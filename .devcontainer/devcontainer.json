@@ -61,5 +61,5 @@
         }
     },
     "remoteUser": "root",
-    "postCreateCommand": "bash -i -c './ post-create.sh'"
+    "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'"
 }
