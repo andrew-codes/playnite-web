@@ -5,7 +5,7 @@
     },
     "features": {
         "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-            "version": "24.0.7"
+            "version": "23.0.7"
         },
         "ghcr.io/devcontainers/features/dotnet:2": {
             "version": "7.0.403"
@@ -61,5 +61,6 @@
         }
     },
     "remoteUser": "root",
-    "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'"
+    "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
+    "postStartCommand": "./.devcontainer/post-start.sh"
 }
