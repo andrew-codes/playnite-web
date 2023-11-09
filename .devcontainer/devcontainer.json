@@ -57,7 +57,7 @@
                 "sburg.vscode-javascript-booster",
                 "streetsidesoftware.code-spell-checker",
                 "unifiedjs.vscode-mdx"
-            ],
+            ]
         }
     },
     "remoteUser": "root",
