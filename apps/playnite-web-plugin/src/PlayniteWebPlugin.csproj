@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <SrcRoot>$(MSBuildThisFileDirectory)</SrcRoot>
+    <BuildRoot>$(MSBuildThisFileDirectory)\..\.build\</BuildRoot>
+    <DistRoot>$(MSBuildThisFileDirectory)\..\.dist\</DistRoot>
+    <Configuration Condition="$(Configuration) == ''">Debug</Configuration>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BinariesFolder>$(DistRoot)bin</BinariesFolder>
+    <CommonIntermediateOutputRoot>$(DistRoot)obj\</CommonIntermediateOutputRoot>
+    <BaseIntermediateOutputPath>$(CommonIntermediateOutputRoot)$(Configuration)\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <AssemblyInfoPath Condition="'$(AssemblyInfoPath)' == ''">$(BaseIntermediateOutputPath)GlobalAssemblyInfo.cs</AssemblyInfoPath>
+    <CommonOutputDirectory>$(BinariesFolder)\$(Configuration)</CommonOutputDirectory>
+    <BuildToCommonOutputDirectory Condition="'$(BuildToCommonOutputDirectory)' == ''">true</BuildToCommonOutputDirectory>
+    <OutputPath Condition="'$(OutputPath)' == ''">$(BinariesFolder)\$(Configuration)\$(MSBuildProjectName)</OutputPath>
+    <OutputPath Condition="'$(BuildToCommonOutputDirectory)' == 'true'">$(CommonOutputDirectory)\</OutputPath>
+    <OutDir>$(OutputPath)</OutDir>
+    <TargetFrameworkMonikerAssemblyAttributesPath>$(IntermediateOutputPath)AssemblyAttributes.cs</TargetFrameworkMonikerAssemblyAttributesPath>
+  </PropertyGroup>
+</Project>

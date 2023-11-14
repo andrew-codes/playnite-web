@@ -2,3 +2,6 @@
 
 
 .nx/cache
+
+apps/*/.dist
+apps/*/.build
