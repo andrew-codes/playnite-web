@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="PlayniteSDK" Version="6.10.0" />
+    <PackageReference Include="PresentationFramework" Version="4.6.0" />
   </ItemGroup>
 
 </Project>
