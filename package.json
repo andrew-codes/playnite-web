@@ -5,5 +5,8 @@
   "workspaces": [
     "apps/*",
     "libs/**/*"
-  ]
+  ],
+  "devDependencies": {
+    "nx": "17.1.2"
+  }
 }
