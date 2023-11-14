@@ -1,5 +1,10 @@
 {
-  "targetDefaults": {},
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build", "restore"],
+      "cache": true
+    }
+  },
   "affected": {
     "defaultBase": "main"
   }
