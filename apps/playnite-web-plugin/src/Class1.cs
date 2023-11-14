@@ -1,6 +1,7 @@
-﻿namespace PlayniteWebPlugin;
-
-public class Class1
+﻿namespace PlayniteWebPlugin
 {
+  public class Class1
+  {
 
+  }
 }
