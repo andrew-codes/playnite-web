@@ -12,9 +12,17 @@
       }
     },
     "build": {
-      "executor": "@nx-dotnet/core:build",
+      "executor": "nx:run-commands",
       "options": {
-        "configuration": "Release"
+        "command": "dotnet build --configuration Release --no-dependencies",
+        "cwd": "{projectRoot}/src"
+      }
+    },
+    "test/unit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet build && dotnet test --results-directory ../../../.test-runs/unit --configuration Release --framework net4.6.2",
+        "cwd": "{projectRoot}/tests/unit/src"
       }
     }
   },
