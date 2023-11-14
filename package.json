@@ -1,0 +1,12 @@
+{
+  "name": "playnite-web",
+  "packageManager": "yarn@4.0.2",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/**/*"
+  ],
+  "devDependencies": {
+    "nx": "17.1.2"
+  }
+}
