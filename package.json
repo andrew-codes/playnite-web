@@ -7,6 +7,7 @@
     "libs/**/*"
   ],
   "devDependencies": {
+    "@nx-dotnet/core": "^2.1.1",
     "nx": "17.1.2"
   }
 }
