@@ -1,5 +1,9 @@
 {
   "name": "playnite-web",
   "packageManager": "yarn@4.0.2",
-  "private": true
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/**/*"
+  ]
 }
