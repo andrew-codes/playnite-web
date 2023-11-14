@@ -3,5 +3,5 @@
 
 .nx/cache
 
-apps/*/.dist
-apps/*/.build
+.dist
+.test-runs
