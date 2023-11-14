@@ -1,0 +1,17 @@
+{
+  "name": "playnite-web-plugin",
+  "sourceRoot": "apps/playnite-web-plugin/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.dist"],
+      "options": {
+        "command": "yarn rimraf .dist",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": []
+}
