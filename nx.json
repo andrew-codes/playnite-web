@@ -3,6 +3,10 @@
     "build": {
       "dependsOn": ["^build", "restore"],
       "cache": true
+    },
+    "test/unit": {
+      "dependsOn": ["restore", "^restore"],
+      "cache": true
     }
   },
   "affected": {
