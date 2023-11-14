@@ -1,0 +1,15 @@
+<Project>
+ <PropertyGroup>
+   <Deterministic>true</Deterministic>
+ </PropertyGroup>
+
+  <PropertyGroup>
+    <DistRoot>$(MSBuildThisFileDirectory)\..\.dist\</DistRoot>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+    <MSBuildProjectExtensionsPath>$(DistRoot)</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+
+</Project>
