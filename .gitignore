@@ -2,3 +2,6 @@
 
 
 .nx/cache
+
+.dist
+.test-runs
