@@ -1,66 +1,67 @@
 {
-    "name": "Playnite Web",
-    "build": {
-        "dockerfile": "Dockerfile"
+  "name": "Playnite Web",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "23.0.7"
     },
-    "features": {
-        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-            "version": "23.0.7"
-        },
-        "ghcr.io/devcontainers/features/dotnet:2": {
-            "version": "7.0.403"
-        },
-        "ghcr.io/devcontainers/features/node:1": {
-            "version": "20.9.0"
-        },
-        "ghcr.io/devcontainers/features/powershell:1": {}
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "7.0.403"
     },
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "terminal.integrated.profiles.linux": {
-                    "bash": {
-                        "path": "bash",
-                        "icon": "terminal-bash"
-                    }
-                },
-                "workbench.colorTheme": "Dracula Pro"
-            },
-            "extensions": [
-                "andrew-codes.jest-snippets",
-                "arcanis.vscode-zipfs",
-                "bierner.github-markdown-preview",
-                "bierner.markdown-yaml-preamble",
-                "capaj.vscode-exports-autocomplete",
-                "cmstead.js-codeformer",
-                "cmstead.jsrefactor",
-                "dbaeumer.vscode-eslint",
-                "dracula-theme-pro.theme-dracula-pro",
-                "drKnoxy.eslint-disable-snippets",
-                "eamodio.gitlens",
-                "esbenp.prettier-vscode",
-                "GitHub.copilot-chat",
-                "GitHub.copilot",
-                "github.vscode-github-actions",
-                "GitHub.vscode-pull-request-github",
-                "humao.rest-client",
-                "johnuphoff.vscode-styled-sort",
-                "kisstkondoros.vscode-codemetrics",
-                "mikestead.dotenv",
-                "ms-dotnettools.csdevkit",
-                "ms-vscode.powershell",
-                "Orta.vscode-jest",
-                "paulmolluzzo.convert-css-in-js",
-                "pflannery.vscode-versionlens",
-                "redhat.vscode-yaml",
-                "rpdswtk.vsmqtt",
-                "sburg.vscode-javascript-booster",
-                "streetsidesoftware.code-spell-checker",
-                "unifiedjs.vscode-mdx"
-            ]
-        }
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20.9.0"
     },
-    "remoteUser": "root",
-    "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
-    "postStartCommand": "./.devcontainer/post-start.sh"
+    "ghcr.io/devcontainers/features/powershell:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+          }
+        },
+        "workbench.colorTheme": "Dracula Pro"
+      },
+      "extensions": [
+        "andrew-codes.jest-snippets",
+        "arcanis.vscode-zipfs",
+        "bierner.github-markdown-preview",
+        "bierner.markdown-yaml-preamble",
+        "capaj.vscode-exports-autocomplete",
+        "cmstead.js-codeformer",
+        "cmstead.jsrefactor",
+        "dbaeumer.vscode-eslint",
+        "dracula-theme-pro.theme-dracula-pro",
+        "drKnoxy.eslint-disable-snippets",
+        "eamodio.gitlens",
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "GitHub.copilot-chat",
+        "GitHub.copilot",
+        "github.vscode-github-actions",
+        "GitHub.vscode-pull-request-github",
+        "humao.rest-client",
+        "johnuphoff.vscode-styled-sort",
+        "kisstkondoros.vscode-codemetrics",
+        "mikestead.dotenv",
+        "ms-dotnettools.csdevkit",
+        "ms-vscode.powershell",
+        "Orta.vscode-jest",
+        "paulmolluzzo.convert-css-in-js",
+        "pflannery.vscode-versionlens",
+        "redhat.vscode-yaml",
+        "rpdswtk.vsmqtt",
+        "sburg.vscode-javascript-booster",
+        "streetsidesoftware.code-spell-checker",
+        "unifiedjs.vscode-mdx"
+      ]
+    }
+  },
+  "remoteUser": "root",
+  "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
+  "postStartCommand": "./.devcontainer/post-start.sh"
 }
