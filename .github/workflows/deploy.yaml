@@ -32,7 +32,7 @@ jobs:
         run: yarn nx run-many --target=test/unit --all --parallel
 
   deploy:
-    name: Test and Deploy Affected Apps
+    name: Deploy Affected Apps
     runs-on: amd64-runner
     needs:
       - test
@@ -62,4 +62,8 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+          MQTT_HOST: ${{ secrets.K8S_MAIN_NODE_IP }}
+          MQTT_PORT: ${{ secrets.MQTT_PORT_EXTERNAL }}
+          MQTT_USERNAME: ${{ secrets.MQTT_USERNAME }}
+          MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
           NODE_ENV: production
