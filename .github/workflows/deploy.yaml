@@ -1,23 +1,21 @@
-name: "Test"
+name: "Deploy to Production"
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
 jobs:
-  run_tests:
-    name: Verify PR - Tests
+  test:
+    name: Run all Verifications/Tests
     runs-on: amd64-runner
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Read .nvmrc
+          ref: main
+      - name: Read Node version
         run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
-      - name: Save version
-        run: echo "latest" > version
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
@@ -33,18 +31,18 @@ jobs:
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --all --parallel
 
-  build:
-    name: Verify PR - Buildable
+  deploy:
+    name: Deploy Affected Apps
     runs-on: amd64-runner
+    needs:
+      - test
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Read .nvmrc
+          ref: main
+      - name: Read Node version
         run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
-      - name: Save version
-        run: echo "latest" > version
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
@@ -57,10 +55,15 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-      - name: Compile affected apps
-        run: yarn nx affected --target=compile --parallel --base=HEAD~ --head=HEAD --verbose
+      - name: Deploy affected apps
+        run: yarn nx affected --target=deploy --parallel --base=HEAD~ --head=HEAD --verbose
         env:
+          CODECOV_TOKEN: ${{ secrets.CODE_COV_TOKEN }}
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+          MQTT_HOST: ${{ secrets.K8S_MAIN_NODE_IP }}
+          MQTT_PORT: ${{ secrets.MQTT_PORT_EXTERNAL }}
+          MQTT_USERNAME: ${{ secrets.MQTT_USERNAME }}
+          MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
           NODE_ENV: production
