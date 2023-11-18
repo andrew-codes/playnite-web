@@ -2,6 +2,10 @@
   "name": "playnite-web",
   "packageManager": "yarn@4.0.2",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0",
+    "yarn": ">=4.0.0"
+  },
   "workspaces": [
     "apps/*",
     "libs/**/*"
