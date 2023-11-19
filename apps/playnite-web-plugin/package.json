@@ -1,6 +1,6 @@
 {
   "name": "playnite-web-plugin",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "devDependencies": {
     "nx": "^17.1.2",
     "rimraf": "^5.0.5"
