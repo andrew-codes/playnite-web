@@ -24,7 +24,7 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
       - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "4.6.2"
+          dotnet-version: "7.0.403"
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -54,7 +54,7 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
       - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "4.6.2"
+          dotnet-version: "7.0.403"
       - name: Install deps
         run: yarn
       - name: Prepare
