@@ -22,10 +22,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "4.6.2"
       - name: Install deps
         run: yarn
       - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
@@ -49,6 +52,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "4.6.2"
       - name: Install deps
         run: yarn
       - name: Prepare
