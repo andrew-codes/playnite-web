@@ -8,7 +8,7 @@ on:
 jobs:
   test:
     name: Run all Verifications/Tests
-    runs-on: amd64-runner
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
         with:
@@ -33,7 +33,7 @@ jobs:
 
   deploy:
     name: Deploy Affected Apps
-    runs-on: amd64-runner
+    runs-on: self-hosted
     needs:
       - test
     steps:
