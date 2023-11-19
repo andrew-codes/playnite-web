@@ -4,6 +4,10 @@
       "dependsOn": ["^build", "restore"],
       "cache": true
     },
+    "package": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
     "test/unit": {
       "dependsOn": ["restore", "^restore"],
       "cache": true
