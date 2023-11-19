@@ -8,7 +8,7 @@ on:
 jobs:
   run_tests:
     name: Verify PR - Tests
-    runs-on: amd64-runner
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
         with:
@@ -35,7 +35,7 @@ jobs:
 
   build:
     name: Verify PR - Buildable
-    runs-on: amd64-runner
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
         with:
