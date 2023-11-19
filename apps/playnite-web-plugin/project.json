@@ -14,7 +14,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "dotnet build --configuration Release --no-dependencies",
+        "command": "dotnet build --configuration Release --no-dependencies --framework net4.6.2",
         "cwd": "{projectRoot}/src"
       }
     },
