@@ -1,0 +1,10 @@
+{
+  "name": "playnite-web-plugin",
+  "version": "0.0.1",
+  "devDependencies": {
+    "cpy": "^11.0.0",
+    "cpy-cli": "^5.0.0",
+    "nx": "^17.1.2",
+    "rimraf": "^5.0.5"
+  }
+}

@@ -1,4 +1,4 @@
-name: "Test"
+name: "Verify Pull Request"
 
 on:
   pull_request:
@@ -22,7 +22,7 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
       - uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: "7.0.403"
+          dotnet-version: "8.0.100"
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -32,40 +32,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --all --parallel --verbose
-
-  build:
-    name: Verify PR - Buildable
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: "7.0.403"
-      - name: Install deps
-        run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-      - name: Compile affected apps
-        run: yarn nx affected --target=build --parallel --base=HEAD~ --head=HEAD --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          NODE_ENV: production
+        run: yarn nx run-many --target=test/unit --all --parallel --verbose --exclude=playnite-web-extension
 
   package:
     name: Package
@@ -73,7 +40,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
       - name: Read .nvmrc
         run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
         id: nvm
@@ -83,7 +50,7 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
       - uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: "7.0.403"
+          dotnet-version: "8.0.100"
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -94,7 +61,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Package apps
-        run: yarn nx affected --target=package --parallel -all --verbose
+        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --exclude=playnite-web-extension
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
