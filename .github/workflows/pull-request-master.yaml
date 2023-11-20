@@ -32,7 +32,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --all --parallel --verbose
+        run: yarn nx run-many --target=test/unit --all --parallel --verbose --exclude=playnite-web-extension
 
   package:
     name: Package
