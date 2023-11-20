@@ -5,7 +5,6 @@
   "targets": {
     "clean": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.dist"],
       "options": {
         "command": "yarn rimraf .dist .packaged .test-runs",
         "cwd": "{projectRoot}"
@@ -13,6 +12,7 @@
     },
     "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.dist"],
       "options": {
         "command": "dotnet build --configuration Release --no-dependencies --framework net4.8.1",
         "cwd": "{projectRoot}/src"
@@ -21,12 +21,13 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "zip -r .packaged/playnite-web-plugin.zip .dist/bin/Release/",
+        "command": "mkdir -p .packaged && zip -r .packaged/playnite-web-plugin.zip .dist/bin/Release/",
         "cwd": "{projectRoot}"
       }
     },
     "test/unit": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
       "options": {
         "command": "dotnet test --results-directory ../../../.test-runs/unit --configuration Release --framework net4.8.1",
         "cwd": "{projectRoot}/tests/unit/src"
