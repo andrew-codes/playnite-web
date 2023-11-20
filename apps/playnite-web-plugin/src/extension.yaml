@@ -1,0 +1,14 @@
+Id: PlayniteWeb_272c28c2-d920-45c4-8866-cf2bf63528f8
+Name: Playnite-Web
+Author: Andrew Smith
+Version: 0.0.1
+Icon: Resources/icon.png
+Module: PlayniteWebPlugin.dll
+Type: GenericPlugin
+Links:
+  - Name: Original Author Credits
+    URL: https://simeonradivoev.com
+  - Name: GitHub
+    URL: https://github.com/andrew-codes/playnite-web
+  - Name: Website
+    URL: https://andrew.codes

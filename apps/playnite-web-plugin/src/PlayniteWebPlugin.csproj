@@ -25,4 +25,13 @@
     <PackageReference Include=" System.ValueTuple" version=" 4.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="extension.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
