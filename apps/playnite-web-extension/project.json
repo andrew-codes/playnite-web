@@ -47,7 +47,7 @@
       "outputs": ["{projectRoot}/.test-runs/unit"],
       "depends_on" :["restore/test"],
       "options": {
-        "command": "dotnet test --results-directory ../../../.test-runs/unit --configuration Release --framework net4.6.2",
+        "command": "dotnet test --results-directory ../../../.test-runs/unit --configuration Release",
         "cwd": "{projectRoot}/tests/unit/src"
       }
     }
