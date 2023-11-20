@@ -254,7 +254,7 @@ namespace PlayniteWebPlugin
 
     #region Overrides of Plugin
 
-    public override Guid Id { get; } = Guid.Parse("6d116e57-cebb-4ef0-a1ed-030a8aa6a7e7");
+    public override Guid Id { get; } = Guid.Parse("272c28c2-d920-45c4-8866-cf2bf63528f8");
 
     public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
     {
