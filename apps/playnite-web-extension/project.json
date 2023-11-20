@@ -23,7 +23,6 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "mkdir -p ../../.packaged",
           "Toolbox.exe pack . ../../../.packaged"
         ],
         "cwd": "{projectRoot}/.dist/bin/Release"
