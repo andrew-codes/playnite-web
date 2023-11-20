@@ -21,8 +21,11 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "mkdir -p .packaged && zip -r .packaged/playnite-web-plugin.zip .dist/bin/Release/",
-        "cwd": "{projectRoot}"
+        "commands": [
+          "mkdir -p ../../.packaged",
+          "yarn cpy . ../../../.packaged --dot"
+        ],
+        "cwd": "{projectRoot}/.dist/bin/Release"
       }
     },
     "test/unit": {
