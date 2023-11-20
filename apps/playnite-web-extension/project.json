@@ -1,6 +1,6 @@
 {
-  "name": "playnite-web-plugin",
-  "sourceRoot": "apps/playnite-web-plugin/src",
+  "name": "playnite-web-extension",
+  "sourceRoot": "apps/playnite-web-extension/src",
   "projectType": "application",
   "targets": {
     "clean": {
@@ -24,7 +24,7 @@
       "options": {
         "commands": [
           "mkdir -p ../../.packaged",
-          "yarn cpy . ../../../.packaged --dot"
+          "Toolbox.exe pack . ../../../.packaged"
         ],
         "cwd": "{projectRoot}/.dist/bin/Release"
       }
