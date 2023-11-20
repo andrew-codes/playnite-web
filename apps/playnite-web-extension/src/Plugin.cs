@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -25,8 +24,9 @@ namespace PlayniteWebPlugin
     private readonly List<MainMenuItem> mainMenuItems;
 
     private readonly List<SidebarItem> sidebarItems;
-    private readonly JsonSerializerOptions jsonOptions;
+
     public static ISerializeObjects serializer { get; set; }
+
     public static IMqttClient client { get; set; }
 
     public static MqttSettings settings;
@@ -35,11 +35,6 @@ namespace PlayniteWebPlugin
 
     public WebPlugin(IPlayniteAPI api) : base(api)
     {
-
-      jsonOptions = new JsonSerializerOptions
-      {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-      };
       serializer = new ObjectSerializer();
       client = new MqttFactory().CreateMqttClient();
       settings = new MqttSettings();
