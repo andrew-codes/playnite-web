@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "playnite-web-plugin", "play
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2F45A914-AE3B-4391-B023-EC8BCFCB36F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayniteWebPlugin", "apps\playnite-web-plugin\src\PlayniteWebPlugin.csproj", "{11E4F3D4-D252-4B55-8E3F-9A70192E3D74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playnite-Web-Extension", "apps\playnite-web-extension\src\Playnite-Web-Extension.csproj", "{11E4F3D4-D252-4B55-8E3F-9A70192E3D74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
