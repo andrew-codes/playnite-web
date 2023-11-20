@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2F45A914-AE3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playnite-Web-Extension", "apps\playnite-web-extension\src\Playnite-Web-Extension.csproj", "{11E4F3D4-D252-4B55-8E3F-9A70192E3D74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayniteWebExtension.Tests", "apps\playnite-web-extension\tests\unit\src\PlayniteWebExtension.Tests.csproj", "{FE091D18-D5AE-44FA-AF2C-7D7A56E7C39C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{11E4F3D4-D252-4B55-8E3F-9A70192E3D74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E4F3D4-D252-4B55-8E3F-9A70192E3D74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E4F3D4-D252-4B55-8E3F-9A70192E3D74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE091D18-D5AE-44FA-AF2C-7D7A56E7C39C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE091D18-D5AE-44FA-AF2C-7D7A56E7C39C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE091D18-D5AE-44FA-AF2C-7D7A56E7C39C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE091D18-D5AE-44FA-AF2C-7D7A56E7C39C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -29,5 +35,6 @@ Global
 		{579FD8D9-5E3F-4385-AA2B-0C94920B94BF} = {00172130-52A7-4DBA-9F4E-5361DE868BCD}
 		{11E4F3D4-D252-4B55-8E3F-9A70192E3D74} = {2F45A914-AE3B-4391-B023-EC8BCFCB36F4}
 		{2F45A914-AE3B-4391-B023-EC8BCFCB36F4} = {579FD8D9-5E3F-4385-AA2B-0C94920B94BF}
+		{FE091D18-D5AE-44FA-AF2C-7D7A56E7C39C} = {579FD8D9-5E3F-4385-AA2B-0C94920B94BF}
 	EndGlobalSection
 EndGlobal
