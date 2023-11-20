@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Playnite-Web-Extensions.csproj" />
+    <ProjectReference Include="..\..\..\src\Playnite-Web-Extension.csproj" />
   </ItemGroup>
 
 </Project>
