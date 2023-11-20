@@ -22,7 +22,7 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
       - uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: "7.0.403"
+          dotnet-version: "8.0.100"
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -50,7 +50,7 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
       - uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: "7.0.403"
+          dotnet-version: "8.0.100"
       - name: Install deps
         run: yarn
       - name: Prepare
