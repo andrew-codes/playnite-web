@@ -41,7 +41,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Package apps
-        run: yarn nx run-many --target=package --parallel --all --verbose
+        run: yarn nx run-many --target=package --parallel --all --verbose --exclude=playnite-web-extension
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
