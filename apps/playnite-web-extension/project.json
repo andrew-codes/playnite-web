@@ -1,0 +1,57 @@
+{
+  "name": "playnite-web-extension",
+  "sourceRoot": "apps/playnite-web-extension/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .dist .packaged .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.dist"],
+      "depends_on": ["restore"],
+      "options": {
+        "command": "dotnet build --configuration Release --no-dependencies --no-restore --framework net4.6.2",
+        "cwd": "{projectRoot}/src"
+      }
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "Toolbox.exe pack . ../../../.packaged"
+        ],
+        "cwd": "{projectRoot}/.dist/bin/Release"
+      }
+    },
+    "restore": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuget restore",
+        "cwd": "{projectRoot}/src"
+      }
+    },
+    "restore/test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuget restore",
+        "cwd": "{projectRoot}/tests/unit/src"
+      }
+    },
+    "test/unit": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "depends_on" :["restore/test"],
+      "options": {
+        "command": "dotnet test --results-directory ../../../.test-runs/unit --configuration Release",
+        "cwd": "{projectRoot}/tests/unit/src"
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": []
+}
