@@ -1,0 +1,232 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                    mc:Ignorable="d">
+
+    <Style TargetType="{x:Type Main}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Main}">
+                    <Grid x:Name="PART_MainHost"
+                          d:DesignWidth="{StaticResource DesignWidth}"
+                          d:DesignHeight="{StaticResource DesignHeight}"
+                          d:DataContext="{x:Static DesignMainViewModel.DesignIntance}">
+                        <Grid x:Name="PART_ViewHost" Background="{DynamicResource MainBackgourndBrush}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <FadeImage x:Name="PART_ImageBackground" Grid.RowSpan="3"
+                                       HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+                            <Grid Grid.Row="0" Background="{DynamicResource TopBarBackgroundBrush}"
+                                  Height="110">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+
+                                <FilterPresetSelector x:Name="PART_FilterPresetSelector" Grid.Column="1" Margin="0,0,50,0" />
+
+                                <ContentControl x:Name="PART_ElemBatteryStatus" Focusable="False" FontSize="42"
+                                            VerticalAlignment="Center" Margin="10,0,10,0"
+                                            Grid.Column="2">
+                                    <ContentControl.Style>
+                                        <Style TargetType="ContentControl">
+                                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PowerStatus.Charge}" Value="Critical">
+                                                    <Setter Property="Content" Value="{DynamicResource BatteryStatusCritical}" />
+                                                    <Setter Property="Foreground" Value="Red" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding PowerStatus.Charge}" Value="Low">
+                                                    <Setter Property="Content" Value="{DynamicResource BatteryStatusLow}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding PowerStatus.Charge}" Value="Medium">
+                                                    <Setter Property="Content" Value="{DynamicResource BatteryStatusMedium}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding PowerStatus.Charge}" Value="High">
+                                                    <Setter Property="Content" Value="{DynamicResource BatteryStatusHigh}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding PowerStatus.IsCharging}" Value="True">
+                                                    <Setter Property="Content" Value="{DynamicResource BatteryStatusCharging}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+
+                                <TextBlock x:Name="PART_TextBatteryPercentage" Style="{DynamicResource TextBlockBaseStyle}"
+                                       VerticalAlignment="Center" Margin="0,0,20,0"
+                                       Grid.Column="3"/>
+
+                                <TextBlock x:Name="PART_TextClock" Style="{DynamicResource TextBlockBaseStyle}"
+                                       VerticalAlignment="Center" Margin="20,0,20,0"
+                                       Grid.Column="4"/>
+
+                                <ButtonEx x:Name="PART_ButtonProgramUpdate" VerticalAlignment="Center"
+                                          Margin="10,0,10,0" Height="48" MinWidth="48"
+                                          Style="{DynamicResource ButtonTopMenu}"                                          
+                                          Grid.Column="5">
+                                    <ButtonEx.Content>
+                                        <TextBlock Text="&#xef08;" FontFamily="{StaticResource FontIcoFont}"                                                   
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2"
+                                                   Foreground="{DynamicResource GlyphLightBrush}" FontSize="30" />
+                                    </ButtonEx.Content>
+                                </ButtonEx>
+
+                                <ButtonEx x:Name="PART_ButtonNotifications" VerticalAlignment="Center"
+                                          Margin="10,0,10,0" Height="48" MinWidth="48"
+                                          Grid.Column="6">
+                                    <Button.Content>
+                                        <Grid>
+                                            <TextBlock Text="&#xeea3;" FontFamily="{StaticResource FontIcoFont}"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2"
+                                                       Foreground="White" FontSize="30" />
+                                            <TextBlock Text="&#x25CF;" Foreground="{DynamicResource GlyphBrush}"
+                                                       HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                                       FontSize="24" Margin="0,0,5,0" />
+                                        </Grid>
+                                    </Button.Content>
+                                    <Button.Style>
+                                        <Style TargetType="Button" BasedOn="{StaticResource ButtonTopMenu}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Api Notifications.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </ButtonEx>
+
+                                <ButtonEx x:Name="PART_ButtonMainMenu" VerticalAlignment="Center"
+                                          Style="{DynamicResource ButtonTopMenu}"
+                                          Margin="10,0,10,0" Height="48" MinWidth="48"
+                                          Grid.Column="7">
+                                    <Button.Content>
+                                        <Image RenderOptions.BitmapScalingMode="Fant" Margin="2"
+                                           Source="{ThemeFile 'Images/applogo_clean.png'}" />
+                                    </Button.Content>
+                                </ButtonEx>
+                            </Grid>
+
+                            <DockPanel Grid.Row="1">
+                                <Filters x:Name="PART_ElemFilters"
+                                         DockPanel.Dock="Left" Focusable="False" />
+
+                                <FiltersAdditional x:Name="PART_ElemFiltersAdditional"
+                                                   DockPanel.Dock="Left" Focusable="False" />
+
+                                <ContentControl x:Name="PART_ContentFilterItems"
+                                            DockPanel.Dock="Left" Focusable="False" />
+
+                                <ListBoxEx x:Name="PART_ListGameItems" Margin="25,0,25,0"
+                                           Background="Transparent" BorderThickness="0"
+                                           DockPanel.Dock="Right"
+                                           KeyboardNavigation.DirectionalNavigation="Once" />
+                            </DockPanel>
+
+                            <TextBlock Grid.Row="1" FontSize="40"
+                                       Text="{DynamicResource LOCNoGamesFound}"
+                                       TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockBaseStyle}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Items.Count, ElementName=PART_ListGameItems}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <Grid Grid.Row="2" Background="{DynamicResource TopBarBackgroundBrush}"
+                              Height="100">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <!--Install-->
+                                    <ButtonEx x:Name="PART_ButtonInstall"
+                                              Style="{DynamicResource ButtonBottomMenu}"
+                                              Content="{DynamicResource LOCInstallGame}" />
+                                    <!--Play-->
+                                    <ButtonEx x:Name="PART_ButtonPlay"
+                                              Style="{DynamicResource ButtonBottomMenu}"
+                                              Content="{DynamicResource LOCPlayGame}" />
+                                    <!--Details-->
+                                    <ButtonEx x:Name="PART_ButtonDetails"
+                                              Style="{DynamicResource ButtonBottomMenu}"
+                                              Content="{DynamicResource LOCGameDetails}" />
+                                    <!--Options-->
+                                    <ButtonEx x:Name="PART_ButtonGameOptions"
+                                              Style="{DynamicResource ButtonBottomMenu}"
+                                              Content="{DynamicResource LOCGameOptions}" />
+                                    <!--Search-->
+                                    <ButtonEx x:Name="PART_ButtonSearch"
+                                              Style="{DynamicResource ButtonBottomMenu}"
+                                              Content="{DynamicResource LOCSearchLabel}" />
+                                    <!--Filter-->
+                                    <ButtonEx x:Name="PART_ButtonFilter"
+                                              Style="{DynamicResource ButtonBottomMenu}"
+                                              Content="{DynamicResource LOCFilter}" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2" x:Name="PART_ElemSearchActive"
+                                            VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                                            Margin="0,15,0,0">
+                                    <TextBlock  FontSize="18"                                                
+                                                TextAlignment="Center"
+                                                Style="{DynamicResource TextBlockBaseStyle}"
+                                                Text="{DynamicResource LOCGameListSearchResults}"/>
+                                    <TextBlock  Foreground="White"
+                                                TextAlignment="Center"
+                                                Style="{DynamicResource TextBlockBaseStyle}"
+                                                Text="{Binding AppSettings.Fullscreen.FilterSettings.Name}"/>
+                                </StackPanel>
+
+                                <TextBlock Grid.Column="2" x:Name="PART_ElemExtraFilterActive"
+                                       FontSize="20"
+                                       VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                       TextAlignment="Center"
+                                       Style="{DynamicResource TextBlockBaseStyle}"
+                                       Text="{DynamicResource LOCGameListExtraFiltered}"/>
+
+                                <StackPanel x:Name="PART_ElemProgressIndicator" Orientation="Horizontal"
+                                        Grid.Column="3" VerticalAlignment="Center">
+                                    <TextBlock x:Name="PART_TextProgressTooltip" 
+                                           Margin="0,0,15,0" FontSize="20" VerticalAlignment="Center"
+                                           Style="{DynamicResource TextBlockBaseStyle}"/>
+                                    <ContentControl Style="{DynamicResource ProgressIndicator}" Focusable="False"
+                                                Height="38" Width="38" VerticalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+
+                        <GameDetails x:Name="PART_ElemGameDetails" Grid.RowSpan="3"
+                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+
+                        <GameStatus x:Name="PART_ElemGameStatus" Grid.RowSpan="3"
+                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
