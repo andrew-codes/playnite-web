@@ -19,7 +19,7 @@
         "cwd": "{projectRoot}/src"
       }
     },
-    "release": {
+    "publish": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
