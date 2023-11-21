@@ -1,0 +1,34 @@
+Id: pcsx2
+Name: PCSX2
+Website: 'https://pcsx2.net/'
+Profiles:
+  - Name: Default 32bit
+    StartupArguments: '"{ImagePath}" --nogui --fullboot --fullscreen'
+    Platforms: [sony_playstation2]
+    ImageExtensions: [iso, bin, mdf, nrg, img, gz, cso, chd, m3u]
+    StartupExecutable: ^pcsx2\.exe$
+  - Name: Default 64bit
+    StartupArguments: '"{ImagePath}" --nogui --fullboot --fullscreen'
+    Platforms: [sony_playstation2]
+    ImageExtensions: [iso, bin, mdf, nrg, img, gz, cso, chd, m3u]
+    StartupExecutable: ^pcsx2x64\.exe$
+  - Name: Default QT
+    StartupArguments: '-fullscreen -slowboot -- {ImagePath}'
+    Platforms: [sony_playstation2]
+    ImageExtensions: [iso, bin, mdf, nrg, img, gz, cso, chd, m3u]
+    StartupExecutable: ^pcsx2-qt\.exe$
+  - Name: 64bit AVX2
+    StartupArguments: '"{ImagePath}" --nogui --fullboot --fullscreen'
+    Platforms: [sony_playstation2]
+    ImageExtensions: [iso, bin, mdf, nrg, img, gz, cso, chd, m3u]
+    StartupExecutable: ^pcsx2x64-avx2\.exe$
+  - Name: 64bit AVX2 QT
+    StartupArguments: '-fullscreen -slowboot -- {ImagePath}'
+    Platforms: [sony_playstation2]
+    ImageExtensions: [iso, bin, mdf, nrg, img, gz, cso, chd, m3u]
+    StartupExecutable: ^pcsx2-qtx64-avx2\.exe$
+  - Name: 64bit SSE4 QT
+    StartupArguments: '-fullscreen -slowboot -- {ImagePath}'
+    Platforms: [sony_playstation2]
+    ImageExtensions: [iso, bin, mdf, nrg, img, gz, cso, chd, m3u]
+    StartupExecutable: ^pcsx2-qtx64\.exe$

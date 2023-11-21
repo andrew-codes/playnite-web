@@ -1,0 +1,32 @@
+2023-11-20 15:53:30.1643|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 15:53:30.1753|DEBUG|Playnite.Toolbox.Program|"C:\Users\andrew\AppData\Local\Playnite\Toolbox.exe"
+2023-11-20 16:22:54.9729|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 16:22:54.9729|DEBUG|Playnite.Toolbox.Program|"C:\Users\andrew\AppData\Local\Playnite\Toolbox.exe" pack . ../playnite-web
+2023-11-20 16:22:55.2875|INFO|Playnite.Toolbox.Program|GenericPlugin successfully packed as "../playnite-web\PlayniteWeb_272c28c2-d920-45c4-8866-cf2bf63528f8_0_0_1.pext"
+2023-11-20 16:34:10.0982|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 16:34:10.0982|DEBUG|Playnite.Toolbox.Program|"C:\Users\andrew\AppData\Local\Playnite\Toolbox.exe" pack . ../
+2023-11-20 16:34:10.5074|INFO|Playnite.Toolbox.Program|GenericPlugin successfully packed as "../PlayniteWeb_272c28c2-d920-45c4-8866-cf2bf63528f8_0_0_1.pext"
+2023-11-20 16:38:52.4189|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 16:38:52.4189|DEBUG|Playnite.Toolbox.Program|"C:\Users\andrew\AppData\Local\Playnite\Toolbox.exe" new GenericPlugin Playnite-Web .\plugin\
+2023-11-20 16:38:52.4769|INFO|Playnite.Toolbox.Program|Created new GenericPlugin in ".\plugin\Playnite-Web"
+2023-11-20 16:38:52.4769|WARN|Playnite.Toolbox.Program|Don't forget to update manifest file with relevant information.
+2023-11-20 16:38:52.4769|WARN|Playnite.Toolbox.Program|Use generated .sln solution file to open plugin source.
+2023-11-20 17:38:52.1885|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 17:38:52.1885|DEBUG|Playnite.Toolbox.Program|"C:\Users\andrew\AppData\Local\Playnite\Toolbox.exe" pack .dist .
+2023-11-20 17:38:52.2457|ERROR|Playnite.Toolbox.Program|Failed to pack extension: .dist.
+Specified method is not supported.
+2023-11-20 17:39:01.7061|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 17:39:01.7061|DEBUG|Playnite.Toolbox.Program|"C:\Users\andrew\AppData\Local\Playnite\Toolbox.exe" pack ./.dist .
+2023-11-20 17:39:01.7334|ERROR|Playnite.Toolbox.Program|Failed to pack extension: ./.dist.
+Specified method is not supported.
+2023-11-20 17:39:25.7536|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 17:39:25.7536|DEBUG|Playnite.Toolbox.Program|"C:\Users\andrew\AppData\Local\Playnite\Toolbox.exe" pack ./.dist/bin/Debug .
+2023-11-20 17:39:25.9306|INFO|Playnite.Toolbox.Program|GenericPlugin successfully packed as ".\Playnite-Web_9db26542-83a3-4252-94c2-2bfbb369f5c7_0_1.pext"
+2023-11-20 18:10:36.5009|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 18:10:36.5009|DEBUG|Playnite.Toolbox.Program|Toolbox.exe  pack . ../../../.packaged
+2023-11-20 18:10:36.7280|INFO|Playnite.Toolbox.Program|GenericPlugin successfully packed as "../../../.packaged\Playnite-Web_9db26542-83a3-4252-94c2-2bfbb369f5c7_0_1.pext"
+2023-11-20 18:11:19.8248|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-20 18:11:19.8318|DEBUG|Playnite.Toolbox.Program|Toolbox.exe  pack . ../../../.packaged
+2023-11-20 18:11:20.0930|INFO|Playnite.Toolbox.Program|GenericPlugin successfully packed as "../../../.packaged\Playnite-Web_9db26542-83a3-4252-94c2-2bfbb369f5c7_0_1.pext"
+2023-11-21 08:43:06.6431|DEBUG|Playnite.Toolbox.Program|Toolbox started.
+2023-11-21 08:43:06.6431|DEBUG|Playnite.Toolbox.Program|"C:\Users\andrew\Toolbox\Toolbox.exe"
