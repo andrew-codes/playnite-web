@@ -1,16 +1,28 @@
 {
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build", "restore"],
+      "dependsOn": ["^build", "build/restore"],
       "cache": true
     },
     "package": {
       "dependsOn": ["build"],
       "cache": false
     },
+    "publish": {
+      "dependsOn": ["package"],
+      "cache": false
+    },
+    "release": {
+      "dependsOn": ["package"],
+      "cache": false
+    },
     "test/unit": {
-      "dependsOn": ["restore", "^restore"],
+      "dependsOn": ["test/unit/restore", "test/unit/build"],
       "cache": true
+    },
+    "test/unit/restore": {
+      "dependsOn": ["build/restore"],
+      "cache": false
     }
   },
   "affected": {

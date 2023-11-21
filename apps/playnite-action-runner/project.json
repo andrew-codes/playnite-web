@@ -1,0 +1,35 @@
+{
+  "name": "playnite-action-runner",
+  "sourceRoot": "apps/playnite-action-runner/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker build -t ghcr.io/andrew-codes/playnite-action-runner:latest ."
+        ],
+        "cwd": "{projectRoot}/src"
+      }
+    },
+    "release": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "export VERSION=$(cat package.json | jq -r '.version')",
+          "docker push ghcr.io/andrew-codes/playnite-action-runner:$VERSION"
+        ],
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": []
+}

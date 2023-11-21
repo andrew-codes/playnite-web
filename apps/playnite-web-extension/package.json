@@ -1,6 +1,8 @@
 {
-  "name": "playnite-web-plugin",
+  "name": "playnite-web-extension",
+  "description": "Playnite extension required for Playnite Web.",
   "version": "0.0.1",
+  "private": true,
   "devDependencies": {
     "cpy": "^11.0.0",
     "cpy-cli": "^5.0.0",
