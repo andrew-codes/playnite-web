@@ -14,8 +14,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "export VERSION=$(cat package.json | jq -r '.version')",
-          "docker build -t ghcr.io/andrew-codes/playnite-action-runner:latest -t ghcr.io/andrew-codes/playnite-action-runner:$VERSION ."
+          "export VERSION=$(cat package.json | jq -r '.version') && docker build -t ghcr.io/andrew-codes/playnite-action-runner:latest -t ghcr.io/andrew-codes/playnite-action-runner:$VERSION ."
         ],
         "cwd": "{projectRoot}/src"
       }
@@ -24,9 +23,8 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "export VERSION=$(cat package.json | jq -r '.version')",
           "docker push ghcr.io/andrew-codes/playnite-action-runner:latest",
-          "docker push ghcr.io/andrew-codes/playnite-action-runner:$VERSION"
+          "export VERSION=$(cat package.json | jq -r '.version') && docker push ghcr.io/andrew-codes/playnite-action-runner:$VERSION"
         ],
         "cwd": "{projectRoot}"
       }
