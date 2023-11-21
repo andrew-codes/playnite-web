@@ -34,39 +34,6 @@ jobs:
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:linux
 
-  unit_tests_windows:
-    name: Verify PR - Tests (Windows)
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Install jq
-        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: "8.0.100"
-      - name: Enable yarn
-        run: corepack enable
-      - run: corepack prepare --activate yarn@^4.0.0
-      - name: Install deps
-        run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-      - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
-
   package_linux:
     name: Package (Linux)
     runs-on: self-hosted
@@ -106,6 +73,39 @@ jobs:
           name: packaged-apps
           path: apps/*/.packaged
 
+  unit_tests_windows:
+    name: Verify PR - Tests (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install jq
+        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+      - name: Read .nvmrc
+        run: echo "##[set-output name=NODE_VERSION;]20.9.0"
+        id: nvm
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "8.0.100"
+      - name: Enable yarn
+        run: corepack enable
+      - run: corepack prepare --activate yarn@^4.0.0
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+      - name: Run all unit tests
+        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
+
   package_windows:
     name: Package (Windows)
     runs-on: windows-latest
@@ -116,7 +116,7 @@ jobs:
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
+        run: echo "##[set-output name=NODE_VERSION;]20.9.0"
         id: nvm
       - name: Use Node.js
         uses: actions/setup-node@v3
