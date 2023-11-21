@@ -1,0 +1,9 @@
+{
+  "name": "playnite-action-runner",
+  "description": "Github Action Runner image to test, build, and package Playnite extensions.",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "nx": "^17.1.2"
+  }
+}
