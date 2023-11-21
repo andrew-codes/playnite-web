@@ -32,7 +32,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --tags=linux
+        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:linux
 
   package_for_ppe_linux:
     name: Package for PPE (Linux)
@@ -61,7 +61,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Package apps
-        run: yarn nx run-many --target=package --parallel --verbose --tags=linux
+        run: yarn nx run-many --target=package --parallel --verbose --projects=tag:linux
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
@@ -102,7 +102,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Deploy affected apps
-        run: yarn nx affected --target=deploy --parallel --base=HEAD~ --head=HEAD --verbose --tags=linux
+        run: yarn nx affected --target=deploy --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:linux
         env:
           CODECOV_TOKEN: ${{ secrets.CODE_COV_TOKEN }}
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
@@ -142,10 +142,10 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --tags=windows
+        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
 
   package_windows:
-    name: Package (Windows)
+    name: Package for PPE (Windows)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -172,7 +172,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Package apps
-        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --tags=windows
+        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:windows
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}

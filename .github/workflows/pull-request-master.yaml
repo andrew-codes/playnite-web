@@ -32,7 +32,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --tags=linux
+        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:linux
 
   unit_tests_windows:
     name: Verify PR - Tests (Windows)
@@ -62,7 +62,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --tags=windows
+        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
 
   package_linux:
     name: Package (Linux)
@@ -91,7 +91,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Package apps
-        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --tags=linux
+        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:linux
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
@@ -132,7 +132,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Package apps
-        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --tags=windows
+        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:windows
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
