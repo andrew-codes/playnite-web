@@ -1,4 +1,4 @@
-namespace PlayniteWebPlugin.Services
+namespace PlayniteWebExtension.Services
 {
   public interface ISerializeObjects
   {

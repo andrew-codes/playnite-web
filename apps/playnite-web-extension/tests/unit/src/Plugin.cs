@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace PlayniteWebPlugin.UnitTests
+namespace PlayniteWebExtension.UnitTests
 {
     [TestFixture]
     public class ExampleTest

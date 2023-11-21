@@ -1,14 +1,14 @@
 using MQTTnet.Client;
 
-namespace PlayniteWebPlugin.Services.Mqtt
+namespace PlayniteWebExtension.Services.Mqtt
 {
   public class TopicManager : IManageTopics
   {
     private readonly IMqttClient client;
 
-    private readonly MqttSettings settings;
+    private readonly IMqttSettings settings;
 
-    public TopicManager(IMqttClient client, MqttSettings settings)
+    public TopicManager(IMqttClient client, IMqttSettings settings)
     {
       this.client = client;
       this.settings = settings;

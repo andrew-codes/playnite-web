@@ -7,8 +7,8 @@
     <ProjectGuid>{4FDF1E89-5BC3-4C72-8FDA-0D580E7A5D5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Playnite-Web</RootNamespace>
-    <AssemblyName>Playnite-Web</AssemblyName>
+    <RootNamespace>PlayniteWebExtension</RootNamespace>
+    <AssemblyName>PlayniteWebExtension</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -17,18 +17,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+    <OutputPath>..\.dist\bin\Debug</OutputPath>
     <WarningLevel>4</WarningLevel>
+    <IntermediateOutputPath>C:\Users\andrew\AppData\Local\Temp\vs9DC.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
+    <OutputPath>..\.dist\bin\Release</OutputPath>
     <WarningLevel>4</WarningLevel>
+    <IntermediateOutputPath>C:\Users\andrew\AppData\Local\Temp\vs9DC.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Playnite.SDK, Version=6.2.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -45,6 +47,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.ProtectedData, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\System.Security.Cryptography.ProtectedData.8.0.0\lib\net462\System.Security.Cryptography.ProtectedData.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -55,37 +61,43 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="**/*.cs" />
-    <!-- <Compile Include="Playnite-WebSettingsView.xaml.cs">
-      <DependentUpon>Playnite-WebSettingsView.xaml</DependentUpon>
-    </Compile> -->
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="app.config" />
     <None Include="extension.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="nuget.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <!-- <None Include="Localization\*.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None> -->
-    <!-- <Page Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Playnite-WebSettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page> -->
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IMqttSettings.cs" />
+    <Compile Include="IntToStringValueConverter.cs" />
+    <Compile Include="MqttSettingsViewModel.cs" />
+    <Compile Include="Plugin.cs" />
+    <Compile Include="PluginSettings.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ISerializeObjects.cs" />
+    <Compile Include="Services\Mqtt\IManageTopics.cs" />
+    <Compile Include="Services\Mqtt\PublishTopics.cs" />
+    <Compile Include="Services\Mqtt\SubscribeTopics.cs" />
+    <Compile Include="Services\Mqtt\TopicManager.cs" />
+    <Compile Include="Services\ObjectSerializer.cs" />
+    <Compile Include="UI\MqttSettingsView.xaml.cs">
+      <DependentUpon>MqttSettingsView.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\MqttSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

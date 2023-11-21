@@ -5,17 +5,17 @@ using Playnite.SDK;
 using Playnite.SDK.Events;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
-using PlayniteWebPlugin.Services;
-using PlayniteWebPlugin.Services.Mqtt;
+using PlayniteWebExtension.Services;
+using PlayniteWebExtension.Services.Mqtt;
+using PlayniteWebExtension.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
-namespace PlayniteWebPlugin
+namespace PlayniteWebExtension
 {
   public class WebPlugin : GenericPlugin
   {
@@ -29,7 +29,7 @@ namespace PlayniteWebPlugin
 
     public static IMqttClient client { get; set; }
 
-    public static MqttSettings settings;
+    public static MqttPluginSettingsViewModel settings;
 
     public static IManageTopics topicManager { get; set; }
 
@@ -37,12 +37,12 @@ namespace PlayniteWebPlugin
     {
       serializer = new ObjectSerializer();
       client = new MqttFactory().CreateMqttClient();
-      settings = new MqttSettings();
+      settings = new MqttPluginSettingsViewModel(this);
       topicManager = new TopicManager(client, settings);
 
       Properties = new GenericPluginProperties
       {
-        HasSettings = false
+        HasSettings = true
       };
 
       sidebarItems = new List<SidebarItem>
@@ -75,7 +75,7 @@ namespace PlayniteWebPlugin
 
             if (settings.UseSecureConnection)
             {
-              optionsUnBuilt = optionsUnBuilt.WithTls();
+              optionsUnBuilt = optionsUnBuilt.WithTlsOptions(new MqttClientTlsOptionsBuilder().WithTargetHost(settings.ServerAddress).WithSslProtocols(System.Security.Authentication.SslProtocols.Tls12).Build());
             }
 
             var options = optionsUnBuilt.Build();
