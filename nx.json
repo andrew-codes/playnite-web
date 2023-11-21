@@ -12,10 +12,6 @@
       "dependsOn": ["package"],
       "cache": false
     },
-    "release": {
-      "dependsOn": ["package"],
-      "cache": false
-    },
     "test/unit": {
       "dependsOn": ["test/unit/restore", "test/unit/build"],
       "cache": true

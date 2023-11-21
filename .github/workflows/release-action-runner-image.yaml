@@ -48,4 +48,4 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
       - name: Release runner image
-        run: export VERSION=$(cat package.json | jq -r '.version')" && docker push ghcr.io/andrew-codes/playnite-action-runner:$VERSION
+        run: yarn nx run playnite-action-runner:publish --verbose
