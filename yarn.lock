@@ -1337,9 +1337,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playnite-web-plugin@workspace:apps/playnite-web-extension":
+"playnite-action-runner@workspace:apps/playnite-action-runner":
   version: 0.0.0-use.local
-  resolution: "playnite-web-plugin@workspace:apps/playnite-web-extension"
+  resolution: "playnite-action-runner@workspace:apps/playnite-action-runner"
+  dependencies:
+    nx: "npm:^17.1.2"
+  languageName: unknown
+  linkType: soft
+
+"playnite-web-extension@workspace:apps/playnite-web-extension":
+  version: 0.0.0-use.local
+  resolution: "playnite-web-extension@workspace:apps/playnite-web-extension"
   dependencies:
     cpy: "npm:^11.0.0"
     cpy-cli: "npm:^5.0.0"
