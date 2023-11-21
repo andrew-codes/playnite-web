@@ -124,7 +124,7 @@ jobs:
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
+        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | ./jq.exe .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
         id: nvm
       - name: Use Node.js
         uses: actions/setup-node@v3
@@ -157,7 +157,7 @@ jobs:
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
+        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | ./jq.exe .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
         id: nvm
       - name: Use Node.js
         uses: actions/setup-node@v3
