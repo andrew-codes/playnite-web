@@ -66,6 +66,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
+      - name: Install jq
+        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read .nvmrc
         run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
         id: nvm
