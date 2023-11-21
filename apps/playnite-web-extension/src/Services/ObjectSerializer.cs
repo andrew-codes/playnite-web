@@ -1,16 +1,13 @@
 using System.IO;
 using Newtonsoft.Json;
 
-namespace PlayniteWebPlugin.Services
+namespace PlayniteWebExtension.Services
 {
   public class ObjectSerializer : ISerializeObjects
   {
     private readonly JsonSerializer serializer;
 
-    public ObjectSerializer()
-    {
-      serializer = new JsonSerializer();
-    }
+    public ObjectSerializer() => serializer = new JsonSerializer();
 
     public string Serialize<T>(T data)
     {

@@ -2,44 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PlayniteWebPlugin
+namespace PlayniteWebExtension
 {
-  public class MqttSettings : ObservableObject
+  public class PluginSettings : ObservableObject
   {
-    public MqttSettings()
+    public PluginSettings()
     {
-      ServerAddress = Environment.GetEnvironmentVariable("PLAYNITE_WEB_MQTT_HOST", EnvironmentVariableTarget.Process) ?? "localhost";
-      if (int.TryParse(Environment.GetEnvironmentVariable("PLAYNITE_WEB_MQTT_PORT", EnvironmentVariableTarget.Process), out var _port))
-      {
-        Port = _port;
-      }
-      else
-      {
-        Port = 1883;
-      }
-      Username = Environment.GetEnvironmentVariable("PLAYNITE_WEB_MQTT_USERNAME", EnvironmentVariableTarget.Process);
-
-      var _password = Environment.GetEnvironmentVariable("PLAYNITE_WEB_MQTT_PASSWORD", EnvironmentVariableTarget.Process);
-      Password = Encoding.UTF8.GetBytes(_password);
-
-      DeviceId = Environment.GetEnvironmentVariable("PLAYNITE_WEB_MQTT_DEVICE_ID", EnvironmentVariableTarget.Process) ?? "playnite";
-      DeviceName = Environment.GetEnvironmentVariable("PLAYNITE_WEB_MQTT_DEVICE_NAME", EnvironmentVariableTarget.Process) ?? "Desktop Playnite";
-      if (bool.TryParse(Environment.GetEnvironmentVariable("PLAYNITE_WEB_PUBLISH_COVER_COLORS", EnvironmentVariableTarget.Process), out var _publishCoverColors))
-      {
-        PublishCoverColors = _publishCoverColors;
-      }
-      if (bool.TryParse(Environment.GetEnvironmentVariable("PLAYNITE_WEB_PUBLISH_COVER", EnvironmentVariableTarget.Process), out var _publishCover))
-      {
-        PublishCover = _publishCover;
-      }
-      if (bool.TryParse(Environment.GetEnvironmentVariable("PLAYNITE_WEB_PUBLISH_BACKGROUND", EnvironmentVariableTarget.Process), out var _publishBackground))
-      {
-        PublishBackground = _publishBackground;
-      }
-      if (bool.TryParse(Environment.GetEnvironmentVariable("PLAYNITE_WEB_USE_SECURE_CONNECTION", EnvironmentVariableTarget.Process), out var _userSecureConnection))
-      {
-        UseSecureConnection = _userSecureConnection;
-      }
     }
 
     private string clientId = "Playnite";

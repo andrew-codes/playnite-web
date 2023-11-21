@@ -1,4 +1,4 @@
-namespace PlayniteWebPlugin.Services.Mqtt
+namespace PlayniteWebExtension.Services.Mqtt
 {
   public interface IManageTopics
   {
