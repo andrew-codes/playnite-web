@@ -34,14 +34,6 @@
         "cwd": "{projectRoot}/.dist/bin/Release"
       }
     },
-    "test/unit": {
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.test-runs/unit"],
-      "options": {
-        "command": "dotnet test --results-directory ../../../.test-runs/unit --configuration Release",
-        "cwd": "{projectRoot}/tests/unit/src"
-      }
-    },
     "test/unit/restore": {
       "executor": "nx:run-commands",
       "options": {
