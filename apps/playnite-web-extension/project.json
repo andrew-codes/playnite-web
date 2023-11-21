@@ -29,9 +29,9 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn nx run playnite-toolbox:run pack . ../../../.packaged"
+          "Toolbox.exe pack ../../../../apps/playnite-web-extension/.packaged"
         ],
-        "cwd": "{projectRoot}/.dist/bin/Release"
+        "cwd": "libs/build-utils/playnite-toolbox/src/Toolbox"
       }
     },
     "test/unit/restore": {
