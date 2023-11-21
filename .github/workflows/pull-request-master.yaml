@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  unit_tests:
-    name: Verify PR - Tests
+  unit_tests_linux:
+    name: Verify PR - Tests (Linxu)
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
@@ -32,10 +32,40 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --all --parallel --verbose --exclude=playnite-web-extension
+        run: yarn nx run-many --target=test/unit --parallel --verbose --tags=linux
 
-  package:
-    name: Package
+  unit_tests_windows:
+    name: Verify PR - Tests (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read .nvmrc
+        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
+        id: nvm
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "8.0.100"
+      - name: Enable yarn
+        run: corepack enable && corepack prepare --activate yarn@^4.0.0
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+      - name: Run all unit tests
+        run: yarn nx run-many --target=test/unit --parallel --verbose --tags=linux
+
+  package_linux:
+    name: Package (Linux)
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +91,48 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Package apps
-        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --exclude=playnite-web-extension,playnite-action-runner
+        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --tags=linux
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+          NODE_ENV: production
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: packaged-apps
+          path: apps/*/.packaged
+
+  package_windows:
+    name: Package (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Read .nvmrc
+        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
+        id: nvm
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "8.0.100"
+      - name: Enable yarn
+        run: corepack enable && corepack prepare --activate yarn@^4.0.0
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+
+      - name: Package apps
+        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --tags=linux
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
