@@ -48,6 +48,6 @@
       }
     }
   },
-  "tags": [],
+  "tags": ["windows"],
   "implicitDependencies": []
 }

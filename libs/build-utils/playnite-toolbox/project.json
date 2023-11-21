@@ -1,0 +1,16 @@
+{
+  "name": "playnite-toolbox",
+  "sourceRoot": "libs/build-utils/playnite-toolbox/src",
+  "projectType": "library",
+  "targets": {
+    "run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./src/Toolbox/Toolbox.exe",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": []
+}
