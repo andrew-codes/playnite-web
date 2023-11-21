@@ -52,7 +52,7 @@ jobs:
         with:
           dotnet-version: "8.0.100"
       - name: Enable yarn
-        run: corepack enable && corepack prepare --activate yarn@^4.0.0
+        run: corepack enable && yarn set version stable
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -121,7 +121,7 @@ jobs:
         with:
           dotnet-version: "8.0.100"
       - name: Enable yarn
-        run: corepack enable && corepack prepare --activate yarn@^4.0.0
+        run: corepack enable && yarn set version stable
       - name: Install deps
         run: yarn
       - name: Prepare
