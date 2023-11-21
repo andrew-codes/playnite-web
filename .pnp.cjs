@@ -14,18 +14,18 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:."\
     },\
     {\
-      "name": "playnite-action-runner",\
-      "reference": "workspace:apps/playnite-action-runner"\
-    },\
-    {\
       "name": "playnite-web-extension",\
       "reference": "workspace:apps/playnite-web-extension"\
+    },\
+    {\
+      "name": "playnite-toolbox",\
+      "reference": "workspace:libs/build-utils/playnite-toolbox"\
     }\
   ],\
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "fallbackExclusionList": [\
-    ["playnite-action-runner", ["workspace:apps/playnite-action-runner"]],\
+    ["playnite-toolbox", ["workspace:libs/build-utils/playnite-toolbox"]],\
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-extension", ["workspace:apps/playnite-web-extension"]]\
   ],\
@@ -1536,11 +1536,11 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["playnite-action-runner", [\
-      ["workspace:apps/playnite-action-runner", {\
-        "packageLocation": "./apps/playnite-action-runner/",\
+    ["playnite-toolbox", [\
+      ["workspace:libs/build-utils/playnite-toolbox", {\
+        "packageLocation": "./libs/build-utils/playnite-toolbox/",\
         "packageDependencies": [\
-          ["playnite-action-runner", "workspace:apps/playnite-action-runner"],\
+          ["playnite-toolbox", "workspace:libs/build-utils/playnite-toolbox"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:17.1.2"]\
         ],\
         "linkType": "SOFT"\
