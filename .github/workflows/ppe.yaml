@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  unit_tests:
-    name: Verify Tests
+  unit_tests_linux:
+    name: Verify Tests (Linux)
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
@@ -32,10 +32,10 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --all --parallel --verbose --exclude=playnite-web-extension
+        run: yarn nx run-many --target=test/unit --parallel --verbose --tags=linux
 
-  package_for_ppe:
-    name: Package for PPE
+  package_for_ppe_linux:
+    name: Package for PPE (Linux)
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Package apps
-        run: yarn nx run-many --target=package --parallel --all --verbose --exclude=playnite-web-extension,playnite-action-runner
+        run: yarn nx run-many --target=package --parallel --verbose --tags=linux
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
@@ -77,7 +77,7 @@ jobs:
     name: Deploy affected to PPE
     runs-on: self-hosted
     needs:
-      - unit_tests
+      - unit_tests_linux
     steps:
       - uses: actions/checkout@v4
         with:
@@ -102,7 +102,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Deploy affected apps
-        run: yarn nx affected --target=deploy --parallel --base=HEAD~ --head=HEAD --verbose --exclude=playnite-action-runner
+        run: yarn nx affected --target=deploy --parallel --base=HEAD~ --head=HEAD --verbose --tags=linux
         env:
           CODECOV_TOKEN: ${{ secrets.CODE_COV_TOKEN }}
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
@@ -113,3 +113,73 @@ jobs:
           MQTT_USERNAME: ${{ secrets.MQTT_USERNAME }}
           MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
           NODE_ENV: production
+
+  unit_tests_windows:
+    name: Verify PR - Tests (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Read .nvmrc
+        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
+        id: nvm
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "8.0.100"
+      - name: Enable yarn
+        run: corepack enable && corepack prepare --activate yarn@^4.0.0
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+      - name: Run all unit tests
+        run: yarn nx run-many --target=test/unit --parallel --verbose --tags=windows
+
+  package_windows:
+    name: Package (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Read .nvmrc
+        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
+        id: nvm
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: "8.0.100"
+      - name: Enable yarn
+        run: corepack enable && corepack prepare --activate yarn@^4.0.0
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+      - name: Package apps
+        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --tags=windows
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+          NODE_ENV: production
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: packaged-apps
+          path: apps/*/.packaged
