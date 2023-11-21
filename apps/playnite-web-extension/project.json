@@ -29,7 +29,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "Toolbox.exe pack ../../../../apps/playnite-web-extension/.dist/bin/Release ../../../../apps/playnite-web-extension/.packaged"
+          "Toolbox.exe pack ../../../../../apps/playnite-web-extension/.dist/bin/Release/ ../../../../../apps/playnite-web-extension/.packaged"
         ],
         "cwd": "libs/build-utils/playnite-toolbox/src/Toolbox"
       }

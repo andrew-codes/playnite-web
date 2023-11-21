@@ -7,3 +7,4 @@
 .test-runs
 .packaged
 .nuget
+*.log
