@@ -102,7 +102,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
       - name: Deploy affected apps
-        run: yarn nx affected --target=deploy --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:linux
+        run: yarn nx affected --target=deploy --parallel --verbose --projects=tag:linux
         env:
           CODECOV_TOKEN: ${{ secrets.CODE_COV_TOKEN }}
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
@@ -178,7 +178,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Package apps
-        run: yarn nx run-many --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:windows
+        run: yarn nx run-many --target=package --parallel --verbose --projects=tag:windows
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
