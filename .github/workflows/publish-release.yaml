@@ -30,7 +30,7 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
       - uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: "8.0.100"
+          dotnet-version: "4.6.2"
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -77,7 +77,7 @@ jobs:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
       - uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: "8.0.100"
+          dotnet-version: "4.6.2"
       - name: Enable yarn
         run: corepack enable
       - run: corepack prepare --activate yarn@^4.0.0
