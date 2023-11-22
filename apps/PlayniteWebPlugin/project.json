@@ -1,0 +1,47 @@
+{
+  "name": "playnite-web-plugin",
+  "sourceRoot": "apps/playnite-web-extension/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .dist .packaged .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.dist"],
+      "options": {
+        "command": "dotnet build --configuration Release --no-dependencies --no-restore --framework net4.6.2",
+        "cwd": "{projectRoot}/src"
+      }
+    },
+    "build/restore": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuget restore",
+        "cwd": "{projectRoot}/src"
+      }
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "Toolbox.exe pack ../../../../../apps/playnite-web-extension/.dist/bin/Release/ ../../../../../apps/playnite-web-extension/.packaged"
+        ],
+        "cwd": "libs/build-utils/playnite-toolbox/src/Toolbox"
+      }
+    },
+    "test/unit/restore": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuget restore",
+        "cwd": "{projectRoot}/tests/unit/src"
+      }
+    }
+  },
+  "tags": ["windows"],
+  "implicitDependencies": []
+}
