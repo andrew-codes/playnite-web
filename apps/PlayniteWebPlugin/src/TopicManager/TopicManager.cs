@@ -1,0 +1,29 @@
+using System;
+
+namespace PlayniteWeb.Services.Mqtt
+{
+  public class TopicManager : IManageTopics
+  {
+    private readonly PlayniteWebSettings settings;
+
+    public TopicManager(PlayniteWebSettings settings)
+    {
+      this.settings = settings;
+    }
+
+    public string GetPublishTopic(string subTopic)
+    {
+      if (string.IsNullOrEmpty(settings.DeviceId))
+      {
+        throw new NotSupportedException("Device ID is required to be set in the Plugin Settings pane.");
+
+      }
+      return $"playnite/{settings.DeviceId}/{subTopic}";
+    }
+
+    public string GetSubscribeTopic(string subTopic)
+    {
+      return $"playnite/{subTopic}";
+    }
+  }
+}

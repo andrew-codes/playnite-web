@@ -1,0 +1,7 @@
+Id: PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac
+Name: Generic Plugin
+Author: Andrew Smith
+Version: 0.1
+Module: PlayniteWeb.dll
+Type: GenericPlugin
+Icon: Resources\icon.png

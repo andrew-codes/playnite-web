@@ -28,9 +28,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: "5.0.x"
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -75,9 +72,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: "5.0.x"
       - name: Enable yarn
         run: corepack enable
       - run: corepack prepare --activate yarn@^4.0.0
