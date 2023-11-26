@@ -1345,9 +1345,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"playnite-web-extension@workspace:apps/playnite-web-extension":
+"playnite-web-plugin@workspace:apps/PlayniteWebPlugin":
   version: 0.0.0-use.local
-  resolution: "playnite-web-extension@workspace:apps/playnite-web-extension"
+  resolution: "playnite-web-plugin@workspace:apps/PlayniteWebPlugin"
   dependencies:
     cpy: "npm:^11.0.0"
     cpy-cli: "npm:^5.0.0"
