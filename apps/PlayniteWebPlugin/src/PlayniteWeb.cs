@@ -2,11 +2,16 @@ using MQTTnet;
 using MQTTnet.Client;
 using Playnite.SDK;
 using Playnite.SDK.Events;
+using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
 using PlayniteWeb.Services.Mqtt;
 using PlayniteWeb.UI;
 using System;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -14,7 +19,11 @@ namespace PlayniteWeb
 {
   public class PlayniteWeb : GenericPlugin
   {
-    private IPublishGamesToPlayniteWeb<IMqttClient> gamePublisher;
+    private readonly IPublishGamesToPlayniteWeb<IMqttClient> gamePublisher;
+    private readonly Subject<Task> libraryRefreshRequests;
+    private readonly Subject<ItemUpdatedEventArgs<Game>> gameUpdates;
+    private IObservable<EventPattern<Task>> libraryRefreshRequestReceived;
+    private IObservable<EventPattern<ItemUpdatedEventArgs<Game>>> gameUpdated;
 
     private PlayniteWebSettingsViewModel settings { get; set; }
 
@@ -30,6 +39,32 @@ namespace PlayniteWeb
       {
         HasSettings = true
       };
+
+      libraryRefreshRequestReceived = Observable.FromEventPattern<Task>(h => gamePublisher.LibraryRefreshRequest += h, h => gamePublisher.LibraryRefreshRequest -= h);
+      libraryRefreshRequests = new Subject<Task>();
+      libraryRefreshRequests.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
+
+      gameUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<Game>>(h => PlayniteApi.Database.Games.ItemUpdated += h, h => PlayniteApi.Database.Games.ItemUpdated -= h);
+      gameUpdates = new Subject<ItemUpdatedEventArgs<Game>>();
+      gameUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
+    }
+
+
+    private Task LibraryRefreshed(Task incoming)
+    {
+      var games = PlayniteApi.Database.Games;
+      return incoming.ContinueWith(t => gamePublisher.PublishLibrary(games));
+    }
+
+    private void Games_ItemUpdated(object sender, ItemUpdatedEventArgs<Game> e)
+    {
+      var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
+      gamePublisher.PublishLibrary(updatedGamesData).Wait();
+    }
+
+    public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
+    {
+      libraryRefreshRequests.OnNext(Task.CompletedTask);
     }
 
     public override void OnGameInstalled(OnGameInstalledEventArgs args)
@@ -59,38 +94,21 @@ namespace PlayniteWeb
 
     public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
     {
-      // Add code to be executed when Playnite is initialized.
-      gamePublisher.LibraryRefreshRequest += RefreshLibrary;
-
       var options = new MqttPublisherOptions(settings.Settings.ClientId, settings.Settings.ServerAddress, settings.Settings.Port, settings.Settings.Username, settings.Settings.Password, Id.ToByteArray());
       gamePublisher.StartConnection(options);
 
-      PlayniteApi.Database.Games.ItemUpdated += Games_ItemUpdated;
-    }
+      libraryRefreshRequestReceived.Subscribe(e => libraryRefreshRequests.OnNext(Task.CompletedTask));
+      libraryRefreshRequests.Subscribe(e => LibraryRefreshed(e));
 
-    private void Games_ItemUpdated(object sender, ItemUpdatedEventArgs<Playnite.SDK.Models.Game> e)
-    {
-      var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
-      gamePublisher.PublishLibrary(updatedGamesData).Wait();
+      gameUpdated.Subscribe(e => gameUpdates.OnNext(e.EventArgs));
+      gameUpdates.Subscribe(e => Games_ItemUpdated(this, e));
     }
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
-      gamePublisher.LibraryRefreshRequest -= RefreshLibrary;
-      PlayniteApi.Database.Games.ItemUpdated -= Games_ItemUpdated;
+      libraryRefreshRequests.Dispose();
+      gameUpdates.Dispose();
       gamePublisher.StartDisconnect().Wait();
-    }
-
-    private Task RefreshLibrary()
-    {
-       var games = PlayniteApi.Database.Games;
-      return gamePublisher.PublishLibrary(games);
-    }
-
-    public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
-    {
-      var games = PlayniteApi.Database.Games;
-      gamePublisher.PublishLibrary(games).Wait();
     }
 
     public override ISettings GetSettings(bool firstRunSettings)
