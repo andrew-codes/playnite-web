@@ -9,6 +9,14 @@
         "command": "yarn rimraf .dist .packaged .test-runs",
         "cwd": "{projectRoot}"
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "options": {
+        "command": "yarn jest --config jest.config.js",
+        "cwd": "{projectRoot}"
+      }
     }
   },
   "tags": ["windows"],
