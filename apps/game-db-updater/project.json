@@ -1,0 +1,16 @@
+{
+  "name": "game-db-updater",
+  "sourceRoot": "apps/game-db-updater/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .dist .packaged .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["windows"],
+  "implicitDependencies": []
+}

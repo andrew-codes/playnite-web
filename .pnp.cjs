@@ -18,6 +18,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/PlayniteWebPlugin"\
     },\
     {\
+      "name": "game-db-updater",\
+      "reference": "workspace:apps/game-db-updater"\
+    },\
+    {\
       "name": "playnite-toolbox",\
       "reference": "workspace:libs/build-utils/playnite-toolbox"\
     }\
@@ -25,6 +29,7 @@ const RAW_RUNTIME_STATE =
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "fallbackExclusionList": [\
+    ["game-db-updater", ["workspace:apps/game-db-updater"]],\
     ["playnite-toolbox", ["workspace:libs/build-utils/playnite-toolbox"]],\
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]]\
@@ -867,6 +872,19 @@ const RAW_RUNTIME_STATE =
           ["fs.realpath", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["game-db-updater", [\
+      ["workspace:apps/game-db-updater", {\
+        "packageLocation": "./apps/game-db-updater/",\
+        "packageDependencies": [\
+          ["game-db-updater", "workspace:apps/game-db-updater"],\
+          ["cpy", "npm:11.0.0"],\
+          ["cpy-cli", "npm:5.0.0"],\
+          ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:17.1.2"],\
+          ["rimraf", "npm:5.0.5"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["get-caller-file", [\
