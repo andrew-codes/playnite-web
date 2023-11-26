@@ -32,9 +32,9 @@ namespace PlayniteWeb
     public PlayniteWeb(IPlayniteAPI api) : base(api)
     {
       IMqttClient client = new MqttFactory().CreateMqttClient();
+      settings = new PlayniteWebSettingsViewModel(this);
       IManageTopics topicManager = new TopicManager(settings.Settings);
       gamePublisher = new MqttGamePublisher(client, topicManager, api.Database);
-      settings = new PlayniteWebSettingsViewModel(this, gamePublisher);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
@@ -49,17 +49,27 @@ namespace PlayniteWeb
       gameUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
     }
 
+    private void StartConnection(PlayniteWebSettings settings)
+    {
+      var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, Id.ToByteArray());
+      gamePublisher.StartConnection(options);
+    }
 
-    private Task LibraryRefreshed(Task incoming)
+    private Task HandleLibraryRefreshed(Task incoming)
     {
       var games = PlayniteApi.Database.Games;
       return incoming.ContinueWith(t => gamePublisher.PublishLibrary(games));
     }
 
-    private void Games_ItemUpdated(object sender, ItemUpdatedEventArgs<Game> e)
+    private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Game> e)
     {
       var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
       gamePublisher.PublishLibrary(updatedGamesData).Wait();
+    }
+
+    private void HandleVerifySettings(object sender, PlayniteWebSettings e)
+    {
+      StartConnection(e);
     }
 
     public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
@@ -94,20 +104,24 @@ namespace PlayniteWeb
 
     public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
     {
-      var options = new MqttPublisherOptions(settings.Settings.ClientId, settings.Settings.ServerAddress, settings.Settings.Port, settings.Settings.Username, settings.Settings.Password, Id.ToByteArray());
-      gamePublisher.StartConnection(options);
+      settings.OnVerifySettings += HandleVerifySettings;
+
+      StartConnection(settings.Settings);
 
       libraryRefreshRequestReceived.Subscribe(e => libraryRefreshRequests.OnNext(Task.CompletedTask));
-      libraryRefreshRequests.Subscribe(e => LibraryRefreshed(e));
+      libraryRefreshRequests.Subscribe(e => HandleLibraryRefreshed(e));
 
       gameUpdated.Subscribe(e => gameUpdates.OnNext(e.EventArgs));
-      gameUpdates.Subscribe(e => Games_ItemUpdated(this, e));
+      gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
     }
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
+      settings.OnVerifySettings -= HandleVerifySettings;
+
       libraryRefreshRequests.Dispose();
       gameUpdates.Dispose();
+
       gamePublisher.StartDisconnect().Wait();
     }
 
