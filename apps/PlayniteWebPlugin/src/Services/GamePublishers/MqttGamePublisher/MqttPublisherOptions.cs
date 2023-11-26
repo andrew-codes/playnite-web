@@ -22,7 +22,7 @@ namespace PlayniteWeb.UI
       this.host = host;
       this.port = port;
       this.username = username;
-      this.password = password;
+      this.password = password ?? new byte[] { };
       this.entropy = entropy;
     }
 
@@ -40,7 +40,11 @@ namespace PlayniteWeb.UI
       }
       mqttOptionsBuilder = creds.ApplyCredentials(mqttOptionsBuilder);
 
-      client.ConnectAsync(mqttOptionsBuilder.Build(), cancelToken).Wait(cancelToken);
+      try
+      {
+        client.ConnectAsync(mqttOptionsBuilder.Build(), cancelToken).Wait(cancelToken);
+      }
+      catch { }
 
       return client;
     }

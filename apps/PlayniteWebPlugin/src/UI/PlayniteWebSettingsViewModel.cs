@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using MQTTnet.Client;
 using Playnite.SDK;
 using Playnite.SDK.Data;
 using Playnite.SDK.Plugins;
@@ -12,8 +13,9 @@ namespace PlayniteWeb.UI
   public class PlayniteWebSettingsViewModel : ObservableObject, ISettings
   {
     private readonly Plugin plugin;
-    private readonly IPublishGamesToPlayniteWeb<IMqttClient> gamePublisher;
     private PlayniteWebSettings settings;
+    public event EventHandler<PlayniteWebSettings> OnVerifySettings;
+
     public PlayniteWebSettings Settings
     {
       get => settings;
@@ -25,7 +27,7 @@ namespace PlayniteWeb.UI
     }
     private PlayniteWebSettings editingClone { get; set; }
 
-    public PlayniteWebSettingsViewModel(Plugin plugin, IPublishGamesToPlayniteWeb<IMqttClient> gamePublisher)
+    public PlayniteWebSettingsViewModel(Plugin plugin)
     {
       // Injecting your plugin instance is required for Save/Load method because Playnite saves data to a location based on what plugin requested the operation.
       this.plugin = plugin;
@@ -42,8 +44,6 @@ namespace PlayniteWeb.UI
       {
         Settings = new PlayniteWebSettings();
       }
-
-      this.gamePublisher = gamePublisher;
     }
 
     public void SavePassword(string password)
@@ -83,13 +83,16 @@ namespace PlayniteWeb.UI
       // Executed before EndEdit is called and EndEdit is not called if false is returned.
       // List of errors is presented to user if verification fails.
       errors = new List<string>();
+      try
+      {
+        OnVerifySettings.Invoke(this, settings);
+      }
+      catch (Exception e)
+      {
+        errors.Add(e.Message);
+      }
 
-      gamePublisher.StartDisconnect().Wait();
-
-      var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, plugin.Id.ToByteArray());
-      gamePublisher.StartConnection(options);
-
-      return true;
+      return !errors.Any();
     }
 
     #endregion
