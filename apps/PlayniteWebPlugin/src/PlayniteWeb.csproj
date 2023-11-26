@@ -115,7 +115,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\icon.png" />
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
