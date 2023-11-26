@@ -14,8 +14,8 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:."\
     },\
     {\
-      "name": "playnite-web-extension",\
-      "reference": "workspace:apps/playnite-web-extension"\
+      "name": "playnite-web-plugin",\
+      "reference": "workspace:apps/PlayniteWebPlugin"\
     },\
     {\
       "name": "playnite-toolbox",\
@@ -27,7 +27,7 @@ const RAW_RUNTIME_STATE =
   "fallbackExclusionList": [\
     ["playnite-toolbox", ["workspace:libs/build-utils/playnite-toolbox"]],\
     ["playnite-web", ["workspace:."]],\
-    ["playnite-web-extension", ["workspace:apps/playnite-web-extension"]]\
+    ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]]\
   ],\
   "fallbackPool": [\
   ],\
@@ -1556,11 +1556,11 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["playnite-web-extension", [\
-      ["workspace:apps/playnite-web-extension", {\
-        "packageLocation": "./apps/playnite-web-extension/",\
+    ["playnite-web-plugin", [\
+      ["workspace:apps/PlayniteWebPlugin", {\
+        "packageLocation": "./apps/PlayniteWebPlugin/",\
         "packageDependencies": [\
-          ["playnite-web-extension", "workspace:apps/playnite-web-extension"],\
+          ["playnite-web-plugin", "workspace:apps/PlayniteWebPlugin"],\
           ["cpy", "npm:11.0.0"],\
           ["cpy-cli", "npm:5.0.0"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:17.1.2"],\
