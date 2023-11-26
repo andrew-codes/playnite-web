@@ -26,7 +26,7 @@ namespace PlayniteWeb
       this.gameDatabase = gameDatabase;
     }
 
-    public event Func<Task> LibraryRefreshRequest;
+    public event EventHandler<Task> LibraryRefreshRequest;
 
     public Task PublishGame(Game game)
     {
@@ -89,12 +89,15 @@ namespace PlayniteWeb
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
+      var task = Task.CompletedTask;
       if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish))
       {
-        return LibraryRefreshRequest.Invoke();
+        LibraryRefreshRequest.Invoke(this, task);
       }
 
-      return Task.CompletedTask;
+      task.Wait(cancellationToken: default);
+
+      return task;
     }
 
     public Task StartDisconnect()
