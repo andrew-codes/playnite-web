@@ -13,7 +13,7 @@
     <TabControl ClipToBounds="True"
     MaxHeight="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Panel}},
 Path=ActualHeight, Mode=OneWay}">
-      <TabItem Header="General">
+      <TabItem Header="MQTT Connection">
         <ScrollViewer HorizontalScrollBarVisibility="Disabled">
           <StackPanel Margin="10">
             <TextBlock Text="Client Name" />
@@ -52,6 +52,24 @@ disabled." />
             <TextBlock Text="Device Name"
             ToolTip="This is the name that will be given in home assistant as display name." />
             <TextBox Text="{Binding Settings.DeviceName}" />
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Other">
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Margin="10">
+            <TextBlock Text="Publishing Throttle (seconds)"
+            ToolTip="The number of seconds with no new publish updates that must pass until publishing topics." />
+            <TextBox PreviewTextInput="NumberValidationTextBox">
+              <TextBox.Text>
+                <Binding Path="Settings.PublishingThrottle"
+                  UpdateSourceTrigger="PropertyChanged"
+                  ValidatesOnDataErrors="True"
+                  NotifyOnValidationError="True"
+                  Converter="{StaticResource IntToString}"
+                  />
+              </TextBox.Text>
+            </TextBox>
           </StackPanel>
         </ScrollViewer>
       </TabItem>

@@ -10,7 +10,7 @@ namespace PlayniteWeb
     void StartConnection(IApplyPublisherOptions<TPublishClient> options);
     Task StartDisconnect();
 
-    event Func<Task> LibraryRefreshRequest;
+    event EventHandler<Task> LibraryRefreshRequest;
 
     Task PublishGame(Game game);
     Task PublishLibrary(IEnumerable<Game> games);

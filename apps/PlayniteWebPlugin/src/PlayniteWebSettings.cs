@@ -23,6 +23,8 @@ namespace PlayniteWeb
 
     private DateTime lastPublish = DateTime.Now;
 
+    private int publishingThrottle = 30;
+
     public string ClientId
     {
       get => clientId;
@@ -75,5 +77,7 @@ namespace PlayniteWeb
       get => lastPublish;
       set => SetValue(ref lastPublish, value);
     }
+
+    public int PublishingThrottle { get => publishingThrottle; set => SetValue(ref publishingThrottle, value); }
   }
 }
