@@ -3,6 +3,10 @@
   "description": "Service to listen to MQTT messages and update game database.",
   "version": "0.0.1",
   "private": true,
+  "dependencies": {
+    "async-mqtt": "^2.6.3",
+    "debug": "4.3.4"
+  },
   "devDependencies": {
     "@types/jest": "^29.2.5",
     "@types/node": "^18.11.18",
