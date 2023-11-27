@@ -2,16 +2,11 @@ const { defaults } = require("jest-config");
 
 const defaultConfig = {
   transform: {
-    "^.+\\.(j|t)sx?$": [
-      "ts-jest",
-      {
-        useESM: true,
-      },
-    ],
+    "^.+\\.(j|t)sx?$": ["ts-jest", {}],
   },
   resetMocks: true,
   modulePathIgnorePatterns: ["<rootDir>/\\.dist/"],
-  passWithNoTests: true,
+  passWithNoTests: false,
   coverageDirectory: "<rootDir>/.test-runs/unit",
   collectCoverage: true,
   moduleFileExtensions: [...defaults.moduleFileExtensions, "ts", "tsx"],
