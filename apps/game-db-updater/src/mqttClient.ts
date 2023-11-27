@@ -1,4 +1,4 @@
-import { AsyncMqttClient, connectAsync } from "async-mqtt";
+import { type AsyncMqttClient, connectAsync } from "async-mqtt";
 import createDebugger from "debug";
 
 let mqttClient: AsyncMqttClient;

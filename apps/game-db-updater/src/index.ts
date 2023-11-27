@@ -1,10 +1,11 @@
 import createDebugger from "debug";
+import { type AsyncMqttClient } from "async-mqtt";
 import dotenv from "dotenv";
 import path from "path";
 import handlers from "./handlers";
 import { createMqtt } from "./mqttClient";
 
-async function run() {
+const run: () => Promise<AsyncMqttClient> = async () => {
   const debug = createDebugger("game-db-updater/index");
   debug("Starting game-db-updater");
 
@@ -30,8 +31,12 @@ async function run() {
       console.error(error);
     }
   });
-}
+
+  return mqttClient;
+};
 
 if (require.main === module) {
   run();
 }
+
+export default run;
