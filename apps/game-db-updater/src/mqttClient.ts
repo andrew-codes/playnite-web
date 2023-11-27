@@ -1,16 +1,13 @@
 import { AsyncMqttClient, connectAsync } from "async-mqtt";
 import createDebugger from "debug";
 
-const { MQTT_HOST, MQTT_PASSWORD, MQTT_PORT, MQTT_USERNAME } = process.env;
-const mqttPort = parseInt(MQTT_PORT || "1883", 10);
-
 let mqttClient: AsyncMqttClient;
 
 const createMqtt = async (
-  host: string | undefined = MQTT_HOST,
-  port: number | undefined = mqttPort,
-  username: string | undefined = MQTT_USERNAME,
-  password: string | undefined = MQTT_PASSWORD
+  host: string = "localhost",
+  port: number = 1883,
+  username: string = "",
+  password: string = ""
 ): Promise<AsyncMqttClient> => {
   const debug = createDebugger("game-db-updater/mqttClient");
 
