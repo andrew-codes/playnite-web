@@ -9,3 +9,5 @@
 *.log
 .vs
 *.user
+*.env
+!local.env
