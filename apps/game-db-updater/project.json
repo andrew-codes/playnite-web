@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "command": "DEBUG=game-db-updater/* yarn nodemon --inspect src/index.ts"
+        "command": "yarn nodemon --inspect src/index.ts"
       }
     },
     "test": {
