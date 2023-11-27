@@ -3174,6 +3174,7 @@ const RAW_RUNTIME_STATE =
           ["cpy", "npm:11.0.0"],\
           ["cpy-cli", "npm:5.0.0"],\
           ["debug", "virtual:afa9bb9438b9a67b27f31f18db5f637ff150aa286922551b1763d52aa97c3685da04db28dadcec2a414af6254ce40307ab6e8c88b433b63e4224515fdb8570d3#npm:4.3.4"],\
+          ["dotenv", "npm:16.3.1"],\
           ["esbuild", "npm:0.17.19"],\
           ["esbuild-register", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:3.5.0"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
