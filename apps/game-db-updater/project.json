@@ -10,6 +10,13 @@
         "cwd": "{projectRoot}"
       }
     },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "DEBUG=game-db-updater/* yarn nodemon --inspect src/index.ts"
+      }
+    },
     "test": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.test-runs/unit"],
