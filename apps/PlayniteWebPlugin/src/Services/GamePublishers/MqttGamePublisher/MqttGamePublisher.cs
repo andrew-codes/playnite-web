@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace PlayniteWeb
@@ -30,28 +31,6 @@ namespace PlayniteWeb
     }
 
     public event EventHandler<Task> LibraryRefreshRequest;
-
-    public Task PublishGame(Game game)
-    {
-      if (!client.IsConnected)
-      {
-        return Task.CompletedTask;
-      }
-
-      var publishGameTasks = new List<Task>{
-        client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.Game(game.Id)), serializer.Serialize(game), MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default),
-      };
-      if (!string.IsNullOrEmpty(game.CoverImage))
-      {
-        publishGameTasks.Add(publishFile(PublishTopics.GameFile(game.Id, toAssetId(game.CoverImage)), game.CoverImage));
-      }
-      if (!string.IsNullOrEmpty(game.BackgroundImage))
-      {
-        publishGameTasks.Add(publishFile(PublishTopics.GameFile(game.Id, toAssetId(game.BackgroundImage)), game.CoverImage));
-      }
-
-      return Task.WhenAll(publishGameTasks);
-    }
 
     private string toAssetId(string assetFilePath)
     {
@@ -125,44 +104,87 @@ namespace PlayniteWeb
         .ContinueWith(async r => await client.DisconnectAsync());
     }
 
-    public Task PublishLibrary(IEnumerable<Game> games)
+    public IEnumerable<Task> PublishLibrary()
     {
       if (!client.IsConnected)
       {
-        return Task.CompletedTask;
+        yield return Task.CompletedTask;
+        yield break;
       }
 
-      var allTasks = new List<Task>
-      {
-        client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.LibraryRequesteCompleted()), "start")
+      yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.LibraryRequesteCompleted()), "start");
+
+      IEnumerable<string> ignored = new List<string> {
+        "Games", "Platforms", "ImportExclusions", "FilterPresets", "IsOpen"
       };
+      var gameEntityProperties = typeof(IGameDatabase)
+        .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
+        .Where(propertyInfo => !ignored.Any(ignore => ignore == propertyInfo.Name));
+      var gameEntities = gameEntityProperties
+        .SelectMany(propertyInfo => (IEnumerable<DatabaseObject>)propertyInfo.GetValue(gameDatabase));
 
-      foreach (var platform in games.Where(game => game.Platforms != null).SelectMany(game => game.Platforms).Distinct())
+      var gamePublications = PublishGames(gameDatabase.Games);
+      var platformPublications = gameDatabase.Platforms.SelectMany(PublishPlatform);
+      var otherGameEntityPublications = gameEntities.Select(PublishGameEntity);
+
+
+      var tasksToYield = gamePublications.Concat(platformPublications.Concat(otherGameEntityPublications));
+
+      foreach (var task in tasksToYield)
       {
-        allTasks.Add(client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.Platform(platform.Id)), serializer.Serialize(platform), retain: false, qualityOfServiceLevel: MqttQualityOfServiceLevel.AtLeastOnce));
-
-        if (!string.IsNullOrEmpty(platform.Cover))
-        {
-          allTasks.Add(publishFile(topicBuilder.GetPublishTopic(PublishTopics.PlatformFile(platform.Id, toAssetId(platform.Cover))), platform.Cover));
-        }
-        if (!string.IsNullOrEmpty(platform.Background))
-        {
-          allTasks.Add(publishFile(topicBuilder.GetPublishTopic(PublishTopics.PlatformFile(platform.Id, toAssetId(platform.Background))), platform.Background));
-        }
-        if (!string.IsNullOrEmpty(platform.Icon))
-        {
-          allTasks.Add(publishFile(topicBuilder.GetPublishTopic(PublishTopics.PlatformFile(platform.Id, toAssetId(platform.Icon))), platform.Icon));
-        }
+        yield return task;
       }
 
-      foreach (var game in games)
+      yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.LibraryRequesteCompleted()), "end");
+    }
+
+    private Task PublishGameEntity(IIdentifiable gameEntity)
+    {
+      return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameEntity(gameEntity.GetType().Name, gameEntity.Id)), serializer.Serialize(gameEntity), retain: false, qualityOfServiceLevel: MqttQualityOfServiceLevel.AtLeastOnce);
+    }
+
+    public IEnumerable<Task> PublishGames(IEnumerable<Game> games)
+    {
+      if (!client.IsConnected)
       {
-        allTasks.Add(PublishGame(game));
+        return Enumerable.Empty<Task>();
       }
 
-      allTasks.Add(client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.LibraryRequesteCompleted()), "end"));
+      return games.SelectMany(PublishGame);
+    }
 
-      return Task.WhenAll(allTasks);
+    private IEnumerable<Task> PublishGame(Game game)
+    {
+      yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.Game(game.Id)), serializer.Serialize(game), MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default);
+
+      if (!string.IsNullOrEmpty(game.CoverImage))
+      {
+        yield return publishFile(PublishTopics.GameFile(game.Id, toAssetId(game.CoverImage)), game.CoverImage);
+      }
+
+      if (!string.IsNullOrEmpty(game.BackgroundImage))
+      {
+        yield return publishFile(PublishTopics.GameFile(game.Id, toAssetId(game.BackgroundImage)), game.CoverImage);
+      }
+    }
+
+
+    private IEnumerable<Task> PublishPlatform(Platform platform)
+    {
+      yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.Platform(platform.Id)), serializer.Serialize(platform), retain: false, qualityOfServiceLevel: MqttQualityOfServiceLevel.AtLeastOnce);
+
+      if (!string.IsNullOrEmpty(platform.Cover))
+      {
+        yield return publishFile(topicBuilder.GetPublishTopic(PublishTopics.PlatformFile(platform.Id, toAssetId(platform.Cover))), platform.Cover);
+      }
+      if (!string.IsNullOrEmpty(platform.Background))
+      {
+        yield return publishFile(topicBuilder.GetPublishTopic(PublishTopics.PlatformFile(platform.Id, toAssetId(platform.Background))), platform.Background);
+      }
+      if (!string.IsNullOrEmpty(platform.Icon))
+      {
+        yield return publishFile(topicBuilder.GetPublishTopic(PublishTopics.PlatformFile(platform.Id, toAssetId(platform.Icon))), platform.Icon);
+      }
     }
   }
 }

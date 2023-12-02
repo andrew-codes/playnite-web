@@ -11,7 +11,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -57,14 +56,13 @@ namespace PlayniteWeb
 
     private Task HandleLibraryRefreshed(Task incoming)
     {
-      var games = PlayniteApi.Database.Games;
-      return incoming.ContinueWith(t => gamePublisher.PublishLibrary(games));
+      return incoming.ContinueWith(t => Task.WhenAll(gamePublisher.PublishLibrary())); ;
     }
 
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Game> e)
     {
       var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
-      gamePublisher.PublishLibrary(updatedGamesData).Wait();
+      Task.WhenAll(gamePublisher.PublishGames(updatedGamesData));
     }
 
     private void HandleVerifySettings(object sender, PlayniteWebSettings e)
