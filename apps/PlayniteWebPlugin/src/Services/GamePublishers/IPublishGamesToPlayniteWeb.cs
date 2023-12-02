@@ -12,7 +12,7 @@ namespace PlayniteWeb
 
     event EventHandler<Task> LibraryRefreshRequest;
 
-    Task PublishGame(Game game);
-    Task PublishLibrary(IEnumerable<Game> games);
+    IEnumerable<Task> PublishGames(IEnumerable<Game> game);
+    IEnumerable<Task> PublishLibrary();
   }
 }

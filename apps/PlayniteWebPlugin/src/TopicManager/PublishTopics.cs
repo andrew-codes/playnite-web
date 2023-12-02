@@ -10,5 +10,7 @@ namespace PlayniteWeb.Services.Mqtt
     public static string GameFile (Guid id, string assetId) => $"game/{id}/asset/{assetId}";
     public static string Platform(Guid id) => $"platform/{id}";
     public static string PlatformFile(Guid id, string assetId) => $"platform/{id}/asset/{assetId}";
+
+    public static string GameEntity(string name, Guid id) => $"{name}/{id}";
   }
 }

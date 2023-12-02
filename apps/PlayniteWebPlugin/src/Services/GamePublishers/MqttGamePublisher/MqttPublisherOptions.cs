@@ -1,4 +1,6 @@
 using MQTTnet.Client;
+using Playnite.SDK;
+using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,6 +17,7 @@ namespace PlayniteWeb.UI
     private readonly string username;
     private readonly byte[] password;
     private readonly byte[] entropy;
+    private readonly ILogger logger = LogManager.GetLogger();
 
     public MqttPublisherOptions(string clientId, string host, int? port, string username, byte[] password, byte[] entropy)
     {
@@ -33,7 +36,7 @@ namespace PlayniteWeb.UI
         .WithTcpServer(host, port);
 
       IApplyMqttCredentials creds = new NoCredentials();
-      if (string.IsNullOrEmpty(username) && password.Any())
+      if (!string.IsNullOrEmpty(username) && password.Any())
       {
         var plainTextPassword = Encoding.UTF8.GetString(ProtectedData.Unprotect(password, entropy, DataProtectionScope.CurrentUser));
         creds = new PasswordCredentials(username, plainTextPassword);
@@ -44,7 +47,9 @@ namespace PlayniteWeb.UI
       {
         client.ConnectAsync(mqttOptionsBuilder.Build(), cancelToken).Wait(cancelToken);
       }
-      catch { }
+      catch(Exception e) {
+        logger.Error(e.Message);
+      }
 
       return client;
     }
