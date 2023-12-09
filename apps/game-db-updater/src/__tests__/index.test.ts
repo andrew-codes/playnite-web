@@ -3,9 +3,8 @@ jest.mock("../handlers", () => {
   const realHandlers = jest.requireActual("../handlers").default;
   return realHandlers.concat([mockHandler]);
 });
-import { type AsyncMqttClient, connectAsync } from "async-mqtt";
-import sut from "..";
-import { createMqtt } from "../mqttClient";
+import { type AsyncMqttClient } from "async-mqtt";
+import app from "..";
 
 let testMqttClient: AsyncMqttClient;
 afterEach(() => {
@@ -18,7 +17,7 @@ test("Connects to MQTT and subscribes to playnite/# topics.", (done) => {
     done();
   });
 
-  sut().then((mqttClient) => {
+  app().then((mqttClient) => {
     testMqttClient = mqttClient;
     testMqttClient.publish("playnite/test", "test");
   });
