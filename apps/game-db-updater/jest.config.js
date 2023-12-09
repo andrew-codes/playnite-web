@@ -12,7 +12,7 @@ const defaultConfig = {
   moduleFileExtensions: [...defaults.moduleFileExtensions, "ts", "tsx"],
   collectCoverageFrom: ["**/src/**", "**/scripts/**"],
   coveragePathIgnorePatterns: ["/__tests__/", "/__mocks__/"],
-  setupFiles: ["<rootDir>/../../.tests/setupEnvVars.ts"],
+  setupFiles: ["<rootDir>/apps/game-db-updater/.tests/setupFiles.ts"],
 };
 
 module.exports = defaultConfig;

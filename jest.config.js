@@ -1,4 +1,9 @@
 const { defaults } = require("jest-config");
+const glob = require("glob");
+
+const setupFiles = glob
+  .sync("**/.tests/setupFiles.ts")
+  .map((path) => `<rootDir>/${path}`);
 
 const defaultConfig = {
   transform: {
@@ -12,7 +17,7 @@ const defaultConfig = {
   moduleFileExtensions: [...defaults.moduleFileExtensions, "ts", "tsx"],
   collectCoverageFrom: ["**/src/**", "**/scripts/**"],
   coveragePathIgnorePatterns: ["/__tests__/", "/__mocks__/"],
-  setupFiles: ["<rootDir>/.tests/setupEnvVars.ts"],
+  setupFiles: setupFiles,
 };
 
 module.exports = defaultConfig;
