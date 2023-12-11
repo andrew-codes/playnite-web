@@ -1,31 +1,31 @@
 {
-  "name": "game-db-updater",
-  "sourceRoot": "apps/game-db-updater/src",
-  "projectType": "application",
-  "targets": {
-    "clean": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn rimraf .dist .packaged .test-runs",
-        "cwd": "{projectRoot}"
-      }
+    "name": "game-db-updater",
+    "sourceRoot": "apps/game-db-updater/src",
+    "projectType": "application",
+    "targets": {
+        "clean": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "yarn rimraf .dist .packaged .test-runs",
+                "cwd": "{projectRoot}"
+            }
+        },
+        "start": {
+            "executor": "nx:run-commands",
+            "options": {
+                "cwd": "{projectRoot}",
+                "command": "DEBUG=game-db-updater/* yarn nodemon --inspect src/index.ts"
+            }
+        },
+        "test": {
+            "executor": "nx:run-commands",
+            "outputs": ["{projectRoot}/.test-runs/unit"],
+            "options": {
+                "command": "yarn jest --config jest.config.js",
+                "cwd": "{projectRoot}"
+            }
+        }
     },
-    "start": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "{projectRoot}",
-        "command": "DEBUG=game-db-updater/* yarn nodemon --inspect src/index.ts"
-      }
-    },
-    "test": {
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.test-runs/unit"],
-      "options": {
-        "command": "yarn jest --config jest.config.js",
-        "cwd": "{projectRoot}"
-      }
-    }
-  },
-  "tags": ["windows"],
-  "implicitDependencies": []
+    "tags": ["linux"],
+    "implicitDependencies": []
 }
