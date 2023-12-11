@@ -1,5 +1,5 @@
 interface IHandlePublishedTopics {
-  (topic: string, payload: string): Promise<void>;
+    (topic: string, payload: string): Promise<void>
 }
 
-export type { IHandlePublishedTopics };
+export type { IHandlePublishedTopics }
