@@ -8,9 +8,9 @@ namespace PlayniteWeb.Services.Mqtt
     public static string LibraryRequesteCompleted() => "library/request/state";
     public static string Game(Guid id) => $"game/{id}";
     public static string GameFile (Guid id, string assetId) => $"game/{id}/asset/{assetId}";
-    public static string Platform(Guid id) => $"platform/{id}";
-    public static string PlatformFile(Guid id, string assetId) => $"platform/{id}/asset/{assetId}";
-
-    public static string GameEntity(string name, Guid id) => $"{name}/{id}";
+    public static string Platform(Guid id) => GameEntity("platform", id);
+    public static string PlatformFile(Guid id, string assetId) => GameEntityAsset("platform", id, assetId);
+    public static string GameEntity(string name, Guid id) => $"entity/{name}/{id}";
+    public static string GameEntityAsset(string name, Guid id, string assetId) => $"entity/{name}/{id}/asset/{assetId}";
   }
 }
