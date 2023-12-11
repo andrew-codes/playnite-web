@@ -1,35 +1,35 @@
-import { type AsyncMqttClient } from "async-mqtt";
-import createDebugger from "debug";
-import dotenv from "dotenv";
-import path from "path";
-import handlers from "./handlers";
-import { getMqttClient } from "./mqttClient";
+import { type AsyncMqttClient } from 'async-mqtt'
+import createDebugger from 'debug'
+import dotenv from 'dotenv'
+import path from 'path'
+import handlers from './handlers'
+import { getMqttClient } from './mqttClient'
 
 const run: () => Promise<AsyncMqttClient> = async () => {
-  const debug = createDebugger("game-db-updater/index");
-  debug("Starting game-db-updater");
+    const debug = createDebugger('game-db-updater/index')
+    debug('Starting game-db-updater')
 
-  dotenv.config({ path: path.join(__dirname, "..", "local.env") });
+    dotenv.config({ path: path.join(__dirname, '..', 'local.env') })
 
-  const mqttClient = await getMqttClient();
-  mqttClient.subscribe("playnite/#");
+    const mqttClient = await getMqttClient()
+    mqttClient.subscribe('playnite/#')
 
-  mqttClient.on("message", async (topic, payload) => {
-    try {
-      const payloadString = payload.toString();
-      await Promise.all(
-        handlers.map((handler) => handler(topic, payloadString))
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  });
+    mqttClient.on('message', async (topic, payload) => {
+        try {
+            const payloadString = payload.toString()
+            await Promise.all(
+                handlers.map((handler) => handler(topic, payloadString)),
+            )
+        } catch (error) {
+            console.error(error)
+        }
+    })
 
-  return mqttClient;
-};
-
-if (require.main === module) {
-  run();
+    return mqttClient
 }
 
-export default run;
+if (require.main === module) {
+    run()
+}
+
+export default run
