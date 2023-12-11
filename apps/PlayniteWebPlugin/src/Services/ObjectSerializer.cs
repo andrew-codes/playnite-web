@@ -1,5 +1,6 @@
 using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace PlayniteWeb.Services
 {
@@ -7,7 +8,7 @@ namespace PlayniteWeb.Services
   {
     private readonly JsonSerializer serializer;
 
-    public ObjectSerializer() => serializer = new JsonSerializer();
+    public ObjectSerializer() => serializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
 
     public string Serialize<T>(T data)
     {

@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Services\GamePublishers\IApplyPublisherOptions.cs" />
     <Compile Include="Services\GamePublishers\MqttGamePublisher\IApplyMqttCredentials.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="UI\IntToStringValueConverter.cs" />
     <Compile Include="Services\GamePublishers\IPublishGamesToPlayniteWeb.cs" />
     <Compile Include="Services\GamePublishers\MqttGamePublisher\MqttGamePublisher.cs" />
