@@ -2464,6 +2464,7 @@ __metadata:
     jest: "npm:^29.3.1"
     jest-config: "npm:29.3.1"
     jest-when: "npm:^3.5.2"
+    lodash: "npm:^4.17.21"
     mongodb: "npm:^6.3.0"
     nodemon: "npm:^2.0.20"
     nx: "npm:^17.1.2"
@@ -3558,6 +3559,13 @@ __metadata:
   version: 4.1.2
   resolution: "lodash.memoize@npm:4.1.2"
   checksum: c8713e51eccc650422716a14cece1809cfe34bc5ab5e242b7f8b4e2241c2483697b971a604252807689b9dd69bfe3a98852e19a5b89d506b000b4187a1285df8
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
   languageName: node
   linkType: hard
 
