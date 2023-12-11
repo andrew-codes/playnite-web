@@ -3,5 +3,7 @@
     "**/.yarn": true,
     "**/.pnp.*": true
   },
-  "dotnet.defaultSolution": "PlayniteWebPlugin.sln"
+  "dotnet.defaultSolution": "PlayniteWebPlugin.sln",
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
