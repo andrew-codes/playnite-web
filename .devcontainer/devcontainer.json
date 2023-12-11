@@ -48,7 +48,6 @@
         "johnuphoff.vscode-styled-sort",
         "kisstkondoros.vscode-codemetrics",
         "mikestead.dotenv",
-        "ms-dotnettools.csdevkit",
         "ms-vscode.powershell",
         "Orta.vscode-jest",
         "paulmolluzzo.convert-css-in-js",
@@ -64,5 +63,8 @@
   },
   "remoteUser": "root",
   "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
-  "postStartCommand": "./.devcontainer/post-start.sh"
+  "postStartCommand": "./.devcontainer/post-start.sh",
+  "appPort": [
+    "1883:18833"
+  ]
 }

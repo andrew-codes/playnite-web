@@ -1,4 +1,4 @@
-.mongodb
+.data
 
 .nx/cache
 
@@ -9,3 +9,5 @@
 *.log
 .vs
 *.user
+*.env
+!local.env
