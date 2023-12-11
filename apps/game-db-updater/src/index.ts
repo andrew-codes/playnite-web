@@ -16,9 +16,8 @@ const run: () => Promise<AsyncMqttClient> = async () => {
 
     mqttClient.on('message', async (topic, payload) => {
         try {
-            const payloadString = payload.toString()
             await Promise.all(
-                handlers.map((handler) => handler(topic, payloadString)),
+                handlers.map((handler) => handler(topic, payload)),
             )
         } catch (error) {
             console.error(error)
