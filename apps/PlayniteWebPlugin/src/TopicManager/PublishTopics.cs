@@ -6,7 +6,7 @@ namespace PlayniteWeb.Services.Mqtt
   {
     public static string Connection() => "connection";
     public static string LibraryRequesteCompleted() => "library/request/state";
-    public static string Game(Guid id) => $"games/{id}";
+    public static string Game(Guid id) => GameEntity("games", id);
     public static string GameFile (Guid id, string assetId) => GameEntityAsset("games", id, assetId);
     public static string Platform(Guid id) => GameEntity("platforms", id);
     public static string PlatformFile(Guid id, string assetId) => GameEntityAsset("platforms", id, assetId);
