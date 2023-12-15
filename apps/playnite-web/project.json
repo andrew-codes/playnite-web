@@ -1,0 +1,23 @@
+{
+  "name": "playnite-web-app",
+  "sourceRoot": "apps/playnite-web-app/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .dist .packaged .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "yarn remix dev -c \"node server.mjs\""
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}
