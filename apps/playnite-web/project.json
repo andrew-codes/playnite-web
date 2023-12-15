@@ -16,6 +16,13 @@
         "cwd": "{projectRoot}",
         "command": "yarn remix dev -c \"node server.mjs\""
       }
+    },
+    "test/components": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "DISPLAY=\"\" yarn cypress open",
+        "cwd": "{projectRoot}"
+      }
     }
   },
   "tags": ["linux"],
