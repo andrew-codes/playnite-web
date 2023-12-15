@@ -11,3 +11,8 @@
 *.user
 *.env
 !local.env
+
+
+apps/playnite-web/.cache
+apps/playnite-web/build
+apps/playnite-web/public/build

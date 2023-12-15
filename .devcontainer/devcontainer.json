@@ -65,6 +65,8 @@
   "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
   "postStartCommand": "./.devcontainer/post-start.sh",
   "appPort": [
-    "1883:18833"
+    "1883:1883",
+    "3000:3000",
+    "3001:3001"
   ]
 }
