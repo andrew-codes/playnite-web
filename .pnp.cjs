@@ -22,6 +22,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/game-db-updater"\
     },\
     {\
+      "name": "playnite-web-app",\
+      "reference": "workspace:apps/playnite-web"\
+    },\
+    {\
       "name": "playnite-toolbox",\
       "reference": "workspace:libs/build-utils/playnite-toolbox"\
     }\
@@ -32,6 +36,7 @@ const RAW_RUNTIME_STATE =
     ["game-db-updater", ["workspace:apps/game-db-updater"]],\
     ["playnite-toolbox", ["workspace:libs/build-utils/playnite-toolbox"]],\
     ["playnite-web", ["workspace:."]],\
+    ["playnite-web-app", ["workspace:apps/playnite-web"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]]\
   ],\
   "fallbackPool": [\
@@ -5436,6 +5441,15 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.1.1"],\
           ["ts-jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.1.1"],\
           ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["playnite-web-app", [\
+      ["workspace:apps/playnite-web", {\
+        "packageLocation": "./apps/playnite-web/",\
+        "packageDependencies": [\
+          ["playnite-web-app", "workspace:apps/playnite-web"]\
         ],\
         "linkType": "SOFT"\
       }]\
