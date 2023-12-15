@@ -17,6 +17,7 @@
     "@types/node": "^18.11.18",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cypress": "^13.6.1",
     "nx": "17.1.2",
     "prettier": "^3.1.1",
     "typescript": "^5.3.2"
