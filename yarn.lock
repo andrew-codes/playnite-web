@@ -4372,6 +4372,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"playnite-web-app@workspace:apps/playnite-web":
+  version: 0.0.0-use.local
+  resolution: "playnite-web-app@workspace:apps/playnite-web"
+  languageName: unknown
+  linkType: soft
+
 "playnite-web-plugin@workspace:apps/PlayniteWebPlugin":
   version: 0.0.0-use.local
   resolution: "playnite-web-plugin@workspace:apps/PlayniteWebPlugin"
