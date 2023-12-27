@@ -21,6 +21,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
+          "echo \"Building for $TAG\"",
           "docker build --tag ghcr.io/andrew-codes/playnite-web-game-db-updater:$TAG --tag --file Dockerfile .",
           "docker push ghcr.io/andrew-codes/playnite-web-game-db-updater:$TAG",
           "cp -R .dist/ .packaged/"
