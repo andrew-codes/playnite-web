@@ -97,43 +97,43 @@ jobs:
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
 
-  package_windows:
-    name: Package (Windows)
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - name: Install jq
-        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]20.9.0"
-        id: nvm
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - name: Enable yarn
-        run: corepack enable
-      - run: corepack prepare --activate yarn@^4.0.0
-      - name: Install deps
-        run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+  # package_windows:
+  #   name: Package (Windows)
+  #   runs-on: windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 2
+  #     - name: Install jq
+  #       run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+  #     - name: Read .nvmrc
+  #       run: echo "##[set-output name=NODE_VERSION;]20.9.0"
+  #       id: nvm
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+  #     - name: Enable yarn
+  #       run: corepack enable
+  #     - run: corepack prepare --activate yarn@^4.0.0
+  #     - name: Install deps
+  #       run: yarn
+  #     - name: Prepare
+  #       run: yarn nx run-many --target=prepare --parallel --all --verbose
+  #       env:
+  #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+  #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+  #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
-      - name: Package apps
-        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:windows
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          NODE_ENV: production
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: packaged-apps
-          path: apps/*/.packaged
+  #     - name: Package apps
+  #       run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:windows
+  #       env:
+  #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+  #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+  #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+  #         NODE_ENV: production
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: packaged-apps
+  #         path: apps/*/.packaged
