@@ -1,31 +1,50 @@
 {
-    "name": "game-db-updater",
-    "sourceRoot": "apps/game-db-updater/src",
-    "projectType": "application",
-    "targets": {
-        "clean": {
-            "executor": "nx:run-commands",
-            "options": {
-                "command": "yarn rimraf .dist .packaged .test-runs",
-                "cwd": "{projectRoot}"
-            }
-        },
-        "start": {
-            "executor": "nx:run-commands",
-            "options": {
-                "cwd": "{projectRoot}",
-                "command": "DEBUG=game-db-updater/* yarn nodemon --inspect src/index.ts"
-            }
-        },
-        "test": {
-            "executor": "nx:run-commands",
-            "outputs": ["{projectRoot}/.test-runs/unit"],
-            "options": {
-                "command": "yarn jest --config jest.config.js",
-                "cwd": "{projectRoot}"
-            }
-        }
+  "name": "game-db-updater",
+  "sourceRoot": "apps/game-db-updater/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.dist"],
+      "options": {
+        "command": ".yarn/unplugged/@esbuild-linux-x64-npm-0.17.19-08a7136aa6/node_modules/@esbuild/linux-x64/bin/esbuild apps/game-db-updater/src/index.ts --bundle --platform=node --target=node20 --outdir=apps/game-db-updater/.dist"
+      }
     },
-    "tags": ["linux"],
-    "implicitDependencies": []
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .dist .packaged .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker build --tag ghcr.io/andrew-codes/playnite-web-game-db-updater:$TAG --tag ghcr.io/andrew-codes/playnite-web-game-db-updater:$SHA --file Dockerfile .",
+          "docker push ghcr.io/andrew-codes/playnite-web-game-db-updater:$SHA",
+          "docker push ghcr.io/andrew-codes/playnite-web-game-db-updater:$TAG",
+          "cp -R .dist/ .packaged/"
+        ],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "DEBUG=game-db-updater/* yarn nodemon --inspect src/index.ts"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "options": {
+        "command": "yarn jest --config jest.config.js",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
 }
