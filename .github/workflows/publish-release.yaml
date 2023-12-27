@@ -52,48 +52,48 @@ jobs:
             LICENSE
             apps/*/.packaged
 
-  release_windows:
-    name: On Release Published
-    needs: []
+  # release_windows:
+  #   name: On Release Published
+  #   needs: []
 
-    runs-on: windows-latest
+  #   runs-on: windows-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - name: Install jq
-        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]20.9.0"
-        id: nvm
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - name: Enable yarn
-        run: corepack enable
-      - run: corepack prepare --activate yarn@^4.0.0
-      - name: Install deps
-        run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 2
+  #     - name: Install jq
+  #       run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+  #     - name: Read .nvmrc
+  #       run: echo "##[set-output name=NODE_VERSION;]20.9.0"
+  #       id: nvm
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+  #     - name: Enable yarn
+  #       run: corepack enable
+  #     - run: corepack prepare --activate yarn@^4.0.0
+  #     - name: Install deps
+  #       run: yarn
+  #     - name: Prepare
+  #       run: yarn nx run-many --target=prepare --parallel --verbose
+  #       env:
+  #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+  #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+  #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
-      - name: Package apps
-        run: yarn nx run-many --target=package --parallel --verbose --projects=tag:windows
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          NODE_ENV: production
+  #     - name: Package apps
+  #       run: yarn nx run-many --target=package --parallel --verbose --projects=tag:windows
+  #       env:
+  #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+  #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+  #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+  #         NODE_ENV: production
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            apps/*/.packaged
+  #     - name: Release
+  #       uses: softprops/action-gh-release@v1
+  #       with:
+  #         files: |
+  #           apps/*/.packaged
