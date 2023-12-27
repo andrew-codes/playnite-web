@@ -36,7 +36,7 @@
         "command": "DEBUG=game-db-updater/* yarn nodemon --inspect src/index.ts"
       }
     },
-    "test/unit": {
+    "test/e2e": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.test-runs/unit"],
       "options": {
