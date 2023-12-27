@@ -70,6 +70,13 @@
     "3001:3001"
   ],
   "runArgs": [
-    "--ipc=host"
-  ]
+    "--ipc=host",
+    "--net=host"
+  ],
+  "containerEnv": {
+    "DISPLAY": "localhost:10.0"
+  },
+  "remoteEnv": {
+    "DISPLAY": "localhost:10.0"
+  }
 }
