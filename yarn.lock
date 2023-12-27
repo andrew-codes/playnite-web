@@ -8249,6 +8249,7 @@ __metadata:
   dependencies:
     "@types/jest": "npm:^29.2.5"
     "@types/node": "npm:^18.11.18"
+    cypress: "npm:^13.6.1"
     dotenv: "npm:^16.3.1"
     glob: "npm:^10.3.10"
     jest: "npm:^29.3.1"

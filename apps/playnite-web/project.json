@@ -20,7 +20,7 @@
     "test/components": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "DISPLAY=\"\" yarn cypress open",
+        "command": "yarn cypress open",
         "cwd": "{projectRoot}"
       }
     }
