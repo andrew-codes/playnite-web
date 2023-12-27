@@ -1,4 +1,4 @@
-name: "PPE"
+name: 'PPE'
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -44,7 +44,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -67,47 +67,6 @@ jobs:
           name: packaged-apps
           path: apps/*/.packaged
 
-  deploy_ppe:
-    name: Deploy affected to PPE
-    runs-on: self-hosted
-    needs:
-      - unit_tests_linux
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-          ref: main
-      - name: Read Node version
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: "7.0.403"
-      - name: Install deps
-        run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-
-      - name: Deploy affected apps
-        run: yarn nx affected --target=deploy --parallel --verbose --projects=tag:linux
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODE_COV_TOKEN }}
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          MQTT_HOST: ${{ secrets.K8S_MAIN_NODE_IP }}
-          MQTT_PORT: ${{ secrets.MQTT_PORT_EXTERNAL }}
-          MQTT_USERNAME: ${{ secrets.MQTT_USERNAME }}
-          MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
-          NODE_ENV: production
-
   unit_tests_windows:
     name: Verify PR - Tests (Windows)
     runs-on: windows-latest
@@ -123,7 +82,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
       - name: Enable yarn
         run: corepack enable
       - run: corepack prepare --activate yarn@^4.0.0
