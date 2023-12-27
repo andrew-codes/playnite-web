@@ -1,4 +1,4 @@
-name: "Verify Pull Request"
+name: 'Verify Pull Request'
 
 on:
   pull_request:
@@ -19,7 +19,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -44,7 +44,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -82,7 +82,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
       - name: Enable yarn
         run: corepack enable
       - run: corepack prepare --activate yarn@^4.0.0
