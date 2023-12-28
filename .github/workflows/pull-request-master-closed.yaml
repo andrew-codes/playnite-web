@@ -22,5 +22,5 @@ jobs:
           cut-off: two hours ago UTC+4
           account-type: personal
           skip-tags: dev, v*
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
           filter-tags: PR${{ github.event.pull_request.number }}
