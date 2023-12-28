@@ -26,10 +26,12 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
     )}`,
   )
 
+  const collectionName = entityType[0].toLowerCase() + entityType.slice(1)
+
   const client = await getDbClient()
   client
     .db('games')
-    .collection(entityType)
+    .collection(collectionName)
     .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
 }
 
