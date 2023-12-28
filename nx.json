@@ -4,7 +4,11 @@
       "dependsOn": ["^build", "build/restore"],
       "cache": true
     },
-    "package": {
+    "package/linux": {
+      "dependsOn": ["build"],
+      "cache": false
+    },
+    "package/windows": {
       "dependsOn": ["build"],
       "cache": false
     },
