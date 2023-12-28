@@ -40,6 +40,8 @@ jobs:
     runs-on: self-hosted
     permissions:
       packages: write
+    env:
+      REGISTRY: ghcr.io
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,16 +61,28 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-      - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Package apps
-        run: yarn nx run-many --target=package --parallel --verbose --projects=tag:linux
+        run: yarn nx affected --target=package/linux --parallel --base=HEAD~ --head=HEAD --verbose
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           TAG: ${{ github.event.pull_request.head.sha }}
           NODE_ENV: production
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: apps/game-db-updater
+          push: true
+          tags: dev
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -134,7 +148,7 @@ jobs:
   #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
   #     - name: Package apps
-  #       run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:windows
+  #       run: yarn nx affected --target=package/windows --parallel --base=HEAD~ --head=HEAD --verbose
   #       env:
   #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
   #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
