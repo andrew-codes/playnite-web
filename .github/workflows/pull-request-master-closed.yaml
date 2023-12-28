@@ -20,7 +20,7 @@ jobs:
         uses: snok/container-retention-policy@v2
         with:
           image-names: playnite-web-game-db-updater
-          cut-off: one second ago
+          cut-off: one second ago UTC-4
           account-type: personal
           keep-at-least: 0
           token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
