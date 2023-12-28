@@ -11,18 +11,27 @@ permissions:
 jobs:
   unit_tests_linux:
     name: Verify Tests (Linux)
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Extract yarn version from package.json
+        uses: sergeysova/jq-action@v2
+        id: yarn_version
+        with:
+          cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -36,7 +45,7 @@ jobs:
 
   package_for_ppe_linux:
     name: Package for PPE (Linux)
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       packages: write
     env:
@@ -45,13 +54,22 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Extract yarn version from package.json
+        uses: sergeysova/jq-action@v2
+        id: yarn_version
+        with:
+          cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
       - name: Prepare
