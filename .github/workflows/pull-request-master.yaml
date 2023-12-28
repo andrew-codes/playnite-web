@@ -51,7 +51,7 @@ jobs:
       packages: write
     env:
       REGISTRY: ghcr.io
-      GITHUB_USERNAME: andrew-codes
+      OWNER: andrew-codes
       REPO_NAME: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v4
@@ -85,7 +85,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ env.GITHUB_USERNAME }}
+          username: ${{ env.OWNER }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -136,6 +136,12 @@ jobs:
   # package_windows:
   #   name: Package (Windows)
   #   runs-on: windows-latest
+  #   permissions:
+  #     packages: write
+  #   env:
+  #     REGISTRY: ghcr.io
+  #     OWNER: andrew-codes
+  #     REPO_NAME: ${{ github.repository }}
   #   steps:
   #     - uses: actions/checkout@v4
   #       with:
