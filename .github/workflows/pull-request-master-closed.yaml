@@ -16,20 +16,10 @@ jobs:
     name: Retention policy
     runs-on: ubuntu-latest
     steps:
-      - uses: snok/container-retention-policy@v2
+      - uses: actions/delete-package-versions@v4
         with:
-          image-names: '*'
-          cut-off: two hours ago UTC+4
-          timestamp-to-use: updated_at
-          account-type: personal
+          package-version-ids: PR${{ github.event.pull_request.number }}
+          package-name: ${{ github.repository }}-*
+          package-type: container
+          ignore-versions: '^(dev)|([0-9])'
           token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
-          filter-tags: PR${{ github.event.pull_request.number }}
-
-      - uses: snok/container-retention-policy@v2
-        with:
-          image-names: '*'
-          cut-off: two hours ago UTC+4
-          timestamp-to-use: updated_at
-          account-type: personal
-          token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
-          untagged-only: true
