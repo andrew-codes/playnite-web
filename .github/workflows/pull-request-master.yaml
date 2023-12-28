@@ -83,7 +83,7 @@ jobs:
         with:
           context: apps/game-db-updater
           push: true
-          tags: dev
+          tags: pr-${{ github.event.pull_request.number }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
