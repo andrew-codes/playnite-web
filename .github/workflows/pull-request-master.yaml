@@ -52,6 +52,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       GITHUB_USERNAME: andrew-codes
+      REPO_NAME: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,8 +96,6 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           TAG: PR${{ github.event.pull_request.number }}
-          REGISTRY: ${{ env.REGISTRY }}
-          REPO_NAME: ${{ github.repository }}
           NODE_ENV: production
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
