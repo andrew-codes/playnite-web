@@ -22,7 +22,7 @@
       "options": {
         "commands": [
           "cp -R .dist/ .packaged/",
-          "docker build --tag $REGISTRY/$REPO_NAME-game-db-updater:$TAG --file Dockerfile ."
+          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG --file Dockerfile ."
         ],
         "cwd": "{projectRoot}"
       }
@@ -30,7 +30,7 @@
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["docker push $REGISTRY/$REPO_NAME-game-db-updater:$TAG"],
+        "commands": ["docker push $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG"],
         "cwd": "{projectRoot}"
       }
     },

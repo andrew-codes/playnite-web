@@ -50,7 +50,7 @@ jobs:
       packages: write
     env:
       REGISTRY: ghcr.io
-      GITHUB_USERNAME: andrew-codes
+      OWNER: andrew-codes
       REPO_NAME: playnite-web
     steps:
       - uses: actions/checkout@v4
@@ -84,10 +84,10 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY}}
-          username: ${{ env.GITHUB_USERNAME }}
-          password: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
+          username: ${{ env.OWNER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish apps
-        run: yarn nx run-many --target=publish --parallel --verbose
+        run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
