@@ -1,4 +1,4 @@
-name: 'PPE'
+name: 'Publish dev artifacts (latest dev)'
 
 on:
   push:
@@ -91,7 +91,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
-          TAG: dev
+          TAG: ${{ env.REGISTRY }}/${{ github.repository }}:game-db-updater-dev
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
