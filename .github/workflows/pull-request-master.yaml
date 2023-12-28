@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   unit_tests_linux:
-    name: Verify PR - Tests (Linxu)
+    name: Verify PR - Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
