@@ -24,6 +24,7 @@ jobs:
           account-type: personal
           token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
           filter-tags: PR${{ github.event.pull_request.number }}
+
       - uses: snok/container-retention-policy@v2
         with:
           image-names: '*'
