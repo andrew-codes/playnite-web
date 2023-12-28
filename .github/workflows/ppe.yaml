@@ -50,6 +50,7 @@ jobs:
       packages: write
     env:
       REGISTRY: ghcr.io
+      GITHUB_USERNAME: andrew-codes
     steps:
       - uses: actions/checkout@v4
         with:
@@ -82,7 +83,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY}}
-          username: ${{ github.actor }}
+          username: ${{ env.GITHUB_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish apps
         run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
@@ -91,7 +92,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
-          TAG: ${{ env.REGISTRY }}/${{ github.repository }}:game-db-updater-dev
+          TAG: ${{ env.REGISTRY }}/${{ github.repository }}-game-db-updater:dev
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
