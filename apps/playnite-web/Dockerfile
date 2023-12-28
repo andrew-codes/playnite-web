@@ -4,4 +4,4 @@ LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-w
 WORKDIR /opt/playnite-web-game-db-updater
 COPY .packaged/ .
 
-ENTRYPOINT [ "node index.js" ]
+ENTRYPOINT [ "node", "index.js" ]
