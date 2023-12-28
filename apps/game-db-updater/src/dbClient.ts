@@ -18,23 +18,26 @@ const getDbClient = async (
     const host = connectionOptions?.host ?? process.env.DB_HOST ?? 'localhost'
     const port =
       connectionOptions?.port ?? parseInt(process.env.DB_PORT ?? '27017')
-    const username =
-      connectionOptions?.username ?? process.env.DB_USERNAME ?? ''
-    const password =
-      connectionOptions?.password ?? process.env.DB_PASSWORD ?? ''
+    const username = connectionOptions?.username ?? process.env.DB_USERNAME
+    const password = connectionOptions?.password ?? process.env.DB_PASSWORD
 
     debug(
       `Existing DB client not found; creating one with the following options: host=${host}, port=${port}, username=${username}`,
     )
-    client = new MongoClient(`mongodb://${host}:${port}`, {
-      auth: {
-        username,
-        password,
-      },
-    })
+    if (!username && !password) {
+      client = new MongoClient(`mongodb://${host}:${port}`)
+    } else {
+      client = new MongoClient(`mongodb://${host}:${port}`, {
+        auth: {
+          username,
+          password,
+        },
+      })
+    }
   }
+  await client.connect()
 
-  debug('Returning MQTT client')
+  debug('Returning mongoDB client')
   return client
 }
 
