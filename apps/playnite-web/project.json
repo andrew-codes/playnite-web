@@ -1,0 +1,54 @@
+{
+  "name": "playnite-web-app",
+  "sourceRoot": "apps/playnite-web-app/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .dist .packaged .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "command": "yarn remix dev -c \"node server.mjs\""
+      }
+    },
+    "test/components": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn cypress open",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["yarn remix build"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cp build/ .packaged -r",
+          "docker build --tag $REGISTRY/$REPO_NAME-app:$TAG --file Dockerfile ."
+        ],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker push $REGISTRY/$REPO_NAME-app:$TAG"],
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}

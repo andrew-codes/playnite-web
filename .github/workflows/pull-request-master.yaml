@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   unit_tests_linux:
-    name: Verify PR - Tests (Linxu)
+    name: Verify PR - Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -94,7 +94,9 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          TAG: ${{ env.REGISTRY }}/${{ github.repository }}-game-db-updater:PR${{ github.event.pull_request.number }}
+          TAG: PR${{ github.event.pull_request.number }}
+          REGISTRY: ${{ env.REGISTRY }}
+          REPO_NAME: ${{ github.repository }}
           NODE_ENV: production
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
