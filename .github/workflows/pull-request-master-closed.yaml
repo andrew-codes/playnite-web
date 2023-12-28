@@ -20,6 +20,16 @@ jobs:
         with:
           image-names: '*'
           cut-off: two hours ago UTC+4
+          timestamp-to-use: updated_at
           account-type: personal
           token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
           filter-tags: PR${{ github.event.pull_request.number }}
+
+      - uses: snok/container-retention-policy@v2
+        with:
+          image-names: '*'
+          cut-off: two hours ago UTC+4
+          timestamp-to-use: updated_at
+          account-type: personal
+          token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
+          untagged-only: true
