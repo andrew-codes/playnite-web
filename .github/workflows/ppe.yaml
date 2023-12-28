@@ -84,7 +84,7 @@ jobs:
           registry: ${{ env.REGISTRY}}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Package apps
+      - name: Publish apps
         run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
@@ -155,7 +155,7 @@ jobs:
   #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
   #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
   #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-  #     - name: Package apps
+  #     - name: Publish apps
   #       run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
   #       env:
   #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
