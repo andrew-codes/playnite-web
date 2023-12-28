@@ -88,21 +88,13 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Package apps
-        run: yarn nx affected --target=package/linux --parallel --base=HEAD~ --head=HEAD --verbose
+        run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           TAG: ${{ env.REGISTRY }}/${{ github.repository }}:game-db-updater-PR${{ github.event.pull_request.number }}
           NODE_ENV: production
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: apps/game-db-updater
-          push: true
-          tags: pr-${{ github.event.pull_request.number }}
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -168,7 +160,7 @@ jobs:
   #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
   #     - name: Package apps
-  #       run: yarn nx affected --target=package/windows --parallel --base=HEAD~ --head=HEAD --verbose
+  #       run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
   #       env:
   #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
   #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}

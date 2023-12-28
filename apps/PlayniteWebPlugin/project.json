@@ -25,13 +25,11 @@
         "cwd": "{projectRoot}/src"
       }
     },
-    "package/windows": {
+    "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "Toolbox.exe pack ../../../../../apps/playnite-web-extension/.dist/bin/Release/ ../../../../../apps/playnite-web-extension/.packaged"
-        ],
-        "cwd": "libs/build-utils/playnite-toolbox/src/Toolbox"
+        "commands": "./scripts/package.sh",
+        "cwd": "{projectRoot}"
       }
     },
     "test/unit/restore": {
