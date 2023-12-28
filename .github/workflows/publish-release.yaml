@@ -16,6 +16,7 @@ jobs:
       packages: write
     env:
       REGISTRY: ghcr.io
+      GITHUB_USERNAME: andrew-codes
     runs-on: ubuntu-latest
 
     steps:
@@ -52,7 +53,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
+          username: ${{ env.GITHUB_USERNAME }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish apps
         run: yarn nx run-many --target=publish --parallel --verbose --all
