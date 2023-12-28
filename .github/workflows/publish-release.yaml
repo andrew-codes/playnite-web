@@ -3,31 +3,43 @@ name: Release a new version of Playnite-Web
 on:
   push:
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   release_linux:
     name: On Release Published
     needs: []
-
-    runs-on: self-hosted
+    permissions:
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Extract yarn version from package.json
+        uses: sergeysova/jq-action@v2
+        id: yarn_version
+        with:
+          cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -36,9 +48,14 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-
-      - name: Package apps
-        run: yarn nx run-many --target=package --parallel --verbose --projects=tag:linux
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish apps
+        run: yarn nx run-many --target=publish --parallel --verbose --all
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
@@ -52,48 +69,48 @@ jobs:
             LICENSE
             apps/*/.packaged
 
-  release_windows:
-    name: On Release Published
-    needs: []
+  # release_windows:
+  #   name: On Release Published
+  #   needs: []
 
-    runs-on: windows-latest
+  #   runs-on: windows-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - name: Install jq
-        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]20.9.0"
-        id: nvm
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - name: Enable yarn
-        run: corepack enable
-      - run: corepack prepare --activate yarn@^4.0.0
-      - name: Install deps
-        run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 2
+  #     - name: Install jq
+  #       run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+  #     - name: Read .nvmrc
+  #       run: echo "##[set-output name=NODE_VERSION;]20.9.0"
+  #       id: nvm
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+  #     - name: Enable yarn
+  #       run: corepack enable
+  #     - run: corepack prepare --activate yarn@^4.0.0
+  #     - name: Install deps
+  #       run: yarn
+  #     - name: Prepare
+  #       run: yarn nx run-many --target=prepare --parallel --verbose
+  #       env:
+  #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+  #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+  #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
-      - name: Package apps
-        run: yarn nx run-many --target=package --parallel --verbose --projects=tag:windows
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          NODE_ENV: production
+  #     - name: Publish apps
+  #       run: yarn nx run-many --target=publish --parallel --verbose --all
+  #       env:
+  #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+  #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+  #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+  #         NODE_ENV: production
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            apps/*/.packaged
+  #     - name: Release
+  #       uses: softprops/action-gh-release@v1
+  #       with:
+  #         files: |
+  #           apps/*/.packaged
