@@ -14,7 +14,10 @@ jobs:
   release_linux:
     name: On Release Published
     needs: []
-
+    permissions:
+      packages: write
+    env:
+      REGISTRY: ghcr.io
     runs-on: self-hosted
 
     steps:
@@ -37,9 +40,14 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Package apps
-        run: yarn nx run-many --target=package --parallel --verbose --projects=tag:linux
+        run: yarn nx run-many --target=package/linux --parallel --verbose --all
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
@@ -86,7 +94,7 @@ jobs:
   #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
   #     - name: Package apps
-  #       run: yarn nx run-many --target=package --parallel --verbose --projects=tag:windows
+  #       run: yarn nx run-many --target=package/windows --parallel --verbose --all
   #       env:
   #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
   #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}

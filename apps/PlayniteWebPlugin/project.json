@@ -25,7 +25,7 @@
         "cwd": "{projectRoot}/src"
       }
     },
-    "package": {
+    "package/windows": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
