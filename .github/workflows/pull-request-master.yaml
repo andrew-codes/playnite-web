@@ -93,7 +93,7 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          TAG: ${{ env.REGISTRY }}/${{ github.repository }}:game-db-updater-PR${{ github.event.pull_request.number }}
+          TAG: ${{ env.REGISTRY }}/${{ github.repository }}-game-db-updater:PR${{ github.event.pull_request.number }}
           NODE_ENV: production
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
