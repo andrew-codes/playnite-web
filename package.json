@@ -5,7 +5,7 @@
   "private": true,
   "engines": {
     "node": ">=20.9.0",
-    "yarn": ">=4.0.0"
+    "yarn": "^4.0.0"
   },
   "workspaces": [
     "apps/*",

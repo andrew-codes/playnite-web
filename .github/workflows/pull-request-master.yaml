@@ -1,25 +1,38 @@
-name: "Verify Pull Request"
+name: 'Verify Pull Request'
 
 on:
   pull_request:
     branches:
       - main
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   unit_tests_linux:
     name: Verify PR - Tests (Linxu)
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Extract yarn version from package.json
+        uses: sergeysova/jq-action@v2
+        id: yarn_version
+        with:
+          cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -33,18 +46,31 @@ jobs:
 
   package_linux:
     name: Package (Linux)
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    env:
+      REGISTRY: ghcr.io
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]$(cat package.json | jq .engines.node | sed -e 's/"//g' | sed -e 's/>=//g')"
-        id: nvm
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Extract yarn version from package.json
+        uses: sergeysova/jq-action@v2
+        id: yarn_version
+        with:
+          cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -53,13 +79,21 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-
-      - name: Package apps
-        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:linux
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Publish apps
+        run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+          TAG: ${{ env.REGISTRY }}/${{ github.repository }}:game-db-updater-PR${{ github.event.pull_request.number }}
           NODE_ENV: production
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -82,7 +116,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+          node-version: '${{ steps.nvm.outputs.NODE_VERSION }}'
       - name: Enable yarn
         run: corepack enable
       - run: corepack prepare --activate yarn@^4.0.0
@@ -97,43 +131,43 @@ jobs:
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
 
-  package_windows:
-    name: Package (Windows)
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - name: Install jq
-        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
-      - name: Read .nvmrc
-        run: echo "##[set-output name=NODE_VERSION;]20.9.0"
-        id: nvm
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
-      - name: Enable yarn
-        run: corepack enable
-      - run: corepack prepare --activate yarn@^4.0.0
-      - name: Install deps
-        run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+  # package_windows:
+  #   name: Package (Windows)
+  #   runs-on: windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 2
+  #     - name: Install jq
+  #       run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+  #     - name: Read .nvmrc
+  #       run: echo "##[set-output name=NODE_VERSION;]20.9.0"
+  #       id: nvm
+  #     - name: Use Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "${{ steps.nvm.outputs.NODE_VERSION }}"
+  #     - name: Enable yarn
+  #       run: corepack enable
+  #     - run: corepack prepare --activate yarn@^4.0.0
+  #     - name: Install deps
+  #       run: yarn
+  #     - name: Prepare
+  #       run: yarn nx run-many --target=prepare --parallel --all --verbose
+  #       env:
+  #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+  #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+  #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
 
-      - name: Package apps
-        run: yarn nx affected --target=package --parallel --base=HEAD~ --head=HEAD --verbose --projects=tag:windows
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          NODE_ENV: production
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: packaged-apps
-          path: apps/*/.packaged
+  #     - name: Publish apps
+  #       run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
+  #       env:
+  #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+  #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+  #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+  #         NODE_ENV: production
+  #     - name: Upload artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: packaged-apps
+  #         path: apps/*/.packaged
