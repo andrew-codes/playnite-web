@@ -20,6 +20,6 @@ jobs:
         with:
           user: andrew-codes
           type: container
-          version-pattern: 'PR${{ github.event.pull_request.number }}'
+          version-pattern: PR${{ github.event.pull_request.number }}
           names: |
             playnite-web-game-db-updater
