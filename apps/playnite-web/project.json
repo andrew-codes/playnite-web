@@ -23,6 +23,30 @@
         "command": "yarn cypress open",
         "cwd": "{projectRoot}"
       }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["yarn remix build"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cp build/ .packaged -r",
+          "docker build --tag $REGISTRY_NAME/$REPO_NAME-app:$TAG --file Dockerfile ."
+        ],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["docker push $REGISTRY_NAME/$REPO_NAME-app:$TAG"],
+        "cwd": "{projectRoot}"
+      }
     }
   },
   "tags": ["linux"],
