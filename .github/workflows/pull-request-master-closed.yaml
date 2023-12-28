@@ -16,10 +16,10 @@ jobs:
     name: Retention policy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/delete-package-versions@v4
+      - uses: smartsquaregmbh/delete-old-packages@v0.7.0
         with:
-          package-version-ids: PR${{ github.event.pull_request.number }}
-          package-name: ${{ github.repository }}-*
-          package-type: container
-          ignore-versions: '^(dev)|([0-9])'
-          token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
+          user: andrew-codes
+          type: container
+          version-pattern: '^PR${{ github.event.pull_request.number }}$' # The regex needs to be escaped!
+          names: |
+            "*"
