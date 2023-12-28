@@ -10,6 +10,7 @@ mkdir -p .data/mongodb
 docker stop playnite-web-db || true
 docker container rm playnite-web-db || true
 docker run --rm --name playnite-web-db -d \
+  --network host \
   -e MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME \
   -e MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD \
   -v $PWD/.data/mongodb:/data/db \
