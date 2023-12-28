@@ -16,10 +16,8 @@ jobs:
     name: Retention policy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/delete-package-versions@v4
+      - uses: jackhowa/delete-github-package-versions@v0.4.9
         with:
-          owner: ${{ github.actor }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          package-type: container
-          package-name: playnite-web
-          ignore-versions: '^[a-z0-9]+-?[a-z0-9]*-(?!PR${{ github.event.pull_request.number }})$'
+          names: |
+            playnite-web
+          version-pattern: '^.*-PR${{ github.event.pull_request.number }}$'
