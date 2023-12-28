@@ -16,11 +16,11 @@ jobs:
     name: Retention policy
     runs-on: ubuntu-latest
     steps:
-      - name: Delete 'dev' containers older than a week
+      - name: Delete merged PR images
         uses: snok/container-retention-policy@v2
         with:
           image-names: playnite-web-game-db-updater
-          cut-off: one millisecond ago
+          cut-off: one second ago
           account-type: personal
           keep-at-least: 0
           token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
