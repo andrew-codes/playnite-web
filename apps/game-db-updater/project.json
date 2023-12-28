@@ -17,7 +17,7 @@
         "cwd": "{projectRoot}"
       }
     },
-    "package/linux": {
+    "package": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
