@@ -16,10 +16,13 @@ jobs:
     name: Retention policy
     runs-on: ubuntu-latest
     steps:
-      - uses: smartsquaregmbh/delete-old-packages@v0.7.0
+      - name: Delete 'dev' containers older than a week
+        uses: snok/container-retention-policy@v2
         with:
-          user: andrew-codes
-          type: container
-          version-pattern: PR${{ github.event.pull_request.number }}
-          names: |
-            playnite-web-game-db-updater
+          image-names: playnite-web-game-db-updater
+          cut-off: one millisecond ago
+          account-type: personal
+          keep-at-least: 0
+          token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
+          skip-tags: dev, v*
+          filter-tags: PR${{ github.event.pull_request.number }}*
