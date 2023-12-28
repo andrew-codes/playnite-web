@@ -85,7 +85,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Package apps
-        run: yarn nx affected --target=package/linux --parallel --base=HEAD~ --head=HEAD --verbose
+        run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
@@ -156,7 +156,7 @@ jobs:
   #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
   #         ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
   #     - name: Package apps
-  #       run: yarn nx affected --target=package/windows --parallel --base=HEAD~ --head=HEAD --verbose
+  #       run: yarn nx affected --target=publish --parallel --base=HEAD~ --head=HEAD --verbose
   #       env:
   #         ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
   #         ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
