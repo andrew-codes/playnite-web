@@ -23,5 +23,4 @@ jobs:
           account-type: personal
           skip-tags: dev, v*
           token: ${{ secrets.GITHUB_TOKEN }}
-          token-type: github-token
           filter-tags: PR${{ github.event.pull_request.number }}
