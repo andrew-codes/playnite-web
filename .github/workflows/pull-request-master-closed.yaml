@@ -20,6 +20,6 @@ jobs:
         with:
           user: andrew-codes
           type: container
-          version-pattern: '^PR${{ github.event.pull_request.number }}$' # The regex needs to be escaped!
+          version-pattern: PR${{ github.event.pull_request.number }}
           names: |
             playnite-web-game-db-updater
