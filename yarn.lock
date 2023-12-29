@@ -8693,6 +8693,7 @@ __metadata:
     prettier: "npm:^3.1.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-use-dimensions: "npm:^1.2.1"
     remix-esbuild-override: "npm:^3.1.0"
     remix-island: "npm:^0.1.2"
     remix-routes: "npm:^1.5.1"
@@ -9161,6 +9162,17 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: ff499df6994353b79ddd4abf35004c4dce944668fa16b18896a72ba255447d3f5ca50018d90f3034abbe08b87a5757141b09144f8eb17e4f375d8850373a11c3
+  languageName: node
+  linkType: hard
+
+"react-use-dimensions@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "react-use-dimensions@npm:1.2.1"
+  peerDependencies:
+    "@types/react": ^16.8.20
+    react: ^16.8.x
+    typescript: ^3.5.2
+  checksum: 32f0ff084f12f4ea09acec6ef0a74f8ea7f9cfba60c43d6670bd5eab7c3dceded06da4f1956b8646d83d856bfd3487ca1ea4f74a719d54474736127b5ff68600
   languageName: node
   linkType: hard
 

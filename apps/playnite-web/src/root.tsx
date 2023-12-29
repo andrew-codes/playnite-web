@@ -7,7 +7,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react'
+import { FC } from 'react'
 import { createHead } from 'remix-island'
+import { createGlobalStyle } from 'styled-components'
 
 const meta: MetaFunction = () => {
   return [
@@ -31,17 +33,25 @@ const Head = createHead(() => (
   </>
 ))
 
-function App() {
-  return (
-    <>
-      <Head />
-      <Outlet />
-      <ScrollRestoration />
-      <Scripts />
-      <LiveReload />
-    </>
-  )
+const GlobalStyles = createGlobalStyle`
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(17, 17, 17);
+  color: rgb(255, 255, 255);
 }
+`
+
+const App: FC<{}> = () => (
+  <>
+    <Head />
+    <GlobalStyles />
+    <Outlet />
+    <ScrollRestoration />
+    <Scripts />
+    <LiveReload />
+  </>
+)
 
 export default App
 export { Head, meta }
