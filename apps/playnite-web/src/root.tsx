@@ -5,7 +5,9 @@ import {
   MetaFunction,
   Outlet,
   Scripts,
+  ScrollRestoration,
 } from '@remix-run/react'
+import { createHead } from 'remix-island'
 
 const meta: MetaFunction = () => {
   return [
@@ -21,24 +23,25 @@ const meta: MetaFunction = () => {
   ]
 }
 
-const App = () => {
-  return (
-    <html>
-      <head>
-        <link rel="icon" href="data:image/x-icon;base64,AA" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <h1>Hello world!!!!</h1>
-        <Outlet />
+const Head = createHead(() => (
+  <>
+    <link rel="icon" href="data:image/x-icon;base64,AA" />
+    <Meta />
+    <Links />
+  </>
+))
 
-        <Scripts />
-        <LiveReload />
-      </body>
-    </html>
+function App() {
+  return (
+    <>
+      <Head />
+      <Outlet />
+      <ScrollRestoration />
+      <Scripts />
+      <LiveReload />
+    </>
   )
 }
 
 export default App
-export { meta }
+export { Head, meta }
