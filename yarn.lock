@@ -8694,6 +8694,7 @@ __metadata:
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     remix-esbuild-override: "npm:^3.1.0"
+    remix-island: "npm:^0.1.2"
     remix-routes: "npm:^1.5.1"
     styled-components: "npm:^6.1.6"
     typescript: "npm:^5.3.2"
@@ -9319,6 +9320,18 @@ __metadata:
   bin:
     remix-esbuild-override: dist/bin/esbuild-override.js
   checksum: 7e6b8c43df1b746775c70dea011ecfbc5e87f91b21cb5bb266553c21e7c7b7ea814ad642878e56cfcc293056c2cdc3af12938e17f9a959d665cb8b8672711e30
+  languageName: node
+  linkType: hard
+
+"remix-island@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "remix-island@npm:0.1.2"
+  peerDependencies:
+    "@remix-run/react": ">= 1"
+    "@remix-run/server-runtime": ">= 1"
+    react: ">= 16.8"
+    react-dom: ">= 16.8"
+  checksum: 69cdbdb9c19c774687257ca1b3c57fdef3f761fcfe971f9a1bd9e0d6e99acf549d52100fbbf3675511347c8c99a5cc192e2059e1142495d16a5c8a5e58507f60
   languageName: node
   linkType: hard
 
