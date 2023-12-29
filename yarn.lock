@@ -3793,7 +3793,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.3":
+"cross-env@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "cross-env@npm:7.0.3"
+  dependencies:
+    cross-spawn: "npm:^7.0.1"
+  bin:
+    cross-env: src/bin/cross-env.js
+    cross-env-shell: src/bin/cross-env-shell.js
+  checksum: f3765c25746c69fcca369655c442c6c886e54ccf3ab8c16847d5ad0e91e2f337d36eedc6599c1227904bf2a228d721e690324446876115bc8e7b32a866735ecf
+  languageName: node
+  linkType: hard
+
+"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
   dependencies:
@@ -8686,9 +8698,13 @@ __metadata:
     "@types/styled-components": "npm:^5.1.34"
     babel-plugin-styled-components: "npm:^2.1.4"
     concurrently: "npm:^8.2.2"
+    cross-env: "npm:^7.0.3"
     cypress: "npm:^13.6.1"
+    debug: "npm:^4.3.4"
+    dotenv: "npm:^16.3.1"
     express: "npm:^4.18.2"
     isbot: "npm:^3.7.1"
+    mongodb: "npm:^6.3.0"
     nx: "npm:17.1.2"
     prettier: "npm:^3.1.1"
     react: "npm:^18.2.0"
