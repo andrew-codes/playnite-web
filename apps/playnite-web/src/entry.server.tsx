@@ -6,8 +6,8 @@ import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
 import { renderHeadToString } from 'remix-island'
 import { ServerStyleSheet } from 'styled-components'
-import WritableWithStyles from './WritableWithStyles.js'
-import { Head } from './root.js'
+import WritableWithStyles from './WritableWithStyles'
+import { Head } from './root'
 
 const ABORT_DELAY = 5_000
 
