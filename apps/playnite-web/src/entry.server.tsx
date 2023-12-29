@@ -5,6 +5,8 @@ import isbot from 'isbot'
 import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
 import { renderHeadToString } from 'remix-island'
+import { ServerStyleSheet } from 'styled-components'
+import WritableWithStyles from './WritableWithStyles.js'
 import { Head } from './root.js'
 
 const ABORT_DELAY = 5_000
@@ -39,12 +41,15 @@ function handleBotRequest(
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false
+    const sheet = new ServerStyleSheet()
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      sheet.collectStyles(
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />,
+      ),
       {
         onAllReady() {
           shellRendered = true
@@ -61,11 +66,12 @@ function handleBotRequest(
             }),
           )
 
-          body.write(
+          const bodyWithStyles = new WritableWithStyles(body, sheet)
+          bodyWithStyles.write(
             `<!DOCTYPE html><html><head>${head}</head><body><div id="root">`,
           )
-          pipe(body)
-          body.write(`</div></body></html>`)
+          pipe(bodyWithStyles)
+          bodyWithStyles.write(`</div></body></html>`)
         },
         onShellError(error: unknown) {
           reject(error)
@@ -94,12 +100,15 @@ function handleBrowserRequest(
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false
+    const sheet = new ServerStyleSheet()
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      sheet.collectStyles(
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />,
+      ),
       {
         onShellReady() {
           shellRendered = true
@@ -115,11 +124,12 @@ function handleBrowserRequest(
               status: responseStatusCode,
             }),
           )
-          body.write(
+          const bodyWithStyles = new WritableWithStyles(body, sheet)
+          bodyWithStyles.write(
             `<!DOCTYPE html><html><head>${head}</head><body><div id="root">`,
           )
-          pipe(body)
-          body.write(`</div></body></html>`)
+          pipe(bodyWithStyles)
+          bodyWithStyles.write(`</div></body></html>`)
         },
         onShellError(error: unknown) {
           reject(error)
