@@ -4907,6 +4907,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["cross-env", [\
+      ["npm:7.0.3", {\
+        "packageLocation": "../../root/.yarn/berry/cache/cross-env-npm-7.0.3-96d81820f4-10c0.zip/node_modules/cross-env/",\
+        "packageDependencies": [\
+          ["cross-env", "npm:7.0.3"],\
+          ["cross-spawn", "npm:7.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["cross-spawn", [\
       ["npm:7.0.3", {\
         "packageLocation": "../../root/.yarn/berry/cache/cross-spawn-npm-7.0.3-e4ff3e65b3-10c0.zip/node_modules/cross-spawn/",\
@@ -10402,9 +10412,13 @@ const RAW_RUNTIME_STATE =
           ["@types/styled-components", "npm:5.1.34"],\
           ["babel-plugin-styled-components", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.1.4"],\
           ["concurrently", "npm:8.2.2"],\
+          ["cross-env", "npm:7.0.3"],\
           ["cypress", "npm:13.6.1"],\
+          ["debug", "virtual:92a28e392bb7746809827b7e8ebf6aec49c5f04125481214ae6ea6f4de204344bcccbe5eb3a2f4388bb368cfa5d84f03ce0d8f32a9fcc3f5e92ea34723da1c56#npm:4.3.4"],\
+          ["dotenv", "npm:16.3.1"],\
           ["express", "npm:4.18.2"],\
           ["isbot", "npm:3.7.1"],\
+          ["mongodb", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:6.3.0"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:17.1.2"],\
           ["prettier", "npm:3.1.1"],\
           ["react", "npm:18.2.0"],\
