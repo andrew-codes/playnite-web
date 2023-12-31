@@ -4,8 +4,14 @@
     "jsx": "react-jsx",
     "plugins": [
       {
-        "name": "typescript-remix-routes-plugin"
+        "name": "typescript-remix-routes-plugin",
+        "tag": "route",
       }
-    ]
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types",
+      "apps/playnite-web/node_modules"
+    ],
   },
 }
