@@ -38,4 +38,13 @@ type GameEntity = WithId<Document> &
     tagsIds: string[]
   }
 
-export type { GameEntity }
+type GameAssetType = 'games' | 'platforms'
+
+type GameAssetEntity = {
+  id: string
+  file: Buffer
+  relatedId: string
+  relatedType: GameAssetType
+}
+
+export type { GameAssetEntity, GameAssetType, GameEntity }

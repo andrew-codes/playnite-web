@@ -10,7 +10,7 @@ type DbConnectionOptions = {
 }
 
 const getDbClient = (connectionOptions?: DbConnectionOptions): MongoClient => {
-  const debug = createDebugger('game-db-updater/mqttClient')
+  const debug = createDebugger('playnite-web/MongoDbClient')
 
   if (!client) {
     const host = connectionOptions?.host ?? process.env.DB_HOST ?? 'localhost'
@@ -22,6 +22,7 @@ const getDbClient = (connectionOptions?: DbConnectionOptions): MongoClient => {
     debug(
       `Existing DB client not found; creating one with the following options: host=${host}, port=${port}, username=${username}`,
     )
+
     if (!username && !password) {
       client = new MongoClient(`mongodb://${host}:${port}`)
     } else {
@@ -34,7 +35,6 @@ const getDbClient = (connectionOptions?: DbConnectionOptions): MongoClient => {
     }
   }
 
-  debug('Returning mongoDB client')
   return client
 }
 

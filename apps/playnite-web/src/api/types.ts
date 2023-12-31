@@ -1,3 +1,29 @@
+type DomainType =
+  | 'ageRating'
+  | 'assets'
+  | 'company'
+  | 'completionStatus'
+  // | 'developer'
+  | 'gameFeature'
+  | 'games'
+  | 'gameSource'
+  | 'genre'
+  | 'platforms'
+  // | 'publisher'
+  | 'region'
+  | 'series'
+  | 'tag'
+
+interface IdentifyDomainObjects {
+  id: string
+  type: DomainType
+  toString(): string
+}
+
+type WithOid = {
+  oid: IdentifyDomainObjects
+}
+
 type Platform = {
   id: string
   name: string
@@ -5,6 +31,7 @@ type Platform = {
   cover: string
   icon: string
 }
+
 type Genre = {
   id: string
   name: string
@@ -48,9 +75,18 @@ type CompletionStatus = {
   id: string
   name: string
 }
+
 type AgeRating = {
   id: string
   name: string
+}
+
+type GameAssetType = 'games' | 'platforms'
+
+type GameAsset = WithOid & {
+  id: string
+  file: Buffer
+  related: IdentifyDomainObjects
 }
 
 const runStates = [
@@ -63,7 +99,7 @@ const runStates = [
 ] as const
 type RunState = (typeof runStates)[number]
 
-type Game = {
+type Game = WithOid & {
   added: Date
   ageRating?: AgeRating
   background: string
@@ -92,7 +128,9 @@ type Game = {
 }
 
 interface Api {
+  getGameById(id: string): Promise<Game>
   getGames(): Promise<Game[]>
+  getAssetRelatedTo(oid: IdentifyDomainObjects): Promise<Buffer>
 }
 
 export type {
@@ -100,9 +138,13 @@ export type {
   Api,
   CompletionStatus,
   Developer,
+  DomainType,
   Feature,
   Game,
+  GameAsset,
+  GameAssetType,
   Genre,
+  IdentifyDomainObjects,
   Platform,
   Publisher,
   RunState,
