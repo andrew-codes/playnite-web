@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "command": "yarn remix dev -c \"node server.mjs\""
+        "command": "yarn concurrently \"remix-routes -w\" \"yarn cross-env DEBUG='playnite-web/*' yarn remix dev -c 'node server.mjs'\""
       }
     },
     "test/components": {
@@ -27,7 +27,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["yarn remix build"],
+        "commands": ["yarn remix-routes && yarn remix build"],
         "cwd": "{projectRoot}"
       }
     },
