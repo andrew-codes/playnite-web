@@ -1,5 +1,6 @@
 import { FC, useMemo } from 'react'
 import { styled } from 'styled-components'
+import type { Game } from '../api/types'
 
 const OrderedList = styled.ol<{ width: number }>`
   margin: 0;
@@ -14,15 +15,28 @@ const ListItem = styled.li<{ width: number }>`
   width: ${({ width }) => width}px;
 `
 
-const Game = styled.section`
+const Game = styled.section<{ cover: string }>`
+  background-image: url(${({ cover }) => cover});
+  background-size: cover;
   border: 1px solid rgb(255, 255, 255);
   display: flex;
   flex: 1;
-  margin: 16px;
-  padding: 8px;
+  margin: 16px 8px;
+  padding: 0;
+  position: relative;
 `
 
-const GameList: FC<{ games: any[]; width: number; columns?: number }> = ({
+const GameTitle = styled.span`
+  color: #fff;
+  font-size: 1.5rem;
+  left: 10%;
+  position: absolute;
+  right: 10%;
+  text-align: center;
+  top: 20%;
+`
+
+const GameList: FC<{ games: Game[]; width: number; columns?: number }> = ({
   columns = 2,
   games,
   width,
@@ -39,7 +53,9 @@ const GameList: FC<{ games: any[]; width: number; columns?: number }> = ({
     <OrderedList width={width}>
       {games.map((game) => (
         <ListItem key={game.id} width={gameWidth}>
-          <Game>{game.name}</Game>
+          <Game cover={`coverArt/${game.oid.type}:${game.oid.id}`}>
+            <GameTitle hidden={!!game.cover}>{game.name}</GameTitle>
+          </Game>
         </ListItem>
       ))}
     </OrderedList>
