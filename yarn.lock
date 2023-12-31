@@ -1884,6 +1884,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@remix-run/server-runtime@npm:*, @remix-run/server-runtime@npm:2.4.1":
+  version: 2.4.1
+  resolution: "@remix-run/server-runtime@npm:2.4.1"
+  dependencies:
+    "@remix-run/router": "npm:1.14.1"
+    "@types/cookie": "npm:^0.5.3"
+    "@web3-storage/multipart-parser": "npm:^1.0.0"
+    cookie: "npm:^0.5.0"
+    set-cookie-parser: "npm:^2.4.8"
+    source-map: "npm:^0.7.3"
+  peerDependencies:
+    typescript: ^5.1.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 95f38f5e0d31a8d1cb1cda0edd1940051d61aebb5e30bb44410ff0d30a5676b5b5bd3a2cad4ab3088c43f8aa412985437745afc49b8b52569e6681cf8db7e8ee
+  languageName: node
+  linkType: hard
+
 "@remix-run/server-runtime@npm:2.4.0":
   version: 2.4.0
   resolution: "@remix-run/server-runtime@npm:2.4.0"
@@ -1900,25 +1919,6 @@ __metadata:
     typescript:
       optional: true
   checksum: 016b4059c086385a72826b9e07183fba7dcb8d1e8fd7e1b5cbe31e4e25366b5f724ebd9ac6f6b0ab45be4d8d9ce012aec99eb422762f43ff12b2ba77d2889f8f
-  languageName: node
-  linkType: hard
-
-"@remix-run/server-runtime@npm:2.4.1":
-  version: 2.4.1
-  resolution: "@remix-run/server-runtime@npm:2.4.1"
-  dependencies:
-    "@remix-run/router": "npm:1.14.1"
-    "@types/cookie": "npm:^0.5.3"
-    "@web3-storage/multipart-parser": "npm:^1.0.0"
-    cookie: "npm:^0.5.0"
-    set-cookie-parser: "npm:^2.4.8"
-    source-map: "npm:^0.7.3"
-  peerDependencies:
-    typescript: ^5.1.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 95f38f5e0d31a8d1cb1cda0edd1940051d61aebb5e30bb44410ff0d30a5676b5b5bd3a2cad4ab3088c43f8aa412985437745afc49b8b52569e6681cf8db7e8ee
   languageName: node
   linkType: hard
 
