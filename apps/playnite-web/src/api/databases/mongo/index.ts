@@ -1,4 +1,5 @@
 import createDebugger from 'debug'
+import _ from 'lodash'
 import { MongoClient } from 'mongodb'
 import Oid from '../../Oid'
 import { NoScore, NumericScore } from '../../Score'
@@ -7,6 +8,7 @@ import type { Game, IdentifyDomainObjects, RunState } from '../../types'
 import { getDbClient } from './client'
 
 const debug = createDebugger('playnite-web/MongoDbApi')
+const { startCase, toLower } = _
 
 const getRunState = (gameEntity: GameEntity): RunState => {
   if (gameEntity.isRunning) {
@@ -52,6 +54,7 @@ const gameEntityToGame = (gameEntity: GameEntity): Game => ({
   recentActivity: new Date(gameEntity.recentActivity),
   releaseDate: new Date(gameEntity.releaseDate),
   runState: getRunState(gameEntity),
+  sortName: startCase(toLower(gameEntity.name)),
   // series: Series[],
   // source: Source,
   // tags: Tag[],
