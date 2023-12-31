@@ -123,6 +123,7 @@ type Game = WithOid & {
   releaseDate: Date
   runState: RunState
   series?: Series[]
+  sortName: string
   source?: Source
   tags?: Tag[]
 }

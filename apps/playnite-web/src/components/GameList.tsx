@@ -1,6 +1,9 @@
+import _ from 'lodash'
 import { FC, useMemo } from 'react'
 import { styled } from 'styled-components'
 import type { Game } from '../api/types'
+
+const { groupBy } = _
 
 const OrderedList = styled.ol<{ width: number }>`
   margin: 0;
@@ -45,19 +48,28 @@ const GameList: FC<{ games: Game[]; width: number; columns?: number }> = ({
     return null
   }
 
+  const gamesGroupedByName = useMemo<Record<string, Game[]>>(
+    () => groupBy(games, 'sortName'),
+    [games],
+  )
+
   const gameWidth = useMemo(() => {
     return Math.trunc(width / columns)
   }, [width, columns])
 
   return (
     <OrderedList width={width}>
-      {games.map((game) => (
-        <ListItem key={game.id} width={gameWidth}>
-          <Game cover={`coverArt/${game.oid.type}:${game.oid.id}`}>
-            <GameTitle hidden={!!game.cover}>{game.name}</GameTitle>
-          </Game>
-        </ListItem>
-      ))}
+      {Object.entries(gamesGroupedByName).map(([name, games]) => {
+        const game = games[0]
+
+        return (
+          <ListItem key={game.id} width={gameWidth}>
+            <Game cover={`coverArt/${game.oid.type}:${game.oid.id}`}>
+              <GameTitle hidden={!!game.cover}>{game.name}</GameTitle>
+            </Game>
+          </ListItem>
+        )
+      })}
     </OrderedList>
   )
 }

@@ -11,8 +11,8 @@ async function loader({ request }: LoaderFunctionArgs) {
   const api = new PlayniteApi()
   const games = await api.getGames()
   games.sort((a, b) => {
-    const aName = a.name.toLowerCase()
-    const bName = b.name.toLowerCase()
+    const aName = a.sortName
+    const bName = b.sortName
     if (aName > bName) {
       return 1
     }
@@ -39,7 +39,7 @@ function Index() {
 
   return (
     <Main ref={ref}>
-      <GameList width={width} columns={4} games={games} />
+      <GameList width={width} columns={12} games={games} />
     </Main>
   )
 }
