@@ -11323,7 +11323,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["remix-island", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.1.2"],\
           ["@remix-run/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.4.0"],\
-          ["@remix-run/server-runtime", null],\
+          ["@remix-run/server-runtime", "virtual:e266eabc878c06e0fb7ee856ffa450ad0e9f6b58f996d84818af0495aeffc4a4072abba9ab7a1a9b90e6168f050f863032cf9f3d545dffc1bb4d21bc5ec297d5#npm:2.4.1"],\
           ["@types/react", "npm:18.2.45"],\
           ["@types/react-dom", "npm:18.2.17"],\
           ["@types/remix-run__react", null],\
@@ -11333,7 +11333,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "packagePeers": [\
           "@remix-run/react",\
-          "@remix-run/server-runtime",\
           "@types/react-dom",\
           "@types/react",\
           "@types/remix-run__react",\
