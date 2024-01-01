@@ -4,42 +4,47 @@ import { useLoaderData } from '@remix-run/react'
 import useDimensions from 'react-use-dimensions'
 import { styled } from 'styled-components'
 import PlayniteApi from '../api'
-import { Game } from '../api/types'
+import { Game, Playlist } from '../api/types'
 import GameList from '../components/GameList.js'
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = new PlayniteApi()
-  const games = await api.getGames()
-  games.sort((a, b) => {
-    const aName = a.sortName
-    const bName = b.sortName
-    if (aName > bName) {
-      return 1
-    }
-    if (aName < bName) {
-      return -1
-    }
-
-    return 0
-  })
+  const featured = ['on deck', 'up next']
+  const playlists = (await api.getPlaylists()).filter((playlist) =>
+    featured.includes(playlist.name.toLowerCase()),
+  )
+  const playlistGames = (await api.getPlaylistsGames(playlists)).sort(
+    (a, b) => {
+      if (a[0].name.toLowerCase() === 'on deck') {
+        return -1
+      } else {
+        return 1
+      }
+    },
+  )
 
   return json({
-    games,
+    playlists: playlistGames,
   })
 }
 
 const Main = styled.main``
 
 function Index() {
-  const { games } = useLoaderData<typeof loader>() as unknown as {
-    games: Game[]
+  const { playlists } = useLoaderData<typeof loader>() as unknown as {
+    playlists: [Playlist, Game[]][]
   }
 
   const [ref, { width }] = useDimensions()
 
   return (
     <Main ref={ref}>
-      <GameList width={width} columns={12} games={games} />
+      {playlists.map(([playlist, games]) => (
+        <section>
+          <h2>{playlist.name}</h2>
+          <GameList width={width} columns={12} games={games} />
+        </section>
+      ))}
     </Main>
   )
 }
