@@ -62,7 +62,8 @@ namespace PlayniteWeb
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Game> e)
     {
       var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
-      Task.WhenAll(gamePublisher.PublishGames(updatedGamesData));
+      Task.WhenAll(gamePublisher.PublishGames(updatedGamesData).Concat(gamePublisher.PublishGameRelationships())
+     );
     }
 
     private void HandleVerifySettings(object sender, PlayniteWebSettings e)
@@ -72,7 +73,7 @@ namespace PlayniteWeb
 
     public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
     {
-      libraryRefreshRequests.OnNext(Task.CompletedTask);
+      //libraryRefreshRequests.OnNext(Task.CompletedTask);
     }
 
     public override void OnGameInstalled(OnGameInstalledEventArgs args)
