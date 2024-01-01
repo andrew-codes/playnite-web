@@ -159,12 +159,12 @@ namespace PlayniteWeb
 
       if (!string.IsNullOrEmpty(game.CoverImage))
       {
-        yield return publishFile(PublishTopics.GameFile(game.Id, toAssetId(game.CoverImage)), game.CoverImage);
+        yield return publishFile(topicBuilder.GetPublishTopic(PublishTopics.GameFile(game.Id, toAssetId(game.CoverImage))), game.CoverImage);
       }
 
       if (!string.IsNullOrEmpty(game.BackgroundImage))
       {
-        yield return publishFile(PublishTopics.GameFile(game.Id, toAssetId(game.BackgroundImage)), game.CoverImage);
+        yield return publishFile(topicBuilder.GetPublishTopic(PublishTopics.GameFile(game.Id, toAssetId(game.BackgroundImage))), game.CoverImage);
       }
     }
 
