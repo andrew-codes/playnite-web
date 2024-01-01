@@ -1,5 +1,6 @@
 using MQTTnet.Client;
 using MQTTnet.Protocol;
+using Newtonsoft.Json.Linq;
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using PlayniteWeb.Services;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace PlayniteWeb
 {
@@ -185,6 +187,21 @@ namespace PlayniteWeb
       {
         yield return publishFile(topicBuilder.GetPublishTopic(PublishTopics.PlatformFile(platform.Id, toAssetId(platform.Icon))), platform.Icon);
       }
+    }
+
+    public IEnumerable<Task> PublishGameRelationships()
+    {
+      IEnumerable<string> ignored = new List<string> {
+        "Games", "Platforms", "ImportExclusions", "FilterPresets", "IsOpen"
+      };
+
+      var gameEntityProperties = typeof(IGameDatabase)
+         .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
+         .Where(propertyInfo => !ignored.Any(ignore => ignore == propertyInfo.Name));
+      var gameEntities = gameEntityProperties
+        .SelectMany(propertyInfo => (IEnumerable<DatabaseObject>)propertyInfo.GetValue(gameDatabase));
+      var platformPublications = gameDatabase.Platforms.SelectMany(PublishPlatform);
+      return platformPublications.Concat(gameEntities.Select(PublishGameEntity));
     }
   }
 }

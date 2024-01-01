@@ -14,5 +14,6 @@ namespace PlayniteWeb
 
     IEnumerable<Task> PublishGames(IEnumerable<Game> game);
     IEnumerable<Task> PublishLibrary();
+    IEnumerable<Task> PublishGameRelationships();
   }
 }
