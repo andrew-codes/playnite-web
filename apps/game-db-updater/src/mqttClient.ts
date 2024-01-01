@@ -34,8 +34,6 @@ const getMqttClient = async (
     })
   }
 
-  debug('Returning MQTT client')
-
   return mqttClient
 }
 
