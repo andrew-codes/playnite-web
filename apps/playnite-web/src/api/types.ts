@@ -89,6 +89,11 @@ type GameAsset = WithOid & {
   related: IdentifyDomainObjects
 }
 
+type Playlist = {
+  id: string
+  name: string
+}
+
 const runStates = [
   'installed',
   'installing',
@@ -129,8 +134,10 @@ type Game = WithOid & {
 }
 
 interface Api {
+  getPlaylists(): Promise<Playlist[]>
   getGameById(id: string): Promise<Game>
   getGames(): Promise<Game[]>
+  getPlaylistsGames(playlists: Playlist[]): Promise<[Playlist, Game[]][]>
   getAssetRelatedTo(oid: IdentifyDomainObjects): Promise<Buffer>
 }
 
@@ -147,6 +154,7 @@ export type {
   Genre,
   IdentifyDomainObjects,
   Platform,
+  Playlist,
   Publisher,
   RunState,
   Score,

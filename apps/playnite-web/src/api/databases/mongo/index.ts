@@ -4,7 +4,13 @@ import { MongoClient } from 'mongodb'
 import Oid from '../../Oid'
 import { NoScore, NumericScore } from '../../Score'
 import type { GameEntity } from '../../dbTypes'
-import type { Game, IdentifyDomainObjects, RunState } from '../../types'
+import type {
+  Game,
+  IdentifyDomainObjects,
+  Playlist,
+  RunState,
+  Tag,
+} from '../../types'
 import { getDbClient } from './client'
 
 const debug = createDebugger('playnite-web/MongoDbApi')
@@ -63,7 +69,9 @@ const gameEntityToGame = (gameEntity: GameEntity): Game => ({
 interface MongoDbApi {
   getGameById(id: string): Promise<Game>
   getGames(): Promise<Game[]>
+  getTags(): Promise<Tag[]>
   getAssetRelatedTo(oid: IdentifyDomainObjects): Promise<Buffer>
+  getPlaylistsGames(playlists: Playlist[]): Promise<[Playlist, Game[]][]>
 }
 
 class MongoDb implements MongoDbApi {
@@ -81,6 +89,39 @@ class MongoDb implements MongoDbApi {
       debug('Disconnected from MongoDB')
       this.isConnected = false
     })
+  }
+
+  async getTags(): Promise<Tag[]> {
+    await this.connect()
+
+    return (await this.client
+      .db('games')
+      .collection('tag')
+      .find({})
+      .toArray()) as unknown as Tag[]
+  }
+
+  async getPlaylistsGames(
+    playlists: Playlist[],
+  ): Promise<[Playlist, Game[]][]> {
+    await this.connect()
+
+    return await Promise.all(
+      playlists.map(async (playlist) => {
+        const games = await this.client
+          .db('games')
+          .collection('games')
+          .find({ 'tags.id': playlist.id })
+          .map<Game>((entity) => {
+            const gameEntity = entity as GameEntity
+
+            return gameEntityToGame(gameEntity)
+          })
+          .toArray()
+
+        return [playlist, games]
+      }),
+    )
   }
 
   private async connect() {
