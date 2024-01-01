@@ -23,7 +23,6 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
     `Persisting game entity asset ${entityType} with id ${entityId} and with asset ID ${assetId}`,
   )
   const binaryFile = new Binary(payload)
-  const _id = new ObjectId()
   const relatedId = entityId
   const assetDoc = {
     relatedId,
