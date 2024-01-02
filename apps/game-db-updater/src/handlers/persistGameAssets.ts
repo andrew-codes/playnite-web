@@ -6,7 +6,7 @@ import { getDbClient } from '../dbClient'
 const debug = createDebugger('game-db-updater/handler/persistGameEntities')
 
 const topicMatch =
-  /^playnite\/.*\/entity\/(?<entityType>[a-z0-9\-]+)\/(?<entityId>[a-z0-9\-]+)\/asset\/(?<assetId>[a-z0-9\-]+)$/
+  /^playnite\/.*\/entity\/(?<entityType>[a-z0-9\-]+)\/(?<entityId>[a-z0-9\-]+)\/asset\/(?<assetId>.*)$/
 
 const handler: IHandlePublishedTopics = async (topic, payload) => {
   if (!topicMatch.test(topic)) {
