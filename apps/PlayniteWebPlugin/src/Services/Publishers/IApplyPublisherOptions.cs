@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace PlayniteWeb
+namespace PlayniteWeb.Services.Publishers
 {
   public interface IApplyPublisherOptions<TPublishClient>
   {
