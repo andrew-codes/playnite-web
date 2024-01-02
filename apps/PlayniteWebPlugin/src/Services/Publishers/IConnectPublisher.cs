@@ -3,17 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PlayniteWeb
+namespace PlayniteWeb.Services.Publishers
 {
-  public interface IPublishGamesToPlayniteWeb<TPublishClient>
+  public interface IConnectPublisher<TPublishClient>
   {
     void StartConnection(IApplyPublisherOptions<TPublishClient> options);
     Task StartDisconnect();
 
     event EventHandler<Task> LibraryRefreshRequest;
-
-    IEnumerable<Task> PublishGames(IEnumerable<Game> game);
-    IEnumerable<Task> PublishLibrary();
-    IEnumerable<Task> PublishGameRelationships();
   }
 }

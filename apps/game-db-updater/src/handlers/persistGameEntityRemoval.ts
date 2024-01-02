@@ -5,7 +5,7 @@ import { getDbClient } from '../dbClient'
 const debug = createDebugger('game-db-updater/handler/persistGameEntities')
 
 const topicMatch =
-  /^playnite\/.*\/entity\/(?<entityType>[a-z0-9\-]+)\/(?<entityId>[a-z0-9\-]+)$/
+  /^playnite\/.*\/entity\/(?<entityType>[a-z0-9\-]+)\/(?<entityId>[a-z0-9\-]+)\/removed$/
 
 const handler: IHandlePublishedTopics = async (topic, payload) => {
   if (!topicMatch.test(topic)) {
@@ -19,18 +19,13 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
 
   const { entityType, entityId } = match.groups
   debug(
-    `Persisting game entity ${entityType} with id ${entityId} for topic ${topic}`,
+    `Persisting game entity ${entityType} removal with id ${entityId} for topic ${topic}`,
   )
   try {
-    const entity = JSON.parse(payload.toString())
-
     const collectionName = entityType[0].toLowerCase() + entityType.slice(1)
 
     const client = await getDbClient()
-    client
-      .db('games')
-      .collection(collectionName)
-      .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
+    client.db('games').collection(collectionName).deleteOne({ id: entityId })
   } catch (e) {
     console.error(e)
   }

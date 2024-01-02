@@ -1,6 +1,6 @@
 using System;
 
-namespace PlayniteWeb.Services.Mqtt
+namespace PlayniteWeb.TopicManager
 {
   public class TopicManager : IManageTopics
   {

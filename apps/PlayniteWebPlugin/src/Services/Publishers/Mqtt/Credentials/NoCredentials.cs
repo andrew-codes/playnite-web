@@ -1,6 +1,6 @@
 using MQTTnet.Client;
 
-namespace PlayniteWeb.UI
+namespace PlayniteWeb.Services.Publishers.Mqtt.Credentials
 {
   internal class NoCredentials : IApplyMqttCredentials
   {
