@@ -7,12 +7,15 @@ using Playnite.SDK.Plugins;
 using PlayniteWeb.Services;
 using PlayniteWeb.Services.Publishers;
 using PlayniteWeb.Services.Publishers.Mqtt;
+using PlayniteWeb.TopicManager;
 using PlayniteWeb.UI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -33,8 +36,9 @@ namespace PlayniteWeb
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> otherEntityUpdated;
     private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> collectionUpdates;
     private readonly IObservable<EventPattern<ItemCollectionChangedEventArgs<DatabaseObject>>> collectionUpdated;
-
+    private readonly IEnumerable<MainMenuItem> mainMenuItems;
     private PlayniteWebSettingsViewModel settings { get; set; }
+    private readonly IManageTopics topicManager;
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
@@ -42,18 +46,17 @@ namespace PlayniteWeb
     {
       IMqttClient client = new MqttFactory().CreateMqttClient();
       settings = new PlayniteWebSettingsViewModel(this);
-      TopicManager.IManageTopics topicManager = new TopicManager.TopicManager(settings.Settings);
+      topicManager = new TopicManager.TopicManager(settings.Settings);
       publisher = new MqttPublisher(client, topicManager);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
       };
       var serializer = new ObjectSerializer();
-      gamePublisher = new PublishGame(client, topicManager, serializer, api.Database);
-      platformPublisher = new PublishPlatform(client, topicManager, serializer, api.Database);
-      gameEntityPublisher = new PublishGameEntity(client, topicManager, serializer, api.Database);
-      gameEntityRemovalPublisher = new PublishGameEntityRemoval(client, topicManager, serializer, api.Database);
-
+      gamePublisher = new PublishGame((IMqttClient)publisher, topicManager, serializer, api.Database);
+      platformPublisher = new PublishPlatform((IMqttClient)publisher, topicManager, serializer, api.Database);
+      gameEntityPublisher = new PublishGameEntity((IMqttClient)publisher, topicManager, serializer, api.Database);
+      gameEntityRemovalPublisher = new PublishGameEntityRemoval((IMqttClient)publisher, topicManager, serializer, api.Database);
 
       gameUpdates = new Subject<ItemUpdatedEventArgs<Game>>();
       gameUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
@@ -129,6 +132,34 @@ namespace PlayniteWeb
       }
         );
       collectionUpdated.Subscribe(e => collectionUpdates.OnNext(e.EventArgs));
+
+      mainMenuItems = new List<MainMenuItem>
+            {
+                new MainMenuItem
+                {
+                    Description = "Sync Library", MenuSection = "@Playnite Web", Action = SyncLibrary
+                },
+            };
+    }
+
+    private void SyncLibrary(MainMenuItemActionArgs args)
+    {
+      var gamePublications = PlayniteApi.Database.Games.SelectMany(game => gamePublisher.Publish(game));
+      var platformPublications = PlayniteApi.Database.Platforms.SelectMany(platform => platformPublisher.Publish(platform));
+
+      IEnumerable<string> ignored = new List<string> {
+        "Games", "Platforms", "ImportExclusions", "FilterPresets", "IsOpen"
+      };
+      var gameEntityProperties = typeof(IGameDatabase)
+        .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
+        .Where(propertyInfo => !ignored.Any(ignore => ignore == propertyInfo.Name));
+      var gameEntities = gameEntityProperties
+        .SelectMany(propertyInfo => (IEnumerable<DatabaseObject>)propertyInfo.GetValue(PlayniteApi.Database));
+      var otherGameEntityPublications = gameEntities.SelectMany(entity => gameEntityPublisher.Publish(entity));
+
+
+      var tasks = gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications);
+      Task.WhenAll(tasks);
     }
 
     private void StartConnection(PlayniteWebSettings settings)
@@ -242,6 +273,11 @@ namespace PlayniteWeb
     public override UserControl GetSettingsView(bool firstRunSettings)
     {
       return new PlayniteWebSettingsView();
+    }
+
+    public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
+    {
+      return mainMenuItems.AsEnumerable();
     }
   }
 }
