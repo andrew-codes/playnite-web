@@ -37,7 +37,7 @@ class PlayniteWebApi implements Api {
   async getPlaylistsGames(
     playlists: Playlist[],
   ): Promise<[Playlist, Game[]][]> {
-    return this.mongo.getPlaylistsGames(playlists)
+    return this.mongo.getTagsGames(playlists)
   }
 }
 

@@ -19,6 +19,7 @@ async function loader({ request, params }: LoaderFunctionArgs) {
       headers: { 'Content-Type': 'image/jpg' },
     })
   } catch (e) {
+    console.error(e)
     return new Response(null, {
       status: 500,
     })
