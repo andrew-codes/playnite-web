@@ -33,7 +33,7 @@ const getRunState = (gameEntity: GameEntity): RunState => {
 }
 
 const gameEntityToGame = (gameEntity: GameEntity): Game => ({
-  oid: new Oid(`games:${gameEntity.id}`),
+  oid: new Oid(`game:${gameEntity.id}`),
   added: new Date(gameEntity.added),
   // ageRating: AgeRating,
   background: gameEntity.backgroundImage?.replace(`${gameEntity.id}\\`, ''),
@@ -71,7 +71,7 @@ interface MongoDbApi {
   getGames(): Promise<Game[]>
   getTags(): Promise<Tag[]>
   getAssetRelatedTo(oid: IdentifyDomainObjects): Promise<Buffer>
-  getPlaylistsGames(playlists: Playlist[]): Promise<[Playlist, Game[]][]>
+  getTagsGames(tags: Tag[]): Promise<[Playlist, Game[]][]>
 }
 
 class MongoDb implements MongoDbApi {
@@ -101,17 +101,15 @@ class MongoDb implements MongoDbApi {
       .toArray()) as unknown as Tag[]
   }
 
-  async getPlaylistsGames(
-    playlists: Playlist[],
-  ): Promise<[Playlist, Game[]][]> {
+  async getTagsGames(tags: Tag[]): Promise<[Playlist, Game[]][]> {
     await this.connect()
 
     return await Promise.all(
-      playlists.map(async (playlist) => {
+      tags.map(async (tag) => {
         const games = await this.client
           .db('games')
-          .collection('games')
-          .find({ 'tags.id': playlist.id })
+          .collection('game')
+          .find({ 'tags.id': tag.id })
           .map<Game>((entity) => {
             const gameEntity = entity as GameEntity
 
@@ -119,7 +117,7 @@ class MongoDb implements MongoDbApi {
           })
           .toArray()
 
-        return [playlist, games]
+        return [tag, games]
       }),
     )
   }
@@ -150,7 +148,7 @@ class MongoDb implements MongoDbApi {
 
     const gameEntity = (await this.client
       .db('games')
-      .collection('games')
+      .collection('game')
       .findOne({ id })) as unknown as GameEntity | null
 
     if (!gameEntity) {
@@ -165,7 +163,7 @@ class MongoDb implements MongoDbApi {
 
     return this.client
       .db('games')
-      .collection('games')
+      .collection('game')
       .find({})
       .map<Game>((entity) => {
         const gameEntity = entity as GameEntity
