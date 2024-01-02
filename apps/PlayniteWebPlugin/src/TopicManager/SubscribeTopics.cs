@@ -1,4 +1,4 @@
-namespace PlayniteWeb.Services.Mqtt
+namespace PlayniteWeb.TopicManager
 {
   public static class SubscribeTopics
   {

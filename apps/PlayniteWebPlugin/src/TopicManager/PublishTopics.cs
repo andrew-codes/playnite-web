@@ -1,16 +1,13 @@
 using System;
 
-namespace PlayniteWeb.Services.Mqtt
+namespace PlayniteWeb.TopicManager
 {
   public static class PublishTopics
   {
     public static string Connection() => "connection";
     public static string LibraryRequesteCompleted() => "library/request/state";
-    public static string Game(Guid id) => GameEntity("games", id);
-    public static string GameFile (Guid id, string assetId) => GameEntityAsset("games", id, assetId);
-    public static string Platform(Guid id) => GameEntity("platforms", id);
-    public static string PlatformFile(Guid id, string assetId) => GameEntityAsset("platforms", id, assetId);
-    public static string GameEntity(string name, Guid id) => $"entity/{name}/{id}";
-    public static string GameEntityAsset(string name, Guid id, string assetId) => $"entity/{name.ToCamelCase()}/{id}/asset/{assetId}";
-  }
-}
+    public static string Game(Guid id) => GameEntity("game", id);
+    public static string Platform(Guid id) => GameEntity("platform", id);
+    public static string GameEntity(string name, Guid id) => $"entity/{name.ToLower()}/{id}";
+    public static string GameEntityRemoval(string name, Guid id) => $"{GameEntity(name, id)}/removed";
+} }
