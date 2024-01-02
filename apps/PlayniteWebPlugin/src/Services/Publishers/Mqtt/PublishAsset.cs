@@ -21,6 +21,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       this.client = client;
       this.filePath = filePath;
       this.gameDatabase = gameDatabase;
+      this.rootTopic = rootTopic;
     }
 
     private string toAssetId(string assetFilePath)
