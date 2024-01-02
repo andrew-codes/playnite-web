@@ -1,12 +1,13 @@
 using MQTTnet.Client;
 using Playnite.SDK;
+using PlayniteWeb.Services.Publishers.Mqtt.Credentials;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 
-namespace PlayniteWeb.UI
+namespace PlayniteWeb.Services.Publishers.Mqtt
 {
   internal class MqttPublisherOptions : IApplyPublisherOptions<IMqttClient>
   {
