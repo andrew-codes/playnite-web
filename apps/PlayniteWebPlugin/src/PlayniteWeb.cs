@@ -4,7 +4,9 @@ using Playnite.SDK;
 using Playnite.SDK.Events;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
-using PlayniteWeb.Services.Mqtt;
+using PlayniteWeb.Services;
+using PlayniteWeb.Services.Publishers;
+using PlayniteWeb.Services.Publishers.Mqtt;
 using PlayniteWeb.UI;
 using System;
 using System.Linq;
@@ -18,11 +20,19 @@ namespace PlayniteWeb
 {
   public class PlayniteWeb : GenericPlugin
   {
-    private readonly IPublishGamesToPlayniteWeb<IMqttClient> gamePublisher;
-    private readonly Subject<Task> libraryRefreshRequests;
+    private readonly IConnectPublisher<IMqttClient> publisher;
+    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
+    private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
     private readonly Subject<ItemUpdatedEventArgs<Game>> gameUpdates;
-    private IObservable<EventPattern<Task>> libraryRefreshRequestReceived;
-    private IObservable<EventPattern<ItemUpdatedEventArgs<Game>>> gameUpdated;
+    private readonly IPublishToPlaynite gamePublisher;
+    private readonly IPublishToPlaynite platformPublisher;
+    private readonly IPublishToPlaynite gameEntityPublisher;
+    private readonly IPublishToPlaynite gameEntityRemovalPublisher;
+    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Game>>> gameUpdated;
+    private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> otherEntityUpdates;
+    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> otherEntityUpdated;
+    private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> collectionUpdates;
+    private readonly IObservable<EventPattern<ItemCollectionChangedEventArgs<DatabaseObject>>> collectionUpdated;
 
     private PlayniteWebSettingsViewModel settings { get; set; }
 
@@ -32,38 +42,139 @@ namespace PlayniteWeb
     {
       IMqttClient client = new MqttFactory().CreateMqttClient();
       settings = new PlayniteWebSettingsViewModel(this);
-      IManageTopics topicManager = new TopicManager(settings.Settings);
-      gamePublisher = new MqttGamePublisher(client, topicManager, api.Database);
+      TopicManager.IManageTopics topicManager = new TopicManager.TopicManager(settings.Settings);
+      publisher = new MqttPublisher(client, topicManager);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
       };
+      var serializer = new ObjectSerializer();
+      gamePublisher = new PublishGame(client, topicManager, serializer, api.Database);
+      platformPublisher = new PublishPlatform(client, topicManager, serializer, api.Database);
+      gameEntityPublisher = new PublishGameEntity(client, topicManager, serializer, api.Database);
+      gameEntityRemovalPublisher = new PublishGameEntityRemoval(client, topicManager, serializer, api.Database);
 
-      libraryRefreshRequestReceived = Observable.FromEventPattern<Task>(h => gamePublisher.LibraryRefreshRequest += h, h => gamePublisher.LibraryRefreshRequest -= h);
-      libraryRefreshRequests = new Subject<Task>();
-      libraryRefreshRequests.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
 
-      gameUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<Game>>(h => PlayniteApi.Database.Games.ItemUpdated += h, h => PlayniteApi.Database.Games.ItemUpdated -= h);
       gameUpdates = new Subject<ItemUpdatedEventArgs<Game>>();
       gameUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
+      gameUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<Game>>(h => PlayniteApi.Database.Games.ItemUpdated += h, h => PlayniteApi.Database.Games.ItemUpdated -= h);
+      gameUpdated.Subscribe(e => gameUpdates.OnNext(e.EventArgs));
+
+      platformUpdates = new Subject<ItemUpdatedEventArgs<Platform>>();
+      platformUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
+      platformUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<Platform>>(h => PlayniteApi.Database.Platforms.ItemUpdated += h, h => PlayniteApi.Database.Platforms.ItemUpdated -= h);
+      platformUpdated.Subscribe(e => platformUpdates.OnNext(e.EventArgs));
+
+      var handlers = new EventHandlers();
+
+      otherEntityUpdates = new Subject<ItemUpdatedEventArgs<DatabaseObject>>();
+      otherEntityUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
+      otherEntityUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<DatabaseObject>>(h =>
+      {
+        PlayniteApi.Database.AgeRatings.ItemUpdated += handlers.RegisterItemUpdateHandler<AgeRating>(h);
+        PlayniteApi.Database.Categories.ItemUpdated += handlers.RegisterItemUpdateHandler<Category>(h);
+        PlayniteApi.Database.Companies.ItemUpdated += handlers.RegisterItemUpdateHandler<Company>(h);
+        PlayniteApi.Database.CompletionStatuses.ItemUpdated += handlers.RegisterItemUpdateHandler<CompletionStatus>(h);
+        PlayniteApi.Database.Features.ItemUpdated += handlers.RegisterItemUpdateHandler<GameFeature>(h);
+        PlayniteApi.Database.Genres.ItemUpdated += handlers.RegisterItemUpdateHandler<Genre>(h);
+        PlayniteApi.Database.Regions.ItemUpdated += handlers.RegisterItemUpdateHandler<Region>(h);
+        PlayniteApi.Database.Series.ItemUpdated += handlers.RegisterItemUpdateHandler<Series>(h);
+        PlayniteApi.Database.Sources.ItemUpdated += handlers.RegisterItemUpdateHandler<GameSource>(h);
+        PlayniteApi.Database.Tags.ItemUpdated += handlers.RegisterItemUpdateHandler<Tag>(h);
+      },
+      h =>
+      {
+        PlayniteApi.Database.AgeRatings.ItemUpdated -= handlers.GetItemUpdateHandler<AgeRating>();
+        PlayniteApi.Database.Categories.ItemUpdated -= handlers.GetItemUpdateHandler<Category>();
+        PlayniteApi.Database.Companies.ItemUpdated -= handlers.GetItemUpdateHandler<Company>();
+        PlayniteApi.Database.CompletionStatuses.ItemUpdated -= handlers.GetItemUpdateHandler<CompletionStatus>();
+        PlayniteApi.Database.Features.ItemUpdated -= handlers.GetItemUpdateHandler<GameFeature>();
+        PlayniteApi.Database.Genres.ItemUpdated -= handlers.GetItemUpdateHandler<Genre>();
+        PlayniteApi.Database.Regions.ItemUpdated -= handlers.GetItemUpdateHandler<Region>();
+        PlayniteApi.Database.Series.ItemUpdated -= handlers.GetItemUpdateHandler<Series>();
+        PlayniteApi.Database.Tags.ItemUpdated -= handlers.GetItemUpdateHandler<Tag>();
+      });
+      otherEntityUpdated.Subscribe(e => otherEntityUpdates.OnNext(e.EventArgs));
+
+      collectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
+      collectionUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
+      collectionUpdated = Observable.FromEventPattern<ItemCollectionChangedEventArgs<DatabaseObject>>(h =>
+      {
+        PlayniteApi.Database.AgeRatings.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<AgeRating>(h);
+        PlayniteApi.Database.Categories.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Category>(h);
+        PlayniteApi.Database.Companies.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Company>(h);
+        PlayniteApi.Database.CompletionStatuses.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<CompletionStatus>(h);
+        PlayniteApi.Database.Features.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<GameFeature>(h);
+        PlayniteApi.Database.Games.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Game>(h);
+        PlayniteApi.Database.Genres.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Genre>(h);
+        PlayniteApi.Database.Platforms.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Platform>(h);
+        PlayniteApi.Database.Regions.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Region>(h);
+        PlayniteApi.Database.Series.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Series>(h);
+        PlayniteApi.Database.Sources.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<GameSource>(h);
+        PlayniteApi.Database.Tags.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Tag>(h);
+      },
+      h =>
+      {
+        PlayniteApi.Database.AgeRatings.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<AgeRating>();
+        PlayniteApi.Database.Categories.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Category>();
+        PlayniteApi.Database.Companies.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Company>();
+        PlayniteApi.Database.CompletionStatuses.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<CompletionStatus>();
+        PlayniteApi.Database.Features.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<GameFeature>();
+        PlayniteApi.Database.Games.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Game>();
+        PlayniteApi.Database.Genres.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Genre>();
+        PlayniteApi.Database.Platforms.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Platform>();
+        PlayniteApi.Database.Regions.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Region>();
+        PlayniteApi.Database.Series.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Series>();
+        PlayniteApi.Database.Tags.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Tag>();
+      }
+        );
+      collectionUpdated.Subscribe(e => collectionUpdates.OnNext(e.EventArgs));
     }
 
     private void StartConnection(PlayniteWebSettings settings)
     {
       var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, Id.ToByteArray());
-      gamePublisher.StartConnection(options);
-    }
-
-    private Task HandleLibraryRefreshed(Task incoming)
-    {
-      return incoming.ContinueWith(t => Task.WhenAll(gamePublisher.PublishLibrary())); ;
+      publisher.StartConnection(options);
     }
 
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Game> e)
     {
       var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
-      Task.WhenAll(gamePublisher.PublishGames(updatedGamesData).Concat(gamePublisher.PublishGameRelationships())
+      Task.WhenAll(updatedGamesData.SelectMany(item => gamePublisher.Publish(item))
      );
+    }
+
+    private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
+    {
+      var updatedPlatforms = e.UpdatedItems.Select(g => g.NewData);
+      Task.WhenAll(updatedPlatforms.SelectMany(item => platformPublisher.Publish(item))
+     );
+    }
+
+    private void HandleOtherGameEntitiesUpdated(object sender, ItemUpdatedEventArgs<DatabaseObject> e)
+    {
+      var updates = e.UpdatedItems.Select(g => g.NewData);
+      Task.WhenAll(updates.SelectMany(item => gameEntityPublisher.Publish(item))
+     );
+    }
+
+    private void HandleCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
+    {
+      Task.WhenAll(e.AddedItems.SelectMany(item =>
+      {
+        if (item.GetType() == typeof(Game))
+        {
+          return gameEntityPublisher.Publish(item);
+        }
+        if (item.GetType() == typeof(Platform))
+        {
+          return platformPublisher.Publish(item);
+        }
+
+        return gameEntityPublisher.Publish(item);
+      }));
+
+      Task.WhenAll(e.RemovedItems.SelectMany(item => gameEntityRemovalPublisher.Publish(item)));
     }
 
     private void HandleVerifySettings(object sender, PlayniteWebSettings e)
@@ -73,7 +184,6 @@ namespace PlayniteWeb
 
     public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
     {
-      //libraryRefreshRequests.OnNext(Task.CompletedTask);
     }
 
     public override void OnGameInstalled(OnGameInstalledEventArgs args)
@@ -106,22 +216,22 @@ namespace PlayniteWeb
       settings.OnVerifySettings += HandleVerifySettings;
 
       StartConnection(settings.Settings);
-
-      libraryRefreshRequestReceived.Subscribe(e => libraryRefreshRequests.OnNext(Task.CompletedTask));
-      libraryRefreshRequests.Subscribe(e => HandleLibraryRefreshed(e));
-
-      gameUpdated.Subscribe(e => gameUpdates.OnNext(e.EventArgs));
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
+      platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
+      otherEntityUpdates.Subscribe(e => HandleOtherGameEntitiesUpdated(this, e));
+      collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
     }
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
       settings.OnVerifySettings -= HandleVerifySettings;
 
-      libraryRefreshRequests.Dispose();
       gameUpdates.Dispose();
+      platformUpdates.Dispose();
+      otherEntityUpdates.Dispose();
+      collectionUpdates.Dispose();
 
-      gamePublisher.StartDisconnect().Wait();
+      publisher.StartDisconnect().Wait();
     }
 
     public override ISettings GetSettings(bool firstRunSettings)
