@@ -1,12 +1,11 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { useMemo } from 'react'
-import useDimensions from 'react-use-dimensions'
 import { styled } from 'styled-components'
 import PlayniteApi from '../api'
 import { Game } from '../api/types'
-import GameList from '../components/GameList.js'
+import GameList from '../components/GameList'
+import GameListItem from '../components/GameListItem'
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = new PlayniteApi()
@@ -35,7 +34,13 @@ async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-const Main = styled.main``
+const Main = styled.main`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+`
 
 const spacing = 8
 const maxGameWidth = 300
@@ -50,33 +55,17 @@ function Index() {
     height: number
   }
 
-  const [ref, { width: actualWidth, height: actualHeight }] = useDimensions()
-
-  const [rows, columns] = useMemo(() => {
-    if (width && height) {
-      const rows = Math.floor(height / maxGameHeight)
-      const columns = Math.floor(width / maxGameWidth)
-      return [rows, columns]
-    }
-
-    if (actualWidth && actualHeight) {
-      const rows = Math.floor(actualHeight / maxGameHeight)
-      const columns = Math.floor(actualWidth / maxGameWidth)
-      return [rows, columns]
-    }
-
-    return [6, 12]
-  }, [width, height, actualWidth, actualHeight])
-
   return (
-    <Main ref={ref}>
+    <Main>
+      <h1>Browse</h1>
       <GameList
-        rows={rows}
-        columns={columns}
+        Game={GameListItem}
         games={games}
         maxGameHeight={maxGameHeight - spacing * 2}
         maxGameWidth={maxGameWidth - spacing * 2}
         spacing={spacing}
+        width={width}
+        height={height}
       />
     </Main>
   )
