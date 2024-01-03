@@ -10,6 +10,8 @@ const FillParent = styled.div`
   flex: 1;
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
 `
 
 const Viewport = styled.div.attrs<{ $height: number; $width: number }>(
