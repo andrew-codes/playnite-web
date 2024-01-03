@@ -1,11 +1,6 @@
-import type {
-  Api,
-  Game,
-  IdentifyDomainObjects,
-  Playlist,
-} from 'apps/playnite-web/src/api/types'
 import type { MongoDbApi } from './databases/mongo'
 import MongoDb from './databases/mongo'
+import type { Api, Game, IdentifyDomainObjects, Playlist } from './types'
 
 class PlayniteWebApi implements Api {
   private mongo: MongoDbApi
