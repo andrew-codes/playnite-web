@@ -18,14 +18,8 @@ async function loader({ request }: LoaderFunctionArgs) {
   ].filter((playlist) => !!playlist) as Playlist[]
   const playlistGames = await api.getPlaylistsGames(playlists)
 
-  const url = new URL(request.url)
-  const width = url.searchParams.get('width')
-  const height = url.searchParams.get('height')
-
   return json({
     playlists: playlistGames,
-    width: !!width ? parseInt(width) : null,
-    height: !!height ? parseInt(height) : null,
   })
 }
 
@@ -55,11 +49,7 @@ const maxGameWidth = 300
 const maxGameHeight = (maxGameWidth * 4) / 3
 
 function Index() {
-  const { playlists, height, width } = useLoaderData<
-    typeof loader
-  >() as unknown as {
-    width: number
-    height: number
+  const { playlists } = useLoaderData<typeof loader>() as unknown as {
     playlists: [Playlist, Game[]][]
   }
 
@@ -75,13 +65,11 @@ function Index() {
               maxGameHeight={maxGameHeight - spacing * 2}
               maxGameWidth={maxGameWidth - spacing * 2}
               spacing={spacing}
-              width={width}
-              height={height}
             />
           </PlaylistListItem>
         ))}
       </PlaylistList>
-      <a href={`/browse?width=${width}&height=${height}`}>Browse All</a>
+      <a href={`/browse`}>Browse All</a>
     </Main>
   )
 }

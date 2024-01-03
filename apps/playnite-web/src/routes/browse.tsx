@@ -23,14 +23,8 @@ async function loader({ request }: LoaderFunctionArgs) {
     return 0
   })
 
-  const url = new URL(request.url)
-  const width = url.searchParams.get('width')
-  const height = url.searchParams.get('height')
-
   return json({
     games,
-    width: !!width ? parseInt(width) : null,
-    height: !!height ? parseInt(height) : null,
   })
 }
 
@@ -47,12 +41,8 @@ const maxGameWidth = 300
 const maxGameHeight = (maxGameWidth * 4) / 3
 
 function Index() {
-  const { games, height, width } = useLoaderData<
-    typeof loader
-  >() as unknown as {
+  const { games } = useLoaderData<typeof loader>() as unknown as {
     games: Game[]
-    width: number
-    height: number
   }
 
   return (
@@ -64,8 +54,6 @@ function Index() {
         maxGameHeight={maxGameHeight - spacing * 2}
         maxGameWidth={maxGameWidth - spacing * 2}
         spacing={spacing}
-        width={width}
-        height={height}
       />
     </Main>
   )

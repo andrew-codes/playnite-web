@@ -79,8 +79,6 @@ const GameList: FC<{
   games: Game[]
   maxGameWidth: number
   maxGameHeight: number
-  width?: number
-  height?: number
   spacing: number
   Game: FC<{
     cover: string
@@ -88,7 +86,7 @@ const GameList: FC<{
     height: number
     width: number
   }>
-}> = ({ games, spacing, maxGameWidth, maxGameHeight, Game, height, width }) => {
+}> = ({ games, spacing, maxGameWidth, maxGameHeight, Game }) => {
   const normalizedGames = useMemo<Game[][]>(
     () => Object.values(groupBy(games, 'sortName')),
     [games],
@@ -101,13 +99,6 @@ const GameList: FC<{
       const rows = Math.floor(actualHeight / maxGameHeight)
       const columns = Math.floor(actualWidth / maxGameWidth)
       return [rows, columns, rows * columns]
-    }
-
-    if (width && height) {
-      const rows = Math.floor(height / maxGameHeight)
-      const columns = Math.floor(width / maxGameWidth)
-
-      return [rows, columns]
     }
 
     return [null, null, 0]
