@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { styled } from 'styled-components'
-import type { Game } from '../api/types'
+import type { Game } from '../api/playnite/types'
 
 const Game = styled.section.attrs<{
   $cover: string
