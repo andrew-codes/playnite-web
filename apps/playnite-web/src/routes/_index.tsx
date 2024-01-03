@@ -42,6 +42,9 @@ const PlaylistListItem = styled.li`
   flex-direction: column;
   display: flex;
   min-height: 452px;
+  > * {
+    justify-content: start !important;
+  }
 `
 
 const spacing = 8
