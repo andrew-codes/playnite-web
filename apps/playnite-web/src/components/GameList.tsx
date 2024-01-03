@@ -66,15 +66,15 @@ const ListItem = styled.li.attrs<{
   $spacing: number
   $height: number
   $width: number
-}>(({ $height, $spacing, $width }) => ({
+}>(({ $height, $width }) => ({
   style: {
     height: `${$height}px`,
     width: `${$width}px`,
-    margin: `${$spacing}px`,
   },
 }))`
   box-sizing: border-box;
   display: inline-block;
+  margin: ${({ $spacing }) => `${$spacing}px`};
 `
 
 const GameList: FC<{

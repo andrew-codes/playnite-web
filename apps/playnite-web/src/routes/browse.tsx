@@ -1,12 +1,14 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
-import inferredLayout from '../api/layout'
-import PlayniteApi from '../api/playnite'
-import type { Game } from '../api/playnite/types'
+import { getGameDimensions } from '../api/client/state/layoutSlice'
+import PlayniteApi from '../api/server/playnite'
+import type { Game } from '../api/server/playnite/types'
 import GameList from '../components/GameList'
 import GameListItem from '../components/GameListItem'
+import WithNavigation from '../components/WithNavigation'
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = new PlayniteApi()
@@ -24,46 +26,40 @@ async function loader({ request }: LoaderFunctionArgs) {
     return 0
   })
 
-  const [gameWidth, gameHeight] =
-    await inferredLayout.getGameDimensions(request)
-
   return json({
     games,
-    gameWidth,
-    gameHeight,
   })
 }
 
 const Main = styled.main`
   display: flex;
   align-items: center;
+  flex: 1;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
 `
 
 const spacing = 8
 
 function Index() {
-  const { games, gameWidth, gameHeight } = useLoaderData<
-    typeof loader
-  >() as unknown as {
+  const { games } = useLoaderData<{
     games: Game[]
-    gameWidth: number
-    gameHeight: number
-  }
+  }>()
+
+  const [gameWidth, gameHeight] = useSelector(getGameDimensions)
 
   return (
-    <Main>
-      <h1>Browse</h1>
-      <GameList
-        Game={GameListItem}
-        games={games}
-        gameHeight={gameHeight - spacing * 2}
-        gameWidth={gameWidth - spacing * 2}
-        spacing={spacing}
-      />
-    </Main>
+    <WithNavigation>
+      <Main>
+        <GameList
+          Game={GameListItem}
+          games={games}
+          gameHeight={gameHeight - spacing * 2}
+          gameWidth={gameWidth - spacing * 2}
+          spacing={spacing}
+        />
+      </Main>
+    </WithNavigation>
   )
 }
 
