@@ -2,8 +2,8 @@ import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { styled } from 'styled-components'
-import PlayniteApi from '../api'
-import type { Game, Playlist } from '../api/types'
+import PlayniteApi from '../api/playnite'
+import type { Game, Playlist } from '../api/playnite/types'
 import GameList from '../components/GameList.js'
 import GameListItem from '../components/GameListItem'
 
@@ -65,8 +65,8 @@ function Index() {
             <GameList
               Game={GameListItem}
               games={games}
-              maxGameHeight={maxGameHeight - spacing * 2}
-              maxGameWidth={maxGameWidth - spacing * 2}
+              gameHeight={maxGameHeight - spacing * 2}
+              gameWidth={maxGameWidth - spacing * 2}
               spacing={spacing}
             />
           </PlaylistListItem>

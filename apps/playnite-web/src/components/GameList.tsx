@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { FC, useMemo } from 'react'
 import useDimensions from 'react-use-dimensions'
 import { styled } from 'styled-components'
-import type { Game } from '../api/types'
+import type { Game } from '../api/playnite/types'
 
 const { chunk, groupBy } = _
 
@@ -79,8 +79,8 @@ const ListItem = styled.li.attrs<{
 
 const GameList: FC<{
   games: Game[]
-  maxGameWidth: number
-  maxGameHeight: number
+  gameWidth: number
+  gameHeight: number
   spacing: number
   Game: FC<{
     cover: string
@@ -88,7 +88,7 @@ const GameList: FC<{
     height: number
     width: number
   }>
-}> = ({ games, spacing, maxGameWidth, maxGameHeight, Game }) => {
+}> = ({ games, spacing, gameWidth, gameHeight, Game }) => {
   const normalizedGames = useMemo<Game[][]>(
     () => Object.values(groupBy(games, 'sortName')),
     [games],
@@ -98,13 +98,13 @@ const GameList: FC<{
 
   const [rows, columns, perPage] = useMemo(() => {
     if (actualWidth && actualHeight) {
-      const rows = Math.floor(actualHeight / maxGameHeight)
-      const columns = Math.floor(actualWidth / maxGameWidth)
+      const rows = Math.floor(actualHeight / gameHeight)
+      const columns = Math.floor(actualWidth / gameWidth)
       return [rows, columns, rows * columns]
     }
 
     return [null, null, 0]
-  }, [actualWidth, actualHeight, maxGameHeight, maxGameWidth])
+  }, [actualWidth, actualHeight, gameHeight, gameWidth])
 
   const pages = chunk(normalizedGames, perPage)
 
@@ -112,19 +112,19 @@ const GameList: FC<{
     <FillParent ref={ref}>
       {!!rows && !!columns ? (
         <Viewport
-          $height={rows * (maxGameHeight + spacing * 2)}
-          $width={columns * (maxGameWidth + spacing * 2)}
+          $height={rows * (gameHeight + spacing * 2)}
+          $width={columns * (gameWidth + spacing * 2)}
         >
           <GamePages
-            $height={rows * (maxGameHeight + spacing * 2)}
-            $width={pages.length * columns * (maxGameWidth + spacing * 2)}
+            $height={rows * (gameHeight + spacing * 2)}
+            $width={pages.length * columns * (gameWidth + spacing * 2)}
           >
             {pages.map((page: Game[], index: number) => {
               return (
                 <GridPage
                   key={index}
-                  $height={rows * (maxGameHeight + spacing * 2)}
-                  $width={columns * (maxGameWidth + spacing * 2)}
+                  $height={rows * (gameHeight + spacing * 2)}
+                  $width={columns * (gameWidth + spacing * 2)}
                 >
                   {page.map((games: Game) => {
                     const game = games[0]
@@ -132,14 +132,14 @@ const GameList: FC<{
                     return (
                       <ListItem
                         key={game.id}
-                        $height={maxGameHeight}
-                        $width={maxGameWidth}
+                        $height={gameHeight}
+                        $width={gameWidth}
                         $spacing={spacing}
                       >
                         <Game
                           cover={`coverArt/${game.oid.type}:${game.oid.id}`}
-                          height={maxGameHeight}
-                          width={maxGameWidth}
+                          height={gameHeight}
+                          width={gameWidth}
                           game={game}
                         />
                       </ListItem>
