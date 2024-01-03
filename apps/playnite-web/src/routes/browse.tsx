@@ -2,8 +2,9 @@ import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { styled } from 'styled-components'
-import PlayniteApi from '../api'
-import { Game } from '../api/types'
+import inferredLayout from '../api/layout'
+import PlayniteApi from '../api/playnite'
+import type { Game } from '../api/playnite/types'
 import GameList from '../components/GameList'
 import GameListItem from '../components/GameListItem'
 
@@ -23,8 +24,13 @@ async function loader({ request }: LoaderFunctionArgs) {
     return 0
   })
 
+  const [gameWidth, gameHeight] =
+    await inferredLayout.getGameDimensions(request)
+
   return json({
     games,
+    gameWidth,
+    gameHeight,
   })
 }
 
@@ -37,12 +43,14 @@ const Main = styled.main`
 `
 
 const spacing = 8
-const maxGameWidth = 300
-const maxGameHeight = (maxGameWidth * 4) / 3
 
 function Index() {
-  const { games } = useLoaderData<typeof loader>() as unknown as {
+  const { games, gameWidth, gameHeight } = useLoaderData<
+    typeof loader
+  >() as unknown as {
     games: Game[]
+    gameWidth: number
+    gameHeight: number
   }
 
   return (
@@ -51,8 +59,8 @@ function Index() {
       <GameList
         Game={GameListItem}
         games={games}
-        maxGameHeight={maxGameHeight - spacing * 2}
-        maxGameWidth={maxGameWidth - spacing * 2}
+        gameHeight={gameHeight - spacing * 2}
+        gameWidth={gameWidth - spacing * 2}
         spacing={spacing}
       />
     </Main>
