@@ -62,9 +62,9 @@ const PlaylistListItem = styled.li`
 const spacing = 8
 
 function Index() {
-  const { playlists } = useLoaderData<{
+  const { playlists } = useLoaderData() as unknown as {
     playlists: [Playlist, Game[]][]
-  }>()
+  }
 
   const [gameWidth, gameHeight] = useSelector(getGameDimensions)
 
