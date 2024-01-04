@@ -2,9 +2,9 @@ import _ from 'lodash'
 import { FC, useMemo } from 'react'
 import useDimensions from 'react-use-dimensions'
 import { styled } from 'styled-components'
-import type { Game } from '../api/playnite/types'
+import type { Game } from '../api/server/playnite/types'
 
-const { chunk, groupBy } = _
+const { chunk, groupBy, stubTrue } = _
 
 const FillParent = styled.div`
   flex: 1;
@@ -78,6 +78,7 @@ const ListItem = styled.li.attrs<{
 `
 
 const GameList: FC<{
+  onFilter?: (game: Game) => boolean
   games: Game[]
   gameWidth: number
   gameHeight: number
@@ -88,11 +89,12 @@ const GameList: FC<{
     height: number
     width: number
   }>
-}> = ({ games, spacing, gameWidth, gameHeight, Game }) => {
-  const normalizedGames = useMemo<Game[][]>(
-    () => Object.values(groupBy(games, 'sortName')),
-    [games],
-  )
+}> = ({ games, spacing, gameWidth, gameHeight, Game, onFilter = stubTrue }) => {
+  const normalizedGames = useMemo<Game[][]>(() => {
+    const filteredGames = games.filter(onFilter)
+
+    return Object.values(groupBy(filteredGames, 'sortName'))
+  }, [games, onFilter])
 
   const [ref, { width: actualWidth, height: actualHeight }] = useDimensions()
 
