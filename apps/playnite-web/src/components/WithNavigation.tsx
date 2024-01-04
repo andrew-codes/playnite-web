@@ -3,11 +3,24 @@ import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { getIsMobile } from '../api/client/state/layoutSlice'
 
-const Layout = styled.div`
+const Layout = styled.div<{ mobile: boolean }>`
   display: flex;
   flex-direction: column;
   flex: 1;
   height: 100vh;
+
+  > * {
+    margin-top: 24px;
+  }
+
+  ${({ mobile }) =>
+    mobile
+      ? `:last-child {
+    margin-top: 0;
+  }`
+      : `:first-child {
+    margin-top: 0;
+  }`}
 `
 
 const Navigation: FC<PropsWithChildren & { mobile: boolean }> = ({
@@ -21,11 +34,10 @@ const GlobalNavigation = styled(Navigation)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 8px 48px;
+  margin: 24px 48px !important;
   position: relative;
 
   > * {
-    display: inline-block;
     flex: 1;
     padding: 8px 16px;
     color: #fff;
@@ -49,8 +61,8 @@ const GlobalNavigation = styled(Navigation)`
   &:after {
     content: '';
     position: absolute;
-    bottom: ${({ mobile }) => (mobile ? `unset` : `-3px`)};
-    top: ${({ mobile }) => (mobile ? `-3px` : `unset`)};
+    bottom: ${({ mobile }) => (mobile ? `unset` : `-24px`)};
+    top: ${({ mobile }) => (mobile ? `-24px` : `unset`)};
     left: -16px;
     right: -16px;
     height: 2px;
@@ -59,13 +71,17 @@ const GlobalNavigation = styled(Navigation)`
   }
 `
 
-const WithNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
+const WithNavigation: FC<PropsWithChildren & { Toolbar?: FC }> = ({
+  children,
+  Toolbar,
+}) => {
   const isMobile = useSelector(getIsMobile)
 
   return (
-    <Layout>
+    <Layout mobile={isMobile}>
       <GlobalNavigation mobile={isMobile}>
         <a href={`/`}>On Deck</a>
+        {Toolbar && <Toolbar />}
         <a href={`/browse`}>Browse</a>
       </GlobalNavigation>
       {children}
