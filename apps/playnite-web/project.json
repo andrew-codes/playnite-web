@@ -6,7 +6,7 @@
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf .dist .packaged .test-runs",
+        "command": "yarn rimraf .dist .packaged .test-runs build",
         "cwd": "{projectRoot}"
       }
     },
@@ -35,8 +35,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "cp build/ .packaged -r",
-          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ."
+          "mkdir -p .packaged/build && cp build/ .packaged -r && cp server.mjs .packaged && cp package.json .packaged && docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ."
         ],
         "cwd": "{projectRoot}"
       }

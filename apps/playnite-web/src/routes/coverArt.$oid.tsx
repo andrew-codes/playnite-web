@@ -4,7 +4,7 @@ import { $params } from 'remix-routes'
 import PlayniteApi from '../api/server/playnite'
 import Oid from '../api/server/playnite/Oid'
 
-const debug = createDebugger('playnite-web/route/coverArt')
+const debug = createDebugger('playnite-web-app/route/coverArt')
 
 async function loader({ request, params }: LoaderFunctionArgs) {
   try {

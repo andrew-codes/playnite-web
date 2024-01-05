@@ -1,6 +1,7 @@
 {
   "name": "playnite-web-app",
   "type": "module",
+  "version": "1.0.0",
   "sideEffects": false,
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
