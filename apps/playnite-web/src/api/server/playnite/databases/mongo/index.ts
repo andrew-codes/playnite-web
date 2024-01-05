@@ -13,7 +13,7 @@ import type {
 } from '../../types'
 import { getDbClient } from './client'
 
-const debug = createDebugger('playnite-web/MongoDbApi')
+const debug = createDebugger('playnite-web-app/MongoDbApi')
 const { startCase, toLower } = _
 
 const getRunState = (gameEntity: GameEntity): RunState => {
