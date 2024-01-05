@@ -10,7 +10,7 @@ type DbConnectionOptions = {
 }
 
 const getDbClient = (connectionOptions?: DbConnectionOptions): MongoClient => {
-  const debug = createDebugger('playnite-web/MongoDbClient')
+  const debug = createDebugger('playnite-web-app/MongoDbClient')
 
   if (!client) {
     const host = connectionOptions?.host ?? process.env.DB_HOST ?? 'localhost'

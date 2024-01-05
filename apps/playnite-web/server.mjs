@@ -6,7 +6,7 @@ import express from 'express'
 import path from 'path'
 import * as build from './build/index.js'
 
-const debug = createDebugger('playnite-web/server')
+const debug = createDebugger('playnite-web-app/server')
 
 dotenv.config({ path: path.join(process.cwd(), 'local.env'), override: true })
 
