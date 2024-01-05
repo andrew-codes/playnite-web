@@ -35,7 +35,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "mkdir -p .packaged/build && cp build/ .packaged -r && cp server.mjs .packaged && cp package.json .packaged && docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ."
+          "mkdir -p .packaged/build && cp build/ .packaged -r && cp public/ .packaged -r && cp server.mjs .packaged && cp package.json .packaged && docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ."
         ],
         "cwd": "{projectRoot}"
       }
