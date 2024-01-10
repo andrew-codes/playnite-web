@@ -6,15 +6,16 @@ import { useCallback, useEffect, useReducer } from 'react'
 import { useSelector } from 'react-redux'
 import useDimensions from 'react-use-dimensions'
 import { styled } from 'styled-components'
+import { authenticator } from '../api/auth/auth.server'
 import { getGameDimensions } from '../api/client/state/layoutSlice'
-import PlayniteApi from '../api/server/playnite'
+import PlayniteApi from '../api/server/playnite/index.server'
 import type { Game } from '../api/server/playnite/types'
 import GameList from '../components/GameList'
 import GameListItem from '../components/GameListItem'
 import Search from '../components/Search'
 import WithNavigation from '../components/WithNavigation'
 
-const { debounce, merge } = _
+const { debounce } = _
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = new PlayniteApi()
@@ -32,7 +33,10 @@ async function loader({ request }: LoaderFunctionArgs) {
     return 0
   })
 
+  const user = await authenticator.isAuthenticated(request)
+
   return json({
+    user,
     games,
   })
 }
@@ -100,7 +104,10 @@ function Index() {
     [debouncedSearch, height, ref, search.query],
   )
 
-  const { games } = useLoaderData() as unknown as { games: Game[] }
+  const { games } = useLoaderData() as unknown as {
+    games: Game[]
+  }
+
   const handleFilter = useCallback(
     (game: Game) => game.name.toLowerCase().includes(search.query),
     [search.query],
