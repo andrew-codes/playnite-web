@@ -24,6 +24,7 @@ const getDbClient = (connectionOptions?: DbConnectionOptions): MongoClient => {
     )
 
     if (!username && !password) {
+      debug(`No username or password provided; connecting without auth`)
       client = new MongoClient(`mongodb://${host}:${port}`)
     } else {
       client = new MongoClient(`mongodb://${host}:${port}`, {
