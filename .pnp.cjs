@@ -10475,6 +10475,8 @@ const RAW_RUNTIME_STATE =
           ["react-dom", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:18.2.0"],\
           ["react-redux", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:9.0.4"],\
           ["react-use-dimensions", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.2.1"],\
+          ["remix-auth", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.6.0"],\
+          ["remix-auth-form", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.4.0"],\
           ["remix-esbuild-override", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.1.0"],\
           ["remix-island", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.1.2"],\
           ["remix-routes", "npm:1.5.1"],\
@@ -11399,6 +11401,57 @@ const RAW_RUNTIME_STATE =
           ["@types/mdast", "npm:3.0.15"],\
           ["mdast-util-to-hast", "npm:12.3.0"],\
           ["unified", "npm:10.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["remix-auth", [\
+      ["npm:3.6.0", {\
+        "packageLocation": "../../root/.yarn/berry/cache/remix-auth-npm-3.6.0-c96fab9c4d-10c0.zip/node_modules/remix-auth/",\
+        "packageDependencies": [\
+          ["remix-auth", "npm:3.6.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.6.0", {\
+        "packageLocation": "./.yarn/__virtual__/remix-auth-virtual-bf0feb60bf/3/root/.yarn/berry/cache/remix-auth-npm-3.6.0-c96fab9c4d-10c0.zip/node_modules/remix-auth/",\
+        "packageDependencies": [\
+          ["remix-auth", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.6.0"],\
+          ["@remix-run/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.4.0"],\
+          ["@remix-run/server-runtime", "virtual:e266eabc878c06e0fb7ee856ffa450ad0e9f6b58f996d84818af0495aeffc4a4072abba9ab7a1a9b90e6168f050f863032cf9f3d545dffc1bb4d21bc5ec297d5#npm:2.4.1"],\
+          ["@types/remix-run__react", null],\
+          ["@types/remix-run__server-runtime", null],\
+          ["uuid", "npm:8.3.2"]\
+        ],\
+        "packagePeers": [\
+          "@remix-run/react",\
+          "@types/remix-run__react",\
+          "@types/remix-run__server-runtime"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["remix-auth-form", [\
+      ["npm:1.4.0", {\
+        "packageLocation": "../../root/.yarn/berry/cache/remix-auth-form-npm-1.4.0-78eb6e3706-10c0.zip/node_modules/remix-auth-form/",\
+        "packageDependencies": [\
+          ["remix-auth-form", "npm:1.4.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.4.0", {\
+        "packageLocation": "./.yarn/__virtual__/remix-auth-form-virtual-caa281e050/3/root/.yarn/berry/cache/remix-auth-form-npm-1.4.0-78eb6e3706-10c0.zip/node_modules/remix-auth-form/",\
+        "packageDependencies": [\
+          ["remix-auth-form", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.4.0"],\
+          ["@remix-run/server-runtime", "virtual:e266eabc878c06e0fb7ee856ffa450ad0e9f6b58f996d84818af0495aeffc4a4072abba9ab7a1a9b90e6168f050f863032cf9f3d545dffc1bb4d21bc5ec297d5#npm:2.4.1"],\
+          ["@types/remix-auth", null],\
+          ["@types/remix-run__server-runtime", null],\
+          ["remix-auth", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.6.0"]\
+        ],\
+        "packagePeers": [\
+          "@types/remix-auth",\
+          "@types/remix-run__server-runtime",\
+          "remix-auth"\
         ],\
         "linkType": "HARD"\
       }]\

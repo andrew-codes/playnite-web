@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
+import { getIsAuthenticated } from '../api/client/state/authSlice'
 import { getIsMobile } from '../api/client/state/layoutSlice'
 
 const Layout = styled.div<{ mobile: boolean }>`
@@ -77,12 +78,16 @@ const WithNavigation: FC<PropsWithChildren & { Toolbar?: FC }> = ({
 }) => {
   const isMobile = useSelector(getIsMobile)
 
+  const isAuthenticated = useSelector(getIsAuthenticated)
+
   return (
     <Layout mobile={isMobile}>
       <GlobalNavigation mobile={isMobile}>
         <a href={`/`}>On Deck</a>
         {Toolbar && <Toolbar />}
         <a href={`/browse`}>Browse</a>
+        {!isAuthenticated && <a href={`/login`}>Sign In</a>}
+        {isAuthenticated && <a href={`/logout`}>Logout</a>}
       </GlobalNavigation>
       {children}
     </Layout>
