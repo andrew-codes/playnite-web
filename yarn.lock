@@ -8747,6 +8747,8 @@ __metadata:
     react-dom: "npm:^18.2.0"
     react-redux: "npm:^9.0.4"
     react-use-dimensions: "npm:^1.2.1"
+    remix-auth: "npm:^3.6.0"
+    remix-auth-form: "npm:^1.4.0"
     remix-esbuild-override: "npm:^3.1.0"
     remix-island: "npm:^0.1.2"
     remix-routes: "npm:^1.5.1"
@@ -9413,6 +9415,28 @@ __metadata:
     mdast-util-to-hast: "npm:^12.1.0"
     unified: "npm:^10.0.0"
   checksum: 803e658c9b51a9b53ee2ada42ff82e8e570444bb97c873e0d602c2d8dcb69a774fd22bd6f26643dfd5ab4c181059ea6c9fb9a99a2d7f9665f3f11bef1a1489bd
+  languageName: node
+  linkType: hard
+
+"remix-auth-form@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "remix-auth-form@npm:1.4.0"
+  peerDependencies:
+    "@remix-run/server-runtime": ^1.0.0 || ^2.0.0
+    remix-auth: ^3.6.0
+  checksum: 3a1c3e9e497d2baa6a278e457559fe5bcb711ed37af79b8dbbc16e6a00872537359ec95dab725307442a5954df27d31c87198d4a13bc4d08a6df82b5bd49fedb
+  languageName: node
+  linkType: hard
+
+"remix-auth@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "remix-auth@npm:3.6.0"
+  dependencies:
+    uuid: "npm:^8.3.2"
+  peerDependencies:
+    "@remix-run/react": ^1.0.0 || ^2.0.0
+    "@remix-run/server-runtime": ^1.0.0 || ^2.0.0
+  checksum: 2b9d9f5ad02e7addbf2082d0968b8a23cb7569d68c322b713b35864e21028ceca9d554c36e33f42e7ece04c826a08411e120fdc827595cee3932facd5071fcf5
   languageName: node
   linkType: hard
 
