@@ -16,7 +16,7 @@ const Search = forwardRef<
     defaultValue: string
     height?: number
   }
->(({ onSearch, defaultValue = '', height = 0 }, ref) => {
+>(({ onSearch, defaultValue = '', height }, ref) => {
   const [value, setValue] = useState(defaultValue)
   const handleOnChange = useCallback((e) => {
     setValue(e.target.value)
@@ -25,7 +25,7 @@ const Search = forwardRef<
 
   return (
     <SearchInput
-      $height={height}
+      $height={height ?? 48}
       onChange={handleOnChange}
       placeholder="Search"
       ref={ref}
