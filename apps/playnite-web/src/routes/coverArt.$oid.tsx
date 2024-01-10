@@ -1,8 +1,8 @@
 import { LoaderFunctionArgs } from '@remix-run/node'
 import createDebugger from 'debug'
 import { $params } from 'remix-routes'
-import PlayniteApi from '../api/server/playnite'
 import Oid from '../api/server/playnite/Oid'
+import PlayniteApi from '../api/server/playnite/index.server'
 
 const debug = createDebugger('playnite-web-app/route/coverArt')
 

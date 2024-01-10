@@ -14,7 +14,9 @@ import { FC } from 'react'
 import { Provider } from 'react-redux'
 import { createHead } from 'remix-island'
 import { createGlobalStyle } from 'styled-components'
+import { authenticator } from './api/auth/auth.server'
 import { reducer } from './api/client/state'
+import { signedIn, signedOut } from './api/client/state/authSlice'
 import { layoutDetermined } from './api/client/state/layoutSlice'
 import inferredLayout from './api/server/layout'
 
@@ -38,10 +40,13 @@ async function loader({ request }: LoaderFunctionArgs) {
 
   const isMobile = request.headers.get('user-agent')?.includes('Mobile')
 
+  const user = await authenticator.isAuthenticated(request)
+
   return json({
     isMobile,
     gameWidth,
     gameHeight,
+    user,
   })
 }
 
@@ -67,14 +72,20 @@ body {
 `
 
 const App: FC<{}> = () => {
-  const { isMobile, gameWidth, gameHeight } = useLoaderData<{
+  const { isMobile, gameWidth, gameHeight, user } = useLoaderData<{
     isMobile: boolean
     gameWidth: number
     gameHeight: number
+    user?: any
   }>()
 
   const store = configureStore({ reducer })
   store.dispatch(layoutDetermined({ isMobile, gameWidth, gameHeight }))
+  if (!!user) {
+    store.dispatch(signedIn({ payload: null }))
+  } else {
+    store.dispatch(signedOut({ payload: null }))
+  }
 
   return (
     <>
