@@ -18,6 +18,8 @@
     "react-dom": "^18.2.0",
     "react-redux": "^9.0.4",
     "react-use-dimensions": "^1.2.1",
+    "remix-auth": "^3.6.0",
+    "remix-auth-form": "^1.4.0",
     "remix-island": "^0.1.2",
     "remix-routes": "^1.5.1",
     "styled-components": "^6.1.6"
