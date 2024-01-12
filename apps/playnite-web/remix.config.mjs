@@ -1,8 +1,9 @@
 import { withEsbuildOverride } from 'remix-esbuild-override'
+import materialUiImportPlugin from './material-ui-import-esbuild-plugin.mjs'
 import styledComponentsPlugin from './styled-components-esbuild-plugin.mjs'
 
 withEsbuildOverride((option) => {
-  option.plugins.unshift(styledComponentsPlugin())
+  option.plugins.unshift(materialUiImportPlugin, styledComponentsPlugin())
 
   return option
 })
