@@ -18,8 +18,6 @@ import { createHead } from 'remix-island'
 import { authenticator } from './api/auth/auth.server'
 import { reducer } from './api/client/state'
 import { signedIn, signedOut } from './api/client/state/authSlice'
-import { layoutDetermined } from './api/client/state/layoutSlice'
-import inferredLayout from './api/server/layout'
 import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
@@ -41,17 +39,9 @@ const meta: MetaFunction = () => {
 }
 
 async function loader({ request }: LoaderFunctionArgs) {
-  const [gameWidth, gameHeight] =
-    await inferredLayout.getGameDimensions(request)
-
-  const isMobile = request.headers.get('user-agent')?.includes('Mobile')
-
   const user = await authenticator.isAuthenticated(request)
 
   return json({
-    isMobile,
-    gameWidth,
-    gameHeight,
     user,
   })
 }
@@ -82,15 +72,11 @@ const globalStyles = (
 )
 
 const App: FC<{}> = () => {
-  const { isMobile, gameWidth, gameHeight, user } = useLoaderData<{
-    isMobile: boolean
-    gameWidth: number
-    gameHeight: number
+  const { user } = useLoaderData<{
     user?: any
   }>()
 
   const store = configureStore({ reducer })
-  store.dispatch(layoutDetermined({ isMobile, gameWidth, gameHeight }))
   if (!!user) {
     store.dispatch(signedIn({ payload: null }))
   } else {

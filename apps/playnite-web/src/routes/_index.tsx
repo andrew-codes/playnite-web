@@ -2,12 +2,8 @@ import styled from '@emotion/styled'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { useSelector } from 'react-redux'
-import { getGameDimensions } from '../api/client/state/layoutSlice'
 import PlayniteApi from '../api/server/playnite/index.server'
 import type { Game, Playlist } from '../api/server/playnite/types'
-import GameList from '../components/GameList.js'
-import GameListItem from '../components/GameListItem'
 import { Heading } from '../components/Headings'
 import WithNavigation from '../components/WithNavigation'
 
@@ -35,7 +31,6 @@ async function loader({ request }: LoaderFunctionArgs) {
 
 const Main = styled.main`
   display: flex;
-  height: 100%;
   flex: 1;
   flex-direction: column;
   > * {
@@ -66,8 +61,6 @@ function Index() {
     playlists: [Playlist, Game[]][]
   }
 
-  const [gameWidth, gameHeight] = useSelector(getGameDimensions)
-
   return (
     <WithNavigation>
       <Main>
@@ -75,13 +68,13 @@ function Index() {
           {playlists.map(([playlist, games]) => (
             <PlaylistListItem key={playlist.id}>
               <Heading>{playlist.name}</Heading>
-              <GameList
+              {/* <GameList
                 Game={GameListItem}
                 games={games}
                 gameHeight={gameHeight - spacing * 2}
                 gameWidth={gameWidth - spacing * 2}
                 spacing={spacing}
-              />
+              /> */}
             </PlaylistListItem>
           ))}
         </PlaylistList>
