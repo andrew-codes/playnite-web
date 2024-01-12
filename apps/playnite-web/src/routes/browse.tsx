@@ -5,9 +5,7 @@ import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import _ from 'lodash'
 import { createRef, useCallback, useEffect, useReducer } from 'react'
-import { useSelector } from 'react-redux'
 import { authenticator } from '../api/auth/auth.server'
-import { getGameDimensions } from '../api/client/state/layoutSlice'
 import PlayniteApi from '../api/server/playnite/index.server'
 import type { Game } from '../api/server/playnite/types'
 import Search from '../components/Search'
@@ -41,8 +39,6 @@ async function loader({ request }: LoaderFunctionArgs) {
 
 const Main = styled(Container)`
   height: 100%;
-
-  border: 1px solid red;
 `
 
 function MyComponent() {
@@ -114,8 +110,6 @@ function Index() {
     (game: Game) => game.name.toLowerCase().includes(search.query),
     [search.query],
   )
-
-  const [gameWidth, gameHeight] = useSelector(getGameDimensions)
 
   return (
     <WithNavigation Toolbar={Toolbar}>
