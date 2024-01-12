@@ -1,5 +1,4 @@
-import { Global, css } from '@emotion/react'
-import { ThemeProvider } from '@mui/material'
+import { CssBaseline, ThemeProvider } from '@mui/material'
 import { configureStore } from '@reduxjs/toolkit'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import {
@@ -54,23 +53,6 @@ const Head = createHead(() => (
   </>
 ))
 
-const globalStyles = (
-  <Global
-    styles={css`
-      body {
-        background-color: rgb(17, 17, 17);
-        box-sizing: border-box;
-        color: rgb(255, 255, 255);
-        font-size: 16px;
-        line-height: 1;
-        margin: 0;
-        padding: 0;
-        font-family: Lato, sans-serif;
-      }
-    `}
-  />
-)
-
 const App: FC<{}> = () => {
   const { user } = useLoaderData<{
     user?: any
@@ -86,8 +68,8 @@ const App: FC<{}> = () => {
   return (
     <>
       <Head />
-      {globalStyles}
       <ThemeProvider theme={muiTheme()}>
+        <CssBaseline />
         <Provider store={store}>
           <Outlet />
         </Provider>

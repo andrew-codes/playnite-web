@@ -15,6 +15,9 @@ declare module '@mui/material/styles' {
 }
 
 let defaults = createTheme({
+  palette: {
+    mode: 'dark',
+  },
   breakpoints: {
     values: {
       phone: 0,
@@ -28,14 +31,7 @@ const setDefaults = (theme = {}) => {
   defaults = createTheme(deepmerge(defaults, theme))
 }
 
-const theme = () =>
-  createTheme(
-    deepmerge(defaults, {
-      palette: {
-        mode: 'dark',
-      },
-    }),
-  )
+const theme = () => defaults
 
 export default theme
 export { setDefaults }
