@@ -33,6 +33,10 @@ const meta: MetaFunction = () => {
       name: 'description',
       content: 'Share your Playnite library with your friends!',
     },
+    {
+      name: 'viewport',
+      content: 'initial-scale=1, width=device-width',
+    },
   ]
 }
 
@@ -97,7 +101,7 @@ const App: FC<{}> = () => {
     <>
       <Head />
       {globalStyles}
-      <ThemeProvider theme={muiTheme}>
+      <ThemeProvider theme={muiTheme()}>
         <Provider store={store}>
           <Outlet />
         </Provider>
