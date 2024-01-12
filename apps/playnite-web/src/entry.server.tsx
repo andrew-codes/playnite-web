@@ -6,8 +6,6 @@ import isbot from 'isbot'
 import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
 import { renderHeadToString } from 'remix-island'
-import { ServerStyleSheet } from 'styled-components'
-import WritableWithStyles from './WritableWithStyles'
 import createEmotionCache from './createEmotionCache'
 import { Head } from './root'
 
@@ -43,18 +41,15 @@ function handleBotRequest(
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false
-    const sheet = new ServerStyleSheet()
     const clientSideCache = createEmotionCache()
     const { pipe, abort } = renderToPipeableStream(
-      sheet.collectStyles(
-        <CacheProvider value={clientSideCache}>
-          <RemixServer
-            context={remixContext}
-            url={request.url}
-            abortDelay={ABORT_DELAY}
-          />
-        </CacheProvider>,
-      ),
+      <CacheProvider value={clientSideCache}>
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />
+      </CacheProvider>,
       {
         onAllReady() {
           shellRendered = true
@@ -71,12 +66,11 @@ function handleBotRequest(
             }),
           )
 
-          const bodyWithStyles = new WritableWithStyles(body, sheet)
-          bodyWithStyles.write(
+          body.write(
             `<!DOCTYPE html><html><head>${head}</head><body><div id="root">`,
           )
-          pipe(bodyWithStyles)
-          bodyWithStyles.write(`</div></body></html>`)
+          pipe(body)
+          body.write(`</div></body></html>`)
         },
         onShellError(error: unknown) {
           reject(error)
@@ -105,18 +99,15 @@ function handleBrowserRequest(
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false
-    const sheet = new ServerStyleSheet()
     const clientSideCache = createEmotionCache()
     const { pipe, abort } = renderToPipeableStream(
-      sheet.collectStyles(
-        <CacheProvider value={clientSideCache}>
-          <RemixServer
-            context={remixContext}
-            url={request.url}
-            abortDelay={ABORT_DELAY}
-          />
-        </CacheProvider>,
-      ),
+      <CacheProvider value={clientSideCache}>
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />
+      </CacheProvider>,
       {
         onShellReady() {
           shellRendered = true
@@ -132,12 +123,11 @@ function handleBrowserRequest(
               status: responseStatusCode,
             }),
           )
-          const bodyWithStyles = new WritableWithStyles(body, sheet)
-          bodyWithStyles.write(
+          body.write(
             `<!DOCTYPE html><html><head>${head}</head><body><div id="root">`,
           )
-          pipe(bodyWithStyles)
-          bodyWithStyles.write(`</div></body></html>`)
+          pipe(body)
+          body.write(`</div></body></html>`)
         },
         onShellError(error: unknown) {
           reject(error)

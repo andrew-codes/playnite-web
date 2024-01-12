@@ -1,6 +1,6 @@
+import styled from '@emotion/styled'
 import { FC, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
-import { styled } from 'styled-components'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
 import { getIsMobile } from '../api/client/state/layoutSlice'
 
@@ -29,6 +29,7 @@ const Navigation: FC<PropsWithChildren & { mobile: boolean }> = ({
   mobile,
   ...rest
 }) => <nav {...rest}>{children}</nav>
+
 const GlobalNavigation = styled(Navigation)`
   order: ${({ mobile }) => (mobile ? `1` : `0`)};
 

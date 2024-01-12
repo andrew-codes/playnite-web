@@ -1426,13 +1426,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@emotion/unitless", [\
-      ["npm:0.8.0", {\
-        "packageLocation": "../../root/.yarn/berry/cache/@emotion-unitless-npm-0.8.0-aa125284fa-10c0.zip/node_modules/@emotion/unitless/",\
-        "packageDependencies": [\
-          ["@emotion/unitless", "npm:0.8.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:0.8.1", {\
         "packageLocation": "../../root/.yarn/berry/cache/@emotion-unitless-npm-0.8.1-bcf0a8f565-10c0.zip/node_modules/@emotion/unitless/",\
         "packageDependencies": [\
@@ -3786,15 +3779,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@types/stylis", [\
-      ["npm:4.2.0", {\
-        "packageLocation": "../../root/.yarn/berry/cache/@types-stylis-npm-4.2.0-5addc9ed60-10c0.zip/node_modules/@types/stylis/",\
-        "packageDependencies": [\
-          ["@types/stylis", "npm:4.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@types/unist", [\
       ["npm:2.0.10", {\
         "packageLocation": "../../root/.yarn/berry/cache/@types-unist-npm-2.0.10-f9b9ac478e-10c0.zip/node_modules/@types/unist/",\
@@ -4496,7 +4480,7 @@ const RAW_RUNTIME_STATE =
           ["@types/styled-components", "npm:5.1.34"],\
           ["lodash", "npm:4.17.21"],\
           ["picomatch", "npm:2.3.1"],\
-          ["styled-components", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.1.6"]\
+          ["styled-components", null]\
         ],\
         "packagePeers": [\
           "@types/styled-components",\
@@ -4928,15 +4912,6 @@ const RAW_RUNTIME_STATE =
           ["camelcase", "npm:5.3.1"],\
           ["map-obj", "npm:4.3.0"],\
           ["quick-lru", "npm:4.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["camelize", [\
-      ["npm:1.0.1", {\
-        "packageLocation": "../../root/.yarn/berry/cache/camelize-npm-1.0.1-d86ebe085a-10c0.zip/node_modules/camelize/",\
-        "packageDependencies": [\
-          ["camelize", "npm:1.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5537,27 +5512,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["css-color-keywords", [\
-      ["npm:1.0.0", {\
-        "packageLocation": "../../root/.yarn/berry/cache/css-color-keywords-npm-1.0.0-fc176df58b-10c0.zip/node_modules/css-color-keywords/",\
-        "packageDependencies": [\
-          ["css-color-keywords", "npm:1.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["css-to-react-native", [\
-      ["npm:3.2.0", {\
-        "packageLocation": "../../root/.yarn/berry/cache/css-to-react-native-npm-3.2.0-46e31a25e3-10c0.zip/node_modules/css-to-react-native/",\
-        "packageDependencies": [\
-          ["css-to-react-native", "npm:3.2.0"],\
-          ["camelize", "npm:1.0.1"],\
-          ["css-color-keywords", "npm:1.0.0"],\
-          ["postcss-value-parser", "npm:4.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["css-what", [\
       ["npm:6.1.0", {\
         "packageLocation": "../../root/.yarn/berry/cache/css-what-npm-6.1.0-57f751efbb-10c0.zip/node_modules/css-what/",\
@@ -5577,13 +5531,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["csstype", [\
-      ["npm:3.1.2", {\
-        "packageLocation": "../../root/.yarn/berry/cache/csstype-npm-3.1.2-cead7d99b2-10c0.zip/node_modules/csstype/",\
-        "packageDependencies": [\
-          ["csstype", "npm:3.1.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:3.1.3", {\
         "packageLocation": "../../root/.yarn/berry/cache/csstype-npm-3.1.3-e9a1c85013-10c0.zip/node_modules/csstype/",\
         "packageDependencies": [\
@@ -11113,7 +11060,6 @@ const RAW_RUNTIME_STATE =
           ["remix-island", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.1.2"],\
           ["remix-routes", "npm:1.5.1"],\
           ["rimraf", "npm:5.0.5"],\
-          ["styled-components", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.1.6"],\
           ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
           ["typescript-remix-routes-plugin", "npm:1.0.1"]\
         ],\
@@ -11135,16 +11081,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["postcss", [\
-      ["npm:8.4.31", {\
-        "packageLocation": "../../root/.yarn/berry/cache/postcss-npm-8.4.31-385051a82b-10c0.zip/node_modules/postcss/",\
-        "packageDependencies": [\
-          ["postcss", "npm:8.4.31"],\
-          ["nanoid", "npm:3.3.7"],\
-          ["picocolors", "npm:1.0.0"],\
-          ["source-map-js", "npm:1.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:8.4.32", {\
         "packageLocation": "../../root/.yarn/berry/cache/postcss-npm-8.4.32-2004ba88b8-10c0.zip/node_modules/postcss/",\
         "packageDependencies": [\
@@ -12530,15 +12466,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["shallowequal", [\
-      ["npm:1.1.0", {\
-        "packageLocation": "../../root/.yarn/berry/cache/shallowequal-npm-1.1.0-6688d419cb-10c0.zip/node_modules/shallowequal/",\
-        "packageDependencies": [\
-          ["shallowequal", "npm:1.1.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["shebang-command", [\
       ["npm:2.0.0", {\
         "packageLocation": "../../root/.yarn/berry/cache/shebang-command-npm-2.0.0-eb2b01921d-10c0.zip/node_modules/shebang-command/",\
@@ -13043,53 +12970,11 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["styled-components", [\
-      ["npm:6.1.6", {\
-        "packageLocation": "../../root/.yarn/berry/cache/styled-components-npm-6.1.6-00d21430ec-10c0.zip/node_modules/styled-components/",\
-        "packageDependencies": [\
-          ["styled-components", "npm:6.1.6"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.1.6", {\
-        "packageLocation": "./.yarn/__virtual__/styled-components-virtual-982af49fe4/3/root/.yarn/berry/cache/styled-components-npm-6.1.6-00d21430ec-10c0.zip/node_modules/styled-components/",\
-        "packageDependencies": [\
-          ["styled-components", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.1.6"],\
-          ["@emotion/is-prop-valid", "npm:1.2.1"],\
-          ["@emotion/unitless", "npm:0.8.0"],\
-          ["@types/react", "npm:18.2.45"],\
-          ["@types/react-dom", "npm:18.2.17"],\
-          ["@types/stylis", "npm:4.2.0"],\
-          ["css-to-react-native", "npm:3.2.0"],\
-          ["csstype", "npm:3.1.2"],\
-          ["postcss", "npm:8.4.31"],\
-          ["react", "npm:18.2.0"],\
-          ["react-dom", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:18.2.0"],\
-          ["shallowequal", "npm:1.1.0"],\
-          ["stylis", "npm:4.3.1"],\
-          ["tslib", "npm:2.5.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/react-dom",\
-          "@types/react",\
-          "react-dom",\
-          "react"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["stylis", [\
       ["npm:4.2.0", {\
         "packageLocation": "../../root/.yarn/berry/cache/stylis-npm-4.2.0-6b07f11c99-10c0.zip/node_modules/stylis/",\
         "packageDependencies": [\
           ["stylis", "npm:4.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:4.3.1", {\
-        "packageLocation": "../../root/.yarn/berry/cache/stylis-npm-4.3.1-df21265105-10c0.zip/node_modules/stylis/",\
-        "packageDependencies": [\
-          ["stylis", "npm:4.3.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -13448,13 +13333,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["tslib", [\
-      ["npm:2.5.0", {\
-        "packageLocation": "../../root/.yarn/berry/cache/tslib-npm-2.5.0-bb364efebd-10c0.zip/node_modules/tslib/",\
-        "packageDependencies": [\
-          ["tslib", "npm:2.5.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:2.6.2", {\
         "packageLocation": "../../root/.yarn/berry/cache/tslib-npm-2.6.2-4fc8c068d9-10c0.zip/node_modules/tslib/",\
         "packageDependencies": [\
