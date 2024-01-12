@@ -2,11 +2,14 @@ import { CacheProvider } from '@emotion/react'
 import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { createReadableStreamFromReadable } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
+import mediaQuery from 'css-mediaquery'
 import isbot from 'isbot'
 import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
 import { renderHeadToString } from 'remix-island'
+import { UAParser } from 'ua-parser-js'
 import createEmotionCache from './createEmotionCache'
+import { setDefaults } from './muiTheme'
 import { Head } from './root'
 
 const ABORT_DELAY = 5_000
@@ -98,6 +101,29 @@ function handleBrowserRequest(
   remixContext: EntryContext,
 ) {
   return new Promise((resolve, reject) => {
+    const ua = UAParser(request.headers.get('user-agent'))
+    const deviceType = ua?.device?.type ?? 'desktop'
+    const ssrMatchMedia = (query) => ({
+      matches: mediaQuery.match(query, {
+        width:
+          deviceType === 'mobile'
+            ? '390px'
+            : deviceType === 'tablet'
+              ? '1366px'
+              : '1920px',
+      }),
+    })
+
+    setDefaults({
+      components: {
+        MuiUseMediaQuery: {
+          defaultProps: {
+            ssrMatchMedia,
+          },
+        },
+      },
+    })
+
     let shellRendered = false
     const clientSideCache = createEmotionCache()
     const { pipe, abort } = renderToPipeableStream(

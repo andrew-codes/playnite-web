@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Container, useMediaQuery } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -9,8 +10,6 @@ import { authenticator } from '../api/auth/auth.server'
 import { getGameDimensions } from '../api/client/state/layoutSlice'
 import PlayniteApi from '../api/server/playnite/index.server'
 import type { Game } from '../api/server/playnite/types'
-import GameList from '../components/GameList'
-import GameListItem from '../components/GameListItem'
 import Search from '../components/Search'
 import WithNavigation from '../components/WithNavigation'
 
@@ -40,13 +39,17 @@ async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-const Main = styled.main`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  flex-direction: column;
+const Main = styled(Container)`
   height: 100%;
+
+  border: 1px solid red;
 `
+
+function MyComponent() {
+  const matches = useMediaQuery('(min-width:600px)')
+
+  return <span>{`(min-width:600px) matches: ${matches}`}</span>
+}
 
 const spacing = 8
 
@@ -116,15 +119,16 @@ function Index() {
 
   return (
     <WithNavigation Toolbar={Toolbar}>
-      <Main>
-        <GameList
+      <Main fixed>
+        <MyComponent />
+        {/* <GameGrid
           Game={GameListItem}
-          gameHeight={gameHeight - spacing * 2}
           games={games}
-          gameWidth={gameWidth - spacing * 2}
+          rows={6}
+          columns={3}
           onFilter={handleFilter}
           spacing={spacing}
-        />
+        /> */}
       </Main>
     </WithNavigation>
   )
