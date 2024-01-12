@@ -1,67 +1,36 @@
-import styled from '@emotion/styled'
+import { Unstable_Grid2 as Grid, styled } from '@mui/material'
 import _ from 'lodash'
 import { FC, useMemo } from 'react'
-import useDimensions from 'react-use-dimensions'
 import type { Game } from '../api/server/playnite/types'
 
 const { chunk, groupBy, stubTrue } = _
 
-const FillParent = styled.div`
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-`
+const Viewport = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  flex: 1,
+  scrollSnapType: 'x mandatory',
+  overflowX: 'scroll',
+  overflowY: 'hidden',
+  scrollBehavior: 'smooth',
+  flexDirection: 'row',
 
-const Viewport = styled.div<{ height: number; width: number }>`
-  height: ${({ height }) => `${height}px`};
-  width: ${({ width }) => `${width}px`};
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+}))
 
-  scroll-snap-type: x mandatory;
-  overflow-x: scroll;
-  overflow-y: hidden;
+const GamePages = styled('div')<{ length: number }>(({ theme, length }) => ({
+  width: `calc(100vw * ${length})`,
+  display: 'flex',
+  flexDirection: 'row',
 
-  scroll-behavior: smooth;
-  -ms-overflow-style: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`
-
-const GamePages = styled.ol<{ height: number; width: number }>`
-  height: ${({ height }) => `${height}px`};
-  width: ${({ width }) => `${width}px`};
-
-  display: flex;
-  margin: 0;
-  padding: 0;
-  flex-direction: row;
-`
-
-const GridPage = styled.ol<{ height: number; width: number }>`
-  height: ${({ height }) => `${height}px`};
-  width: ${({ width }) => `${width}px`};
-
-  scroll-snap-align: start;
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-`
-
-const ListItem = styled.li<{
-  $spacing: number
-  height: number
-  width: number
-}>`
-  height: ${({ height }) => `${height}px`};
-  width: ${({ width }) => `${width}px`};
-
-  box-sizing: border-box;
-  display: inline-block;
-  margin: ${({ $spacing }) => `${$spacing}px`};
-`
+  '> * ': {
+    width: '100vw',
+    scrollSnapAlign: 'start',
+    marginRight: '8px !important',
+  },
+}))
 
 const GameGrid: FC<{
   onFilter?: (game: Game) => boolean
@@ -71,9 +40,7 @@ const GameGrid: FC<{
   spacing: number
   Game: FC<{
     cover: string
-    game: Game
-    height: number
-    width: number
+    game: Game[]
   }>
 }> = ({ games, spacing, rows, columns, Game, onFilter = stubTrue }) => {
   const normalizedGames = useMemo<Game[][]>(() => {
@@ -82,65 +49,87 @@ const GameGrid: FC<{
     return Object.values(groupBy(filteredGames, 'sortName'))
   }, [games, onFilter])
 
-  const [ref, { width: actualWidth, height: actualHeight }] = useDimensions()
+  const perPage = useMemo(() => {
+    return rows * columns
+  }, [rows, columns])
 
-  const [rows, columns, perPage] = useMemo(() => {
-    if (actualWidth && actualHeight) {
-      const rows = Math.floor(actualHeight / gameHeight)
-      const columns = Math.floor(actualWidth / gameWidth)
-      return [rows, columns, rows * columns]
-    }
-
-    return [null, null, 0]
-  }, [actualWidth, actualHeight, gameHeight, gameWidth])
-
-  const pages = chunk(normalizedGames, perPage)
+  const pagedGrids = useMemo(
+    () =>
+      chunk(normalizedGames, perPage).map((gamesPerPage: Game[][]) =>
+        chunk(gamesPerPage, columns),
+      ),
+    [normalizedGames, perPage],
+  )
 
   return (
-    <FillParent ref={ref}>
-      {!!rows && !!columns ? (
-        <Viewport
-          height={rows * (gameHeight + spacing * 2)}
-          width={columns * (gameWidth + spacing * 2)}
-        >
-          <GamePages
-            height={rows * (gameHeight + spacing * 2)}
-            width={pages.length * columns * (gameWidth + spacing * 2)}
-          >
-            {pages.map((page: Game[], index: number) => {
-              return (
-                <GridPage
-                  key={index}
-                  height={rows * (gameHeight + spacing * 2)}
-                  width={columns * (gameWidth + spacing * 2)}
-                >
-                  {page.map((games: Game) => {
-                    const game = games[0]
-
-                    return (
-                      <ListItem
-                        key={game.id}
-                        height={gameHeight}
-                        width={gameWidth}
-                        $spacing={spacing}
-                      >
-                        <Game
-                          cover={`coverArt/${game.oid.type}:${game.oid.id}`}
-                          height={gameHeight}
-                          width={gameWidth}
-                          game={game}
-                        />
-                      </ListItem>
-                    )
-                  })}
-                </GridPage>
-              )
-            })}
-          </GamePages>
-        </Viewport>
-      ) : null}
-    </FillParent>
+    <Viewport>
+      <GamePages length={pagedGrids.length}>
+        {pagedGrids.map((gameRows: Game[][][], pageIndex: number) => (
+          <Grid key={pageIndex} container direction="column" spacing={2}>
+            {gameRows.map((games: Game[][], rowIndex: number) => (
+              <Grid container key={rowIndex} direction="row" spacing={2}>
+                {games.map((game: Game[]) => (
+                  <Grid tablet={12 / columns} spacing={2}>
+                    <Game
+                      key={game[0].oid.id}
+                      cover={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                      game={game}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            ))}
+          </Grid>
+        ))}
+      </GamePages>
+    </Viewport>
   )
+
+  // return (
+  //   <FillParent>
+  //     {!!rows && !!columns ? (
+  //       <Viewport
+  //         height={rows * (gameHeight + spacing * 2)}
+  //         width={columns * (gameWidth + spacing * 2)}
+  //       >
+  //         <GamePages
+  //           height={rows * (gameHeight + spacing * 2)}
+  //           width={pages.length * columns * (gameWidth + spacing * 2)}
+  //         >
+  //           {pages.map((page: Game[], index: number) => {
+  //             return (
+  //               <GridPage
+  //                 key={index}
+  //                 height={rows * (gameHeight + spacing * 2)}
+  //                 width={columns * (gameWidth + spacing * 2)}
+  //               >
+  //                 {page.map((games: Game) => {
+  //                   const game = games[0]
+
+  //                   return (
+  //                     <ListItem
+  //                       key={game.id}
+  //                       height={gameHeight}
+  //                       width={gameWidth}
+  //                       $spacing={spacing}
+  //                     >
+  //                       <Game
+  //                         cover={`coverArt/${game.oid.type}:${game.oid.id}`}
+  //                         height={gameHeight}
+  //                         width={gameWidth}
+  //                         game={game}
+  //                       />
+  //                     </ListItem>
+  //                   )
+  //                 })}
+  //               </GridPage>
+  //             )
+  //           })}
+  //         </GamePages>
+  //       </Viewport>
+  //     ) : null}
+  //   </FillParent>
+  // )
 }
 
 export default GameGrid

@@ -1,43 +1,45 @@
-import styled from '@emotion/styled'
+import { styled } from '@mui/material'
 import { FC } from 'react'
 import type { Game } from '../api/server/playnite/types'
 
-const Game = styled.section<{
+const Game = styled('div')<{
   cover: string
-  height: number
-  width: number
-}>`
-  background-image: ${({ cover }) => `url(${cover})`};
-  height: ${({ height }) => `${height}px`};
-  width: ${({ width }) => `${width}px`};
-  box-sizing: border-box;
-  background-size: cover;
-  display: flex;
-  flex: 1;
-  padding: 0;
-  margin: 0;
-  position: relative;
-`
+}>(({ cover, theme }) => ({
+  background: `url(${cover})`,
+  backgroundSize: 'cover',
+  boxSizing: 'border-box',
+  display: 'flex',
+  flex: 1,
+  padding: 0,
+  margin: 0,
+  position: 'relative',
+  [theme.breakpoints.up('desktop')]: {
+    minHeight: '400px',
+    minWidth: '300px',
+  },
+  [theme.breakpoints.down('desktop')]: {
+    minHeight: '280px',
+    minWidth: '210px',
+  },
+}))
 
-const GameTitle = styled.span`
-  color: #fff;
-  font-size: 1.5rem;
-  left: 10%;
-  position: absolute;
-  right: 10%;
-  text-align: center;
-  top: 20%;
-`
+const GameTitle = styled('span')(({ theme }) => ({
+  color: '#fff',
+  fontSize: '1.5rem',
+  left: '10%',
+  position: 'absolute',
+  right: '10%',
+  textAlign: 'center',
+  top: '20%',
+}))
 
 const GameListItem: FC<{
   cover: string
-  width: number
-  height: number
-  game: Game
-}> = ({ cover, game, width, height }) => {
+  game: Game[]
+}> = ({ cover, game }) => {
   return (
-    <Game cover={cover} height={height} width={width}>
-      <GameTitle hidden={!!game.cover}>{game.name}</GameTitle>
+    <Game cover={cover}>
+      <GameTitle>{game[0].name}</GameTitle>
     </Game>
   )
 }

@@ -1,79 +1,98 @@
-import { Button, styled } from '@mui/material'
-import { FC, PropsWithChildren } from 'react'
+import { Menu as MenuIcon, Search } from '@mui/icons-material'
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Link,
+  Menu,
+  MenuItem,
+  styled,
+} from '@mui/material'
+import { useLocation } from '@remix-run/react'
+import { FC, MouseEvent, PropsWithChildren, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
 
 const Layout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  // flex: 1,
   height: '100vh',
 
   '> *:first-child': {
-    marginTop: '24px',
-  },
-  '> *:last-child': {
     flex: 1,
+    flexDirection: 'column',
+    display: 'flex',
   },
 }))
 
-const GlobalNavigation = styled('nav')(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  position: 'relative',
-  order: 1,
-  width: '100%',
-
-  '> *': {
-    flex: 1,
-    padding: '8px 16px',
-    color: '#fff',
-    textDecoration: 'none',
-    fontSize: '2rem',
-    textAlign: 'center',
-    marginBottom: '6px !important¸˛Í',
-
-    '&:visited': {
-      color: '#fff',
-    },
-
-    '&:first-child': {
-      textAlign: 'left',
-    },
-
-    '&:last-child': {
-      textAlign: 'right',
-    },
-  },
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    top: '-12px',
-    left: '0',
-    right: '0',
-    height: '2px',
-    opacity: 0.25,
-    backgroundColor: 'lightblue',
-  },
+const Main = styled('main')(({ theme }) => ({
+  margin: '16px',
 }))
 
-const WithNavigation: FC<PropsWithChildren & { Toolbar?: FC }> = ({
-  children,
-  Toolbar,
-}) => {
+const WithNavigation: FC<PropsWithChildren> = ({ children }) => {
   const isAuthenticated = useSelector(getIsAuthenticated)
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const { pathname } = useLocation()
+  const [value, setValue] = useState(pathname)
+  const handleBottomNavigationChange = useCallback<
+    (event: React.SyntheticEvent, value: any) => void
+  >((event, newValue) => {
+    setValue(newValue)
+    if (newValue === 'more') {
+      handleClick(event as MouseEvent<HTMLButtonElement>)
+    }
+  }, [])
 
   return (
     <Layout>
-      <GlobalNavigation>
-        <Button href={`/`}>On Deck</Button>
-        {Toolbar && <Toolbar />}
-        <Button href={`/browse`}>Browse</Button>
-        {!isAuthenticated && <Button href={`/login`}>Sign In</Button>}
-        {isAuthenticated && <Button href={`/logout`}>Logout</Button>}
-      </GlobalNavigation>
-      <div>{children}</div>
+      <Main>{children}</Main>
+      <BottomNavigation
+        showLabels
+        value={value}
+        onChange={handleBottomNavigationChange}
+      >
+        <BottomNavigationAction
+          href="/"
+          label="Playlists"
+          value="/"
+          icon={<MenuIcon />}
+        />
+        <BottomNavigationAction
+          label="Browse"
+          icon={<Search />}
+          href="/browse"
+          value="/browse"
+        />
+        <BottomNavigationAction label="More" icon={<MenuIcon />} value="more" />
+      </BottomNavigation>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem href="/browse">Browse</MenuItem>
+        {!isAuthenticated && (
+          <MenuItem href="/login" component={Link}>
+            Sign In
+          </MenuItem>
+        )}
+        {isAuthenticated && (
+          <MenuItem href="/logout" component={Link}>
+            Sign Out
+          </MenuItem>
+        )}
+      </Menu>
     </Layout>
   )
 }
