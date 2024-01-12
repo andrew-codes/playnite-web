@@ -1,96 +1,79 @@
-import styled from '@emotion/styled'
+import { Button, styled } from '@mui/material'
 import { FC, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
-import { getIsMobile } from '../api/client/state/layoutSlice'
 
-const Layout = styled.div<{ mobile: boolean }>`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  height: 100vh;
+const Layout = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  // flex: 1,
+  height: '100vh',
 
-  > * {
-    margin-top: 24px;
-  }
+  '> *:first-child': {
+    marginTop: '24px',
+  },
+  '> *:last-child': {
+    flex: 1,
+  },
+}))
 
-  ${({ mobile }) =>
-    mobile
-      ? `:last-child {
-    margin-top: 0;
-  }`
-      : `:first-child {
-    margin-top: 0;
-  }`}
-`
+const GlobalNavigation = styled('nav')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  position: 'relative',
+  order: 1,
+  width: '100%',
 
-const Navigation: FC<PropsWithChildren & { mobile: boolean }> = ({
-  children,
-  mobile,
-  ...rest
-}) => <nav {...rest}>{children}</nav>
+  '> *': {
+    flex: 1,
+    padding: '8px 16px',
+    color: '#fff',
+    textDecoration: 'none',
+    fontSize: '2rem',
+    textAlign: 'center',
+    marginBottom: '6px !important¸˛Í',
 
-const GlobalNavigation = styled(Navigation)`
-  order: ${({ mobile }) => (mobile ? `1` : `0`)};
+    '&:visited': {
+      color: '#fff',
+    },
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 24px 48px !important;
-  position: relative;
+    '&:first-child': {
+      textAlign: 'left',
+    },
 
-  > * {
-    flex: 1;
-    padding: 8px 16px;
-    color: #fff;
-    text-decoration: none;
-    font-size: 2rem;
-    text-align: center;
-
-    &::visited {
-      color: #fff;
-    }
-
-    &:first-child {
-      text-align: left;
-    }
-
-    &:last-child {
-      text-align: right;
-    }
-  }
-
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: ${({ mobile }) => (mobile ? `unset` : `-24px`)};
-    top: ${({ mobile }) => (mobile ? `-24px` : `unset`)};
-    left: -16px;
-    right: -16px;
-    height: 2px;
-    opacity: 0.25;
-    background-color: lightblue;
-  }
-`
+    '&:last-child': {
+      textAlign: 'right',
+    },
+  },
+  '&:after': {
+    content: '""',
+    position: 'absolute',
+    top: '-12px',
+    left: '0',
+    right: '0',
+    height: '2px',
+    opacity: 0.25,
+    backgroundColor: 'lightblue',
+  },
+}))
 
 const WithNavigation: FC<PropsWithChildren & { Toolbar?: FC }> = ({
   children,
   Toolbar,
 }) => {
-  const isMobile = useSelector(getIsMobile)
-
   const isAuthenticated = useSelector(getIsAuthenticated)
 
   return (
-    <Layout mobile={isMobile}>
-      <GlobalNavigation mobile={isMobile}>
-        <a href={`/`}>On Deck</a>
+    <Layout>
+      <GlobalNavigation>
+        <Button href={`/`}>On Deck</Button>
         {Toolbar && <Toolbar />}
-        <a href={`/browse`}>Browse</a>
-        {!isAuthenticated && <a href={`/login`}>Sign In</a>}
-        {isAuthenticated && <a href={`/logout`}>Logout</a>}
+        <Button href={`/browse`}>Browse</Button>
+        {!isAuthenticated && <Button href={`/login`}>Sign In</Button>}
+        {isAuthenticated && <Button href={`/logout`}>Logout</Button>}
       </GlobalNavigation>
-      {children}
+      <div>{children}</div>
     </Layout>
   )
 }
