@@ -1,7 +1,7 @@
+import styled from '@emotion/styled'
 import _ from 'lodash'
 import { FC, useMemo } from 'react'
 import useDimensions from 'react-use-dimensions'
-import { styled } from 'styled-components'
 import type { Game } from '../api/server/playnite/types'
 
 const { chunk, groupBy, stubTrue } = _
@@ -14,14 +14,10 @@ const FillParent = styled.div`
   justify-content: center;
 `
 
-const Viewport = styled.div.attrs<{ $height: number; $width: number }>(
-  ({ $height, $width }) => ({
-    style: {
-      height: `${$height}px`,
-      width: `${$width}px`,
-    },
-  }),
-)`
+const Viewport = styled.div<{ height: number; width: number }>`
+  height: ${({ height }) => `${height}px`};
+  width: ${({ width }) => `${width}px`};
+
   scroll-snap-type: x mandatory;
   overflow-x: scroll;
   overflow-y: hidden;
@@ -34,44 +30,34 @@ const Viewport = styled.div.attrs<{ $height: number; $width: number }>(
   }
 `
 
-const GamePages = styled.ol.attrs<{ $height: number; $width: number }>(
-  ({ $height, $width }) => ({
-    style: {
-      height: `${$height}px`,
-      width: `${$width}px`,
-    },
-  }),
-)`
+const GamePages = styled.ol<{ height: number; width: number }>`
+  height: ${({ height }) => `${height}px`};
+  width: ${({ width }) => `${width}px`};
+
   display: flex;
   margin: 0;
   padding: 0;
   flex-direction: row;
 `
 
-const GridPage = styled.ol.attrs<{ $height: number; $width: number }>(
-  ({ $height, $width }) => ({
-    style: {
-      height: `${$height}px`,
-      width: `${$width}px`,
-    },
-  }),
-)`
+const GridPage = styled.ol<{ height: number; width: number }>`
+  height: ${({ height }) => `${height}px`};
+  width: ${({ width }) => `${width}px`};
+
   scroll-snap-align: start;
   display: inline-block;
   margin: 0;
   padding: 0;
 `
 
-const ListItem = styled.li.attrs<{
+const ListItem = styled.li<{
   $spacing: number
-  $height: number
-  $width: number
-}>(({ $height, $width }) => ({
-  style: {
-    height: `${$height}px`,
-    width: `${$width}px`,
-  },
-}))`
+  height: number
+  width: number
+}>`
+  height: ${({ height }) => `${height}px`};
+  width: ${({ width }) => `${width}px`};
+
   box-sizing: border-box;
   display: inline-block;
   margin: ${({ $spacing }) => `${$spacing}px`};
@@ -114,19 +100,19 @@ const GameList: FC<{
     <FillParent ref={ref}>
       {!!rows && !!columns ? (
         <Viewport
-          $height={rows * (gameHeight + spacing * 2)}
-          $width={columns * (gameWidth + spacing * 2)}
+          height={rows * (gameHeight + spacing * 2)}
+          width={columns * (gameWidth + spacing * 2)}
         >
           <GamePages
-            $height={rows * (gameHeight + spacing * 2)}
-            $width={pages.length * columns * (gameWidth + spacing * 2)}
+            height={rows * (gameHeight + spacing * 2)}
+            width={pages.length * columns * (gameWidth + spacing * 2)}
           >
             {pages.map((page: Game[], index: number) => {
               return (
                 <GridPage
                   key={index}
-                  $height={rows * (gameHeight + spacing * 2)}
-                  $width={columns * (gameWidth + spacing * 2)}
+                  height={rows * (gameHeight + spacing * 2)}
+                  width={columns * (gameWidth + spacing * 2)}
                 >
                   {page.map((games: Game) => {
                     const game = games[0]
@@ -134,8 +120,8 @@ const GameList: FC<{
                     return (
                       <ListItem
                         key={game.id}
-                        $height={gameHeight}
-                        $width={gameWidth}
+                        height={gameHeight}
+                        width={gameWidth}
                         $spacing={spacing}
                       >
                         <Game
