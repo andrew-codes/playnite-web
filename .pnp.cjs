@@ -2454,7 +2454,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/runtime", "npm:7.23.8"],\
           ["@floating-ui/react-dom", "virtual:0cc5e81fc3eb2e6b6a6a1e15204c90c11e3def0820309881f61b7271448a43305306f3f772d03f64a0137799a2547d8e94bee3785e2519c641e6b973460f3ff0#npm:2.0.5"],\
           ["@mui/types", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:7.2.13"],\
-          ["@mui/utils", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:5.15.4"],\
+          ["@mui/utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4"],\
           ["@popperjs/core", "npm:2.11.8"],\
           ["@types/react", "npm:18.2.45"],\
           ["@types/react-dom", "npm:18.2.17"],\
@@ -2527,7 +2527,7 @@ const RAW_RUNTIME_STATE =
           ["@mui/core-downloads-tracker", "npm:5.15.4"],\
           ["@mui/system", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:5.15.4"],\
           ["@mui/types", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:7.2.13"],\
-          ["@mui/utils", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:5.15.4"],\
+          ["@mui/utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4"],\
           ["@types/emotion__react", null],\
           ["@types/emotion__styled", null],\
           ["@types/react", "npm:18.2.45"],\
@@ -2567,7 +2567,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@mui/private-theming", "virtual:e775e1451fdb91548f92c4f2bdc67fa74f72352764d71544fe6c535f9d99255bc252f4002d18f35c8cc381480c2e0619bd8912d3e789269a9f2c023e1140738b#npm:5.15.4"],\
           ["@babel/runtime", "npm:7.23.8"],\
-          ["@mui/utils", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:5.15.4"],\
+          ["@mui/utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4"],\
           ["@types/react", "npm:18.2.45"],\
           ["prop-types", "npm:15.8.1"],\
           ["react", "npm:18.2.0"]\
@@ -2631,7 +2631,7 @@ const RAW_RUNTIME_STATE =
           ["@mui/private-theming", "virtual:e775e1451fdb91548f92c4f2bdc67fa74f72352764d71544fe6c535f9d99255bc252f4002d18f35c8cc381480c2e0619bd8912d3e789269a9f2c023e1140738b#npm:5.15.4"],\
           ["@mui/styled-engine", "virtual:e775e1451fdb91548f92c4f2bdc67fa74f72352764d71544fe6c535f9d99255bc252f4002d18f35c8cc381480c2e0619bd8912d3e789269a9f2c023e1140738b#npm:5.15.4"],\
           ["@mui/types", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:7.2.13"],\
-          ["@mui/utils", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:5.15.4"],\
+          ["@mui/utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4"],\
           ["@types/emotion__react", null],\
           ["@types/emotion__styled", null],\
           ["@types/react", "npm:18.2.45"],\
@@ -2679,10 +2679,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:5.15.4", {\
-        "packageLocation": "./.yarn/__virtual__/@mui-utils-virtual-9d2939369e/3/root/.yarn/berry/cache/@mui-utils-npm-5.15.4-e8475423a0-10c0.zip/node_modules/@mui/utils/",\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4", {\
+        "packageLocation": "./.yarn/__virtual__/@mui-utils-virtual-c6716b38e1/3/root/.yarn/berry/cache/@mui-utils-npm-5.15.4-e8475423a0-10c0.zip/node_modules/@mui/utils/",\
         "packageDependencies": [\
-          ["@mui/utils", "virtual:554924fb1578800a8f60a8488a16f3e24c1e92b7225a726032003962d78a5a719f2db2614b8267f94e245534349894f0c69eb129657296159332c48c1d828667#npm:5.15.4"],\
+          ["@mui/utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4"],\
           ["@babel/runtime", "npm:7.23.8"],\
           ["@types/prop-types", "npm:15.7.11"],\
           ["@types/react", "npm:18.2.45"],\
@@ -5508,6 +5508,15 @@ const RAW_RUNTIME_STATE =
           ["path-key", "npm:3.1.1"],\
           ["shebang-command", "npm:2.0.0"],\
           ["which", "npm:2.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["css-mediaquery", [\
+      ["npm:0.1.2", {\
+        "packageLocation": "../../root/.yarn/berry/cache/css-mediaquery-npm-0.1.2-39b61fbcad-10c0.zip/node_modules/css-mediaquery/",\
+        "packageDependencies": [\
+          ["css-mediaquery", "npm:0.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -11027,6 +11036,7 @@ const RAW_RUNTIME_STATE =
           ["@emotion/styled", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:11.11.0"],\
           ["@mui/icons-material", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4"],\
           ["@mui/material", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4"],\
+          ["@mui/utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.4"],\
           ["@reduxjs/toolkit", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.0.1"],\
           ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.4.0"],\
           ["@remix-run/express", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.4.0"],\
@@ -11041,6 +11051,7 @@ const RAW_RUNTIME_STATE =
           ["babel-plugin-styled-components", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.1.4"],\
           ["concurrently", "npm:8.2.2"],\
           ["cross-env", "npm:7.0.3"],\
+          ["css-mediaquery", "npm:0.1.2"],\
           ["cypress", "npm:13.6.1"],\
           ["debug", "virtual:92a28e392bb7746809827b7e8ebf6aec49c5f04125481214ae6ea6f4de204344bcccbe5eb3a2f4388bb368cfa5d84f03ce0d8f32a9fcc3f5e92ea34723da1c56#npm:4.3.4"],\
           ["dotenv", "npm:16.3.1"],\
@@ -11061,7 +11072,8 @@ const RAW_RUNTIME_STATE =
           ["remix-routes", "npm:1.5.1"],\
           ["rimraf", "npm:5.0.5"],\
           ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
-          ["typescript-remix-routes-plugin", "npm:1.0.1"]\
+          ["typescript-remix-routes-plugin", "npm:1.0.1"],\
+          ["ua-parser-js", "npm:1.0.37"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -13443,6 +13455,15 @@ const RAW_RUNTIME_STATE =
           ["resolve", "patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d"],\
           ["slash", "npm:3.0.0"],\
           ["typescript", "patch:typescript@npm%3A4.9.5#optional!builtin<compat/typescript>::version=4.9.5&hash=289587"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["ua-parser-js", [\
+      ["npm:1.0.37", {\
+        "packageLocation": "../../root/.yarn/berry/cache/ua-parser-js-npm-1.0.37-b79655e1b5-10c0.zip/node_modules/ua-parser-js/",\
+        "packageDependencies": [\
+          ["ua-parser-js", "npm:1.0.37"]\
         ],\
         "linkType": "HARD"\
       }]\
