@@ -1,3 +1,4 @@
+import { CacheProvider } from '@emotion/react'
 import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { createReadableStreamFromReadable } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
@@ -7,6 +8,7 @@ import { renderToPipeableStream } from 'react-dom/server'
 import { renderHeadToString } from 'remix-island'
 import { ServerStyleSheet } from 'styled-components'
 import WritableWithStyles from './WritableWithStyles'
+import createEmotionCache from './createEmotionCache'
 import { Head } from './root'
 
 const ABORT_DELAY = 5_000
@@ -42,13 +44,16 @@ function handleBotRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const sheet = new ServerStyleSheet()
+    const clientSideCache = createEmotionCache()
     const { pipe, abort } = renderToPipeableStream(
       sheet.collectStyles(
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />,
+        <CacheProvider value={clientSideCache}>
+          <RemixServer
+            context={remixContext}
+            url={request.url}
+            abortDelay={ABORT_DELAY}
+          />
+        </CacheProvider>,
       ),
       {
         onAllReady() {
@@ -101,13 +106,16 @@ function handleBrowserRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const sheet = new ServerStyleSheet()
+    const clientSideCache = createEmotionCache()
     const { pipe, abort } = renderToPipeableStream(
       sheet.collectStyles(
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />,
+        <CacheProvider value={clientSideCache}>
+          <RemixServer
+            context={remixContext}
+            url={request.url}
+            abortDelay={ABORT_DELAY}
+          />
+        </CacheProvider>,
       ),
       {
         onShellReady() {

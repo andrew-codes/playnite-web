@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@mui/material'
 import { configureStore } from '@reduxjs/toolkit'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
 import {
@@ -19,6 +20,7 @@ import { reducer } from './api/client/state'
 import { signedIn, signedOut } from './api/client/state/authSlice'
 import { layoutDetermined } from './api/client/state/layoutSlice'
 import inferredLayout from './api/server/layout'
+import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
   return [
@@ -91,9 +93,11 @@ const App: FC<{}> = () => {
     <>
       <Head />
       <GlobalStyles />
-      <Provider store={store}>
-        <Outlet />
-      </Provider>
+      <ThemeProvider theme={muiTheme}>
+        <Provider store={store}>
+          <Outlet />
+        </Provider>
+      </ThemeProvider>
       <ScrollRestoration />
       <Scripts />
       <LiveReload />
