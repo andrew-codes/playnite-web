@@ -1,4 +1,4 @@
-import { styled } from 'styled-components'
+import styled from '@emotion/styled'
 
 const Heading = styled.h2`
   margin: 0 0 8px 0;

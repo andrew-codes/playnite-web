@@ -1,18 +1,15 @@
+import styled from '@emotion/styled'
 import { FC } from 'react'
-import { styled } from 'styled-components'
 import type { Game } from '../api/server/playnite/types'
 
-const Game = styled.section.attrs<{
-  $cover: string
-  $height: number
-  $width: number
-}>(({ $cover, $height, $width }) => ({
-  style: {
-    backgroundImage: `url(${$cover})`,
-    height: `${$height}px`,
-    width: `${$width}px`,
-  },
-}))`
+const Game = styled.section<{
+  cover: string
+  height: number
+  width: number
+}>`
+  background-image: ${({ cover }) => `url(${cover})`};
+  height: ${({ height }) => `${height}px`};
+  width: ${({ width }) => `${width}px`};
   box-sizing: border-box;
   background-size: cover;
   display: flex;
@@ -39,7 +36,7 @@ const GameListItem: FC<{
   game: Game
 }> = ({ cover, game, width, height }) => {
   return (
-    <Game $cover={cover} $height={height} $width={width}>
+    <Game cover={cover} height={height} width={width}>
       <GameTitle hidden={!!game.cover}>{game.name}</GameTitle>
     </Game>
   )

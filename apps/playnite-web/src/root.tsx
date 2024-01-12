@@ -1,3 +1,4 @@
+import { Global, css } from '@emotion/react'
 import { ThemeProvider } from '@mui/material'
 import { configureStore } from '@reduxjs/toolkit'
 import { LoaderFunctionArgs, json } from '@remix-run/node'
@@ -14,7 +15,6 @@ import {
 import { FC } from 'react'
 import { Provider } from 'react-redux'
 import { createHead } from 'remix-island'
-import { createGlobalStyle } from 'styled-components'
 import { authenticator } from './api/auth/auth.server'
 import { reducer } from './api/client/state'
 import { signedIn, signedOut } from './api/client/state/authSlice'
@@ -60,18 +60,22 @@ const Head = createHead(() => (
   </>
 ))
 
-const GlobalStyles = createGlobalStyle`
-body {
-  background-color: rgb(17, 17, 17);
-  box-sizing: border-box;
-  color: rgb(255, 255, 255);
-  font-size: 16px;
-  line-height: 1;
-  margin: 0;
-  padding: 0;
-  font-family: Lato, sans-serif;
-}
-`
+const globalStyles = (
+  <Global
+    styles={css`
+      body {
+        background-color: rgb(17, 17, 17);
+        box-sizing: border-box;
+        color: rgb(255, 255, 255);
+        font-size: 16px;
+        line-height: 1;
+        margin: 0;
+        padding: 0;
+        font-family: Lato, sans-serif;
+      }
+    `}
+  />
+)
 
 const App: FC<{}> = () => {
   const { isMobile, gameWidth, gameHeight, user } = useLoaderData<{
@@ -92,7 +96,7 @@ const App: FC<{}> = () => {
   return (
     <>
       <Head />
-      <GlobalStyles />
+      {globalStyles}
       <ThemeProvider theme={muiTheme}>
         <Provider store={store}>
           <Outlet />

@@ -26,8 +26,7 @@
     "remix-auth": "^3.6.0",
     "remix-auth-form": "^1.4.0",
     "remix-island": "^0.1.2",
-    "remix-routes": "^1.5.1",
-    "styled-components": "^6.1.6"
+    "remix-routes": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",

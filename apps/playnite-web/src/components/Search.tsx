@@ -1,10 +1,10 @@
+import styled from '@emotion/styled'
 import { forwardRef, useCallback, useState } from 'react'
-import { styled } from 'styled-components'
 
-const SearchInput = styled.input<{ $height: number }>`
+const SearchInput = styled.input<{ height: number }>`
   display: flex;
   justify-content: center;
-  border-radius: ${({ $height }) => $height / 2}px;
+  border-radius: ${({ height }) => height / 2}px;
   padding: 0;
   color: darkslategray;
 `
@@ -25,7 +25,7 @@ const Search = forwardRef<
 
   return (
     <SearchInput
-      $height={height ?? 48}
+      height={height ?? 48}
       onChange={handleOnChange}
       placeholder="Search"
       ref={ref}

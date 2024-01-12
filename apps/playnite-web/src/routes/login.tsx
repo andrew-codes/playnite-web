@@ -1,9 +1,15 @@
-import { Button, Container, Stack, TextField, styled } from '@mui/material'
+import {
+  Button,
+  Container,
+  Stack,
+  TextField,
+  styled as muiStyled,
+} from '@mui/material'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form } from '@remix-run/react'
 import { authenticator } from '../api/auth/auth.server'
 
-const TallStack = styled(Stack)`
+const TallStack = muiStyled(Stack)`
   height: 100vh;
 `
 
