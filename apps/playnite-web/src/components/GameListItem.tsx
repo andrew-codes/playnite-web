@@ -13,12 +13,12 @@ const Game = styled('div')<{
   margin: 0,
   position: 'relative',
   [theme.breakpoints.up('desktop')]: {
-    minHeight: '400px',
-    minWidth: '300px',
+    maxHeight: '400px',
+    maxWidth: '300px',
   },
   [theme.breakpoints.down('desktop')]: {
-    minHeight: '282px',
-    minWidth: '211px',
+    maxHeight: '282px',
+    maxWidth: '211px',
   },
 }))
 
