@@ -101,13 +101,7 @@ function Index() {
 
   return (
     <WithNavigation>
-      <GameGrid
-        games={games}
-        rows={3}
-        columns={6}
-        Game={GameListItem}
-        spacing={0}
-      />
+      <GameGrid games={games} rows={3} columns={6} Game={GameListItem} />
     </WithNavigation>
   )
 }
