@@ -4,10 +4,17 @@
   "version": "1.0.0",
   "sideEffects": false,
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.4",
+    "@mui/material": "^5.15.4",
+    "@mui/utils": "^5.15.4",
     "@reduxjs/toolkit": "^2.0.1",
     "@remix-run/express": "^2.4.0",
     "@remix-run/node": "^2.4.0",
     "@remix-run/react": "^2.4.0",
+    "css-mediaquery": "^0.1.2",
     "debug": "^4.3.4",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
@@ -22,7 +29,7 @@
     "remix-auth-form": "^1.4.0",
     "remix-island": "^0.1.2",
     "remix-routes": "^1.5.1",
-    "styled-components": "^6.1.6"
+    "ua-parser-js": "^1.0.37"
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",
@@ -32,6 +39,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/styled-components": "^5.1.34",
+    "babel-plugin-direct-import": "^1.0.0",
     "babel-plugin-styled-components": "^2.1.4",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
