@@ -52,13 +52,7 @@ function Index() {
         {playlists.map(([playlist, games]) => (
           <PlaylistListItem key={playlist.id}>
             <Typography variant="h1">{playlist.name}</Typography>
-            <GameGrid
-              games={games}
-              rows={1}
-              columns={6}
-              Game={GameListItem}
-              spacing={0}
-            />
+            <GameGrid games={games} rows={1} columns={6} Game={GameListItem} />
           </PlaylistListItem>
         ))}
       </Stack>
