@@ -1,13 +1,13 @@
 import { Unstable_Grid2 as Grid, styled } from '@mui/material'
 import _ from 'lodash'
 import { FC, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { Helmet } from 'react-helmet'
 import useDimensions from 'react-use-dimensions'
 import type { Game } from '../api/server/playnite/types'
 
 const { chunk, debounce, groupBy, stubTrue } = _
 
 const scrollReducer = (state, action) => {
-  console.log('dispatched', action.type, action.payload)
   switch (action.type) {
     case 'PAGE_WIDTH_CHANGED':
       return {
@@ -86,7 +86,6 @@ const GameGrid: FC<{
     pageWidth: 0,
   })
   useEffect(() => {
-    console.log(pageNumber)
     onPageChange(pageNumber)
   }, [pageNumber, onPageChange])
 
@@ -131,31 +130,59 @@ const GameGrid: FC<{
   )
 
   return (
-    <Viewport ref={ref} onScroll={handleScroll}>
-      <GamePages length={pagedGrids.length}>
-        {pagedGrids.map((gameRows: Game[][][], pageIndex: number) => (
-          <Grid key={pageIndex} container direction="column" spacing={2}>
-            {gameRows.map((games: Game[][], rowIndex: number) => (
-              <Grid container key={rowIndex} direction="row" spacing={2}>
-                {games.map((game: Game[]) => (
-                  <Grid
-                    tablet={12 / columns}
-                    spacing={2}
-                    key={game[0].oid.id}
-                    style={{ display: 'flex' }}
-                  >
-                    <Game
-                      cover={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
-                      game={game}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            ))}
-          </Grid>
-        ))}
-      </GamePages>
-    </Viewport>
+    <>
+      <Helmet>
+        {pagedGrids.map((gameRows: Game[][][], pageIndex: number) =>
+          gameRows.map((games: Game[][], rowIndex: number) =>
+            games.map((game: Game[]) => {
+              if (pageIndex === 0) {
+                return (
+                  <link
+                    key={`${pageIndex}-${rowIndex}-${game[0].oid.id}`}
+                    rel="preload"
+                    as="image"
+                    href={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                  />
+                )
+              }
+              return (
+                <link
+                  key={`${pageIndex}-${rowIndex}-${game[0].oid.id}`}
+                  rel="prefetch"
+                  as="image"
+                  href={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                />
+              )
+            }),
+          ),
+        )}
+      </Helmet>
+      <Viewport ref={ref} onScroll={handleScroll}>
+        <GamePages length={pagedGrids.length}>
+          {pagedGrids.map((gameRows: Game[][][], pageIndex: number) => (
+            <Grid key={pageIndex} container direction="column" spacing={2}>
+              {gameRows.map((games: Game[][], rowIndex: number) => (
+                <Grid container key={rowIndex} direction="row" spacing={2}>
+                  {games.map((game: Game[]) => (
+                    <Grid
+                      tablet={12 / columns}
+                      spacing={2}
+                      key={game[0].oid.id}
+                      style={{ display: 'flex' }}
+                    >
+                      <Game
+                        cover={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                        game={game}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              ))}
+            </Grid>
+          ))}
+        </GamePages>
+      </Viewport>
+    </>
   )
 }
 
