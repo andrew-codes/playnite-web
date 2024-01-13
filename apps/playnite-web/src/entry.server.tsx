@@ -6,7 +6,9 @@ import mediaQuery from 'css-mediaquery'
 import isbot from 'isbot'
 import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
+import { Helmet } from 'react-helmet'
 import { renderHeadToString } from 'remix-island'
+import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
 import { UAParser } from 'ua-parser-js'
 import createEmotionCache from './createEmotionCache'
 import { setDefaults } from './muiTheme'
@@ -135,9 +137,13 @@ function handleBrowserRequest(
         />
       </CacheProvider>,
       {
+        onAllReady() {
+          preloadRouteAssets(remixContext, responseHeaders)
+        },
         onShellReady() {
           shellRendered = true
           const head = renderHeadToString({ request, remixContext, Head })
+          const helmet = Helmet.renderStatic()
           const body = new PassThrough()
           const stream = createReadableStreamFromReadable(body)
 
@@ -150,7 +156,7 @@ function handleBrowserRequest(
             }),
           )
           body.write(
-            `<!DOCTYPE html><html><head>${head}</head><body><div id="root">`,
+            `<!DOCTYPE html><html><head>${head}${helmet.link.toString()}</head><body><div id="root">`,
           )
           pipe(body)
           body.write(`</div></body></html>`)
