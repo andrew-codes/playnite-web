@@ -1,6 +1,6 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { configureStore } from '@reduxjs/toolkit'
-import { LoaderFunctionArgs, json } from '@remix-run/node'
+import { LinksFunction, LoaderFunctionArgs, json } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -33,6 +33,17 @@ const meta: MetaFunction = () => {
     {
       name: 'viewport',
       content: 'initial-scale=1, width=device-width',
+    },
+  ]
+}
+
+const links: LinksFunction = () => {
+  return [
+    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap',
     },
   ]
 }
@@ -82,4 +93,4 @@ const App: FC<{}> = () => {
 }
 
 export default App
-export { Head, loader, meta }
+export { Head, links, loader, meta }
