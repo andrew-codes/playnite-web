@@ -7,7 +7,7 @@ import PlayniteApi from '../api/server/playnite/index.server'
 import type { Game, Playlist } from '../api/server/playnite/types'
 import GameGrid from '../components/GameGrid'
 import GameListItem from '../components/GameListItem'
-import { Heading } from '../components/Headings'
+import Typography from '../components/Typography'
 import WithNavigation from '../components/WithNavigation'
 
 async function loader({ request }: LoaderFunctionArgs) {
@@ -51,7 +51,7 @@ function Index() {
       <Stack>
         {playlists.map(([playlist, games]) => (
           <PlaylistListItem key={playlist.id}>
-            <Heading>{playlist.name}</Heading>
+            <Typography variant="h1">{playlist.name}</Typography>
             <GameGrid
               games={games}
               rows={1}
