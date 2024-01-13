@@ -69,9 +69,13 @@ const GameGrid: FC<{
             {gameRows.map((games: Game[][], rowIndex: number) => (
               <Grid container key={rowIndex} direction="row" spacing={2}>
                 {games.map((game: Game[]) => (
-                  <Grid tablet={12 / columns} spacing={2}>
+                  <Grid
+                    tablet={12 / columns}
+                    spacing={2}
+                    key={game[0].oid.id}
+                    style={{ display: 'flex' }}
+                  >
                     <Game
-                      key={game[0].oid.id}
                       cover={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
                       game={game}
                     />
