@@ -1,9 +1,34 @@
 import { Unstable_Grid2 as Grid, styled } from '@mui/material'
 import _ from 'lodash'
-import { FC, useMemo } from 'react'
+import { FC, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import { Helmet } from 'react-helmet'
+import useDimensions from 'react-use-dimensions'
 import type { Game } from '../api/server/playnite/types'
 
-const { chunk, groupBy, stubTrue } = _
+const { chunk, debounce, groupBy, stubTrue } = _
+
+const scrollReducer = (state, action) => {
+  switch (action.type) {
+    case 'PAGE_WIDTH_CHANGED':
+      return {
+        ...state,
+        pageWidth: action.payload,
+      }
+
+    case 'SCROLLED':
+      return {
+        ...state,
+        currentScroll: action.payload,
+        pageNumber: Math.max(
+          Math.ceil((action.payload * 1.5) / state.pageWidth),
+          state.pageNumber,
+        ),
+      }
+
+    default:
+      return state
+  }
+}
 
 const Viewport = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -33,25 +58,68 @@ const GamePages = styled('div')<{ length: number }>(({ theme, length }) => ({
 }))
 
 const GameGrid: FC<{
-  onFilter?: (game: Game) => boolean
-  games: Game[]
-  rows: number
   columns: number
-  spacing: number
+  games: Game[]
   Game: FC<{
     cover: string
     game: Game[]
   }>
-}> = ({ games, spacing, rows, columns, Game, onFilter = stubTrue }) => {
-  const normalizedGames = useMemo<Game[][]>(() => {
-    const filteredGames = games.filter(onFilter)
+  rows: number
+  onFilter?: (game: Game) => boolean
+  onPageChange?: (pageNumber: number) => void
+}> = ({
+  games,
+  rows,
+  columns,
+  Game,
+  onFilter = stubTrue,
+  onPageChange = stubTrue,
+}) => {
+  const [ref, { width }] = useDimensions()
+  useEffect(() => {
+    dispatch({ type: 'PAGE_WIDTH_CHANGED', payload: width })
+  }, [width])
 
-    return Object.values(groupBy(filteredGames, 'sortName'))
-  }, [games, onFilter])
+  const [{ pageNumber }, dispatch] = useReducer(scrollReducer, {
+    pageNumber: 1,
+    currentScroll: 0,
+    pageWidth: 0,
+  })
+  useEffect(() => {
+    onPageChange(pageNumber)
+  }, [pageNumber, onPageChange])
+
+  const isTickingRef = useRef(false)
+  const updateScroll = useCallback(
+    debounce(
+      (evt) => dispatch({ type: 'SCROLLED', payload: evt.target.scrollLeft }),
+      120,
+    ),
+    [],
+  )
+  const handleScroll = useCallback(
+    (evt) => {
+      if (!isTickingRef.current) {
+        window.requestAnimationFrame(() => {
+          isTickingRef.current = false
+          updateScroll(evt)
+        })
+        isTickingRef.current = true
+      }
+    },
+    [updateScroll],
+  )
 
   const perPage = useMemo(() => {
     return rows * columns
   }, [rows, columns])
+  const normalizedGames = useMemo<Game[][]>(() => {
+    const filteredGames = games.filter(onFilter)
+    return Object.values(groupBy(filteredGames, 'sortName')).slice(
+      0,
+      perPage * (pageNumber + 2),
+    ) as Game[][]
+  }, [games, onFilter, pageNumber, perPage])
 
   const pagedGrids = useMemo(
     () =>
@@ -62,78 +130,60 @@ const GameGrid: FC<{
   )
 
   return (
-    <Viewport>
-      <GamePages length={pagedGrids.length}>
-        {pagedGrids.map((gameRows: Game[][][], pageIndex: number) => (
-          <Grid key={pageIndex} container direction="column" spacing={2}>
-            {gameRows.map((games: Game[][], rowIndex: number) => (
-              <Grid container key={rowIndex} direction="row" spacing={2}>
-                {games.map((game: Game[]) => (
-                  <Grid
-                    tablet={12 / columns}
-                    spacing={2}
-                    key={game[0].oid.id}
-                    style={{ display: 'flex' }}
-                  >
-                    <Game
-                      cover={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
-                      game={game}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            ))}
-          </Grid>
-        ))}
-      </GamePages>
-    </Viewport>
+    <>
+      <Helmet>
+        {pagedGrids.map((gameRows: Game[][][], pageIndex: number) =>
+          gameRows.map((games: Game[][], rowIndex: number) =>
+            games.map((game: Game[]) => {
+              if (pageIndex === 0) {
+                return (
+                  <link
+                    key={`${pageIndex}-${rowIndex}-${game[0].oid.id}`}
+                    rel="preload"
+                    as="image"
+                    href={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                  />
+                )
+              }
+              return (
+                <link
+                  key={`${pageIndex}-${rowIndex}-${game[0].oid.id}`}
+                  rel="prefetch"
+                  as="image"
+                  href={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                />
+              )
+            }),
+          ),
+        )}
+      </Helmet>
+      <Viewport ref={ref} onScroll={handleScroll}>
+        <GamePages length={pagedGrids.length}>
+          {pagedGrids.map((gameRows: Game[][][], pageIndex: number) => (
+            <Grid key={pageIndex} container direction="column" spacing={2}>
+              {gameRows.map((games: Game[][], rowIndex: number) => (
+                <Grid container key={rowIndex} direction="row" spacing={2}>
+                  {games.map((game: Game[]) => (
+                    <Grid
+                      tablet={12 / columns}
+                      spacing={2}
+                      key={game[0].oid.id}
+                      style={{ display: 'flex' }}
+                    >
+                      <Game
+                        cover={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                        game={game}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              ))}
+            </Grid>
+          ))}
+        </GamePages>
+      </Viewport>
+    </>
   )
-
-  // return (
-  //   <FillParent>
-  //     {!!rows && !!columns ? (
-  //       <Viewport
-  //         height={rows * (gameHeight + spacing * 2)}
-  //         width={columns * (gameWidth + spacing * 2)}
-  //       >
-  //         <GamePages
-  //           height={rows * (gameHeight + spacing * 2)}
-  //           width={pages.length * columns * (gameWidth + spacing * 2)}
-  //         >
-  //           {pages.map((page: Game[], index: number) => {
-  //             return (
-  //               <GridPage
-  //                 key={index}
-  //                 height={rows * (gameHeight + spacing * 2)}
-  //                 width={columns * (gameWidth + spacing * 2)}
-  //               >
-  //                 {page.map((games: Game) => {
-  //                   const game = games[0]
-
-  //                   return (
-  //                     <ListItem
-  //                       key={game.id}
-  //                       height={gameHeight}
-  //                       width={gameWidth}
-  //                       $spacing={spacing}
-  //                     >
-  //                       <Game
-  //                         cover={`coverArt/${game.oid.type}:${game.oid.id}`}
-  //                         height={gameHeight}
-  //                         width={gameWidth}
-  //                         game={game}
-  //                       />
-  //                     </ListItem>
-  //                   )
-  //                 })}
-  //               </GridPage>
-  //             )
-  //           })}
-  //         </GamePages>
-  //       </Viewport>
-  //     ) : null}
-  //   </FillParent>
-  // )
 }
 
 export default GameGrid
