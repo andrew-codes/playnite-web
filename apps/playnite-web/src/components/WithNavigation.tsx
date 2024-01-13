@@ -1,4 +1,4 @@
-import { Menu as MenuIcon, Search } from '@mui/icons-material'
+import { Menu as MenuIcon, PlaylistPlay, Search } from '@mui/icons-material'
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -21,11 +21,8 @@ const Layout = styled('div')(({ theme }) => ({
     flex: 1,
     flexDirection: 'column',
     display: 'flex',
+    margin: '16px',
   },
-}))
-
-const Main = styled('main')(({ theme }) => ({
-  margin: '16px',
 }))
 
 const WithNavigation: FC<PropsWithChildren> = ({ children }) => {
@@ -53,7 +50,7 @@ const WithNavigation: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <Layout>
-      <Main>{children}</Main>
+      <main>{children}</main>
       <BottomNavigation
         showLabels
         value={value}
@@ -63,7 +60,7 @@ const WithNavigation: FC<PropsWithChildren> = ({ children }) => {
           href="/"
           label="Playlists"
           value="/"
-          icon={<MenuIcon />}
+          icon={<PlaylistPlay />}
         />
         <BottomNavigationAction
           label="Browse"
@@ -81,7 +78,6 @@ const WithNavigation: FC<PropsWithChildren> = ({ children }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem href="/browse">Browse</MenuItem>
         {!isAuthenticated && (
           <MenuItem href="/login" component={Link}>
             Sign In

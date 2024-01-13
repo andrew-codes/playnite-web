@@ -5,7 +5,6 @@ import type { Game } from '../api/server/playnite/types'
 const Game = styled('div')<{
   cover: string
 }>(({ cover, theme }) => ({
-  background: `url(${cover})`,
   backgroundSize: 'cover',
   boxSizing: 'border-box',
   display: 'flex',
@@ -18,9 +17,14 @@ const Game = styled('div')<{
     minWidth: '300px',
   },
   [theme.breakpoints.down('desktop')]: {
-    minHeight: '280px',
-    minWidth: '210px',
+    minHeight: '282px',
+    minWidth: '211px',
   },
+}))
+
+const GameImage = styled('img')(({ theme }) => ({
+  width: '100%',
+  flex: 1,
 }))
 
 const GameTitle = styled('span')(({ theme }) => ({
@@ -39,7 +43,8 @@ const GameListItem: FC<{
 }> = ({ cover, game }) => {
   return (
     <Game cover={cover}>
-      <GameTitle>{game[0].name}</GameTitle>
+      <GameImage src={cover} alt={game[0].name} />
+      <GameTitle hidden={!!cover}>{game[0].name}</GameTitle>
     </Game>
   )
 }
