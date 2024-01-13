@@ -2,15 +2,11 @@ import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import _ from 'lodash'
-import { useCallback, useEffect, useReducer } from 'react'
-import { useSelector } from 'react-redux'
-import useDimensions from 'react-use-dimensions'
-import { styled } from 'styled-components'
+import { createRef, useCallback, useEffect, useReducer } from 'react'
 import { authenticator } from '../api/auth/auth.server'
-import { getGameDimensions } from '../api/client/state/layoutSlice'
 import PlayniteApi from '../api/server/playnite/index.server'
 import type { Game } from '../api/server/playnite/types'
-import GameList from '../components/GameList'
+import GameGrid from '../components/GameGrid'
 import GameListItem from '../components/GameListItem'
 import Search from '../components/Search'
 import WithNavigation from '../components/WithNavigation'
@@ -41,16 +37,6 @@ async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-const Main = styled.main`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  flex-direction: column;
-  height: 100%;
-`
-
-const spacing = 8
-
 const searchReducer = (state, action) => {
   switch (action.type) {
     case 'SEARCH/STARTED':
@@ -76,14 +62,14 @@ function Index() {
     query: '',
   })
 
-  const [ref, { height }, node] = useDimensions()
+  const ref = createRef<HTMLInputElement>()
   useEffect(() => {
     if (!search.isSearching) {
       return
     }
 
-    node.focus()
-  }, [search.isSearching, node])
+    ref.current?.focus()
+  }, [search.isSearching, ref.current])
 
   const debouncedSearch = useCallback(
     debounce((search: string) => {
@@ -96,12 +82,12 @@ function Index() {
     () => (
       <Search
         defaultValue={search.query}
-        height={height}
+        height={48}
         onSearch={debouncedSearch}
         ref={ref}
       />
     ),
-    [debouncedSearch, height, ref, search.query],
+    [debouncedSearch, ref, search.query],
   )
 
   const { games } = useLoaderData() as unknown as {
@@ -113,20 +99,15 @@ function Index() {
     [search.query],
   )
 
-  const [gameWidth, gameHeight] = useSelector(getGameDimensions)
-
   return (
-    <WithNavigation Toolbar={Toolbar}>
-      <Main>
-        <GameList
-          Game={GameListItem}
-          gameHeight={gameHeight - spacing * 2}
-          games={games}
-          gameWidth={gameWidth - spacing * 2}
-          onFilter={handleFilter}
-          spacing={spacing}
-        />
-      </Main>
+    <WithNavigation>
+      <GameGrid
+        games={games}
+        rows={3}
+        columns={6}
+        Game={GameListItem}
+        spacing={0}
+      />
     </WithNavigation>
   )
 }

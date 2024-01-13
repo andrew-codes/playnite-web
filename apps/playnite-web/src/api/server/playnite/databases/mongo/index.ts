@@ -136,11 +136,7 @@ class MongoDb implements MongoDbApi {
       .collection('assets')
       .findOne({ relatedId: oid.id, relatedType: oid.type })
 
-    if (!foundAsset) {
-      throw new Error(`No asset found matching ${JSON.stringify(oid)}`)
-    }
-
-    return foundAsset.file.value(true)
+    return foundAsset?.file.value(true)
   }
 
   async getGameById(id: string): Promise<Game> {

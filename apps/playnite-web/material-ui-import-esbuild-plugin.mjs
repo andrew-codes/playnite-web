@@ -1,11 +1,11 @@
 import babel from '@babel/core'
-import styled from 'babel-plugin-styled-components'
+import babelPluginDirectImport from 'babel-plugin-direct-import'
 import fs from 'node:fs'
 import path from 'path'
 
-function styledComponentsPlugin() {
+function materialUiImportPlugin() {
   return {
-    name: 'styled-components',
+    name: 'material-ui-import',
     setup({ onLoad }) {
       const root = process.cwd()
       onLoad({ filter: /\.[tj]sx$/ }, async (args) => {
@@ -37,7 +37,10 @@ function styledComponentsPlugin() {
           generatorOpts: {
             decoratorsBeforeExport: true,
           },
-          plugins: [styled],
+          plugins: [
+            babelPluginDirectImport,
+            { modules: ['@mui/material', '@mui/icons-material'] },
+          ],
           sourceMaps: true,
           inputSourceMap: false,
         })
@@ -54,4 +57,4 @@ function styledComponentsPlugin() {
   }
 }
 
-export default styledComponentsPlugin
+export default materialUiImportPlugin
