@@ -14,6 +14,13 @@ async function loader({ request, params }: LoaderFunctionArgs) {
     const api = new PlayniteApi()
     const assetBuffer = await api.getAssetRelatedTo(relatedOid)
 
+    if (!assetBuffer) {
+      return new Response(assetBuffer, {
+        status: 404,
+        headers: { 'Content-Type': 'image/jpg' },
+      })
+    }
+
     return new Response(assetBuffer, {
       status: 200,
       headers: { 'Content-Type': 'image/jpg' },
