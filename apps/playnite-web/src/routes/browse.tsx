@@ -61,23 +61,19 @@ function Index() {
     isSearching: false,
     query: '',
   })
-
   const ref = createRef<HTMLInputElement>()
   useEffect(() => {
     if (!search.isSearching) {
       return
     }
-
     ref.current?.focus()
   }, [search.isSearching, ref.current])
-
   const debouncedSearch = useCallback(
     debounce((search: string) => {
       searchDispatch({ type: 'SEARCH/STARTED', payload: search.toLowerCase() })
     }, 500),
     [],
   )
-
   const Toolbar = useCallback(
     () => (
       <Search
@@ -93,7 +89,6 @@ function Index() {
   const { games } = useLoaderData() as unknown as {
     games: Game[]
   }
-
   const handleFilter = useCallback(
     (game: Game) => game.name.toLowerCase().includes(search.query),
     [search.query],
@@ -101,7 +96,7 @@ function Index() {
 
   return (
     <WithNavigation>
-      <GameGrid games={games} rows={3} columns={6} Game={GameListItem} />
+      <GameGrid games={games} Game={GameListItem} />
     </WithNavigation>
   )
 }

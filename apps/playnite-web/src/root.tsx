@@ -40,7 +40,11 @@ const meta: MetaFunction = () => {
 const links: LinksFunction = () => {
   return [
     { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: "anonymous" },
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.gstatic.com',
+      crossOrigin: 'anonymous',
+    },
     {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap',
@@ -70,6 +74,7 @@ const App: FC<{}> = () => {
   }>()
 
   const store = configureStore({ reducer })
+
   if (!!user) {
     store.dispatch(signedIn({ payload: null }))
   } else {
