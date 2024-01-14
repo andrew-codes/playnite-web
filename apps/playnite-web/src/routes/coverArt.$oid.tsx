@@ -23,7 +23,10 @@ async function loader({ request, params }: LoaderFunctionArgs) {
 
     return new Response(assetBuffer, {
       status: 200,
-      headers: { 'Content-Type': 'image/jpg' },
+      headers: {
+        'Content-Type': 'image/jpg',
+        'Cache-Control': 'public, max-age=31536000, immutable',
+      },
     })
   } catch (e) {
     console.error(e)
