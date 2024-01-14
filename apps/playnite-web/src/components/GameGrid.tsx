@@ -155,7 +155,6 @@ const GameGrid: FC<{
     }
   }, [width, height, isTablet, isPhone])
 
-  console.log(rows, columns, rowHeight, columnWidth)
   const perPage = useMemo(() => {
     return rows * columns
   }, [rows, columns])
