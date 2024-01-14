@@ -32,13 +32,10 @@ async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-const PlaylistListItem = styled.section`
-  flex: 1;
-  flex-direction: column;
+const GameGridContainer = styled.div`
+  height: 300px;
+  width: 100%;
   display: flex;
-  > * {
-    justify-content: start !important;
-  }
 `
 
 function Index() {
@@ -50,10 +47,12 @@ function Index() {
     <WithNavigation>
       <Stack>
         {playlists.map(([playlist, games]) => (
-          <PlaylistListItem key={playlist.id}>
+          <div key={playlist.id}>
             <Typography variant="h1">{playlist.name}</Typography>
-            <GameGrid games={games} Game={GameListItem} />
-          </PlaylistListItem>
+            <GameGridContainer>
+              <GameGrid games={games} Game={GameListItem} />
+            </GameGridContainer>
+          </div>
         ))}
       </Stack>
     </WithNavigation>
