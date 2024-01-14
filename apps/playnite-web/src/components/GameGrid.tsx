@@ -1,4 +1,9 @@
-import { Unstable_Grid2 as Grid, styled } from '@mui/material'
+import {
+  Unstable_Grid2 as Grid,
+  Theme,
+  styled,
+  useMediaQuery,
+} from '@mui/material'
 import _ from 'lodash'
 import { FC, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
 import { Helmet } from 'react-helmet'
@@ -58,24 +63,17 @@ const GamePages = styled('div')<{ length: number }>(({ theme, length }) => ({
 }))
 
 const GameGrid: FC<{
-  columns: number
   games: Game[]
   Game: FC<{
     cover: string
     game: Game[]
+    height: number
+    width: number
   }>
-  rows: number
   onFilter?: (game: Game) => boolean
   onPageChange?: (pageNumber: number) => void
-}> = ({
-  games,
-  rows,
-  columns,
-  Game,
-  onFilter = stubTrue,
-  onPageChange = stubTrue,
-}) => {
-  const [ref, { width }] = useDimensions()
+}> = ({ games, Game, onFilter = stubTrue, onPageChange = stubTrue }) => {
+  const [ref, { height, width }] = useDimensions()
   useEffect(() => {
     dispatch({ type: 'PAGE_WIDTH_CHANGED', payload: width })
   }, [width])
@@ -110,6 +108,54 @@ const GameGrid: FC<{
     [updateScroll],
   )
 
+  const isTablet = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.between('tablet', 'desktop'),
+  )
+  const isPhone = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.between('phone', 'tablet'),
+  )
+
+  const { columns, columnWidth, rows, rowHeight } = useMemo(() => {
+    let columns
+    if (!width || !height) {
+      columns = 8
+      if (isPhone) {
+        columns = 2
+      }
+      if (isTablet) {
+        columns = 4
+      }
+    } else {
+      columns = 1
+      if (width >= 400) {
+        columns = 2
+      }
+      if (width >= 600) {
+        columns = 3
+      }
+      if (width >= 848) {
+        columns = 4
+      }
+      if (width >= 1280) {
+        columns = 6
+      }
+      if (width >= 1920) {
+        columns = 8
+      }
+    }
+
+    const maxColumnWidth = Math.floor(width / columns) - 16
+    const rowHeight = Math.floor((maxColumnWidth * 4) / 3)
+
+    return {
+      columns,
+      columnWidth: maxColumnWidth,
+      rowHeight,
+      rows: Math.floor(height / rowHeight),
+    }
+  }, [width, height, isTablet, isPhone])
+
+  console.log(rows, columns, rowHeight, columnWidth)
   const perPage = useMemo(() => {
     return rows * columns
   }, [rows, columns])
@@ -120,7 +166,6 @@ const GameGrid: FC<{
       perPage * (pageNumber + 2),
     ) as Game[][]
   }, [games, onFilter, pageNumber, perPage])
-
   const pagedGrids = useMemo(
     () =>
       chunk(normalizedGames, perPage).map((gamesPerPage: Game[][]) =>
@@ -173,6 +218,8 @@ const GameGrid: FC<{
                       <Game
                         cover={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
                         game={game}
+                        height={rowHeight}
+                        width={columnWidth}
                       />
                     </Grid>
                   ))}
