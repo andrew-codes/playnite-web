@@ -21,8 +21,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "cp -R .dist/ .packaged/",
-          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG --file Dockerfile ."
+          "cp -R .dist/ .packaged/ && docker build --tag $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG --file Dockerfile ."
         ],
         "cwd": "{projectRoot}"
       }
