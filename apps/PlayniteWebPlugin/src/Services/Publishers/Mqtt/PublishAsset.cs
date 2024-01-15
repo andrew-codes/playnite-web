@@ -2,6 +2,7 @@ using MQTTnet.Client;
 using MQTTnet.Protocol;
 using Playnite.SDK;
 using Playnite.SDK.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,19 +10,21 @@ using System.Threading.Tasks;
 
 namespace PlayniteWeb.Services.Publishers.Mqtt
 {
-  internal class PublishAsset : IPublishToPlaynite
+  internal class PublishAsset : IPublishToPlayniteWeb
   {
     private readonly IMqttClient client;
     private readonly IGameDatabaseAPI gameDatabase;
     private readonly string filePath;
     private readonly string rootTopic;
+    private readonly AssetType typeKey;
 
-    public PublishAsset(IMqttClient client, IGameDatabaseAPI gameDatabase, string filePath, string rootTopic)
+    public PublishAsset(IMqttClient client, IGameDatabaseAPI gameDatabase, string filePath, string rootTopic, AssetType typeKey)
     {
       this.client = client;
       this.filePath = filePath;
       this.gameDatabase = gameDatabase;
       this.rootTopic = rootTopic;
+      this.typeKey = typeKey;
     }
 
     private string toAssetId(string assetFilePath)
@@ -52,7 +55,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         var result = new byte[fileStream.Length];
         fileStream.Read(result, 0, result.Length);
 
-        var topic = $"{rootTopic}/asset/{toAssetId(filePath)}";
+        string topic = $"{rootTopic}/asset/{toAssetId(filePath)}/type/{Enum.GetName(typeof(AssetType), typeKey)}";
         yield return client.PublishBinaryAsync(
             topic,
             result,

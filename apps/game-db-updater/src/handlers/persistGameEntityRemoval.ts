@@ -12,6 +12,8 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
     return
   }
 
+  debug(`Received game entity removal for topic ${topic}`)
+
   const match = topicMatch.exec(topic)
   if (!match?.groups) {
     return

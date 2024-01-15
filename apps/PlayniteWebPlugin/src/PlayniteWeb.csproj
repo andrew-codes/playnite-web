@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventHandlers.cs" />
+    <Compile Include="Services\AssetType.cs" />
     <Compile Include="Services\Publishers\IApplyPublisherOptions.cs" />
     <Compile Include="Services\Publishers\IPublishToPlayniteWeb.cs" />
     <Compile Include="Services\Publishers\Mqtt\FilePathExtractors\GameBackgroundFilePath.cs" />

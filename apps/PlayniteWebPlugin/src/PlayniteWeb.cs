@@ -27,10 +27,10 @@ namespace PlayniteWeb
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
     private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
     private readonly Subject<ItemUpdatedEventArgs<Game>> gameUpdates;
-    private readonly IPublishToPlaynite gamePublisher;
-    private readonly IPublishToPlaynite platformPublisher;
-    private readonly IPublishToPlaynite gameEntityPublisher;
-    private readonly IPublishToPlaynite gameEntityRemovalPublisher;
+    private readonly IPublishToPlayniteWeb gamePublisher;
+    private readonly IPublishToPlayniteWeb platformPublisher;
+    private readonly IPublishToPlayniteWeb gameEntityPublisher;
+    private readonly IPublishToPlayniteWeb gameEntityRemovalPublisher;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Game>>> gameUpdated;
     private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> otherEntityUpdates;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> otherEntityUpdated;
@@ -137,12 +137,24 @@ namespace PlayniteWeb
             {
                 new MainMenuItem
                 {
-                    Description = "Sync Library", MenuSection = "@Playnite Web", Action = SyncLibrary
+                    Description = "Sync Library", MenuSection = "@Playnite Web", Action = SyncLibraryFromMenu
                 },
             };
+
+      publisher.LibraryRefreshRequest += Publisher_LibraryRefreshRequest;
     }
 
-    private void SyncLibrary(MainMenuItemActionArgs args)
+    private void Publisher_LibraryRefreshRequest(object sender, Task e)
+    {
+      SyncLibrary();
+    }
+
+    private void SyncLibraryFromMenu(MainMenuItemActionArgs args)
+    {
+      SyncLibrary();
+    }
+
+    private void SyncLibrary()
     {
       var gamePublications = PlayniteApi.Database.Games.SelectMany(game => gamePublisher.Publish(game));
       var platformPublications = PlayniteApi.Database.Platforms.SelectMany(platform => platformPublisher.Publish(platform));
