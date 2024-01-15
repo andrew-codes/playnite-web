@@ -27,10 +27,10 @@ namespace PlayniteWeb
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
     private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
     private readonly Subject<ItemUpdatedEventArgs<Game>> gameUpdates;
-    private readonly IPublishToPlaynite gamePublisher;
-    private readonly IPublishToPlaynite platformPublisher;
-    private readonly IPublishToPlaynite gameEntityPublisher;
-    private readonly IPublishToPlaynite gameEntityRemovalPublisher;
+    private readonly IPublishToPlayniteWeb gamePublisher;
+    private readonly IPublishToPlayniteWeb platformPublisher;
+    private readonly IPublishToPlayniteWeb gameEntityPublisher;
+    private readonly IPublishToPlayniteWeb gameEntityRemovalPublisher;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Game>>> gameUpdated;
     private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> otherEntityUpdates;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> otherEntityUpdated;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PlayniteWeb.Services.Publishers.Mqtt
 {
-  internal class PublishGameEntity : IPublishToPlaynite
+  internal class PublishGameEntity : IPublishToPlayniteWeb
   {
     private readonly IMqttClient client;
     private readonly ISerializeObjects serializer;
