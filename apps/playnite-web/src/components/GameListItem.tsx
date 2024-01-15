@@ -37,10 +37,10 @@ const GameListItem: FC<{
   return (
     <Game>
       <GameImage
-        src={cover}
         alt={game[0].name}
-        width={`${width}px`}
         height={`${height}px`}
+        src={cover}
+        width={`${width}px`}
       />
       <GamePlatformList>
         {game
@@ -49,7 +49,9 @@ const GameListItem: FC<{
             <GamePlatformListItem key={g.id}>
               <img
                 alt={g.platform?.name}
-                src={`gameAsset/icon/${g?.platform?.id}`}
+                height="48px"
+                src={`gameAsset/icon/platform:${g?.platform?.id}`}
+                width="48px"
               />
             </GamePlatformListItem>
           ))}
