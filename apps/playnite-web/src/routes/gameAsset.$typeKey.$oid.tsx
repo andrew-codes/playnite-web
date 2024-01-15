@@ -8,11 +8,12 @@ const debug = createDebugger('playnite-web-app/route/coverArt')
 
 async function loader({ request, params }: LoaderFunctionArgs) {
   try {
-    const { oid } = $params('/coverArt/:oid', params)
+    const { oid, typeKey } = $params('/gameAsset/:typeKey/:oid', params)
     const relatedOid = new Oid(oid)
 
     const api = new PlayniteApi()
-    const assetBuffer = await api.getAssetRelatedTo(relatedOid)
+    const assets = await api.getAssetsRelatedTo(relatedOid)
+    const assetBuffer = assets.find((asset) => asset.typeKey == typeKey)?.file
 
     if (!assetBuffer) {
       return new Response(assetBuffer, {
