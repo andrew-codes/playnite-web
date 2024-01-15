@@ -12,6 +12,20 @@ const Game = styled('div')(({ theme }) => ({
   position: 'relative',
 }))
 
+const GamePlatformList = styled('ol')(({ theme }) => ({
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  right: 0,
+  margin: 0,
+  padding: 0,
+  listStyle: 'none',
+  height: '48px',
+}))
+const GamePlatformListItem = styled('li')(({ theme }) => ({
+  display: 'inline-block',
+}))
+
 const GameImage = styled('img')(({ theme }) => ({}))
 
 const GameListItem: FC<{
@@ -28,6 +42,18 @@ const GameListItem: FC<{
         width={`${width}px`}
         height={`${height}px`}
       />
+      <GamePlatformList>
+        {game
+          .filter((g) => !!g.platform)
+          .map((g) => (
+            <GamePlatformListItem key={g.id}>
+              <img
+                alt={g.platform?.name}
+                src={`gameAsset/icon/${g?.platform?.id}`}
+              />
+            </GamePlatformListItem>
+          ))}
+      </GamePlatformList>
     </Game>
   )
 }

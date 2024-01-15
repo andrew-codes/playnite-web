@@ -12,6 +12,10 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
     return
   }
 
+  debug(
+    `Received game entity for topic ${topic} with payload ${payload.toString()}`,
+  )
+
   const match = topicMatch.exec(topic)
   if (!match?.groups) {
     return

@@ -185,7 +185,7 @@ const GameGrid: FC<{
                     key={`${pageIndex}-${rowIndex}-${game[0].oid.id}`}
                     rel="preload"
                     as="image"
-                    href={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                    href={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
                   />
                 )
               }
@@ -194,7 +194,7 @@ const GameGrid: FC<{
                   key={`${pageIndex}-${rowIndex}-${game[0].oid.id}`}
                   rel="prefetch"
                   as="image"
-                  href={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                  href={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
                 />
               )
             }),
@@ -215,7 +215,7 @@ const GameGrid: FC<{
                       style={{ display: 'flex' }}
                     >
                       <Game
-                        cover={`coverArt/${game[0].oid.type}:${game[0].oid.id}`}
+                        cover={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
                         game={game}
                         height={rowHeight}
                         width={columnWidth}
