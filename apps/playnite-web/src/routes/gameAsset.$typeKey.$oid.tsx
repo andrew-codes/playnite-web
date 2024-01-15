@@ -8,11 +8,13 @@ const debug = createDebugger('playnite-web-app/route/coverArt')
 
 async function loader({ request, params }: LoaderFunctionArgs) {
   try {
-    const { oid } = $params('/coverArt/:oid', params)
+    const { oid, typeKey } = $params('/gameAsset/:typeKey/:oid', params)
     const relatedOid = new Oid(oid)
 
     const api = new PlayniteApi()
-    const assetBuffer = await api.getAssetRelatedTo(relatedOid)
+    const assets = await api.getAssetsRelatedTo(relatedOid)
+    const asset = assets.find((asset) => asset.typeKey == typeKey)
+    const assetBuffer = asset?.file
 
     if (!assetBuffer) {
       return new Response(assetBuffer, {
@@ -21,10 +23,11 @@ async function loader({ request, params }: LoaderFunctionArgs) {
       })
     }
 
+    const extension = asset.id.split('.').pop()
     return new Response(assetBuffer, {
       status: 200,
       headers: {
-        'Content-Type': 'image/jpg',
+        'Content-Type': `image/${extension}`,
         'Cache-Control': 'public, max-age=31536000, immutable',
       },
     })

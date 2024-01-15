@@ -81,12 +81,13 @@ type AgeRating = {
   name: string
 }
 
-type GameAssetType = 'games' | 'platforms'
+type AssetTypeKey = 'background' | 'cover' | 'icon'
 
-type GameAsset = WithOid & {
+type GameAsset = {
   id: string
   file: Buffer
   related: IdentifyDomainObjects
+  typeKey: AssetTypeKey
 }
 
 type Playlist = {
@@ -122,7 +123,7 @@ type Game = WithOid & {
   id: string
   isCustomGame: boolean
   name: string
-  platforms?: Platform[]
+  platform?: Platform
   publishers?: Publisher[]
   recentActivity: Date
   releaseDate: Date
@@ -138,19 +139,19 @@ interface Api {
   getGameById(id: string): Promise<Game>
   getGames(): Promise<Game[]>
   getPlaylistsGames(playlists: Playlist[]): Promise<[Playlist, Game[]][]>
-  getAssetRelatedTo(oid: IdentifyDomainObjects): Promise<Buffer>
+  getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]>
 }
 
 export type {
   AgeRating,
   Api,
+  AssetTypeKey,
   CompletionStatus,
   Developer,
   DomainType,
   Feature,
   Game,
   GameAsset,
-  GameAssetType,
   Genre,
   IdentifyDomainObjects,
   Platform,

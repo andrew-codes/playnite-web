@@ -1,7 +1,7 @@
 {
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build", "build/restore"],
+      "dependsOn": ["clean", "^build", "build/restore"],
       "cache": true
     },
     "package": {
