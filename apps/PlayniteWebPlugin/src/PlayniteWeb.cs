@@ -137,12 +137,24 @@ namespace PlayniteWeb
             {
                 new MainMenuItem
                 {
-                    Description = "Sync Library", MenuSection = "@Playnite Web", Action = SyncLibrary
+                    Description = "Sync Library", MenuSection = "@Playnite Web", Action = SyncLibraryFromMenu
                 },
             };
+
+      publisher.LibraryRefreshRequest += Publisher_LibraryRefreshRequest;
     }
 
-    private void SyncLibrary(MainMenuItemActionArgs args)
+    private void Publisher_LibraryRefreshRequest(object sender, Task e)
+    {
+      SyncLibrary();
+    }
+
+    private void SyncLibraryFromMenu(MainMenuItemActionArgs args)
+    {
+      SyncLibrary();
+    }
+
+    private void SyncLibrary()
     {
       var gamePublications = PlayniteApi.Database.Games.SelectMany(game => gamePublisher.Publish(game));
       var platformPublications = PlayniteApi.Database.Platforms.SelectMany(platform => platformPublisher.Publish(platform));

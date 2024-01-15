@@ -41,20 +41,28 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         return;
       }
 
+      client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("playnite/#").Build());
       this.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.Connection()), "online", MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default).Wait(cancellationToken: default);
     }
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
-      var task = Task.CompletedTask;
-      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish))
+      var libraryRequestTask = Task.CompletedTask;
+      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish) && LibraryRefreshRequest != null)
       {
-        LibraryRefreshRequest.Invoke(this, task);
+        LibraryRefreshRequest.Invoke(this, libraryRequestTask);
       }
 
-      task.Wait(cancellationToken: default);
+      var innerEventTask = Task.CompletedTask;
+      if (this.ApplicationMessageReceivedAsync != null)
+      {
+        innerEventTask = this.ApplicationMessageReceivedAsync(args);
+      }
+      
 
-      return task;
+      libraryRequestTask.Wait(cancellationToken: default);
+
+      return Task.WhenAll(new[] { libraryRequestTask, innerEventTask });
     }
 
     public Task StartDisconnect()
