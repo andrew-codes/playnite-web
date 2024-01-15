@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PlayniteWeb.Services.Publishers.Mqtt
 {
-  internal class PublishPlatform : IPublishToPlaynite
+  internal class PublishPlatform : IPublishToPlayniteWeb
   {
     private readonly IMqttClient client;
     private readonly ISerializeObjects serializer;
@@ -29,21 +29,21 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       yield return client.PublishStringAsync(topic, serializer.Serialize(platform), MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default);
 
       var coverImageFilePath = new PlatformCoverFilePath(platform).getFilePath();
-      var coverPublisher = new PublishAsset(client, gameDatabase, coverImageFilePath, topic);
+      var coverPublisher = new PublishAsset(client, gameDatabase, coverImageFilePath, topic, AssetType.cover);
       foreach (var task in coverPublisher.Publish(platform))
       {
         yield return task;
       }
 
       var backgroundImageFilePath = new PlatformBackgroundFilePath(platform).getFilePath();
-      var backgroundPublisher = new PublishAsset(client, gameDatabase, backgroundImageFilePath, topic);
+      var backgroundPublisher = new PublishAsset(client, gameDatabase, backgroundImageFilePath, topic, AssetType.background);
       foreach (var task in backgroundPublisher.Publish(platform))
       {
         yield return task;
       }
 
-      var iconFilePath = new PlatformBackgroundFilePath(platform).getFilePath();
-      var iconPublisher = new PublishAsset(client, gameDatabase, iconFilePath, topic);
+      var iconFilePath = new PlatformIconFilePath(platform).getFilePath();
+      var iconPublisher = new PublishAsset(client, gameDatabase, iconFilePath, topic, AssetType.icon);
       foreach (var task in iconPublisher.Publish(platform))
       {
         yield return task;
