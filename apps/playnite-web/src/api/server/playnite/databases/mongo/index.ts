@@ -6,6 +6,7 @@ import { NoScore, NumericScore } from '../../Score'
 import type { GameEntity } from '../../dbTypes'
 import type {
   Game,
+  GameAsset,
   IdentifyDomainObjects,
   Playlist,
   RunState,
@@ -55,14 +56,14 @@ const gameEntityToGame = (gameEntity: GameEntity): Game => ({
   id: gameEntity.id,
   isCustomGame: gameEntity.isCustomGame,
   name: gameEntity.name,
-  // platforms: Platform[],
+  platform: gameEntity.platforms?.[0],
   // publishers: Publisher[],
   recentActivity: new Date(gameEntity.recentActivity),
   releaseDate: new Date(gameEntity.releaseDate),
   runState: getRunState(gameEntity),
   sortName: startCase(toLower(gameEntity.name)),
   // series: Series[],
-  // source: Source,
+  source: gameEntity.source,
   // tags: Tag[],
 })
 
@@ -70,7 +71,7 @@ interface MongoDbApi {
   getGameById(id: string): Promise<Game>
   getGames(): Promise<Game[]>
   getTags(): Promise<Tag[]>
-  getAssetRelatedTo(oid: IdentifyDomainObjects): Promise<Buffer>
+  getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]>
   getTagsGames(tags: Tag[]): Promise<[Playlist, Game[]][]>
 }
 
@@ -128,15 +129,22 @@ class MongoDb implements MongoDbApi {
     }
   }
 
-  async getAssetRelatedTo(oid: IdentifyDomainObjects): Promise<Buffer> {
+  async getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]> {
     await this.connect()
 
-    const foundAsset = await this.client
+    const foundAssets = await this.client
       .db('games')
       .collection('assets')
-      .findOne({ relatedId: oid.id, relatedType: oid.type })
+      .find({ relatedId: oid.id, relatedType: oid.type })
 
-    return foundAsset?.file.value(true)
+    return foundAssets
+      .map<GameAsset>((asset) => ({
+        id: asset.id,
+        file: asset.file.value(true),
+        related: { id: asset.relatedId, type: asset.relatedType },
+        typeKey: asset.typeKey,
+      }))
+      .toArray()
   }
 
   async getGameById(id: string): Promise<Game> {

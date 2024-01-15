@@ -32,6 +32,7 @@ const getMqttClient = async (
       port,
       username,
     })
+    debug('MQTT client connected')
   }
 
   return mqttClient

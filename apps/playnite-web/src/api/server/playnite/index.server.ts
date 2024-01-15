@@ -1,6 +1,12 @@
 import type { MongoDbApi } from './databases/mongo'
 import MongoDb from './databases/mongo'
-import type { Api, Game, IdentifyDomainObjects, Playlist } from './types'
+import type {
+  Api,
+  Game,
+  GameAsset,
+  IdentifyDomainObjects,
+  Playlist,
+} from './types'
 
 class PlayniteWebApi implements Api {
   private mongo: MongoDbApi
@@ -17,8 +23,8 @@ class PlayniteWebApi implements Api {
       .map((tag) => ({ id: tag.id, name: tag.name.replace('playlist-', '') }))
   }
 
-  getAssetRelatedTo(oid: IdentifyDomainObjects): Promise<Buffer> {
-    return this.mongo.getAssetRelatedTo(oid)
+  getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]> {
+    return this.mongo.getAssetsRelatedTo(oid)
   }
 
   async getGames(): Promise<Game[]> {
