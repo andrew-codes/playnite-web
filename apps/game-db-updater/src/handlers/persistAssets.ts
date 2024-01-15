@@ -27,6 +27,7 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
   const binaryFile = new Binary(payload)
   const relatedId = entityId
   const assetDoc = {
+    id: assetId,
     relatedId,
     relatedType: entityType,
     file: binaryFile,
@@ -37,7 +38,11 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
   client
     .db('games')
     .collection('assets')
-    .updateOne({ id: assetId }, { $set: assetDoc }, { upsert: true })
+    .updateOne(
+      { relatedId, relatedType: entityType, typeKey: assetTypeKey },
+      { $set: assetDoc },
+      { upsert: true },
+    )
 }
 
 export default handler
