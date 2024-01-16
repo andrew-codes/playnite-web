@@ -17,14 +17,21 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       mqtt.ApplicationMessageReceivedAsync += MesssageReceived;
     }
 
-    public event EventHandler<Task> LibraryRefreshRequest;
+    public event EventHandler<Task> OnLibraryRequest;
+    public event EventHandler<Guid> OnPlayGameRequest;
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
       var task = Task.CompletedTask;
-      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish) && LibraryRefreshRequest != null)
+      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish) && OnLibraryRequest != null)
       {
-        LibraryRefreshRequest.Invoke(this, task);
+        OnLibraryRequest.Invoke(this, task);
+      }
+
+      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestStartGame) && OnPlayGameRequest != null)
+      {
+        var gameId = Guid.Parse(args.ApplicationMessage.ConvertPayloadToString());
+        OnPlayGameRequest.Invoke(this, gameId);
       }
 
       return Task.WhenAll(task);
