@@ -23,7 +23,7 @@ namespace PlayniteWeb.TopicManager
 
     public string GetSubscribeTopic(string subTopic)
     {
-      return $"playnite/{subTopic}";
+      return $"playnite/request/{subTopic}";
     }
   }
 }
