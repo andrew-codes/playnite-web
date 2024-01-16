@@ -9,6 +9,8 @@ namespace PlayniteWeb.Services.Subscribers
   internal interface ISubscribeToPlayniteWeb
   {
     event EventHandler<Task> OnLibraryRequest;
-    event EventHandler<Guid> OnPlayGameRequest;
+    event EventHandler<Guid> OnStartGameRequest;
+    event EventHandler<Guid> OnInstallGameRequest;
+    event EventHandler<Guid> OnUninstallGameRequest;
   }
 }

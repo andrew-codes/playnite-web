@@ -18,7 +18,9 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
     }
 
     public event EventHandler<Task> OnLibraryRequest;
-    public event EventHandler<Guid> OnPlayGameRequest;
+    public event EventHandler<Guid> OnStartGameRequest;
+    public event EventHandler<Guid> OnInstallGameRequest;
+    public event EventHandler<Guid> OnUninstallGameRequest;
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
@@ -27,11 +29,20 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       {
         OnLibraryRequest.Invoke(this, task);
       }
-
-      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestStartGame) && OnPlayGameRequest != null)
+      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestStartGame) && OnStartGameRequest != null)
       {
         var gameId = Guid.Parse(args.ApplicationMessage.ConvertPayloadToString());
-        OnPlayGameRequest.Invoke(this, gameId);
+        OnStartGameRequest.Invoke(this, gameId);
+      }
+      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestInstallGame) && OnInstallGameRequest != null)
+      {
+        var gameId = Guid.Parse(args.ApplicationMessage.ConvertPayloadToString());
+        OnInstallGameRequest.Invoke(this, gameId);
+      }
+      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestUninstallGame) && OnUninstallGameRequest != null)
+      {
+        var gameId = Guid.Parse(args.ApplicationMessage.ConvertPayloadToString());
+        OnUninstallGameRequest.Invoke(this, gameId);
       }
 
       return Task.WhenAll(task);

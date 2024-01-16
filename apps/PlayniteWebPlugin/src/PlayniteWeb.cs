@@ -204,7 +204,9 @@ namespace PlayniteWeb
       settings.OnVerifySettings -= HandleVerifySettings;
 
       subscriber.OnLibraryRequest -= Publisher_LibraryRefreshRequest;
-      subscriber.OnPlayGameRequest -= Subscriber_OnPlayGameRequest;
+      subscriber.OnStartGameRequest -= Subscriber_OnStartGameRequest;
+      subscriber.OnInstallGameRequest -= Subscriber_OnInstallGameRequest;
+      subscriber.OnUninstallGameRequest -= Subscriber_OnUninstallGameRequest;
 
       gameUpdates.Dispose();
       platformUpdates.Dispose();
@@ -221,12 +223,33 @@ namespace PlayniteWeb
       StartConnection(settings.Settings);
 
       subscriber.OnLibraryRequest += Publisher_LibraryRefreshRequest;
-      subscriber.OnPlayGameRequest += Subscriber_OnPlayGameRequest;
+      subscriber.OnStartGameRequest += Subscriber_OnStartGameRequest;
+      subscriber.OnInstallGameRequest += Subscriber_OnInstallGameRequest;
+      subscriber.OnUninstallGameRequest += Subscriber_OnUninstallGameRequest;
+
 
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
       platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
       otherEntityUpdates.Subscribe(e => HandleOtherGameEntitiesUpdated(this, e));
       collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
+    }
+
+    private void Subscriber_OnUninstallGameRequest(object sender, Guid e)
+    {
+      var game = PlayniteApi.Database.Games.First(g => g.Id == e);
+      if (game.IsInstalled)
+      {
+        PlayniteApi.UninstallGame(e);
+      }
+    }
+
+    private void Subscriber_OnInstallGameRequest(object sender, Guid e)
+    {
+      var game = PlayniteApi.Database.Games.First(g => g.Id == e);
+      if (!game.IsInstalled)
+      {
+        PlayniteApi.InstallGame(e);
+      }
     }
 
     private void HandleVerifySettings(object sender, PlayniteWebSettings e)
@@ -240,7 +263,7 @@ namespace PlayniteWeb
       publisher.StartConnection(options);
     }
 
-    private void Subscriber_OnPlayGameRequest(object sender, Guid gameId)
+    private void Subscriber_OnStartGameRequest(object sender, Guid gameId)
     {
       PlayniteApi.StartGame(gameId);
     }
