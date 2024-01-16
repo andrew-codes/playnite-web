@@ -7,6 +7,8 @@ using Playnite.SDK.Plugins;
 using PlayniteWeb.Services;
 using PlayniteWeb.Services.Publishers;
 using PlayniteWeb.Services.Publishers.Mqtt;
+using PlayniteWeb.Services.Subscribers;
+using PlayniteWeb.Services.Subscribers.Mqtt;
 using PlayniteWeb.TopicManager;
 using PlayniteWeb.UI;
 using System;
@@ -24,6 +26,7 @@ namespace PlayniteWeb
   public class PlayniteWeb : GenericPlugin
   {
     private readonly IConnectPublisher<IMqttClient> publisher;
+    private readonly ISubscribeToPlayniteWeb subscriber;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
     private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
     private readonly Subject<ItemUpdatedEventArgs<Game>> gameUpdates;
@@ -48,6 +51,7 @@ namespace PlayniteWeb
       settings = new PlayniteWebSettingsViewModel(this);
       topicManager = new TopicManager.TopicManager(settings.Settings);
       publisher = new MqttPublisher(client, topicManager);
+      subscriber = new PlayniteWebSubscriber(client, topicManager);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
@@ -140,8 +144,6 @@ namespace PlayniteWeb
                     Description = "Sync Library", MenuSection = "@Playnite Web", Action = SyncLibraryFromMenu
                 },
             };
-
-      publisher.LibraryRefreshRequest += Publisher_LibraryRefreshRequest;
     }
 
     private void Publisher_LibraryRefreshRequest(object sender, Task e)
@@ -259,6 +261,7 @@ namespace PlayniteWeb
       settings.OnVerifySettings += HandleVerifySettings;
 
       StartConnection(settings.Settings);
+      subscriber.LibraryRefreshRequest += Publisher_LibraryRefreshRequest;
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
       platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
       otherEntityUpdates.Subscribe(e => HandleOtherGameEntitiesUpdated(this, e));
@@ -268,6 +271,7 @@ namespace PlayniteWeb
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
       settings.OnVerifySettings -= HandleVerifySettings;
+      subscriber.LibraryRefreshRequest -= Publisher_LibraryRefreshRequest;
 
       gameUpdates.Dispose();
       platformUpdates.Dispose();

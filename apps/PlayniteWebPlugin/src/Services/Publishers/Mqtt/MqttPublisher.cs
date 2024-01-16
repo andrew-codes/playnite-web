@@ -21,12 +21,41 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     public MqttPublisher(IMqttClient client, IManageTopics topicBuilder)
     {
       this.client = client;
-      client.ApplicationMessageReceivedAsync += MesssageReceived;
 
       this.topicBuilder = topicBuilder;
+      this.client.ApplicationMessageReceivedAsync += Client_ApplicationMessageReceivedAsync;
+      this.client.ConnectedAsync += Client_ConnectedAsync;
+      this.client.ConnectingAsync += Client_ConnectingAsync;
+      this.client.DisconnectedAsync += Client_DisconnectedAsync;
+      this.client.InspectPacketAsync += Client_InspectPacketAsync;
+
     }
 
-    public event EventHandler<Task> LibraryRefreshRequest;
+    private Task Client_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
+    {
+      return DisconnectedAsync(arg);
+    }
+
+    private Task Client_ConnectingAsync(MqttClientConnectingEventArgs arg)
+    {
+      return ConnectingAsync(arg);
+    }
+
+    private Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
+    {
+      return ConnectedAsync(arg);
+    }
+
+    private Task Client_InspectPacketAsync(InspectMqttPacketEventArgs arg)
+    {
+      return InspectPacketAsync(arg);
+    }
+
+    private Task Client_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
+    {
+      return ApplicationMessageReceivedAsync(arg);
+    }
+
     public event Func<MqttApplicationMessageReceivedEventArgs, Task> ApplicationMessageReceivedAsync;
     public event Func<MqttClientConnectedEventArgs, Task> ConnectedAsync;
     public event Func<MqttClientConnectingEventArgs, Task> ConnectingAsync;
@@ -41,28 +70,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         return;
       }
 
-      client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("playnite/#").Build());
       this.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.Connection()), "online", MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default).Wait(cancellationToken: default);
-    }
-
-    private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
-    {
-      var libraryRequestTask = Task.CompletedTask;
-      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish) && LibraryRefreshRequest != null)
-      {
-        LibraryRefreshRequest.Invoke(this, libraryRequestTask);
-      }
-
-      var innerEventTask = Task.CompletedTask;
-      if (this.ApplicationMessageReceivedAsync != null)
-      {
-        innerEventTask = this.ApplicationMessageReceivedAsync(args);
-      }
-      
-
-      libraryRequestTask.Wait(cancellationToken: default);
-
-      return Task.WhenAll(new[] { libraryRequestTask, innerEventTask });
     }
 
     public Task StartDisconnect()
