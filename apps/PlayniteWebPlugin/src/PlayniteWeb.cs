@@ -176,27 +176,32 @@ namespace PlayniteWeb
 
     public override void OnGameInstalled(OnGameInstalledEventArgs args)
     {
-      // Add code to be executed when game is finished installing.
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnGameStarted(OnGameStartedEventArgs args)
     {
-      // Add code to be executed when game is started running.
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, args.StartedProcessId);
+      gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnGameStarting(OnGameStartingEventArgs args)
     {
-      // Add code to be executed when game is preparing to be started.
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnGameStopped(OnGameStoppedEventArgs args)
     {
-      // Add code to be executed when game is preparing to be started.
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
     {
-      // Add code to be executed when game is uninstalled.
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
@@ -240,6 +245,8 @@ namespace PlayniteWeb
       if (game.IsInstalled)
       {
         PlayniteApi.UninstallGame(e);
+        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+        gameStatePublisher.Publish(game);
       }
     }
 
@@ -249,6 +256,8 @@ namespace PlayniteWeb
       if (!game.IsInstalled)
       {
         PlayniteApi.InstallGame(e);
+        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+        gameStatePublisher.Publish(game);
       }
     }
 
