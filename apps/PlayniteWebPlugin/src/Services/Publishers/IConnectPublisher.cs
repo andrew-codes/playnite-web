@@ -9,7 +9,5 @@ namespace PlayniteWeb.Services.Publishers
   {
     void StartConnection(IApplyPublisherOptions<TPublishClient> options);
     Task StartDisconnect();
-
-    event EventHandler<Task> LibraryRefreshRequest;
   }
 }

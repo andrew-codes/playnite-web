@@ -87,6 +87,8 @@
     <Compile Include="Services\Publishers\Mqtt\PublishGameEntity.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishPlatform.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGame.cs" />
+    <Compile Include="Services\Subscribers\ISubscribeToPlayniteWeb.cs" />
+    <Compile Include="Services\Subscribers\Mqtt\PlayniteWebSubscriber.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="UI\IntToStringValueConverter.cs" />
     <Compile Include="Services\Publishers\IConnectPublisher.cs" />
