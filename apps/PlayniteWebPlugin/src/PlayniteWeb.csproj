@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Services\AssetType.cs" />
+    <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\Publishers\IApplyPublisherOptions.cs" />
     <Compile Include="Services\Publishers\IPublishToPlayniteWeb.cs" />
     <Compile Include="Services\Publishers\Mqtt\FilePathExtractors\GameBackgroundFilePath.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Services\Publishers\Mqtt\IGetFilePath.cs" />
     <Compile Include="Services\Publishers\Mqtt\MqttPublisher.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishAsset.cs" />
+    <Compile Include="Services\Publishers\Mqtt\PublishGameState.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGameEntityRemoval.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGameEntity.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishPlatform.cs" />
