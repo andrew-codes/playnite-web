@@ -4,11 +4,20 @@ import {
   styled,
   useMediaQuery,
 } from '@mui/material'
+import { useActionData, useFetcher } from '@remix-run/react'
 import _ from 'lodash'
-import { FC, useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
+import React, {
+  FC,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react'
 import { Helmet } from 'react-helmet'
 import useDimensions from 'react-use-dimensions'
-import type { Game } from '../api/server/playnite/types'
+import type { Game } from '../api/playnite/types'
 
 const { chunk, debounce, groupBy, stubTrue } = _
 
@@ -69,6 +78,7 @@ const GameGrid: FC<{
     game: Game[]
     height: number
     width: number
+    onActivate: (evt: React.SyntheticEvent, id: string) => void
   }>
   onFilter?: (game: Game) => boolean
   onPageChange?: (pageNumber: number) => void
@@ -173,6 +183,16 @@ const GameGrid: FC<{
     [normalizedGames, perPage],
   )
 
+  const fetcher = useFetcher()
+  const handleActivate = useCallback(
+    (evt: SyntheticEvent, id: string) => {
+      fetcher.submit({ id }, { method: 'post', action: '/activate' })
+    },
+    [fetcher.submit],
+  )
+  const actionData = useActionData()
+  console.log(actionData, fetcher.data)
+
   return (
     <>
       <Helmet>
@@ -218,6 +238,7 @@ const GameGrid: FC<{
                         cover={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
                         game={game}
                         height={rowHeight}
+                        onActivate={handleActivate}
                         width={columnWidth}
                       />
                     </Grid>

@@ -32,7 +32,9 @@ const LoginForm = () => (
           autoComplete="password"
           required
         />
-        <Button variant="contained">Sign In</Button>
+        <Button variant="contained" type="submit">
+          Sign In
+        </Button>
       </TallStack>
     </Container>
   </Form>
