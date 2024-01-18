@@ -14,6 +14,7 @@
     "@remix-run/express": "^2.4.0",
     "@remix-run/node": "^2.4.0",
     "@remix-run/react": "^2.4.0",
+    "async-mqtt": "^2.6.3",
     "compression": "^1.7.4",
     "css-mediaquery": "^0.1.2",
     "debug": "^4.3.4",
