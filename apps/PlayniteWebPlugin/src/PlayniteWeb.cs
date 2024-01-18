@@ -7,6 +7,8 @@ using Playnite.SDK.Plugins;
 using PlayniteWeb.Services;
 using PlayniteWeb.Services.Publishers;
 using PlayniteWeb.Services.Publishers.Mqtt;
+using PlayniteWeb.Services.Subscribers;
+using PlayniteWeb.Services.Subscribers.Mqtt;
 using PlayniteWeb.TopicManager;
 using PlayniteWeb.UI;
 using System;
@@ -24,6 +26,7 @@ namespace PlayniteWeb
   public class PlayniteWeb : GenericPlugin
   {
     private readonly IConnectPublisher<IMqttClient> publisher;
+    private readonly ISubscribeToPlayniteWeb subscriber;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
     private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
     private readonly Subject<ItemUpdatedEventArgs<Game>> gameUpdates;
@@ -48,6 +51,7 @@ namespace PlayniteWeb
       settings = new PlayniteWebSettingsViewModel(this);
       topicManager = new TopicManager.TopicManager(settings.Settings);
       publisher = new MqttPublisher(client, topicManager);
+      subscriber = new PlayniteWebSubscriber(client, topicManager);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
@@ -140,21 +144,14 @@ namespace PlayniteWeb
                     Description = "Sync Library", MenuSection = "@Playnite Web", Action = SyncLibraryFromMenu
                 },
             };
-
-      publisher.LibraryRefreshRequest += Publisher_LibraryRefreshRequest;
-    }
-
-    private void Publisher_LibraryRefreshRequest(object sender, Task e)
-    {
-      SyncLibrary();
     }
 
     private void SyncLibraryFromMenu(MainMenuItemActionArgs args)
     {
-      SyncLibrary();
+     Task.WhenAll(SyncLibrary()).Wait();
     }
 
-    private void SyncLibrary()
+    private IEnumerable<Task> SyncLibrary()
     {
       var gamePublications = PlayniteApi.Database.Games.SelectMany(game => gamePublisher.Publish(game));
       var platformPublications = PlayniteApi.Database.Platforms.SelectMany(platform => platformPublisher.Publish(platform));
@@ -170,14 +167,119 @@ namespace PlayniteWeb
       var otherGameEntityPublications = gameEntities.SelectMany(entity => gameEntityPublisher.Publish(entity));
 
 
-      var tasks = gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications);
-      Task.WhenAll(tasks);
+      return gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications);      
+    }
+
+    public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
+    {
+    }
+
+    public override void OnGameInstalled(OnGameInstalledEventArgs args)
+    {
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      gameStatePublisher.Publish(args.Game);
+    }
+
+    public override void OnGameStarted(OnGameStartedEventArgs args)
+    {
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, args.StartedProcessId);
+      gameStatePublisher.Publish(args.Game);
+    }
+
+    public override void OnGameStarting(OnGameStartingEventArgs args)
+    {
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      gameStatePublisher.Publish(args.Game);
+    }
+
+    public override void OnGameStopped(OnGameStoppedEventArgs args)
+    {
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      gameStatePublisher.Publish(args.Game);
+    }
+
+    public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
+    {
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      gameStatePublisher.Publish(args.Game);
+    }
+
+    public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
+    {
+      settings.OnVerifySettings -= HandleVerifySettings;
+
+      subscriber.OnLibraryRequest -= Publisher_LibraryRefreshRequest;
+      subscriber.OnStartGameRequest -= Subscriber_OnStartGameRequest;
+      subscriber.OnInstallGameRequest -= Subscriber_OnInstallGameRequest;
+      subscriber.OnUninstallGameRequest -= Subscriber_OnUninstallGameRequest;
+
+      gameUpdates.Dispose();
+      platformUpdates.Dispose();
+      otherEntityUpdates.Dispose();
+      collectionUpdates.Dispose();
+
+      publisher.StartDisconnect().Wait();
+    }
+
+    public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
+    {
+      settings.OnVerifySettings += HandleVerifySettings;
+
+      StartConnection(settings.Settings);
+
+      subscriber.OnLibraryRequest += Publisher_LibraryRefreshRequest;
+      subscriber.OnStartGameRequest += Subscriber_OnStartGameRequest;
+      subscriber.OnInstallGameRequest += Subscriber_OnInstallGameRequest;
+      subscriber.OnUninstallGameRequest += Subscriber_OnUninstallGameRequest;
+
+
+      gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
+      platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
+      otherEntityUpdates.Subscribe(e => HandleOtherGameEntitiesUpdated(this, e));
+      collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
+    }
+
+    private void Subscriber_OnUninstallGameRequest(object sender, Guid e)
+    {
+      var game = PlayniteApi.Database.Games.First(g => g.Id == e);
+      if (game.IsInstalled)
+      {
+        PlayniteApi.UninstallGame(e);
+        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+        gameStatePublisher.Publish(game);
+      }
+    }
+
+    private void Subscriber_OnInstallGameRequest(object sender, Guid e)
+    {
+      var game = PlayniteApi.Database.Games.First(g => g.Id == e);
+      if (!game.IsInstalled)
+      {
+        PlayniteApi.InstallGame(e);
+        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+        gameStatePublisher.Publish(game);
+      }
+    }
+
+    private void HandleVerifySettings(object sender, PlayniteWebSettings e)
+    {
+      StartConnection(e);
     }
 
     private void StartConnection(PlayniteWebSettings settings)
     {
       var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, Id.ToByteArray());
       publisher.StartConnection(options);
+    }
+
+    private void Subscriber_OnStartGameRequest(object sender, Guid gameId)
+    {
+      PlayniteApi.StartGame(gameId);
+    }
+
+    private void Publisher_LibraryRefreshRequest(object sender, Task e)
+    {
+      Task.WhenAll(SyncLibrary()).ContinueWith((t) => e);
     }
 
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Game> e)
@@ -218,63 +320,6 @@ namespace PlayniteWeb
       }));
 
       Task.WhenAll(e.RemovedItems.SelectMany(item => gameEntityRemovalPublisher.Publish(item)));
-    }
-
-    private void HandleVerifySettings(object sender, PlayniteWebSettings e)
-    {
-      StartConnection(e);
-    }
-
-    public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
-    {
-    }
-
-    public override void OnGameInstalled(OnGameInstalledEventArgs args)
-    {
-      // Add code to be executed when game is finished installing.
-    }
-
-    public override void OnGameStarted(OnGameStartedEventArgs args)
-    {
-      // Add code to be executed when game is started running.
-    }
-
-    public override void OnGameStarting(OnGameStartingEventArgs args)
-    {
-      // Add code to be executed when game is preparing to be started.
-    }
-
-    public override void OnGameStopped(OnGameStoppedEventArgs args)
-    {
-      // Add code to be executed when game is preparing to be started.
-    }
-
-    public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
-    {
-      // Add code to be executed when game is uninstalled.
-    }
-
-    public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
-    {
-      settings.OnVerifySettings += HandleVerifySettings;
-
-      StartConnection(settings.Settings);
-      gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
-      platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
-      otherEntityUpdates.Subscribe(e => HandleOtherGameEntitiesUpdated(this, e));
-      collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
-    }
-
-    public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
-    {
-      settings.OnVerifySettings -= HandleVerifySettings;
-
-      gameUpdates.Dispose();
-      platformUpdates.Dispose();
-      otherEntityUpdates.Dispose();
-      collectionUpdates.Dispose();
-
-      publisher.StartDisconnect().Wait();
     }
 
     public override ISettings GetSettings(bool firstRunSettings)
