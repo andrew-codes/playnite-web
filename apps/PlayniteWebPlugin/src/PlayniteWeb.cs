@@ -224,8 +224,11 @@ namespace PlayniteWeb
     public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
     {
       settings.OnVerifySettings += HandleVerifySettings;
-
-      StartConnection(settings.Settings);
+      try
+      {
+        StartConnection(settings.Settings);
+      }
+      catch (Exception ex) { }
 
       subscriber.OnLibraryRequest += Publisher_LibraryRefreshRequest;
       subscriber.OnStartGameRequest += Subscriber_OnStartGameRequest;
