@@ -30,6 +30,7 @@ namespace PlayniteWeb
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
     private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
     private readonly Subject<ItemUpdatedEventArgs<Game>> gameUpdates;
+    private readonly ISerializeObjects serializer;
     private readonly IPublishToPlayniteWeb gamePublisher;
     private readonly IPublishToPlayniteWeb platformPublisher;
     private readonly IPublishToPlayniteWeb gameEntityPublisher;
@@ -56,7 +57,7 @@ namespace PlayniteWeb
       {
         HasSettings = true
       };
-      var serializer = new ObjectSerializer();
+      serializer = new ObjectSerializer();
       gamePublisher = new PublishGame((IMqttClient)publisher, topicManager, serializer, api.Database);
       platformPublisher = new PublishPlatform((IMqttClient)publisher, topicManager, serializer, api.Database);
       gameEntityPublisher = new PublishGameEntity((IMqttClient)publisher, topicManager, serializer, api.Database);
@@ -176,31 +177,31 @@ namespace PlayniteWeb
 
     public override void OnGameInstalled(OnGameInstalledEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
       gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnGameStarted(OnGameStartedEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, args.StartedProcessId);
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer, args.StartedProcessId);
       gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnGameStarting(OnGameStartingEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
       gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnGameStopped(OnGameStoppedEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
       gameStatePublisher.Publish(args.Game);
     }
 
     public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
       gameStatePublisher.Publish(args.Game);
     }
 
@@ -248,7 +249,7 @@ namespace PlayniteWeb
       if (game.IsInstalled)
       {
         PlayniteApi.UninstallGame(e);
-        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
         gameStatePublisher.Publish(game);
       }
     }
@@ -259,7 +260,7 @@ namespace PlayniteWeb
       if (!game.IsInstalled)
       {
         PlayniteApi.InstallGame(e);
-        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager);
+        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
         gameStatePublisher.Publish(game);
       }
     }

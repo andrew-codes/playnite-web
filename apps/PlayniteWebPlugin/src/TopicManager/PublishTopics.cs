@@ -7,7 +7,7 @@ namespace PlayniteWeb.TopicManager
   {
     public static string Connection() => "connection";
     public static string LibraryRequesteCompleted() => "library/request/state";
-    public static string GameState(Guid id, GameState state) => $"response/game/{id}/{Enum.GetName(typeof(GameState), state)}";
+    public static string GameState() => $"response/game/state";
     public static string Game(Guid id) => GameEntity("game", id);
     public static string Platform(Guid id) => GameEntity("platform", id);
     public static string GameEntity(string name, Guid id) => $"entity/{name.ToLower()}/{id}";
