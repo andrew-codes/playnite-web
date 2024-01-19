@@ -1,6 +1,7 @@
 using MQTTnet.Client;
 using Playnite.SDK.Models;
 using PlayniteWeb.TopicManager;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
           GameId = game.Id,
-          State = GameState.installing,
+          State = Enum.GetName(typeof(GameState), GameState.installing),
           ProcessId = processId
         }));
         yield break;
@@ -40,7 +41,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
           GameId = game.Id,
-          State = GameState.starting,
+          State = Enum.GetName(typeof(GameState), GameState.starting),
           ProcessId = processId
         }));
         yield break;
@@ -50,7 +51,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
           GameId = game.Id,
-          State = GameState.started,
+          State = Enum.GetName(typeof(GameState), GameState.started),
           ProcessId = processId
         }));
         yield break;
@@ -60,7 +61,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
           GameId = game.Id,
-          State = GameState.installed,
+          State = Enum.GetName(typeof(GameState), GameState.installed),
           ProcessId = processId
         }));
         yield break;
@@ -70,7 +71,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
           GameId = game.Id,
-          State = GameState.uninstalled,
+          State = Enum.GetName(typeof(GameState), GameState.uninstalled),
           ProcessId = processId
         }));
         yield break;
@@ -79,7 +80,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
           GameId = game.Id,
-          State = GameState.stopped,
+          State = Enum.GetName(typeof(GameState), GameState.stopped),
           ProcessId = processId
         }));
     }
