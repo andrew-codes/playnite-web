@@ -36,17 +36,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         }));
         yield break;
       }
-      if (g.IsLaunching)
-      {
-        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
-        {
-          GameId = game.Id,
-          State = Enum.GetName(typeof(GameState), GameState.starting),
-          ProcessId = processId
-        }));
-        yield break;
-      }
-      if (g.IsRunning)
+      if (g.IsRunning || processId != null)
       {
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
@@ -56,6 +46,16 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         }));
         yield break;
       }
+      if (g.IsLaunching)
+      {
+        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
+        {
+          GameId = game.Id,
+          State = Enum.GetName(typeof(GameState), GameState.starting),
+          ProcessId = processId
+        }));
+        yield break;
+      }      
       if (g.IsInstalled)
       {
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
