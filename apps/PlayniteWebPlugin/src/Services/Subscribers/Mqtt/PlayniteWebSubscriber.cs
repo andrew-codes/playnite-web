@@ -9,12 +9,19 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
   internal class PlayniteWebSubscriber : ISubscribeToPlayniteWeb
   {
     private readonly IManageTopics topicBuilder;
+    private readonly IMqttClient mqtt;
 
     public PlayniteWebSubscriber(IMqttClient mqtt, IManageTopics topicBuilder)
     {
       this.topicBuilder = topicBuilder;
-      mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic("#")).Build());
+      this.mqtt = mqtt;
       mqtt.ApplicationMessageReceivedAsync += MesssageReceived;
+      mqtt.ConnectedAsync += Client_ConnectedAsync;
+    }
+
+    private Task Client_ConnectedAsync(MqttClientConnectedEventArgs args)
+    {
+      return mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic("#")).Build());
     }
 
     public event EventHandler<Task> OnLibraryRequest;
