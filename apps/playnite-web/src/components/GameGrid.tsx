@@ -4,7 +4,7 @@ import {
   styled,
   useMediaQuery,
 } from '@mui/material'
-import { useActionData, useFetcher } from '@remix-run/react'
+import { useFetcher } from '@remix-run/react'
 import _ from 'lodash'
 import React, {
   FC,
@@ -16,17 +16,19 @@ import React, {
   useRef,
 } from 'react'
 import { Helmet } from 'react-helmet'
+import { useSelector } from 'react-redux'
 import useDimensions from 'react-use-dimensions'
+import { getDeviceType } from '../api/client/state/layoutSlice'
 import type { Game } from '../api/playnite/types'
 
 const { chunk, debounce, groupBy, stubTrue } = _
 
 const scrollReducer = (state, action) => {
   switch (action.type) {
-    case 'PAGE_WIDTH_CHANGED':
+    case 'VIEWPORT_DIMENSIONS_CHANGED':
       return {
         ...state,
-        pageWidth: action.payload,
+        dimension: action.payload,
       }
 
     case 'SCROLLED':
@@ -34,7 +36,7 @@ const scrollReducer = (state, action) => {
         ...state,
         currentScroll: action.payload,
         pageNumber: Math.max(
-          Math.ceil((action.payload * 1.5) / state.pageWidth),
+          Math.ceil((action.payload * 1.5) / state.dimension),
           state.pageNumber,
         ),
       }
@@ -44,13 +46,15 @@ const scrollReducer = (state, action) => {
   }
 }
 
-const Viewport = styled('div')(({ theme }) => ({
+const Viewport = styled('div')<{
+  deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' | null
+}>(({ deviceType, theme }) => ({
   display: 'flex',
   width: '100%',
   flex: 1,
-  scrollSnapType: 'x mandatory',
-  overflowX: 'scroll',
-  overflowY: 'hidden',
+  scrollSnapType: deviceType === 'desktop' ? 'unset' : 'x mandatory',
+  overflowX: deviceType === 'desktop' ? 'hidden' : 'scroll',
+  overflowY: deviceType === 'desktop' ? 'scroll' : 'hidden',
   scrollBehavior: 'smooth',
   flexDirection: 'row',
 
@@ -59,15 +63,20 @@ const Viewport = styled('div')(({ theme }) => ({
   },
 }))
 
-const GamePages = styled('div')<{ length: number }>(({ theme, length }) => ({
-  width: `calc(100vw * ${length})`,
+const GamePages = styled('div')<{
+  deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' | null
+  length: number
+}>(({ deviceType, theme, length }) => ({
+  width: deviceType === 'desktop' ? 'unset' : `calc(100vw * ${length})`,
+  height: deviceType === 'desktop' ? `calc(100vh * ${length})` : 'unset',
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: deviceType === 'desktop' ? 'column' : 'row',
 
   '> * ': {
-    width: '100vw',
+    width: deviceType === 'desktop' ? '100%' : '100vw',
     scrollSnapAlign: 'start',
-    marginRight: '8px !important',
+    marginRight: deviceType === 'desktop' ? 'unset' : '8px !important',
+    marginBottom: deviceType === 'desktop' ? '8px !important' : 'unset',
   },
 }))
 
@@ -83,15 +92,23 @@ const GameGrid: FC<{
   onFilter?: (game: Game) => boolean
   onPageChange?: (pageNumber: number) => void
 }> = ({ games, Game, onFilter = stubTrue, onPageChange = stubTrue }) => {
+  const deviceType = useSelector(getDeviceType)
+
+  const layoutDirection =
+    deviceType === 'mobile' || deviceType === 'tablet' ? 'column' : 'row'
+
   const [ref, { height, width }] = useDimensions()
   useEffect(() => {
-    dispatch({ type: 'PAGE_WIDTH_CHANGED', payload: width })
-  }, [width])
+    dispatch({
+      type: 'VIEWPORT_DIMENSIONS_CHANGED',
+      payload: deviceType !== 'desktop' ? width : height,
+    })
+  }, [deviceType, height, width])
 
   const [{ pageNumber }, dispatch] = useReducer(scrollReducer, {
     pageNumber: 1,
     currentScroll: 0,
-    pageWidth: 0,
+    dimension: 0,
   })
   useEffect(() => {
     onPageChange(pageNumber)
@@ -100,7 +117,14 @@ const GameGrid: FC<{
   const isTickingRef = useRef(false)
   const updateScroll = useCallback(
     debounce(
-      (evt) => dispatch({ type: 'SCROLLED', payload: evt.target.scrollLeft }),
+      (evt) =>
+        dispatch({
+          type: 'SCROLLED',
+          payload:
+            deviceType !== 'desktop'
+              ? evt.target.scrollLeft
+              : evt.target.scrollTop,
+        }),
       120,
     ),
     [],
@@ -168,6 +192,7 @@ const GameGrid: FC<{
   const perPage = useMemo(() => {
     return rows * columns
   }, [rows, columns])
+
   const normalizedGames = useMemo<Game[][]>(() => {
     const filteredGames = games.filter(onFilter)
     return Object.values(groupBy(filteredGames, 'sortName')).slice(
@@ -190,7 +215,6 @@ const GameGrid: FC<{
     },
     [fetcher.submit],
   )
-  const actionData = useActionData()
 
   return (
     <>
@@ -220,10 +244,15 @@ const GameGrid: FC<{
           ),
         )}
       </Helmet>
-      <Viewport ref={ref} onScroll={handleScroll}>
-        <GamePages length={pagedGrids.length}>
+      <Viewport ref={ref} onScroll={handleScroll} deviceType={deviceType}>
+        <GamePages length={pagedGrids.length} deviceType={deviceType}>
           {pagedGrids.map((gameRows: Game[][][], pageIndex: number) => (
-            <Grid key={pageIndex} container direction="column" spacing={2}>
+            <Grid
+              key={pageIndex}
+              container
+              direction={layoutDirection}
+              spacing={2}
+            >
               {gameRows.map((games: Game[][], rowIndex: number) => (
                 <Grid container key={rowIndex} direction="row" spacing={2}>
                   {games.map((game: Game[]) => (

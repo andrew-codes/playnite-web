@@ -17,6 +17,8 @@ import { createHead } from 'remix-island'
 import { authenticator } from './api/auth/auth.server'
 import { reducer } from './api/client/state'
 import { signedIn, signedOut } from './api/client/state/authSlice'
+import { setDeviceType } from './api/client/state/layoutSlice'
+import { UAParser } from './api/layout.server'
 import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
@@ -54,9 +56,13 @@ const links: LinksFunction = () => {
 
 async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
+  const ua = UAParser(request.headers.get('user-agent'))
+  console.dir(ua)
+  const deviceType = ua?.device?.type ?? 'desktop'
 
   return json({
     user,
+    deviceType: deviceType,
   })
 }
 
@@ -69,11 +75,14 @@ const Head = createHead(() => (
 ))
 
 const App: FC<{}> = () => {
-  const { user } = useLoaderData<{
+  const { deviceType, user } = useLoaderData<{
+    deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown'
     user?: any
   }>()
 
   const store = configureStore({ reducer })
+
+  store.dispatch(setDeviceType(deviceType))
 
   if (!!user) {
     store.dispatch(signedIn({ payload: null }))
