@@ -8,6 +8,7 @@ const debug = createDebugger('playnite-web-app/auth.server')
 
 const authenticator = new Authenticator<{
   username: string
+  shouldRememberMe: boolean
 }>(sessionStorage)
 
 authenticator.use(
@@ -19,7 +20,7 @@ authenticator.use(
       throw new Error('Invalid credentials')
     }
 
-    return { username }
+    return { username, shouldRememberMe: form.get('rememberMe') === 'on' }
   }),
   'user-pass',
 )
