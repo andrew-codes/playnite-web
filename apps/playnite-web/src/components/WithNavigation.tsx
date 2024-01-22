@@ -10,6 +10,7 @@ import {
 import { useLocation } from '@remix-run/react'
 import { FC, MouseEvent, PropsWithChildren, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { $path } from 'remix-routes'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
 
 const Layout = styled('div')(({ theme }) => ({
@@ -48,6 +49,8 @@ const WithNavigation: FC<PropsWithChildren> = ({ children }) => {
     }
   }, [])
 
+  const location = useLocation()
+
   return (
     <Layout>
       <main>{children}</main>
@@ -79,12 +82,18 @@ const WithNavigation: FC<PropsWithChildren> = ({ children }) => {
         }}
       >
         {!isAuthenticated && (
-          <MenuItem href="/login" component={Link}>
+          <MenuItem
+            href={$path('/login', { returnTo: location.pathname })}
+            component={Link}
+          >
             Sign In
           </MenuItem>
         )}
         {isAuthenticated && (
-          <MenuItem href="/logout" component={Link}>
+          <MenuItem
+            href={$path('/logout', { returnTo: location.pathname })}
+            component={Link}
+          >
             Sign Out
           </MenuItem>
         )}
