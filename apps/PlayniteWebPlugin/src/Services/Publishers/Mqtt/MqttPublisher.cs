@@ -33,26 +33,31 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     private Task Client_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
     {
+      if (DisconnectedAsync == null) { return Task.CompletedTask; }
       return DisconnectedAsync(arg);
     }
 
     private Task Client_ConnectingAsync(MqttClientConnectingEventArgs arg)
     {
+      if (ConnectingAsync == null) { return Task.CompletedTask; }
       return ConnectingAsync(arg);
     }
 
     private Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
     {
+      if (ConnectedAsync == null) { return Task.CompletedTask; }
       return ConnectedAsync(arg);
     }
 
     private Task Client_InspectPacketAsync(InspectMqttPacketEventArgs arg)
     {
+      if (InspectPacketAsync == null) { return Task.CompletedTask; }
       return InspectPacketAsync(arg);
     }
 
     private Task Client_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
     {
+      if (ApplicationMessageReceivedAsync == null) { return Task.CompletedTask; }
       return ApplicationMessageReceivedAsync(arg);
     }
 

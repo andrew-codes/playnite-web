@@ -1,6 +1,7 @@
 using MQTTnet.Client;
 using Playnite.SDK.Models;
 using PlayniteWeb.TopicManager;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,13 +11,16 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
   {
     private readonly IMqttClient client;
     private readonly IManageTopics topicBuilder;
+    private readonly ISerializeObjects serializer;
     private readonly int? processId;
 
-    public PublishGameState(IMqttClient client, IManageTopics topicBuilder, int? processId = null)
+    public PublishGameState(IMqttClient client, IManageTopics topicBuilder, ISerializeObjects serializer, int? processId = null)
     {
       this.client = client;
       this.topicBuilder = topicBuilder;
+      this.serializer = serializer;
       this.processId = processId;
+      this.serializer = serializer;
     }
 
     public IEnumerable<Task> Publish(IIdentifiable game)
@@ -24,30 +28,61 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       var g = (Game)game;
       if (g.IsInstalling)
       {
-        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState(g.Id, GameState.Installing)) , string.Empty);
+        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
+        {
+          GameId = game.Id,
+          State = Enum.GetName(typeof(GameState), GameState.installing),
+          ProcessId = processId
+        }));
         yield break;
       }
-      if (g.IsInstalled)
+      if (g.IsRunning || processId != null)
       {
-        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState(g.Id, GameState.Installed)), string.Empty);
+        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
+        {
+          GameId = game.Id,
+          State = Enum.GetName(typeof(GameState), GameState.started),
+          ProcessId = processId
+        }));
         yield break;
       }
       if (g.IsLaunching)
       {
-        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState(g.Id, GameState.Starting)));
+        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
+        {
+          GameId = game.Id,
+          State = Enum.GetName(typeof(GameState), GameState.starting),
+          ProcessId = processId
+        }));
         yield break;
-      }
-      if (g.IsRunning)
+      }      
+      if (g.IsInstalled)
       {
-        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState(g.Id, GameState.Started)), $"{processId}");
+        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
+        {
+          GameId = game.Id,
+          State = Enum.GetName(typeof(GameState), GameState.installed),
+          ProcessId = processId
+        }));
         yield break;
       }
       if (g.InstallationStatus == InstallationStatus.Uninstalled)
       {
-        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState(g.Id, GameState.Uninstalled)));
+        yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
+        {
+          GameId = game.Id,
+          State = Enum.GetName(typeof(GameState), GameState.uninstalled),
+          ProcessId = processId
+        }));
         yield break;
       }
-      yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState(g.Id, GameState.Stopped)), $"{processId}");
+
+      yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
+        {
+          GameId = game.Id,
+          State = Enum.GetName(typeof(GameState), GameState.stopped),
+          ProcessId = processId
+        }));
     }
   }
 }
