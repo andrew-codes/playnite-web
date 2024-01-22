@@ -191,7 +191,6 @@ const GameGrid: FC<{
     [fetcher.submit],
   )
   const actionData = useActionData()
-  console.log(actionData, fetcher.data)
 
   return (
     <>
