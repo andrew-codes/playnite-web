@@ -1,4 +1,3 @@
-import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
@@ -32,12 +31,6 @@ async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-const GameGridContainer = styled.div`
-  height: 300px;
-  width: 100%;
-  display: flex;
-`
-
 function Index() {
   const { playlists } = useLoaderData() as unknown as {
     playlists: [Playlist, Game[]][]
@@ -49,9 +42,7 @@ function Index() {
         {playlists.map(([playlist, games]) => (
           <div key={playlist.id}>
             <Typography variant="h1">{playlist.name}</Typography>
-            <GameGridContainer>
-              <GameGrid games={games} Game={GameListItem} />
-            </GameGridContainer>
+            <GameGrid games={games} Game={GameListItem} height={'300px'} />
           </div>
         ))}
       </Stack>
