@@ -51,30 +51,33 @@ const Viewport = styled('div')<{
 }>(({ deviceType, theme }) => ({
   display: 'flex',
   width: '100%',
-  flex: 1,
-  scrollSnapType: deviceType === 'desktop' ? 'unset' : 'x mandatory',
+  height: 'calc(100vh - 32px - 48px)',
+  scrollSnapType: deviceType === 'desktop' ? 'y mandatory' : 'x mandatory',
   overflowX: deviceType === 'desktop' ? 'hidden' : 'scroll',
   overflowY: deviceType === 'desktop' ? 'scroll' : 'hidden',
   scrollBehavior: 'smooth',
   flexDirection: 'row',
 
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
+  '&::-webkit-scrollbar':
+    deviceType === 'desktop'
+      ? {}
+      : {
+          display: 'none',
+        },
 }))
 
 const GamePages = styled('div')<{
   deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' | null
   length: number
 }>(({ deviceType, theme, length }) => ({
-  width: deviceType === 'desktop' ? 'unset' : `calc(100vw * ${length})`,
+  width: deviceType === 'desktop' ? 'initial' : `calc(100vw * ${length})`,
   height: deviceType === 'desktop' ? `calc(100vh * ${length})` : 'unset',
   display: 'flex',
   flexDirection: deviceType === 'desktop' ? 'column' : 'row',
 
   '> * ': {
     width: deviceType === 'desktop' ? '100%' : '100vw',
-    scrollSnapAlign: 'start',
+    scrollSnapAlign: deviceType === 'desktop' ? 'initial' : 'start',
     marginRight: deviceType === 'desktop' ? 'unset' : '8px !important',
     marginBottom: deviceType === 'desktop' ? '8px !important' : 'unset',
   },
@@ -93,6 +96,7 @@ const GameGrid: FC<{
   onPageChange?: (pageNumber: number) => void
 }> = ({ games, Game, onFilter = stubTrue, onPageChange = stubTrue }) => {
   const deviceType = useSelector(getDeviceType)
+  console.log(deviceType)
 
   const layoutDirection =
     deviceType === 'mobile' || deviceType === 'tablet' ? 'column' : 'row'
@@ -127,7 +131,7 @@ const GameGrid: FC<{
         }),
       120,
     ),
-    [],
+    [deviceType],
   )
   const handleScroll = useCallback(
     (evt) => {
@@ -142,10 +146,10 @@ const GameGrid: FC<{
     [updateScroll],
   )
 
-  const isTablet = useMediaQuery((theme: Theme) =>
+  const isTabletSized = useMediaQuery((theme: Theme) =>
     theme.breakpoints.between('tablet', 'desktop'),
   )
-  const isPhone = useMediaQuery((theme: Theme) =>
+  const isPhoneSized = useMediaQuery((theme: Theme) =>
     theme.breakpoints.between('phone', 'tablet'),
   )
 
@@ -153,10 +157,10 @@ const GameGrid: FC<{
     let columns
     if (!width || !height) {
       columns = 8
-      if (isPhone) {
+      if (isPhoneSized) {
         columns = 2
       }
-      if (isTablet) {
+      if (isTabletSized) {
         columns = 4
       }
     } else {
@@ -187,7 +191,7 @@ const GameGrid: FC<{
       rowHeight,
       rows: Math.floor(height / rowHeight),
     }
-  }, [width, height, isTablet, isPhone])
+  }, [width, height, isTabletSized, isPhoneSized])
 
   const perPage = useMemo(() => {
     return rows * columns
@@ -195,17 +199,18 @@ const GameGrid: FC<{
 
   const normalizedGames = useMemo<Game[][]>(() => {
     const filteredGames = games.filter(onFilter)
-    return Object.values(groupBy(filteredGames, 'sortName')).slice(
-      0,
-      perPage * (pageNumber + 2),
-    ) as Game[][]
+    return Object.values(groupBy(filteredGames, 'sortName')) as Game[][]
   }, [games, onFilter, pageNumber, perPage])
+  const allPages = useMemo(
+    () => chunk(normalizedGames, perPage),
+    [normalizedGames, perPage],
+  )
   const pagedGrids = useMemo(
     () =>
-      chunk(normalizedGames, perPage).map((gamesPerPage: Game[][]) =>
-        chunk(gamesPerPage, columns),
-      ),
-    [normalizedGames, perPage],
+      allPages
+        .slice(0, pageNumber + 1)
+        .map((gamesPerPage: Game[][]) => chunk(gamesPerPage, columns)),
+    [allPages, columns, pageNumber],
   )
 
   const fetcher = useFetcher()
@@ -245,7 +250,7 @@ const GameGrid: FC<{
         )}
       </Helmet>
       <Viewport ref={ref} onScroll={handleScroll} deviceType={deviceType}>
-        <GamePages length={pagedGrids.length} deviceType={deviceType}>
+        <GamePages length={allPages.length - 1} deviceType={deviceType}>
           {pagedGrids.map((gameRows: Game[][][], pageIndex: number) => (
             <Grid
               key={pageIndex}
@@ -254,7 +259,15 @@ const GameGrid: FC<{
               spacing={2}
             >
               {gameRows.map((games: Game[][], rowIndex: number) => (
-                <Grid container key={rowIndex} direction="row" spacing={2}>
+                <Grid
+                  container
+                  key={rowIndex}
+                  direction="row"
+                  spacing={2}
+                  style={{
+                    width: '100%',
+                  }}
+                >
                   {games.map((game: Game[]) => (
                     <Grid
                       tablet={12 / columns}
