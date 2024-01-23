@@ -48,13 +48,14 @@ const scrollReducer = (state, action) => {
 
 const Viewport = styled('div')<{
   deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' | null
-}>(({ deviceType, theme }) => ({
+  height?: string
+}>(({ deviceType, height = '100vh' }) => ({
   display: 'flex',
   width: '100%',
-  height: 'calc(100vh - 32px - 48px)',
+  height,
   scrollSnapType: deviceType === 'desktop' ? 'y mandatory' : 'x mandatory',
-  overflowX: deviceType === 'desktop' ? 'hidden' : 'scroll',
-  overflowY: deviceType === 'desktop' ? 'scroll' : 'hidden',
+  overflowX: deviceType === 'desktop' ? 'hidden' : 'auto',
+  overflowY: deviceType === 'desktop' ? 'auto' : 'hidden',
   scrollBehavior: 'smooth',
   flexDirection: 'row',
 
@@ -68,10 +69,11 @@ const Viewport = styled('div')<{
 
 const GamePages = styled('div')<{
   deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' | null
-  length: number
-}>(({ deviceType, theme, length }) => ({
-  width: deviceType === 'desktop' ? 'initial' : `calc(100vw * ${length})`,
-  height: deviceType === 'desktop' ? `calc(100vh * ${length})` : 'unset',
+  height: number
+  width: number
+}>(({ deviceType, height, width }) => ({
+  width: `${width}px`,
+  height: `${height}px`,
   display: 'flex',
   flexDirection: deviceType === 'desktop' ? 'column' : 'row',
 
@@ -85,6 +87,7 @@ const GamePages = styled('div')<{
 
 const GameGrid: FC<{
   games: Game[]
+  height?: string
   Game: FC<{
     cover: string
     game: Game[]
@@ -94,9 +97,14 @@ const GameGrid: FC<{
   }>
   onFilter?: (game: Game) => boolean
   onPageChange?: (pageNumber: number) => void
-}> = ({ games, Game, onFilter = stubTrue, onPageChange = stubTrue }) => {
+}> = ({
+  games,
+  Game,
+  height: viewportHeight,
+  onFilter = stubTrue,
+  onPageChange = stubTrue,
+}) => {
   const deviceType = useSelector(getDeviceType)
-  console.log(deviceType)
 
   const layoutDirection =
     deviceType === 'mobile' || deviceType === 'tablet' ? 'column' : 'row'
@@ -129,7 +137,7 @@ const GameGrid: FC<{
               ? evt.target.scrollLeft
               : evt.target.scrollTop,
         }),
-      120,
+      deviceType === 'desktop' ? 0 : 80,
     ),
     [deviceType],
   )
@@ -208,10 +216,23 @@ const GameGrid: FC<{
   const pagedGrids = useMemo(
     () =>
       allPages
-        .slice(0, pageNumber + 1)
+        .slice(0, pageNumber + 3)
         .map((gamesPerPage: Game[][]) => chunk(gamesPerPage, columns)),
     [allPages, columns, pageNumber],
   )
+
+  const totalHeight = useMemo(() => {
+    return (
+      rows * (rowHeight + 16) * (deviceType === 'desktop' ? allPages.length : 1)
+    )
+  }, [rows, rowHeight, allPages.length, deviceType])
+  const totalWidth = useMemo(() => {
+    return (
+      columns *
+      (columnWidth + 16) *
+      (deviceType === 'desktop' ? 1 : allPages.length)
+    )
+  }, [rows, rowHeight, allPages.length, deviceType])
 
   const fetcher = useFetcher()
   const handleActivate = useCallback(
@@ -249,8 +270,17 @@ const GameGrid: FC<{
           ),
         )}
       </Helmet>
-      <Viewport ref={ref} onScroll={handleScroll} deviceType={deviceType}>
-        <GamePages length={allPages.length - 1} deviceType={deviceType}>
+      <Viewport
+        ref={ref}
+        onScroll={handleScroll}
+        deviceType={deviceType}
+        height={viewportHeight}
+      >
+        <GamePages
+          height={totalHeight}
+          deviceType={deviceType}
+          width={totalWidth}
+        >
           {pagedGrids.map((gameRows: Game[][][], pageIndex: number) => (
             <Grid
               key={pageIndex}
