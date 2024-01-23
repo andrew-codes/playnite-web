@@ -11,7 +11,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import { createHead } from 'remix-island'
 import { authenticator } from './api/auth/auth.server'
@@ -75,12 +75,38 @@ const Head = createHead(() => (
 ))
 
 const App: FC<{}> = () => {
-  const { deviceType, user } = useLoaderData<{
+  const { deviceType: serverDeviceType, user } = useLoaderData<{
     deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown'
     user?: any
   }>()
 
   const store = configureStore({ reducer })
+
+  const [deviceType, setDeviceTypeState] = useState<
+    'mobile' | 'tablet' | 'desktop' | 'unknown' | null
+  >(serverDeviceType)
+  useEffect(() => {
+    if (
+      !!navigator &&
+      'maxTouchPoints' in navigator &&
+      navigator.maxTouchPoints > 0
+    ) {
+      setDeviceTypeState('tablet')
+    } else if (
+      !!navigator &&
+      'msMaxTouchPoints' in navigator &&
+      (navigator as unknown as any).msMaxTouchPoints > 0
+    ) {
+      setDeviceTypeState('tablet')
+    } else {
+      const mQ = matchMedia?.('(pointer:coarse)')
+      if (mQ?.media === '(pointer:coarse)' && !!mQ.matches) {
+        setDeviceTypeState('tablet')
+      } else if ('orientation' in window) {
+        setDeviceTypeState('tablet')
+      }
+    }
+  }, [])
 
   store.dispatch(setDeviceType(deviceType))
 
