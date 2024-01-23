@@ -96,7 +96,11 @@ function Index() {
 
   return (
     <WithNavigation>
-      <GameGrid games={games} Game={GameListItem} />
+      <GameGrid
+        games={games}
+        Game={GameListItem}
+        height="calc(100vh - 48px - 32px)"
+      />
     </WithNavigation>
   )
 }
