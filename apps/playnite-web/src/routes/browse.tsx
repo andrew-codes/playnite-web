@@ -1,16 +1,39 @@
+import {
+  AccountCircle,
+  Menu as MenuIcon,
+  Search as SearchIcon,
+} from '@mui/icons-material'
+import {
+  AppBar,
+  IconButton,
+  InputBase,
+  Link,
+  Menu,
+  MenuItem,
+  Toolbar,
+  alpha,
+  styled,
+} from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useLocation } from '@remix-run/react'
 import _ from 'lodash'
-import { createRef, useCallback, useEffect, useReducer } from 'react'
-import { authenticator } from '../api/auth/auth.server'
+import {
+  ChangeEvent,
+  MouseEvent,
+  useCallback,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react'
+import { useSelector } from 'react-redux'
+import { $path } from 'remix-routes'
+import { getIsAuthenticated } from '../api/client/state/authSlice'
 import PlayniteApi from '../api/playnite/index.server'
 import type { Game } from '../api/playnite/types'
 import GameGrid from '../components/GameGrid'
-import Search from '../components/Search'
-import WithNavigation from '../components/WithNavigation'
 
-const { debounce } = _
+const { debounce, merge } = _
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = new PlayniteApi()
@@ -28,77 +51,153 @@ async function loader({ request }: LoaderFunctionArgs) {
     return 0
   })
 
-  const user = await authenticator.isAuthenticated(request)
-
   return json({
-    user,
     games,
   })
 }
 
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('phone')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+}))
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}))
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  width: '100%',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    [theme.breakpoints.up('phone')]: {
+      width: '14ch',
+      '&:focus': {
+        width: '26ch',
+      },
+    },
+  },
+}))
+
+const Spacer = styled('div')(({ theme }) => ({ flex: 1 }))
+
 const searchReducer = (state, action) => {
   switch (action.type) {
-    case 'SEARCH/STARTED':
-      return {
-        isSearching: true,
+    case 'SEARCH/QUERY_UPDATE':
+      return merge({}, state, {
         query: action.payload,
-      }
-
-    case 'SEARCH/STOPPED':
-      return {
-        isSearching: false,
-        query: state.query,
-      }
+      })
 
     default:
       return state
   }
 }
 
-function Index() {
+function Browse() {
   const [search, searchDispatch] = useReducer(searchReducer, {
-    isSearching: false,
     query: '',
   })
-  const ref = createRef<HTMLInputElement>()
-  useEffect(() => {
-    if (!search.isSearching) {
-      return
-    }
-    ref.current?.focus()
-  }, [search.isSearching, ref.current])
-  const debouncedSearch = useCallback(
-    debounce((search: string) => {
-      searchDispatch({ type: 'SEARCH/STARTED', payload: search.toLowerCase() })
-    }, 500),
+  const handleOnChange = useCallback(
+    debounce((evt: ChangeEvent<HTMLInputElement>) => {
+      searchDispatch({
+        type: 'SEARCH/QUERY_UPDATE',
+        payload: evt.target.value,
+      })
+    }, 850),
     [],
   )
-  const Toolbar = useCallback(
-    () => (
-      <Search
-        defaultValue={search.query}
-        height={48}
-        onSearch={debouncedSearch}
-        ref={ref}
-      />
-    ),
-    [debouncedSearch, ref, search.query],
-  )
-
   const { games } = useLoaderData() as unknown as {
     games: Game[]
   }
-  const handleFilter = useCallback(
-    (game: Game) => game.name.toLowerCase().includes(search.query),
-    [search.query],
+  const filteredGames = useMemo(
+    () =>
+      games.filter((game) => game.name.toLowerCase().includes(search.query)),
+    [games, search.query],
   )
 
+  const { pathname } = useLocation()
+  const isAuthenticated = useSelector(getIsAuthenticated)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
   return (
-    <WithNavigation>
-      <GameGrid games={games} />
-    </WithNavigation>
+    <>
+      <AppBar position="sticky">
+        <Toolbar>
+          <IconButton>
+            <MenuIcon />
+          </IconButton>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              inputProps={{ 'aria-label': 'search' }}
+              placeholder="Search by name"
+              onChange={handleOnChange}
+            />
+          </Search>
+          <Spacer />
+          <IconButton onClick={handleClick}>
+            <AccountCircle />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        {!isAuthenticated && (
+          <MenuItem
+            href={$path('/login', { returnTo: pathname })}
+            component={Link}
+          >
+            Sign In
+          </MenuItem>
+        )}
+        {isAuthenticated && (
+          <MenuItem
+            href={$path('/logout', { returnTo: pathname })}
+            component={Link}
+          >
+            Sign Out
+          </MenuItem>
+        )}
+      </Menu>
+      <main>
+        <GameGrid games={filteredGames} />
+      </main>
+    </>
   )
 }
 
-export default Index
+export default Browse
 export { loader }
