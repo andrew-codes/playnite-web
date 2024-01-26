@@ -1,6 +1,8 @@
+import { Typography } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { Fragment } from 'react'
 import PlayniteApi from '../api/playnite/index.server'
 import type { Game, Playlist } from '../api/playnite/types'
 import GameGrid from '../components/GameGrid'
@@ -35,10 +37,12 @@ function Index() {
 
   return (
     <WithNavigation>
-      <GameGrid games={playlists[0][1]} />
-      {/* {playlists.map(([playlist, games]) => (
-        <GameGrid games={games} />
-      ))} */}
+      {playlists.map(([playlist, games]) => (
+        <Fragment key={playlist.id}>
+          <Typography variant="h1">{playlist.name}</Typography>
+          <GameGrid games={games} />
+        </Fragment>
+      ))}
     </WithNavigation>
   )
 }
