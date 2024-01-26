@@ -7,7 +7,6 @@ import { authenticator } from '../api/auth/auth.server'
 import PlayniteApi from '../api/playnite/index.server'
 import type { Game } from '../api/playnite/types'
 import GameGrid from '../components/GameGrid'
-import GameListItem from '../components/GameListItem'
 import Search from '../components/Search'
 import WithNavigation from '../components/WithNavigation'
 
@@ -96,11 +95,7 @@ function Index() {
 
   return (
     <WithNavigation>
-      <GameGrid
-        games={games}
-        Game={GameListItem}
-        height="calc(100vh - 48px - 32px)"
-      />
+      <GameGrid games={games} />
     </WithNavigation>
   )
 }

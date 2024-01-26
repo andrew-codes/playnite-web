@@ -57,7 +57,6 @@ const links: LinksFunction = () => {
 async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
   const ua = UAParser(request.headers.get('user-agent'))
-  console.dir(ua)
   const deviceType = ua?.device?.type ?? 'desktop'
 
   return json({
