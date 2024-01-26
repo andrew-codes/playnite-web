@@ -13,7 +13,7 @@ import { getDeviceType } from '../api/client/state/layoutSlice'
 import type { Game } from '../api/playnite/types'
 import GameMenu from './GameMenu'
 
-const { groupBy, stubTrue } = _
+const { groupBy } = _
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
@@ -21,8 +21,7 @@ const ImageListWithoutOverflow = styled(ImageList)`
 
 const GameGrid: FC<{
   games: Game[]
-  onFilter?: (game: Game) => boolean
-}> = ({ games, onFilter = stubTrue }) => {
+}> = ({ games }) => {
   const deviceType = useSelector(getDeviceType)
   const { columns, rowHeight } = useMemo(() => {
     if (deviceType === 'mobile') {
@@ -46,9 +45,9 @@ const GameGrid: FC<{
   }, [deviceType])
 
   const normalizedGames = useMemo<Game[][]>(() => {
-    const filteredGames = games.filter((g) => !!g.platform).filter(onFilter)
+    const filteredGames = games.filter((g) => !!g.platform)
     return Object.values(groupBy(filteredGames, 'sortName')) as Game[][]
-  }, [games, onFilter])
+  }, [games])
 
   const numberToPreload = 40
   const preloadGames = useMemo(() => {
