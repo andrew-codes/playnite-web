@@ -5,6 +5,7 @@ import {
   Link,
   Menu,
   MenuItem,
+  Paper,
   styled,
 } from '@mui/material'
 import { useLocation } from '@remix-run/react'
@@ -54,25 +55,34 @@ const WithNavigation: FC<PropsWithChildren> = ({ children }) => {
   return (
     <Layout>
       <main>{children}</main>
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={handleBottomNavigationChange}
+      <Paper
+        sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+        elevation={3}
       >
-        <BottomNavigationAction
-          href="/"
-          label="Playlists"
-          value="/"
-          icon={<PlaylistPlay />}
-        />
-        <BottomNavigationAction
-          label="Browse"
-          icon={<Search />}
-          href="/browse"
-          value="/browse"
-        />
-        <BottomNavigationAction label="More" icon={<MenuIcon />} value="more" />
-      </BottomNavigation>
+        <BottomNavigation
+          showLabels
+          value={value}
+          onChange={handleBottomNavigationChange}
+        >
+          <BottomNavigationAction
+            href="/"
+            label="Playlists"
+            value="/"
+            icon={<PlaylistPlay />}
+          />
+          <BottomNavigationAction
+            label="Browse"
+            icon={<Search />}
+            href="/browse"
+            value="/browse"
+          />
+          <BottomNavigationAction
+            label="More"
+            icon={<MenuIcon />}
+            value="more"
+          />
+        </BottomNavigation>
+      </Paper>
       <Menu
         anchorEl={anchorEl}
         open={open}
