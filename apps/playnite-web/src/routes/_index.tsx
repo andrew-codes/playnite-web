@@ -39,7 +39,7 @@ function Index() {
     <WithNavigation>
       {playlists.map(([playlist, games]) => (
         <Fragment key={playlist.id}>
-          <Typography variant="h1">{playlist.name}</Typography>
+          <Typography variant="h3">{playlist.name}</Typography>
           <GameGrid games={games} />
         </Fragment>
       ))}
