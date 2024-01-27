@@ -91,8 +91,6 @@ const WithNavigation: FC<
   )
 
   const handleOnChange = useCallback((evt) => {
-    console.log(evt)
-
     handleFilter(evt)
   }, [])
 
