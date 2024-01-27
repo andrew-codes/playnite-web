@@ -15,10 +15,11 @@ const GameGrid: FC<{
   gameMatches: Match<IGame>[]
 }> = ({ gameMatches }) => {
   const deviceType = useSelector(getDeviceType)
-  const { columns, rowHeight } = useMemo(() => {
+  const { columns, rowHeight, numberToPreload } = useMemo(() => {
     if (deviceType === 'mobile') {
       return {
         columns: 2,
+        numberToPreload: 5,
         rowHeight: 210,
       }
     }
@@ -26,18 +27,17 @@ const GameGrid: FC<{
     if (deviceType === 'tablet') {
       return {
         columns: 5,
+        numberToPreload: 15,
         rowHeight: 300,
       }
     }
 
     return {
       columns: 10,
+      numberToPreload: 40,
       rowHeight: 300,
     }
-  }, [deviceType])
-
-  const numberToPreload =
-    deviceType === 'mobile' ? 5 : deviceType === 'tablet' ? 15 : 40
+  }, [])
 
   const fetcher = useFetcher()
   const playGame = useCallback(
