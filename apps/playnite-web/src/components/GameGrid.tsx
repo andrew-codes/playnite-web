@@ -1,6 +1,13 @@
 import { ImageList, styled } from '@mui/material'
 import { useFetcher } from '@remix-run/react'
-import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
+import {
+  FC,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { getDeviceType } from '../api/client/state/layoutSlice'
@@ -19,7 +26,7 @@ const GameGrid: FC<{
     if (deviceType === 'mobile') {
       return {
         columns: 2,
-        numberToPreload: 5,
+        numberToPreload: 8,
         rowHeight: 210,
       }
     }
@@ -27,7 +34,7 @@ const GameGrid: FC<{
     if (deviceType === 'tablet') {
       return {
         columns: 5,
-        numberToPreload: 15,
+        numberToPreload: 25,
         rowHeight: 300,
       }
     }
@@ -36,6 +43,30 @@ const GameGrid: FC<{
       columns: 10,
       numberToPreload: 40,
       rowHeight: 300,
+    }
+  }, [])
+
+  const [state, setState] = useState({ columns, rowHeight })
+  useEffect(() => {
+    if (
+      window.screen.orientation.type.startsWith('landscape') &&
+      deviceType === 'mobile'
+    ) {
+      setState((state) => ({ ...state, columns: 5 }))
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleOrientationChange = (evt) => {
+      if (window.screen.orientation.type.startsWith('landscape')) {
+        setState((state) => ({ ...state, columns: 5 }))
+      } else {
+        setState((state) => ({ ...state, columns: 2 }))
+      }
+    }
+    window.addEventListener('orientationchange', handleOrientationChange)
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange)
     }
   }, [])
 
@@ -61,12 +92,15 @@ const GameGrid: FC<{
           )
         })}
       </Helmet>
-      <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
+      <ImageListWithoutOverflow
+        rowHeight={state.rowHeight}
+        cols={state.columns}
+      >
         {gameMatches.map((gameMatch, gameMatchIndex) => (
           <GameImage
             noDefer={gameMatchIndex <= numberToPreload}
             style={{ display: gameMatch.matches ? 'block' : 'none' }}
-            height={`${rowHeight}px`}
+            height={`${state.rowHeight}px`}
             game={gameMatch.item}
             onActivate={playGame}
             key={gameMatch.item.oid.asString}
