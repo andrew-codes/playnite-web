@@ -1,11 +1,11 @@
 import _ from 'lodash'
 import Game from './Game'
 import NoFilter from './NoFilter'
-import { GameOnPlatform, IGame, IGameList, IMatchA } from './types'
+import { GameOnPlatform, IGame, IList, IMatchA } from './types'
 
 const { groupBy } = _
 
-class GameList implements IGameList {
+class GameList implements IList<IGame> {
   private _games: IGame[]
 
   constructor(
@@ -14,12 +14,10 @@ class GameList implements IGameList {
   ) {
     this._games = Object.values<GameOnPlatform[]>(
       groupBy(gamesOnPlatforms, 'sortName'),
-    )
-      .map((groupedGames) => new Game(groupedGames) as IGame)
-      .filter((game) => filter.matches(game))
+    ).map((groupedGames) => new Game(groupedGames) as IGame)
   }
 
-  get games(): IGame[] {
+  get items(): IGame[] {
     return this._games
   }
 }

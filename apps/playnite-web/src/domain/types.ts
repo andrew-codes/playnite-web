@@ -132,12 +132,18 @@ interface IGame {
   get platforms(): GameOnPlatform[]
 }
 
-interface IGameList {
-  get games(): IGame[]
+interface IList<T> {
+  get items(): T[]
 }
 
+interface IFilterList<T> extends IList<Match<T>> {}
+
+type Match<T> = {
+  item: T
+  matches: boolean
+}
 interface IMatchA<T> {
-  matches(item: T): boolean
+  matches(item: T): Match<T>
 }
 type GameAssetType = 'background' | 'cover' | 'icon'
 
@@ -158,10 +164,12 @@ export type {
   GameAssetType,
   GameOnPlatform,
   Genre,
+  IFilterList,
   IGame,
-  IGameList,
+  IList,
   IMatchA,
   IdentifyDomainObjects,
+  Match,
   Platform,
   Playlist,
   Publisher,
