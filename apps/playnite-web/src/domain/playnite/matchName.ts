@@ -1,4 +1,4 @@
-import { IGame, IMatchA } from '../types'
+import { IGame, IMatchA, Match } from '../types'
 
 class MatchName implements IMatchA<IGame> {
   private nameMatcher: RegExp
@@ -6,8 +6,8 @@ class MatchName implements IMatchA<IGame> {
     this.nameMatcher = new RegExp(name, 'i')
   }
 
-  matches(item: IGame): boolean {
-    return this.nameMatcher.test(item.name)
+  matches(item: IGame): Match<IGame> {
+    return { item, matches: this.nameMatcher.test(item.name) }
   }
 }
 

@@ -1,23 +1,19 @@
-import {
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  styled,
-} from '@mui/material'
+import { ImageList, styled } from '@mui/material'
 import { useFetcher } from '@remix-run/react'
 import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
+import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { getDeviceType } from '../api/client/state/layoutSlice'
-import type { IGame } from '../domain/types'
-import GameMenu from './GameMenu'
+import type { IGame, Match } from '../domain/types'
+import GameImage from './GameImage'
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
 `
 
 const GameGrid: FC<{
-  games: IGame[]
-}> = ({ games }) => {
+  gameMatches: Match<IGame>[]
+}> = ({ gameMatches }) => {
   const deviceType = useSelector(getDeviceType)
   const { columns, rowHeight } = useMemo(() => {
     if (deviceType === 'mobile') {
@@ -40,7 +36,9 @@ const GameGrid: FC<{
     }
   }, [deviceType])
 
-  const numberToPreload = 40
+  const numberToPreload =
+    deviceType === 'mobile' ? 5 : deviceType === 'tablet' ? 15 : 40
+
   const fetcher = useFetcher()
   const playGame = useCallback(
     (evt: SyntheticEvent, id: string) => {
@@ -50,24 +48,32 @@ const GameGrid: FC<{
   )
 
   return (
-    <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
-      {games.map((game, gameIndex: number) => (
-        <ImageListItem key={game.oid.asString}>
-          <img
-            alt={game.name}
+    <>
+      <Helmet>
+        {gameMatches.slice(0, numberToPreload).map((gameMatch) => {
+          return (
+            <link
+              key={gameMatch.item.oid.asString}
+              rel="preload"
+              as="image"
+              href={gameMatch.item.cover}
+            />
+          )
+        })}
+      </Helmet>
+      <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
+        {gameMatches.map((gameMatch, gameMatchIndex) => (
+          <GameImage
+            noDefer={gameMatchIndex <= numberToPreload}
+            style={{ display: gameMatch.matches ? 'block' : 'none' }}
             height={`${rowHeight}px`}
-            loading={gameIndex < numberToPreload ? 'eager' : 'lazy'}
-            src={game.cover}
+            game={gameMatch.item}
+            onActivate={playGame}
+            key={gameMatch.item.oid.asString}
           />
-          <ImageListItemBar
-            title={game.name}
-            actionIcon={
-              <GameMenu game={game.platforms} onActivate={playGame} />
-            }
-          />
-        </ImageListItem>
-      ))}
-    </ImageListWithoutOverflow>
+        ))}
+      </ImageListWithoutOverflow>
+    </>
   )
 }
 
