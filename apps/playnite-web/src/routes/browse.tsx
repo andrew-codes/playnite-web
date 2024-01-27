@@ -1,21 +1,21 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import _ from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
 import PlayniteApi from '../api/playnite/index.server'
-import type { Game } from '../api/playnite/types'
 import GameGrid from '../components/GameGrid'
 import WithNavigation from '../components/WithNavigation'
-
-const { debounce, merge, stubTrue } = _
+import FilteredGameList from '../domain/FilteredGameList'
+import GameList from '../domain/GameList'
+import MatchName from '../domain/playnite/matchName'
+import type { GameOnPlatform } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = new PlayniteApi()
-  const games = await api.getGames()
-  games.sort((a, b) => {
-    const aName = a.sortName
-    const bName = b.sortName
+  const gamesOnPlatforms = await api.getGames()
+  gamesOnPlatforms.sort((a, b) => {
+    const aName = a.name
+    const bName = b.name
     if (aName > bName) {
       return 1
     }
@@ -27,27 +27,31 @@ async function loader({ request }: LoaderFunctionArgs) {
   })
 
   return json({
-    games,
+    gamesOnPlatforms,
   })
 }
 
 function Browse() {
-  const { games } = useLoaderData() as unknown as {
-    games: Game[]
+  const { gamesOnPlatforms } = useLoaderData() as unknown as {
+    gamesOnPlatforms: GameOnPlatform[]
   }
 
-  const [[filterId, filter], setFilter] = useState<
-    [string | null, (game: Game) => boolean]
-  >([null, stubTrue as unknown as (game: Game) => boolean])
-  const handleFilter = useCallback((id, filter) => setFilter([id, filter]), [])
+  const gameList = useMemo(() => {
+    return new GameList(gamesOnPlatforms)
+  }, [gamesOnPlatforms])
+
+  const [nameQuery, setNameQuery] = useState<string>('')
+  const handleFilter = useCallback((evt, userNameQuery) => {
+    setNameQuery(userNameQuery)
+  }, [])
   const filteredGames = useMemo(
-    () => games.filter((game) => filter(game)),
-    [games, filterId],
+    () => new FilteredGameList(gameList, new MatchName(nameQuery)),
+    [gamesOnPlatforms, nameQuery],
   )
 
   return (
     <WithNavigation onFilter={handleFilter}>
-      <GameGrid games={filteredGames} />
+      <GameGrid gameMatches={filteredGames.items} />
     </WithNavigation>
   )
 }

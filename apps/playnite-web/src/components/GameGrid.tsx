@@ -1,32 +1,32 @@
-import {
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  styled,
-} from '@mui/material'
+import { ImageList, styled } from '@mui/material'
 import { useFetcher } from '@remix-run/react'
-import _ from 'lodash'
-import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
+import {
+  FC,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { getDeviceType } from '../api/client/state/layoutSlice'
-import type { Game } from '../api/playnite/types'
-import GameMenu from './GameMenu'
-
-const { groupBy } = _
+import type { IGame, Match } from '../domain/types'
+import GameImage from './GameImage'
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
 `
 
 const GameGrid: FC<{
-  games: Game[]
-}> = ({ games }) => {
+  gameMatches: Match<IGame>[]
+}> = ({ gameMatches }) => {
   const deviceType = useSelector(getDeviceType)
-  const { columns, rowHeight } = useMemo(() => {
+  const { columns, rowHeight, numberToPreload } = useMemo(() => {
     if (deviceType === 'mobile') {
       return {
         columns: 2,
+        numberToPreload: 8,
         rowHeight: 210,
       }
     }
@@ -34,29 +34,41 @@ const GameGrid: FC<{
     if (deviceType === 'tablet') {
       return {
         columns: 5,
+        numberToPreload: 25,
         rowHeight: 300,
       }
     }
 
     return {
       columns: 10,
+      numberToPreload: 40,
       rowHeight: 300,
     }
-  }, [deviceType])
-
-  const normalizedGames = useMemo<Game[][]>(() => {
-    const filteredGames = games.filter((g) => !!g.platform)
-    return Object.values(groupBy(filteredGames, 'sortName')) as Game[][]
-  }, [games])
-
-  const numberToPreload = 40
-  const preloadGames = useMemo(() => {
-    return normalizedGames.slice(0, numberToPreload)
   }, [])
 
-  const prefetchGames = useMemo(() => {
-    return normalizedGames.slice(numberToPreload + 1)
-  }, [normalizedGames, numberToPreload])
+  const [state, setState] = useState({ columns, rowHeight })
+  useEffect(() => {
+    if (
+      window.screen.orientation.type.startsWith('landscape') &&
+      deviceType === 'mobile'
+    ) {
+      setState((state) => ({ ...state, columns: 5 }))
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleOrientationChange = (evt) => {
+      if (window.screen.orientation.type.startsWith('landscape')) {
+        setState((state) => ({ ...state, columns: 5 }))
+      } else {
+        setState((state) => ({ ...state, columns: 2 }))
+      }
+    }
+    window.addEventListener('orientationchange', handleOrientationChange)
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange)
+    }
+  }, [])
 
   const fetcher = useFetcher()
   const playGame = useCallback(
@@ -69,42 +81,30 @@ const GameGrid: FC<{
   return (
     <>
       <Helmet>
-        {preloadGames.map((game: Game[], gameIndex: number) => {
+        {gameMatches.slice(0, numberToPreload).map((gameMatch) => {
           return (
             <link
-              key={`${gameIndex}-${game[0].oid.id}`}
+              key={gameMatch.item.oid.asString}
               rel="preload"
               as="image"
-              href={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
-            />
-          )
-        })}
-        {prefetchGames.map((game: Game[], gameIndex: number) => {
-          return (
-            <link
-              key={`${gameIndex}-${game[0].oid.id}`}
-              rel="prefetch"
-              as="image"
-              href={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
+              href={gameMatch.item.cover}
             />
           )
         })}
       </Helmet>
-
-      <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
-        {normalizedGames.map((game: Game[], gameIndex: number) => (
-          <ImageListItem key={game[0].id}>
-            <img
-              alt={game[0].name}
-              height={`${rowHeight}px`}
-              loading={gameIndex < numberToPreload ? 'eager' : 'lazy'}
-              src={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
-            />
-            <ImageListItemBar
-              title={game[0].name}
-              actionIcon={<GameMenu game={game} onActivate={playGame} />}
-            />
-          </ImageListItem>
+      <ImageListWithoutOverflow
+        rowHeight={state.rowHeight}
+        cols={state.columns}
+      >
+        {gameMatches.map((gameMatch, gameMatchIndex) => (
+          <GameImage
+            noDefer={gameMatchIndex <= numberToPreload}
+            style={{ display: gameMatch.matches ? 'block' : 'none' }}
+            height={`${state.rowHeight}px`}
+            game={gameMatch.item}
+            onActivate={playGame}
+            key={gameMatch.item.oid.asString}
+          />
         ))}
       </ImageListWithoutOverflow>
     </>
