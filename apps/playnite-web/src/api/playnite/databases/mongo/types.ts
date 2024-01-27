@@ -1,9 +1,14 @@
-import { Document, WithId } from 'mongodb'
-import type { Game } from './types'
+import { Binary, Document, WithId } from 'mongodb'
+import type { GameAssetType, GameOnPlatform } from '../../../../domain/types'
+
+type TagEntity = {
+  id: string
+  name: string
+}
 
 type GameEntity = WithId<Document> &
   Omit<
-    Game,
+    GameOnPlatform,
     | 'background'
     | 'cover'
     | 'developers'
@@ -14,6 +19,7 @@ type GameEntity = WithId<Document> &
     | 'series'
     | 'tags'
   > & {
+    id: string
     ageRating: string
     backgroundImage: string
     communityScore: number | null
@@ -38,13 +44,31 @@ type GameEntity = WithId<Document> &
     tagsIds: string[]
   }
 
-type GameAssetType = 'games' | 'platforms'
+type GameAssetEntityType = 'games' | 'platforms'
 
 type GameAssetEntity = {
   id: string
-  file: Buffer
+  file: Binary
   relatedId: string
-  relatedType: GameAssetType
+  relatedType: GameAssetEntityType
+  typeKey: GameAssetType
 }
 
-export type { GameAssetEntity, GameAssetType, GameEntity }
+interface MongoDbApi {
+  getGameById(id: string): Promise<GameEntity>
+  getGames(): Promise<GameEntity[]>
+  getTags(): Promise<TagEntity[]>
+  getAssetsRelatedTo(
+    relatedId: string,
+    relatedType: GameAssetEntityType,
+  ): Promise<GameAssetEntity[]>
+  getTagsGames(tagIds: string[]): Promise<[TagEntity, GameEntity[]][]>
+}
+
+export type {
+  GameAssetEntity,
+  GameAssetEntityType,
+  GameEntity,
+  MongoDbApi,
+  TagEntity,
+}
