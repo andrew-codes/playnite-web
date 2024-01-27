@@ -5,22 +5,18 @@ import {
   styled,
 } from '@mui/material'
 import { useFetcher } from '@remix-run/react'
-import _ from 'lodash'
 import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
-import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { getDeviceType } from '../api/client/state/layoutSlice'
-import type { Game } from '../api/playnite/types'
+import type { IGame } from '../domain/types'
 import GameMenu from './GameMenu'
-
-const { groupBy } = _
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
 `
 
 const GameGrid: FC<{
-  games: Game[]
+  games: IGame[]
 }> = ({ games }) => {
   const deviceType = useSelector(getDeviceType)
   const { columns, rowHeight } = useMemo(() => {
@@ -44,20 +40,7 @@ const GameGrid: FC<{
     }
   }, [deviceType])
 
-  const normalizedGames = useMemo<Game[][]>(() => {
-    const filteredGames = games.filter((g) => !!g.platform)
-    return Object.values(groupBy(filteredGames, 'sortName')) as Game[][]
-  }, [games])
-
   const numberToPreload = 40
-  const preloadGames = useMemo(() => {
-    return normalizedGames.slice(0, numberToPreload)
-  }, [])
-
-  const prefetchGames = useMemo(() => {
-    return normalizedGames.slice(numberToPreload + 1)
-  }, [normalizedGames, numberToPreload])
-
   const fetcher = useFetcher()
   const playGame = useCallback(
     (evt: SyntheticEvent, id: string) => {
@@ -67,47 +50,24 @@ const GameGrid: FC<{
   )
 
   return (
-    <>
-      <Helmet>
-        {preloadGames.map((game: Game[], gameIndex: number) => {
-          return (
-            <link
-              key={`${gameIndex}-${game[0].oid.id}`}
-              rel="preload"
-              as="image"
-              href={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
-            />
-          )
-        })}
-        {prefetchGames.map((game: Game[], gameIndex: number) => {
-          return (
-            <link
-              key={`${gameIndex}-${game[0].oid.id}`}
-              rel="prefetch"
-              as="image"
-              href={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
-            />
-          )
-        })}
-      </Helmet>
-
-      <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
-        {normalizedGames.map((game: Game[], gameIndex: number) => (
-          <ImageListItem key={game[0].id}>
-            <img
-              alt={game[0].name}
-              height={`${rowHeight}px`}
-              loading={gameIndex < numberToPreload ? 'eager' : 'lazy'}
-              src={`gameAsset/cover/${game[0].oid.type}:${game[0].oid.id}`}
-            />
-            <ImageListItemBar
-              title={game[0].name}
-              actionIcon={<GameMenu game={game} onActivate={playGame} />}
-            />
-          </ImageListItem>
-        ))}
-      </ImageListWithoutOverflow>
-    </>
+    <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
+      {games.map((game, gameIndex: number) => (
+        <ImageListItem key={game.oid.asString}>
+          <img
+            alt={game.name}
+            height={`${rowHeight}px`}
+            loading={gameIndex < numberToPreload ? 'eager' : 'lazy'}
+            src={game.cover}
+          />
+          <ImageListItemBar
+            title={game.name}
+            actionIcon={
+              <GameMenu game={game.platforms} onActivate={playGame} />
+            }
+          />
+        </ImageListItem>
+      ))}
+    </ImageListWithoutOverflow>
   )
 }
 

@@ -1,21 +1,21 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import _ from 'lodash'
 import { useCallback, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import PlayniteApi from '../api/playnite/index.server'
-import type { Game } from '../api/playnite/types'
 import GameGrid from '../components/GameGrid'
 import WithNavigation from '../components/WithNavigation'
-
-const { debounce, merge, stubTrue } = _
+import GameList from '../domain/GameList'
+import MatchName from '../domain/playnite/matchName'
+import type { GameOnPlatform } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = new PlayniteApi()
-  const games = await api.getGames()
-  games.sort((a, b) => {
-    const aName = a.sortName
-    const bName = b.sortName
+  const gamesOnPlatforms = await api.getGames()
+  gamesOnPlatforms.sort((a, b) => {
+    const aName = a.name
+    const bName = b.name
     if (aName > bName) {
       return 1
     }
@@ -27,28 +27,63 @@ async function loader({ request }: LoaderFunctionArgs) {
   })
 
   return json({
-    games,
+    gamesOnPlatforms,
   })
 }
 
 function Browse() {
-  const { games } = useLoaderData() as unknown as {
-    games: Game[]
+  const { gamesOnPlatforms } = useLoaderData() as unknown as {
+    gamesOnPlatforms: GameOnPlatform[]
   }
 
-  const [[filterId, filter], setFilter] = useState<
-    [string | null, (game: Game) => boolean]
-  >([null, stubTrue as unknown as (game: Game) => boolean])
-  const handleFilter = useCallback((id, filter) => setFilter([id, filter]), [])
-  const filteredGames = useMemo(
-    () => games.filter((game) => filter(game)),
-    [games, filterId],
+  const numberToPreload = 40
+  const [preloadGames, prefetchGames] = useMemo(() => {
+    const games = new GameList(gamesOnPlatforms)
+    return [
+      games.games.slice(0, numberToPreload),
+      games.games.slice(numberToPreload + 1),
+    ]
+  }, [gamesOnPlatforms])
+
+  const [nameQuery, setNameQuery] = useState<string>('')
+  const handleFilter = useCallback((evt, userNameQuery) => {
+    setNameQuery(userNameQuery)
+  }, [])
+  const gameList = useMemo(
+    () => new GameList(gamesOnPlatforms, new MatchName(nameQuery)),
+    [gamesOnPlatforms, nameQuery],
   )
 
+  console.log(nameQuery)
+
   return (
-    <WithNavigation onFilter={handleFilter}>
-      <GameGrid games={filteredGames} />
-    </WithNavigation>
+    <>
+      <Helmet>
+        {preloadGames.map((game) => {
+          return (
+            <link
+              key={game.oid.asString}
+              rel="preload"
+              as="image"
+              href={game.cover}
+            />
+          )
+        })}
+        {prefetchGames.map((game) => {
+          return (
+            <link
+              key={game.oid.asString}
+              rel="prefetch"
+              as="image"
+              href={game.cover}
+            />
+          )
+        })}
+      </Helmet>
+      <WithNavigation onFilter={handleFilter}>
+        <GameGrid games={gameList.games} />
+      </WithNavigation>
+    </>
   )
 }
 

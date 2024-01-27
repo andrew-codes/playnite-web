@@ -23,13 +23,14 @@ import {
   FC,
   MouseEvent,
   PropsWithChildren,
+  SyntheticEvent,
   useCallback,
+  useMemo,
   useState,
 } from 'react'
 import { useSelector } from 'react-redux'
 import { $path } from 'remix-routes'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
-import { Game } from '../api/playnite/types'
 
 const { debounce, merge, stubTrue } = _
 
@@ -78,17 +79,22 @@ const Spacer = styled('div')(({ theme }) => ({ flex: 1 }))
 
 const WithNavigation: FC<
   PropsWithChildren & {
-    onFilter?: (id: string, filterFn: (game: Game) => boolean) => void
+    onFilter?: (evt: SyntheticEvent, nameQuery: string) => void
   }
 > = ({ children, onFilter = stubTrue }) => {
-  const handleOnChange = useCallback(
-    debounce((evt: ChangeEvent<HTMLInputElement>) => {
-      onFilter(evt.target.value, (game) =>
-        game.name.toLowerCase().includes(evt.target.value.toLowerCase()),
-      )
-    }, 850),
+  const handleFilter = useMemo(
+    () =>
+      debounce((evt: ChangeEvent<HTMLInputElement>) => {
+        onFilter(evt, evt.target.value)
+      }, 850),
     [],
   )
+
+  const handleOnChange = useCallback((evt) => {
+    console.log(evt)
+
+    handleFilter(evt)
+  }, [])
 
   const { pathname } = useLocation()
   const isAuthenticated = useSelector(getIsAuthenticated)
