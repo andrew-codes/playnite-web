@@ -1,9 +1,9 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { configureStore } from '@reduxjs/toolkit'
+import { LiveReload, useSWEffect } from '@remix-pwa/sw'
 import { LinksFunction, LoaderFunctionArgs, json } from '@remix-run/node'
 import {
   Links,
-  LiveReload,
   Meta,
   MetaFunction,
   Outlet,
@@ -74,6 +74,8 @@ const Head = createHead(() => (
 ))
 
 const App: FC<{}> = () => {
+  useSWEffect()
+
   const { deviceType: serverDeviceType, user } = useLoaderData<{
     deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown'
     user?: any
