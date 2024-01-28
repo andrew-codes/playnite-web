@@ -6,19 +6,22 @@ import {
   Links,
   Meta,
   MetaFunction,
-  Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
+  useOutlet,
 } from '@remix-run/react'
-import { FC, useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { FC, useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { createHead } from 'remix-island'
 import { authenticator } from './api/auth/auth.server'
 import { reducer } from './api/client/state'
 import { signedIn, signedOut } from './api/client/state/authSlice'
-import { setDeviceType } from './api/client/state/layoutSlice'
+import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
 import { UAParser } from './api/layout.server'
+import Layout from './components/Layout'
 import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
@@ -56,12 +59,19 @@ const links: LinksFunction = () => {
 
 async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
+
   const ua = UAParser(request.headers.get('user-agent'))
-  const deviceType = ua?.device?.type ?? 'desktop'
+  const type = ua?.device?.type ?? 'desktop'
+  const device = {
+    type,
+    vendor: ua?.device?.vendor ?? null,
+    model: ua?.device?.model ?? null,
+  }
+  console.log(JSON.stringify(ua, null, 2))
 
   return json({
     user,
-    deviceType: deviceType,
+    device,
   })
 }
 
@@ -77,40 +87,16 @@ const Head = createHead(() => (
 const App: FC<{}> = () => {
   useSWEffect()
 
-  const { deviceType: serverDeviceType, user } = useLoaderData<{
-    deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown'
-    user?: any
-  }>()
-
   const store = configureStore({ reducer })
 
-  const [deviceType, setDeviceTypeState] = useState<
-    'mobile' | 'tablet' | 'desktop' | 'unknown' | null
-  >(serverDeviceType)
-  useEffect(() => {
-    if (
-      !!navigator &&
-      'maxTouchPoints' in navigator &&
-      navigator.maxTouchPoints > 0
-    ) {
-      setDeviceTypeState('tablet')
-    } else if (
-      !!navigator &&
-      'msMaxTouchPoints' in navigator &&
-      (navigator as unknown as any).msMaxTouchPoints > 0
-    ) {
-      setDeviceTypeState('tablet')
-    } else {
-      const mQ = matchMedia?.('(pointer:coarse)')
-      if (mQ?.media === '(pointer:coarse)' && !!mQ.matches) {
-        setDeviceTypeState('tablet')
-      } else if ('orientation' in window) {
-        setDeviceTypeState('tablet')
-      }
+  const { device, user } = useLoaderData<{
+    device: {
+      type: 'desktop' | 'tablet' | 'mobile'
+      vendor: string | null
+      model: string | null
     }
-  }, [])
-
-  store.dispatch(setDeviceType(deviceType))
+    user?: any
+  }>()
 
   if (!!user) {
     store.dispatch(signedIn({ payload: null }))
@@ -118,13 +104,62 @@ const App: FC<{}> = () => {
     store.dispatch(signedOut({ payload: null }))
   }
 
+  store.dispatch(setDeviceFeatures({ device }))
+  useEffect(() => {
+    let isTouchEnabled = false
+    let orientation: null | OrientationType = null
+    let isPwa = false
+    if (
+      !!navigator &&
+      'maxTouchPoints' in navigator &&
+      (navigator.maxTouchPoints > 0 ||
+        (navigator as unknown as any).msMaxTouchPoints > 0)
+    ) {
+      isTouchEnabled = true
+    } else {
+      const touchMq = matchMedia?.('(pointer:coarse)')
+      if (touchMq?.media === '(pointer:coarse)' && !!touchMq.matches) {
+        isTouchEnabled = true
+      }
+    }
+    if ('screen' in window) {
+      orientation = screen.orientation.type
+    }
+    const pwaMq = matchMedia('(display-mode: standalone)')
+    if (pwaMq?.media === '(display-mode: standalone)' && !!pwaMq.matches) {
+      isPwa = true
+    }
+    store.dispatch(
+      setDeviceFeatures({
+        isTouchEnabled,
+        orientation,
+        isPwa,
+      }),
+    )
+  }, [])
+
+  const outlet = useOutlet()
+  const location = useLocation()
+
   return (
     <>
       <Head />
       <ThemeProvider theme={muiTheme()}>
         <CssBaseline />
         <Provider store={store}>
-          <Outlet />
+          <Layout>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.main
+                key={location.pathname}
+                initial={{ x: '-10%', opacity: 0 }}
+                animate={{ x: '0', opacity: 1 }}
+                exit={{ y: '-10%', opacity: 0 }}
+                transition={{ duration: 0 }}
+              >
+                {outlet}
+              </motion.main>
+            </AnimatePresence>
+          </Layout>
         </Provider>
       </ThemeProvider>
       <ScrollRestoration />
