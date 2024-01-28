@@ -14,12 +14,10 @@ type GameAsset = {
 }
 
 interface PlayniteApi {
+  getPlaylistByName(name: string): Promise<Playlist>
   getPlaylists(): Promise<Playlist[]>
   getGameById(id: string): Promise<GameOnPlatform>
   getGames(): Promise<GameOnPlatform[]>
-  getPlaylistsGames(
-    playlists: Playlist[],
-  ): Promise<[Playlist, GameOnPlatform[]][]>
   getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]>
 }
 

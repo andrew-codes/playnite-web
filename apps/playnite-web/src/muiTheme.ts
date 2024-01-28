@@ -17,12 +17,34 @@ declare module '@mui/material/styles' {
 let defaults = createTheme({
   palette: {
     mode: 'dark',
+    background: {
+      default: 'rgb(32,38,52)',
+      paper: 'rgb(40,48,68)',
+    },
   },
   breakpoints: {
     values: {
       phone: 0,
       tablet: 1024,
       desktop: 1920,
+    },
+  },
+  components: {
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: 'unset',
+        },
+      },
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          '*': {
+            boxSizing: 'border-box',
+          },
+        },
+      },
     },
   },
 })
