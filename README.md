@@ -83,6 +83,10 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 | USERNAME             |                                          | Username used to login                               |
 | PASSWORD             |                                          | Password value used to login                         |
 | SECRET               |                                          | Secret used to protect credentials                   |
+| MQTT_HOST            | IP address/hostname of MQTT broker.      |                                                      |
+| MQTT_PORT            | Port of MQTT broker                      | Default for MQTT image is 1883                       |
+| MQTT_USERNAME        | Username to access MQTT broker           | Optional, only required if disabled anonymous access |
+| MQTT_PASSWORD        | Password to access MQTT broker           | Optional, only required if disabled anonymous access |
 
 ### Post Deployment Steps
 
