@@ -21,7 +21,7 @@ const config = {
   serverBuildPath: 'build/index.js',
 
   // PWA
-  entryWorkerFile: 'src/entry.worker.ts',
+  entryWorkerFile: './src/entry.worker.ts',
   workerName: 'entry.worker',
   workerMinify: true,
 }
