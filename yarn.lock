@@ -2334,7 +2334,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-pwa/worker-runtime@npm:^2.0.8":
+"@remix-pwa/worker-runtime@npm:*, @remix-pwa/worker-runtime@npm:^2.0.8":
   version: 2.0.8
   resolution: "@remix-pwa/worker-runtime@npm:2.0.8"
   dependencies:
