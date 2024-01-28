@@ -67,6 +67,7 @@ async function loader({ request }: LoaderFunctionArgs) {
 
 const Head = createHead(() => (
   <>
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="data:image/x-icon;base64,AA" />
     <Meta />
     <Links />
