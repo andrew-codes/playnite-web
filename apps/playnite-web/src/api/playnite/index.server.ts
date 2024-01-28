@@ -7,6 +7,7 @@ import type {
   IdentifyDomainObjects,
   Playlist,
   RunState,
+  WithId,
 } from '../../domain/types'
 import MongoDb from './databases/mongo/index.server'
 import {
@@ -75,15 +76,29 @@ class PlayniteWebApi implements PlayniteApi {
     this._mongo = new MongoDb()
   }
 
+  async getPlaylistByName(name: string): Promise<Playlist> {
+    const playlists = await this.getPlaylists()
+
+    const playlist = playlists.find((playlist) => playlist.name === name)
+    if (!playlist) {
+      throw new Error('Playlist not found')
+    }
+
+    return playlist
+  }
+
   async getPlaylists(): Promise<Playlist[]> {
     const tags = await this._mongo.getTags()
 
-    return tags
-      .filter(({ name }) => this._playlistMatcher.test(name))
-      .map((tag) => ({
-        id: tag.id,
-        name: tag.name.replace(this._playlistMatcher, ''),
-      }))
+    return Promise.all(
+      tags
+        .filter(({ name }) => this._playlistMatcher.test(name))
+        .map(async (tag) => ({
+          id: tag.id,
+          name: tag.name.replace(this._playlistMatcher, ''),
+          games: await this.getPlaylistsGames(tag),
+        })),
+    )
   }
 
   async getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]> {
@@ -108,14 +123,10 @@ class PlayniteWebApi implements PlayniteApi {
     return gameEntityToGame(await this._mongo.getGameById(id))
   }
 
-  async getPlaylistsGames(
-    playlists: Playlist[],
-  ): Promise<[Playlist, GameOnPlatform[]][]> {
-    const tagsGames = await this._mongo.getTagsGames(
-      playlists.map(({ id }) => id),
-    )
+  private async getPlaylistsGames(playlist: WithId): Promise<GameOnPlatform[]> {
+    const tagsGames = await this._mongo.getTagsGames([playlist.id])
 
-    return tagsGames.map(([tag, games]) => [tag, games.map(gameEntityToGame)])
+    return tagsGames.flatMap(([tag, games]) => games.map(gameEntityToGame))
   }
 }
 
