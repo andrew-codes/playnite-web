@@ -67,12 +67,6 @@
     "typescript-remix-routes-plugin": "^1.0.1"
   },
   "scripts": {
-    "postinstall": "yarn remix-esbuild-override",
-    "build": "run-s build:*",
-    "build:remix": "remix build",
-    "build:worker": "remix-pwa build",
-    "dev": "run-p dev:*",
-    "dev:remix": "remix dev",
-    "dev:worker": "remix-pwa dev"
+    "postinstall": "yarn remix-esbuild-override"
   }
 }
