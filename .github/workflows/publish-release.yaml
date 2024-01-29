@@ -63,7 +63,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
-          TAG: ${{ github.ref }}
+          TAG: ${{ github.ref_name }}
 
       - name: Release
         uses: softprops/action-gh-release@v1
