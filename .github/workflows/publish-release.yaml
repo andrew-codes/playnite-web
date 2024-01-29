@@ -1,9 +1,9 @@
 name: Release a new version of Playnite-Web
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types:
+      - published
 
 permissions:
   contents: write
