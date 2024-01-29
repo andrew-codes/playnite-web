@@ -8,10 +8,9 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
-import { getDeviceType } from '../api/client/state/layoutSlice'
-import type { IGame, Match } from '../domain/types'
+import { getDeviceFeatures } from '../api/client/state/deviceFeaturesSlice'
+import type { IGame, IList, Match } from '../domain/types'
 import GameImage from './GameImage'
 
 const ImageListWithoutOverflow = styled(ImageList)`
@@ -19,9 +18,11 @@ const ImageListWithoutOverflow = styled(ImageList)`
 `
 
 const GameGrid: FC<{
-  gameMatches: Match<IGame>[]
-}> = ({ gameMatches }) => {
-  const deviceType = useSelector(getDeviceType)
+  games: IList<Match<IGame>>
+}> = ({ games }) => {
+  const {
+    device: { type: deviceType },
+  } = useSelector(getDeviceFeatures)
   const { columns, rowHeight, numberToPreload } = useMemo(() => {
     if (deviceType === 'mobile') {
       return {
@@ -80,30 +81,18 @@ const GameGrid: FC<{
 
   return (
     <>
-      <Helmet>
-        {gameMatches.slice(0, numberToPreload).map((gameMatch) => {
-          return (
-            <link
-              key={gameMatch.item.oid.asString}
-              rel="preload"
-              as="image"
-              href={gameMatch.item.cover}
-            />
-          )
-        })}
-      </Helmet>
       <ImageListWithoutOverflow
         rowHeight={state.rowHeight}
         cols={state.columns}
       >
-        {gameMatches.map((gameMatch, gameMatchIndex) => (
+        {games.items.map((game, gameMatchIndex) => (
           <GameImage
             noDefer={gameMatchIndex <= numberToPreload}
-            style={{ display: gameMatch.matches ? 'block' : 'none' }}
+            style={{ display: game.matches ? 'block' : 'none' }}
             height={`${state.rowHeight}px`}
-            game={gameMatch.item}
+            game={game}
             onActivate={playGame}
-            key={gameMatch.item.oid.asString}
+            key={game.oid.asString}
           />
         ))}
       </ImageListWithoutOverflow>

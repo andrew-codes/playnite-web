@@ -4,7 +4,6 @@ import { getMqttClient } from '../api/mqtt'
 import PlayniteApi from '../api/playnite/index.server'
 
 async function action({ request }: ActionFunctionArgs) {
-  console.log('activate')
   const user = await authenticator.isAuthenticated(request)
 
   if (!user) {
@@ -21,7 +20,6 @@ async function action({ request }: ActionFunctionArgs) {
       status: 400,
     })
   }
-  console.log('id', id)
 
   const playnite = new PlayniteApi()
   const game = await playnite.getGameById(id)
