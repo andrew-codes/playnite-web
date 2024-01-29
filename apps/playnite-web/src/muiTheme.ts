@@ -1,53 +1,46 @@
-import { createTheme } from '@mui/material/styles'
+import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 import { deepmerge } from '@mui/utils'
 
-declare module '@mui/material/styles' {
-  interface BreakpointOverrides {
-    xs: false
-    sm: false
-    md: false
-    lg: false
-    xl: false
-    phone: true
-    tablet: true
-    desktop: true
-  }
-}
-
-let defaults = createTheme({
-  palette: {
-    mode: 'dark',
-    background: {
-      default: 'rgb(32,38,52)',
-      paper: 'rgb(40,48,68)',
-    },
-  },
-  breakpoints: {
-    values: {
-      phone: 0,
-      tablet: 1024,
-      desktop: 1920,
-    },
-  },
-  components: {
-    MuiDrawer: {
-      styleOverrides: {
-        paper: {
-          backgroundColor: 'unset',
-        },
+let defaults = responsiveFontSizes(
+  createTheme({
+    palette: {
+      mode: 'dark',
+      background: {
+        default: 'rgb(32,38,52)',
+        paper: 'rgb(40,48,68)',
       },
     },
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          '*': {
-            boxSizing: 'border-box',
+    breakpoints: {
+      values: {
+        xl: 1440,
+        lg: 1280,
+        md: 1024,
+        sm: 860,
+        xs: 640,
+      },
+    },
+    components: {
+      MuiDrawer: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: 'unset',
+          },
+        },
+      },
+      MuiTypography: {},
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            textRendering: 'optimizeLegibility',
+            '*': {
+              boxSizing: 'border-box',
+            },
           },
         },
       },
     },
-  },
-})
+  }),
+)
 
 const setDefaults = (theme = {}) => {
   defaults = createTheme(deepmerge(defaults, theme))
