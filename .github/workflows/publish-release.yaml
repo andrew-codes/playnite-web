@@ -66,12 +66,12 @@ jobs:
           NODE_ENV: production
           TAG: ${{ github.ref_name }}
 
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            LICENSE
-            apps/*/.packaged
+      # - name: Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     files: |
+      #       LICENSE
+      #       apps/*/.packaged
 
   # release_windows:
   #   name: On Release Published
