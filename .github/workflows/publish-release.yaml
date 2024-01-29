@@ -18,6 +18,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
+      REPO_NAME: ${{ github.repository }}
     runs-on: ubuntu-latest
 
     steps:
