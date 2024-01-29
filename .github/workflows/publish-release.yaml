@@ -18,7 +18,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      REPO_NAME: ${{ github.repository }}
+      REPO_NAME: playnite-web
     runs-on: ubuntu-latest
 
     steps:
