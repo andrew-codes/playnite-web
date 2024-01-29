@@ -13,7 +13,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  AppBarProps as MuiAppBarProps,
   Drawer as MuiDrawer,
   Theme,
   styled,
@@ -21,10 +20,6 @@ import {
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
 import { FC, PropsWithChildren, useState } from 'react'
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean
-}
 
 const drawerWidth = 240
 const openedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
@@ -43,7 +38,7 @@ const closedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
   }),
   overflowX: 'hidden',
   width: `calc(${theme.spacing(7)} + ${additionalWidth}px + 1px)`,
-  [theme.breakpoints.up('phone')]: {
+  [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(10)} + ${additionalWidth}px + 1px)`,
   },
 })
@@ -160,7 +155,7 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <>
       <aside>
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
@@ -241,10 +236,8 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
           </DrawerBody>
         </Drawer>
       </aside>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {children}
-      </Box>
-    </Box>
+      {children}
+    </>
   )
 }
 

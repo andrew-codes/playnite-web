@@ -17,6 +17,7 @@ async function loader({ request, params }: LoaderFunctionArgs) {
     const assetBuffer = asset?.file
 
     if (!assetBuffer) {
+      debug(`Asset not found for ${oid} and ${typeKey}`)
       return new Response(assetBuffer, {
         status: 404,
         headers: { 'Content-Type': 'image/jpg' },
@@ -32,7 +33,7 @@ async function loader({ request, params }: LoaderFunctionArgs) {
       },
     })
   } catch (e) {
-    console.error(e)
+    debug(e)
     return new Response(null, {
       status: 500,
     })

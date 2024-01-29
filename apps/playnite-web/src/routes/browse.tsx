@@ -6,7 +6,7 @@ import PlayniteApi from '../api/playnite/index.server'
 import GameGrid from '../components/GameGrid'
 import FilteredGameList from '../domain/FilteredGameList'
 import GameList from '../domain/GameList'
-import MatchName from '../domain/playnite/matchName'
+import MatchName from '../domain/filters/playnite/MatchName'
 import type { GameOnPlatform } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
@@ -48,7 +48,8 @@ function Browse() {
     [gamesOnPlatforms, nameQuery],
   )
 
-  return <GameGrid gameMatches={filteredGames.items} />
+  console.log(gameList.items.length, filteredGames.items.length)
+  return <GameGrid games={filteredGames} />
 }
 
 export default Browse

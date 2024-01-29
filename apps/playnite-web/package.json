@@ -36,6 +36,7 @@
     "react-intersection-observer": "^9.5.3",
     "react-redux": "^9.0.4",
     "react-use-dimensions": "^1.2.1",
+    "react-window": "^1.8.10",
     "remix-auth": "^3.6.0",
     "remix-auth-form": "^1.4.0",
     "remix-island": "^0.1.2",

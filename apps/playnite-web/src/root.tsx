@@ -137,6 +137,16 @@ const App: FC<{}> = () => {
       }),
     )
   }, [])
+  useEffect(() => {
+    const handleOrientationChange = (evt) => {
+      setDeviceFeatures({ orientation: window.screen.orientation.type })
+    }
+    window.addEventListener('orientationchange', handleOrientationChange)
+
+    return () => {
+      window.removeEventListener('orientationchange', handleOrientationChange)
+    }
+  }, [])
 
   const outlet = useOutlet()
   const location = useLocation()
@@ -149,15 +159,15 @@ const App: FC<{}> = () => {
         <Provider store={store}>
           <Layout>
             <AnimatePresence mode="wait" initial={false}>
-              <motion.main
+              <motion.div
                 key={location.pathname}
                 initial={{ x: '-10%', opacity: 0 }}
                 animate={{ x: '0', opacity: 1 }}
                 exit={{ y: '-10%', opacity: 0 }}
-                transition={{ duration: 0 }}
+                transition={{ duration: 0.3 }}
               >
                 {outlet}
-              </motion.main>
+              </motion.div>
             </AnimatePresence>
           </Layout>
         </Provider>

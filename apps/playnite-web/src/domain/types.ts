@@ -129,14 +129,11 @@ interface IList<T> {
   get items(): T[]
 }
 
-interface IFilterList<T> extends IList<Match<T>> {}
-
-type Match<T> = {
-  item: T
+type Match<T> = T & {
   matches: boolean
 }
 interface IMatchA<T> {
-  matches(item: T): Match<T>
+  matches(item: T): boolean
 }
 type GameAssetType = 'background' | 'cover' | 'icon'
 
@@ -156,7 +153,6 @@ export type {
   GameAssetType,
   GameOnPlatform,
   Genre,
-  IFilterList,
   IGame,
   IList,
   IMatchA,

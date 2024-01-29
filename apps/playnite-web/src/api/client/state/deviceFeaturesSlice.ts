@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import _ from 'lodash'
 
-const { merge } = _
+const { merge, memoize } = _
 
 const initialState: {
   device: {
@@ -23,7 +23,16 @@ const slice = createSlice({
   name: 'deviceFeatures',
   initialState,
   selectors: {
-    getDeviceFeatures: (state) => state,
+    getDeviceFeatures: memoize((state) => ({
+      device: {
+        type: state.device?.type,
+        vendor: state.device?.vendor,
+        model: state.device?.model,
+      },
+      isTouchEnabled: state.isTouchEnabled,
+      isPwa: state.isPwa,
+      orientation: state.orientation,
+    })),
   },
   reducers: {
     setDeviceFeatures(

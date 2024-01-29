@@ -2,7 +2,10 @@ import { Typography } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { useMemo } from 'react'
 import PlayniteApi from '../api/playnite/index.server'
+import HorizontalGameList from '../components/HorizontalGameList'
+import GameList from '../domain/GameList'
 import { Playlist } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
@@ -19,11 +22,17 @@ function Index() {
   const { playing } = (useLoaderData() || {}) as unknown as {
     playing?: Playlist
   }
+  const playingPlaylist = useMemo(() => {
+    return { ...playing, games: new GameList(playing?.games || []) }
+  }, [playing])
 
   return (
     <>
       <Typography variant="h1">Library</Typography>
-      <Typography variant="h3">{playing?.name}</Typography>
+      <section>
+        <Typography variant="h3">{playingPlaylist?.name}</Typography>
+        <HorizontalGameList games={playingPlaylist.games} />
+      </section>
     </>
   )
 }
