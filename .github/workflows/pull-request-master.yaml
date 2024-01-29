@@ -52,7 +52,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      REPO_NAME: ${{ github.repository }}
+      REPO_NAME: playnite-web
     steps:
       - uses: actions/checkout@v4
         with:
