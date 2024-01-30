@@ -11,7 +11,6 @@ import { renderHeadToString } from 'remix-island'
 import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
 import { UAParser } from 'ua-parser-js'
 import createEmotionCache from './createEmotionCache'
-import { setDefaults } from './muiTheme'
 import { Head } from './root'
 
 const ABORT_DELAY = 5_000
@@ -107,23 +106,19 @@ function handleBrowserRequest(
     const deviceType = ua?.device?.type ?? 'desktop'
     const ssrMatchMedia = (query) => ({
       matches: mediaQuery.match(query, {
+        minWidth:
+          deviceType === 'mobile'
+            ? '390px'
+            : deviceType === 'tablet'
+              ? '1024px'
+              : '1441px',
         width:
           deviceType === 'mobile'
             ? '390px'
             : deviceType === 'tablet'
-              ? '1366px'
-              : '1920px',
+              ? '1024px'
+              : '1441px',
       }),
-    })
-
-    setDefaults({
-      components: {
-        MuiUseMediaQuery: {
-          defaultProps: {
-            ssrMatchMedia,
-          },
-        },
-      },
     })
 
     let shellRendered = false
