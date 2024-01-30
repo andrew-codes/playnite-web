@@ -1,37 +1,66 @@
-import { createTheme } from '@mui/material/styles'
-import { deepmerge } from '@mui/utils'
+import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+import mediaQuery from 'css-mediaquery'
 
-declare module '@mui/material/styles' {
-  interface BreakpointOverrides {
-    xs: false
-    sm: false
-    md: false
-    lg: false
-    xl: false
-    phone: true
-    tablet: true
-    desktop: true
-  }
+const ssrMatchMedia =
+  (deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown') => (query) => ({
+    matches: mediaQuery.match(query, {
+      width:
+        deviceType === 'mobile'
+          ? '390px'
+          : deviceType === 'tablet'
+            ? '1024px'
+            : '1440px',
+    }),
+  })
+
+const theme = (
+  deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' = 'unknown',
+) => {
+  return responsiveFontSizes(
+    createTheme({
+      palette: {
+        mode: 'dark',
+        background: {
+          default: 'rgb(32,38,52)',
+          paper: 'rgb(40,48,68)',
+        },
+      },
+      breakpoints: {
+        values: {
+          xl: 1440,
+          lg: 1280,
+          md: 1024,
+          sm: 860,
+          xs: 640,
+        },
+      },
+      components: {
+        MuiUseMediaQuery: {
+          defaultProps: {
+            ssrMatchMedia: ssrMatchMedia(deviceType),
+          },
+        },
+        MuiDrawer: {
+          styleOverrides: {
+            paper: {
+              backgroundColor: 'unset',
+            },
+          },
+        },
+        MuiTypography: {},
+        MuiCssBaseline: {
+          styleOverrides: {
+            body: {
+              textRendering: 'optimizeLegibility',
+              '*': {
+                boxSizing: 'border-box',
+              },
+            },
+          },
+        },
+      },
+    }),
+  )
 }
-
-let defaults = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-  breakpoints: {
-    values: {
-      phone: 0,
-      tablet: 1024,
-      desktop: 1920,
-    },
-  },
-})
-
-const setDefaults = (theme = {}) => {
-  defaults = createTheme(deepmerge(defaults, theme))
-}
-
-const theme = () => defaults
 
 export default theme
-export { setDefaults }
