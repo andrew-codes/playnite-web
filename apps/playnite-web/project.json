@@ -16,7 +16,8 @@
         "cwd": "{projectRoot}",
         "commands": [
           "yarn remix-routes -w",
-          "bash -c 'set -o allexport && source local.env && set +o allexport && yarn remix dev -c \"node server.mjs\"'"
+          "bash -c 'set -o allexport && source local.env && set +o allexport && yarn remix dev -c \"node server.mjs\"'",
+          "yarn remix-pwa dev"
         ]
       }
     },
@@ -30,7 +31,9 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["yarn remix-routes && yarn remix build"],
+        "commands": [
+          "yarn remix-routes && yarn remix build && yarn remix-pwa build"
+        ],
         "cwd": "{projectRoot}"
       }
     },

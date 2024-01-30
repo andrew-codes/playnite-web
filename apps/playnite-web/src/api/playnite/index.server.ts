@@ -7,6 +7,7 @@ import type {
   IdentifyDomainObjects,
   Playlist,
   RunState,
+  WithId,
 } from '../../domain/types'
 import MongoDb from './databases/mongo/index.server'
 import {
@@ -17,39 +18,6 @@ import {
 import { GameAsset, PlayniteApi } from './types'
 
 const { startCase, toLower } = _
-
-const gameEntityToGame = (gameEntity: GameEntity): GameOnPlatform => ({
-  added: new Date(gameEntity.added),
-  // ageRating: AgeRating,
-  background: gameEntity.backgroundImage?.replace(`${gameEntity.id}\\`, ''),
-  communityScore: gameEntity.communityScore
-    ? new NumericScore(gameEntity.communityScore)
-    : new NoScore(),
-  // completionStatus: CompletionStatus,
-  cover: gameEntity.coverImage?.replace(`${gameEntity.id}\\`, ''),
-  criticScore: gameEntity.criticScore
-    ? new NumericScore(gameEntity.criticScore)
-    : new NoScore(),
-  description: gameEntity.description,
-  // developers: Developer[],
-  // features: Feature[],
-  gameId: gameEntity.gameId,
-  // genres: Genre[],
-  hidden: gameEntity.hidden,
-  icon: gameEntity.icon,
-  id: gameEntity.id,
-  isCustomGame: gameEntity.isCustomGame,
-  name: gameEntity.name,
-  platform: gameEntity.platforms?.[0],
-  // publishers: Publisher[],
-  recentActivity: new Date(gameEntity.recentActivity),
-  releaseDate: new Date(gameEntity.releaseDate),
-  runState: getRunState(gameEntity),
-  sortName: startCase(toLower(gameEntity.name)),
-  // series: Series[],
-  source: gameEntity.source,
-  // tags: Tag[],
-})
 
 const getRunState = (gameEntity: GameEntity): RunState => {
   if (gameEntity.isRunning) {
@@ -75,15 +43,29 @@ class PlayniteWebApi implements PlayniteApi {
     this._mongo = new MongoDb()
   }
 
+  async getPlaylistByName(name: string): Promise<Playlist> {
+    const playlists = await this.getPlaylists()
+
+    const playlist = playlists.find((playlist) => playlist.name === name)
+    if (!playlist) {
+      throw new Error('Playlist not found')
+    }
+
+    return playlist
+  }
+
   async getPlaylists(): Promise<Playlist[]> {
     const tags = await this._mongo.getTags()
 
-    return tags
-      .filter(({ name }) => this._playlistMatcher.test(name))
-      .map((tag) => ({
-        id: tag.id,
-        name: tag.name.replace(this._playlistMatcher, ''),
-      }))
+    return Promise.all(
+      tags
+        .filter(({ name }) => this._playlistMatcher.test(name))
+        .map(async (tag) => ({
+          id: tag.id,
+          name: tag.name.replace(this._playlistMatcher, ''),
+          games: await this.getPlaylistsGames(tag),
+        })),
+    )
   }
 
   async getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]> {
@@ -101,21 +83,52 @@ class PlayniteWebApi implements PlayniteApi {
   }
 
   async getGames(): Promise<GameOnPlatform[]> {
-    return (await this._mongo.getGames()).map(gameEntityToGame)
+    return (await this._mongo.getGames()).map(this.gameEntityToGame)
   }
 
   async getGameById(id: string): Promise<GameOnPlatform> {
-    return gameEntityToGame(await this._mongo.getGameById(id))
+    return this.gameEntityToGame(await this._mongo.getGameById(id))
   }
 
-  async getPlaylistsGames(
-    playlists: Playlist[],
-  ): Promise<[Playlist, GameOnPlatform[]][]> {
-    const tagsGames = await this._mongo.getTagsGames(
-      playlists.map(({ id }) => id),
-    )
+  private async getPlaylistsGames(playlist: WithId): Promise<GameOnPlatform[]> {
+    const tagsGames = await this._mongo.getTagsGames([playlist.id])
 
-    return tagsGames.map(([tag, games]) => [tag, games.map(gameEntityToGame)])
+    return tagsGames.flatMap(([tag, games]) => games.map(this.gameEntityToGame))
+  }
+
+  private gameEntityToGame(gameEntity: GameEntity): GameOnPlatform {
+    return {
+      added: new Date(gameEntity.added),
+      // ageRating: AgeRating,
+      background: gameEntity.backgroundImage?.replace(`${gameEntity.id}\\`, ''),
+      communityScore: gameEntity.communityScore
+        ? new NumericScore(gameEntity.communityScore)
+        : new NoScore(),
+      // completionStatus: CompletionStatus,
+      cover: gameEntity.coverImage?.replace(`${gameEntity.id}\\`, ''),
+      criticScore: gameEntity.criticScore
+        ? new NumericScore(gameEntity.criticScore)
+        : new NoScore(),
+      description: gameEntity.description,
+      // developers: Developer[],
+      // features: Feature[],
+      gameId: gameEntity.gameId,
+      // genres: Genre[],
+      hidden: gameEntity.hidden,
+      icon: gameEntity.icon,
+      id: gameEntity.id,
+      isCustomGame: gameEntity.isCustomGame,
+      name: gameEntity.name,
+      platform: gameEntity.platforms?.[0],
+      // publishers: Publisher[],
+      recentActivity: new Date(gameEntity.recentActivity),
+      releaseDate: new Date(gameEntity.releaseDate),
+      runState: getRunState(gameEntity),
+      sortName: startCase(toLower(gameEntity.name)),
+      // series: Series[],
+      source: gameEntity.source,
+      // tags: Tag[],
+    }
   }
 }
 

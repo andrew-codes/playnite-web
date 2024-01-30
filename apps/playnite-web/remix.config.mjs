@@ -8,6 +8,7 @@ withEsbuildOverride((option) => {
 })
 
 /** @type {import('@remix-run/dev').AppConfig} */
+/** @type {import('@remix-pwa/dev').WorkerConfig} */
 
 const config = {
   appDirectory: 'src',
@@ -18,6 +19,11 @@ const config = {
   ignoredRouteFiles: ['**/.*'],
   publicPath: '/build/',
   serverBuildPath: 'build/index.js',
+
+  // PWA
+  entryWorkerFile: './src/entry.worker.ts',
+  workerName: 'entry.worker',
+  workerMinify: true,
 }
 
 export default config
