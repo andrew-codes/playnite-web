@@ -19,6 +19,9 @@ const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
               maxWidth: '1440px',
               padding: '120px',
             },
+            [theme.breakpoints.down('lg')]: {
+              maxWidth: '1024px',
+            },
           })}
         >
           {children}

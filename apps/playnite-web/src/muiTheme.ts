@@ -1,52 +1,66 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
-import { deepmerge } from '@mui/utils'
+import mediaQuery from 'css-mediaquery'
 
-let defaults = responsiveFontSizes(
-  createTheme({
-    palette: {
-      mode: 'dark',
-      background: {
-        default: 'rgb(32,38,52)',
-        paper: 'rgb(40,48,68)',
-      },
-    },
-    breakpoints: {
-      values: {
-        xl: 1440,
-        lg: 1280,
-        md: 1024,
-        sm: 860,
-        xs: 640,
-      },
-    },
-    components: {
-      MuiDrawer: {
-        styleOverrides: {
-          paper: {
-            backgroundColor: 'unset',
-          },
+const ssrMatchMedia =
+  (deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown') => (query) => ({
+    matches: mediaQuery.match(query, {
+      width:
+        deviceType === 'mobile'
+          ? '390px'
+          : deviceType === 'tablet'
+            ? '1024px'
+            : '1440px',
+    }),
+  })
+
+const theme = (
+  deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' = 'unknown',
+) => {
+  return responsiveFontSizes(
+    createTheme({
+      palette: {
+        mode: 'dark',
+        background: {
+          default: 'rgb(32,38,52)',
+          paper: 'rgb(40,48,68)',
         },
       },
-      MuiTypography: {},
-      MuiCssBaseline: {
-        styleOverrides: {
-          body: {
-            textRendering: 'optimizeLegibility',
-            '*': {
-              boxSizing: 'border-box',
+      breakpoints: {
+        values: {
+          xl: 1440,
+          lg: 1280,
+          md: 1024,
+          sm: 860,
+          xs: 640,
+        },
+      },
+      components: {
+        MuiUseMediaQuery: {
+          defaultProps: {
+            ssrMatchMedia: ssrMatchMedia(deviceType),
+          },
+        },
+        MuiDrawer: {
+          styleOverrides: {
+            paper: {
+              backgroundColor: 'unset',
+            },
+          },
+        },
+        MuiTypography: {},
+        MuiCssBaseline: {
+          styleOverrides: {
+            body: {
+              textRendering: 'optimizeLegibility',
+              '*': {
+                boxSizing: 'border-box',
+              },
             },
           },
         },
       },
-    },
-  }),
-)
-
-const setDefaults = (theme = {}) => {
-  defaults = createTheme(deepmerge(defaults, theme))
+    }),
+  )
 }
 
-const theme = () => defaults
-
 export default theme
-export { setDefaults }
