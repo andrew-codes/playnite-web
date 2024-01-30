@@ -1,20 +1,18 @@
 import _ from 'lodash'
 import Game from './Game'
-import NoFilter from './NoFilter'
-import { GameOnPlatform, IGame, IList, IMatchA } from './types'
+import { GameOnPlatform, IGame, IList } from './types'
 
 const { groupBy } = _
 
 class GameList implements IList<IGame> {
   private _games: IGame[]
 
-  constructor(
-    gamesOnPlatforms: GameOnPlatform[],
-    filter: IMatchA<IGame> = new NoFilter(),
-  ) {
+  constructor(gamesOnPlatforms: GameOnPlatform[]) {
     this._games = Object.values<GameOnPlatform[]>(
       groupBy(gamesOnPlatforms, 'sortName'),
-    ).map((groupedGames) => new Game(groupedGames) as IGame)
+    )
+      .filter((groupedGames) => groupedGames.length > 0)
+      .map((groupedGames) => new Game(groupedGames) as IGame)
   }
 
   get items(): IGame[] {

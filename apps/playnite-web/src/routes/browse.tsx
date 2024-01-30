@@ -4,10 +4,9 @@ import { useLoaderData } from '@remix-run/react'
 import { useCallback, useMemo, useState } from 'react'
 import PlayniteApi from '../api/playnite/index.server'
 import GameGrid from '../components/GameGrid'
-import WithNavigation from '../components/WithNavigation'
 import FilteredGameList from '../domain/FilteredGameList'
 import GameList from '../domain/GameList'
-import MatchName from '../domain/playnite/matchName'
+import MatchName from '../domain/filters/playnite/MatchName'
 import type { GameOnPlatform } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
@@ -32,12 +31,12 @@ async function loader({ request }: LoaderFunctionArgs) {
 }
 
 function Browse() {
-  const { gamesOnPlatforms } = useLoaderData() as unknown as {
-    gamesOnPlatforms: GameOnPlatform[]
+  const { gamesOnPlatforms } = (useLoaderData() || {}) as unknown as {
+    gamesOnPlatforms?: GameOnPlatform[]
   }
 
   const gameList = useMemo(() => {
-    return new GameList(gamesOnPlatforms)
+    return new GameList(gamesOnPlatforms ?? [])
   }, [gamesOnPlatforms])
 
   const [nameQuery, setNameQuery] = useState<string>('')
@@ -49,11 +48,8 @@ function Browse() {
     [gamesOnPlatforms, nameQuery],
   )
 
-  return (
-    <WithNavigation onFilter={handleFilter}>
-      <GameGrid gameMatches={filteredGames.items} />
-    </WithNavigation>
-  )
+  console.log(gameList.items.length, filteredGames.items.length)
+  return <GameGrid games={filteredGames} />
 }
 
 export default Browse

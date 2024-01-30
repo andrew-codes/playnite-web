@@ -21,46 +21,42 @@ interface IdentifyDomainObjects {
   get asString(): string
 }
 
-type Platform = {
+interface WithId {
   id: string
+}
+
+type Platform = WithId & {
   name: string
   background: string
   cover: string
   icon: string
 }
 
-type Genre = {
-  id: string
+type Genre = WithId & {
   name: string
 }
 
-type Tag = {
-  id: string
+type Tag = WithId & {
   name: string
 }
 
-type Publisher = {
-  id: string
+type Publisher = WithId & {
   name: string
 }
 
-type Series = {
-  id: string
+type Series = WithId & {
   name: string
 }
 
-type Source = {
-  id: string
+type Source = WithId & {
   name: string
 }
 
-type Feature = {
-  id: string
+type Feature = WithId & {
   name: string
 }
 
-type Developer = {
-  id: string
+type Developer = WithId & {
   name: string
 }
 
@@ -68,19 +64,17 @@ interface Score {
   get value(): string
 }
 
-type CompletionStatus = {
-  id: string
+type CompletionStatus = WithId & {
   name: string
 }
 
-type AgeRating = {
-  id: string
+type AgeRating = WithId & {
   name: string
 }
 
-type Playlist = {
-  id: string
+type Playlist = WithId & {
   name: string
+  games: GameOnPlatform[]
 }
 
 const runStates = [
@@ -93,7 +87,7 @@ const runStates = [
 ] as const
 type RunState = (typeof runStates)[number]
 
-type GameOnPlatform = {
+type GameOnPlatform = WithId & {
   added: Date
   ageRating?: AgeRating
   background: string
@@ -108,7 +102,6 @@ type GameOnPlatform = {
   genres?: Genre[]
   hidden: boolean
   icon: string
-  id: string
   isCustomGame: boolean
   name: string
   platform?: Platform
@@ -136,19 +129,15 @@ interface IList<T> {
   get items(): T[]
 }
 
-interface IFilterList<T> extends IList<Match<T>> {}
-
-type Match<T> = {
-  item: T
+type Match<T> = T & {
   matches: boolean
 }
 interface IMatchA<T> {
-  matches(item: T): Match<T>
+  matches(item: T): boolean
 }
 type GameAssetType = 'background' | 'cover' | 'icon'
 
-type GameAsset = {
-  id: string
+type GameAsset = WithId & {
   file: Buffer
   related: IdentifyDomainObjects
   typeKey: GameAssetType
@@ -164,7 +153,6 @@ export type {
   GameAssetType,
   GameOnPlatform,
   Genre,
-  IFilterList,
   IGame,
   IList,
   IMatchA,
@@ -178,4 +166,5 @@ export type {
   Series,
   Source,
   Tag,
+  WithId,
 }
