@@ -19,39 +19,6 @@ import { GameAsset, PlayniteApi } from './types'
 
 const { startCase, toLower } = _
 
-const gameEntityToGame = (gameEntity: GameEntity): GameOnPlatform => ({
-  added: new Date(gameEntity.added),
-  // ageRating: AgeRating,
-  background: gameEntity.backgroundImage?.replace(`${gameEntity.id}\\`, ''),
-  communityScore: gameEntity.communityScore
-    ? new NumericScore(gameEntity.communityScore)
-    : new NoScore(),
-  // completionStatus: CompletionStatus,
-  cover: gameEntity.coverImage?.replace(`${gameEntity.id}\\`, ''),
-  criticScore: gameEntity.criticScore
-    ? new NumericScore(gameEntity.criticScore)
-    : new NoScore(),
-  description: gameEntity.description,
-  // developers: Developer[],
-  // features: Feature[],
-  gameId: gameEntity.gameId,
-  // genres: Genre[],
-  hidden: gameEntity.hidden,
-  icon: gameEntity.icon,
-  id: gameEntity.id,
-  isCustomGame: gameEntity.isCustomGame,
-  name: gameEntity.name,
-  platform: gameEntity.platforms?.[0],
-  // publishers: Publisher[],
-  recentActivity: new Date(gameEntity.recentActivity),
-  releaseDate: new Date(gameEntity.releaseDate),
-  runState: getRunState(gameEntity),
-  sortName: startCase(toLower(gameEntity.name)),
-  // series: Series[],
-  source: gameEntity.source,
-  // tags: Tag[],
-})
-
 const getRunState = (gameEntity: GameEntity): RunState => {
   if (gameEntity.isRunning) {
     return 'running'
@@ -116,17 +83,52 @@ class PlayniteWebApi implements PlayniteApi {
   }
 
   async getGames(): Promise<GameOnPlatform[]> {
-    return (await this._mongo.getGames()).map(gameEntityToGame)
+    return (await this._mongo.getGames()).map(this.gameEntityToGame)
   }
 
   async getGameById(id: string): Promise<GameOnPlatform> {
-    return gameEntityToGame(await this._mongo.getGameById(id))
+    return this.gameEntityToGame(await this._mongo.getGameById(id))
   }
 
   private async getPlaylistsGames(playlist: WithId): Promise<GameOnPlatform[]> {
     const tagsGames = await this._mongo.getTagsGames([playlist.id])
 
-    return tagsGames.flatMap(([tag, games]) => games.map(gameEntityToGame))
+    return tagsGames.flatMap(([tag, games]) => games.map(this.gameEntityToGame))
+  }
+
+  private gameEntityToGame(gameEntity: GameEntity): GameOnPlatform {
+    return {
+      added: new Date(gameEntity.added),
+      // ageRating: AgeRating,
+      background: gameEntity.backgroundImage?.replace(`${gameEntity.id}\\`, ''),
+      communityScore: gameEntity.communityScore
+        ? new NumericScore(gameEntity.communityScore)
+        : new NoScore(),
+      // completionStatus: CompletionStatus,
+      cover: gameEntity.coverImage?.replace(`${gameEntity.id}\\`, ''),
+      criticScore: gameEntity.criticScore
+        ? new NumericScore(gameEntity.criticScore)
+        : new NoScore(),
+      description: gameEntity.description,
+      // developers: Developer[],
+      // features: Feature[],
+      gameId: gameEntity.gameId,
+      // genres: Genre[],
+      hidden: gameEntity.hidden,
+      icon: gameEntity.icon,
+      id: gameEntity.id,
+      isCustomGame: gameEntity.isCustomGame,
+      name: gameEntity.name,
+      platform: gameEntity.platforms?.[0],
+      // publishers: Publisher[],
+      recentActivity: new Date(gameEntity.recentActivity),
+      releaseDate: new Date(gameEntity.releaseDate),
+      runState: getRunState(gameEntity),
+      sortName: startCase(toLower(gameEntity.name)),
+      // series: Series[],
+      source: gameEntity.source,
+      // tags: Tag[],
+    }
   }
 }
 

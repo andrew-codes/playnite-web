@@ -154,7 +154,7 @@ const App: FC<{}> = () => {
   return (
     <>
       <Head />
-      <ThemeProvider theme={muiTheme()}>
+      <ThemeProvider theme={muiTheme(device.type ?? 'unknown')}>
         <CssBaseline />
         <Provider store={store}>
           <Layout>

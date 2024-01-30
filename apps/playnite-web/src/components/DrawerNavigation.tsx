@@ -2,10 +2,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Home,
-  LibraryBooks,
+  LocalLibrary,
 } from '@mui/icons-material'
 import {
-  Box,
   CSSObject,
   IconButton,
   List,
@@ -16,12 +15,13 @@ import {
   Drawer as MuiDrawer,
   Theme,
   styled,
+  useMediaQuery,
   useTheme,
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
 import { FC, PropsWithChildren, useState } from 'react'
 
-const drawerWidth = 240
+const drawerWidth = 320
 const openedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
   width: `calc(${drawerWidth}px + ${additionalWidth}px)`,
   transition: theme.transitions.create('width', {
@@ -142,13 +142,13 @@ const NavigationList = styled(List, {
 const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   const theme = useTheme()
 
-  const [open, setOpen] = useState(false)
+  const shouldBeOpenMq = useMediaQuery(theme.breakpoints.up('xl'))
+  const [open, setOpen] = useState(shouldBeOpenMq)
   const toggleDrawerOpen = () => {
     setOpen((state) => !state)
   }
 
   const navigate = useNavigate()
-
   const handleNavigation = (href: string) => (evt: any) => {
     evt.preventDefault()
     navigate(href)
@@ -222,7 +222,7 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
                         justifyContent: 'center',
                       }}
                     >
-                      <LibraryBooks />
+                      <LocalLibrary />
                     </ListItemIcon>
                     <ListItemText
                       primary={'My Games'}
