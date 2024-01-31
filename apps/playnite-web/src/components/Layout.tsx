@@ -15,12 +15,29 @@ const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
           sx={(theme) => ({
             flexGrow: 1,
             margin: '0 auto',
-            [theme.breakpoints.up('xl')]: {
-              maxWidth: '1440px',
-              padding: '120px',
+            [theme.breakpoints.up('xs')]: {
+              maxWidth: '544px',
+              padding: '48px 0',
             },
-            [theme.breakpoints.down('lg')]: {
+            [theme.breakpoints.up('sm')]: {
+              maxWidth: '736px',
+              padding: '60px 0',
+            },
+            [theme.breakpoints.up('md')]: {
+              maxWidth: '960px',
+              padding: '80px 24px',
+            },
+            [theme.breakpoints.up('xl')]: {
               maxWidth: '1024px',
+              padding: '100px 0',
+            },
+            [theme.breakpoints.up('xxl')]: {
+              maxWidth: '1440px',
+              padding: '120px 48px',
+            },
+            [theme.breakpoints.down('xs')]: {
+              maxWidth: '342px',
+              padding: '24px 0',
             },
           })}
         >
