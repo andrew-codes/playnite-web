@@ -2,14 +2,12 @@ import { CacheProvider } from '@emotion/react'
 import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { createReadableStreamFromReadable } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
-import mediaQuery from 'css-mediaquery'
 import isbot from 'isbot'
 import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
 import { Helmet } from 'react-helmet'
 import { renderHeadToString } from 'remix-island'
 import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
-import { UAParser } from 'ua-parser-js'
 import createEmotionCache from './createEmotionCache'
 import { Head } from './root'
 
@@ -102,25 +100,6 @@ function handleBrowserRequest(
   remixContext: EntryContext,
 ) {
   return new Promise((resolve, reject) => {
-    const ua = UAParser(request.headers.get('user-agent'))
-    const deviceType = ua?.device?.type ?? 'desktop'
-    const ssrMatchMedia = (query) => ({
-      matches: mediaQuery.match(query, {
-        minWidth:
-          deviceType === 'mobile'
-            ? '390px'
-            : deviceType === 'tablet'
-              ? '1024px'
-              : '1441px',
-        width:
-          deviceType === 'mobile'
-            ? '390px'
-            : deviceType === 'tablet'
-              ? '1024px'
-              : '1441px',
-      }),
-    })
-
     let shellRendered = false
     const clientSideCache = createEmotionCache()
     const { pipe, abort } = renderToPipeableStream(
