@@ -19,7 +19,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
-import { FC, PropsWithChildren, useState } from 'react'
+import { FC, PropsWithChildren, useMemo, useState } from 'react'
 
 const drawerWidth = 320
 const openedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
@@ -147,6 +147,11 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   const toggleDrawerOpen = () => {
     setOpen((state) => !state)
   }
+  const shouldBeTemporary = useMediaQuery(theme.breakpoints.down('xl'))
+  const drawerVariant = useMemo(
+    () => (shouldBeTemporary ? 'temporary' : 'permanent'),
+    [shouldBeTemporary],
+  )
 
   const navigate = useNavigate()
   const handleNavigation = (href: string) => (evt: any) => {
@@ -157,7 +162,7 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   return (
     <>
       <aside>
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant={drawerVariant} open={open}>
           <DrawerHeader>
             <DrawerButton onClick={toggleDrawerOpen}>
               {theme.direction === 'rtl' ? (
