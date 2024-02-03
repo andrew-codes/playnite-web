@@ -48,7 +48,6 @@ function Browse() {
     [gamesOnPlatforms, nameQuery],
   )
 
-  console.log(gameList.items.length, filteredGames.items.length)
   return <GameGrid games={filteredGames} />
 }
 

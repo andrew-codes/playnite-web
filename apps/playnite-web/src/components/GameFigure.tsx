@@ -6,6 +6,14 @@ const Figure = styled('figure')(({ theme }) => ({
   margin: 0,
 }))
 
+const Image = styled('img', {
+  shouldForwardProp: (prop) => prop !== 'width',
+})<{ width: number }>(({ width, theme }) => ({
+  objectFit: 'cover',
+  width: `${width - 16}px`,
+  height: `${width - 48}px`,
+}))
+
 const GameFigure: FC<{
   adornment?: ReactNode
   game: IGame
@@ -21,13 +29,7 @@ const GameFigure: FC<{
 }) => {
   return (
     <Figure style={style}>
-      <img
-        src={game.cover}
-        alt={game.name}
-        height="216px"
-        width="216px"
-        style={{ objectFit: 'cover' }}
-      />
+      <Image src={game.cover} alt={game.name} width={style.width} />
       <Stack>
         {adornment}
         <Typography

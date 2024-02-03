@@ -1,14 +1,25 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles'
 import mediaQuery from 'css-mediaquery'
 
+declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    xs: true
+    sm: true
+    md: true
+    lg: true
+    xl: true
+    xxl: true
+  }
+}
+
 const ssrMatchMedia =
   (deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown') => (query) => ({
     matches: mediaQuery.match(query, {
       width:
         deviceType === 'mobile'
-          ? '390px'
+          ? '390'
           : deviceType === 'tablet'
-            ? '1024px'
+            ? '768px'
             : '1440px',
     }),
   })
@@ -27,11 +38,12 @@ const theme = (
       },
       breakpoints: {
         values: {
-          xl: 1440,
-          lg: 1280,
-          md: 1024,
-          sm: 860,
-          xs: 640,
+          xxl: 1696,
+          xl: 1366,
+          lg: 1024,
+          md: 768,
+          sm: 430,
+          xs: 390,
         },
       },
       components: {
@@ -47,7 +59,11 @@ const theme = (
             },
           },
         },
-        MuiTypography: {},
+        MuiTypography: {
+          styleOverrides: {
+            h1: {},
+          },
+        },
         MuiCssBaseline: {
           styleOverrides: {
             body: {
