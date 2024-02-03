@@ -31,8 +31,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
   padding: 0,
   position: 'absolute',
-  left: '63px',
-  top: '24px',
+  left: '16px',
+  top: '16px',
   ...theme.mixins.toolbar,
 }))
 
