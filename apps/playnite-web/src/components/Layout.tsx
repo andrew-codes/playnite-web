@@ -1,32 +1,54 @@
-import { Box } from '@mui/material'
+import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { FC, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
 import { getDeviceFeatures } from '../api/client/state/deviceFeaturesSlice'
 import DrawerNavigation from './DrawerNavigation'
+import MobileDrawerNavigation from './MobileDrawerNavigation'
+import useThemeWidth from './useThemeWidth'
 
 const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
   const deviceFeatures = useSelector(getDeviceFeatures)
 
+  const theme = useTheme()
+  const shouldUseMobileDrawer = useMediaQuery(theme.breakpoints.down('lg'))
+  const Drawer = shouldUseMobileDrawer
+    ? MobileDrawerNavigation
+    : DrawerNavigation
+
+  const width = useThemeWidth()
+
   return (
     <Box sx={{ display: 'flex' }}>
-      <DrawerNavigation>
+      <Drawer>
         <Box
           component={'main'}
           sx={(theme) => ({
             flexGrow: 1,
             margin: '0 auto',
-            [theme.breakpoints.up('xl')]: {
-              maxWidth: '1440px',
-              padding: '120px',
+            width: `${width}px`,
+            [theme.breakpoints.up('xs')]: {
+              padding: '80px 24px',
             },
-            [theme.breakpoints.down('lg')]: {
-              maxWidth: '1024px',
+            [theme.breakpoints.up('sm')]: {
+              padding: '80px 24px',
+            },
+            [theme.breakpoints.up('md')]: {
+              padding: '80px 24px',
+            },
+            [theme.breakpoints.up('lg')]: {
+              padding: '80px 24px',
+            },
+            [theme.breakpoints.up('xl')]: {
+              padding: '120px 48px',
+            },
+            [theme.breakpoints.down('xs')]: {
+              padding: '80px 24px',
             },
           })}
         >
           {children}
         </Box>
-      </DrawerNavigation>
+      </Drawer>
     </Box>
   )
 }
