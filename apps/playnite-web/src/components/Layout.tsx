@@ -1,49 +1,54 @@
-import { Box } from '@mui/material'
+import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { FC, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
 import { getDeviceFeatures } from '../api/client/state/deviceFeaturesSlice'
 import DrawerNavigation from './DrawerNavigation'
+import MobileDrawerNavigation from './MobileDrawerNavigation'
+import useThemeWidth from './useThemeWidth'
 
 const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
   const deviceFeatures = useSelector(getDeviceFeatures)
 
+  const theme = useTheme()
+  const shouldUseMobileDrawer = useMediaQuery(theme.breakpoints.down('lg'))
+  const Drawer = shouldUseMobileDrawer
+    ? MobileDrawerNavigation
+    : DrawerNavigation
+
+  const width = useThemeWidth()
+
   return (
     <Box sx={{ display: 'flex' }}>
-      <DrawerNavigation>
+      <Drawer>
         <Box
           component={'main'}
           sx={(theme) => ({
             flexGrow: 1,
             margin: '0 auto',
+            width: `${width}px`,
             [theme.breakpoints.up('xs')]: {
-              maxWidth: '544px',
-              padding: '48px 0',
+              padding: '80px 24px',
             },
             [theme.breakpoints.up('sm')]: {
-              maxWidth: '736px',
-              padding: '60px 0',
+              padding: '80px 24px',
             },
             [theme.breakpoints.up('md')]: {
-              maxWidth: '960px',
+              padding: '80px 24px',
+            },
+            [theme.breakpoints.up('lg')]: {
               padding: '80px 24px',
             },
             [theme.breakpoints.up('xl')]: {
-              maxWidth: '1024px',
-              padding: '100px 0',
-            },
-            [theme.breakpoints.up('xxl')]: {
-              maxWidth: '1440px',
               padding: '120px 48px',
             },
             [theme.breakpoints.down('xs')]: {
-              maxWidth: '342px',
               padding: '24px 0',
             },
           })}
         >
           {children}
         </Box>
-      </DrawerNavigation>
+      </Drawer>
     </Box>
   )
 }
