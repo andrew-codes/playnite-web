@@ -5,7 +5,7 @@ const { merge, memoize } = _
 
 const initialState: {
   device: {
-    type: 'desktop' | 'mobile' | 'tablet'
+    type: 'desktop' | 'mobile' | 'tablet' | null
     vendor: string | null
     model: string | null
   } | null
@@ -23,7 +23,7 @@ const slice = createSlice({
   name: 'deviceFeatures',
   initialState,
   selectors: {
-    getDeviceFeatures: memoize((state) => ({
+    getDeviceFeatures: (state) => ({
       device: {
         type: state.device?.type,
         vendor: state.device?.vendor,
@@ -32,7 +32,7 @@ const slice = createSlice({
       isTouchEnabled: state.isTouchEnabled,
       isPwa: state.isPwa,
       orientation: state.orientation,
-    })),
+    }),
   },
   reducers: {
     setDeviceFeatures(

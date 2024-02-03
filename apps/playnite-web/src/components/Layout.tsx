@@ -2,8 +2,8 @@ import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { FC, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
 import { getDeviceFeatures } from '../api/client/state/deviceFeaturesSlice'
-import DrawerNavigation from './DrawerNavigation'
-import MobileDrawerNavigation from './MobileDrawerNavigation'
+import DrawerNavigation from './Navigation/DrawerNavigation'
+import MobileDrawerNavigation from './Navigation/MobileDrawerNavigation'
 import useThemeWidth from './useThemeWidth'
 
 const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
