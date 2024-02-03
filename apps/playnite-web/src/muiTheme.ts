@@ -59,7 +59,11 @@ const theme = (
             },
           },
         },
-        MuiTypography: {},
+        MuiTypography: {
+          styleOverrides: {
+            h1: {},
+          },
+        },
         MuiCssBaseline: {
           styleOverrides: {
             body: {

@@ -42,7 +42,7 @@ const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
               padding: '120px 48px',
             },
             [theme.breakpoints.down('xs')]: {
-              padding: '24px 0',
+              padding: '80px 24px',
             },
           })}
         >

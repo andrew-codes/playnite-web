@@ -28,9 +28,9 @@ function Index() {
 
   return (
     <>
-      <Typography variant="h1">Library</Typography>
+      <Typography variant="h2">Library</Typography>
       <section>
-        <Typography variant="h3">{playingPlaylist?.name}</Typography>
+        <Typography variant="h4">{playingPlaylist?.name}</Typography>
         <HorizontalGameList games={playingPlaylist.games} />
       </section>
     </>
