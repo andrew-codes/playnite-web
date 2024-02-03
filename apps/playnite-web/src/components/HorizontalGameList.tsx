@@ -19,8 +19,10 @@ const GameListItem: FC<{ data: IGame[]; index: number; style: any }> = ({
       key={game.oid.asString}
       game={game}
       primaryText={game.name}
-      secondaryText={game.series.join(',')}
+      secondaryText={game.name}
       style={style}
+      width={`${style.width}px`}
+      height={style.height}
     />
   )
 }
