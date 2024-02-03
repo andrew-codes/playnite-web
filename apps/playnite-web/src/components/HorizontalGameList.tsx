@@ -14,7 +14,6 @@ const GameListItem: FC<{ data: IGame[]; index: number; style: any }> = ({
   style,
 }) => {
   const game = data[index]
-  console.log(style.width)
   return (
     <GameFigure
       key={game.oid.asString}
@@ -36,8 +35,6 @@ const HorizontalGameList: FC<{
     },
     [fetcher],
   )
-
-  const testGames = games.items.concat(games.items.slice(0, 4))
 
   const theme = useTheme()
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
@@ -67,8 +64,8 @@ const HorizontalGameList: FC<{
   return (
     <List
       height={height}
-      itemCount={testGames.length}
-      itemData={testGames}
+      itemCount={games.items.length}
+      itemData={games.items}
       itemSize={itemSize}
       layout="horizontal"
       width={width}

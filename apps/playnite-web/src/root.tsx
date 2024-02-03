@@ -67,7 +67,6 @@ async function loader({ request }: LoaderFunctionArgs) {
     vendor: ua?.device?.vendor ?? null,
     model: ua?.device?.model ?? null,
   }
-  console.log(JSON.stringify(ua, null, 2))
 
   return json({
     user,
