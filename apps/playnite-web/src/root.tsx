@@ -67,7 +67,6 @@ async function loader({ request }: LoaderFunctionArgs) {
     vendor: ua?.device?.vendor ?? null,
     model: ua?.device?.model ?? null,
   }
-  console.log(JSON.stringify(ua, null, 2))
 
   return json({
     user,
@@ -165,6 +164,9 @@ const App: FC<{}> = () => {
                 animate={{ x: '0', opacity: 1 }}
                 exit={{ y: '-10%', opacity: 0 }}
                 transition={{ duration: 0.3 }}
+                style={{
+                  overflow: 'hidden',
+                }}
               >
                 {outlet}
               </motion.div>

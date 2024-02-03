@@ -1,12 +1,5 @@
-import { ChevronLeft, ChevronRight } from '@mui/icons-material'
-import {
-  CSSObject,
-  IconButton,
-  Drawer as MuiDrawer,
-  Theme,
-  styled,
-  useTheme,
-} from '@mui/material'
+import { Menu } from '@mui/icons-material'
+import { CSSObject, Drawer, IconButton, Theme, styled } from '@mui/material'
 import { FC, PropsWithChildren, useState } from 'react'
 import MainNavigation from './Navigation/MainNavigation'
 
@@ -32,58 +25,14 @@ const closedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
   },
 })
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: 'nowrap',
-  boxSizing: 'border-box',
-  ...(open && {
-    ...openedMixin(theme),
-    '& .MuiDrawer-paper': {
-      border: 'none',
-      '&:after': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        right: '24px',
-        bottom: 0,
-        width: '1px',
-        zIndex: 1300,
-        backgroundColor: theme.palette.divider,
-      },
-      ...openedMixin(theme),
-    },
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    '& .MuiDrawer-paper': {
-      border: 'none',
-      '&:after': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        right: '24px',
-        bottom: 0,
-        width: '1px',
-        zIndex: 1300,
-        backgroundColor: theme.palette.divider,
-      },
-      ...closedMixin(theme, 24),
-    },
-  }),
-}))
-
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
   padding: 0,
   position: 'absolute',
-  right: 0,
-  top: `24px`,
-  zIndex: 1400,
+  left: '16px',
+  top: '16px',
   ...theme.mixins.toolbar,
 }))
 
@@ -111,9 +60,7 @@ const DrawerBody = styled('div', {
   }),
 }))
 
-const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
-  const theme = useTheme()
-
+const MobileDrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   const [open, setOpen] = useState(false)
   const toggleDrawerOpen = () => {
     setOpen((state) => !state)
@@ -122,22 +69,12 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   return (
     <>
       <aside>
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
-            <DrawerButton onClick={toggleDrawerOpen}>
-              {theme.direction === 'rtl' ? (
-                open ? (
-                  <ChevronRight />
-                ) : (
-                  <ChevronLeft />
-                )
-              ) : open ? (
-                <ChevronLeft />
-              ) : (
-                <ChevronRight />
-              )}
-            </DrawerButton>
-          </DrawerHeader>
+        <DrawerHeader>
+          <DrawerButton onClick={toggleDrawerOpen}>
+            <Menu />
+          </DrawerButton>
+        </DrawerHeader>
+        <Drawer variant="temporary" open={open} onClose={toggleDrawerOpen}>
           <DrawerBody open={open}>
             <MainNavigation open={open} />
           </DrawerBody>
@@ -148,4 +85,4 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   )
 }
 
-export default DrawerNavigation
+export default MobileDrawerNavigation
