@@ -1,75 +1,71 @@
-import { ImageList, styled } from '@mui/material'
+import { ImageList, styled, useMediaQuery, useTheme } from '@mui/material'
 import { useFetcher } from '@remix-run/react'
-import {
-  FC,
-  SyntheticEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-import { useSelector } from 'react-redux'
-import { getDeviceFeatures } from '../api/client/state/deviceFeaturesSlice'
+import _ from 'lodash'
+import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
 import type { IGame, IList, Match } from '../domain/types'
-import GameImage from './GameImage'
+import GameFigure from './GameFigure'
+
+const { chunk } = _
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
 `
 
+const GameListItem: FC<{
+  data: IGame[]
+  columnIndex: number
+  rowIndex: number
+  style: any
+}> = ({ data, rowIndex, columnIndex, style }) => {
+  const game = data[rowIndex][columnIndex]
+
+  return (
+    <GameFigure
+      key={game.oid.asString}
+      game={game}
+      primaryText={game.name}
+      secondaryText={game.name}
+      style={style}
+      width={`calc(${style.width}px - 16px)`}
+      height={`calc(${style.height}px - 32px)`}
+    />
+  )
+}
+
 const GameGrid: FC<{
   games: IList<Match<IGame>>
 }> = ({ games }) => {
-  const {
-    device: { type: deviceType },
-  } = useSelector(getDeviceFeatures)
-  const { columns, rowHeight, numberToPreload } = useMemo(() => {
-    if (deviceType === 'mobile') {
-      return {
-        columns: 2,
-        numberToPreload: 8,
-        rowHeight: 210,
-      }
-    }
+  const theme = useTheme()
+  const isXl = useMediaQuery(theme.breakpoints.up('xl'))
+  const isLg = useMediaQuery(theme.breakpoints.up('lg'))
+  const isMd = useMediaQuery(theme.breakpoints.up('md'))
+  const isSm = useMediaQuery(theme.breakpoints.up('sm'))
+  const isXs = useMediaQuery(theme.breakpoints.up('xs'))
 
-    if (deviceType === 'tablet') {
-      return {
-        columns: 5,
-        numberToPreload: 25,
-        rowHeight: 300,
-      }
-    }
-
-    return {
-      columns: 10,
-      numberToPreload: 40,
-      rowHeight: 300,
-    }
-  }, [])
-
-  const [state, setState] = useState({ columns, rowHeight })
-  useEffect(() => {
-    if (
-      window.screen.orientation.type.startsWith('landscape') &&
-      deviceType === 'mobile'
-    ) {
-      setState((state) => ({ ...state, columns: 5 }))
-    }
-  }, [])
-
-  useEffect(() => {
-    const handleOrientationChange = (evt) => {
-      if (window.screen.orientation.type.startsWith('landscape')) {
-        setState((state) => ({ ...state, columns: 5 }))
-      } else {
-        setState((state) => ({ ...state, columns: 2 }))
-      }
-    }
-    window.addEventListener('orientationchange', handleOrientationChange)
-    return () => {
-      window.removeEventListener('orientationchange', handleOrientationChange)
-    }
-  }, [])
+  const columnWidth = useMemo(() => {
+    if (isXl) return 240
+    if (isLg) return 240
+    if (isMd) return 232
+    if (isSm) return 232
+    if (isXs) return 196
+    return 168
+  }, [isXl, isLg, isMd, isSm, isXs])
+  const rowHeight = useMemo(() => {
+    if (isXl) return 286
+    if (isLg) return 286
+    if (isMd) return 274
+    if (isSm) return 274
+    if (isXs) return 238
+    return 124
+  }, [isXl, isLg, isMd, isSm, isXs])
+  const columns = useMemo(() => {
+    if (isXl) return 5
+    if (isLg) return 4
+    if (isMd) return 3
+    if (isSm) return 2
+    if (isXs) return 2
+    return 2
+  }, [isXl, isLg, isMd, isSm, isXs])
 
   const fetcher = useFetcher()
   const playGame = useCallback(
@@ -81,17 +77,15 @@ const GameGrid: FC<{
 
   return (
     <>
-      <ImageListWithoutOverflow
-        rowHeight={state.rowHeight}
-        cols={state.columns}
-      >
-        {games.items.map((game, gameMatchIndex) => (
-          <GameImage
-            noDefer={gameMatchIndex <= numberToPreload}
-            style={{ display: game.matches ? 'block' : 'none' }}
-            height={`${state.rowHeight}px`}
+      <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
+        {games.items.map((game, gameIndex) => (
+          <GameFigure
+            noDefer={gameIndex <= 15}
             game={game}
-            onActivate={playGame}
+            primaryText={game.name}
+            secondaryText={game.name}
+            width={`${columnWidth - 16}px`}
+            height={`${rowHeight - 32}px`}
             key={game.oid.asString}
           />
         ))}
