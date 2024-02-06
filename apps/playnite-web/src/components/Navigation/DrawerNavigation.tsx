@@ -124,7 +124,7 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
       <aside>
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
-            <DrawerButton onClick={toggleDrawerOpen}>
+            <DrawerButton onClick={toggleDrawerOpen} name="toggle-drawer">
               {theme.direction === 'rtl' ? (
                 open ? (
                   <ChevronRight />

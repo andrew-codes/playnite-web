@@ -1,5 +1,6 @@
 import {
   ImageList,
+  ImageListItem,
   Typography,
   styled,
   useMediaQuery,
@@ -57,45 +58,46 @@ const GameGrid: FC<{
     <>
       <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
         {games.items.map((game, gameIndex) => (
-          <GameFigure
-            game={game}
-            height={`${rowHeight}px`}
-            key={game.oid.asString}
-            noDefer={gameIndex <= noDeferCount}
-            width={`${columnWidth - 16}px`}
-          >
-            <Typography
-              variant="caption"
-              component="figcaption"
-              sx={{
-                fontWeight: 'bold',
-                textWrap: 'balance',
-                lineHeight: '1.5',
-                textOverflow: 'ellipsis',
-                overflowY: 'hidden',
-                maxHeight: '4rem',
-                lineClamp: 2,
-                fontSize: '15px',
-              }}
+          <ImageListItem key={game.oid.asString}>
+            <GameFigure
+              game={game}
+              height={`${rowHeight}px`}
+              noDefer={gameIndex <= noDeferCount}
+              width={`${columnWidth - 16}px`}
             >
-              {game.name}
-            </Typography>
-            <Typography
-              variant="body2"
-              component="div"
-              sx={{
-                textWrap: 'balance',
-                lineHeight: '1.5',
-                textOverflow: 'ellipsis',
-                overflowY: 'hidden',
-                maxHeight: '4rem',
-                lineClamp: 2,
-                fontSize: '13px',
-              }}
-            >
-              {game.name}
-            </Typography>
-          </GameFigure>
+              <Typography
+                variant="caption"
+                component="figcaption"
+                sx={{
+                  fontWeight: 'bold',
+                  textWrap: 'balance',
+                  lineHeight: '1.5',
+                  textOverflow: 'ellipsis',
+                  overflowY: 'hidden',
+                  maxHeight: '4rem',
+                  lineClamp: 2,
+                  fontSize: '15px',
+                }}
+              >
+                {game.name}
+              </Typography>
+              <Typography
+                variant="body2"
+                component="div"
+                sx={{
+                  textWrap: 'balance',
+                  lineHeight: '1.5',
+                  textOverflow: 'ellipsis',
+                  overflowY: 'hidden',
+                  maxHeight: '4rem',
+                  lineClamp: 2,
+                  fontSize: '13px',
+                }}
+              >
+                {game.name}
+              </Typography>
+            </GameFigure>
+          </ImageListItem>
         ))}
       </ImageListWithoutOverflow>
     </>
