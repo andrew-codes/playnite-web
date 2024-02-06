@@ -4,6 +4,7 @@ import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { useMemo } from 'react'
 import PlayniteApi from '../api/playnite/index.server'
+import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
 import GameList from '../domain/GameList'
 import { Playlist } from '../domain/types'
@@ -28,7 +29,9 @@ function Index() {
 
   return (
     <>
-      <Typography variant="h2">Library</Typography>
+      <Header>
+        <Typography variant="h2">Library</Typography>
+      </Header>
       <section>
         <Typography variant="h4">{playingPlaylist?.name}</Typography>
         <HorizontalGameList games={playingPlaylist.games} />

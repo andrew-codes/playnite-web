@@ -17,7 +17,7 @@ const slice = createSlice({
   },
   reducers: {
     setDeviceType(state, action) {
-      return merge(state, { deviceType: action.payload })
+      return merge({}, state, { deviceType: action.payload })
     },
   },
 })

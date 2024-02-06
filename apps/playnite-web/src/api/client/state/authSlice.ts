@@ -15,10 +15,10 @@ const slice = createSlice({
   },
   reducers: {
     signedIn(state, action) {
-      return merge(state, { isAuthenticated: true })
+      return merge({}, state, { isAuthenticated: true })
     },
     signedOut(state, action) {
-      return merge(state, { isAuthenticated: false })
+      return merge({}, state, { isAuthenticated: false })
     },
   },
 })
