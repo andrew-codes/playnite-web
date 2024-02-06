@@ -25,7 +25,7 @@ const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
           sx={(theme) => ({
             flexGrow: 1,
             margin: '0 auto',
-            width: `${width}px`,
+            maxWidth: `${width}px`,
             [theme.breakpoints.up('xs')]: {
               padding: '80px 24px',
             },

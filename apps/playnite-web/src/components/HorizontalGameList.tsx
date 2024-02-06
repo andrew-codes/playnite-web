@@ -16,13 +16,13 @@ const GameListItem: FC<{ data: IGame[]; index: number; style: any }> = ({
   const game = data[index]
   return (
     <GameFigure
+      noDefer={true}
       key={game.oid.asString}
       game={game}
       primaryText={game.name}
       secondaryText={game.name}
       style={style}
       width={`${style.width}px`}
-      height={style.height}
     />
   )
 }
@@ -55,13 +55,8 @@ const HorizontalGameList: FC<{
 
   const width = useThemeWidth()
   const height = useMemo(() => {
-    if (isXl) return 286
-    if (isLg) return 286
-    if (isMd) return 286
-    if (isSm) return 286
-    if (isXs) return 286
-    return 202
-  }, [isXl, isLg, isMd, isSm, isXs])
+    return itemSize + 48
+  }, [itemSize])
 
   return (
     <List
