@@ -11,30 +11,17 @@ const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
 `
 
-const GameListItem: FC<{
-  data: IGame[]
-  columnIndex: number
-  rowIndex: number
-  style: any
-}> = ({ data, rowIndex, columnIndex, style }) => {
-  const game = data[rowIndex][columnIndex]
-
-  return (
-    <GameFigure
-      key={game.oid.asString}
-      game={game}
-      primaryText={game.name}
-      secondaryText={game.name}
-      style={style}
-      width={`calc(${style.width}px - 16px)`}
-      height={`calc(${style.height}px - 32px)`}
-    />
-  )
-}
-
 const GameGrid: FC<{
   games: IList<Match<IGame>>
 }> = ({ games }) => {
+  const fetcher = useFetcher()
+  const playGame = useCallback(
+    (evt: SyntheticEvent, id: string) => {
+      fetcher.submit({ id }, { method: 'post', action: '/activate' })
+    },
+    [fetcher],
+  )
+
   const theme = useTheme()
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
@@ -46,18 +33,13 @@ const GameGrid: FC<{
     if (isXl) return 240
     if (isLg) return 240
     if (isMd) return 232
-    if (isSm) return 232
-    if (isXs) return 196
+    if (isSm) return 200
+    if (isXs) return 184
     return 168
   }, [isXl, isLg, isMd, isSm, isXs])
   const rowHeight = useMemo(() => {
-    if (isXl) return 286
-    if (isLg) return 286
-    if (isMd) return 274
-    if (isSm) return 274
-    if (isXs) return 238
-    return 124
-  }, [isXl, isLg, isMd, isSm, isXs])
+    return columnWidth + 48
+  }, [columnWidth])
   const columns = useMemo(() => {
     if (isXl) return 5
     if (isLg) return 4
@@ -66,14 +48,6 @@ const GameGrid: FC<{
     if (isXs) return 2
     return 2
   }, [isXl, isLg, isMd, isSm, isXs])
-
-  const fetcher = useFetcher()
-  const playGame = useCallback(
-    (evt: SyntheticEvent, id: string) => {
-      fetcher.submit({ id }, { method: 'post', action: '/activate' })
-    },
-    [fetcher],
-  )
 
   return (
     <>
@@ -85,7 +59,6 @@ const GameGrid: FC<{
             primaryText={game.name}
             secondaryText={game.name}
             width={`${columnWidth - 16}px`}
-            height={`${rowHeight - 32}px`}
             key={game.oid.asString}
           />
         ))}

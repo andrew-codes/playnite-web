@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -48,7 +49,12 @@ function Browse() {
     [gamesOnPlatforms, nameQuery],
   )
 
-  return <GameGrid games={filteredGames} />
+  return (
+    <>
+      <Typography variant="h2">My Games</Typography>
+      <GameGrid games={filteredGames} />
+    </>
+  )
 }
 
 export default Browse
