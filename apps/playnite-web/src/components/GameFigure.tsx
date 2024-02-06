@@ -8,11 +8,11 @@ const Figure = styled('figure')(({ theme }) => ({
 }))
 
 const Image = styled('img', {
-  shouldForwardProp: (prop) => prop !== 'width' && prop !== 'height',
-})<{ height: string; width: string }>(({ height, width, theme }) => ({
+  shouldForwardProp: (prop) => prop !== 'width',
+})<{ width: string }>(({ width, theme }) => ({
   objectFit: 'cover',
   width: `calc(${width} - 16px)`,
-  height: `calc(${height} - 48px)`,
+  height: `calc(${width} - 16px)`,
 }))
 
 const GameFigure: FC<{
@@ -23,32 +23,29 @@ const GameFigure: FC<{
   secondaryText: string
   width: string
   noDefer: boolean
-  height: string
 }> = ({
   adornment = null,
   game,
-  height,
   primaryText = '',
   secondaryText = '',
   style,
   noDefer,
   width,
 }) => {
-  const [inView, setInView] = useState(false)
+  const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
   const handleChange = useCallback((inView) => {
-    setInView(true)
+    setHasBeenInViewBefore(true)
   }, [])
   const { ref } = useInView({ onChange: handleChange })
 
   return (
     <Figure style={style} ref={ref}>
-      {inView || noDefer
+      {hasBeenInViewBefore || noDefer
         ? [
             <Image
               src={game.cover}
               alt={game.name}
               width={width}
-              height={height}
               loading="eager"
             />,
             <Stack>
