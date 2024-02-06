@@ -3,7 +3,7 @@ import { IGame, IMatchA } from '../../types'
 class MatchName implements IMatchA<IGame> {
   private nameMatcher: RegExp
   constructor(name: string) {
-    this.nameMatcher = new RegExp(name, 'i')
+    this.nameMatcher = new RegExp(`\\b${name}\\b`, 'i')
   }
 
   matches(item: IGame): boolean {
