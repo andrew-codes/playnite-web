@@ -75,7 +75,7 @@ function handleBotRequest(
           )
 
           body.write(
-            `<!DOCTYPE html><html lang="en-US"><head>${head}</head><body><div id="root">`,
+            `<!DOCTYPE html><html lang="en-US"><head>${head}</head><body style="overflow-y: scroll;"><div id="root">`,
           )
           pipe(body)
           body.write(`</div></body></html>`)
@@ -139,7 +139,7 @@ function handleBrowserRequest(
             }),
           )
           body.write(
-            `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body><div id="root">`,
+            `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body style="overflow-y: scroll;"><div id="root">`,
           )
           pipe(body)
           body.write(`</div></body></html>`)
