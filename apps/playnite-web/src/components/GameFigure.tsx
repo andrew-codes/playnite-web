@@ -1,5 +1,5 @@
-import { Stack, Typography, styled } from '@mui/material'
-import { FC, ReactNode, useCallback, useState } from 'react'
+import { Stack, styled } from '@mui/material'
+import { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { IGame } from '../domain/types'
 
@@ -15,25 +15,20 @@ const Image = styled('img', {
   height: `calc(${width} - 16px)`,
 }))
 
-const GameFigure: FC<{
-  adornment?: ReactNode
-  game: IGame
-  style?: any
-  primaryText: string
-  secondaryText: string
-  width: string
-  noDefer: boolean
-}> = ({
-  adornment = null,
-  game,
-  primaryText = '',
-  secondaryText = '',
-  style,
-  noDefer,
-  width,
-}) => {
+const GameFigure: FC<
+  PropsWithChildren<{
+    game: IGame
+    style?: any
+    width: string
+    height: string
+    noDefer: boolean
+  }>
+> = ({ children, game, style, noDefer, width, height }) => {
   const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
   const handleChange = useCallback((inView) => {
+    if (!inView) {
+      return
+    }
     setHasBeenInViewBefore(true)
   }, [])
   const { ref } = useInView({ onChange: handleChange })
@@ -43,44 +38,17 @@ const GameFigure: FC<{
       {hasBeenInViewBefore || noDefer
         ? [
             <Image
+              key={`${game.oid.asString}-image`}
               src={game.cover}
               alt={game.name}
               width={width}
               loading="eager"
             />,
-            <Stack>
-              {adornment}
-              <Typography
-                variant="caption"
-                component="figcaption"
-                sx={{
-                  fontWeight: 'bold',
-                  textWrap: 'balance',
-                  lineHeight: '1.5',
-                  textOverflow: 'ellipsis',
-                  overflowY: 'hidden',
-                  maxHeight: '4rem',
-                  lineClamp: 2,
-                  fontSize: '15px',
-                }}
-              >
-                {primaryText}
-              </Typography>
-              <Typography
-                variant="body2"
-                component="div"
-                sx={{
-                  textWrap: 'balance',
-                  lineHeight: '1.5',
-                  textOverflow: 'ellipsis',
-                  overflowY: 'hidden',
-                  maxHeight: '4rem',
-                  lineClamp: 2,
-                  fontSize: '13px',
-                }}
-              >
-                {secondaryText}
-              </Typography>
+            <Stack
+              sx={{ height: `calc(${height} - ${width})` }}
+              key={`${game.oid.asString}-details`}
+            >
+              {children}
             </Stack>,
           ]
         : []}
