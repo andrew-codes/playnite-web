@@ -1,4 +1,5 @@
 import { CacheProvider } from '@emotion/react'
+import { configureStore } from '@reduxjs/toolkit'
 import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { createReadableStreamFromReadable } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
@@ -6,8 +7,10 @@ import isbot from 'isbot'
 import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
 import { Helmet } from 'react-helmet'
+import { Provider } from 'react-redux'
 import { renderHeadToString } from 'remix-island'
 import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
+import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
 import { Head } from './root'
 
@@ -44,13 +47,16 @@ function handleBotRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const clientSideCache = createEmotionCache()
+    const store = configureStore({ reducer })
     const { pipe, abort } = renderToPipeableStream(
       <CacheProvider value={clientSideCache}>
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />
+        <Provider store={store}>
+          <RemixServer
+            context={remixContext}
+            url={request.url}
+            abortDelay={ABORT_DELAY}
+          />
+        </Provider>
       </CacheProvider>,
       {
         onAllReady() {
@@ -69,7 +75,7 @@ function handleBotRequest(
           )
 
           body.write(
-            `<!DOCTYPE html><html lang="en-US"><head>${head}</head><body><div id="root">`,
+            `<!DOCTYPE html><html lang="en-US"><head>${head}</head><body style="overflow-y: scroll;"><div id="root">`,
           )
           pipe(body)
           body.write(`</div></body></html>`)
@@ -102,13 +108,16 @@ function handleBrowserRequest(
   return new Promise((resolve, reject) => {
     let shellRendered = false
     const clientSideCache = createEmotionCache()
+    const store = configureStore({ reducer })
     const { pipe, abort } = renderToPipeableStream(
       <CacheProvider value={clientSideCache}>
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />
+        <Provider store={store}>
+          <RemixServer
+            context={remixContext}
+            url={request.url}
+            abortDelay={ABORT_DELAY}
+          />
+        </Provider>
       </CacheProvider>,
       {
         onAllReady() {
@@ -130,7 +139,7 @@ function handleBrowserRequest(
             }),
           )
           body.write(
-            `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body><div id="root">`,
+            `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body style="overflow-y: scroll;"><div id="root">`,
           )
           pipe(body)
           body.write(`</div></body></html>`)

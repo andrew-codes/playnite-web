@@ -58,7 +58,10 @@ const GameGrid: FC<{
     <>
       <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
         {games.items.map((game, gameIndex) => (
-          <ImageListItem key={game.oid.asString}>
+          <ImageListItem
+            key={game.oid.asString}
+            sx={{ ...(!game.matches ? { display: 'none' } : {}) }}
+          >
             <GameFigure
               game={game}
               height={`${rowHeight}px`}
