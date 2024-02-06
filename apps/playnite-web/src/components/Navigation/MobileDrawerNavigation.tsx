@@ -70,7 +70,7 @@ const MobileDrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
     <>
       <aside>
         <DrawerHeader>
-          <DrawerButton onClick={toggleDrawerOpen}>
+          <DrawerButton onClick={toggleDrawerOpen} name="toggle-drawer">
             <Menu />
           </DrawerButton>
         </DrawerHeader>
