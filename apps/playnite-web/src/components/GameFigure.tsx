@@ -10,9 +10,11 @@ const Figure = styled('figure')(({ theme }) => ({
 const Image = styled('img', {
   shouldForwardProp: (prop) => prop !== 'width',
 })<{ width: string }>(({ width, theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+  height: `calc(${width} - 16px)`,
   objectFit: 'cover',
   width: `calc(${width} - 16px)`,
-  height: `calc(${width} - 16px)`,
 }))
 
 const GameFigure: FC<
