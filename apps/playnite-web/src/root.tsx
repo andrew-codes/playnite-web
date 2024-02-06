@@ -1,5 +1,4 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
-import { configureStore } from '@reduxjs/toolkit'
 import { LiveReload, useSWEffect } from '@remix-pwa/sw'
 import { LinksFunction, LoaderFunctionArgs, json } from '@remix-run/node'
 import {
@@ -14,10 +13,9 @@ import {
 } from '@remix-run/react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FC, useEffect } from 'react'
-import { Provider } from 'react-redux'
+import { useStore } from 'react-redux'
 import { createHead } from 'remix-island'
 import { authenticator } from './api/auth/auth.server'
-import { reducer } from './api/client/state'
 import { signedIn, signedOut } from './api/client/state/authSlice'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
 import { UAParser } from './api/layout.server'
@@ -86,8 +84,6 @@ const Head = createHead(() => (
 const App: FC<{}> = () => {
   useSWEffect()
 
-  const store = configureStore({ reducer })
-
   const { device, user } = useLoaderData<{
     device: {
       type: 'desktop' | 'tablet' | 'mobile'
@@ -97,6 +93,7 @@ const App: FC<{}> = () => {
     user?: any
   }>()
 
+  const store = useStore()
   if (!!user) {
     store.dispatch(signedIn({ payload: null }))
   } else {
@@ -155,24 +152,22 @@ const App: FC<{}> = () => {
       <Head />
       <ThemeProvider theme={muiTheme(device.type ?? 'unknown')}>
         <CssBaseline />
-        <Provider store={store}>
-          <Layout>
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={location.pathname}
-                initial={{ x: '-10%', opacity: 0 }}
-                animate={{ x: '0', opacity: 1 }}
-                exit={{ y: '-10%', opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  overflow: 'hidden',
-                }}
-              >
-                {outlet}
-              </motion.div>
-            </AnimatePresence>
-          </Layout>
-        </Provider>
+        <Layout>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={location.pathname}
+              initial={{ x: '-10%', opacity: 0 }}
+              animate={{ x: '0', opacity: 1 }}
+              exit={{ y: '-10%', opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                overflow: 'hidden',
+              }}
+            >
+              {outlet}
+            </motion.div>
+          </AnimatePresence>
+        </Layout>
       </ThemeProvider>
       <ScrollRestoration />
       <Scripts />
