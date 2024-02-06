@@ -1,17 +1,14 @@
-import { ImageList, styled } from '@mui/material'
-import { useFetcher } from '@remix-run/react'
 import {
-  FC,
-  SyntheticEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-import { useSelector } from 'react-redux'
-import { getDeviceFeatures } from '../api/client/state/deviceFeaturesSlice'
+  ImageList,
+  Typography,
+  styled,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
+import { useFetcher } from '@remix-run/react'
+import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
 import type { IGame, IList, Match } from '../domain/types'
-import GameImage from './GameImage'
+import GameFigure from './GameFigure'
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
@@ -19,58 +16,8 @@ const ImageListWithoutOverflow = styled(ImageList)`
 
 const GameGrid: FC<{
   games: IList<Match<IGame>>
-}> = ({ games }) => {
-  const {
-    device: { type: deviceType },
-  } = useSelector(getDeviceFeatures)
-  const { columns, rowHeight, numberToPreload } = useMemo(() => {
-    if (deviceType === 'mobile') {
-      return {
-        columns: 2,
-        numberToPreload: 8,
-        rowHeight: 210,
-      }
-    }
-
-    if (deviceType === 'tablet') {
-      return {
-        columns: 5,
-        numberToPreload: 25,
-        rowHeight: 300,
-      }
-    }
-
-    return {
-      columns: 10,
-      numberToPreload: 40,
-      rowHeight: 300,
-    }
-  }, [])
-
-  const [state, setState] = useState({ columns, rowHeight })
-  useEffect(() => {
-    if (
-      window.screen.orientation.type.startsWith('landscape') &&
-      deviceType === 'mobile'
-    ) {
-      setState((state) => ({ ...state, columns: 5 }))
-    }
-  }, [])
-
-  useEffect(() => {
-    const handleOrientationChange = (evt) => {
-      if (window.screen.orientation.type.startsWith('landscape')) {
-        setState((state) => ({ ...state, columns: 5 }))
-      } else {
-        setState((state) => ({ ...state, columns: 2 }))
-      }
-    }
-    window.addEventListener('orientationchange', handleOrientationChange)
-    return () => {
-      window.removeEventListener('orientationchange', handleOrientationChange)
-    }
-  }, [])
-
+  noDeferCount: number
+}> = ({ games, noDeferCount }) => {
   const fetcher = useFetcher()
   const playGame = useCallback(
     (evt: SyntheticEvent, id: string) => {
@@ -79,21 +26,76 @@ const GameGrid: FC<{
     [fetcher],
   )
 
+  const theme = useTheme()
+  const isXl = useMediaQuery(theme.breakpoints.up('xl'))
+  const isLg = useMediaQuery(theme.breakpoints.up('lg'))
+  const isMd = useMediaQuery(theme.breakpoints.up('md'))
+  const isSm = useMediaQuery(theme.breakpoints.up('sm'))
+  const isXs = useMediaQuery(theme.breakpoints.up('xs'))
+
+  const columnWidth = useMemo(() => {
+    if (isXl) return 240
+    if (isLg) return 240
+    if (isMd) return 232
+    if (isSm) return 200
+    if (isXs) return 184
+    return 168
+  }, [isXl, isLg, isMd, isSm, isXs])
+  const rowHeight = useMemo(() => {
+    return columnWidth + 64
+  }, [columnWidth])
+  const columns = useMemo(() => {
+    if (isXl) return 5
+    if (isLg) return 4
+    if (isMd) return 3
+    if (isSm) return 2
+    if (isXs) return 2
+    return 2
+  }, [isXl, isLg, isMd, isSm, isXs])
+
   return (
     <>
-      <ImageListWithoutOverflow
-        rowHeight={state.rowHeight}
-        cols={state.columns}
-      >
-        {games.items.map((game, gameMatchIndex) => (
-          <GameImage
-            noDefer={gameMatchIndex <= numberToPreload}
-            style={{ display: game.matches ? 'block' : 'none' }}
-            height={`${state.rowHeight}px`}
+      <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
+        {games.items.map((game, gameIndex) => (
+          <GameFigure
             game={game}
-            onActivate={playGame}
+            height={`${rowHeight}px`}
             key={game.oid.asString}
-          />
+            noDefer={gameIndex <= noDeferCount}
+            width={`${columnWidth - 16}px`}
+          >
+            <Typography
+              variant="caption"
+              component="figcaption"
+              sx={{
+                fontWeight: 'bold',
+                textWrap: 'balance',
+                lineHeight: '1.5',
+                textOverflow: 'ellipsis',
+                overflowY: 'hidden',
+                maxHeight: '4rem',
+                lineClamp: 2,
+                fontSize: '15px',
+              }}
+            >
+              {game.name}
+            </Typography>
+            <Typography
+              variant="body2"
+              component="div"
+              sx={{
+                textWrap: 'balance',
+                lineHeight: '1.5',
+                textOverflow: 'ellipsis',
+                overflowY: 'hidden',
+                maxHeight: '4rem',
+                lineClamp: 2,
+                fontSize: '13px',
+              }}
+            >
+              {game.name}
+            </Typography>
+          </GameFigure>
         ))}
       </ImageListWithoutOverflow>
     </>

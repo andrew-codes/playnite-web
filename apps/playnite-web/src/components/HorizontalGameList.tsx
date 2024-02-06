@@ -1,4 +1,4 @@
-import { useMediaQuery, useTheme } from '@mui/material'
+import { Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useFetcher } from '@remix-run/react'
 import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
 import * as windowed from 'react-window'
@@ -16,12 +16,45 @@ const GameListItem: FC<{ data: IGame[]; index: number; style: any }> = ({
   const game = data[index]
   return (
     <GameFigure
-      key={game.oid.asString}
       game={game}
-      primaryText={game.name}
-      secondaryText={game.series.join(',')}
+      height={style.height}
+      key={game.oid.asString}
+      noDefer={true}
       style={style}
-    />
+      width={`${style.width}px`}
+    >
+      <Typography
+        variant="caption"
+        component="figcaption"
+        sx={{
+          fontWeight: 'bold',
+          textWrap: 'balance',
+          lineHeight: '1.5',
+          textOverflow: 'ellipsis',
+          overflowY: 'hidden',
+          maxHeight: '4rem',
+          lineClamp: 2,
+          fontSize: '15px',
+        }}
+      >
+        {game.name}
+      </Typography>
+      <Typography
+        variant="body2"
+        component="div"
+        sx={{
+          textWrap: 'balance',
+          lineHeight: '1.5',
+          textOverflow: 'ellipsis',
+          overflowY: 'hidden',
+          maxHeight: '4rem',
+          lineClamp: 2,
+          fontSize: '13px',
+        }}
+      >
+        {game.name}
+      </Typography>
+    </GameFigure>
   )
 }
 
@@ -53,13 +86,8 @@ const HorizontalGameList: FC<{
 
   const width = useThemeWidth()
   const height = useMemo(() => {
-    if (isXl) return 286
-    if (isLg) return 286
-    if (isMd) return 286
-    if (isSm) return 286
-    if (isXs) return 286
-    return 202
-  }, [isXl, isLg, isMd, isSm, isXs])
+    return itemSize + 64
+  }, [itemSize])
 
   return (
     <List
