@@ -1,5 +1,6 @@
-import { Stack, Typography, styled } from '@mui/material'
-import { FC, ReactNode } from 'react'
+import { Stack, styled } from '@mui/material'
+import { FC, PropsWithChildren, useCallback, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 import type { IGame } from '../domain/types'
 
 const Figure = styled('figure')(({ theme }) => ({
@@ -8,62 +9,49 @@ const Figure = styled('figure')(({ theme }) => ({
 
 const Image = styled('img', {
   shouldForwardProp: (prop) => prop !== 'width',
-})<{ width: number }>(({ width, theme }) => ({
+})<{ width: string }>(({ width, theme }) => ({
   objectFit: 'cover',
-  width: `${width - 16}px`,
-  height: `${width - 48}px`,
+  width: `calc(${width} - 16px)`,
+  height: `calc(${width} - 16px)`,
 }))
 
-const GameFigure: FC<{
-  adornment?: ReactNode
-  game: IGame
-  style: any
-  primaryText: string
-  secondaryText: string
-}> = ({
-  adornment = null,
-  game,
-  primaryText = '',
-  secondaryText = '',
-  style,
-}) => {
+const GameFigure: FC<
+  PropsWithChildren<{
+    game: IGame
+    style?: any
+    width: string
+    height: string
+    noDefer: boolean
+  }>
+> = ({ children, game, style, noDefer, width, height }) => {
+  const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
+  const handleChange = useCallback((inView) => {
+    if (!inView) {
+      return
+    }
+    setHasBeenInViewBefore(true)
+  }, [])
+  const { ref } = useInView({ onChange: handleChange })
+
   return (
-    <Figure style={style}>
-      <Image src={game.cover} alt={game.name} width={style.width} />
-      <Stack>
-        {adornment}
-        <Typography
-          variant="caption"
-          component="figcaption"
-          sx={{
-            fontWeight: 'bold',
-            textWrap: 'balance',
-            lineHeight: '1.5',
-            textOverflow: 'ellipsis',
-            overflowY: 'hidden',
-            maxHeight: '4rem',
-            lineClamp: 2,
-            fontSize: '15px',
-          }}
-        >
-          {primaryText}
-        </Typography>
-        <Typography
-          variant="body2"
-          component="div"
-          sx={{
-            textWrap: 'balance',
-            lineHeight: '1.5',
-            textOverflow: 'ellipsis',
-            overflowY: 'hidden',
-            maxHeight: '4rem',
-            lineClamp: 2,
-            fontSize: '13px',
-          }}
-        >
-          {secondaryText}
-        </Typography>
-      </Stack>
+    <Figure style={style} ref={ref}>
+      {hasBeenInViewBefore || noDefer
+        ? [
+            <Image
+              key={`${game.oid.asString}-image`}
+              src={game.cover}
+              alt={game.name}
+              width={width}
+              loading="eager"
+            />,
+            <Stack
+              sx={{ height: `calc(${height} - ${width})` }}
+              key={`${game.oid.asString}-details`}
+            >
+              {children}
+            </Stack>,
+          ]
+        : []}
     </Figure>
   )
 }
