@@ -1,7 +1,10 @@
 import { Divider, TextField, styled } from '@mui/material'
+import _ from 'lodash'
 import { ChangeEvent, FC, PropsWithChildren, useCallback } from 'react'
-import { useDispatch, useStore } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setNameFilter } from '../api/client/state/librarySlice'
+
+const { debounce } = _
 
 const HeaderContainer = styled('header')(({ theme }) => ({
   display: 'flex',
@@ -20,12 +23,13 @@ const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
   children,
   showFilters,
 }) => {
-  const store = useStore()
-  console.dir(store.getState())
   const dispatch = useDispatch()
-  const handleSearch = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setNameFilter(event.target.value))
-  }, [])
+  const handleSearch = useCallback(
+    debounce((event: ChangeEvent<HTMLInputElement>) => {
+      dispatch(setNameFilter(event.target.value))
+    }, 400),
+    [],
+  )
 
   return (
     <>
