@@ -1,7 +1,9 @@
+import { Typography } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { useCallback, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import PlayniteApi from '../api/playnite/index.server'
 import GameGrid from '../components/GameGrid'
 import FilteredGameList from '../domain/FilteredGameList'
@@ -48,7 +50,27 @@ function Browse() {
     [gamesOnPlatforms, nameQuery],
   )
 
-  return <GameGrid games={filteredGames} />
+  const noDeferCount = 25
+
+  return (
+    <>
+      <Helmet>
+        {gameList.items
+          .filter((game, index) => index <= noDeferCount)
+          .map((game) => (
+            <link
+              key={game.oid.asString}
+              rel="preload"
+              as="image"
+              href={game.cover}
+            />
+          ))}
+      </Helmet>
+      <Typography variant="h2">My Games</Typography>
+
+      <GameGrid games={filteredGames} noDeferCount={noDeferCount} />
+    </>
+  )
 }
 
 export default Browse
