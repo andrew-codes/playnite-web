@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import PlayniteApi from '../api/playnite/index.server'
 import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
+import Drawer from '../components/Navigation/Drawer'
 import GameList from '../domain/GameList'
 import { Playlist } from '../domain/types'
 
@@ -28,7 +29,7 @@ function Index() {
   }, [playing])
 
   return (
-    <>
+    <Drawer>
       <Header>
         <Typography variant="h2">Library</Typography>
       </Header>
@@ -36,7 +37,7 @@ function Index() {
         <Typography variant="h4">{playingPlaylist?.name}</Typography>
         <HorizontalGameList games={playingPlaylist.games} />
       </section>
-    </>
+    </Drawer>
   )
 }
 
