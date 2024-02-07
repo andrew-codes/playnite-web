@@ -9,6 +9,9 @@ const { debounce } = _
 const HeaderContainer = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
+  [theme.breakpoints.down('lg')]: {
+    flexDirection: 'column',
+  },
 }))
 
 const Filters = styled('div')(({ theme }) => ({
@@ -17,6 +20,12 @@ const Filters = styled('div')(({ theme }) => ({
   flex: 1,
   justifyContent: 'flex-end',
   alignItems: 'flex-end',
+  [theme.breakpoints.up('lg')]: {
+    marginLeft: theme.spacing(10),
+  },
+  [theme.breakpoints.down('lg')]: {
+    marginTop: theme.spacing(2),
+  },
 }))
 
 const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
@@ -57,6 +66,7 @@ const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
                 type="text"
                 defaultValue=""
                 variant="outlined"
+                sx={{ width: '100%' }}
               />
             </Filters>
           )}
