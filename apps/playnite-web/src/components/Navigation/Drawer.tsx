@@ -25,22 +25,22 @@ const Drawer: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
           margin: '0 auto',
           maxWidth: `${width}px`,
           [theme.breakpoints.up('xs')]: {
-            padding: '0 80px',
+            padding: '0',
           },
           [theme.breakpoints.up('sm')]: {
-            padding: '0 80px',
+            padding: '0',
           },
           [theme.breakpoints.up('md')]: {
-            padding: '0 80px',
+            padding: '0',
           },
           [theme.breakpoints.up('lg')]: {
-            padding: '48px 72px',
+            padding: '48px 0 48px 72px',
           },
           [theme.breakpoints.up('xl')]: {
-            padding: '48px 48px',
+            padding: '48px 0 48px 72px',
           },
           [theme.breakpoints.down('xs')]: {
-            padding: '0 80px',
+            padding: '0',
           },
         })}
       >
