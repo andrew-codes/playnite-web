@@ -47,8 +47,10 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
           flexDirection: 'column',
           height: `calc(100vh - ${theme.spacing(12)})`,
           padding: `0 ${theme.spacing()} 0 ${theme.spacing(2)}`,
-          overflowY: 'auto',
-          scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+          [theme.breakpoints.down('lg')]: {
+            overflowY: 'auto',
+            scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+          },
         })}
       >
         <Header showFilters>
@@ -59,7 +61,17 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
             </Typography>
           </div>
         </Header>
-        <Box sx={{ flexGrow: 1, maxWidth: `${width}px`, margin: '0 auto' }}>
+        <Box
+          sx={(theme) => ({
+            flexGrow: 1,
+            maxWidth: `${width}px`,
+            margin: '0 auto',
+            [theme.breakpoints.up('lg')]: {
+              overflowY: 'auto',
+              scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+            },
+          })}
+        >
           <GameGrid games={filteredGames} noDeferCount={noDeferCount} />
         </Box>
       </Box>
