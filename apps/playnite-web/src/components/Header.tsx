@@ -38,13 +38,12 @@ const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
         sx={(theme) => ({
           display: 'flex',
           flexDirection: 'column',
-          position: 'sticky',
           paddingTop: theme.spacing(4),
           top: 0,
           zIndex: 1000,
           backgroundColor: theme.palette.background.default,
-          [theme.breakpoints.down('lg')]: {
-            position: 'initial',
+          [theme.breakpoints.up('lg')]: {
+            position: 'sticky',
           },
         })}
       >
