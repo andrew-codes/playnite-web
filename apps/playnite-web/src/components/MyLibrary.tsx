@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { FC, useMemo } from 'react'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
@@ -38,15 +38,25 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
             />
           ))}
       </Helmet>
-      <Header showFilters>
-        <div>
-          <Typography variant="h2">My Games</Typography>
-          <Typography variant="subtitle1">
-            {gameList.items.length} games in my library
-          </Typography>
-        </div>
-      </Header>
-      <GameGrid games={filteredGames} noDeferCount={noDeferCount} />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: `calc(100vh - 48px - 48px)`,
+        }}
+      >
+        <Header showFilters>
+          <div>
+            <Typography variant="h2">My Games</Typography>
+            <Typography variant="subtitle1">
+              {gameList.items.length} games in my library
+            </Typography>
+          </div>
+        </Header>
+        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+          <GameGrid games={filteredGames} noDeferCount={noDeferCount} />
+        </Box>
+      </Box>
     </>
   )
 }

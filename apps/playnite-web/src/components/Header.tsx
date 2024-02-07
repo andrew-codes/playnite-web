@@ -41,7 +41,7 @@ const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
           position: 'sticky',
           paddingTop: theme.spacing(4),
           top: 0,
-          zIndex: 1800,
+          zIndex: 1000,
           backgroundColor: theme.palette.background.default,
           [theme.breakpoints.down('lg')]: {
             position: 'initial',
