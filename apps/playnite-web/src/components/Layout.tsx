@@ -14,7 +14,7 @@ const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
   const width = useThemeWidth()
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Drawer>
         <Box
           component={'main'}
@@ -23,16 +23,16 @@ const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
             margin: '0 auto',
             maxWidth: `${width}px`,
             [theme.breakpoints.up('xs')]: {
-              padding: '80px 24px',
+              padding: '64px 24px',
             },
             [theme.breakpoints.up('sm')]: {
-              padding: '80px 24px',
+              padding: '64px 24px',
             },
             [theme.breakpoints.up('md')]: {
-              padding: '80px 24px',
+              padding: '64px 64px',
             },
             [theme.breakpoints.up('lg')]: {
-              padding: '80px 24px',
+              padding: '80px 64px',
             },
             [theme.breakpoints.up('xl')]: {
               padding: '80px 48px',
