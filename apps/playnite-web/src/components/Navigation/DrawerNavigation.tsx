@@ -119,7 +119,11 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
       <aside>
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
-            <IconButton onClick={toggleDrawerOpen} name="toggle-drawer">
+            <IconButton
+              onClick={toggleDrawerOpen}
+              name="toggle-drawer"
+              aria-label="open drawer"
+            >
               {theme.direction === 'rtl' ? (
                 open ? (
                   <ChevronRight />
