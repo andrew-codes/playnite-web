@@ -8,6 +8,7 @@ import Header from '../components/Header'
 import FilteredGameList from '../domain/FilteredGameList'
 import GameList from '../domain/GameList'
 import type { GameOnPlatform } from '../domain/types'
+import useThemeWidth from './useThemeWidth'
 
 const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
   gamesOnPlatforms = [] as GameOnPlatform[],
@@ -24,6 +25,8 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
 
   const noDeferCount = 25
 
+  const width = useThemeWidth()
+
   return (
     <>
       <Helmet>
@@ -39,11 +42,14 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
           ))}
       </Helmet>
       <Box
-        sx={{
+        sx={(theme) => ({
           display: 'flex',
           flexDirection: 'column',
-          height: `calc(100vh - 48px - 48px)`,
-        }}
+          height: `calc(100vh - ${theme.spacing(12)})`,
+          padding: `0 ${theme.spacing()} 0 ${theme.spacing(2)}`,
+          overflowY: 'auto',
+          scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+        })}
       >
         <Header showFilters>
           <div>
@@ -53,7 +59,7 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
             </Typography>
           </div>
         </Header>
-        <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
+        <Box sx={{ flexGrow: 1, maxWidth: `${width}px`, margin: '0 auto' }}>
           <GameGrid games={filteredGames} noDeferCount={noDeferCount} />
         </Box>
       </Box>

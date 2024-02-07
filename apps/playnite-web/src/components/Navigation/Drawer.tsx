@@ -1,6 +1,5 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { FC, PropsWithChildren, ReactNode } from 'react'
-import useThemeWidth from '../useThemeWidth'
 import MobileDrawerNavigation from './MobileDrawerNavigation'
 import NonMobileDrawerNavigation from './NonMobileDrawerNavigation'
 
@@ -14,8 +13,6 @@ const Drawer: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
     ? MobileDrawerNavigation
     : NonMobileDrawerNavigation
 
-  const width = useThemeWidth()
-
   return (
     <Drawer title={title}>
       <Box
@@ -23,7 +20,6 @@ const Drawer: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
         sx={(theme) => ({
           flexGrow: 1,
           margin: '0 auto',
-          maxWidth: `${width}px`,
           [theme.breakpoints.up('xs')]: {
             padding: '0',
           },
@@ -34,10 +30,10 @@ const Drawer: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
             padding: '0',
           },
           [theme.breakpoints.up('lg')]: {
-            padding: '48px 0 48px 72px',
+            padding: '48px 0 48px 88px',
           },
           [theme.breakpoints.up('xl')]: {
-            padding: '48px 0 48px 72px',
+            padding: '48px 0 48px 88px',
           },
           [theme.breakpoints.down('xs')]: {
             padding: '0',
