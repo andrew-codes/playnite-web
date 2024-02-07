@@ -27,7 +27,7 @@ const NavigationList = styled(List, {
   ...(!open && {}),
 }))
 
-const MainNavigation: FC<{ open: boolean }> = ({ open }) => {
+const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   const navigate = useNavigate()
   const handleNavigation = (href: string) => (evt: any) => {
     evt.preventDefault()
@@ -41,6 +41,7 @@ const MainNavigation: FC<{ open: boolean }> = ({ open }) => {
           marginTop: '28px',
         },
       }}
+      {...rest}
     >
       <NavigationList open={open}>
         <ListItem disablePadding sx={{ display: 'block' }}>
