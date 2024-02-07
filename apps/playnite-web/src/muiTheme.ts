@@ -35,6 +35,9 @@ const theme = (
           default: 'rgb(32,38,52)',
           paper: 'rgb(40,48,68)',
         },
+        action: {
+          hover: '#41495a',
+        },
       },
       breakpoints: {
         values: {
