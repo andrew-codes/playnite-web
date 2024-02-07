@@ -42,6 +42,7 @@ const Drawer = styled(MuiDrawer, {
   ...(open && {
     ...openedMixin(theme),
     '& .MuiDrawer-paper': {
+      position: 'fixed',
       border: 'none',
       '&:after': {
         content: '""',
@@ -59,6 +60,7 @@ const Drawer = styled(MuiDrawer, {
   ...(!open && {
     ...closedMixin(theme),
     '& .MuiDrawer-paper': {
+      position: 'fixed',
       border: 'none',
       '&:after': {
         content: '""',
@@ -118,32 +120,30 @@ const DrawerNavigation: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
 
   return (
     <>
-      <aside>
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
-            <IconButton
-              onClick={toggleDrawerOpen}
-              name="toggle-drawer"
-              aria-label="open drawer"
-            >
-              {theme.direction === 'rtl' ? (
-                open ? (
-                  <ChevronRight />
-                ) : (
-                  <ChevronLeft />
-                )
-              ) : open ? (
-                <ChevronLeft />
-              ) : (
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <IconButton
+            onClick={toggleDrawerOpen}
+            name="toggle-drawer"
+            aria-label="open drawer"
+          >
+            {theme.direction === 'rtl' ? (
+              open ? (
                 <ChevronRight />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <DrawerBody open={open}>
-            <MainNavigation open={open} />
-          </DrawerBody>
-        </Drawer>
-      </aside>
+              ) : (
+                <ChevronLeft />
+              )
+            ) : open ? (
+              <ChevronLeft />
+            ) : (
+              <ChevronRight />
+            )}
+          </IconButton>
+        </DrawerHeader>
+        <DrawerBody open={open}>
+          <MainNavigation open={open} />
+        </DrawerBody>
+      </Drawer>
       {children}
     </>
   )
