@@ -6,7 +6,7 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { FC, PropsWithChildren, useState } from 'react'
+import { FC, PropsWithChildren, ReactNode, useState } from 'react'
 import IconButton from '../IconButton'
 import MainNavigation from './MainNavigation'
 
@@ -106,7 +106,9 @@ const DrawerBody = styled('div', {
   }),
 }))
 
-const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
+const DrawerNavigation: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
+  children,
+}) => {
   const theme = useTheme()
 
   const [open, setOpen] = useState(false)

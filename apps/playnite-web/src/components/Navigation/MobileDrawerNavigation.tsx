@@ -8,7 +8,7 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { FC, PropsWithChildren, useState } from 'react'
+import { FC, PropsWithChildren, ReactNode, useState } from 'react'
 import IconButton from '../IconButton'
 import MainNavigation from './MainNavigation'
 
@@ -34,17 +34,6 @@ const closedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
   },
 })
 
-const Root = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open: boolean
-}>(({ open, theme }) => ({
-  //   ...(open
-  //     ? {
-  //         '& main': {
-  //           paddingTop: '16px,',
-  //         },
-  //       }
-  //     : {}),
-}))
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<{ open?: boolean }>(({ theme, open }) => ({
@@ -174,7 +163,10 @@ const Navigation = styled(MainNavigation)<{ open: boolean }>(
   }),
 )
 
-const MobileDrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
+const MobileDrawerNavigation: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
+  children,
+  title,
+}) => {
   const [open, setOpen] = useState(false)
   const toggleDrawerOpen = () => {
     setOpen((state) => !state)
@@ -183,38 +175,10 @@ const MobileDrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   const theme = useTheme()
 
   return (
-    <Root open={open}>
-      <aside>
-        <AppBar position="fixed" open={open}>
-          <Toolbar>
-            <AppBarHeader open={open}>
-              <IconButton
-                onClick={toggleDrawerOpen}
-                name="toggle-drawer"
-                aria-label="open drawer"
-              >
-                {theme.direction === 'rtl' ? (
-                  open ? (
-                    <Clear />
-                  ) : (
-                    <ChevronLeft />
-                  )
-                ) : open ? (
-                  <Clear />
-                ) : (
-                  <ChevronRight />
-                )}
-              </IconButton>
-            </AppBarHeader>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="temporary"
-          open={open}
-          onClose={toggleDrawerOpen}
-          ModalProps={{ keepMounted: true }}
-        >
-          <DrawerHeader open={open}>
+    <>
+      <AppBar position="sticky" open={open}>
+        <Toolbar>
+          <AppBarHeader open={open}>
             <IconButton
               onClick={toggleDrawerOpen}
               name="toggle-drawer"
@@ -232,14 +196,41 @@ const MobileDrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
                 <ChevronRight />
               )}
             </IconButton>
-          </DrawerHeader>
-          <DrawerBody open={open}>
-            <Navigation open={open} />
-          </DrawerBody>
-        </Drawer>
-      </aside>
+          </AppBarHeader>
+          {title}
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="temporary"
+        open={open}
+        onClose={toggleDrawerOpen}
+        ModalProps={{ keepMounted: true }}
+      >
+        <DrawerHeader open={open}>
+          <IconButton
+            onClick={toggleDrawerOpen}
+            name="toggle-drawer"
+            aria-label="open drawer"
+          >
+            {theme.direction === 'rtl' ? (
+              open ? (
+                <Clear />
+              ) : (
+                <ChevronLeft />
+              )
+            ) : open ? (
+              <Clear />
+            ) : (
+              <ChevronRight />
+            )}
+          </IconButton>
+        </DrawerHeader>
+        <DrawerBody open={open}>
+          <Navigation open={open} />
+        </DrawerBody>
+      </Drawer>
       {children}
-    </Root>
+    </>
   )
 }
 
