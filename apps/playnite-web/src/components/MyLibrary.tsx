@@ -39,12 +39,12 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
           ))}
       </Helmet>
       <Header showFilters>
-        <section>
+        <div>
           <Typography variant="h2">My Games</Typography>
           <Typography variant="subtitle1">
             {gameList.items.length} games in my library
           </Typography>
-        </section>
+        </div>
       </Header>
       <GameGrid games={filteredGames} noDeferCount={noDeferCount} />
     </>
