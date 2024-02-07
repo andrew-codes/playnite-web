@@ -23,22 +23,22 @@ const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
             margin: '0 auto',
             maxWidth: `${width}px`,
             [theme.breakpoints.up('xs')]: {
-              padding: '64px 24px',
+              padding: '64px 80px',
             },
             [theme.breakpoints.up('sm')]: {
-              padding: '64px 24px',
+              padding: '64px 80px',
             },
             [theme.breakpoints.up('md')]: {
-              padding: '64px 64px',
+              padding: '64px 80px',
             },
             [theme.breakpoints.up('lg')]: {
-              padding: '80px 64px',
+              padding: '48px 72px',
             },
             [theme.breakpoints.up('xl')]: {
-              padding: '80px 48px',
+              padding: '48px 48px',
             },
             [theme.breakpoints.down('xs')]: {
-              padding: '80px 24px',
+              padding: '48px 80px',
             },
           })}
         >

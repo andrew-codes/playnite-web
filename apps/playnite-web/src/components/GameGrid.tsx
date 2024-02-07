@@ -13,6 +13,7 @@ import GameFigure from './GameFigure'
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
+  margin-top: 0;
 `
 
 const GameGrid: FC<{
