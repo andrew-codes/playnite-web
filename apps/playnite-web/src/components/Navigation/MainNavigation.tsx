@@ -6,6 +6,7 @@ import {
   ListItemIcon,
   ListItemText,
   styled,
+  useTheme,
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
 import { FC } from 'react'
@@ -34,6 +35,8 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
     navigate(href)
   }
 
+  const theme = useTheme()
+
   return (
     <Navigation
       sx={{
@@ -48,7 +51,7 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
           <ListItemButton
             onClick={handleNavigation('/')}
             sx={{
-              minHeight: 48,
+              minHeight: theme.spacing(6),
               justifyContent: open ? 'initial' : 'center',
               px: 2.5,
             }}
@@ -72,7 +75,7 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
           <ListItemButton
             onClick={handleNavigation('/browse')}
             sx={{
-              minHeight: 48,
+              minHeight: theme.spacing(6),
               justifyContent: open ? 'initial' : 'center',
               px: 2.5,
             }}
