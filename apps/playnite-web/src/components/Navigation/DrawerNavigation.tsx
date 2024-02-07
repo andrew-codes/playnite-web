@@ -1,13 +1,13 @@
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
 import {
   CSSObject,
-  IconButton,
   Drawer as MuiDrawer,
   Theme,
   styled,
   useTheme,
 } from '@mui/material'
 import { FC, PropsWithChildren, useState } from 'react'
+import IconButton from '../IconButton'
 import MainNavigation from './MainNavigation'
 
 const drawerWidth = 320
@@ -87,11 +87,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }))
 
-const DrawerButton = styled(IconButton)(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
-  border: `1px solid ${theme.palette.divider}`,
-}))
-
 const DrawerBody = styled('div', {
   shouldForwardProp: (prop) => prop !== 'open',
 })<{ open: boolean }>(({ open, theme }) => ({
@@ -124,7 +119,7 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
       <aside>
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
-            <DrawerButton onClick={toggleDrawerOpen} name="toggle-drawer">
+            <IconButton onClick={toggleDrawerOpen} name="toggle-drawer">
               {theme.direction === 'rtl' ? (
                 open ? (
                   <ChevronRight />
@@ -136,7 +131,7 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
               ) : (
                 <ChevronRight />
               )}
-            </DrawerButton>
+            </IconButton>
           </DrawerHeader>
           <DrawerBody open={open}>
             <MainNavigation open={open} />
