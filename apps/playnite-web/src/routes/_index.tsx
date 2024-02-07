@@ -7,6 +7,7 @@ import PlayniteApi from '../api/playnite/index.server'
 import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
 import Drawer from '../components/Navigation/Drawer'
+import OuterScroll from '../components/OuterScroll'
 import GameList from '../domain/GameList'
 import { Playlist } from '../domain/types'
 
@@ -30,13 +31,15 @@ function Index() {
 
   return (
     <Drawer>
-      <Header>
-        <Typography variant="h2">Library</Typography>
-      </Header>
-      <section>
-        <Typography variant="h4">{playingPlaylist?.name}</Typography>
-        <HorizontalGameList games={playingPlaylist.games} />
-      </section>
+      <OuterScroll>
+        <Header>
+          <Typography variant="h2">Library</Typography>
+        </Header>
+        <section>
+          <Typography variant="h4">{playingPlaylist?.name}</Typography>
+          <HorizontalGameList games={playingPlaylist.games} />
+        </section>
+      </OuterScroll>
     </Drawer>
   )
 }

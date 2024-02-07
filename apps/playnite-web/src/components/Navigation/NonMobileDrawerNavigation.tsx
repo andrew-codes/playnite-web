@@ -100,6 +100,7 @@ const DrawerBody = styled('div', {
   top: 0,
   left: 0,
   backgroundColor: theme.palette.background.paper,
+  height: '100vh',
   ...(open && {
     ...openedMixin(theme, -24),
   }),
