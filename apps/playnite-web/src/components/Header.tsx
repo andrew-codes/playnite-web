@@ -6,7 +6,7 @@ import { setNameFilter } from '../api/client/state/librarySlice'
 
 const { debounce } = _
 
-const HeaderContainer = styled('header')(({ theme }) => ({
+const HeaderContainer = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
 }))
@@ -47,7 +47,7 @@ const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
           </Filters>
         )}
       </HeaderContainer>
-      <Divider sx={{ margin: `48px 0` }} />
+      <Divider sx={{ margin: `16px 0` }} />
     </>
   )
 }

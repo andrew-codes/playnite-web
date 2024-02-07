@@ -1,8 +1,10 @@
 import { ChevronLeft, ChevronRight, Clear } from '@mui/icons-material'
 import {
   CSSObject,
+  AppBar as MuiAppBar,
   Drawer as MuiDrawer,
   Theme,
+  Toolbar,
   styled,
   useTheme,
 } from '@mui/material'
@@ -32,6 +34,54 @@ const closedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
   },
 })
 
+const Root = styled('div', { shouldForwardProp: (prop) => prop !== 'open' })<{
+  open: boolean
+}>(({ open, theme }) => ({
+  //   ...(open
+  //     ? {
+  //         '& main': {
+  //           paddingTop: '16px,',
+  //         },
+  //       }
+  //     : {}),
+}))
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})<{ open?: boolean }>(({ theme, open }) => ({
+  backgroundImage: 'none',
+  ...(open && {
+    // position: 'unset',
+    width: `calc(100% + 15px)`,
+    '& .MuiToolbar-root': {
+      marginLeft: `${drawerWidth - 60}px`,
+      zIndex: 1800,
+      transition: theme.transitions.create(['margin'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+  }),
+  ...(!open && {
+    '& .MuiToolbar-root': {
+      transition: theme.transitions.create(['margin'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+  }),
+}))
+
+const AppBarHeader = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'open',
+})<{ open: boolean }>(({ open, theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: 0,
+  zIndex: 1500,
+  ...theme.mixins.toolbar,
+}))
+
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => true,
 })(({ theme, open }) => ({
@@ -59,7 +109,6 @@ const Drawer = styled(MuiDrawer, {
     '& .MuiDrawer-paper': {
       ...closedMixin(theme, 24),
       overflowX: 'unset',
-      visibility: 'visible !important',
       transform: 'translateX(-48px) !important',
       background: 'none',
       boxShadow: 'none',
@@ -80,18 +129,14 @@ const Drawer = styled(MuiDrawer, {
   }),
 }))
 
-const DrawerHeader = styled('div', {
+const DrawerHeader = styled(AppBarHeader, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<{ open: boolean }>(({ open, theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  padding: 0,
   position: 'absolute',
   right: '-24px',
-  top: '16px',
-  zIndex: 1500,
-  ...theme.mixins.toolbar,
+  ...(!open && {
+    display: 'none',
+  }),
 }))
 
 const DrawerBody = styled('div', {
@@ -138,17 +183,16 @@ const MobileDrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
   const theme = useTheme()
 
   return (
-    <>
+    <Root open={open}>
       <aside>
-        <Drawer
-          variant="temporary"
-          open={open}
-          onClose={toggleDrawerOpen}
-          ModalProps={{ keepMounted: true }}
-        >
-          <DrawerBody open={open}>
-            <DrawerHeader open={open}>
-              <IconButton onClick={toggleDrawerOpen} name="toggle-drawer">
+        <AppBar position="fixed" open={open}>
+          <Toolbar>
+            <AppBarHeader open={open}>
+              <IconButton
+                onClick={toggleDrawerOpen}
+                name="toggle-drawer"
+                aria-label="open drawer"
+              >
                 {theme.direction === 'rtl' ? (
                   open ? (
                     <Clear />
@@ -161,13 +205,41 @@ const MobileDrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
                   <ChevronRight />
                 )}
               </IconButton>
-            </DrawerHeader>
+            </AppBarHeader>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="temporary"
+          open={open}
+          onClose={toggleDrawerOpen}
+          ModalProps={{ keepMounted: true }}
+        >
+          <DrawerHeader open={open}>
+            <IconButton
+              onClick={toggleDrawerOpen}
+              name="toggle-drawer"
+              aria-label="open drawer"
+            >
+              {theme.direction === 'rtl' ? (
+                open ? (
+                  <Clear />
+                ) : (
+                  <ChevronLeft />
+                )
+              ) : open ? (
+                <Clear />
+              ) : (
+                <ChevronRight />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <DrawerBody open={open}>
             <Navigation open={open} />
           </DrawerBody>
         </Drawer>
       </aside>
       {children}
-    </>
+    </Root>
   )
 }
 
