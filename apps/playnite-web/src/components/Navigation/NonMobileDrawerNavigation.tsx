@@ -6,7 +6,7 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { FC, PropsWithChildren, useState } from 'react'
+import { FC, PropsWithChildren, ReactNode, useState } from 'react'
 import IconButton from '../IconButton'
 import MainNavigation from './MainNavigation'
 
@@ -42,6 +42,7 @@ const Drawer = styled(MuiDrawer, {
   ...(open && {
     ...openedMixin(theme),
     '& .MuiDrawer-paper': {
+      position: 'fixed',
       border: 'none',
       '&:after': {
         content: '""',
@@ -59,6 +60,7 @@ const Drawer = styled(MuiDrawer, {
   ...(!open && {
     ...closedMixin(theme),
     '& .MuiDrawer-paper': {
+      position: 'fixed',
       border: 'none',
       '&:after': {
         content: '""',
@@ -106,7 +108,9 @@ const DrawerBody = styled('div', {
   }),
 }))
 
-const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
+const DrawerNavigation: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
+  children,
+}) => {
   const theme = useTheme()
 
   const [open, setOpen] = useState(false)
@@ -116,32 +120,30 @@ const DrawerNavigation: FC<PropsWithChildren & {}> = ({ children }) => {
 
   return (
     <>
-      <aside>
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
-            <IconButton
-              onClick={toggleDrawerOpen}
-              name="toggle-drawer"
-              aria-label="open drawer"
-            >
-              {theme.direction === 'rtl' ? (
-                open ? (
-                  <ChevronRight />
-                ) : (
-                  <ChevronLeft />
-                )
-              ) : open ? (
-                <ChevronLeft />
-              ) : (
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <IconButton
+            onClick={toggleDrawerOpen}
+            name="toggle-drawer"
+            aria-label="open drawer"
+          >
+            {theme.direction === 'rtl' ? (
+              open ? (
                 <ChevronRight />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <DrawerBody open={open}>
-            <MainNavigation open={open} />
-          </DrawerBody>
-        </Drawer>
-      </aside>
+              ) : (
+                <ChevronLeft />
+              )
+            ) : open ? (
+              <ChevronLeft />
+            ) : (
+              <ChevronRight />
+            )}
+          </IconButton>
+        </DrawerHeader>
+        <DrawerBody open={open}>
+          <MainNavigation open={open} />
+        </DrawerBody>
+      </Drawer>
       {children}
     </>
   )
