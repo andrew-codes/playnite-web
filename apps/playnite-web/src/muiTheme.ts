@@ -20,7 +20,7 @@ const ssrMatchMedia =
           ? '390'
           : deviceType === 'tablet'
             ? '768px'
-            : '1440px',
+            : '1696px',
     }),
   })
 
