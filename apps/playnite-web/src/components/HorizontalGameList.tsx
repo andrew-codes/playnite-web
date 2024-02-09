@@ -21,21 +21,19 @@ const GameGrid: FC<{
   noDeferCount: number
 }> = ({ games, noDeferCount }) => {
   const theme = useTheme()
-  const isXxl = useMediaQuery(theme.breakpoints.up('xxl'))
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
   const isSm = useMediaQuery(theme.breakpoints.up('sm'))
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
   const columnsOnScreen = useMemo(() => {
-    if (isXxl) return 6
     if (isXl) return 5
     if (isLg) return 4
     if (isMd) return 3
     if (isSm) return 2
     if (isXs) return 2
     return 2
-  }, [isXxl, isXl, isLg, isMd, isSm, isXs])
+  }, [isXl, isLg, isMd, isSm, isXs])
   const width = useThemeWidth()
   const columnWidth = useMemo(() => {
     return Math.floor((width - columnsOnScreen * 16) / columnsOnScreen)
