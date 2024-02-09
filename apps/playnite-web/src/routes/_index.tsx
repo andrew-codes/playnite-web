@@ -8,7 +8,9 @@ import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
 import Drawer from '../components/Navigation/Drawer'
 import OuterScroll from '../components/OuterScroll'
+import FilteredGameList from '../domain/FilteredGameList'
 import GameList from '../domain/GameList'
+import NoFilter from '../domain/filters/NoFilter'
 import { Playlist } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
@@ -21,12 +23,17 @@ async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
+const noFilter = new NoFilter()
+
 function Index() {
   const { playing } = (useLoaderData() || {}) as unknown as {
     playing?: Playlist
   }
   const playingPlaylist = useMemo(() => {
-    return { ...playing, games: new GameList(playing?.games || []) }
+    return {
+      ...playing,
+      games: new FilteredGameList(new GameList(playing?.games || []), noFilter),
+    }
   }, [playing])
 
   return (
@@ -37,7 +44,7 @@ function Index() {
         </Header>
         <section>
           <Typography variant="h4">{playingPlaylist?.name}</Typography>
-          <HorizontalGameList games={playingPlaylist.games} />
+          <HorizontalGameList games={playingPlaylist.games} noDeferCount={5} />
         </section>
       </OuterScroll>
     </Drawer>
