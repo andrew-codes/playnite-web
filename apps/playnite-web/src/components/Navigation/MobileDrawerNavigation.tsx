@@ -12,7 +12,7 @@ import { FC, PropsWithChildren, ReactNode, useState } from 'react'
 import IconButton from '../IconButton'
 import MainNavigation from './MainNavigation'
 
-const drawerWidth = 320
+const drawerWidth = 296
 const openedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
   width: `calc(${drawerWidth}px + ${additionalWidth}px)`,
   transition: theme.transitions.create('width', {
@@ -42,7 +42,10 @@ const AppBar = styled(MuiAppBar, {
     // position: 'unset',
     width: `calc(100% + 15px)`,
     '& .MuiToolbar-root': {
-      marginLeft: `${drawerWidth - 60}px`,
+      marginLeft: `${drawerWidth - 24 - 24 - 2}px`,
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: `${drawerWidth - 16 - 16 - 2}px`,
+      },
       zIndex: 1800,
       transition: theme.transitions.create(['margin'], {
         easing: theme.transitions.easing.easeOut,
@@ -122,7 +125,7 @@ const DrawerHeader = styled(AppBarHeader, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<{ open: boolean }>(({ open, theme }) => ({
   position: 'absolute',
-  right: '-24px',
+  right: '-22px',
   ...(!open && {
     display: 'none',
   }),
@@ -139,7 +142,7 @@ const DrawerBody = styled('div', {
   paddingTop: `56px`,
   backgroundColor: theme.palette.background.paper,
   ...(open && {
-    ...openedMixin(theme, -24),
+    ...openedMixin(theme),
     transition: theme.transitions.create(['background', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
