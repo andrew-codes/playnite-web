@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 const useThemeWidth = () => {
   const theme = useTheme()
 
+  const isXxl = useMediaQuery(theme.breakpoints.up('xxl'))
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
@@ -11,13 +12,26 @@ const useThemeWidth = () => {
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
 
   const width = useMemo(() => {
-    if (isXl) return 1280
-    if (isLg) return 938
-    if (isMd) return 736
-    if (isSm) return 398
-    if (isXs) return 374
+    if (isXxl) {
+      return theme.breakpoints.values.xxl - 81 - 16
+    }
+    if (isXl) {
+      return theme.breakpoints.values.xl - 81 - 16
+    }
+    if (isLg) {
+      return theme.breakpoints.values.lg - 81 - 16
+    }
+    if (isMd) {
+      return theme.breakpoints.values.md - 16 - 40 - 24
+    }
+    if (isSm) {
+      theme.breakpoints.values.sm - 24 - 20
+    }
+    if (isXs) {
+      return theme.breakpoints.values.xs - 24 - 20
+    }
     return 342
-  }, [isXl, isLg, isMd, isSm, isXs])
+  }, [isXxl, isXl, isLg, isMd, isSm, isXs])
 
   return width
 }

@@ -3,7 +3,10 @@ import { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { IGame } from '../domain/types'
 
-const Figure = styled('figure')(({ theme }) => ({
+const Figure = styled('figure', {
+  shouldForwardProp: (prop) => prop !== 'width',
+})<{ width: string }>(({ theme, width }) => ({
+  width,
   margin: 0,
 }))
 
@@ -12,9 +15,9 @@ const Image = styled('img', {
 })<{ width: string }>(({ width, theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
-  height: `calc(${width} - 16px)`,
+  height: `${width}`,
   objectFit: 'cover',
-  width: `calc(${width} - 16px)`,
+  width,
 }))
 
 const GameFigure: FC<
@@ -36,7 +39,7 @@ const GameFigure: FC<
   const { ref } = useInView({ onChange: handleChange })
 
   return (
-    <Figure style={style} ref={ref}>
+    <Figure style={style} ref={ref} width={width}>
       {hasBeenInViewBefore || noDefer
         ? [
             <Image

@@ -40,15 +40,18 @@ const OuterScroll: FC<PropsWithChildren<{}>> = ({ children }) => {
         display: 'flex',
         flexDirection: 'column',
         height: `calc(100vh - ${theme.spacing(12)})`,
-        padding: `0 ${theme.spacing(2.5)} 0 ${theme.spacing()}`,
-        [theme.breakpoints.down('lg')]: {
-          overflowY: 'auto',
-          scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
-          padding: `0 ${theme.spacing(2.5)} 0 ${theme.spacing(3)}`,
+        padding: `0 ${theme.spacing()} 0 ${theme.spacing()}`,
+        [theme.breakpoints.up('xs')]: {
+          padding: `0 ${theme.spacing(2)} 0 ${theme.spacing(2)}`,
         },
         [theme.breakpoints.only('md')]: {
           padding: `0 ${theme.spacing(3)} 0 ${theme.spacing(5)}`,
         },
+        // [theme.breakpoints.down('lg')]: {
+        //   overflowY: 'auto',
+        //   scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+        //   padding: `0 ${theme.spacing()} 0 ${theme.spacing(3)}`,
+        // },
       })}
     >
       {children}
