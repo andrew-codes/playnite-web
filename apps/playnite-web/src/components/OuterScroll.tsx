@@ -40,7 +40,7 @@ const OuterScroll: FC<PropsWithChildren<{}>> = ({ children }) => {
         display: 'flex',
         flexDirection: 'column',
         height: `calc(100vh - ${theme.spacing(12)})`,
-        padding: `0 ${theme.spacing()} 0 ${theme.spacing(2)}`,
+        padding: `0 ${theme.spacing(2.5)} 0 ${theme.spacing()}`,
         [theme.breakpoints.down('lg')]: {
           overflowY: 'auto',
           scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
