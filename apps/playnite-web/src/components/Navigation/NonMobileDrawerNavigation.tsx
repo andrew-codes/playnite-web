@@ -93,7 +93,6 @@ const DrawerBody = styled('div', {
   shouldForwardProp: (prop) => prop !== 'open',
 })<{ open: boolean }>(({ open, theme }) => ({
   display: 'flex',
-  height: '100%',
   flexDirection: 'column',
   position: 'fixed',
   paddingTop: `56px`,
