@@ -1,8 +1,18 @@
-import { Box } from '@mui/material'
+import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { FC, PropsWithChildren } from 'react'
+import NonMobileDrawerNavigation from './Navigation/NonMobileDrawerNavigation'
 
 const Layout: FC<PropsWithChildren & {}> = ({ children }) => {
-  return <Box sx={{ display: 'flex', flexDirection: 'column' }}>{children}</Box>
+  const theme = useTheme()
+  const shouldUseNonMobileDrawer = useMediaQuery(theme.breakpoints.up('lg'))
+
+  return shouldUseNonMobileDrawer ? (
+    <NonMobileDrawerNavigation>
+      <Box sx={{ display: 'flex', flexDirection: 'column' }}>{children}</Box>
+    </NonMobileDrawerNavigation>
+  ) : (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>{children}</Box>
+  )
 }
 
 export default Layout
