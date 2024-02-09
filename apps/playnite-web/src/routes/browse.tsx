@@ -32,7 +32,7 @@ async function loader({ request }: LoaderFunctionArgs) {
 }
 
 const Title = styled('span')(({ theme }) => ({
-  marginRigth: theme.spacing(8),
+  marginRight: theme.spacing(8),
   textAlign: 'center',
   flex: 1,
 }))
