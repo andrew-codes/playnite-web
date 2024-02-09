@@ -23,6 +23,7 @@ const slice = createSlice({
   initialState,
   selectors: {
     getFilter: createSelector(getNameFilter, (filter) => filter),
+    getFilterValues: (state) => ({ nameFilter: state.nameFilter ?? '' }),
   },
   reducers: {
     setNameFilter(state, action) {
@@ -33,4 +34,4 @@ const slice = createSlice({
 
 export const { reducer } = slice
 export const { setNameFilter } = slice.actions
-export const { getFilter } = slice.selectors
+export const { getFilter, getFilterValues } = slice.selectors
