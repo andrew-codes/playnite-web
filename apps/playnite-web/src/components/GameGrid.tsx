@@ -28,7 +28,6 @@ const GameGrid: FC<{
   const isSm = useMediaQuery(theme.breakpoints.up('sm'))
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
   const columns = useMemo(() => {
-    if (isXxl) return 6
     if (isXl) return 5
     if (isLg) return 4
     if (isMd) return 3
