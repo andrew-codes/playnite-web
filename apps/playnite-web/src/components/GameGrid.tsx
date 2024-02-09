@@ -41,7 +41,7 @@ const GameGrid: FC<{
     return Math.floor((width - columns * 16) / columns)
   }, [width, columns])
   const rowHeight = useMemo(() => {
-    return columnWidth + 64
+    return columnWidth + 96
   }, [columnWidth])
 
   return (
