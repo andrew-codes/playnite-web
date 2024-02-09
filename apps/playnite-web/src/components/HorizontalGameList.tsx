@@ -1,106 +1,114 @@
-import { Typography, useMediaQuery, useTheme } from '@mui/material'
-import { useFetcher } from '@remix-run/react'
-import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
-import * as windowed from 'react-window'
-import type { IGame, IList } from '../domain/types'
+import {
+  ImageList,
+  ImageListItem,
+  Typography,
+  styled,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
+import { FC, useMemo } from 'react'
+import type { IGame, IList, Match } from '../domain/types'
 import GameFigure from './GameFigure'
 import useThemeWidth from './useThemeWidth'
 
-const { FixedSizeList: List } = windowed
+const ImageListWithoutOverflow = styled(ImageList)`
+  overflow-y: hidden;
+  margin-top: 0;
+`
 
-const GameListItem: FC<{ data: IGame[]; index: number; style: any }> = ({
-  data,
-  index,
-  style,
-}) => {
-  const game = data[index]
-  return (
-    <GameFigure
-      game={game}
-      height={style.height}
-      key={game.oid.asString}
-      noDefer={true}
-      style={style}
-      width={`${style.width}px`}
-    >
-      <Typography
-        variant="caption"
-        component="figcaption"
-        sx={{
-          fontWeight: 'bold',
-          textWrap: 'balance',
-          lineHeight: '1.5',
-          textOverflow: 'ellipsis',
-          overflowY: 'hidden',
-          maxHeight: '4rem',
-          lineClamp: 2,
-          fontSize: '15px',
-        }}
-      >
-        {game.name}
-      </Typography>
-      <Typography
-        variant="body2"
-        component="div"
-        sx={{
-          textWrap: 'balance',
-          lineHeight: '1.5',
-          textOverflow: 'ellipsis',
-          overflowY: 'hidden',
-          maxHeight: '4rem',
-          lineClamp: 2,
-          fontSize: '13px',
-        }}
-      >
-        {game.name}
-      </Typography>
-    </GameFigure>
-  )
-}
-
-const HorizontalGameList: FC<{
-  games: IList<IGame>
-}> = ({ games }) => {
-  const fetcher = useFetcher()
-  const playGame = useCallback(
-    (evt: SyntheticEvent, id: string) => {
-      fetcher.submit({ id }, { method: 'post', action: '/activate' })
-    },
-    [fetcher],
-  )
-
+const GameGrid: FC<{
+  games: IList<Match<IGame>>
+  noDeferCount: number
+}> = ({ games, noDeferCount }) => {
   const theme = useTheme()
+  const isXxl = useMediaQuery(theme.breakpoints.up('xxl'))
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
   const isSm = useMediaQuery(theme.breakpoints.up('sm'))
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
-  const itemSize = useMemo(() => {
-    if (isXl) return 240
-    if (isLg) return 240
-    if (isMd) return 232
-    if (isSm) return 232
-    if (isXs) return 196
-    return 168
-  }, [isXl, isLg, isMd, isSm, isXs])
-
+  const columnsOnScreen = useMemo(() => {
+    if (isXxl) return 6
+    if (isXl) return 5
+    if (isLg) return 4
+    if (isMd) return 3
+    if (isSm) return 2
+    if (isXs) return 2
+    return 2
+  }, [isXxl, isXl, isLg, isMd, isSm, isXs])
   const width = useThemeWidth()
-  const height = useMemo(() => {
-    return itemSize + 64
-  }, [itemSize])
+  const columnWidth = useMemo(() => {
+    return Math.floor((width - columnsOnScreen * 16) / columnsOnScreen)
+  }, [width, columnsOnScreen])
+  const rowHeight = useMemo(() => {
+    return columnWidth + 64
+  }, [columnWidth])
+
+  const columns = useMemo(() => {
+    return games.items.filter((game) => game.matches).length
+  }, [games.items])
 
   return (
-    <List
-      height={height}
-      itemCount={games.items.length}
-      itemData={games.items}
-      itemSize={itemSize}
-      layout="horizontal"
-      width={width}
-    >
-      {GameListItem}
-    </List>
+    <>
+      <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
+        {games.items.map((game, gameIndex) => (
+          <ImageListItem
+            key={game.oid.asString}
+            sx={(theme) => ({
+              ...(!game.matches ? { display: 'none' } : {}),
+              alignItems: 'center',
+              margin: '0 16px',
+            })}
+          >
+            <GameFigure
+              game={game}
+              height={`${rowHeight}px`}
+              noDefer={gameIndex <= noDeferCount}
+              width={`calc(${columnWidth}px)`}
+            >
+              <Typography
+                variant="caption"
+                component="figcaption"
+                sx={{
+                  fontWeight: 'bold',
+                  textWrap: 'balance',
+                  lineHeight: '1.5',
+                  textOverflow: 'ellipsis',
+                  overflowY: 'hidden',
+                  maxHeight: '4rem',
+                  lineClamp: '2',
+                  fontSize: '15px',
+                  display: '-webkit-box',
+                  '-webkit-line-clamp': '2',
+                  '-webkit-box-orient': 'vertical ',
+                }}
+              >
+                {game.name}
+              </Typography>
+              <Typography
+                variant="body2"
+                component="div"
+                sx={{
+                  textWrap: 'balance',
+                  lineHeight: '1',
+                  textOverflow: 'ellipsis',
+                  overflowY: 'hidden',
+                  maxHeight: '2rem',
+                  lineClamp: '1',
+                  fontSize: '13px',
+                  display: '-webkit-box',
+                  '-webkit-line-clamp': '1',
+                  '-webkit-box-orient': 'vertical ',
+                }}
+              >
+                {game.name}
+              </Typography>
+            </GameFigure>
+          </ImageListItem>
+        ))}
+      </ImageListWithoutOverflow>
+    </>
   )
 }
 
-export default HorizontalGameList
+export default GameGrid
