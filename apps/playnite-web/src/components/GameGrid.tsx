@@ -6,8 +6,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { useFetcher } from '@remix-run/react'
-import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import type { IGame, IList, Match } from '../domain/types'
 import GameFigure from './GameFigure'
 import useThemeWidth from './useThemeWidth'
@@ -21,14 +20,6 @@ const GameGrid: FC<{
   games: IList<Match<IGame>>
   noDeferCount: number
 }> = ({ games, noDeferCount }) => {
-  const fetcher = useFetcher()
-  const playGame = useCallback(
-    (evt: SyntheticEvent, id: string) => {
-      fetcher.submit({ id }, { method: 'post', action: '/activate' })
-    },
-    [fetcher],
-  )
-
   const theme = useTheme()
   const isXxl = useMediaQuery(theme.breakpoints.up('xxl'))
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
@@ -45,7 +36,6 @@ const GameGrid: FC<{
     if (isXs) return 2
     return 2
   }, [isXxl, isXl, isLg, isMd, isSm, isXs])
-
   const width = useThemeWidth()
   const columnWidth = useMemo(() => {
     return Math.floor((width - columns * 16) / columns)
