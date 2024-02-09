@@ -23,9 +23,6 @@ const ssrMatchMedia =
             : '1440px',
     }),
   })
-const defaultTheme = createTheme()
-
-console.log(JSON.stringify(defaultTheme, null, 2))
 
 const theme = (
   deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' = 'unknown',

@@ -10,6 +10,7 @@ import { useFetcher } from '@remix-run/react'
 import { FC, SyntheticEvent, useCallback, useMemo } from 'react'
 import type { IGame, IList, Match } from '../domain/types'
 import GameFigure from './GameFigure'
+import useThemeWidth from './useThemeWidth'
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;
@@ -29,31 +30,29 @@ const GameGrid: FC<{
   )
 
   const theme = useTheme()
+  const isXxl = useMediaQuery(theme.breakpoints.up('xxl'))
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
   const isSm = useMediaQuery(theme.breakpoints.up('sm'))
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
-
-  const columnWidth = useMemo(() => {
-    if (isXl) return 240
-    if (isLg) return 240
-    if (isMd) return 232
-    if (isSm) return 200
-    if (isXs) return 184
-    return 168
-  }, [isXl, isLg, isMd, isSm, isXs])
-  const rowHeight = useMemo(() => {
-    return columnWidth + 64
-  }, [columnWidth])
   const columns = useMemo(() => {
+    if (isXxl) return 6
     if (isXl) return 5
     if (isLg) return 4
     if (isMd) return 3
     if (isSm) return 2
     if (isXs) return 2
     return 2
-  }, [isXl, isLg, isMd, isSm, isXs])
+  }, [isXxl, isXl, isLg, isMd, isSm, isXs])
+
+  const width = useThemeWidth()
+  const columnWidth = useMemo(() => {
+    return Math.floor((width - columns * 16) / columns)
+  }, [width, columns])
+  const rowHeight = useMemo(() => {
+    return columnWidth + 64
+  }, [columnWidth])
 
   return (
     <>
@@ -61,13 +60,16 @@ const GameGrid: FC<{
         {games.items.map((game, gameIndex) => (
           <ImageListItem
             key={game.oid.asString}
-            sx={{ ...(!game.matches ? { display: 'none' } : {}) }}
+            sx={(theme) => ({
+              ...(!game.matches ? { display: 'none' } : {}),
+              alignItems: 'center',
+            })}
           >
             <GameFigure
               game={game}
               height={`${rowHeight}px`}
               noDefer={gameIndex <= noDeferCount}
-              width={`${columnWidth - 16}px`}
+              width={`calc(${columnWidth}px)`}
             >
               <Typography
                 variant="caption"
@@ -79,8 +81,11 @@ const GameGrid: FC<{
                   textOverflow: 'ellipsis',
                   overflowY: 'hidden',
                   maxHeight: '4rem',
-                  lineClamp: 2,
+                  lineClamp: '2',
                   fontSize: '15px',
+                  display: '-webkit-box',
+                  '-webkit-line-clamp': '2',
+                  '-webkit-box-orient': 'vertical ',
                 }}
               >
                 {game.name}
@@ -90,12 +95,15 @@ const GameGrid: FC<{
                 component="div"
                 sx={{
                   textWrap: 'balance',
-                  lineHeight: '1.5',
+                  lineHeight: '1',
                   textOverflow: 'ellipsis',
                   overflowY: 'hidden',
-                  maxHeight: '4rem',
-                  lineClamp: 2,
+                  maxHeight: '2rem',
+                  lineClamp: '1',
                   fontSize: '13px',
+                  display: '-webkit-box',
+                  '-webkit-line-clamp': '1',
+                  '-webkit-box-orient': 'vertical ',
                 }}
               >
                 {game.name}

@@ -57,7 +57,7 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
         <Box
           sx={(theme) => ({
             flexGrow: 1,
-            maxWidth: `${width}px`,
+            width: '100%',
             margin: '0 auto',
             [theme.breakpoints.up('lg')]: {
               overflowY: 'auto',
