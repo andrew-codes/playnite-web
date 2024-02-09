@@ -1,8 +1,19 @@
-import { Box, Divider, TextField, styled } from '@mui/material'
+import { Clear } from '@mui/icons-material'
+import {
+  Box,
+  Divider,
+  IconButton,
+  InputAdornment,
+  TextField,
+  styled,
+} from '@mui/material'
 import _ from 'lodash'
 import { ChangeEvent, FC, PropsWithChildren, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { setNameFilter } from '../api/client/state/librarySlice'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  getFilterValues,
+  setNameFilter,
+} from '../api/client/state/librarySlice'
 
 const { debounce } = _
 
@@ -34,12 +45,14 @@ const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
   ...rest
 }) => {
   const dispatch = useDispatch()
-  const handleSearch = useCallback(
-    debounce((event: ChangeEvent<HTMLInputElement>) => {
-      dispatch(setNameFilter(event.target.value))
-    }, 400),
-    [],
-  )
+  const handleSearch = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    dispatch(setNameFilter(event.target.value))
+  }, [])
+  const handleClear = useCallback(() => {
+    dispatch(setNameFilter(''))
+  }, [])
+
+  const { nameFilter } = useSelector(getFilterValues)
 
   return (
     <>
@@ -61,12 +74,21 @@ const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
           {showFilters && (
             <Filters>
               <TextField
+                InputProps={{
+                  endAdornment: nameFilter !== '' && (
+                    <InputAdornment position="end">
+                      <IconButton onClick={handleClear}>
+                        <Clear />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 onChange={handleSearch}
                 placeholder="Find"
-                type="text"
-                defaultValue=""
-                variant="outlined"
                 sx={{ width: '100%' }}
+                type="text"
+                value={nameFilter}
+                variant="outlined"
               />
             </Filters>
           )}
