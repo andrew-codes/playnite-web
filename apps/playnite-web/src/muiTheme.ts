@@ -23,6 +23,9 @@ const ssrMatchMedia =
             : '1440px',
     }),
   })
+const defaultTheme = createTheme()
+
+console.log(JSON.stringify(defaultTheme, null, 2))
 
 const theme = (
   deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' = 'unknown',
@@ -32,9 +35,10 @@ const theme = (
       palette: {
         mode: 'dark',
         background: {
-          default: 'rgb(32,38,52)',
-          paper: 'rgb(40,48,68)',
+          default: 'rgb(32, 38, 52)',
+          paper: 'rgb(40, 48, 68)',
         },
+        divider: 'rgba(255, 255, 255, 0.12)',
         action: {
           hover: '#41495a',
         },
@@ -50,6 +54,14 @@ const theme = (
         },
       },
       components: {
+        MuiAppBar: {
+          styleOverrides: {
+            root: {
+              boxShadow: 'none',
+              borderBottom: `1px solid rgba(255, 255, 255, 0.12)`,
+            },
+          },
+        },
         MuiUseMediaQuery: {
           defaultProps: {
             ssrMatchMedia: ssrMatchMedia(deviceType),
@@ -73,6 +85,24 @@ const theme = (
               textRendering: 'optimizeLegibility',
               '*': {
                 boxSizing: 'border-box',
+              },
+            },
+          },
+        },
+        MuiTextField: {
+          styleOverrides: {
+            root: {
+              '& .MuiInputBase-root': {
+                backgroundColor: 'rgb(40, 48, 68)',
+                '& fieldset': {
+                  borderColor: 'rgb(255, 255, 255, 0.6)',
+                },
+
+                '&.Mui-focused': {
+                  '& fieldset': {
+                    borderColor: 'initial',
+                  },
+                },
               },
             },
           },
