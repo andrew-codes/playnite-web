@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material'
-import _ from 'lodash'
 import { FC, useMemo } from 'react'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
@@ -11,8 +10,6 @@ import GameList from '../domain/GameList'
 import type { GameOnPlatform } from '../domain/types'
 import OuterScroll from './OuterScroll'
 import useThemeWidth from './useThemeWidth'
-
-const { debounce } = _
 
 const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
   gamesOnPlatforms = [] as GameOnPlatform[],
@@ -27,9 +24,9 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
     [gameList, filter],
   )
 
-  const noDeferCount = 25
-
   const width = useThemeWidth()
+
+  const noDeferCount = 25
 
   return (
     <>
@@ -62,6 +59,9 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
             [theme.breakpoints.up('lg')]: {
               overflowY: 'auto',
               scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+            },
+            [theme.breakpoints.up('xl')]: {
+              width: `${width}px`,
             },
           })}
         >

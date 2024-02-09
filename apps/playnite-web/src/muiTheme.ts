@@ -17,10 +17,10 @@ const ssrMatchMedia =
     matches: mediaQuery.match(query, {
       width:
         deviceType === 'mobile'
-          ? '390'
+          ? '390px'
           : deviceType === 'tablet'
             ? '768px'
-            : '1696px',
+            : '1366px',
     }),
   })
 
