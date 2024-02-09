@@ -47,11 +47,10 @@ const OuterScroll: FC<PropsWithChildren<{}>> = ({ children }) => {
         [theme.breakpoints.only('md')]: {
           padding: `0 ${theme.spacing(3)} 0 ${theme.spacing(5)}`,
         },
-        // [theme.breakpoints.down('lg')]: {
-        //   overflowY: 'auto',
-        //   scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
-        //   padding: `0 ${theme.spacing()} 0 ${theme.spacing(3)}`,
-        // },
+        [theme.breakpoints.down('lg')]: {
+          overflowY: 'auto',
+          scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+        },
       })}
     >
       {children}
