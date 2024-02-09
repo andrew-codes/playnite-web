@@ -42,7 +42,6 @@ const Drawer = styled(MuiDrawer, {
   ...(open && {
     ...openedMixin(theme),
     '& .MuiDrawer-paper': {
-      position: 'fixed',
       border: 'none',
       '&:after': {
         content: '""',
@@ -60,7 +59,6 @@ const Drawer = styled(MuiDrawer, {
   ...(!open && {
     ...closedMixin(theme),
     '& .MuiDrawer-paper': {
-      position: 'fixed',
       border: 'none',
       '&:after': {
         content: '""',
@@ -94,7 +92,6 @@ const DrawerBody = styled('div', {
 })<{ open: boolean }>(({ open, theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  position: 'fixed',
   paddingTop: `56px`,
   top: 0,
   left: 0,
