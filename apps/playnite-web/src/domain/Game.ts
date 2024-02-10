@@ -17,7 +17,7 @@ const xbox = /xbox/i
 const playstation = /playstation/i
 const nintendo = /nintendo/i
 
-const pc = /pc/i
+const pc = /Windows/i
 const ps5 = /PlayStation ?5/
 const ps4 = /PlayStation ?4/
 const ps3 = /PlayStation ?3/
