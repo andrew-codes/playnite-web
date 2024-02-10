@@ -1,7 +1,8 @@
-import { Stack, styled } from '@mui/material'
-import { FC, PropsWithChildren, useCallback, useState } from 'react'
+import { Box, Stack, styled } from '@mui/material'
+import { FC, PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import type { IGame } from '../domain/types'
+import type { IGame, Platform } from '../domain/types'
+import PlatformList from './PlatformList'
 
 const Figure = styled('figure', {
   shouldForwardProp: (prop) => prop !== 'width',
@@ -29,6 +30,14 @@ const GameFigure: FC<
     noDefer: boolean
   }>
 > = ({ children, game, style, noDefer, width, height }) => {
+  const platforms = useMemo(
+    () =>
+      game.platforms
+        .filter((g) => g.platform)
+        .map((g) => g.platform) as Platform[],
+    [game],
+  )
+
   const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
   const handleChange = useCallback((inView) => {
     if (!inView) {
@@ -42,13 +51,26 @@ const GameFigure: FC<
     <Figure style={style} ref={ref} width={width}>
       {hasBeenInViewBefore || noDefer
         ? [
-            <Image
+            <Box
+              sx={{ position: 'relative' }}
               key={`${game.oid.asString}-image`}
-              src={game.cover}
-              alt={game.name}
-              width={width}
-              loading="eager"
-            />,
+            >
+              <Image
+                src={game.cover}
+                alt={game.name}
+                width={width}
+                loading="eager"
+              />
+              <Box
+                sx={(theme) => ({
+                  position: 'absolute',
+                  bottom: '12px',
+                  right: theme.spacing(),
+                })}
+              >
+                <PlatformList platforms={platforms} />
+              </Box>
+            </Box>,
             <Stack
               sx={{ height: `calc(${height} - ${width})` }}
               key={`${game.oid.asString}-details`}
