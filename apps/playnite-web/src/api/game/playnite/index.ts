@@ -119,7 +119,7 @@ class PlayniteWebApi implements IGameApi {
       id: gameEntity.id,
       isCustomGame: gameEntity.isCustomGame,
       name: gameEntity.name,
-      platform: gameEntity.platforms?.[0],
+      platforms: gameEntity.platforms ?? [],
       // publishers: Publisher[],
       recentActivity: new Date(gameEntity.recentActivity),
       releaseDate: new Date(gameEntity.releaseDate),
