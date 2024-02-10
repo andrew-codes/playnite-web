@@ -5,13 +5,13 @@ import { useLoaderData } from '@remix-run/react'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { scrollTo } from '../api/client/state/layoutSlice'
-import PlayniteApi from '../api/playnite/index.server'
+import getGameApi from '../api/game/index.server'
 import MyLibrary from '../components/MyLibrary'
 import Drawer from '../components/Navigation/Drawer'
 import type { GameOnPlatform } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
-  const api = new PlayniteApi()
+  const api = getGameApi()
   const gamesOnPlatforms = await api.getGames()
   gamesOnPlatforms.sort((a, b) => {
     const aName = a.name
