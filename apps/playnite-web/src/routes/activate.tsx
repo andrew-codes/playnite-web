@@ -1,7 +1,7 @@
 import { ActionFunctionArgs, json } from '@remix-run/node'
 import { authenticator } from '../api/auth/auth.server'
+import getGameApi from '../api/game/index.server'
 import { getMqttClient } from '../api/mqtt'
-import PlayniteApi from '../api/playnite/index.server'
 
 async function action({ request }: ActionFunctionArgs) {
   const user = await authenticator.isAuthenticated(request)
@@ -21,8 +21,8 @@ async function action({ request }: ActionFunctionArgs) {
     })
   }
 
-  const playnite = new PlayniteApi()
-  const game = await playnite.getGameById(id)
+  const gameApi = getGameApi()
+  const game = await gameApi.getGameById(id)
 
   if (!game) {
     return new Response(null, {

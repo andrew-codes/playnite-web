@@ -77,8 +77,8 @@ const GameGrid: FC<{
                   lineClamp: '2',
                   fontSize: '15px',
                   display: '-webkit-box',
-                  '-webkit-line-clamp': '2',
-                  '-webkit-box-orient': 'vertical ',
+                  WebkitLineClamp: '2',
+                  WebkitBoxOrient: 'vertical ',
                 }}
               >
                 {game.name}
@@ -95,8 +95,8 @@ const GameGrid: FC<{
                   lineClamp: '1',
                   fontSize: '13px',
                   display: '-webkit-box',
-                  '-webkit-line-clamp': '1',
-                  '-webkit-box-orient': 'vertical ',
+                  WebkitLineClamp: '1',
+                  WebkitBoxOrient: 'vertical ',
                 }}
               >
                 {game.name}
