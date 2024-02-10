@@ -13,7 +13,7 @@ type GameAsset = {
   typeKey: AssetTypeKey
 }
 
-interface PlayniteApi {
+interface IGameApi {
   getPlaylistByName(name: string): Promise<Playlist>
   getPlaylists(): Promise<Playlist[]>
   getGameById(id: string): Promise<GameOnPlatform>
@@ -21,4 +21,4 @@ interface PlayniteApi {
   getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]>
 }
 
-export type { AssetTypeKey, GameAsset, PlayniteApi }
+export type { AssetTypeKey, GameAsset, IGameApi }
