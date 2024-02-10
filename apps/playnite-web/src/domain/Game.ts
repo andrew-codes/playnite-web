@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Oid from './Oid'
 import type {
   GameOnPlatform,
@@ -6,6 +7,8 @@ import type {
   Platform,
   Series,
 } from './types'
+
+const { uniqBy } = _
 
 const steam = /steam/i
 const epic = /epic/i
@@ -91,9 +94,12 @@ class Game implements IGame {
   }
 
   get platforms(): Platform[] {
-    return this._games
-      .flatMap((g) => gameToPlatform(g))
-      .filter((p): p is Platform => p !== null)
+    return uniqBy(
+      this._games
+        .flatMap((g) => gameToPlatform(g))
+        .filter((p): p is Platform => p !== null),
+      'name',
+    )
   }
 }
 
