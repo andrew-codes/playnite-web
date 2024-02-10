@@ -53,7 +53,7 @@ const List = styled('ol')(({ theme }) => ({
   listStyle: 'none',
   padding: theme.spacing(0.5),
   margin: 0,
-  background: `rgba(0, 0, 0, 0.85)`,
+  background: theme.palette.background.default,
   borderRadius: theme.shape.borderRadius,
 
   '> li': {
@@ -69,7 +69,10 @@ const List = styled('ol')(({ theme }) => ({
       width: '24px',
     },
 
-    '& .MuiChip-colorPrimary': {},
+    '& .MuiChip-colorPrimary': {
+      background: theme.palette.background.default,
+      color: theme.palette.common.white,
+    },
   },
 }))
 
