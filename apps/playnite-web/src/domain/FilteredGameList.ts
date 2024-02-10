@@ -10,7 +10,7 @@ class FilteredGameList implements IList<Match<IGame>> {
 
   constructor(gameList: IList<IGame>, filter: IMatchA<IGame> = new NoFilter()) {
     this._games = gameList.items.map((game) => {
-      const gameMatch = new Game(game.platforms) as unknown as Match<IGame>
+      const gameMatch = new Game(game.gamePlatforms) as unknown as Match<IGame>
       gameMatch.matches = filter.matches(game)
 
       return gameMatch

@@ -104,14 +104,14 @@ type GameOnPlatform = WithId & {
   icon: string
   isCustomGame: boolean
   name: string
-  platform?: Platform
+  platforms: Platform[]
   publishers?: Publisher[]
   recentActivity: Date
   releaseDate: Date
   runState: RunState
   series?: Series[]
   sortName: string
-  source?: Source
+  source: Source
   tags?: Tag[]
 }
 
@@ -122,7 +122,8 @@ interface IGame {
   get cover(): string
   get description(): string
   get series(): Series[]
-  get platforms(): GameOnPlatform[]
+  get gamePlatforms(): GameOnPlatform[]
+  get platforms(): Platform[]
 }
 
 interface IList<T> {
