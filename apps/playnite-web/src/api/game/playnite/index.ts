@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import Oid from '../../domain/Oid'
-import { NoScore, NumericScore } from '../../domain/Score'
+import Oid from '../../../domain/Oid'
+import { NoScore, NumericScore } from '../../../domain/Score'
 import type {
   GameAssetType,
   GameOnPlatform,
@@ -8,14 +8,14 @@ import type {
   Playlist,
   RunState,
   WithId,
-} from '../../domain/types'
+} from '../../../domain/types'
+import { GameAsset, IGameApi } from '../types'
 import MongoDb from './databases/mongo/index.server'
 import {
   GameAssetEntityType,
   GameEntity,
   MongoDbApi,
 } from './databases/mongo/types'
-import { GameAsset, PlayniteApi } from './types'
 
 const { startCase, toLower } = _
 
@@ -35,7 +35,7 @@ const getRunState = (gameEntity: GameEntity): RunState => {
   return 'not installed'
 }
 
-class PlayniteWebApi implements PlayniteApi {
+class PlayniteWebApi implements IGameApi {
   private _mongo: MongoDbApi
   private _playlistMatcher = new RegExp(/^playlist-/, 'i')
 
