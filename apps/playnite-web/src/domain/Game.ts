@@ -3,9 +3,44 @@ import type {
   GameOnPlatform,
   IGame,
   IdentifyDomainObjects,
+  Platform,
   Series,
 } from './types'
 
+const steam = /steam/i
+const epic = /epic/i
+const origin = /origin/i
+const uplay = /uplay/i
+const gog = /gog/i
+const battleNet = /battle.net/i
+const xbox = /xbox/i
+const playstation = /playstation/i
+const nintendo = /nintendo/i
+
+const pc = /pc/i
+const ps5 = /PlayStation ?5/
+const ps4 = /PlayStation ?4/
+const ps3 = /PlayStation ?3/
+
+const gameToPlatform = (game: GameOnPlatform): Platform[] | Platform | null => {
+  if (
+    [steam, epic, origin, uplay, gog, battleNet].some((r) =>
+      r.test(game.source.name),
+    )
+  ) {
+    return game.platforms.find((p) => pc.test(p.name)) ?? null
+  }
+  if (playstation.test(game.source.name)) {
+    const ps5Match = game.platforms.find((p) => ps5.test(p.name)) ?? null
+    const ps4Match = game.platforms.find((p) => ps4.test(p.name)) ?? null
+    const ps3Match = game.platforms.find((p) => ps3.test(p.name)) ?? null
+    return [ps5Match, ps4Match, ps3Match].filter(
+      (p): p is Platform => p !== null,
+    )
+  }
+
+  return null
+}
 class Game implements IGame {
   private _games: GameOnPlatform[]
   private _exposedGame: GameOnPlatform
@@ -51,8 +86,14 @@ class Game implements IGame {
     return this._exposedGame.series ?? []
   }
 
-  get platforms(): GameOnPlatform[] {
+  get gamePlatforms(): GameOnPlatform[] {
     return this._games
+  }
+
+  get platforms(): Platform[] {
+    return this._games
+      .flatMap((g) => gameToPlatform(g))
+      .filter((p): p is Platform => p !== null)
   }
 }
 

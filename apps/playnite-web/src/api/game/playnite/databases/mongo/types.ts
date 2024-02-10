@@ -1,5 +1,5 @@
 import { Binary, Document, WithId } from 'mongodb'
-import type { GameAssetType, GameOnPlatform } from '../../../../domain/types'
+import type { GameAssetType, GameOnPlatform } from '../../../../../domain/types'
 
 type TagEntity = {
   id: string

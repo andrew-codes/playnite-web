@@ -1,7 +1,7 @@
 import { Box, Stack, styled } from '@mui/material'
-import { FC, PropsWithChildren, useCallback, useMemo, useState } from 'react'
+import { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import type { IGame, Platform } from '../domain/types'
+import type { IGame } from '../domain/types'
 import PlatformList from './PlatformList'
 
 const Figure = styled('figure', {
@@ -30,14 +30,6 @@ const GameFigure: FC<
     noDefer: boolean
   }>
 > = ({ children, game, style, noDefer, width, height }) => {
-  const platforms = useMemo(
-    () =>
-      game.platforms
-        .filter((g) => g.platform)
-        .map((g) => g.platform) as Platform[],
-    [game],
-  )
-
   const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
   const handleChange = useCallback((inView) => {
     if (!inView) {
@@ -68,7 +60,7 @@ const GameFigure: FC<
                   right: theme.spacing(),
                 })}
               >
-                <PlatformList platforms={platforms} />
+                <PlatformList platforms={game.platforms} />
               </Box>
             </Box>,
             <Stack
