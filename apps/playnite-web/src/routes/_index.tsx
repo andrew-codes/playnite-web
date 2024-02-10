@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { useMemo } from 'react'
-import PlayniteApi from '../api/playnite/index.server'
+import getGameApi from '../api/game/index.server'
 import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
 import Drawer from '../components/Navigation/Drawer'
@@ -14,7 +14,7 @@ import NoFilter from '../domain/filters/NoFilter'
 import { Playlist } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
-  const api = new PlayniteApi()
+  const api = getGameApi()
 
   const playing = await api.getPlaylistByName('On Deck')
 
