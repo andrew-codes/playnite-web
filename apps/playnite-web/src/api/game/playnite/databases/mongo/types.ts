@@ -73,6 +73,9 @@ interface MongoDbApi {
   getGameById(id: string): Promise<GameEntity>
   getGames(): Promise<GameEntity[]>
   getTags(): Promise<TagEntity[]>
+  getFilterTypeValues(
+    filterTypeName: string,
+  ): Promise<{ id: string; name: string }[]>
   getAssetsRelatedTo(
     relatedId: string,
     relatedType: GameAssetEntityType,
