@@ -131,6 +131,7 @@ interface IGame {
   get oid(): IdentifyDomainObjects
   get platforms(): Platform[]
   get series(): Series[]
+  get features(): Feature[]
 }
 
 interface IList<T> {

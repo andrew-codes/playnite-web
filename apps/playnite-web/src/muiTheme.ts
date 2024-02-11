@@ -64,6 +64,14 @@ const theme = (
             ssrMatchMedia: ssrMatchMedia(deviceType),
           },
         },
+        MuiDialog: {
+          styleOverrides: {
+            paper: {
+              backgroundColor: 'rgb(32, 38, 52)',
+              backgroundImage: 'none',
+            },
+          },
+        },
         MuiDrawer: {
           styleOverrides: {
             paper: {

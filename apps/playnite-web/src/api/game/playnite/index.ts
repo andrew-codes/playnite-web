@@ -2,6 +2,7 @@ import _ from 'lodash'
 import Oid from '../../../domain/Oid'
 import { NoScore, NumericScore } from '../../../domain/Score'
 import type {
+  Feature,
   GameAssetType,
   GameOnPlatform,
   IdentifyDomainObjects,
@@ -41,6 +42,10 @@ class PlayniteWebApi implements IGameApi {
 
   constructor() {
     this._mongo = new MongoDb()
+  }
+
+  async getFeatures(): Promise<Feature[]> {
+    return this._mongo.getFilterTypeValues('gamefeature')
   }
 
   async getPlaylistByName(name: string): Promise<Playlist> {
