@@ -25,6 +25,11 @@ interface WithId {
   id: string
 }
 
+type GameLink = {
+  name: string
+  url: string
+}
+
 type Platform = WithId & {
   name: string
   background: string
@@ -99,6 +104,7 @@ type GameOnPlatform = WithId & {
   developers?: Developer[]
   features?: Feature[]
   gameId: string
+  links: GameLink[]
   genres?: Genre[]
   hidden: boolean
   icon: string
@@ -116,14 +122,15 @@ type GameOnPlatform = WithId & {
 }
 
 interface IGame {
-  get oid(): IdentifyDomainObjects
-  get name(): string
   get background(): string
   get cover(): string
   get description(): string
-  get series(): Series[]
+  get developers(): Developer[]
   get gamePlatforms(): GameOnPlatform[]
+  get name(): string
+  get oid(): IdentifyDomainObjects
   get platforms(): Platform[]
+  get series(): Series[]
 }
 
 interface IList<T> {
