@@ -1,4 +1,5 @@
 import {
+  Feature,
   GameOnPlatform,
   IdentifyDomainObjects,
   Playlist,
@@ -18,6 +19,7 @@ interface IGameApi {
   getPlaylists(): Promise<Playlist[]>
   getGameById(id: string): Promise<GameOnPlatform>
   getGames(): Promise<GameOnPlatform[]>
+  getFeatures(): Promise<Feature[]>
   getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]>
 }
 

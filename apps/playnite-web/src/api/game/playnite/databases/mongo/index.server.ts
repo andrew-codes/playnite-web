@@ -28,6 +28,16 @@ class MongoDb implements MongoDbApi {
     })
   }
 
+  getFilterTypeValues(
+    filterTypeName: string,
+  ): Promise<{ id: string; name: string }[]> {
+    return this.client
+      .db('games')
+      .collection<{ id: string; name: string }>(filterTypeName)
+      .find({})
+      .toArray()
+  }
+
   async getTags(): Promise<TagEntity[]> {
     await this.connect()
 

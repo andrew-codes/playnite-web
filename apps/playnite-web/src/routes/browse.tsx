@@ -5,6 +5,7 @@ import { useLoaderData } from '@remix-run/react'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { scrollTo } from '../api/client/state/layoutSlice'
+import { setFilterTypeValues } from '../api/client/state/librarySlice'
 import getGameApi from '../api/game/index.server'
 import MyLibrary from '../components/MyLibrary'
 import Drawer from '../components/Navigation/Drawer'
@@ -26,8 +27,13 @@ async function loader({ request }: LoaderFunctionArgs) {
     return 0
   })
 
+  const features = await api.getFeatures()
+
   return json({
     gamesOnPlatforms,
+    filterValues: {
+      feature: features,
+    },
   })
 }
 
@@ -38,11 +44,18 @@ const Title = styled('span')(({ theme }) => ({
 }))
 
 function Browse() {
-  const { gamesOnPlatforms } = (useLoaderData() || {}) as unknown as {
+  const { gamesOnPlatforms, filterValues } = (useLoaderData() ||
+    {}) as unknown as {
     gamesOnPlatforms?: GameOnPlatform[]
+    filterValues: {
+      feature: { id: string; name: string }[]
+    }
   }
 
   const dispatch = useDispatch()
+  Object.entries(filterValues).forEach(([key, value]) => {
+    dispatch(setFilterTypeValues({ filterTypeName: key, values: value }))
+  })
 
   const handleScrollTop = useCallback(() => {
     dispatch(scrollTo(0))
