@@ -2,6 +2,7 @@ import _ from 'lodash'
 import Oid from './Oid'
 import type {
   Developer,
+  Feature,
   GameOnPlatform,
   IGame,
   IdentifyDomainObjects,
@@ -58,6 +59,10 @@ class Game implements IGame {
     this._oid = new Oid(
       `gamesonplatforms:${this._games.map((g) => g.id).join(',')}`,
     )
+  }
+
+  get features(): Feature[] {
+    return this._exposedGame.features ?? []
   }
 
   get oid(): IdentifyDomainObjects {
