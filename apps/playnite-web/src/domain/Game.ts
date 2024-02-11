@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import Oid from './Oid'
 import type {
+  Developer,
   GameOnPlatform,
   IGame,
   IdentifyDomainObjects,
@@ -81,8 +82,13 @@ class Game implements IGame {
   get description(): string {
     return this._exposedGame.description
   }
+
   set description(description: string) {
     this._games = this._games.map((game) => ({ ...game, description }))
+  }
+
+  get developers(): Developer[] {
+    return this._exposedGame.developers ?? []
   }
 
   get series(): Series[] {

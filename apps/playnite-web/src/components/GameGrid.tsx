@@ -94,7 +94,7 @@ const GameGrid: FC<{
                   WebkitBoxOrient: 'vertical ',
                 }}
               >
-                {game.name}
+                {game.developers.map((d) => d.name).join(', ')}
               </Typography>
             </GameFigure>
           </ImageListItem>
