@@ -15,12 +15,17 @@ import { Playlist } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = getGameApi()
-
-  const playing = await api.getPlaylistByName('On Deck')
-
-  return json({
-    playing,
-  })
+  try {
+    const playing = await api.getPlaylistByName('On Deck')
+    return json({
+      playing,
+    })
+  } catch (e) {
+    console.error(e)
+    return json({
+      playing: {},
+    })
+  }
 }
 
 const noFilter = new NoFilter()
