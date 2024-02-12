@@ -47,13 +47,15 @@ function Browse() {
   const { gamesOnPlatforms, filterValues } = (useLoaderData() ||
     {}) as unknown as {
     gamesOnPlatforms?: GameOnPlatform[]
-    filterValues: {
-      feature: { id: string; name: string }[]
-    }
+    filterValues:
+      | {
+          feature: { id: string; name: string }[]
+        }
+      | undefined
   }
 
   const dispatch = useDispatch()
-  Object.entries(filterValues).forEach(([key, value]) => {
+  Object.entries(filterValues ?? {}).forEach(([key, value]) => {
     dispatch(setFilterTypeValues({ filterTypeName: key, values: value }))
   })
 
