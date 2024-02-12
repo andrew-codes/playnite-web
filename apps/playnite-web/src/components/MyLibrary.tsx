@@ -24,8 +24,6 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
     [gameList, filter],
   )
 
-  console.log(filter)
-
   const width = useThemeWidth()
 
   const noDeferCount = 25
