@@ -16,7 +16,7 @@ docker run --rm --name playnite-web-db -d \
   -v $PWD/.data/mongodb:/data/db \
   mongo:7.0.3-jammy
 
-mosquitto_passwd -b -c /etc/mosquitto/passwd local dev
+mosquitto_passwd -b -c /etc/mosquitto/passwd $MQTT_USERNAME $MQTT_PASSWORD
 echo -e "allow_anonymous false
 password_file /etc/mosquitto/passwd
 listener 1883" > /etc/mosquitto/conf.d/default.conf
