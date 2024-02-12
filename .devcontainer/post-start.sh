@@ -4,6 +4,7 @@ git lfs install
 
 set -o allexport
 . $PWD/local.env
+. $PWD/dev.env
 set +o allexport
 
 mkdir -p .data/mongodb
