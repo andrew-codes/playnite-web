@@ -23,7 +23,6 @@ const InputWrapper = styled('div')(
   padding: 1px;
   display: flex;
   flex-wrap: wrap;
-  height: 56px;
 
   &:hover {
     border-color: initial;
@@ -124,12 +123,19 @@ type RenderOptions =
   | ((props: RenderOptionProps) => ReactNode)
 
 const AutoComplete: FC<{
+  defaultValue?: AutoCompleteItem[] | undefined
   name: string
   label?: ReactNode
   options: AutoCompleteItem[]
-  value: AutoCompleteItem[]
+  value?: AutoCompleteItem[] | undefined
   renderOptions: RenderOptions
-}> = ({ label = '', name, options, renderOptions, value: initialValue }) => {
+}> = ({
+  label = '',
+  name,
+  options,
+  renderOptions,
+  defaultValue: initialDefaultValue,
+}) => {
   const {
     getRootProps,
     getInputLabelProps,
@@ -147,7 +153,7 @@ const AutoComplete: FC<{
     isOptionEqualToValue: (option, value) => option.id === value.id,
     multiple: true,
     options: options,
-    defaultValue: initialValue,
+    defaultValue: initialDefaultValue,
   })
 
   const RenderOptions = renderOptions
