@@ -43,7 +43,7 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
           ))}
       </Helmet>
       <OuterScroll>
-        <Header showFilters>
+        <Header>
           <div>
             <Typography variant="h2">My Games</Typography>
             <Typography variant="subtitle1">

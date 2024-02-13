@@ -1,6 +1,5 @@
 import { Box, Divider, styled } from '@mui/material'
 import { FC, PropsWithChildren } from 'react'
-import Filters from './Filters'
 
 const HeaderContainer = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -12,11 +11,7 @@ const HeaderContainer = styled('section')(({ theme }) => ({
   },
 }))
 
-const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
-  children,
-  showFilters,
-  ...rest
-}) => {
+const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
   return (
     <>
       <Box
@@ -32,10 +27,7 @@ const Header: FC<PropsWithChildren<{ showFilters?: boolean }>> = ({
           },
         })}
       >
-        <HeaderContainer {...rest}>
-          {children}
-          {showFilters && <Filters />}
-        </HeaderContainer>
+        <HeaderContainer {...rest}>{children}</HeaderContainer>
         <Divider sx={(theme) => ({ margin: `${theme.spacing(4)} 0` })} />
       </Box>
     </>
