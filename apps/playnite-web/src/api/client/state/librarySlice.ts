@@ -8,7 +8,7 @@ import MatchName from '../../../domain/filters/playnite/MatchName'
 const { keyBy, memoize, merge } = _
 
 const initialState: {
-  nameFilters: string | null
+  nameActiveFilter: string | null
   nameFilter: string | null
   selectedFilter: string | null
   featureActiveFilters: string[]
@@ -18,7 +18,7 @@ const initialState: {
   platformFilter: string[]
   platformFilterValues: Record<string, { id: string; name: string }>
 } = {
-  nameFilters: null,
+  nameActiveFilter: null,
   nameFilter: null,
   selectedFilter: null,
   featureActiveFilters: [],
@@ -32,13 +32,13 @@ const initialState: {
 const noFilter = new NoFilter()
 
 const getNameFilter = memoize((state: typeof initialState) =>
-  !state.nameFilters ? noFilter : new MatchName(state.nameFilters),
+  !state.nameActiveFilter ? noFilter : new MatchName(state.nameActiveFilter),
 )
 
 const getFeatureFilter = memoize((state: typeof initialState) => {
-  return state.featureFilter.length === 0
+  return state.featureActiveFilters.length === 0
     ? noFilter
-    : new And(...state.featureFilter.map((id) => new MatchFeature(id)))
+    : new And(...state.featureActiveFilters.map((id) => new MatchFeature(id)))
 })
 
 const getSelectedFilterSelector = (state: typeof initialState) =>
@@ -85,7 +85,7 @@ const slice = createSlice({
   reducers: {
     clearedFilters: (state) => {
       const toBeReset = Object.entries(state)
-        .filter(([key]) => key.endsWith('Filter'))
+        .filter(([key]) => /(?!Active)Filter$/.test(key))
         .map(([key]) => key)
 
       const newState = merge({}, state)
@@ -116,7 +116,7 @@ const slice = createSlice({
     activateFilters(state) {
       return {
         ...state,
-        nameFilters: state.nameFilter,
+        nameActiveFilter: state.nameFilter,
         featureActiveFilters: state.featureFilter,
         platformActiveFilters: state.platformFilter,
       }

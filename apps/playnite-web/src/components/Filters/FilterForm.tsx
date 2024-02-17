@@ -97,6 +97,7 @@ const FilterForm: FC<{
 
   const handleResetFilters = useCallback(
     (evt: React.FormEvent<HTMLFormElement>) => {
+      evt.currentTarget.reset()
       dispatch(clearedFilters())
     },
     [],
@@ -151,25 +152,35 @@ const FilterForm: FC<{
           <MenuItem value="feature">Feature</MenuItem>
         </Select>
       </FormControl>
-      {Object.entries(allPossibleFilters)?.map(([filterName, filterValues]) => (
-        <Box
-          key={filterName}
-          sx={(theme) => ({
-            display: filterBy === filterName ? 'flex' : 'none',
-            flex: 1,
-            flexDirection: 'column',
-            width: '100%',
-          })}
-        >
-          <AutoComplete
-            label={filterByDisplay}
-            name="platform"
-            onChange={handleFilterChange(filterName)}
-            options={filterValues as AutoCompleteItem[]}
-            renderOptions={HeightBoundListAutoCompleteOptions}
-          />
-        </Box>
-      ))}
+      <Box
+        sx={(theme) => ({
+          flex: 1,
+          flexDirection: 'column',
+          width: '100%',
+        })}
+      >
+        {Object.entries(allPossibleFilters)?.map(
+          ([filterName, filterValues]) => (
+            <Box
+              key={filterName}
+              sx={(theme) => ({
+                display: filterBy === filterName ? 'flex' : 'none',
+                flex: 1,
+                flexDirection: 'column',
+                width: '100%',
+              })}
+            >
+              <AutoComplete
+                label={filterByDisplay}
+                name="platform"
+                onChange={handleFilterChange(filterName)}
+                options={filterValues as AutoCompleteItem[]}
+                renderOptions={HeightBoundListAutoCompleteOptions}
+              />
+            </Box>
+          ),
+        )}
+      </Box>
       <Box
         sx={(theme) => ({
           display: 'flex',
