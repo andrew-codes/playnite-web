@@ -24,8 +24,6 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
     [gameList, filter],
   )
 
-  console.log(filter)
-
   const width = useThemeWidth()
 
   const noDeferCount = 25
@@ -45,7 +43,7 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
           ))}
       </Helmet>
       <OuterScroll>
-        <Header showFilters>
+        <Header>
           <div>
             <Typography variant="h2">My Games</Typography>
             <Typography variant="subtitle1">

@@ -1,8 +1,8 @@
 import { Close } from '@mui/icons-material'
 import {
   AutocompleteGetTagProps,
-  List,
-  ListItem,
+  AutocompleteGroupedOption,
+  UseAutocompleteRenderedOption,
   styled,
   useAutocomplete,
 } from '@mui/material'
@@ -23,7 +23,6 @@ const InputWrapper = styled('div')(
   padding: 1px;
   display: flex;
   flex-wrap: wrap;
-  height: 56px;
 
   &:hover {
     border-color: initial;
@@ -106,27 +105,40 @@ const StyledTag = styled(Tag)<TagProps>(
 `,
 )
 
-const SelectableListItem = styled(ListItem)(({ theme }) => ({
-  '&[aria-selected="true"]': {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    fontWeight: 600,
-  },
-  '&[aria-selected="true"].Mui-focused': {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    fontWeight: 600,
-  },
-}))
-
 type AutoCompleteItem = {
   id: string
   name: string
 }
+type RenderOptionProps = {
+  groupedOptions:
+    | AutoCompleteItem[]
+    | AutocompleteGroupedOption<AutoCompleteItem>[]
+  getOptionProps: (
+    renderedOption: UseAutocompleteRenderedOption<AutoCompleteItem>,
+  ) => React.HTMLAttributes<HTMLLIElement>
+  getListboxProps: () => React.HTMLAttributes<HTMLUListElement>
+}
+type RenderOptions =
+  | FC<RenderOptionProps>
+  | ((props: RenderOptionProps) => ReactNode)
+
 const AutoComplete: FC<{
+  defaultValue?: AutoCompleteItem[] | undefined
   name: string
   label?: ReactNode
+  onChange?: (values: any[]) => void | null
   options: AutoCompleteItem[]
-  value: AutoCompleteItem[]
-}> = ({ label = '', name, options, value: initialValue }) => {
+  value?: AutoCompleteItem[] | undefined
+  renderOptions: RenderOptions
+}> = ({
+  label = '',
+  name,
+  options,
+  renderOptions,
+  defaultValue: initialDefaultValue,
+  onChange,
+  value: initialValue,
+}) => {
   const {
     getRootProps,
     getInputLabelProps,
@@ -144,35 +156,32 @@ const AutoComplete: FC<{
     isOptionEqualToValue: (option, value) => option.id === value.id,
     multiple: true,
     options: options,
-    defaultValue: initialValue,
+    onChange: (_, newValue) => {
+      onChange?.(newValue)
+    },
+    defaultValue: initialDefaultValue,
+    value: initialValue,
   })
 
+  const RenderOptions = renderOptions
+
   return (
-    <div>
+    <>
       <div {...getRootProps()}>
         <Label {...getInputLabelProps()}>{label}</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-          {value.map((option: AutoCompleteItem, index: number) => (
-            <StyledTag label={option.name} {...getTagProps({ index })} />
-          ))}
+          {!onChange &&
+            value.map((option: AutoCompleteItem, index: number) => (
+              <StyledTag label={option.name} {...getTagProps({ index })} />
+            ))}
           <input {...getInputProps()} />
           <input type="hidden" name={name} value={JSON.stringify(value)} />
         </InputWrapper>
       </div>
-      {groupedOptions.length > 0 ? (
-        <List {...getListboxProps()}>
-          {(groupedOptions as AutoCompleteItem[]).map((option, index) => (
-            <SelectableListItem
-              {...getOptionProps({ option, index })}
-              key={option.id}
-            >
-              {option.name}
-            </SelectableListItem>
-          ))}
-        </List>
-      ) : null}
-    </div>
+      <RenderOptions {...{ getListboxProps, getOptionProps, groupedOptions }} />
+    </>
   )
 }
 
 export default AutoComplete
+export type { AutoCompleteItem, RenderOptions }

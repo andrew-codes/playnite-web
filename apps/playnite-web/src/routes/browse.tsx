@@ -1,12 +1,15 @@
-import { Button, styled } from '@mui/material'
+import { FilterAlt } from '@mui/icons-material'
+import { Box, Button, styled } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { scrollTo } from '../api/client/state/layoutSlice'
 import { setFilterTypeValues } from '../api/client/state/librarySlice'
 import getGameApi from '../api/game/index.server'
+import FilterDrawer from '../components/FilterDrawer'
+import IconButton from '../components/IconButton'
 import MyLibrary from '../components/MyLibrary'
 import Drawer from '../components/Navigation/Drawer'
 import type { GameOnPlatform } from '../domain/types'
@@ -38,7 +41,6 @@ async function loader({ request }: LoaderFunctionArgs) {
 }
 
 const Title = styled('span')(({ theme }) => ({
-  marginRight: theme.spacing(8),
   textAlign: 'center',
   flex: 1,
 }))
@@ -63,17 +65,29 @@ function Browse() {
     dispatch(scrollTo(0))
   }, [])
 
+  const [open, setOpen] = useState(false)
+
   return (
     <Drawer
       title={
-        <Title>
-          <Button variant="text" onClick={handleScrollTop}>
-            My Games
-          </Button>
-        </Title>
+        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+          <Title>
+            <Button variant="text" onClick={handleScrollTop}>
+              My Games
+            </Button>
+          </Title>
+          <IconButton
+            onClick={() => setOpen(true)}
+            name="open-filter-drawer"
+            sx={{ alignSelf: 'flex-end' }}
+          >
+            <FilterAlt />
+          </IconButton>
+        </Box>
       }
     >
       <MyLibrary gamesOnPlatforms={gamesOnPlatforms ?? []} />
+      <FilterDrawer open={open} onClose={() => setOpen(false)} />
     </Drawer>
   )
 }
