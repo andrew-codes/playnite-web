@@ -6,7 +6,7 @@ import {
   styled,
   useAutocomplete,
 } from '@mui/material'
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useEffect } from 'react'
 
 const Label = styled('label')`
   padding: 0 0 4px;
@@ -126,6 +126,7 @@ const AutoComplete: FC<{
   defaultValue?: AutoCompleteItem[] | undefined
   name: string
   label?: ReactNode
+  onChange?: (values: any[]) => void | null
   options: AutoCompleteItem[]
   value?: AutoCompleteItem[] | undefined
   renderOptions: RenderOptions
@@ -135,6 +136,7 @@ const AutoComplete: FC<{
   options,
   renderOptions,
   defaultValue: initialDefaultValue,
+  onChange,
 }) => {
   const {
     getRootProps,
@@ -156,22 +158,28 @@ const AutoComplete: FC<{
     defaultValue: initialDefaultValue,
   })
 
+  useEffect(() => {
+    console.log(value)
+    onChange?.(value)
+  }, [value])
+
   const RenderOptions = renderOptions
 
   return (
-    <div>
+    <>
       <div {...getRootProps()}>
         <Label {...getInputLabelProps()}>{label}</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-          {value.map((option: AutoCompleteItem, index: number) => (
-            <StyledTag label={option.name} {...getTagProps({ index })} />
-          ))}
+          {!onChange &&
+            value.map((option: AutoCompleteItem, index: number) => (
+              <StyledTag label={option.name} {...getTagProps({ index })} />
+            ))}
           <input {...getInputProps()} />
           <input type="hidden" name={name} value={JSON.stringify(value)} />
         </InputWrapper>
       </div>
       <RenderOptions {...{ getListboxProps, getOptionProps, groupedOptions }} />
-    </div>
+    </>
   )
 }
 
