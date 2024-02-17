@@ -131,11 +131,15 @@ const FilterForm: FC<{
         type="text"
         variant="outlined"
       />
-      <Box>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
         {filterValues.platformFilter
           .concat(filterValues.featureFilter)
           .map((filter) => (
-            <Chip key={`${filter?.id}`} label={filter?.name} />
+            <Chip
+              key={`${filter?.id}`}
+              label={filter?.name}
+              sx={(theme) => ({ margin: theme.spacing(0.25) })}
+            />
           ))}
       </Box>
       <Divider />
