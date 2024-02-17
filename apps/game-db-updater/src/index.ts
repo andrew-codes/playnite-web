@@ -13,6 +13,10 @@ const run: () => Promise<AsyncMqttClient> = async () => {
     path: path.join(__dirname, '..', 'local.env'),
     override: true,
   })
+  dotenv.config({
+    path: path.join(__dirname, '..', 'dev.env'),
+    override: true,
+  })
 
   const mqttClient = await getMqttClient()
   mqttClient.subscribe('playnite/#')
