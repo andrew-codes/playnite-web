@@ -154,6 +154,7 @@ const FilterForm: FC<{
       </FormControl>
       <Box
         sx={(theme) => ({
+          display: 'flex',
           flex: 1,
           flexDirection: 'column',
           width: '100%',
