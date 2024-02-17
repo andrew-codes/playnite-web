@@ -1,6 +1,6 @@
 {
   "name": "playnite-web-plugin",
-  "sourceRoot": "apps/playnite-web-extension/src",
+  "sourceRoot": "apps/PlayniteWebPlugin/src",
   "projectType": "application",
   "targets": {
     "clean": {
