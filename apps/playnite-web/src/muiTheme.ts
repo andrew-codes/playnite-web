@@ -94,6 +94,24 @@ const theme = (
             },
           },
         },
+        MuiSelect: {
+          styleOverrides: {
+            root: {
+              '&': {
+                backgroundColor: 'rgb(40, 48, 68)',
+                '& fieldset': {
+                  borderColor: 'rgb(255, 255, 255, 0.6)',
+
+                  '&.Mui-focused': {
+                    '& fieldset': {
+                      borderColor: 'initial',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
         MuiTextField: {
           styleOverrides: {
             root: {

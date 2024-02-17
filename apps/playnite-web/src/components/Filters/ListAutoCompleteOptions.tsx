@@ -1,4 +1,5 @@
-import { List, ListItem, styled } from '@mui/material'
+import { Box, List, ListItem, styled } from '@mui/material'
+import useDimensions from 'react-use-dimensions'
 import { AutoCompleteItem, RenderOptions } from '../AutoComplete'
 
 const FullHeightList = styled(List)(({ theme }) => ({ height: '100%' }))
@@ -33,4 +34,26 @@ const ListAutoCompleteOptions: RenderOptions = ({
   )
 }
 
+const HeightBoundListAutoCompleteOptions: RenderOptions = (props) => {
+  const [ref, { height }] = useDimensions()
+  return (
+    <Box
+      ref={ref}
+      sx={(theme) => ({
+        flex: 1,
+        ...(!!height && {
+          maxHeight: `${height}px`,
+        }),
+        '& ul': {
+          overflowY: 'auto',
+          scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+        },
+      })}
+    >
+      <ListAutoCompleteOptions {...props} />
+    </Box>
+  )
+}
+
 export default ListAutoCompleteOptions
+export { HeightBoundListAutoCompleteOptions }
