@@ -169,6 +169,9 @@ const FilterForm: FC<{
           onChange={handleFilterChange(filterBy)}
           options={(allPossibleFilters[filterBy] ?? []) as AutoCompleteItem[]}
           renderOptions={HeightBoundListAutoCompleteOptions}
+          value={
+            (filterValues[`${filterBy}Filter`] ?? []) as AutoCompleteItem[]
+          }
         />
       </Box>
       <Box

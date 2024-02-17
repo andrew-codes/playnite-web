@@ -6,7 +6,7 @@ import {
   styled,
   useAutocomplete,
 } from '@mui/material'
-import { FC, ReactNode, useEffect } from 'react'
+import { FC, ReactNode } from 'react'
 
 const Label = styled('label')`
   padding: 0 0 4px;
@@ -137,6 +137,7 @@ const AutoComplete: FC<{
   renderOptions,
   defaultValue: initialDefaultValue,
   onChange,
+  value: initialValue,
 }) => {
   const {
     getRootProps,
@@ -155,13 +156,12 @@ const AutoComplete: FC<{
     isOptionEqualToValue: (option, value) => option.id === value.id,
     multiple: true,
     options: options,
+    onChange: (_, newValue) => {
+      onChange?.(newValue)
+    },
     defaultValue: initialDefaultValue,
+    value: initialValue,
   })
-
-  useEffect(() => {
-    console.log(value)
-    onChange?.(value)
-  }, [value])
 
   const RenderOptions = renderOptions
 
