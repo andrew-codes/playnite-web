@@ -79,9 +79,8 @@ const FilterForm: FC<{
     [onSubmit],
   )
 
-  const filterBy = useSelector(getSelectedFilter)
+  const filterBy = useSelector(getSelectedFilter) ?? 'feature'
   const filterByDisplay = startCase(filterBy)
-
   const allPossibleFilters = useSelector(getAllPossibleFilters)
   const handleFilterChange =
     (filterName) => (value: { id: string; name: string }[]) => {
@@ -160,27 +159,13 @@ const FilterForm: FC<{
           width: '100%',
         })}
       >
-        {Object.entries(allPossibleFilters)?.map(
-          ([filterName, filterValues]) => (
-            <Box
-              key={filterName}
-              sx={(theme) => ({
-                display: filterBy === filterName ? 'flex' : 'none',
-                flex: 1,
-                flexDirection: 'column',
-                width: '100%',
-              })}
-            >
-              <AutoComplete
-                label={filterByDisplay}
-                name="platform"
-                onChange={handleFilterChange(filterName)}
-                options={filterValues as AutoCompleteItem[]}
-                renderOptions={HeightBoundListAutoCompleteOptions}
-              />
-            </Box>
-          ),
-        )}
+        <AutoComplete
+          label={filterByDisplay}
+          name="platform"
+          onChange={handleFilterChange(filterBy)}
+          options={(allPossibleFilters[filterBy] ?? []) as AutoCompleteItem[]}
+          renderOptions={HeightBoundListAutoCompleteOptions}
+        />
       </Box>
       <Box
         sx={(theme) => ({

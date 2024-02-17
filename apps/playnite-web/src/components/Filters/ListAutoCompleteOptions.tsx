@@ -35,14 +35,17 @@ const ListAutoCompleteOptions: RenderOptions = ({
 }
 
 const HeightBoundListAutoCompleteOptions: RenderOptions = (props) => {
-  const [ref, { height }] = useDimensions()
+  const [ref, dims] = useDimensions({ liveMeasure: true })
+
   return (
     <Box
       ref={ref}
       sx={(theme) => ({
         flex: 1,
-        ...(!!height && {
-          maxHeight: `${height}px`,
+        display: 'block',
+        height: '100%',
+        ...(!!dims.height && {
+          maxHeight: `${dims.height}px`,
         }),
         '& ul': {
           overflowY: 'auto',
