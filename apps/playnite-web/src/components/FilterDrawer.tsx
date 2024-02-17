@@ -6,12 +6,15 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import React, { FC } from 'react'
+import { FC, FormEvent, MouseEvent, useCallback } from 'react'
 import FilterForm from './Filters/FilterForm'
 import IconButton from './IconButton'
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: `85%`,
+  width: `80%`,
+  [theme.breakpoints.down('md')]: {
+    width: `100%`,
+  },
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -102,21 +105,38 @@ const DrawerBody = styled('div', {
   width: '100%',
   position: 'relative',
   flexDirection: 'column',
+  overflowY: 'hidden',
   paddingTop: `56px`,
-  padding: `${theme.spacing(2)}`,
+  padding: `${theme.spacing(2.5)}`,
   backgroundColor: theme.palette.background.paper,
+
+  '> *': {
+    marginBottom: `${theme.spacing(2)} !important`,
+
+    '&:last-child': {
+      marginBottom: '0 !important',
+    },
+  },
 }))
 
 const FilterDrawer: FC<{
-  onClose: React.MouseEventHandler<HTMLButtonElement>
+  onClose: (
+    evt: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement> | {},
+  ) => void
   open: boolean
 }> = ({ onClose, open }) => {
+  const handleClose = useCallback(
+    (evt) => {
+      onClose({})
+    },
+    [onClose],
+  )
   return (
     <Drawer
       variant="temporary"
       anchor="right"
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       ModalProps={{ keepMounted: true }}
     >
       <DrawerHeader open={open}>
@@ -129,8 +149,8 @@ const FilterDrawer: FC<{
         </IconButton>
       </DrawerHeader>
       <DrawerBody open={open}>
-        <Typography variant="h4">Filter</Typography>
-        <FilterForm onCancel={onClose} />
+        <Typography variant="h4">Filters</Typography>
+        <FilterForm onCancel={onClose} onSubmit={onClose} />
       </DrawerBody>
     </Drawer>
   )
