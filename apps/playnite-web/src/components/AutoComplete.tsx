@@ -151,15 +151,16 @@ const AutoComplete: FC<{
     focused,
     setAnchorEl,
   } = useAutocomplete({
-    getOptionLabel: (option) => option.name,
+    blurOnSelect: true,
+    defaultValue: initialDefaultValue,
     disableCloseOnSelect: true,
+    getOptionLabel: (option) => option.name,
     isOptionEqualToValue: (option, value) => option.id === value.id,
     multiple: true,
     options: options,
     onChange: (_, newValue) => {
       onChange?.(newValue)
     },
-    defaultValue: initialDefaultValue,
     value: initialValue,
   })
 
