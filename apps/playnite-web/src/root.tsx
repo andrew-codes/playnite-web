@@ -94,13 +94,15 @@ const App: FC<{}> = () => {
   }>()
 
   const store = useStore()
-  if (!!user) {
-    store.dispatch(signedIn({ payload: null }))
-  } else {
-    store.dispatch(signedOut({ payload: null }))
-  }
 
-  store.dispatch(setDeviceFeatures({ device }))
+  useEffect(() => {
+    if (!!user) {
+      store.dispatch(signedIn())
+    } else {
+      store.dispatch(signedOut())
+    }
+  }, [])
+
   useEffect(() => {
     let isTouchEnabled = false
     let orientation: null | OrientationType = null
@@ -127,6 +129,7 @@ const App: FC<{}> = () => {
     }
     store.dispatch(
       setDeviceFeatures({
+        device,
         isTouchEnabled,
         orientation,
         isPwa,

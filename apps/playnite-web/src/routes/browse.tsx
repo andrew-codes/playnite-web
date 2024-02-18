@@ -3,7 +3,7 @@ import { Box, Button, styled } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { scrollTo } from '../api/client/state/layoutSlice'
 import { setFilterTypeValues } from '../api/client/state/librarySlice'
@@ -57,9 +57,11 @@ function Browse() {
   }
 
   const dispatch = useDispatch()
-  Object.entries(filterValues ?? {}).forEach(([key, value]) => {
-    dispatch(setFilterTypeValues({ filterTypeName: key, values: value }))
-  })
+  useEffect(() => {
+    Object.entries(filterValues ?? {}).forEach(([key, value]) => {
+      dispatch(setFilterTypeValues({ filterTypeName: key, values: value }))
+    })
+  }, [])
 
   const handleScrollTop = useCallback(() => {
     dispatch(scrollTo(0))
