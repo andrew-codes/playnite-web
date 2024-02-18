@@ -124,7 +124,6 @@ type RenderOptions =
 
 const AutoComplete: FC<{
   defaultValue?: AutoCompleteItem[] | undefined
-  name: string
   label?: ReactNode
   onChange?: (values: any[]) => void | null
   options: AutoCompleteItem[]
@@ -132,7 +131,6 @@ const AutoComplete: FC<{
   renderOptions: RenderOptions
 }> = ({
   label = '',
-  name,
   options,
   renderOptions,
   defaultValue: initialDefaultValue,
@@ -176,7 +174,6 @@ const AutoComplete: FC<{
               <StyledTag label={option.name} {...getTagProps({ index })} />
             ))}
           <input {...getInputProps()} />
-          <input type="hidden" name={name} value={JSON.stringify(value)} />
         </InputWrapper>
       </div>
       <RenderOptions {...{ getListboxProps, getOptionProps, groupedOptions }} />
