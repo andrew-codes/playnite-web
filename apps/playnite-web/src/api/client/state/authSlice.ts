@@ -14,10 +14,10 @@ const slice = createSlice({
     getIsAuthenticated: (state) => state.isAuthenticated,
   },
   reducers: {
-    signedIn(state, action) {
+    signedIn(state) {
       return merge({}, state, { isAuthenticated: true })
     },
-    signedOut(state, action) {
+    signedOut(state) {
       return merge({}, state, { isAuthenticated: false })
     },
   },
