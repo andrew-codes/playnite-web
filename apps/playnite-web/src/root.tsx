@@ -8,10 +8,9 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useLocation,
   useOutlet,
 } from '@remix-run/react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { FC, useEffect } from 'react'
 import { useStore } from 'react-redux'
 import { createHead } from 'remix-island'
@@ -148,7 +147,6 @@ const App: FC<{}> = () => {
   }, [])
 
   const outlet = useOutlet()
-  const location = useLocation()
 
   return (
     <>
@@ -157,16 +155,7 @@ const App: FC<{}> = () => {
         <CssBaseline />
         <Layout>
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={location.pathname}
-              initial={{ x: '-10%', opacity: 0 }}
-              animate={{ x: '0', opacity: 1 }}
-              exit={{ y: '-10%', opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{}}
-            >
-              {outlet}
-            </motion.div>
+            <div>{outlet}</div>
           </AnimatePresence>
         </Layout>
       </ThemeProvider>
