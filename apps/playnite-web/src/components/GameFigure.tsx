@@ -52,6 +52,7 @@ const GameFigure: FC<
                 alt={game.name}
                 width={width}
                 loading="eager"
+                onError={(e) => {}}
               />
               <Box
                 sx={(theme) => ({

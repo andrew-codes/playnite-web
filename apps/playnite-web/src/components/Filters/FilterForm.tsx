@@ -3,6 +3,9 @@ import {
   Box,
   Button,
   Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Divider,
   FormControl,
   IconButton,
@@ -14,12 +17,20 @@ import {
   styled,
 } from '@mui/material'
 import _ from 'lodash'
-import { FC, Fragment, ReactNode, useCallback, useReducer } from 'react'
+import {
+  FC,
+  Fragment,
+  ReactNode,
+  useCallback,
+  useReducer,
+  useState,
+} from 'react'
 import { useSelector } from 'react-redux'
 import { getAllPossibleFilterValues } from '../../api/client/state/librarySlice'
 import AutoComplete, { AutoCompleteItem } from '../AutoComplete'
+import SquareIconButton from '../IconButton'
 import Select from '../Select'
-import { HeightBoundListAutoCompleteOptions } from './ListAutoCompleteOptions'
+import ListAutoCompleteOptions from './ListAutoCompleteOptions'
 
 const { merge, startCase } = _
 
@@ -37,16 +48,22 @@ const Form = styled('form')(({ theme }) => ({
   },
 }))
 
+const CloseIconButton = styled(SquareIconButton)(({ theme }) => ({
+  position: 'absolute',
+  right: theme.spacing(3),
+  top: theme.spacing(3),
+}))
+
 const filterFormInitialState: {
   nameFilter: string
   platformFilter: AutoCompleteItem[]
   featureFilter: AutoCompleteItem[]
-  filterBy: string
+  filterBy: string | null
 } = {
   nameFilter: '',
   platformFilter: [],
   featureFilter: [],
-  filterBy: 'feature',
+  filterBy: null,
 }
 const filterFormReducer = (state, action) => {
   switch (action.type) {
@@ -68,7 +85,10 @@ const filterFormReducer = (state, action) => {
     case 'removeFilter':
       return {
         ...state,
-        [`${state.filterBy}Filter`]: state[`${state.filterBy}Filter`].filter(
+        featureFilter: state.featureFilter.filter(
+          (filter) => filter.id !== action.payload,
+        ),
+        platformFilter: state.platformFilter.filter(
           (filter) => filter.id !== action.payload,
         ),
       }
@@ -97,13 +117,19 @@ const FilterForm: FC<{
     }),
   )
 
-  const filterByDisplay = startCase(state.filterBy)
+  const filterByDisplay = startCase(state.filterBy ?? '')
+  const [filterByOpen, setFilterByOpen] = useState(false)
+  const handleCloseFilterValues = useCallback(() => {
+    dispatch({ type: 'selectedFilterBy', payload: null })
+    setFilterByOpen(false)
+  }, [])
   const handleFilterByChange = useCallback(
     (evt: SelectChangeEvent<unknown>, child: ReactNode) => {
       dispatch({
         type: 'selectedFilterBy',
         payload: evt.target.value as string | null,
       })
+      setFilterByOpen(true)
     },
     [],
   )
@@ -118,13 +144,14 @@ const FilterForm: FC<{
     dispatch({ type: 'setNameFilterValue', payload: '' })
   }, [])
 
-  const allPossibleFilters = useSelector(getAllPossibleFilterValues)
   const handleFilterChange = useCallback((values) => {
     dispatch({
       type: 'setFilterValue',
       payload: values,
     })
   }, [])
+
+  const allPossibleFilters = useSelector(getAllPossibleFilterValues)
   const handleRemoveFilter = (filterId: string) => {
     dispatch({ type: 'removeFilter', payload: filterId })
   }
@@ -166,28 +193,6 @@ const FilterForm: FC<{
         variant="outlined"
         value={state.nameFilter}
       />
-      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-        {state.platformFilter.map((filter) => (
-          <Fragment key={filter.id}>
-            <Chip
-              label={filter.name}
-              onDelete={() => handleRemoveFilter(filter.id)}
-              sx={(theme) => ({ margin: theme.spacing(0.25) })}
-            />
-            <input type="hidden" name="platformFilter" value={filter.id} />
-          </Fragment>
-        ))}
-        {state.featureFilter.map((filter) => (
-          <Fragment key={filter.id}>
-            <Chip
-              label={filter.name}
-              onDelete={() => handleRemoveFilter(filter.id)}
-              sx={(theme) => ({ margin: theme.spacing(0.25) })}
-            />
-            <input type="hidden" name="featureFilter" value={filter.id} />
-          </Fragment>
-        ))}
-      </Box>
       <Divider />
       <FormControl fullWidth>
         <InputLabel id="filterByLabel">Filter By</InputLabel>
@@ -209,15 +214,68 @@ const FilterForm: FC<{
           width: '100%',
         })}
       >
-        <AutoComplete
-          label={filterByDisplay}
-          onChange={handleFilterChange}
-          options={
-            (allPossibleFilters[state.filterBy] ?? []) as AutoCompleteItem[]
-          }
-          renderOptions={HeightBoundListAutoCompleteOptions}
-          value={(state[`${state.filterBy}Filter`] ?? []) as AutoCompleteItem[]}
-        />
+        <Dialog
+          open={filterByOpen}
+          onClose={handleCloseFilterValues}
+          PaperProps={{
+            sx: (theme) => ({
+              width: '100%',
+              maxWidth: '100%',
+              maxHeight: '100%',
+              height: `calc(100% - ${theme.spacing(6)})`,
+              padding: '24px',
+              scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
+
+              '.MuiDialogContent-root': {
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+              },
+            }),
+          }}
+        >
+          <DialogTitle>
+            <span>Filter by {filterByDisplay}</span>
+          </DialogTitle>
+          <CloseIconButton onClick={handleCloseFilterValues}>
+            <Clear />
+          </CloseIconButton>
+          <DialogContent>
+            <AutoComplete
+              label={filterByDisplay}
+              onChange={handleFilterChange}
+              options={
+                (allPossibleFilters[state.filterBy] ?? []) as AutoCompleteItem[]
+              }
+              renderOptions={ListAutoCompleteOptions}
+              value={
+                (state[`${state.filterBy}Filter`] ?? []) as AutoCompleteItem[]
+              }
+            />
+          </DialogContent>
+        </Dialog>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+          {state.platformFilter.map((filter) => (
+            <Fragment key={filter.id}>
+              <Chip
+                label={filter.name}
+                onDelete={() => handleRemoveFilter(filter.id)}
+                sx={(theme) => ({ margin: theme.spacing(0.25) })}
+              />
+              <input type="hidden" name="platformFilter" value={filter.id} />
+            </Fragment>
+          ))}
+          {state.featureFilter.map((filter) => (
+            <Fragment key={filter.id}>
+              <Chip
+                label={filter.name}
+                onDelete={() => handleRemoveFilter(filter.id)}
+                sx={(theme) => ({ margin: theme.spacing(0.25) })}
+              />
+              <input type="hidden" name="featureFilter" value={filter.id} />
+            </Fragment>
+          ))}
+        </Box>
       </Box>
       <Box
         sx={(theme) => ({
