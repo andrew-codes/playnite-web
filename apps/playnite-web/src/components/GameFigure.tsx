@@ -19,6 +19,7 @@ const Image = styled('img', {
   height: `${width}`,
   objectFit: 'cover',
   width,
+  display: 'block',
 }))
 
 const GameFigure: FC<
@@ -39,6 +40,8 @@ const GameFigure: FC<
   }, [])
   const { ref } = useInView({ onChange: handleChange })
 
+  const [imageHasError, setImageHasError] = useState(false)
+
   return (
     <Figure style={style} ref={ref} width={width}>
       {hasBeenInViewBefore || noDefer
@@ -47,13 +50,24 @@ const GameFigure: FC<
               sx={{ position: 'relative' }}
               key={`${game.oid.asString}-image`}
             >
-              <Image
-                src={game.cover}
-                alt={game.name}
-                width={width}
-                loading="eager"
-                onError={(e) => {}}
-              />
+              {!imageHasError ? (
+                <Image
+                  src={game.cover}
+                  alt={game.name}
+                  width={width}
+                  loading="eager"
+                  onError={(e) => {
+                    setImageHasError(true)
+                  }}
+                />
+              ) : (
+                <Box
+                  sx={{
+                    height: `${width}`,
+                    width: `${width}`,
+                  }}
+                ></Box>
+              )}
               <Box
                 sx={(theme) => ({
                   position: 'absolute',
