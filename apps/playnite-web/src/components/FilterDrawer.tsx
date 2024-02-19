@@ -91,6 +91,7 @@ const DrawerHeader = styled('div', {
 })<{ open: boolean }>(({ open, theme }) => ({
   position: 'absolute',
   right: `24px`,
+  top: '13px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -100,6 +101,9 @@ const DrawerHeader = styled('div', {
   ...(!open && {
     display: 'none',
   }),
+  [theme.breakpoints.down('lg')]: {
+    top: '0',
+  },
 }))
 
 const DrawerBody = styled('div', {
@@ -111,8 +115,7 @@ const DrawerBody = styled('div', {
   position: 'relative',
   flexDirection: 'column',
   overflowY: 'hidden',
-  paddingTop: `56px`,
-  padding: `${theme.spacing(2.5)}`,
+  padding: `56px ${theme.spacing(2.5)} ${theme.spacing(2.5)}`,
   backgroundColor: theme.palette.background.paper,
 
   '> *': {
@@ -168,7 +171,6 @@ const FilterDrawer: FC<{
       anchor="right"
       open={open}
       onClose={handleClose}
-      // ModalProps={{ keepMounted: true }}
     >
       <DrawerHeader open={open}>
         <IconButton
