@@ -134,7 +134,7 @@ const AutoComplete: FC<{
   options,
   renderOptions,
   defaultValue: initialDefaultValue,
-  onChange,
+  onChange: handleChange,
   value: initialValue,
 }) => {
   const {
@@ -157,23 +157,37 @@ const AutoComplete: FC<{
     multiple: true,
     options: options,
     onChange: (_, newValue) => {
-      onChange?.(newValue)
+      handleChange?.(newValue)
     },
     value: initialValue,
   })
 
   const RenderOptions = renderOptions
+  const { onKeyDown, ...restInputProps } = getInputProps()
+  const handleIgnoreBackspaceKeyWithEmptyValue = (
+    evt: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (evt.key === 'Backspace' && !evt.currentTarget.value) {
+      evt.stopPropagation()
+      return
+    }
+
+    onKeyDown?.(evt)
+  }
 
   return (
     <>
       <div {...getRootProps()}>
         <Label {...getInputLabelProps()}>{label}</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-          {!onChange &&
+          {!handleChange &&
             value.map((option: AutoCompleteItem, index: number) => (
               <StyledTag label={option.name} {...getTagProps({ index })} />
             ))}
-          <input {...getInputProps()} />
+          <input
+            {...restInputProps}
+            onKeyDown={handleIgnoreBackspaceKeyWithEmptyValue}
+          />
         </InputWrapper>
       </div>
       <RenderOptions {...{ getListboxProps, getOptionProps, groupedOptions }} />
