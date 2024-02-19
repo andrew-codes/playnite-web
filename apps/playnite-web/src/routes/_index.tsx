@@ -16,14 +16,27 @@ import { Playlist } from '../domain/types'
 async function loader({ request }: LoaderFunctionArgs) {
   const api = getGameApi()
   try {
-    const playing = await api.getPlaylistByName('On Deck')
+    const games = await api.getGames()
     return json({
-      playing,
+      lists: [
+        {
+          name: 'Playing',
+          games: games.filter(
+            (game) => game.completionStatus?.name === 'Playing',
+          ),
+        },
+        {
+          name: 'Up Next',
+          games: games.filter(
+            (game) => game.completionStatus?.name === 'Plan to Play',
+          ),
+        },
+      ],
     })
   } catch (e) {
     console.error(e)
     return json({
-      playing: {},
+      lists: [],
     })
   }
 }
@@ -31,15 +44,17 @@ async function loader({ request }: LoaderFunctionArgs) {
 const noFilter = new NoFilter()
 
 function Index() {
-  const { playing } = (useLoaderData() || {}) as unknown as {
-    playing?: Playlist
+  const { lists } = (useLoaderData() || {}) as unknown as {
+    lists?: Playlist[]
   }
-  const playingPlaylist = useMemo(() => {
-    return {
-      ...playing,
-      games: new FilteredGameList(new GameList(playing?.games || []), noFilter),
-    }
-  }, [playing])
+  const gameListPlaylists = useMemo(() => {
+    return (
+      lists?.map((list) => ({
+        ...list,
+        games: new FilteredGameList(new GameList(list.games), noFilter),
+      })) ?? []
+    )
+  }, [lists])
 
   return (
     <Drawer>
@@ -47,10 +62,12 @@ function Index() {
         <Header>
           <Typography variant="h2">Library</Typography>
         </Header>
-        <section>
-          <Typography variant="h4">{playingPlaylist?.name}</Typography>
-          <HorizontalGameList games={playingPlaylist.games} noDeferCount={5} />
-        </section>
+        {gameListPlaylists.map((playlist) => (
+          <section>
+            <Typography variant="h4">{playlist?.name}</Typography>
+            <HorizontalGameList games={playlist.games} noDeferCount={5} />
+          </section>
+        ))}
       </OuterScroll>
     </Drawer>
   )
