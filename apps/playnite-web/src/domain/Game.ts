@@ -1,9 +1,11 @@
 import _ from 'lodash'
+import ProgressionCompletionStatus from './CompletionStatus'
 import Oid from './Oid'
 import type {
   Developer,
   Feature,
   GameOnPlatform,
+  ICompletionStatus,
   IGame,
   IdentifyDomainObjects,
   Platform,
@@ -51,6 +53,7 @@ class Game implements IGame {
   private _exposedGame: GameOnPlatform
   private _exposedGameOid: Oid
   private _oid: Oid
+  private _completionStatus: ICompletionStatus
 
   constructor(gamesOnPlatforms: GameOnPlatform[]) {
     this._games = gamesOnPlatforms
@@ -59,6 +62,26 @@ class Game implements IGame {
     this._oid = new Oid(
       `gamesonplatforms:${this._games.map((g) => g.id).join(',')}`,
     )
+    this._completionStatus = this._games
+      .filter((g) => g.completionStatus)
+      .map(
+        (g) =>
+          new ProgressionCompletionStatus(
+            g.completionStatus as ICompletionStatus,
+          ),
+      )
+      .sort((a, b) => {
+        if (b.progressionOrder > a.progressionOrder) {
+          return 1
+        }
+        if (b.progressionOrder < a.progressionOrder) {
+          return -1
+        }
+        return 0
+      })[0]
+  }
+  get completionStatus(): ICompletionStatus {
+    return this._completionStatus
   }
 
   get features(): Feature[] {
