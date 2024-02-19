@@ -65,6 +65,13 @@ const filterFormReducer = (state, action) => {
         ...state,
         ['nameFilter']: action.payload,
       }
+    case 'removeFilter':
+      return {
+        ...state,
+        [`${state.filterBy}Filter`]: state[`${state.filterBy}Filter`].filter(
+          (filter) => filter.id !== action.payload,
+        ),
+      }
     case 'reset':
       return action.payload
     case 'clear':
@@ -118,6 +125,9 @@ const FilterForm: FC<{
       payload: values,
     })
   }, [])
+  const handleRemoveFilter = (filterId: string) => {
+    dispatch({ type: 'removeFilter', payload: filterId })
+  }
 
   const handleResetFilters = useCallback(
     (evt: React.FormEvent<HTMLFormElement>) => {
@@ -161,6 +171,7 @@ const FilterForm: FC<{
           <Fragment key={filter.id}>
             <Chip
               label={filter.name}
+              onDelete={() => handleRemoveFilter(filter.id)}
               sx={(theme) => ({ margin: theme.spacing(0.25) })}
             />
             <input type="hidden" name="platformFilter" value={filter.id} />
@@ -170,6 +181,7 @@ const FilterForm: FC<{
           <Fragment key={filter.id}>
             <Chip
               label={filter.name}
+              onDelete={() => handleRemoveFilter(filter.id)}
               sx={(theme) => ({ margin: theme.spacing(0.25) })}
             />
             <input type="hidden" name="featureFilter" value={filter.id} />
