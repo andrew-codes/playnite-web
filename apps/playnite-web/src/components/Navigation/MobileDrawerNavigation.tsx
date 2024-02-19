@@ -143,7 +143,7 @@ const DrawerBody = styled('div', {
   backgroundColor: theme.palette.background.paper,
   ...(open && {
     ...openedMixin(theme),
-    transition: theme.transitions.create(['background', 'width'], {
+    transition: theme.transitions.create(['width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -152,10 +152,9 @@ const DrawerBody = styled('div', {
   ...(!open && {
     width: '80px',
     overflowX: 'unset',
-    background: 'none',
-    transition: theme.transitions.create(['background', 'width'], {
+    transition: theme.transitions.create(['width'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.leavingScreen,
     }),
   }),
 }))
