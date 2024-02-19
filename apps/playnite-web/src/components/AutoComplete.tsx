@@ -149,7 +149,6 @@ const AutoComplete: FC<{
     focused,
     setAnchorEl,
   } = useAutocomplete({
-    blurOnSelect: true,
     defaultValue: initialDefaultValue,
     disableCloseOnSelect: true,
     getOptionLabel: (option) => option.name,
@@ -180,10 +179,9 @@ const AutoComplete: FC<{
       <div {...getRootProps()}>
         <Label {...getInputLabelProps()}>{label}</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-          {!handleChange &&
-            value.map((option: AutoCompleteItem, index: number) => (
-              <StyledTag label={option.name} {...getTagProps({ index })} />
-            ))}
+          {value.map((option: AutoCompleteItem, index: number) => (
+            <StyledTag label={option.name} {...getTagProps({ index })} />
+          ))}
           <input
             {...restInputProps}
             onKeyDown={handleIgnoreBackspaceKeyWithEmptyValue}

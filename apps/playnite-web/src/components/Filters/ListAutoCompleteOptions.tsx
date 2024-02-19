@@ -2,7 +2,14 @@ import { Box, List, ListItem, styled } from '@mui/material'
 import useDimensions from 'react-use-dimensions'
 import { AutoCompleteItem, RenderOptions } from '../AutoComplete'
 
-const FullHeightList = styled(List)(({ theme }) => ({ height: '100%' }))
+const FullHeightList = styled(List)(({ theme }) => ({
+  overflowY: 'auto',
+  scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.paper}`,
+  backgroundColor: theme.palette.background.paper,
+  marginTop: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  padding: 0,
+}))
 
 const SelectableListItem = styled(ListItem)(({ theme }) => ({
   '&[aria-selected="true"]': {
