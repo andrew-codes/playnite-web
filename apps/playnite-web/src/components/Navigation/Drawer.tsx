@@ -2,15 +2,24 @@ import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { FC, PropsWithChildren, ReactNode } from 'react'
 import MobileDrawerNavigation from './MobileDrawerNavigation'
 
-const Drawer: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
-  children,
-  title,
-}) => {
+const Drawer: FC<
+  PropsWithChildren<{
+    title?: ReactNode | undefined
+    secondaryMenu?: ReactNode | undefined
+  }>
+> = ({ children, secondaryMenu, title }) => {
   const theme = useTheme()
   const shouldUseMobileDrawer = useMediaQuery(theme.breakpoints.down('lg'))
 
   return shouldUseMobileDrawer ? (
-    <MobileDrawerNavigation title={title}>
+    <MobileDrawerNavigation
+      title={
+        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+          {title}
+          <Box sx={{ alignSelf: 'flex-end' }}>{secondaryMenu}</Box>
+        </Box>
+      }
+    >
       <Box
         component={'main'}
         sx={(theme) => ({
@@ -65,6 +74,17 @@ const Drawer: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
         },
       })}
     >
+      <Box
+        sx={{
+          display: 'flex',
+          position: 'absolute',
+          top: '24px',
+          right: '24px',
+          zIndex: 1500,
+        }}
+      >
+        {secondaryMenu}
+      </Box>
       {children}
     </Box>
   )
