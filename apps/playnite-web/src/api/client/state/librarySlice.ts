@@ -33,6 +33,10 @@ const getFeatureFilter = memoize((state: typeof initialState) => {
     : new And(...state.activeFeatureFilters.map((id) => new MatchFeature(id)))
 })
 
+const alphabeticalOrder = (a: { name: string }, b: { name: string }) => {
+  return a.name.localeCompare(b.name)
+}
+
 const slice = createSlice({
   name: 'library',
   initialState,
@@ -56,7 +60,7 @@ const slice = createSlice({
         if (key.endsWith('FilterValues')) {
           acc[key.replace('FilterValues', '')] = Object.values(
             value as Record<string, { id: string; name: string }>,
-          )
+          ).sort(alphabeticalOrder)
         }
         return acc
       }, {})
