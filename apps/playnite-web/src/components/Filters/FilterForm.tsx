@@ -211,13 +211,30 @@ const FilterForm: FC<{
         sx={(theme) => ({
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
           width: '100%',
+          [theme.breakpoints.up('lg')]: {
+            justifyContent: 'center',
+            '> button': {
+              margin: `0 ${theme.spacing(2)}`,
+            },
+          },
+          [theme.breakpoints.down('lg')]: {
+            justifyContent: 'space-between',
+            '> button': {
+              flex: 1,
+            },
+          },
         })}
       >
-        <Button type="submit">Filter</Button>
-        <Button type="reset">Clear</Button>
-        <Button onClick={handleCancel}>Cancel</Button>
+        <Button type="submit" size="large">
+          Filter
+        </Button>
+        <Button type="reset" size="large">
+          Clear
+        </Button>
+        <Button onClick={handleCancel} size="large">
+          Cancel
+        </Button>
       </Box>
     </Form>
   )
