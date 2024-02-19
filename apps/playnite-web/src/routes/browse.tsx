@@ -1,5 +1,5 @@
 import { FilterAlt } from '@mui/icons-material'
-import { Box, Button, styled } from '@mui/material'
+import { Button, styled } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -72,20 +72,16 @@ function Browse() {
   return (
     <Drawer
       title={
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          <Title>
-            <Button variant="text" onClick={handleScrollTop}>
-              My Games
-            </Button>
-          </Title>
-          <IconButton
-            onClick={() => setOpen(true)}
-            name="open-filter-drawer"
-            sx={{ alignSelf: 'flex-end' }}
-          >
-            <FilterAlt />
-          </IconButton>
-        </Box>
+        <Title>
+          <Button variant="text" onClick={handleScrollTop}>
+            My Games
+          </Button>
+        </Title>
+      }
+      secondaryMenu={
+        <IconButton onClick={() => setOpen(true)} name="open-filter-drawer">
+          <FilterAlt />
+        </IconButton>
       }
     >
       <MyLibrary gamesOnPlatforms={gamesOnPlatforms ?? []} />
