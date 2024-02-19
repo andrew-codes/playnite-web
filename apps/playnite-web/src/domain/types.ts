@@ -69,7 +69,7 @@ interface Score {
   get value(): string
 }
 
-type CompletionStatus = WithId & {
+interface ICompletionStatus extends WithId {
   name: string
 }
 
@@ -97,7 +97,7 @@ type GameOnPlatform = WithId & {
   ageRating?: AgeRating
   background: string
   communityScore: Score
-  completionStatus?: CompletionStatus
+  completionStatus?: ICompletionStatus
   cover: string
   criticScore: Score
   description: string
@@ -132,6 +132,7 @@ interface IGame {
   get platforms(): Platform[]
   get series(): Series[]
   get features(): Feature[]
+  get completionStatus(): ICompletionStatus
 }
 
 interface IList<T> {
@@ -154,7 +155,6 @@ type GameAsset = WithId & {
 
 export type {
   AgeRating,
-  CompletionStatus,
   Developer,
   DomainType,
   Feature,
@@ -162,6 +162,7 @@ export type {
   GameAssetType,
   GameOnPlatform,
   Genre,
+  ICompletionStatus,
   IGame,
   IList,
   IMatchA,
