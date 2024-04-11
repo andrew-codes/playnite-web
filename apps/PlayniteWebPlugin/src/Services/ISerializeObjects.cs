@@ -2,6 +2,6 @@ namespace PlayniteWeb.Services
 {
   public interface ISerializeObjects
   {
-    string Serialize<T>(T data);
+    string Serialize(object data);
   }
 }
