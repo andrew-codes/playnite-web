@@ -1,23 +1,12 @@
-using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using System.Text.Json;
 
 namespace PlayniteWeb.Services
 {
   public class ObjectSerializer : ISerializeObjects
   {
-    private readonly JsonSerializer serializer;
-
-    public ObjectSerializer() => serializer = new JsonSerializer() { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-
-    public string Serialize<T>(T data)
+    public string Serialize(object data)
     {
-      using (var outStream = new StringWriter())
-      using (var writer = new JsonTextWriter(outStream))
-      {
-        serializer.Serialize(writer, data);
-        return outStream.ToString();
-      }
+      return JsonSerializer.Serialize(data, new JsonSerializerOptions(JsonSerializerDefaults.Web));
     }
   }
 }
