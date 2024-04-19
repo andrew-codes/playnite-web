@@ -1,31 +1,31 @@
 {
-    "name": "game-db-updater",
-    "description": "Service to listen to MQTT messages and update game database.",
-    "version": "0.0.1",
-    "private": true,
-    "dependencies": {
-        "async-mqtt": "^2.6.3",
-        "debug": "^4.3.4",
-        "dotenv": "^16.3.1",
-        "lodash": "^4.17.21",
-        "mongodb": "^6.3.0"
-    },
-    "devDependencies": {
-        "@types/jest": "^29.2.5",
-        "@types/node": "^18.11.18",
-        "cpy": "^11.0.0",
-        "cpy-cli": "^5.0.0",
-        "dotenv": "^16.3.1",
-        "esbuild": "^0.17.3",
-        "esbuild-register": "^3.4.2",
-        "jest": "^29.3.1",
-        "jest-config": "29.3.1",
-        "jest-when": "^3.5.2",
-        "nodemon": "^2.0.20",
-        "nx": "^17.1.2",
-        "prettier": "^3.1.1",
-        "rimraf": "^5.0.5",
-        "ts-jest": "^29.0.5",
-        "typescript": "^5.3.2"
-    }
+  "name": "game-db-updater",
+  "description": "Service to listen to MQTT messages and update game database.",
+  "version": "2.0.1",
+  "private": true,
+  "dependencies": {
+    "async-mqtt": "^2.6.3",
+    "debug": "^4.3.4",
+    "dotenv": "^16.3.1",
+    "lodash": "^4.17.21",
+    "mongodb": "^6.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.2.5",
+    "@types/node": "^18.11.18",
+    "cpy": "^11.0.0",
+    "cpy-cli": "^5.0.0",
+    "dotenv": "^16.3.1",
+    "esbuild": "^0.17.3",
+    "esbuild-register": "^3.4.2",
+    "jest": "^29.3.1",
+    "jest-config": "29.3.1",
+    "jest-when": "^3.5.2",
+    "nodemon": "^2.0.20",
+    "nx": "^17.1.2",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.0.5",
+    "typescript": "^5.3.2"
+  }
 }

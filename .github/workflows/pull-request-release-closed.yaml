@@ -25,4 +25,4 @@ jobs:
           keep-at-least: 0
           token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
           skip-tags: dev, v*
-          filter-tags: PR${{ github.event.pull_request.number }}*
+          filter-tags: '*PR${{ github.event.pull_request.number }}*'
