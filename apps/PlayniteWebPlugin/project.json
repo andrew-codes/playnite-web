@@ -28,7 +28,7 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": "./scripts/package.sh",
+        "command": "bash -c './scripts/package.sh'",
         "cwd": "{projectRoot}"
       }
     }
