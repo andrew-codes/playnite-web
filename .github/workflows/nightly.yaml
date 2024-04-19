@@ -99,6 +99,11 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
           TAG: '${{ steps.major_release_version.outputs.value }}-dev'
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: packaged-apps
+          path: apps/*/.packaged
 
   unit_tests_windows:
     name: Verify PR - Tests (Windows)
@@ -175,8 +180,8 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-      - name: Package apps
-        run: yarn nx run-many --target=package --parallel --verbose
+      - name: Package extension
+        run: yarn nx run playnite-web-plugin:package --verbose
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
@@ -185,5 +190,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: packaged-apps
+          name: playnite-web-extension
           path: apps/*/.packaged
