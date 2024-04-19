@@ -38,7 +38,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "mkdir -p .packaged/build && cp build/ .packaged -r && cp public/ .packaged -r && cp server.mjs .packaged && cp package.json .packaged"
+          "bash -c 'mkdir -p .packaged/build && cp build/ .packaged -r && cp public/ .packaged -r && cp server.mjs .packaged && cp package.json .packaged'"
         ],
         "cwd": "{projectRoot}"
       }
