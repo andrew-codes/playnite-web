@@ -113,18 +113,18 @@ jobs:
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
-        run: ./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g'
+        run: ./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g'"
         id: nvm
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '${{ steps.nvm.outputs.value }}'
       - name: Read Yarn version
-        run: ./jq.exe -r .engines.yarn package.json | sed -e 's/"//g'
+        run: ./jq.exe -r .engines.yarn package.json | sed -e 's/"//g'"
         id: yarn_version
       - name: Enable yarn
         run: corepack enable
-      - run: corepack prepare --activate yarn@{{ steps.yarn_version.outputs.value }}
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
       - name: Prepare
@@ -150,18 +150,18 @@ jobs:
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
-        run: ./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g'
+        run: ./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g'"
         id: nvm
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '${{ steps.nvm.outputs.value }}'
       - name: Read Yarn version
-        run: ./jq.exe -r .engines.yarn package.json | sed -e 's/"//g'
+        run: ./jq.exe -r .engines.yarn package.json | sed -e 's/"//g'"
         id: yarn_version
       - name: Enable yarn
         run: corepack enable
-      - run: corepack prepare --activate yarn@{{ steps.yarn_version.outputs.value }}
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
       - name: Prepare
