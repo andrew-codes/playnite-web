@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.dist"],
       "options": {
-        "command": "msbuild PlayniteWeb.csproj -verbosity:diag -property:Configuration=Release",
+        "command": "msbuild PlayniteWeb.csproj -property:Configuration=Release",
         "cwd": "{projectRoot}/src"
       }
     },
