@@ -99,20 +99,20 @@ jobs:
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
-        run: ./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g'
+        run: echo "value=$(./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g')" >> $GITHUB_OUTPUT
         shell: bash
         id: node_version
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '${{ steps.node_version.outputs.stdout }}'
+          node-version: '${{ steps.node_version.outputs.value }}'
       - name: Read Yarn version
-        run: ./jq.exe -r .engines.yarn package.json | sed -e 's/"//g'
+        run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
         shell: bash
         id: yarn_version
       - name: Enable yarn
         run: corepack enable
-      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.stdout }}
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
       - name: Prepare
