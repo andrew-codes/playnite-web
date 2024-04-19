@@ -103,10 +103,10 @@ jobs:
           TAG: 'PR${{ github.event.pull_request.number }}'
           NODE_ENV: production
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: packaged-apps
-          path: apps/*/.packaged/**
+          path: apps/*/.packaged/
 
   unit_tests_windows:
     name: Verify PR - Tests (Windows)
@@ -187,7 +187,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: playnite-extension
-          path: apps/*/.packaged/**
+          path: apps/*/.packaged/

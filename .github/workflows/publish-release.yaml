@@ -78,10 +78,10 @@ jobs:
           NODE_ENV: production
           TAG: ${{ steps.major_release_version.outputs.value }}-latest
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: playnite-web-extension
-          path: apps/*/.packaged/**
+          path: apps/*/.packaged/
 
       # - name: Release
       #   uses: softprops/action-gh-release@v1
@@ -134,7 +134,7 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: playnite-extension
-          path: apps/*/.packaged/**
+          path: apps/*/.packaged/
