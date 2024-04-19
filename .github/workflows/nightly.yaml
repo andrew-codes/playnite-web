@@ -144,7 +144,7 @@ jobs:
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
-        run: ./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g'"
+        run: ./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g'
         id: nvm
       - name: Use Node.js
         uses: actions/setup-node@v3
