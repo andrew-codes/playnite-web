@@ -57,7 +57,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.OWNER }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish apps
+      - name: Publish specific version for apps
         run: yarn nx run-many --target=publish --parallel --verbose --all
         env:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
