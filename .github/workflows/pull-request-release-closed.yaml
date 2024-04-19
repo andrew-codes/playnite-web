@@ -19,9 +19,9 @@ jobs:
       - name: Delete merged PR images
         uses: snok/container-retention-policy@v2
         with:
-          image-names: andrew-codes/playnite-web-game-db-updater, andrew-codes/playnite-web-app
+          image-names: playnite-web-game-db-updater, playnite-web-app
           cut-off: one second ago UTC-4
           account-type: personal
           keep-at-least: 0
           token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
-          filter-tags: '*PR${{ github.event.pull_request.number }}'
+          filter-tags: 'PR${{ github.event.pull_request.number }}'
