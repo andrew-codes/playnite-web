@@ -100,7 +100,7 @@ jobs:
           ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          TAG: '${{ steps.major_release_version.outputs.value }}-PR${{ github.event.pull_request.number }}'
+          TAG: 'PR${{ github.event.pull_request.number }}'
           NODE_ENV: production
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
