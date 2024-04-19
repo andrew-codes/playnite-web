@@ -3196,40 +3196,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@remix-pwa/push", [\
-      ["npm:1.0.9", {\
-        "packageLocation": "../../root/.yarn/berry/cache/@remix-pwa-push-npm-1.0.9-01bf548050-10c0.zip/node_modules/@remix-pwa/push/",\
-        "packageDependencies": [\
-          ["@remix-pwa/push", "npm:1.0.9"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.0.9", {\
-        "packageLocation": "./.yarn/__virtual__/@remix-pwa-push-virtual-ead4391761/3/root/.yarn/berry/cache/@remix-pwa-push-npm-1.0.9-01bf548050-10c0.zip/node_modules/@remix-pwa/push/",\
-        "packageDependencies": [\
-          ["@remix-pwa/push", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.0.9"],\
-          ["@remix-pwa/sw", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.1.12"],\
-          ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.4.0"],\
-          ["@remix-run/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.4.0"],\
-          ["@types/react-dom", "npm:18.2.17"],\
-          ["@types/remix-pwa__sw", null],\
-          ["@types/remix-run__dev", null],\
-          ["@types/remix-run__react", null],\
-          ["react-dom", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:18.2.0"]\
-        ],\
-        "packagePeers": [\
-          "@remix-pwa/sw",\
-          "@remix-run/dev",\
-          "@remix-run/react",\
-          "@types/react-dom",\
-          "@types/remix-pwa__sw",\
-          "@types/remix-run__dev",\
-          "@types/remix-run__react",\
-          "react-dom"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@remix-pwa/strategy", [\
       ["npm:2.1.9", {\
         "packageLocation": "../../root/.yarn/berry/cache/@remix-pwa-strategy-npm-2.1.9-1a9e263a95-10c0.zip/node_modules/@remix-pwa/strategy/",\
@@ -12240,7 +12206,6 @@ const RAW_RUNTIME_STATE =
           ["@remix-pwa/cache", "npm:2.0.12"],\
           ["@remix-pwa/client", "npm:2.0.1"],\
           ["@remix-pwa/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.0.31"],\
-          ["@remix-pwa/push", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.0.9"],\
           ["@remix-pwa/strategy", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.1.9"],\
           ["@remix-pwa/sw", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.1.12"],\
           ["@remix-pwa/sync", "npm:2.0.2"],\
