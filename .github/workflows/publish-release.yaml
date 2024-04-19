@@ -115,6 +115,8 @@ jobs:
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: 0
       - name: Prepare
         run: yarn nx run-many --target=prepare --parallel --all --verbose
         env:
