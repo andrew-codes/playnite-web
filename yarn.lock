@@ -2310,18 +2310,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-pwa/push@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "@remix-pwa/push@npm:1.0.9"
-  peerDependencies:
-    "@remix-pwa/sw": ^1.0.0 || ^2.1.4
-    "@remix-run/dev": ^1.15.0 || ^2.0.0
-    "@remix-run/react": ^1.15.0 || ^2.0.0
-    react-dom: ^18.2.0
-  checksum: 961194e9d468ed26156123bd34609a7f5f44d413bc477e86e35696994a525d1ec1b68387dfcdcb6b41d54e2bda617f5e6b0b449d447e363f582d120ca6724e30
-  languageName: node
-  linkType: hard
-
 "@remix-pwa/strategy@npm:^2.1.9":
   version: 2.1.9
   resolution: "@remix-pwa/strategy@npm:2.1.9"
@@ -10219,7 +10207,6 @@ __metadata:
     "@remix-pwa/cache": "npm:^2.0.12"
     "@remix-pwa/client": "npm:2.0.1"
     "@remix-pwa/dev": "npm:2.0.31"
-    "@remix-pwa/push": "npm:^1.0.9"
     "@remix-pwa/strategy": "npm:^2.1.9"
     "@remix-pwa/sw": "npm:^2.1.12"
     "@remix-pwa/sync": "npm:^2.0.1"
