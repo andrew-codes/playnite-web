@@ -106,7 +106,7 @@ jobs:
         with:
           node-version: '${{ steps.nvm.outputs.value }}'
       - name: Read Yarn version
-        run: ./jq.exe -r .engines.yarn package.json | sed -e 's/"//g'"
+        run: ./jq.exe -r .engines.yarn package.json | sed -e 's/"//g'
         id: yarn_version
       - name: Enable yarn
         run: corepack enable
