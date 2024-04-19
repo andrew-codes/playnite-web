@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playnite-web-extension
-          path: apps/*/_packaged/
+          path: apps/*/_packaged/**
 
       # - name: Release
       #   uses: softprops/action-gh-release@v1
@@ -137,4 +137,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playnite-extension
-          path: apps/*/_packaged/
+          path: apps/*/_packaged/**
