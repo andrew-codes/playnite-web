@@ -7,7 +7,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.dist"],
       "options": {
-        "command": ".yarn/unplugged/@esbuild-linux-x64-npm-0.17.19-08a7136aa6/node_modules/@esbuild/linux-x64/bin/esbuild apps/game-db-updater/src/index.ts --bundle --platform=node --target=node20 --outdir=apps/game-db-updater/.dist"
+        "command": "yarn dlx esbuild apps/game-db-updater/src/index.ts --bundle --platform=node --target=node20 --outdir=apps/game-db-updater/.dist"
       }
     },
     "clean": {
