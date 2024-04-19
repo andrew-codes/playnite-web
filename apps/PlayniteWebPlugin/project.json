@@ -6,7 +6,7 @@
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf .dist .packaged .test-runs",
+        "command": "yarn rimraf .dist _packaged .test-runs",
         "cwd": "{projectRoot}"
       }
     },

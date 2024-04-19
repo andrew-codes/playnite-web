@@ -103,7 +103,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: packaged-apps
-          path: apps/*/.packaged/
+          path: apps/*/_packaged/
 
   unit_tests_windows:
     name: Verify PR - Tests (Windows)
@@ -187,4 +187,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playnite-web-extension
-          path: apps/*/.packaged/
+          path: apps/*/_packaged/

@@ -13,14 +13,14 @@
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf .dist .packaged .test-runs",
+        "command": "yarn rimraf .dist _packaged .test-runs",
         "cwd": "{projectRoot}"
       }
     },
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["cp -R .dist/ .packaged/"],
+        "commands": ["cp -R .dist/ _packaged/"],
         "cwd": "{projectRoot}"
       }
     },
