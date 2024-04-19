@@ -146,7 +146,7 @@ jobs:
         run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
 
   package:
-    name: Package Apps
+    name: Package extension
     runs-on: windows-latest
     permissions:
       packages: write

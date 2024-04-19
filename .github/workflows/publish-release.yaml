@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   publish_images:
-    name: Publish release images
+    name: Publish apps
     needs: []
     permissions:
       packages: write
@@ -91,7 +91,7 @@ jobs:
       #       apps/*/.packaged
 
   package:
-    name: Package Apps
+    name: Publish Extension
     runs-on: windows-latest
     permissions:
       packages: write
