@@ -19,7 +19,7 @@ jobs:
       - name: Delete merged PR images
         uses: snok/container-retention-policy@v2
         with:
-          image-names: andrew-codes/playnite-web-game-db-updater, andrew-codes/playnite-web-app
+          image-names: ghci.io/andrew-codes/playnite-web-game-db-updater, ghcr.io/andrew-codes/playnite-web-app
           cut-off: one second ago UTC-4
           account-type: personal
           keep-at-least: 0
