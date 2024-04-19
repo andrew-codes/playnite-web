@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.dist"],
       "options": {
-        "command": "dotnet build --configuration Release --no-dependencies --no-restore --framework net4.6.2",
+        "command": "msbuild PlayniteWebPlugin.csproj -verbosity:diag -property:Configuration=Release",
         "cwd": "{projectRoot}/src"
       }
     },
@@ -30,13 +30,6 @@
       "options": {
         "commands": "./scripts/package.sh",
         "cwd": "{projectRoot}"
-      }
-    },
-    "test/unit/restore": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nuget restore",
-        "cwd": "{projectRoot}/tests/unit/src"
       }
     }
   },
