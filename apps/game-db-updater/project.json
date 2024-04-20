@@ -7,22 +7,20 @@
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.dist"],
       "options": {
-        "command": ".yarn/unplugged/@esbuild-linux-x64-npm-0.17.19-08a7136aa6/node_modules/@esbuild/linux-x64/bin/esbuild apps/game-db-updater/src/index.ts --bundle --platform=node --target=node20 --outdir=apps/game-db-updater/.dist"
+        "command": "yarn dlx esbuild apps/game-db-updater/src/index.ts --bundle --platform=node --target=node20 --outdir=apps/game-db-updater/.dist"
       }
     },
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf .dist .packaged .test-runs",
+        "command": "yarn rimraf .dist _packaged .test-runs",
         "cwd": "{projectRoot}"
       }
     },
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "cp -R .dist/ .packaged/ && docker build --tag $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG --file Dockerfile ."
-        ],
+        "commands": ["cp -R .dist/ _packaged/"],
         "cwd": "{projectRoot}"
       }
     },
@@ -30,7 +28,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "docker push $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG"
+          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG --file Dockerfile . && docker push $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG"
         ],
         "cwd": "{projectRoot}"
       }

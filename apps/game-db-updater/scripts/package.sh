@@ -5,4 +5,4 @@ if [ ! "$OS" = "Linux" ]; then
 fi
 
 docker build --tag "$TAG" --file Dockerfile .
-cp -R .dist/ .packaged/
+cp -R .dist/ _packaged/
