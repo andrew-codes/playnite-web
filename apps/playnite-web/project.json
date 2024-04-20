@@ -6,7 +6,7 @@
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf .dist .packaged .test-runs build public/build",
+        "command": "yarn rimraf .dist _packaged .test-runs build public/build",
         "cwd": "{projectRoot}"
       }
     },
@@ -38,7 +38,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "mkdir -p .packaged/build && cp build/ .packaged -r && cp public/ .packaged -r && cp server.mjs .packaged && cp package.json .packaged && docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ../.."
+          "bash -c 'mkdir -p _packaged/build && cp build/ _packaged -r && cp public/ _packaged -r && cp server.mjs _packaged && cp package.json _packaged'"
         ],
         "cwd": "{projectRoot}"
       }
@@ -46,7 +46,9 @@
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["docker push $REGISTRY/$OWNER/$REPO_NAME-app:$TAG"],
+        "commands": [
+          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ../.. && docker push $REGISTRY/$OWNER/$REPO_NAME-app:$TAG"
+        ],
         "cwd": "{projectRoot}"
       }
     }
