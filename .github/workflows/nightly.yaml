@@ -162,7 +162,7 @@ jobs:
         with:
           node-version: '${{ steps.node_version.outputs.value }}'
       - name: Read Yarn version
-        run: echo "value=$(echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT)" >> $GITHUB_OUTPUT
+        run: echo "value=$(echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
         shell: bash
         id: yarn_version
       - name: Enable yarn
