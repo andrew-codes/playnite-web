@@ -82,13 +82,12 @@ jobs:
         with:
           name: playnite-web-extension
           path: apps/*/_packaged/**
-
-      # - name: Release
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     files: |
-      #       LICENSE
-      #       apps/*/.packaged
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            LICENSE
+            apps/*/.packaged/**
 
   package:
     name: Publish Extension
@@ -138,3 +137,8 @@ jobs:
         with:
           name: playnite-extension
           path: apps/*/_packaged/**
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            apps/*/.packaged/**
