@@ -6,7 +6,7 @@
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf .dist .packaged .test-runs",
+        "command": "yarn rimraf .dist _packaged .test-runs",
         "cwd": "{projectRoot}"
       }
     },
@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.dist"],
       "options": {
-        "command": "dotnet build --configuration Release --no-dependencies --no-restore --framework net4.6.2",
+        "command": "msbuild PlayniteWeb.csproj -property:Configuration=Release",
         "cwd": "{projectRoot}/src"
       }
     },
@@ -28,15 +28,8 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": "./scripts/package.sh",
+        "command": "bash -c './scripts/package.sh'",
         "cwd": "{projectRoot}"
-      }
-    },
-    "test/unit/restore": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "nuget restore",
-        "cwd": "{projectRoot}/tests/unit/src"
       }
     }
   },

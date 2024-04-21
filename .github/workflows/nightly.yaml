@@ -1,0 +1,190 @@
+name: 'Publish nightly'
+
+on:
+  push:
+    branches:
+      - release-*
+
+permissions:
+  contents: read
+
+jobs:
+  unit_tests_linux:
+    name: Verify Tests (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Extract yarn version from package.json
+        uses: sergeysova/jq-action@v2
+        id: yarn_version
+        with:
+          cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+      - name: Run all unit tests
+        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:linux
+
+  publish_images:
+    name: Publish images
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      OWNER: andrew-codes
+      REPO_NAME: playnite-web
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Extract major release version from package.json
+        uses: sergeysova/jq-action@v2
+        id: major_release_version
+        with:
+          cmd: jq .version package.json -r | cut -d. -f1
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Extract yarn version from package.json
+        uses: sergeysova/jq-action@v2
+        id: yarn_version
+        with:
+          cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY}}
+          username: ${{ env.OWNER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish apps
+        run: yarn nx run-many --target=publish --parallel --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+          NODE_ENV: production
+          TAG: '${{ steps.major_release_version.outputs.value }}-dev'
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: packaged-apps
+          path: apps/*/_packaged/**
+
+  unit_tests_windows:
+    name: Verify PR - Tests (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install jq
+        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+      - name: Read Node version
+        run: echo "value=$(./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: node_version
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Read Yarn version
+        run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: yarn_version
+      - name: Enable yarn
+        run: corepack enable
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+      - name: Run all unit tests
+        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
+
+  package:
+    name: Package extension
+    runs-on: windows-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      - name: Install jq
+        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+      - name: Read Node version
+        run: echo "value=$(./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: node_version
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Read Yarn version
+        run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: yarn_version
+      - name: Enable yarn
+        run: corepack enable
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+      - name: Install deps
+        run: yarn
+      - name: Prepare
+        run: yarn nx run-many --target=prepare --parallel --all --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+      - name: Package extension
+        run: yarn nx run playnite-web-plugin:package --verbose
+        env:
+          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
+          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
+          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
+          NODE_ENV: production
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: playnite-web-extension
+          path: apps/*/_packaged/**

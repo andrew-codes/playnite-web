@@ -6,6 +6,7 @@ node_modules
 .dist
 .test-runs
 .packaged
+_packaged
 .nuget
 *.log
 .vs
