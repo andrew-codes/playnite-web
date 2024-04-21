@@ -1,0 +1,27 @@
+name: 'Remove Pull Request Packages'
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  retention_policy:
+    if: github.event.pull_request.merged == true
+    name: Retention policy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete merged PR images
+        uses: snok/container-retention-policy@v2
+        with:
+          image-names: playnite-web-game-db-updater, playnite-web-app
+          cut-off: one second ago UTC-4
+          account-type: personal
+          keep-at-least: 0
+          token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
+          filter-tags: 'PR${{ github.event.pull_request.number }}'
