@@ -80,7 +80,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: playnite-web-extension
+          name: playnite-web-apps
           path: apps/*/_packaged/**
       - name: Release
         uses: softprops/action-gh-release@v1
