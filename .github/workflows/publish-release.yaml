@@ -1,13 +1,13 @@
 name: Release a new version of Playnite-Web
 
 on:
-  release:
-    types:
-      - published
-      - edited
+  push:
+    tags:
+      - '*.*.*'
 
 permissions:
   contents: write
+  discussions: write
 
 jobs:
   publish_images:
@@ -77,17 +77,24 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
           TAG: ${{ steps.major_release_version.outputs.value }}-latest
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - name: Use Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          name: playnite-web-apps
-          path: apps/*/_packaged/**
-      - name: Release
-        uses: softprops/action-gh-release@v1
+          ruby-version: '3.1'
+      - name: Install changelog generator
+        run: |
+          gem install github_changelog_generator
+      - name: Generate changelog
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          IFS='/' read -ra REPO_PARTS <<< "$GITHUB_REPOSITORY"
+          github_changelog_generator -u ${REPO_PARTS[0]} -p ${REPO_PARTS[1]}
+      - name: Upload changelog
+        uses: actions/upload-artifact@v3
         with:
-          files: |
-            LICENSE
-            apps/*/.packaged/**
+          name: CHANGELOG.md
+          path: CHANGELOG.md
 
   package:
     name: Publish Extension
@@ -142,3 +149,29 @@ jobs:
         with:
           files: |
             apps/*/.packaged/**
+
+  release:
+    name: Release
+    needs: [publish_images, package]
+    permissions:
+      contents: write
+      discussions: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download extension
+        uses: actions/download-artifact@v3
+        with:
+          name: playnite-extension
+      - name: Download extension
+        uses: actions/download-artifact@v3
+        with:
+          name: CHANGELOG.md
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          body_path: CHANGELOG.md
+          discussion_category_name: announcements
+          files: |
+            *.pext
