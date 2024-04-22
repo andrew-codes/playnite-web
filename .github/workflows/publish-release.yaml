@@ -163,4 +163,4 @@ jobs:
           body_path: CHANGELOG.md
           discussion_category_name: announcements
           files: |
-            *.pext
+            *.*
