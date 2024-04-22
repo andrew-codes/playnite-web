@@ -144,11 +144,6 @@ jobs:
         with:
           name: playnite-extension
           path: apps/*/_packaged/**
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            apps/*/.packaged/**
 
   release:
     name: Release
