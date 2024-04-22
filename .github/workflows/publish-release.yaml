@@ -10,6 +10,33 @@ permissions:
   discussions: write
 
 jobs:
+  changelog:
+    name: Generate changelog
+    needs: []
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1'
+      - name: Install changelog generator
+        run: |
+          gem install github_changelog_generator
+      - name: Generate changelog
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          IFS='/' read -ra REPO_PARTS <<< "$GITHUB_REPOSITORY"
+          github_changelog_generator -u ${REPO_PARTS[0]} -p ${REPO_PARTS[1]}
+      - name: Upload changelog
+        uses: actions/upload-artifact@v3
+        with:
+          name: CHANGELOG
+          path: CHANGELOG.md
+
   publish_images:
     name: Publish apps
     needs: []
@@ -77,24 +104,6 @@ jobs:
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
           TAG: ${{ steps.major_release_version.outputs.value }}-latest
-      - name: Use Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1'
-      - name: Install changelog generator
-        run: |
-          gem install github_changelog_generator
-      - name: Generate changelog
-        env:
-          CHANGELOG_GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          IFS='/' read -ra REPO_PARTS <<< "$GITHUB_REPOSITORY"
-          github_changelog_generator -u ${REPO_PARTS[0]} -p ${REPO_PARTS[1]}
-      - name: Upload changelog
-        uses: actions/upload-artifact@v3
-        with:
-          name: CHANGELOG
-          path: CHANGELOG.md
 
   package:
     name: Publish Extension
@@ -139,23 +148,31 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
+      - name: Move artifacts
+        run: mkdir -p _packaged && mv apps/*/_packaged/** _packaged/
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: playnite-extension
-          path: apps/*/_packaged/**
+          path: _packaged/**
 
   release:
     name: Release
-    needs: [publish_images, package]
+    needs: [publish_images, package, changelog]
     permissions:
       contents: write
       discussions: write
     runs-on: ubuntu-latest
     steps:
+      - name: Download changelog
+        uses: actions/download-artifact@v4
+        with:
+          name: CHANGELOG
+          merge-multiple: true
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
+          name: playnite-extension
           merge-multiple: true
       - name: Display structure of downloaded files
         run: ls -R
@@ -167,4 +184,4 @@ jobs:
           body_path: CHANGELOG.md
           discussion_category_name: announcements
           files: |
-            *.*
+            _packaged/**
