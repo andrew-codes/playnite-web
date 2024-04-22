@@ -155,6 +155,8 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         env:
