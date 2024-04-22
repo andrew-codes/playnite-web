@@ -174,8 +174,6 @@ jobs:
         with:
           name: playnite-extension
           merge-multiple: true
-      - name: Display structure of downloaded files
-        run: ls -R
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v2
         env:
@@ -184,4 +182,5 @@ jobs:
           body_path: CHANGELOG.md
           discussion_category_name: announcements
           files: |
-            _packaged/**
+            *.*
+            *.pext
