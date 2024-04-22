@@ -153,14 +153,8 @@ jobs:
       discussions: write
     runs-on: ubuntu-latest
     steps:
-      - name: Download extension
-        uses: actions/download-artifact@v3
-        with:
-          name: playnite-extension
-      - name: Download extension
-        uses: actions/download-artifact@v3
-        with:
-          name: CHANGELOG.md
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         env:
