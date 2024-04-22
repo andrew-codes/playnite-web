@@ -183,4 +183,3 @@ jobs:
           discussion_category_name: announcements
           files: |
             *.*
-            *.pext
