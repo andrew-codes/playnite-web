@@ -1,7 +1,7 @@
 {
   "name": "game-db-updater",
   "description": "Service to listen to MQTT messages and update game database.",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "private": true,
   "dependencies": {
     "async-mqtt": "^2.6.3",
