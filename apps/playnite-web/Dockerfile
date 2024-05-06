@@ -5,7 +5,7 @@ WORKDIR /opt/playnite-web-app
 COPY apps/playnite-web/package.json apps/playnite-web/package.json
 COPY apps/playnite-web/_packaged/ ./apps/playnite-web/
 COPY .yarn/install-state.gz .yarn/install-state.gz
-COPY .pnp.cjs .pnp.loader.mjs yarn.lock package.json ./
+COPY .pnp.cjs .pnp.loader.mjs yarn.lock package.json .yarnrc.yml ./
 
 RUN corepack enable
 RUN corepack prepare --activate yarn@^4.0.0
