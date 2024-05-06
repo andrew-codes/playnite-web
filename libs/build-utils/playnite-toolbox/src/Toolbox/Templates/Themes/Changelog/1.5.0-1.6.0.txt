@@ -1,2 +1,0 @@
-M	source/Playnite.FullscreenApp/Themes/Fullscreen/Default/Views/Main.xaml
-M	source/Playnite.FullscreenApp/Themes/Fullscreen/Default/Views/SettingsMenu.xaml

@@ -2,7 +2,6 @@
 /.yarn/releases/*    binary
 /.yarn/plugins/**/*  binary
 /.pnp.*              binary linguist-generated
-**/libcef.dll filter=lfs diff=lfs merge=lfs -text
 .yarn/cache/@next-swc-* filter=lfs diff=lfs merge=lfs -text
 .yarn/cache/next-* filter=lfs diff=lfs merge=lfs -text
 .yarn/cache/next-* !text !filter !merge !diff
