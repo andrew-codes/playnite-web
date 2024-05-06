@@ -7,13 +7,14 @@ import GameGrid from '../components/GameGrid'
 import Header from '../components/Header'
 import FilteredGameList from '../domain/FilteredGameList'
 import GameList from '../domain/GameList'
-import type { GameOnPlatform } from '../domain/types'
+import type { GameOnPlatform, IGame } from '../domain/types'
 import OuterScroll from './OuterScroll'
 import useThemeWidth from './useThemeWidth'
 
-const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
-  gamesOnPlatforms = [] as GameOnPlatform[],
-}) => {
+const MyLibrary: FC<{
+  gamesOnPlatforms: GameOnPlatform[]
+  onSelect?: (evt, game: IGame) => void
+}> = ({ gamesOnPlatforms = [] as GameOnPlatform[], onSelect }) => {
   const gameList = useMemo(() => {
     return new GameList(gamesOnPlatforms)
   }, [gamesOnPlatforms])
@@ -65,7 +66,11 @@ const MyLibrary: FC<{ gamesOnPlatforms: GameOnPlatform[] }> = ({
             },
           })}
         >
-          <GameGrid games={filteredGames} noDeferCount={noDeferCount} />
+          <GameGrid
+            games={filteredGames}
+            noDeferCount={noDeferCount}
+            onSelect={onSelect}
+          />
         </Box>
       </OuterScroll>
     </>

@@ -1,4 +1,5 @@
 import { Box, Stack, styled } from '@mui/material'
+import { Link } from '@remix-run/react'
 import { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { IGame } from '../domain/types'
@@ -29,8 +30,9 @@ const GameFigure: FC<
     width: string
     height: string
     noDefer: boolean
+    onSelect: (evt) => void
   }>
-> = ({ children, game, style, noDefer, width, height }) => {
+> = ({ children, game, style, noDefer, onSelect, width, height }) => {
   const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
   const handleChange = useCallback((inView) => {
     if (!inView) {
@@ -50,24 +52,26 @@ const GameFigure: FC<
               sx={{ position: 'relative' }}
               key={`${game.oid.asString}-image`}
             >
-              {!imageHasError ? (
-                <Image
-                  src={game.cover}
-                  alt={game.name}
-                  width={width}
-                  loading="eager"
-                  onError={(e) => {
-                    setImageHasError(true)
-                  }}
-                />
-              ) : (
-                <Box
-                  sx={{
-                    height: `${width}`,
-                    width: `${width}`,
-                  }}
-                ></Box>
-              )}
+              <Link to={`/browse/${game.oid.asString}`} onClick={onSelect}>
+                {!imageHasError ? (
+                  <Image
+                    src={game.cover}
+                    alt={game.name}
+                    width={width}
+                    loading="eager"
+                    onError={(e) => {
+                      setImageHasError(true)
+                    }}
+                  />
+                ) : (
+                  <Box
+                    sx={{
+                      height: `${width}`,
+                      width: `${width}`,
+                    }}
+                  />
+                )}
+              </Link>
               <Box
                 sx={(theme) => ({
                   position: 'absolute',

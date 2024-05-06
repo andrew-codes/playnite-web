@@ -2,16 +2,22 @@ import { FilterAlt } from '@mui/icons-material'
 import { Button, styled } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import {
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from '@remix-run/react'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { scrollTo } from '../api/client/state/layoutSlice'
 import { setFilterTypeValues } from '../api/client/state/librarySlice'
 import getGameApi from '../api/game/index.server'
-import FilterDrawer from '../components/FilterDrawer'
+import Filters from '../components/Filters'
 import IconButton from '../components/IconButton'
 import MyLibrary from '../components/MyLibrary'
 import Drawer from '../components/Navigation/Drawer'
+import RightDrawer from '../components/RightDrawer'
 import type { GameOnPlatform } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
@@ -67,7 +73,21 @@ function Browse() {
     dispatch(scrollTo(0))
   }, [])
 
-  const [open, setOpen] = useState(false)
+  const location = useLocation()
+  const [isRightDrawerOpen, setRightDrawerOpen] = useState(
+    location.pathname.includes('gamesonplatforms:'),
+  )
+  const [isFiltersInDrawer, setFiltersInDrawer] = useState(false)
+  const navigate = useNavigate()
+  const handleClose = useCallback(() => {
+    setRightDrawerOpen(false)
+    setFiltersInDrawer(false)
+    navigate(`/browse`)
+  }, [])
+
+  const handleSelection = useCallback((evt, game) => {
+    setRightDrawerOpen(true)
+  }, [])
 
   return (
     <Drawer
@@ -79,13 +99,24 @@ function Browse() {
         </Title>
       }
       secondaryMenu={
-        <IconButton onClick={() => setOpen(true)} name="open-filter-drawer">
+        <IconButton
+          onClick={() => {
+            setFiltersInDrawer(true)
+            setRightDrawerOpen(true)
+          }}
+          name="open-filter-drawer"
+        >
           <FilterAlt />
         </IconButton>
       }
     >
-      <MyLibrary gamesOnPlatforms={gamesOnPlatforms ?? []} />
-      <FilterDrawer open={open} onClose={() => setOpen(false)} />
+      <MyLibrary
+        gamesOnPlatforms={gamesOnPlatforms ?? []}
+        onSelect={handleSelection}
+      />
+      <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
+        {isFiltersInDrawer ? <Filters onClose={handleClose} /> : <Outlet />}
+      </RightDrawer>
     </Drawer>
   )
 }

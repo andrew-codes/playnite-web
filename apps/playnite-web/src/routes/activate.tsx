@@ -16,8 +16,9 @@ const action = requireAuthentication(
 
     const body = await request.formData()
     const id = body.get('id') as string
+    const platformId = body.get('platformId') as string
 
-    if (!id) {
+    if (!id || !platformId) {
       return new Response(null, {
         status: 400,
       })
@@ -25,8 +26,6 @@ const action = requireAuthentication(
 
     const gameApi = getGameApi()
     const game = await gameApi.getGameById(id)
-
-    console.dir(game)
 
     if (!game) {
       return new Response(null, {
@@ -36,15 +35,15 @@ const action = requireAuthentication(
 
     const mqtt = await getMqttClient()
     const topic = `playnite/request/game/activate`
-    // const payload = JSON.stringify({
-    //   game: {
-    //     id: game.id,
-    //     name: game.name,
-    //     platform: game.platform,
-    //     source: game.source,
-    //     install: game.runState === 'not installed',
-    //   },
-    // })
+    const payload = JSON.stringify({
+      game: {
+        id: game.id,
+        name: game.name,
+        platform: game.platforms.find((p) => p.id === platformId),
+        source: game.source,
+        install: game.runState === 'not installed',
+      },
+    })
 
     await mqtt.publish(topic, payload)
 

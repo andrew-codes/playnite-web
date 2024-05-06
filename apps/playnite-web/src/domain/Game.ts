@@ -100,11 +100,11 @@ class Game implements IGame {
   }
 
   get background(): string {
-    return `gameAsset/background/${this._exposedGameOid.asString}`
+    return `/gameAsset/background/${this._exposedGameOid.asString}`
   }
 
   get cover(): string {
-    return `gameAsset/cover/${this._exposedGameOid.asString}`
+    return `/gameAsset/cover/${this._exposedGameOid.asString}`
   }
 
   get description(): string {
