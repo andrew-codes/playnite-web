@@ -10184,14 +10184,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playnite-toolbox@workspace:libs/build-utils/playnite-toolbox":
-  version: 0.0.0-use.local
-  resolution: "playnite-toolbox@workspace:libs/build-utils/playnite-toolbox"
-  dependencies:
-    nx: "npm:^17.1.2"
-  languageName: unknown
-  linkType: soft
-
 "playnite-web-app@workspace:apps/playnite-web":
   version: 0.0.0-use.local
   resolution: "playnite-web-app@workspace:apps/playnite-web"
