@@ -1,4 +1,4 @@
-import { Home, LocalLibrary } from '@mui/icons-material'
+import { AccountCircle, Home, LocalLibrary } from '@mui/icons-material'
 import {
   List,
   ListItem,
@@ -10,6 +10,8 @@ import {
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
 import { FC } from 'react'
+import { useSelector } from 'react-redux'
+import { getIsAuthenticated } from '../../api/client/state/authSlice'
 
 const Navigation = styled('nav')(({ theme }) => ({
   display: 'flex',
@@ -36,6 +38,8 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   }
 
   const theme = useTheme()
+
+  const isAuthenticated = useSelector(getIsAuthenticated)
 
   return (
     <Navigation
@@ -92,6 +96,30 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
             <ListItemText
               primary={'My Games'}
               secondary={'Games in library'}
+              sx={{ opacity: open ? 1 : 0 }}
+            />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding sx={{ display: 'block' }}>
+          <ListItemButton
+            onClick={handleNavigation(isAuthenticated ? '/logout' : '/login')}
+            sx={{
+              minHeight: theme.spacing(6),
+              justifyContent: open ? 'initial' : 'center',
+              px: 2.5,
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : 'auto',
+                justifyContent: 'center',
+              }}
+            >
+              <AccountCircle />
+            </ListItemIcon>
+            <ListItemText
+              primary={isAuthenticated ? 'Logout' : 'Login'}
               sx={{ opacity: open ? 1 : 0 }}
             />
           </ListItemButton>
