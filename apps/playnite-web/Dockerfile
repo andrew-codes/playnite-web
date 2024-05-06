@@ -9,6 +9,7 @@ COPY .pnp.cjs .pnp.loader.mjs yarn.lock package.json ./
 
 RUN corepack enable
 RUN corepack prepare --activate yarn@^4.0.0
+RUN yarn install
 
 WORKDIR /opt/playnite-web-app/apps/playnite-web
 ENTRYPOINT [ "yarn", "node", "server.mjs" ]
