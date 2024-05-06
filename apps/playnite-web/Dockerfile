@@ -10,4 +10,4 @@ COPY .pnp.cjs .pnp.loader.mjs ./
 RUN corepack enable
 RUN corepack prepare --activate yarn@^4.0.0
 
-ENTRYPOINT [ "yarn", "node", "server.mjs" ]
+ENTRYPOINT [ "yarn", "node", "apps/playnite-web/_packaged/server.mjs" ]
