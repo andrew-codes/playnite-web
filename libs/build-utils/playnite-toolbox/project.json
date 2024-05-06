@@ -1,8 +1,0 @@
-{
-  "name": "playnite-toolbox",
-  "sourceRoot": "libs/build-utils/playnite-toolbox/src",
-  "projectType": "library",
-  "targets": {},
-  "tags": [],
-  "implicitDependencies": []
-}
