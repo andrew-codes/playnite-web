@@ -4,7 +4,7 @@ import { FC, FormEvent, MouseEvent, PropsWithChildren } from 'react'
 import IconButton from './IconButton'
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: `80%`,
+  width: `664px`,
   [theme.breakpoints.down('md')]: {
     width: `100%`,
   },
@@ -103,14 +103,17 @@ const DrawerBody = styled('div', {
   position: 'relative',
   flexDirection: 'column',
   overflowY: 'hidden',
-  padding: `56px ${theme.spacing(2.5)} ${theme.spacing(2.5)}`,
   backgroundColor: theme.palette.background.paper,
 
-  '> *': {
-    marginBottom: `${theme.spacing(2)} !important`,
+  '> div': {
+    padding: `56px ${theme.spacing(2.5)} ${theme.spacing(2.5)}`,
 
-    '&:last-child': {
-      marginBottom: '0 !important',
+    '> *': {
+      marginBottom: `${theme.spacing(2)} !important`,
+
+      '&:last-child': {
+        marginBottom: '0 !important',
+      },
     },
   },
 }))
@@ -134,7 +137,9 @@ const RightDrawer: FC<
           <Clear />
         </IconButton>
       </DrawerHeader>
-      <DrawerBody open={open}>{children}</DrawerBody>
+      <DrawerBody open={open}>
+        <div>{children}</div>
+      </DrawerBody>
     </Drawer>
   )
 }

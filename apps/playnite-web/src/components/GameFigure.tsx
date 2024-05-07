@@ -48,11 +48,8 @@ const GameFigure: FC<
     <Figure style={style} ref={ref} width={width}>
       {hasBeenInViewBefore || noDefer
         ? [
-            <Box
-              sx={{ position: 'relative' }}
-              key={`${game.oid.asString}-image`}
-            >
-              <Link to={`/browse/${game.oid.asString}`} onClick={onSelect}>
+            <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
+              <Link to={`/browse/${game.id}`} onClick={onSelect}>
                 {!imageHasError ? (
                   <Image
                     src={game.cover}
@@ -84,7 +81,7 @@ const GameFigure: FC<
             </Box>,
             <Stack
               sx={{ height: `calc(${height} - ${width})` }}
-              key={`${game.oid.asString}-details`}
+              key={`${game.id}-details`}
             >
               {children}
             </Stack>,

@@ -26,8 +26,15 @@ const action = requireAuthentication(
 
     const gameApi = getGameApi()
     const game = await gameApi.getGameById(id)
+    const gameOnPlatform = game.gameOnPlatform(platformId)
+    if (!gameOnPlatform) {
+      return new Response(null, {
+        status: 404,
+      })
+    }
 
-    if (!game) {
+    const platform = gameOnPlatform.platforms.find((p) => p.id === platformId)
+    if (!platform) {
       return new Response(null, {
         status: 404,
       })
@@ -37,11 +44,12 @@ const action = requireAuthentication(
     const topic = `playnite/request/game/activate`
     const payload = JSON.stringify({
       game: {
-        id: game.id,
-        name: game.name,
-        platform: game.platforms.find((p) => p.id === platformId),
-        source: game.source,
-        install: game.runState === 'not installed',
+        id: gameOnPlatform.id,
+        gameId: gameOnPlatform.gameId,
+        name: gameOnPlatform.name,
+        platform: platform,
+        source: gameOnPlatform.source,
+        install: gameOnPlatform.runState === 'not installed',
       },
     })
 

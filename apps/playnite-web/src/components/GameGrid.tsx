@@ -48,7 +48,7 @@ const GameGrid: FC<{
       <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
         {games.items.map((game, gameIndex) => (
           <ImageListItem
-            key={game.oid.asString}
+            key={game.id}
             sx={(theme) => ({
               ...(!game.matches ? { display: 'none' } : {}),
               alignItems: 'center',

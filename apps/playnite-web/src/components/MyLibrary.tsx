@@ -7,17 +7,17 @@ import GameGrid from '../components/GameGrid'
 import Header from '../components/Header'
 import FilteredGameList from '../domain/FilteredGameList'
 import GameList from '../domain/GameList'
-import type { GameOnPlatform, IGame } from '../domain/types'
+import type { IGame } from '../domain/types'
 import OuterScroll from './OuterScroll'
 import useThemeWidth from './useThemeWidth'
 
 const MyLibrary: FC<{
-  gamesOnPlatforms: GameOnPlatform[]
+  games: IGame[]
   onSelect?: (evt, game: IGame) => void
-}> = ({ gamesOnPlatforms = [] as GameOnPlatform[], onSelect }) => {
+}> = ({ games = [] as IGame[], onSelect }) => {
   const gameList = useMemo(() => {
-    return new GameList(gamesOnPlatforms)
-  }, [gamesOnPlatforms])
+    return new GameList(games)
+  }, [games])
 
   const filter = useSelector(getFilter)
   const filteredGames = useMemo(
@@ -35,12 +35,7 @@ const MyLibrary: FC<{
         {gameList.items
           .filter((game, index) => index <= noDeferCount)
           .map((game) => (
-            <link
-              key={game.oid.asString}
-              rel="preload"
-              as="image"
-              href={game.cover}
-            />
+            <link key={game.id} rel="preload" as="image" href={game.cover} />
           ))}
       </Helmet>
       <OuterScroll>

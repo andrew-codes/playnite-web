@@ -7,7 +7,6 @@ import type {
   GameOnPlatform,
   ICompletionStatus,
   IGame,
-  IdentifyDomainObjects,
   Platform,
   Series,
 } from './types'
@@ -52,16 +51,12 @@ class Game implements IGame {
   private _games: GameOnPlatform[]
   private _exposedGame: GameOnPlatform
   private _exposedGameOid: Oid
-  private _oid: Oid
   private _completionStatus: ICompletionStatus
 
   constructor(gamesOnPlatforms: GameOnPlatform[]) {
     this._games = gamesOnPlatforms
     this._exposedGame = gamesOnPlatforms[0]
     this._exposedGameOid = new Oid(`game:${this._exposedGame.id}`)
-    this._oid = new Oid(
-      `gamesonplatforms:${this._games.map((g) => g.id).join(',')}`,
-    )
     this._completionStatus = this._games
       .filter((g) => g.completionStatus)
       .map(
@@ -80,16 +75,25 @@ class Game implements IGame {
         return 0
       })[0]
   }
+
+  get assetType(): string {
+    return 'game'
+  }
+
+  get id(): string {
+    return this._exposedGame.id
+  }
+
+  get platform(): Platform {
+    throw new Error('Method not implemented.')
+  }
+
   get completionStatus(): ICompletionStatus {
     return this._completionStatus
   }
 
   get features(): Feature[] {
     return this._exposedGame.features ?? []
-  }
-
-  get oid(): IdentifyDomainObjects {
-    return this._oid
   }
 
   get name(): string {
@@ -134,6 +138,17 @@ class Game implements IGame {
         .filter((p): p is Platform => p !== null),
       'name',
     )
+  }
+
+  gameOnPlatform(platformId: string): GameOnPlatform | undefined {
+    return this._games.find((gameOnPlatform) => {
+      const platformMatch = gameToPlatform(gameOnPlatform)
+      if (Array.isArray(platformMatch)) {
+        return platformMatch.some((p) => p.id === platformId)
+      }
+
+      return platformMatch?.id === platformId
+    })
   }
 }
 

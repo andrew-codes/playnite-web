@@ -79,7 +79,7 @@ type AgeRating = WithId & {
 
 type Playlist = WithId & {
   name: string
-  games: GameOnPlatform[]
+  games: IGame[]
 }
 
 const runStates = [
@@ -122,14 +122,16 @@ type GameOnPlatform = WithId & {
 }
 
 interface IGame {
+  get assetType(): string
+  get id(): string
   get background(): string
   get cover(): string
   get description(): string
   get developers(): Developer[]
   get gamePlatforms(): GameOnPlatform[]
   get name(): string
-  get oid(): IdentifyDomainObjects
   get platforms(): Platform[]
+  get platform(): Platform
   get series(): Series[]
   get features(): Feature[]
   get completionStatus(): ICompletionStatus
