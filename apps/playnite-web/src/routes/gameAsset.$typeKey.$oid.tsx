@@ -4,9 +4,8 @@ import { $params } from 'remix-routes'
 import getGameApi from '../api/game/index.server'
 import Oid from '../domain/Oid'
 
-const debug = createDebugger('playnite-web-app/route/coverArt')
-
 async function loader({ request, params }: LoaderFunctionArgs) {
+  const debug = createDebugger('playnite-web-app/route/coverArt')
   try {
     const { oid, typeKey } = $params('/gameAsset/:typeKey/:oid', params)
     const relatedOid = new Oid(oid)

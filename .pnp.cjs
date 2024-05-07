@@ -4090,6 +4090,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/lodash", [\
+      ["npm:4.17.1", {\
+        "packageLocation": "../../root/.yarn/berry/cache/@types-lodash-npm-4.17.1-8c731628b2-10c0.zip/node_modules/@types/lodash/",\
+        "packageDependencies": [\
+          ["@types/lodash", "npm:4.17.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/mdast", [\
       ["npm:3.0.15", {\
         "packageLocation": "../../root/.yarn/berry/cache/@types-mdast-npm-3.0.15-66e5bbbc2b-10c0.zip/node_modules/@types/mdast/",\
@@ -12200,6 +12209,7 @@ const RAW_RUNTIME_STATE =
           ["@remix-run/node", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.4.0"],\
           ["@remix-run/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.4.0"],\
           ["@types/express", "npm:4.17.21"],\
+          ["@types/lodash", "npm:4.17.1"],\
           ["@types/node", "npm:18.18.13"],\
           ["@types/react", "npm:18.2.45"],\
           ["@types/react-dom", "npm:18.2.17"],\

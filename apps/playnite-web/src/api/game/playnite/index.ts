@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Game from '../../../domain/Game'
 import Oid from '../../../domain/Oid'
 import { NoScore, NumericScore } from '../../../domain/Score'
 import type {
@@ -18,7 +19,7 @@ import {
   MongoDbApi,
 } from './databases/mongo/types'
 
-const { startCase, toLower } = _
+const { groupBy, startCase, toLower } = _
 
 const getRunState = (gameEntity: GameEntity): RunState => {
   if (gameEntity.isRunning) {
@@ -87,12 +88,25 @@ class PlayniteWebApi implements IGameApi {
     }))
   }
 
-  async getGames(): Promise<GameOnPlatform[]> {
-    return (await this._mongo.getGames()).map(this.gameEntityToGame)
+  async getGames(): Promise<Game[]> {
+    return Object.values(
+      groupBy(
+        (await this._mongo.getGames()).map(this.gameEntityToGame),
+        'sortName',
+      ),
+    ).map((groupedGames) => new Game(groupedGames))
   }
 
-  async getGameById(id: string): Promise<GameOnPlatform> {
-    return this.gameEntityToGame(await this._mongo.getGameById(id))
+  async getGameById(id: string): Promise<Game> {
+    const gameEntity = await this._mongo.getGameById(id)
+    const gameEntities = await this._mongo.getGames({
+      sortName: gameEntity.sortName,
+      id: { $ne: gameEntity.id },
+    })
+
+    return new Game(
+      [gameEntity].concat(gameEntities).map(this.gameEntityToGame),
+    )
   }
 
   private async getPlaylistsGames(playlist: WithId): Promise<GameOnPlatform[]> {

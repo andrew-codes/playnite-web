@@ -1,5 +1,5 @@
 import createDebugger from 'debug'
-import { MongoClient } from 'mongodb'
+import { Filter, MongoClient } from 'mongodb'
 import { getDbClient } from './client'
 import {
   GameAssetEntity,
@@ -104,13 +104,13 @@ class MongoDb implements MongoDbApi {
     return gameEntity
   }
 
-  async getGames(): Promise<GameEntity[]> {
+  async getGames(filter: Filter<GameEntity> = {}): Promise<GameEntity[]> {
     await this.connect()
 
     return this.client
       .db('games')
       .collection<GameEntity>('game')
-      .find({})
+      .find(filter)
       .toArray()
   }
 }

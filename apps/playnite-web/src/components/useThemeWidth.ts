@@ -12,10 +12,10 @@ const useThemeWidth = () => {
 
   const width = useMemo(() => {
     if (isXl) {
-      return theme.breakpoints.values.xl - 81 - 16
+      return theme.breakpoints.values.xl - 81 - 16 - 8 - 2
     }
     if (isLg) {
-      return theme.breakpoints.values.lg - 81 - 16
+      return theme.breakpoints.values.lg - 81 - 16 - 8 - 2
     }
     if (isMd) {
       return theme.breakpoints.values.md - 16 - 40 - 24
