@@ -62,8 +62,8 @@ function Index() {
         <Header>
           <Typography variant="h2">Library</Typography>
         </Header>
-        {gameListPlaylists.map((playlist) => (
-          <section>
+        {gameListPlaylists.map((playlist, index) => (
+          <section key={`${playlist?.name}${index}`}>
             <Typography variant="h4">{playlist?.name}</Typography>
             <HorizontalGameList games={playlist.games} noDeferCount={5} />
           </section>

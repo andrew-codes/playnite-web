@@ -32,12 +32,15 @@ const theme = (
       palette: {
         mode: 'dark',
         background: {
-          default: 'rgb(32, 38, 52)',
+          default: 'rgb(30, 39, 55)',
           paper: 'rgb(40, 48, 68)',
         },
         divider: 'rgba(255, 255, 255, 0.12)',
         action: {
           hover: '#41495a',
+        },
+        primary: {
+          main: 'rgb(181, 69, 155)',
         },
       },
       breakpoints: {
@@ -67,7 +70,7 @@ const theme = (
         MuiDialog: {
           styleOverrides: {
             paper: {
-              backgroundColor: 'rgb(32, 38, 52)',
+              backgroundColor: 'rgb(30, 39, 55)',
               backgroundImage: 'none',
             },
           },
@@ -130,6 +133,9 @@ const theme = (
             },
           },
         },
+      },
+      shape: {
+        borderRadius: 8,
       },
     }),
   )

@@ -7,6 +7,7 @@ const getGameApi = (): IGameApi => {
   if (!gameClient) {
     gameClient = new PlayniteWebApi()
   }
+
   return gameClient
 }
 

@@ -1,22 +1,10 @@
 import { Clear } from '@mui/icons-material'
-import {
-  CSSObject,
-  Drawer as MuiDrawer,
-  Theme,
-  Typography,
-  styled,
-} from '@mui/material'
-import { FC, FormEvent, MouseEvent, useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  activateFilters,
-  getFilterValues,
-} from '../api/client/state/librarySlice'
-import FilterForm from './Filters/FilterForm'
+import { CSSObject, Drawer as MuiDrawer, Theme, styled } from '@mui/material'
+import { FC, FormEvent, MouseEvent, PropsWithChildren } from 'react'
 import IconButton from './IconButton'
 
 const openedMixin = (theme: Theme): CSSObject => ({
-  width: `80%`,
+  width: `664px`,
   [theme.breakpoints.down('md')]: {
     width: `100%`,
   },
@@ -115,66 +103,34 @@ const DrawerBody = styled('div', {
   position: 'relative',
   flexDirection: 'column',
   overflowY: 'hidden',
-  padding: `56px ${theme.spacing(2.5)} ${theme.spacing(2.5)}`,
   backgroundColor: theme.palette.background.paper,
 
-  '> *': {
-    marginBottom: `${theme.spacing(2)} !important`,
+  '> div': {
+    padding: `56px ${theme.spacing(2.5)} ${theme.spacing(2.5)}`,
 
-    '&:last-child': {
-      marginBottom: '0 !important',
+    '> *': {
+      marginBottom: `${theme.spacing(2)} !important`,
+
+      '&:last-child': {
+        marginBottom: '0 !important',
+      },
     },
   },
 }))
 
-const FilterDrawer: FC<{
-  onClose: (
-    evt: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement> | {},
-  ) => void
-  open: boolean
-}> = ({ onClose, open }) => {
-  const handleClose = useCallback(
-    (evt) => {
-      onClose(evt)
-    },
-    [onClose],
-  )
-
-  const handleFilterCancel = useCallback(
-    (evt) => {
-      onClose(evt)
-    },
-    [onClose],
-  )
-  const dispatch = useDispatch()
-  const handleFilterSubmit = useCallback(
-    (evt: FormEvent<HTMLFormElement>) => {
-      evt.preventDefault()
-      const formData = new FormData(evt.currentTarget)
-      const name = (formData.get('nameFilter') as string) ?? null
-      const feature = (formData.getAll('featureFilter') as string[]) ?? []
-      const platform = (formData.getAll('platformFilter') as string[]) ?? []
-
-      dispatch(
-        activateFilters({ name: name === '' ? null : name, feature, platform }),
-      )
-      onClose(evt)
-    },
-    [onClose],
-  )
-
-  const activeFilters = useSelector(getFilterValues)
-
+const RightDrawer: FC<
+  PropsWithChildren<{
+    onClose: (
+      evt: MouseEvent<HTMLButtonElement> | FormEvent<HTMLFormElement> | {},
+    ) => void
+    open: boolean
+  }>
+> = ({ children, onClose, open }) => {
   return (
-    <Drawer
-      variant="temporary"
-      anchor="right"
-      open={open}
-      onClose={handleClose}
-    >
+    <Drawer variant="temporary" anchor="right" open={open} onClose={onClose}>
       <DrawerHeader open={open}>
         <IconButton
-          onClick={handleFilterCancel}
+          onClick={onClose}
           name="close-drawer"
           aria-label="close drawer"
         >
@@ -182,15 +138,10 @@ const FilterDrawer: FC<{
         </IconButton>
       </DrawerHeader>
       <DrawerBody open={open}>
-        <Typography variant="h4">Filters</Typography>
-        <FilterForm
-          onCancel={handleFilterCancel}
-          onSubmit={handleFilterSubmit}
-          {...activeFilters}
-        />
+        <div>{children}</div>
       </DrawerBody>
     </Drawer>
   )
 }
 
-export default FilterDrawer
+export default RightDrawer

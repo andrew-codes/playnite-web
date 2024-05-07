@@ -19,7 +19,8 @@ const ImageListWithoutOverflow = styled(ImageList)`
 const GameGrid: FC<{
   games: IList<Match<IGame>>
   noDeferCount: number
-}> = ({ games, noDeferCount }) => {
+  onSelect?: (evt, game: IGame) => void
+}> = ({ games, noDeferCount, onSelect }) => {
   const theme = useTheme()
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
@@ -47,7 +48,7 @@ const GameGrid: FC<{
       <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
         {games.items.map((game, gameIndex) => (
           <ImageListItem
-            key={game.oid.asString}
+            key={game.id}
             sx={(theme) => ({
               ...(!game.matches ? { display: 'none' } : {}),
               alignItems: 'center',
@@ -58,6 +59,9 @@ const GameGrid: FC<{
               height={`${rowHeight}px`}
               noDefer={gameIndex <= noDeferCount}
               width={`calc(${columnWidth}px)`}
+              onSelect={(evt) => {
+                onSelect?.(evt, game)
+              }}
             >
               <Typography
                 variant="caption"
