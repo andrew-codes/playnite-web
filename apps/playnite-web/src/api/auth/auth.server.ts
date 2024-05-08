@@ -3,7 +3,6 @@ import { Authenticator } from 'remix-auth'
 import { FormStrategy } from 'remix-auth-form'
 import { sessionStorage } from './session.server'
 
-const { USERNAME, PASSWORD } = process.env
 const debug = createDebugger('playnite-web-app/auth.server')
 
 const authenticator = new Authenticator<{
@@ -13,6 +12,8 @@ const authenticator = new Authenticator<{
 
 authenticator.use(
   new FormStrategy(async ({ form }) => {
+    const { USERNAME, PASSWORD } = process.env
+
     if (USERNAME === undefined || PASSWORD === undefined) {
       debug(
         'Features requiring authentication are disabled. Try setting the USERNAME and PASSWORD environment variables to enable these features.',

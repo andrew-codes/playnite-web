@@ -15,7 +15,7 @@ import {
 import { FC, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
-import { IGame } from '../domain/types'
+import { IGame, Platform } from '../domain/types'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -45,6 +45,14 @@ const Description = styled('div')(({ theme }) => ({
   },
 }))
 
+const sortGameActionPlatforms = (platforms: Platform[]) => {
+  const sortedPlatforms = platforms.slice()
+  sortedPlatforms.sort((a, b) => {
+    return a.name.localeCompare(b.name)
+  })
+  return sortedPlatforms
+}
+
 const GameDetails: FC<{ game: IGame }> = ({ game }) => {
   const isAuthenticated = useSelector(getIsAuthenticated)
 
@@ -57,7 +65,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
       },
       body: new URLSearchParams({
         id: game.id,
-        platformId: game.platforms[selectedIndex].id,
+        platformId: sortGameActionPlatforms(game.platforms)[selectedIndex].id,
       }),
     })
   }
@@ -86,7 +94,8 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
   }
 
   const platformOptions = useMemo(
-    () => game.platforms.map((platform) => platform.name),
+    () =>
+      sortGameActionPlatforms(game.platforms).map((platform) => platform.name),
     [game.platforms],
   )
 
