@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useNavigate } from '@remix-run/react'
 import { useMemo } from 'react'
 import getGameApi from '../api/game/index.server'
 import Header from '../components/Header'
@@ -12,7 +12,7 @@ import FilteredGameList from '../domain/FilteredGameList'
 import Game from '../domain/Game'
 import GameList from '../domain/GameList'
 import NoFilter from '../domain/filters/NoFilter'
-import { Playlist } from '../domain/types'
+import { IGame, Playlist } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = getGameApi()
@@ -62,6 +62,11 @@ function Index() {
     )
   }, [lists])
 
+  const navigate = useNavigate()
+  const handleGameSelect = (game: IGame) => {
+    navigate(`/browse/${game.id}`)
+  }
+
   return (
     <Drawer>
       <OuterScroll>
@@ -71,7 +76,11 @@ function Index() {
         {gameListPlaylists.map((playlist, index) => (
           <section key={`${playlist?.name}${index}`}>
             <Typography variant="h4">{playlist?.name}</Typography>
-            <HorizontalGameList games={playlist.games} noDeferCount={5} />
+            <HorizontalGameList
+              games={playlist.games}
+              noDeferCount={5}
+              onSelect={handleGameSelect}
+            />
           </section>
         ))}
       </OuterScroll>
