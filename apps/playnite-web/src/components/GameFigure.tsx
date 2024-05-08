@@ -30,7 +30,7 @@ const GameFigure: FC<
     width: string
     height: string
     noDefer: boolean
-    onSelect: (evt) => void
+    onSelect?: (evt) => void
   }>
 > = ({ children, game, style, noDefer, onSelect, width, height }) => {
   const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
