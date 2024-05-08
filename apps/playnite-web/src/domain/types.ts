@@ -79,7 +79,7 @@ type AgeRating = WithId & {
 
 type Playlist = WithId & {
   name: string
-  games: IGame[]
+  games: GameOnPlatform[][]
 }
 
 const runStates = [

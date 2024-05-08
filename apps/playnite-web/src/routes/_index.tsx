@@ -9,6 +9,7 @@ import HorizontalGameList from '../components/HorizontalGameList'
 import Drawer from '../components/Navigation/Drawer'
 import OuterScroll from '../components/OuterScroll'
 import FilteredGameList from '../domain/FilteredGameList'
+import Game from '../domain/Game'
 import GameList from '../domain/GameList'
 import NoFilter from '../domain/filters/NoFilter'
 import { Playlist } from '../domain/types'
@@ -21,15 +22,15 @@ async function loader({ request }: LoaderFunctionArgs) {
       lists: [
         {
           name: 'Playing',
-          games: games.filter(
-            (game) => game.completionStatus?.name === 'Playing',
-          ),
+          games: games
+            .filter((game) => game.completionStatus?.name === 'Playing')
+            .map((game) => game.gamePlatforms),
         },
         {
           name: 'Up Next',
-          games: games.filter(
-            (game) => game.completionStatus?.name === 'Plan to Play',
-          ),
+          games: games
+            .filter((game) => game.completionStatus?.name === 'Plan to Play')
+            .map((game) => game.gamePlatforms),
         },
       ],
     })
@@ -51,7 +52,12 @@ function Index() {
     return (
       lists?.map((list) => ({
         ...list,
-        games: new FilteredGameList(new GameList(list.games), noFilter),
+        games: new FilteredGameList(
+          new GameList(
+            list.games.map((gameOnPlatform) => new Game(gameOnPlatform)),
+          ),
+          noFilter,
+        ),
       })) ?? []
     )
   }, [lists])
