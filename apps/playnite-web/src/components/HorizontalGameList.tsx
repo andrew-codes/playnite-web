@@ -19,7 +19,8 @@ const ImageListWithoutOverflow = styled(ImageList)`
 const HorizontalGameList: FC<{
   games: IList<Match<IGame>>
   noDeferCount: number
-}> = ({ games, noDeferCount }) => {
+  onSelect?: (game: IGame) => void
+}> = ({ games, noDeferCount, onSelect }) => {
   const theme = useTheme()
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
@@ -62,6 +63,7 @@ const HorizontalGameList: FC<{
               game={game}
               height={`${rowHeight}px`}
               noDefer={gameIndex <= noDeferCount}
+              onSelect={onSelect}
               width={`calc(${columnWidth}px)`}
             >
               <Typography

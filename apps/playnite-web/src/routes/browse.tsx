@@ -83,7 +83,7 @@ function Browse() {
   const handleClose = useCallback(() => {
     setRightDrawerOpen(false)
     setFiltersInDrawer(false)
-    navigate(`/browse`)
+    navigate(-1)
   }, [])
 
   const handleSelection = useCallback((evt, game) => {
