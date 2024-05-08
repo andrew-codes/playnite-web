@@ -13,6 +13,13 @@ const authenticator = new Authenticator<{
 
 authenticator.use(
   new FormStrategy(async ({ form }) => {
+    if (USERNAME === undefined || PASSWORD === undefined) {
+      debug(
+        'Features requiring authentication are disabled. Try setting the USERNAME and PASSWORD environment variables to enable these features.',
+      )
+      throw new Error('Missing credentials')
+    }
+
     let username = form.get('username')
     let password = form.get('password')
     if (USERNAME !== username || PASSWORD !== password) {
