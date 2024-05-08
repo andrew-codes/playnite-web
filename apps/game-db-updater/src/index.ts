@@ -14,7 +14,7 @@ const run: () => Promise<AsyncMqttClient> = async () => {
     override: true,
   })
   dotenv.config({
-    path: path.join(__dirname, '..', 'dev.env'),
+    path: path.join(__dirname, '..', 'overrides.env'),
     override: true,
   })
 
