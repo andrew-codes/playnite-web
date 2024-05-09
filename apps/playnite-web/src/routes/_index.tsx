@@ -26,7 +26,7 @@ async function loader({ request }: LoaderFunctionArgs) {
         {
           name: 'Playing',
           games: games
-            .filter((game) => game.completionStatus?.name === 'Played')
+            .filter((game) => game.completionStatus?.name === 'Playing')
             .map((game) => game.gamePlatforms),
         },
         {
