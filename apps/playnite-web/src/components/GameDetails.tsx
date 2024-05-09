@@ -63,6 +63,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
+      credentials: 'same-origin',
       body: new URLSearchParams({
         id: game.id,
         platformId: sortGameActionPlatforms(game.platforms)[selectedIndex].id,
@@ -111,7 +112,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
               color="primary"
               aria-label="Platforms in which to play the game"
             >
-              <Button onClick={handlePlay}>
+              <Button onClick={handlePlay(selectedIndex)}>
                 {platformOptions[selectedIndex]}
               </Button>
               <Button
