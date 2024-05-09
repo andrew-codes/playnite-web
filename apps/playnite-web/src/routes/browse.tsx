@@ -91,9 +91,9 @@ function Browse() {
 
     navigate(-1)
   }, [])
-
   const handleSelection = useCallback((evt, game) => {
     setRightDrawerOpen(true)
+    navigate(`/browse/${game.id}`)
   }, [])
 
   const games = useMemo(
