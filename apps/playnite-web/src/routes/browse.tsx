@@ -21,6 +21,8 @@ import RightDrawer from '../components/RightDrawer'
 import Game from '../domain/Game'
 import { GameOnPlatform } from '../domain/types'
 
+const isOnDetailsPage = (location) => /\/browse\/.+$/.test(location.pathname)
+
 async function loader({ request }: LoaderFunctionArgs) {
   const api = getGameApi()
   const games = await api.getGames()
@@ -76,13 +78,17 @@ function Browse() {
 
   const location = useLocation()
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(
-    /\/browse\/.+$/.test(location.pathname),
+    isOnDetailsPage(location),
   )
-  const [isFiltersInDrawer, setFiltersInDrawer] = useState(false)
+  const [isFiltersInDrawer, setFiltersInDrawer] = useState(true)
   const navigate = useNavigate()
   const handleClose = useCallback(() => {
     setRightDrawerOpen(false)
     setFiltersInDrawer(false)
+    if (!isOnDetailsPage(location)) {
+      return
+    }
+
     navigate(-1)
   }, [])
 
