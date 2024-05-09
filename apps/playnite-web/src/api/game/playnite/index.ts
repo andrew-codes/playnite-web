@@ -1,15 +1,18 @@
 import _ from 'lodash'
 import Game from '../../../domain/Game'
+import GameList from '../../../domain/GameList'
+import GameOnPlatform from '../../../domain/GameOnPlatform'
 import Oid from '../../../domain/Oid'
-import { NoScore, NumericScore } from '../../../domain/Score'
+import { TagPlaylist } from '../../../domain/Playlist'
 import type {
   Feature,
   GameAssetType,
-  GameOnPlatform,
-  IdentifyDomainObjects,
-  Playlist,
+  GameOnPlatformDto,
+  IGame,
+  IGameOnPlatform,
+  IIdentifyDomainObjects,
+  IPlaylist,
   RunState,
-  WithId,
 } from '../../../domain/types'
 import { GameAsset, IGameApi } from '../types'
 import MongoDb from './databases/mongo/index.server'
@@ -49,10 +52,10 @@ class PlayniteWebApi implements IGameApi {
     return this._mongo.getFilterTypeValues('gamefeature')
   }
 
-  async getPlaylistByName(name: string): Promise<Playlist> {
+  async getPlaylistByName(name: string): Promise<IPlaylist> {
     const playlists = await this.getPlaylists()
 
-    const playlist = playlists.find((playlist) => playlist.name === name)
+    const playlist = playlists.find((playlist) => playlist.toString() === name)
     if (!playlist) {
       throw new Error('Playlist not found')
     }
@@ -60,82 +63,67 @@ class PlayniteWebApi implements IGameApi {
     return playlist
   }
 
-  async getPlaylists(): Promise<Playlist[]> {
+  async getPlaylists(): Promise<IPlaylist[]> {
     const tags = await this._mongo.getTags()
+    const games = await this.getGames()
 
-    return Promise.all(
-      tags
-        .filter(({ name }) => this._playlistMatcher.test(name))
-        .map(async (tag) => ({
-          id: tag.id,
-          name: tag.name.replace(this._playlistMatcher, ''),
-          games: await this.getPlaylistsGames(tag),
-        })),
-    )
-  }
-
-  async getAssetsRelatedTo(oid: IdentifyDomainObjects): Promise<GameAsset[]> {
-    return (
-      await this._mongo.getAssetsRelatedTo(
-        oid.id,
-        oid.type as GameAssetEntityType,
+    return tags
+      .filter((tag) => this._playlistMatcher.test(tag.name))
+      .map(
+        (tag) =>
+          new TagPlaylist({ tagName: tag.name, games: new GameList(games) }),
       )
-    ).map((asset) => ({
-      id: asset.id,
-      file: Buffer.from(asset.file.value()),
-      related: new Oid(`${asset.relatedType}:${asset.relatedId}`),
-      typeKey: asset.typeKey as GameAssetType,
-    }))
   }
 
-  async getGames(): Promise<Game[]> {
+  async getAssetsRelatedTo(oid: IIdentifyDomainObjects): Promise<GameAsset[]> {
+    return (await this._mongo.getAssetsByType(oid.type as GameAssetEntityType))
+      .filter((asset) =>
+        oid.isEqual(new Oid(`${asset.relatedType}:${asset.relatedId}`)),
+      )
+      .map((asset) => ({
+        id: asset.id,
+        file: Buffer.from(asset.file.value()),
+        related: new Oid(`${asset.relatedType}:${asset.relatedId}`),
+        typeKey: asset.typeKey as GameAssetType,
+      }))
+  }
+
+  async getGames(): Promise<IGame[]> {
     return Object.values(
       groupBy(
-        (await this._mongo.getGames()).map(this.gameEntityToGame),
+        (await this._mongo.getGames()).map(this.gameEntityToGameOnPlatform),
         'sortName',
       ),
     ).map((groupedGames) => new Game(groupedGames))
   }
 
-  async getGameById(id: string): Promise<Game> {
-    const gameEntity = await this._mongo.getGameById(id)
+  async getGameById(id: IIdentifyDomainObjects): Promise<IGame> {
     const gameEntities = await this._mongo.getGames({
-      sortName: gameEntity.sortName,
-      id: { $ne: gameEntity.id },
+      id: { $in: id.id.split(',') },
     })
 
-    return new Game(
-      [gameEntity].concat(gameEntities).map(this.gameEntityToGame),
-    )
+    return new Game(gameEntities.map(this.gameEntityToGameOnPlatform))
   }
 
-  private async getPlaylistsGames(playlist: WithId): Promise<GameOnPlatform[]> {
-    const tagsGames = await this._mongo.getTagsGames([playlist.id])
-
-    return tagsGames.flatMap(([tag, games]) => games.map(this.gameEntityToGame))
-  }
-
-  private gameEntityToGame(gameEntity: GameEntity): GameOnPlatform {
-    return {
+  private gameEntityToGameOnPlatform(gameEntity: GameEntity): IGameOnPlatform {
+    const gameOnPlatform: GameOnPlatformDto = {
       added: new Date(gameEntity.added),
-      // ageRating: AgeRating,
-      background: gameEntity.backgroundImage?.replace(`${gameEntity.id}\\`, ''),
-      communityScore: gameEntity.communityScore
-        ? new NumericScore(gameEntity.communityScore)
-        : new NoScore(),
+      ageRating: gameEntity.ageRating,
+      communityScore: gameEntity.communityScore,
       completionStatus: gameEntity.completionStatus,
-      cover: gameEntity.coverImage?.replace(`${gameEntity.id}\\`, ''),
-      criticScore: gameEntity.criticScore
-        ? new NumericScore(gameEntity.criticScore)
-        : new NoScore(),
+      criticScore: gameEntity.criticScore,
       description: gameEntity.description,
       developers: gameEntity.developers,
       features: gameEntity.features,
       gameId: gameEntity.gameId,
       genres: gameEntity.genres,
       hidden: gameEntity.hidden,
-      icon: gameEntity.icon,
       id: gameEntity.id,
+      isInstalled: gameEntity.isInstalled,
+      isInstalling: gameEntity.isInstalling,
+      isLaunching: gameEntity.isLaunching,
+      isRunning: gameEntity.isRunning,
+      isUninstalling: gameEntity.isUninstalling,
       isCustomGame: gameEntity.isCustomGame,
       links: gameEntity.links,
       name: gameEntity.name,
@@ -147,8 +135,10 @@ class PlayniteWebApi implements IGameApi {
       sortName: startCase(toLower(gameEntity.name)),
       series: gameEntity.series,
       source: gameEntity.source,
-      // tags: Tag[],
+      tags: gameEntity.tags,
     }
+
+    return new GameOnPlatform(gameOnPlatform)
   }
 }
 

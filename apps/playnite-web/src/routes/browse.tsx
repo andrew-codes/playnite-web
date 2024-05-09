@@ -19,7 +19,8 @@ import MyLibrary from '../components/MyLibrary'
 import Drawer from '../components/Navigation/Drawer'
 import RightDrawer from '../components/RightDrawer'
 import Game from '../domain/Game'
-import { GameOnPlatform } from '../domain/types'
+import GameOnPlatform from '../domain/GameOnPlatform'
+import { GameOnPlatformDto, IGame } from '../domain/types'
 
 const isOnDetailsPage = (location) => /\/browse\/.+$/.test(location.pathname)
 
@@ -27,8 +28,8 @@ async function loader({ request }: LoaderFunctionArgs) {
   const api = getGameApi()
   const games = await api.getGames()
   games.sort((a, b) => {
-    const aName = a.name
-    const bName = b.name
+    const aName = a.toString()
+    const bName = b.toString()
     if (aName > bName) {
       return 1
     }
@@ -42,7 +43,7 @@ async function loader({ request }: LoaderFunctionArgs) {
   const features = await api.getFeatures()
 
   return json({
-    gamesOnPlatforms: games.map((game) => game.gamePlatforms),
+    games: games,
     filterValues: {
       feature: features,
     },
@@ -55,9 +56,8 @@ const Title = styled('span')(({ theme }) => ({
 }))
 
 function Browse() {
-  const { gamesOnPlatforms, filterValues } = (useLoaderData() ||
-    {}) as unknown as {
-    gamesOnPlatforms?: GameOnPlatform[][]
+  const data = (useLoaderData() || {}) as unknown as {
+    games: GameOnPlatformDto[][]
     filterValues:
       | {
           feature: { id: string; name: string }[]
@@ -67,10 +67,10 @@ function Browse() {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    Object.entries(filterValues ?? {}).forEach(([key, value]) => {
+    Object.entries(data.filterValues ?? {}).forEach(([key, value]) => {
       dispatch(setFilterTypeValues({ filterTypeName: key, values: value }))
     })
-  }, [])
+  }, [data.filterValues])
 
   const handleScrollTop = useCallback(() => {
     dispatch(scrollTo(0))
@@ -91,17 +91,17 @@ function Browse() {
 
     navigate(-1)
   }, [])
-  const handleSelection = useCallback((evt, game) => {
+  const handleSelection = useCallback((evt, game: IGame) => {
     setRightDrawerOpen(true)
-    navigate(`/browse/${game.id}`)
+    navigate(`/browse/${game.id.toString()}`)
   }, [])
 
   const games = useMemo(
     () =>
-      (gamesOnPlatforms ?? []).map((gamesOnPlatform) => {
-        return new Game(gamesOnPlatform)
+      data.games.map((g) => {
+        return new Game(g.map((gp) => new GameOnPlatform(gp)))
       }),
-    [gamesOnPlatforms],
+    [data.games],
   )
 
   return (

@@ -1,5 +1,8 @@
 import { Binary, Document, Filter, WithId } from 'mongodb'
-import type { GameAssetType, GameOnPlatform } from '../../../../../domain/types'
+import type {
+  GameAssetType,
+  GameOnPlatformDto,
+} from '../../../../../domain/types'
 
 type TagEntity = {
   id: string
@@ -7,18 +10,7 @@ type TagEntity = {
 }
 
 type GameEntity = WithId<Document> &
-  Omit<
-    GameOnPlatform,
-    | 'background'
-    | 'cover'
-    | 'developers'
-    | 'features'
-    | 'genres'
-    | 'platforms'
-    | 'publishers'
-    | 'series'
-    | 'tags'
-  > & {
+  GameOnPlatformDto & {
     id: string
     ageRating: string
     backgroundImage: string
@@ -76,10 +68,7 @@ interface MongoDbApi {
   getFilterTypeValues(
     filterTypeName: string,
   ): Promise<{ id: string; name: string }[]>
-  getAssetsRelatedTo(
-    relatedId: string,
-    relatedType: GameAssetEntityType,
-  ): Promise<GameAssetEntity[]>
+  getAssetsByType(type: GameAssetEntityType): Promise<GameAssetEntity[]>
   getTagsGames(tagIds: string[]): Promise<[TagEntity, GameEntity[]][]>
 }
 

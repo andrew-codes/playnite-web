@@ -1,154 +1,87 @@
-import _ from 'lodash'
-import ProgressionCompletionStatus from './CompletionStatus'
-import Oid from './Oid'
+import { CompositeOid } from './Oid'
 import type {
   Developer,
   Feature,
-  GameOnPlatform,
   ICompletionStatus,
   IGame,
-  Platform,
+  IGameOnPlatform,
+  IIdentifyDomainObjects,
   Series,
 } from './types'
 
-const { uniqBy } = _
-
-const steam = /steam/i
-const epic = /epic/i
-const origin = /origin/i
-const uplay = /uplay/i
-const gog = /gog/i
-const battleNet = /battle.net/i
-const xbox = /xbox/i
-const playstation = /playstation/i
-const nintendo = /nintendo/i
-
-const pc = /Windows/i
-const ps5 = /PlayStation ?5/
-const ps4 = /PlayStation ?4/
-const ps3 = /PlayStation ?3/
-
-const gameToPlatform = (game: GameOnPlatform): Platform[] | Platform | null => {
-  if (
-    [steam, epic, origin, uplay, gog, battleNet].some((r) =>
-      r.test(game.source.name),
-    )
-  ) {
-    return game.platforms.find((p) => pc.test(p.name)) ?? null
-  }
-  if (playstation.test(game.source.name)) {
-    const ps5Match = game.platforms.find((p) => ps5.test(p.name)) ?? null
-    const ps4Match = game.platforms.find((p) => ps4.test(p.name)) ?? null
-    const ps3Match = game.platforms.find((p) => ps3.test(p.name)) ?? null
-    return [ps5Match, ps4Match, ps3Match].filter(
-      (p): p is Platform => p !== null,
-    )
-  }
-
-  return null
-}
 class Game implements IGame {
-  private _games: GameOnPlatform[]
-  private _exposedGame: GameOnPlatform
-  private _exposedGameOid: Oid
-  private _completionStatus: ICompletionStatus
+  private _exposedGame: IGameOnPlatform
+  private _oid: IIdentifyDomainObjects
 
-  constructor(gamesOnPlatforms: GameOnPlatform[]) {
-    this._games = gamesOnPlatforms
+  public completionStatus: ICompletionStatus
+  public platformGames: IGameOnPlatform[]
+
+  constructor(gamesOnPlatforms: IGameOnPlatform[]) {
+    this.platformGames = gamesOnPlatforms
     this._exposedGame = gamesOnPlatforms[0]
-    this._exposedGameOid = new Oid(`game:${this._exposedGame.id}`)
-    this._completionStatus = this._games
-      .filter((g) => g.completionStatus)
-      .map(
-        (g) =>
-          new ProgressionCompletionStatus(
-            g.completionStatus as ICompletionStatus,
-          ),
-      )
+    this._oid = new CompositeOid(`game:${gamesOnPlatforms.map((g) => g.id.id)}`)
+
+    this.completionStatus = this.platformGames
+      .map((g) => g.completionStatus)
       .sort((a, b) => {
-        if (b.progressionOrder > a.progressionOrder) {
+        if (b > a) {
           return 1
         }
-        if (b.progressionOrder < a.progressionOrder) {
+        if (b < a) {
           return -1
         }
         return 0
       })[0]
   }
 
-  get assetType(): string {
-    return 'game'
+  toJSON() {
+    return this.platformGames
   }
 
-  get id(): string {
-    return this._exposedGame.id
-  }
-
-  get platform(): Platform {
-    throw new Error('Method not implemented.')
-  }
-
-  get completionStatus(): ICompletionStatus {
-    return this._completionStatus
+  get id(): IIdentifyDomainObjects {
+    return this._oid
   }
 
   get features(): Feature[] {
-    return this._exposedGame.features ?? []
-  }
-
-  get name(): string {
-    return this._exposedGame.name
-  }
-  set name(name: string) {
-    this._games = this._games.map((game) => ({ ...game, name }))
+    return this._exposedGame.features
   }
 
   get background(): string {
-    return `/gameAsset/background/${this._exposedGameOid.asString}`
+    return `/gameAsset/background/${this.id}`
   }
 
   get cover(): string {
-    return `/gameAsset/cover/${this._exposedGameOid.asString}`
+    return `/gameAsset/cover/${this.id}`
   }
 
   get description(): string {
     return this._exposedGame.description
   }
 
+  set name(name: string) {
+    this.platformGames = this.platformGames.map((game) => ({ ...game, name }))
+  }
+
   set description(description: string) {
-    this._games = this._games.map((game) => ({ ...game, description }))
-  }
-
-  get developers(): Developer[] {
-    return this._exposedGame.developers ?? []
-  }
-
-  get series(): Series[] {
-    return this._exposedGame.series ?? []
-  }
-
-  get gamePlatforms(): GameOnPlatform[] {
-    return this._games
-  }
-
-  get platforms(): Platform[] {
-    return uniqBy(
-      this._games
-        .flatMap((g) => gameToPlatform(g))
-        .filter((p): p is Platform => p !== null),
-      'name',
+    this.platformGames.forEach(
+      (platformGame) => (platformGame.description = description),
     )
   }
 
-  gameOnPlatform(platformId: string): GameOnPlatform | undefined {
-    return this._games.find((gameOnPlatform) => {
-      const platformMatch = gameToPlatform(gameOnPlatform)
-      if (Array.isArray(platformMatch)) {
-        return platformMatch.some((p) => p.id === platformId)
-      }
+  get developers(): Developer[] {
+    return this._exposedGame.developers
+  }
 
-      return platformMatch?.id === platformId
-    })
+  get series(): Series[] {
+    return this._exposedGame.series
+  }
+
+  get gamePlatforms(): IGameOnPlatform[] {
+    return this.platformGames
+  }
+
+  toString(): string {
+    return this._exposedGame.toString()
   }
 }
 

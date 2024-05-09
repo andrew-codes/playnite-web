@@ -76,8 +76,7 @@ class MongoDb implements MongoDbApi {
     }
   }
 
-  async getAssetsRelatedTo(
-    relatedId: string,
+  async getAssetsByType(
     relatedType: GameAssetEntityType,
   ): Promise<GameAssetEntity[]> {
     await this.connect()
@@ -85,7 +84,7 @@ class MongoDb implements MongoDbApi {
     return this.client
       .db('games')
       .collection<GameAssetEntity>('assets')
-      .find({ relatedId, relatedType })
+      .find({ relatedType })
       .toArray()
   }
 

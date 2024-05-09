@@ -1,15 +1,29 @@
-import { ICompletionStatus } from './types'
+import Oid, { NULL } from './Oid'
+import {
+  CompletionStatusDto,
+  ICompletionStatus,
+  IIdentifyDomainObjects,
+} from './types'
 
-class ProgressionCompletionStatus implements ICompletionStatus {
-  constructor(private status: ICompletionStatus) {}
-  get name(): string {
+class CompletionStatus implements ICompletionStatus {
+  private _oid: IIdentifyDomainObjects
+
+  constructor(private status: CompletionStatusDto) {
+    this._oid = new Oid(
+      `completionStatus:${status.id}:${new Date().toISOString()}`,
+    )
+  }
+
+  toString(): string {
     return this.status.name
   }
-  get id(): string {
-    return this.status.id
+
+  get id(): IIdentifyDomainObjects {
+    return this._oid
   }
-  get progressionOrder(): number {
-    const name = this.status.name.toLowerCase()
+
+  valueOf(): number {
+    const name = this.toString().toLowerCase()
     switch (name) {
       case 'not played':
         return 0
@@ -30,6 +44,32 @@ class ProgressionCompletionStatus implements ICompletionStatus {
     }
     return -1
   }
+
+  toJSON() {
+    return {
+      id: this.id.id,
+      name: this.toString(),
+    }
+  }
 }
 
-export default ProgressionCompletionStatus
+class NoCompletionStatus implements ICompletionStatus {
+  toString(): string {
+    return 'unknown'
+  }
+
+  get id(): IIdentifyDomainObjects {
+    return new NULL('completionstatus')
+  }
+
+  valueOf(): number {
+    return -1
+  }
+
+  toJSON() {
+    return null
+  }
+}
+
+export default CompletionStatus
+export { NoCompletionStatus }

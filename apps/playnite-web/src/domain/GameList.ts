@@ -1,7 +1,4 @@
-import _ from 'lodash'
 import { IGame, IList } from './types'
-
-const { groupBy } = _
 
 class GameList implements IList<IGame> {
   private _games: IGame[]

@@ -13,12 +13,14 @@ type DomainType =
   | 'region'
   | 'series'
   | 'tag'
-  | 'gamesonplatforms'
+  | 'gameonplatform'
 
-interface IdentifyDomainObjects {
-  get id(): string
-  get type(): DomainType
-  get asString(): string
+type GameAssetType = 'background' | 'cover' | 'icon'
+
+type GameAsset = WithId & {
+  file: Buffer
+  related: IIdentifyDomainObjects
+  typeKey: GameAssetType
 }
 
 interface WithId {
@@ -30,11 +32,8 @@ type GameLink = {
   url: string
 }
 
-type Platform = WithId & {
+type PlatformDto = WithId & {
   name: string
-  background: string
-  cover: string
-  icon: string
 }
 
 type Genre = WithId & {
@@ -65,21 +64,12 @@ type Developer = WithId & {
   name: string
 }
 
-interface Score {
-  get value(): string
-}
-
-interface ICompletionStatus extends WithId {
+type CompletionStatusDto = WithId & {
   name: string
 }
 
 type AgeRating = WithId & {
   name: string
-}
-
-type Playlist = WithId & {
-  name: string
-  games: GameOnPlatform[][]
 }
 
 const runStates = [
@@ -92,25 +82,27 @@ const runStates = [
 ] as const
 type RunState = (typeof runStates)[number]
 
-type GameOnPlatform = WithId & {
+type GameOnPlatformDto = WithId & {
   added: Date
   ageRating?: AgeRating
-  background: string
-  communityScore: Score
-  completionStatus?: ICompletionStatus
-  cover: string
-  criticScore: Score
+  communityScore: number
+  completionStatus?: CompletionStatusDto
+  criticScore: number
   description: string
   developers?: Developer[]
   features?: Feature[]
   gameId: string
+  isInstalled: boolean
+  isInstalling: boolean
+  isLaunching: boolean
+  isRunning: boolean
+  isUninstalling: boolean
   links: GameLink[]
   genres?: Genre[]
   hidden: boolean
-  icon: string
   isCustomGame: boolean
   name: string
-  platforms: Platform[]
+  platforms: PlatformDto[]
   publishers?: Publisher[]
   recentActivity: Date
   releaseDate: Date
@@ -121,20 +113,96 @@ type GameOnPlatform = WithId & {
   tags?: Tag[]
 }
 
-interface IGame {
-  get assetType(): string
+interface IScore {
+  toString(): string
+  valueOf(): number
+  toJSON()
+}
+
+interface IIdentifyDomainObjects {
   get id(): string
+  get type(): DomainType
+  get moment(): Date
+  isEqual(other: IIdentifyDomainObjects): boolean
+  toString(): string
+  toJSON()
+}
+
+interface IAmIdentifiable {
+  get id(): IIdentifyDomainObjects
+}
+
+interface IPlatform extends IAmIdentifiable {
+  get icon(): string
+  get cover(): string
+  get background(): string
+  toString(): string
+  valueOf(): number
+  toJSON()
+}
+
+interface ICompletionStatus extends IAmIdentifiable {
+  toString(): string
+  valueOf(): number
+  toJSON()
+}
+
+interface IGameOnPlatform extends IAmIdentifiable {
+  get added(): Date
+  get ageRating(): string
+  get background(): string
+  get communityScore(): IScore
+  get completionStatus(): ICompletionStatus
+  get cover(): string
+  get criticScore(): IScore
+  get description(): string
+  get developers(): Developer[]
+  get features(): Feature[]
+  get gameId(): string
+  get genres(): Genre[]
+  get hidden(): boolean
+  get icon(): string
+  get isCustomGame(): boolean
+  get links(): GameLink[]
+  get platform(): IPlatform
+  get publishers(): Publisher[]
+  get recentActivity(): Date
+  get releaseDate(): Date
+  get runState(): RunState
+  get series(): Series[]
+  get sortName(): string
+  get source(): Source
+  get tags(): Tag[]
+
+  set name(name: string)
+  set description(description: string)
+
+  toString(): string
+  toJSON()
+}
+
+interface IGame extends IAmIdentifiable {
   get background(): string
   get cover(): string
   get description(): string
   get developers(): Developer[]
-  get gamePlatforms(): GameOnPlatform[]
-  get name(): string
-  get platforms(): Platform[]
-  get platform(): Platform
+  get platformGames(): IGameOnPlatform[]
   get series(): Series[]
   get features(): Feature[]
   get completionStatus(): ICompletionStatus
+
+  set name(name: string)
+  set description(description: string)
+
+  toString(): string
+  toJSON()
+}
+
+interface IPlaylist {
+  get games(): IList<IGame>
+
+  toString()
+  toJSON()
 }
 
 interface IList<T> {
@@ -147,34 +215,31 @@ type Match<T> = T & {
 interface IMatchA<T> {
   matches(item: T): boolean
 }
-type GameAssetType = 'background' | 'cover' | 'icon'
-
-type GameAsset = WithId & {
-  file: Buffer
-  related: IdentifyDomainObjects
-  typeKey: GameAssetType
-}
 
 export type {
   AgeRating,
+  CompletionStatusDto,
   Developer,
   DomainType,
   Feature,
   GameAsset,
   GameAssetType,
-  GameOnPlatform,
+  GameOnPlatformDto,
   Genre,
+  IAmIdentifiable,
   ICompletionStatus,
   IGame,
+  IGameOnPlatform,
+  IIdentifyDomainObjects,
   IList,
   IMatchA,
-  IdentifyDomainObjects,
+  IPlatform,
+  IPlaylist,
+  IScore,
   Match,
-  Platform,
-  Playlist,
+  PlatformDto,
   Publisher,
   RunState,
-  Score,
   Series,
   Source,
   Tag,

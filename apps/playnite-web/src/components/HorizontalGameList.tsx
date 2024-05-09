@@ -52,7 +52,7 @@ const HorizontalGameList: FC<{
       <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
         {games.items.map((game, gameIndex) => (
           <ImageListItem
-            key={game.cover}
+            key={game.id.toString()}
             sx={(theme) => ({
               ...(!game.matches ? { display: 'none' } : {}),
               alignItems: 'center',

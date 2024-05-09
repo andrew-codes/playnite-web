@@ -48,7 +48,7 @@ const GameGrid: FC<{
       <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
         {games.items.map((game, gameIndex) => (
           <ImageListItem
-            key={game.id}
+            key={game.id.toString()}
             sx={(theme) => ({
               ...(!game.matches ? { display: 'none' } : {}),
               alignItems: 'center',
@@ -98,7 +98,7 @@ const GameGrid: FC<{
                   WebkitBoxOrient: 'vertical ',
                 }}
               >
-                {game.completionStatus.name}
+                {game.completionStatus.toString()}
               </Typography>
             </GameFigure>
           </ImageListItem>

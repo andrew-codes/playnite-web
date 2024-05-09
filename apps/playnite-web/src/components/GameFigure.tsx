@@ -75,7 +75,9 @@ const GameFigure: FC<
                   right: theme.spacing(),
                 })}
               >
-                <PlatformList platforms={game.platforms} />
+                <PlatformList
+                  platforms={game.platformGames.map((gp) => gp.platform)}
+                />
               </Box>
             </Box>,
             <Stack
