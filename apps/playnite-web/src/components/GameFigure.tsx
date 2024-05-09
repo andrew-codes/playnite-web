@@ -1,5 +1,4 @@
-import { Box, Stack, styled } from '@mui/material'
-import { Link } from '@remix-run/react'
+import { Box, Button, Stack, styled } from '@mui/material'
 import { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { IGame } from '../domain/types'
@@ -30,7 +29,7 @@ const GameFigure: FC<
     width: string
     height: string
     noDefer: boolean
-    onSelect?: (evt) => void
+    onSelect?: (evt, game: IGame) => void
   }>
 > = ({ children, game, style, noDefer, onSelect, width, height }) => {
   const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
@@ -49,7 +48,7 @@ const GameFigure: FC<
       {hasBeenInViewBefore || noDefer
         ? [
             <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
-              <Link to={`/browse/${game.id}`} onClick={onSelect}>
+              <Button onClick={(evt) => onSelect?.(evt, game)}>
                 {!imageHasError ? (
                   <Image
                     src={game.cover}
@@ -68,7 +67,7 @@ const GameFigure: FC<
                     }}
                   />
                 )}
-              </Link>
+              </Button>
               <Box
                 sx={(theme) => ({
                   position: 'absolute',

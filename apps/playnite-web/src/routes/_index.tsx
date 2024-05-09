@@ -17,15 +17,16 @@ import NoFilter from '../domain/filters/NoFilter'
 import { IGame, Playlist } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
-  const api = getGameApi()
   try {
+    const api = getGameApi()
     const games = await api.getGames()
+
     return json({
       lists: [
         {
           name: 'Playing',
           games: games
-            .filter((game) => game.completionStatus?.name === 'Playing')
+            .filter((game) => game.completionStatus?.name === 'Played')
             .map((game) => game.gamePlatforms),
         },
         {
@@ -69,7 +70,7 @@ function Index() {
   const handleClose = useCallback(() => {
     setRightDrawerOpen(false)
   }, [])
-  const handleGameSelect = useCallback((game: IGame) => {
+  const handleGameSelect = useCallback((evt, game: IGame) => {
     setGame(game)
     setRightDrawerOpen(true)
   }, [])
