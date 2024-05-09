@@ -23,7 +23,7 @@ const Filters: FC<{
     (evt: FormEvent<HTMLFormElement>) => {
       evt.preventDefault()
       const formData = new FormData(evt.currentTarget)
-      const name = (formData.get('nameFilter') as string) ?? null
+      const name = ((formData.get('nameFilter') as string) ?? '').trim()
       const feature = (formData.getAll('featureFilter') as string[]) ?? []
       const platform = (formData.getAll('platformFilter') as string[]) ?? []
 
