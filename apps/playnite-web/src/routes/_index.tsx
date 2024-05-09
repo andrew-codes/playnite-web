@@ -1,13 +1,15 @@
 import { Typography } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { useLoaderData, useNavigate } from '@remix-run/react'
-import { useMemo } from 'react'
+import { useLoaderData } from '@remix-run/react'
+import { useCallback, useMemo, useState } from 'react'
 import getGameApi from '../api/game/index.server'
+import GameDetails from '../components/GameDetails'
 import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
 import Drawer from '../components/Navigation/Drawer'
 import OuterScroll from '../components/OuterScroll'
+import RightDrawer from '../components/RightDrawer'
 import FilteredGameList from '../domain/FilteredGameList'
 import Game from '../domain/Game'
 import GameList from '../domain/GameList'
@@ -62,10 +64,15 @@ function Index() {
     )
   }, [lists])
 
-  const navigate = useNavigate()
-  const handleGameSelect = (game: IGame) => {
-    navigate(`/browse/${game.id}`)
-  }
+  const [isRightDrawerOpen, setRightDrawerOpen] = useState(false)
+  const [game, setGame] = useState<IGame | null>(null)
+  const handleClose = useCallback(() => {
+    setRightDrawerOpen(false)
+  }, [])
+  const handleGameSelect = useCallback((game: IGame) => {
+    setGame(game)
+    setRightDrawerOpen(true)
+  }, [])
 
   return (
     <Drawer>
@@ -84,6 +91,9 @@ function Index() {
           </section>
         ))}
       </OuterScroll>
+      <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
+        {game && <GameDetails game={game} />}
+      </RightDrawer>
     </Drawer>
   )
 }
