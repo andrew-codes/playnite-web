@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Delete merged PR images
-        uses: snok/container-retention-policy@v2
+        uses: snok/container-retention-policy@39269ee9f066ec0c971b8916615706d3c140a234
         with:
           image-names: playnite-web-game-db-updater, playnite-web-app
           cut-off: one second ago UTC-4
