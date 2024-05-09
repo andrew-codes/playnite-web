@@ -28,7 +28,7 @@ jobs:
         with:
           cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '${{ steps.node_version.outputs.value }}'
       - name: Use Yarn
@@ -73,7 +73,7 @@ jobs:
         with:
           cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '${{ steps.node_version.outputs.value }}'
       - name: Use Yarn
@@ -122,7 +122,7 @@ jobs:
         shell: bash
         id: node_version
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '${{ steps.node_version.outputs.value }}'
       - name: Read Yarn version
@@ -161,7 +161,7 @@ jobs:
   #       shell: bash
   #       id: node_version
   #     - name: Use Node.js
-  #       uses: actions/setup-node@v3
+  #       uses: actions/setup-node@v4
   #       with:
   #         node-version: '${{ steps.node_version.outputs.value }}'
   #     - name: Read Yarn version
