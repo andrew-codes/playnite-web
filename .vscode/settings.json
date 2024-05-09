@@ -7,5 +7,28 @@
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "prettier.prettierPath": ".yarn/unplugged/prettier-npm-3.1.1-072c31ec21/node_modules/prettier",
-  "jest.jestCommandLine": "yarn jest"
+  "jest.jestCommandLine": "yarn jest",
+  "githubIssues.queries": [
+    {
+      "label": "My Issues",
+      "query": "is:open assignee:${user} repo:${owner}/${repository}",
+      "groupBy": [
+        "milestone"
+      ]
+    },
+    {
+      "label": "Created Issues",
+      "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc",
+      "groupBy": [
+        "milestone"
+      ]
+    },
+    {
+      "label": "Recent Issues",
+      "query": "state:open repo:${owner}/${repository} sort:updated-desc",
+      "groupBy": [
+        "milestone"
+      ]
+    }
+  ]
 }
