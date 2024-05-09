@@ -80,7 +80,7 @@ function Browse() {
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(
     isOnDetailsPage(location),
   )
-  const [isFiltersInDrawer, setFiltersInDrawer] = useState(true)
+  const [isFiltersInDrawer, setFiltersInDrawer] = useState(false)
   const navigate = useNavigate()
   const handleClose = useCallback(() => {
     setRightDrawerOpen(false)
