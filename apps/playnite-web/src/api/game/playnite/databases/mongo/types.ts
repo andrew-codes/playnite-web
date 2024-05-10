@@ -2,7 +2,18 @@ import { Binary, Document, Filter, WithId } from 'mongodb'
 import type {
   GameAssetType,
   GameOnPlatformDto,
+  IIdentifyDomainObjects,
 } from '../../../../../domain/types'
+import { AssetTypeKey } from '../../../types'
+
+type PlatformData = {
+  specificationId: string
+  icon: string
+  cover: string
+  name: string
+  background: string
+  id: string
+}
 
 type TagEntity = {
   id: string
@@ -33,20 +44,14 @@ type GameEntity = WithId<Document> &
     isUninstalling: boolean
     links: { name: string; url: string }[]
     platformsIds: string[]
-    platforms: {
-      specificationId: string
-      icon: string
-      cover: string
-      name: string
-      background: string
-      id: string
-    }[]
+    platforms: PlatformData[]
     publishersIds: string[]
     publishers: { id: string; name: string }[]
     recentActivity: string
     releaseDate: string
     seriesIds: string[]
     series: { id: string; name: string }[]
+    sortingName?: string
     sourceId: string
     tagsIds: string[]
   }
@@ -68,7 +73,10 @@ interface MongoDbApi {
   getFilterTypeValues(
     filterTypeName: string,
   ): Promise<{ id: string; name: string }[]>
-  getAssetsByType(type: GameAssetEntityType): Promise<GameAssetEntity[]>
+  getAssetsByType(
+    oid: IIdentifyDomainObjects,
+    typeKey?: AssetTypeKey,
+  ): Promise<GameAssetEntity[]>
   getTagsGames(tagIds: string[]): Promise<[TagEntity, GameEntity[]][]>
 }
 
@@ -77,5 +85,6 @@ export type {
   GameAssetEntityType,
   GameEntity,
   MongoDbApi,
+  PlatformData,
   TagEntity,
 }

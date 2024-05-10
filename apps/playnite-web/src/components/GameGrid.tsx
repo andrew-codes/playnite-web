@@ -80,7 +80,7 @@ const GameGrid: FC<{
                   WebkitBoxOrient: 'vertical ',
                 }}
               >
-                {game.name}
+                {game.toString()}
               </Typography>
               <Typography
                 variant="body2"

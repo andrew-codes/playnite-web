@@ -102,7 +102,7 @@ type GameOnPlatformDto = WithId & {
   hidden: boolean
   isCustomGame: boolean
   name: string
-  platforms: PlatformDto[]
+  platform?: PlatformDto
   publishers?: Publisher[]
   recentActivity: Date
   releaseDate: Date

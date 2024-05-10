@@ -1,15 +1,15 @@
 import { Chip, styled } from '@mui/material'
 import _ from 'lodash'
 import { FC, useMemo } from 'react'
-import { IPlatform, Platform } from '../domain/types'
+import { IPlatform } from '../domain/types'
 
-const { chunk } = _
+const { chunk, uniqWith } = _
 
 const platformDisplays = {
   pc: { matcher: /PC/ },
-  ps5: { matcher: /PlayStation ?5/ },
-  ps4: { matcher: /PlayStation ?4/ },
-  ps3: { matcher: /PlayStation ?3/ },
+  ps5: { matcher: /PlayStation 5/ },
+  ps4: { matcher: /PlayStation 4/ },
+  ps3: { matcher: /PlayStation 3/ },
 }
 
 const sortOrder = [
@@ -78,7 +78,9 @@ const List = styled('ol')(({ theme }) => ({
 
 const PlatformList: FC<{ platforms: IPlatform[] }> = ({ platforms }) => {
   const condensedPlatforms = useMemo(() => {
-    const sortedPlatforms: IPlatform[] = platforms.sort((a, b) => {
+    const sortedPlatforms: IPlatform[] = uniqWith(platforms, (a, b) =>
+      a.id.isEqual(b.id),
+    ).sort((a, b) => {
       const aSort = sortOrder.findIndex((p) => p.matcher.test(a.toString()))
       const bSort = sortOrder.findIndex((p) => p.matcher.test(b.toString()))
       if (aSort > bSort) {
@@ -89,15 +91,15 @@ const PlatformList: FC<{ platforms: IPlatform[] }> = ({ platforms }) => {
       }
       return 0
     })
-    return (sortedPlatforms.slice(0, 2) as (Platform | Platform[])[]).concat([
-      sortedPlatforms.slice(2),
+    return (sortedPlatforms.slice(0, 3) as (IPlatform | IPlatform[])[]).concat([
+      sortedPlatforms.slice(3),
     ])
   }, [platforms])
 
   return (
     <List>
       {condensedPlatforms.map((platform) => (
-        <PlatformListItem platform={platform} key={platform.id} />
+        <PlatformListItem platform={platform} key={platform.toString()} />
       ))}
     </List>
   )

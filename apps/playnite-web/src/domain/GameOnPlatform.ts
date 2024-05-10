@@ -12,7 +12,6 @@ import {
   IIdentifyDomainObjects,
   IPlatform,
   IScore,
-  PlatformDto,
   Publisher,
   RunState,
   Series,
@@ -25,15 +24,15 @@ const epic = /epic/i
 const origin = /origin/i
 const uplay = /uplay/i
 const gog = /gog/i
-const battleNet = /battle.net/i
+const battleNet = /battle\.net/i
 const xbox = /xbox/i
 const playstation = /playstation/i
 const nintendo = /nintendo/i
 
 const pc = /Windows/i
-const ps5 = /PlayStation ?5/
-const ps4 = /PlayStation ?4/
-const ps3 = /PlayStation ?3/
+const ps5 = /PlayStation 5/
+const ps4 = /PlayStation 4/
+const ps3 = /PlayStation 3/
 const nintendoSwitch = /Nintendo Switch/i
 const xboxOne = /Xbox One/i
 
@@ -125,31 +124,9 @@ class GameOnPlatform implements IGameOnPlatform {
   }
 
   get platform(): IPlatform {
-    let platform: PlatformDto | undefined | null = null
-    if (
-      [steam, epic, origin, uplay, gog, battleNet].some((r) =>
-        r.test(this._gameOnPlatform.source.name),
-      )
-    ) {
-      platform = this._gameOnPlatform.platforms.find((p) => pc.test(p.name))
-    } else if (playstation.test(this._gameOnPlatform.source.name)) {
-      platform =
-        this._gameOnPlatform.platforms.find((p) => ps3.test(p.name)) ?? null
-      platform =
-        this._gameOnPlatform.platforms.find((p) => ps4.test(p.name)) ?? null
-      platform =
-        this._gameOnPlatform.platforms.find((p) => ps5.test(p.name)) ?? null
-    } else if (xbox.test(this._gameOnPlatform.source.name)) {
-      platform =
-        this._gameOnPlatform.platforms.find((p) => xboxOne.test(p.name)) ?? null
-    } else if (nintendo.test(this._gameOnPlatform.source.name)) {
-      platform =
-        this._gameOnPlatform.platforms.find((p) =>
-          nintendoSwitch.test(p.name),
-        ) ?? null
-    }
-
-    return platform ? new Platform(platform) : new UnknownPlatform()
+    return this._gameOnPlatform.platform
+      ? new Platform(this._gameOnPlatform.platform)
+      : new UnknownPlatform()
   }
 
   get publishers(): Publisher[] {

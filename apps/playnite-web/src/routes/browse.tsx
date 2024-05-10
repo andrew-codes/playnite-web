@@ -89,7 +89,7 @@ function Browse() {
       return
     }
 
-    navigate(-1)
+    navigate(`/browse`)
   }, [])
   const handleSelection = useCallback((evt, game: IGame) => {
     setRightDrawerOpen(true)

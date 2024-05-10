@@ -100,7 +100,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
 
   return (
     <Details>
-      <Typography variant="h4">{game.name}</Typography>
+      <Typography variant="h4">{game.toString()}</Typography>
 
       <Actions ref={platformsAnchorEl}>
         {isAuthenticated && (

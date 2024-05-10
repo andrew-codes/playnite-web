@@ -7,22 +7,17 @@ import { TagPlaylist } from '../../../domain/Playlist'
 import type {
   Feature,
   GameAssetType,
-  GameOnPlatformDto,
   IGame,
   IGameOnPlatform,
   IIdentifyDomainObjects,
   IPlaylist,
   RunState,
 } from '../../../domain/types'
-import { GameAsset, IGameApi } from '../types'
+import { AssetTypeKey, GameAsset, IGameApi } from '../types'
 import MongoDb from './databases/mongo/index.server'
-import {
-  GameAssetEntityType,
-  GameEntity,
-  MongoDbApi,
-} from './databases/mongo/types'
+import { GameEntity, MongoDbApi, PlatformData } from './databases/mongo/types'
 
-const { groupBy, startCase, toLower } = _
+const { groupBy, merge, startCase, toLower } = _
 
 const getRunState = (gameEntity: GameEntity): RunState => {
   if (gameEntity.isRunning) {
@@ -39,6 +34,27 @@ const getRunState = (gameEntity: GameEntity): RunState => {
 
   return 'not installed'
 }
+
+const steam = /steam/i
+const epic = /epic/i
+const origin = /origin/i
+const uplay = /uplay/i
+const gog = /gog/i
+const battleNet = /battle\.net/i
+const ea = /ea app/i
+const xbox = /xbox/i
+const playstation = /playstation/i
+const nintendo = /nintendo/i
+
+const ps4Game = /^CUSA/i
+const ps5Game = /^PPSA/i
+
+const pc = /Windows/i
+const ps5 = /PlayStation 5/
+const ps4 = /PlayStation 4/
+const ps3 = /PlayStation 3/
+const nintendoSwitch = /Nintendo Switch/i
+const xboxOne = /Xbox One/i
 
 class PlayniteWebApi implements IGameApi {
   private _mongo: MongoDbApi
@@ -75,26 +91,34 @@ class PlayniteWebApi implements IGameApi {
       )
   }
 
-  async getAssetsRelatedTo(oid: IIdentifyDomainObjects): Promise<GameAsset[]> {
-    return (await this._mongo.getAssetsByType(oid.type as GameAssetEntityType))
-      .filter((asset) =>
-        oid.isEqual(new Oid(`${asset.relatedType}:${asset.relatedId}`)),
-      )
-      .map((asset) => ({
-        id: asset.id,
-        file: Buffer.from(asset.file.value()),
-        related: new Oid(`${asset.relatedType}:${asset.relatedId}`),
-        typeKey: asset.typeKey as GameAssetType,
-      }))
+  async getAssetsRelatedTo(
+    oid: IIdentifyDomainObjects,
+    typeKey?: AssetTypeKey,
+  ): Promise<GameAsset[]> {
+    return (await this._mongo.getAssetsByType(oid, typeKey)).map((asset) => ({
+      id: asset.id,
+      file: Buffer.from(asset.file.value()),
+      related: new Oid(`${asset.relatedType}:${asset.relatedId}`),
+      typeKey: asset.typeKey as GameAssetType,
+    }))
   }
 
   async getGames(): Promise<IGame[]> {
-    return Object.values(
+    const gameEntities = await this._mongo.getGames()
+    const groupedBySortName = Object.values(
       groupBy(
-        (await this._mongo.getGames()).map(this.gameEntityToGameOnPlatform),
-        'sortName',
+        gameEntities.map((ge) =>
+          merge({}, ge, {
+            sortingName: ge.sortingName ?? startCase(toLower(ge.name)),
+          }),
+        ),
+        (ge) => startCase(toLower(ge.name)),
       ),
-    ).map((groupedGames) => new Game(groupedGames))
+    )
+
+    return groupedBySortName.map(
+      (groupedGames) => new Game(this.gameEntityToGameOnPlatform(groupedGames)),
+    )
   }
 
   async getGameById(id: IIdentifyDomainObjects): Promise<IGame> {
@@ -102,43 +126,73 @@ class PlayniteWebApi implements IGameApi {
       id: { $in: id.id.split(',') },
     })
 
-    return new Game(gameEntities.map(this.gameEntityToGameOnPlatform))
+    return new Game(this.gameEntityToGameOnPlatform(gameEntities))
   }
 
-  private gameEntityToGameOnPlatform(gameEntity: GameEntity): IGameOnPlatform {
-    const gameOnPlatform: GameOnPlatformDto = {
-      added: new Date(gameEntity.added),
-      ageRating: gameEntity.ageRating,
-      communityScore: gameEntity.communityScore,
-      completionStatus: gameEntity.completionStatus,
-      criticScore: gameEntity.criticScore,
-      description: gameEntity.description,
-      developers: gameEntity.developers,
-      features: gameEntity.features,
-      gameId: gameEntity.gameId,
-      genres: gameEntity.genres,
-      hidden: gameEntity.hidden,
-      id: gameEntity.id,
-      isInstalled: gameEntity.isInstalled,
-      isInstalling: gameEntity.isInstalling,
-      isLaunching: gameEntity.isLaunching,
-      isRunning: gameEntity.isRunning,
-      isUninstalling: gameEntity.isUninstalling,
-      isCustomGame: gameEntity.isCustomGame,
-      links: gameEntity.links,
-      name: gameEntity.name,
-      platforms: gameEntity.platforms ?? [],
-      publishers: gameEntity.publishers,
-      recentActivity: new Date(gameEntity.recentActivity),
-      releaseDate: new Date(gameEntity.releaseDate),
-      runState: getRunState(gameEntity),
-      sortName: startCase(toLower(gameEntity.name)),
-      series: gameEntity.series,
-      source: gameEntity.source,
-      tags: gameEntity.tags,
-    }
+  private gameEntityToGameOnPlatform(
+    gameEntities: GameEntity[],
+  ): IGameOnPlatform[] {
+    return gameEntities.map(
+      (entity) =>
+        new GameOnPlatform({
+          added: new Date(entity.added),
+          ageRating: entity.ageRating,
+          communityScore: entity.communityScore,
+          completionStatus: entity.completionStatus,
+          criticScore: entity.criticScore,
+          description: entity.description,
+          developers: entity.developers,
+          features: entity.features,
+          gameId: entity.gameId,
+          genres: entity.genres,
+          hidden: entity.hidden,
+          id: entity.id,
+          isInstalled: entity.isInstalled,
+          isInstalling: entity.isInstalling,
+          isLaunching: entity.isLaunching,
+          isRunning: entity.isRunning,
+          isUninstalling: entity.isUninstalling,
+          isCustomGame: entity.isCustomGame,
+          links: entity.links,
+          name: entity.name,
+          platform: this.getPlatformDto(entity),
+          publishers: entity.publishers,
+          recentActivity: new Date(entity.recentActivity),
+          releaseDate: new Date(entity.releaseDate),
+          runState: getRunState(entity),
+          sortName: entity.sortingName ?? startCase(toLower(entity.name)),
+          series: entity.series,
+          source: entity.source,
+          tags: entity.tags,
+        }),
+    )
+  }
 
-    return new GameOnPlatform(gameOnPlatform)
+  private getPlatformDto(entity: GameEntity): PlatformData | undefined {
+    if (
+      [steam, epic, origin, uplay, gog, battleNet, ea].find((sourceTest) =>
+        sourceTest.test(entity.source.name),
+      )
+    ) {
+      return entity.platforms.find((platform) => pc.test(platform.name))
+    }
+    if (playstation.test(entity.source.name)) {
+      if (ps4Game.test(entity.gameId)) {
+        return entity.platforms.find((platform) => ps4.test(platform.name))
+      }
+      if (ps5Game.test(entity.gameId)) {
+        return entity.platforms.find((platform) => ps5.test(platform.name))
+      }
+      return entity.platforms.find((platform) => ps3.test(platform.name))
+    }
+    if (nintendo.test(entity.source.name)) {
+      return entity.platforms.find((platform) =>
+        nintendoSwitch.test(platform.name),
+      )
+    }
+    if (xbox.test(entity.source.name)) {
+      return entity.platforms.find((platform) => xboxOne.test(platform.name))
+    }
   }
 }
 

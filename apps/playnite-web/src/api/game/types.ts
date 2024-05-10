@@ -20,7 +20,10 @@ interface IGameApi {
   getGameById(oid: IIdentifyDomainObjects): Promise<IGame>
   getGames(): Promise<IGame[]>
   getFeatures(): Promise<Feature[]>
-  getAssetsRelatedTo(oid: IIdentifyDomainObjects): Promise<GameAsset[]>
+  getAssetsRelatedTo(
+    oid: IIdentifyDomainObjects,
+    typeKey?: AssetTypeKey,
+  ): Promise<GameAsset[]>
 }
 
 export type { AssetTypeKey, GameAsset, IGameApi }

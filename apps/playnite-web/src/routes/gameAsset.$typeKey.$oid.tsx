@@ -11,8 +11,8 @@ async function loader({ request, params }: LoaderFunctionArgs) {
     const relatedOid = new CompositeOid(oid)
 
     const api = getGameApi()
-    const assets = await api.getAssetsRelatedTo(relatedOid)
-    const asset = assets.find((asset) => asset.typeKey == typeKey)
+    const assets = await api.getAssetsRelatedTo(relatedOid, typeKey)
+    const asset = assets[0]
     const assetBuffer = asset?.file
 
     if (!assetBuffer) {
