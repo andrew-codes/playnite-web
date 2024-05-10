@@ -22,7 +22,7 @@ import Game from '../domain/Game'
 import GameOnPlatform from '../domain/GameOnPlatform'
 import { GameOnPlatformDto, IGame } from '../domain/types'
 
-const isOnDetailsPage = (location) => /\/browse\/.+$/.test(location.pathname)
+const isOnDetailsPage = (pathname) => /\/browse\/.+$/.test(pathname)
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = getGameApi()
@@ -78,19 +78,19 @@ function Browse() {
 
   const location = useLocation()
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(
-    isOnDetailsPage(location),
+    isOnDetailsPage(location.pathname),
   )
   const [isFiltersInDrawer, setFiltersInDrawer] = useState(false)
   const navigate = useNavigate()
   const handleClose = useCallback(() => {
     setRightDrawerOpen(false)
     setFiltersInDrawer(false)
-    if (!isOnDetailsPage(location)) {
+    if (!isOnDetailsPage(location.pathname)) {
       return
     }
 
     navigate(`/browse`)
-  }, [])
+  }, [location.pathname])
   const handleSelection = useCallback((evt, game: IGame) => {
     setRightDrawerOpen(true)
     navigate(`/browse/${game.id.toString()}`)
