@@ -1,15 +1,15 @@
 import { Chip, styled } from '@mui/material'
 import _ from 'lodash'
 import { FC, useMemo } from 'react'
-import { Platform } from '../domain/types'
+import { IPlatform } from '../domain/types'
 
-const { chunk } = _
+const { chunk, uniqWith } = _
 
 const platformDisplays = {
   pc: { matcher: /PC/ },
-  ps5: { matcher: /PlayStation ?5/ },
-  ps4: { matcher: /PlayStation ?4/ },
-  ps3: { matcher: /PlayStation ?3/ },
+  ps5: { matcher: /PlayStation 5/ },
+  ps4: { matcher: /PlayStation 4/ },
+  ps3: { matcher: /PlayStation 3/ },
 }
 
 const sortOrder = [
@@ -22,7 +22,7 @@ const sortOrder = [
 const PlatformImage = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
 }))
-const PlatformListItem: FC<{ platform: Platform | Platform[] }> = ({
+const PlatformListItem: FC<{ platform: IPlatform | IPlatform[] }> = ({
   platform,
 }) => {
   if (Array.isArray(platform)) {
@@ -40,8 +40,8 @@ const PlatformListItem: FC<{ platform: Platform | Platform[] }> = ({
   return (
     <li>
       <PlatformImage
-        alt={platform.name}
-        src={`/gameAsset/icon/platform:${platform.id}`}
+        alt={platform.toString()}
+        src={`/gameAsset/icon/${platform.id}`}
       />
     </li>
   )
@@ -76,11 +76,13 @@ const List = styled('ol')(({ theme }) => ({
   },
 }))
 
-const PlatformList: FC<{ platforms: Platform[] }> = ({ platforms }) => {
+const PlatformList: FC<{ platforms: IPlatform[] }> = ({ platforms }) => {
   const condensedPlatforms = useMemo(() => {
-    const sortedPlatforms = platforms.sort((a, b) => {
-      const aSort = sortOrder.findIndex((p) => p.matcher.test(a.name))
-      const bSort = sortOrder.findIndex((p) => p.matcher.test(b.name))
+    const sortedPlatforms: IPlatform[] = uniqWith(platforms, (a, b) =>
+      a.id.isEqual(b.id),
+    ).sort((a, b) => {
+      const aSort = sortOrder.findIndex((p) => p.matcher.test(a.toString()))
+      const bSort = sortOrder.findIndex((p) => p.matcher.test(b.toString()))
       if (aSort > bSort) {
         return 1
       }
@@ -89,15 +91,15 @@ const PlatformList: FC<{ platforms: Platform[] }> = ({ platforms }) => {
       }
       return 0
     })
-    return (sortedPlatforms.slice(0, 2) as (Platform | Platform[])[]).concat([
-      sortedPlatforms.slice(2),
+    return (sortedPlatforms.slice(0, 3) as (IPlatform | IPlatform[])[]).concat([
+      sortedPlatforms.slice(3),
     ])
   }, [platforms])
 
   return (
     <List>
-      {condensedPlatforms.map((platform, platformIndex) => (
-        <PlatformListItem platform={platform} key={platformIndex} />
+      {condensedPlatforms.map((platform) => (
+        <PlatformListItem platform={platform} key={platform.toString()} />
       ))}
     </List>
   )

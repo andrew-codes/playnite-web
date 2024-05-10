@@ -35,7 +35,12 @@ const MyLibrary: FC<{
         {gameList.items
           .filter((game, index) => index <= noDeferCount)
           .map((game) => (
-            <link key={game.id} rel="preload" as="image" href={game.cover} />
+            <link
+              key={game.id.toString()}
+              rel="preload"
+              as="image"
+              href={game.cover}
+            />
           ))}
       </Helmet>
       <OuterScroll>

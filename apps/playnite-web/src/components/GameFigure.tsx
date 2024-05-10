@@ -1,8 +1,11 @@
 import { Box, Button, Stack, styled } from '@mui/material'
+import _ from 'lodash'
 import { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { IGame } from '../domain/types'
 import PlatformList from './PlatformList'
+
+const { uniqWith } = _
 
 const Figure = styled('figure', {
   shouldForwardProp: (prop) => prop !== 'width',
@@ -75,7 +78,9 @@ const GameFigure: FC<
                   right: theme.spacing(),
                 })}
               >
-                <PlatformList platforms={game.platforms} />
+                <PlatformList
+                  platforms={game.platformGames.map((gp) => gp.platform)}
+                />
               </Box>
             </Box>,
             <Stack

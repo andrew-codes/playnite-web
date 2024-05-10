@@ -32,8 +32,8 @@ const theme = (
       palette: {
         mode: 'dark',
         background: {
-          default: 'rgb(30, 39, 55)',
-          paper: 'rgb(40, 48, 68)',
+          default: 'rgb(31, 38, 52)',
+          paper: 'rgb(40, 49, 68)',
         },
         divider: 'rgba(255, 255, 255, 0.12)',
         action: {
@@ -41,6 +41,10 @@ const theme = (
         },
         primary: {
           main: 'rgb(181, 69, 155)',
+        },
+        text: {
+          primary: 'rgb(246, 248, 247)',
+          secondary: 'rgba(211, 221, 217)',
         },
       },
       breakpoints: {
@@ -70,7 +74,7 @@ const theme = (
         MuiDialog: {
           styleOverrides: {
             paper: {
-              backgroundColor: 'rgb(30, 39, 55)',
+              backgroundColor: 'rgb(31, 38, 52)',
               backgroundImage: 'none',
             },
           },
@@ -101,7 +105,7 @@ const theme = (
           styleOverrides: {
             root: {
               '&': {
-                backgroundColor: 'rgb(40, 48, 68)',
+                backgroundColor: 'rgb(40, 49, 68)',
                 '& fieldset': {
                   borderColor: 'rgb(255, 255, 255, 0.6)',
 
@@ -119,7 +123,7 @@ const theme = (
           styleOverrides: {
             root: {
               '& .MuiInputBase-root': {
-                backgroundColor: 'rgb(40, 48, 68)',
+                backgroundColor: 'rgb(40, 49, 68)',
                 '& fieldset': {
                   borderColor: 'rgb(255, 255, 255, 0.6)',
                 },

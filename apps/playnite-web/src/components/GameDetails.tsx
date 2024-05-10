@@ -15,7 +15,7 @@ import {
 import { FC, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
-import { IGame, Platform } from '../domain/types'
+import { IGame, IPlatform } from '../domain/types'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -45,10 +45,10 @@ const Description = styled('div')(({ theme }) => ({
   },
 }))
 
-const sortGameActionPlatforms = (platforms: Platform[]) => {
+const sortGameActionPlatforms = (platforms: IPlatform[]): IPlatform[] => {
   const sortedPlatforms = platforms.slice()
   sortedPlatforms.sort((a, b) => {
-    return a.name.localeCompare(b.name)
+    return a.toString().localeCompare(b.toString())
   })
   return sortedPlatforms
 }
@@ -56,6 +56,10 @@ const sortGameActionPlatforms = (platforms: Platform[]) => {
 const GameDetails: FC<{ game: IGame }> = ({ game }) => {
   const isAuthenticated = useSelector(getIsAuthenticated)
 
+  const platformOptions = useMemo(
+    () => sortGameActionPlatforms(game.platformGames.map((gp) => gp.platform)),
+    [game.platformGames],
+  )
   const [selectedIndex, setSelectedIndex] = useState(0)
   const handlePlay = (selectedIndex) => (evt) => {
     fetch('/activate', {
@@ -65,8 +69,8 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
       },
       credentials: 'same-origin',
       body: new URLSearchParams({
-        id: game.id,
-        platformId: sortGameActionPlatforms(game.platforms)[selectedIndex].id,
+        id: game.id.id,
+        platformId: platformOptions[selectedIndex].id.id,
       }),
     })
   }
@@ -94,15 +98,9 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
     setOpen(false)
   }
 
-  const platformOptions = useMemo(
-    () =>
-      sortGameActionPlatforms(game.platforms).map((platform) => platform.name),
-    [game.platforms],
-  )
-
   return (
     <Details>
-      <Typography variant="h4">{game.name}</Typography>
+      <Typography variant="h4">{game.toString()}</Typography>
 
       <Actions ref={platformsAnchorEl}>
         {isAuthenticated && (
@@ -113,7 +111,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
               aria-label="Platforms in which to play the game"
             >
               <Button onClick={handlePlay(selectedIndex)}>
-                {platformOptions[selectedIndex]}
+                {platformOptions[selectedIndex].toString()}
               </Button>
               <Button
                 size="small"
@@ -149,13 +147,13 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
                       <MenuList id="split-button-menu" autoFocusItem>
                         {platformOptions.map((option, index) => (
                           <MenuItem
-                            key={option}
+                            key={option.id.toString()}
                             selected={index === selectedIndex}
                             onClick={(event) =>
                               handleMenuItemClick(event, index)
                             }
                           >
-                            {option}
+                            {option.toString()}
                           </MenuItem>
                         ))}
                       </MenuList>

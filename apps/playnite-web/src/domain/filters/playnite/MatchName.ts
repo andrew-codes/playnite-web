@@ -7,7 +7,7 @@ class MatchName implements IMatchA<IGame> {
   }
 
   matches(item: IGame): boolean {
-    return this.nameMatcher.test(item.name)
+    return this.nameMatcher.test(item.toString())
   }
 }
 

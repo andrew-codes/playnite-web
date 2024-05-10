@@ -1,26 +1,47 @@
-import type { Score } from './types'
+import type { IScore } from './types'
 
-class NoScore implements Score {
-  get value() {
+class NoScore implements IScore {
+  toString() {
     return 'N/A'
   }
+  valueOf() {
+    return -1
+  }
+
+  toJSON() {
+    return null
+  }
 }
 
-class NumericScore implements Score {
-  constructor(protected score: number) {}
+class NumericScore implements IScore {
+  constructor(private score: number) {}
 
-  get value() {
+  toString() {
     return this.score.toString()
   }
-}
 
-class ScaledScore extends NumericScore {
-  constructor(score: number) {
-    super(score)
+  valueOf() {
+    return this.score
   }
 
-  get value() {
-    return Math.round(this.score / 100).toString()
+  toJSON() {
+    return this.score
+  }
+}
+
+class ScaledScore implements IScore {
+  constructor(private score: NumericScore) {}
+
+  toString() {
+    return Math.round(this.score.valueOf() / 100).toString()
+  }
+
+  valueOf() {
+    return this.score.valueOf()
+  }
+
+  toJSON() {
+    return this.score.toJSON()
   }
 }
 

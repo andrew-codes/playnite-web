@@ -1,5 +1,7 @@
 import createDebugger from 'debug'
 import { Filter, MongoClient } from 'mongodb'
+import { IIdentifyDomainObjects } from '../../../../../domain/types'
+import { AssetTypeKey } from '../../../types'
 import { getDbClient } from './client'
 import {
   GameAssetEntity,
@@ -76,16 +78,20 @@ class MongoDb implements MongoDbApi {
     }
   }
 
-  async getAssetsRelatedTo(
-    relatedId: string,
-    relatedType: GameAssetEntityType,
+  async getAssetsByType(
+    oid: IIdentifyDomainObjects,
+    typeKey?: AssetTypeKey,
   ): Promise<GameAssetEntity[]> {
     await this.connect()
 
     return this.client
       .db('games')
       .collection<GameAssetEntity>('assets')
-      .find({ relatedId, relatedType })
+      .find({
+        relatedType: oid.type as unknown as GameAssetEntityType,
+        relatedId: oid.id.split(',')[0],
+        typeKey: typeKey,
+      })
       .toArray()
   }
 
