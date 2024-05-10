@@ -47,7 +47,7 @@ const noFilter = new NoFilter()
 
 function Index() {
   const data = (useLoaderData() || {}) as unknown as {
-    lists: { completionStatus: string; games: GameOnPlatformDto[][] }[]
+    lists: { completionStatusName: string; games: GameOnPlatformDto[][] }[]
   }
 
   const gameListPlaylists = useMemo(() => {
@@ -55,7 +55,7 @@ function Index() {
       data.lists.map(
         (list) =>
           new CompletionStatusPlaylist({
-            completionStatusName: list.completionStatus,
+            completionStatusName: list.completionStatusName,
             games: new FilteredGameList(
               new GameList(
                 list.games.map(

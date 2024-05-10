@@ -55,7 +55,7 @@ class CompletionStatus implements ICompletionStatus {
 
 class NoCompletionStatus implements ICompletionStatus {
   toString(): string {
-    return 'unknown'
+    return 'Unknown'
   }
 
   get id(): IIdentifyDomainObjects {
