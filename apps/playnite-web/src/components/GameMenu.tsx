@@ -3,10 +3,10 @@ import { IconButton, Menu, MenuItem } from '@mui/material'
 import { FC, SyntheticEvent, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
-import { GameOnPlatform } from '../domain/types'
+import { GameOnPlatformDto } from '../domain/types'
 
 const GameMenu: FC<{
-  game: GameOnPlatform[]
+  game: GameOnPlatformDto[]
   onActivate: (evt: SyntheticEvent, id: string) => void
 }> = ({ game, onActivate }) => {
   const [anchorEl, setAnchorEl] = useState<null | Element>(null)

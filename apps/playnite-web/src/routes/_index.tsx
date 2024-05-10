@@ -13,8 +13,10 @@ import RightDrawer from '../components/RightDrawer'
 import FilteredGameList from '../domain/FilteredGameList'
 import Game from '../domain/Game'
 import GameList from '../domain/GameList'
+import GameOnPlatform from '../domain/GameOnPlatform'
+import { CompletionStatusPlaylist } from '../domain/Playlist'
 import NoFilter from '../domain/filters/NoFilter'
-import { IGame, Playlist } from '../domain/types'
+import { GameOnPlatformDto, IGame, IList, Match } from '../domain/types'
 
 async function loader({ request }: LoaderFunctionArgs) {
   try {
@@ -23,18 +25,14 @@ async function loader({ request }: LoaderFunctionArgs) {
 
     return json({
       lists: [
-        {
-          name: 'Playing',
-          games: games
-            .filter((game) => game.completionStatus?.name === 'Playing')
-            .map((game) => game.gamePlatforms),
-        },
-        {
-          name: 'Up Next',
-          games: games
-            .filter((game) => game.completionStatus?.name === 'Plan to Play')
-            .map((game) => game.gamePlatforms),
-        },
+        new CompletionStatusPlaylist({
+          completionStatusName: 'Playing',
+          games: new GameList(games),
+        }),
+        new CompletionStatusPlaylist({
+          completionStatusName: 'Plan to Play',
+          games: new GameList(games),
+        }),
       ],
     })
   } catch (e) {
@@ -48,22 +46,28 @@ async function loader({ request }: LoaderFunctionArgs) {
 const noFilter = new NoFilter()
 
 function Index() {
-  const { lists } = (useLoaderData() || {}) as unknown as {
-    lists?: Playlist[]
+  const data = (useLoaderData() || {}) as unknown as {
+    lists: { completionStatus: string; games: GameOnPlatformDto[][] }[]
   }
+
   const gameListPlaylists = useMemo(() => {
     return (
-      lists?.map((list) => ({
-        ...list,
-        games: new FilteredGameList(
-          new GameList(
-            list.games.map((gameOnPlatform) => new Game(gameOnPlatform)),
-          ),
-          noFilter,
-        ),
-      })) ?? []
+      data.lists.map(
+        (list) =>
+          new CompletionStatusPlaylist({
+            completionStatusName: list.completionStatus,
+            games: new FilteredGameList(
+              new GameList(
+                list.games.map(
+                  (g) => new Game(g.map((gp) => new GameOnPlatform(gp))),
+                ),
+              ),
+              noFilter,
+            ),
+          }),
+      ) ?? []
     )
-  }, [lists])
+  }, [data.lists])
 
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(false)
   const [game, setGame] = useState<IGame | null>(null)
@@ -82,10 +86,10 @@ function Index() {
           <Typography variant="h2">Library</Typography>
         </Header>
         {gameListPlaylists.map((playlist, index) => (
-          <section key={`${playlist?.name}${index}`}>
-            <Typography variant="h4">{playlist?.name}</Typography>
+          <section key={`${playlist.toString()}${index}`}>
+            <Typography variant="h4">{playlist.toString()}</Typography>
             <HorizontalGameList
-              games={playlist.games}
+              games={playlist.games as unknown as IList<Match<IGame>>}
               noDeferCount={5}
               onSelect={handleGameSelect}
             />

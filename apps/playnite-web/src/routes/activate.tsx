@@ -26,15 +26,10 @@ const action = requireAuthentication(
 
     const gameApi = getGameApi()
     const game = await gameApi.getGameById(id)
-    const gameOnPlatform = game.gameOnPlatform(platformId)
+    const gameOnPlatform = game.platformGames.find(
+      (gp) => gp.platform.id.id === platformId,
+    )
     if (!gameOnPlatform) {
-      return new Response(null, {
-        status: 404,
-      })
-    }
-
-    const platform = gameOnPlatform.platforms.find((p) => p.id === platformId)
-    if (!platform) {
       return new Response(null, {
         status: 404,
       })
@@ -47,7 +42,7 @@ const action = requireAuthentication(
         id: gameOnPlatform.id,
         gameId: gameOnPlatform.gameId,
         name: gameOnPlatform.name,
-        platform: platform,
+        platform: gameOnPlatform.platform,
         source: gameOnPlatform.source,
         install: gameOnPlatform.runState === 'not installed',
       },
