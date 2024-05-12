@@ -5,6 +5,7 @@ import GameOnPlatform from '../../../domain/GameOnPlatform'
 import Oid from '../../../domain/Oid'
 import { TagPlaylist } from '../../../domain/Playlist'
 import type {
+  AgeRating,
   Feature,
   GameAssetType,
   IGame,
@@ -15,7 +16,7 @@ import type {
 } from '../../../domain/types'
 import { AssetTypeKey, GameAsset, IGameApi } from '../types'
 import MongoDb from './databases/mongo/index.server'
-import { GameEntity, MongoDbApi, PlatformData } from './databases/mongo/types'
+import { GameEntity, MongoDbApi, PlatformEntity } from './databases/mongo/types'
 
 const { groupBy, merge, startCase, toLower } = _
 
@@ -136,7 +137,7 @@ class PlayniteWebApi implements IGameApi {
       (entity) =>
         new GameOnPlatform({
           added: new Date(entity.added),
-          ageRating: entity.ageRating,
+          ageRating: entity.ageRating as unknown as AgeRating,
           communityScore: entity.communityScore,
           completionStatus: entity.completionStatus,
           criticScore: entity.criticScore,
@@ -163,35 +164,36 @@ class PlayniteWebApi implements IGameApi {
           sortName: entity.sortingName ?? startCase(toLower(entity.name)),
           series: entity.series,
           source: entity.source,
-          tags: entity.tags,
+          tags: entity.tags ?? [],
         }),
     )
   }
 
-  private getPlatformDto(entity: GameEntity): PlatformData | undefined {
+  private getPlatformDto(entity: GameEntity): PlatformEntity | undefined {
+    const gameSource = entity.source?.name ?? ''
+    const platforms = entity.platforms ?? []
+
     if (
       [steam, epic, origin, uplay, gog, battleNet, ea].find((sourceTest) =>
-        sourceTest.test(entity.source.name),
+        sourceTest.test(gameSource),
       )
     ) {
-      return entity.platforms.find((platform) => pc.test(platform.name))
+      return platforms.find((platform) => pc.test(platform.name))
     }
-    if (playstation.test(entity.source.name)) {
+    if (playstation.test(gameSource)) {
       if (ps4Game.test(entity.gameId)) {
-        return entity.platforms.find((platform) => ps4.test(platform.name))
+        return platforms.find((platform) => ps4.test(platform.name))
       }
       if (ps5Game.test(entity.gameId)) {
-        return entity.platforms.find((platform) => ps5.test(platform.name))
+        return platforms.find((platform) => ps5.test(platform.name))
       }
-      return entity.platforms.find((platform) => ps3.test(platform.name))
+      return platforms.find((platform) => ps3.test(platform.name))
     }
-    if (nintendo.test(entity.source.name)) {
-      return entity.platforms.find((platform) =>
-        nintendoSwitch.test(platform.name),
-      )
+    if (nintendo.test(gameSource)) {
+      return platforms.find((platform) => nintendoSwitch.test(platform.name))
     }
-    if (xbox.test(entity.source.name)) {
-      return entity.platforms.find((platform) => xboxOne.test(platform.name))
+    if (xbox.test(gameSource)) {
+      return platforms.find((platform) => xboxOne.test(platform.name))
     }
   }
 }
