@@ -85,9 +85,9 @@ type RunState = (typeof runStates)[number]
 type GameOnPlatformDto = WithId & {
   added: Date
   ageRating?: AgeRating
-  communityScore: number
+  communityScore: number | null
   completionStatus?: CompletionStatusDto
-  criticScore: number
+  criticScore: number | null
   description: string
   developers?: Developer[]
   features?: Feature[]
@@ -109,7 +109,7 @@ type GameOnPlatformDto = WithId & {
   runState: RunState
   series?: Series[]
   sortName: string
-  source: Source
+  source: Source | null
   tags?: Tag[]
 }
 
