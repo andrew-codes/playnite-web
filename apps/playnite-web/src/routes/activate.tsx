@@ -2,6 +2,7 @@ import { ActionFunctionArgs, json } from '@remix-run/node'
 import { authenticator } from '../api/auth/auth.server'
 import getGameApi from '../api/game/index.server'
 import { getMqttClient } from '../api/mqtt'
+import Oid from '../domain/Oid'
 import { requireAuthentication } from '../route-utils/requireAuthentication'
 
 const action = requireAuthentication(
@@ -25,7 +26,7 @@ const action = requireAuthentication(
     }
 
     const gameApi = getGameApi()
-    const game = await gameApi.getGameById(id)
+    const game = await gameApi.getGameById(new Oid(id))
     const gameOnPlatform = game.platformGames.find(
       (gp) => gp.platform.id.id === platformId,
     )

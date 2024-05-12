@@ -69,7 +69,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
       },
       credentials: 'same-origin',
       body: new URLSearchParams({
-        id: game.id.id,
+        id: game.id.toString(),
         platformId: platformOptions[selectedIndex].id.id,
       }),
     })
