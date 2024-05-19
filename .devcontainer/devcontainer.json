@@ -4,9 +4,6 @@
     "dockerfile": "Dockerfile"
   },
   "features": {
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
-      "version": "23.0.7"
-    },
     "ghcr.io/devcontainers/features/dotnet:2": {
       "version": "7.0.403"
     },
