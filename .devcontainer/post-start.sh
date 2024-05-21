@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. .devcontainer/wrapdocker.sh
+. .devcontainer/wrapdocker.sh &
 
 set -o allexport
 . $PWD/local.env
