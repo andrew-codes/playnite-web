@@ -4,6 +4,9 @@
     "dockerfile": "Dockerfile"
   },
   "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "23.0.7"
+    },
     "ghcr.io/devcontainers/features/dotnet:2": {
       "version": "7.0.403"
     },
@@ -13,7 +16,7 @@
     "ghcr.io/devcontainers/features/powershell:1": {}
   },
   "customizations": {
-     "devpod": {
+    "devpod": {
       "prebuildRepository": "ghcr.io/andrew-codes/playnite-web"
     },
     "vscode": {
