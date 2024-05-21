@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git lfs install
+. .devcontainer/wrapdocker.sh
 
 set -o allexport
 . $PWD/local.env
