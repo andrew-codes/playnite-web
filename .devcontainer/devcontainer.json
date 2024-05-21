@@ -13,6 +13,9 @@
     "ghcr.io/devcontainers/features/powershell:1": {}
   },
   "customizations": {
+     "devpod": {
+      "prebuildRepository": "ghcr.io/andrew-codes/playnite-web"
+    },
     "vscode": {
       "settings": {
         "terminal.integrated.profiles.linux": {
