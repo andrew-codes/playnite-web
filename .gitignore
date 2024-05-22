@@ -19,3 +19,5 @@ apps/playnite-web/.cache
 apps/playnite-web/build
 apps/playnite-web/public/build
 apps/playnite-web/public/entry.worker.js
+
+.devcontainer/.devpod-internal/
