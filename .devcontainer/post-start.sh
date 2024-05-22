@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-. .devcontainer/wrapdocker.sh &
+/usr/local/share/docker-init.sh
 
 set -o allexport
 . $PWD/local.env
