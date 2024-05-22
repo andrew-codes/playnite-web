@@ -6,7 +6,6 @@ echo -e "{
 }" > /etc/docker/daemon.json
 /usr/local/share/docker-init.sh
 
-
 corepack enable
 corepack prepare --activate yarn@^4.0.0
 
