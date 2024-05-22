@@ -22,8 +22,6 @@ password_file /etc/mosquitto/passwd
 listener 1883" > /etc/mosquitto/conf.d/default.conf
 
 mkdir -p /.data/mongodb
-docker kill $(docker ps -aq)
-docker container rm $(docker container ls -aq)
 docker run --name playnite-web-db -d \
   --network host \
   -e MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME \
