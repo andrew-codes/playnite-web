@@ -28,9 +28,6 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E03280
 RUN echo "deb https://download.mono-project.com/repo/debian stable-buster main" > /etc/apt/sources.list.d/mono-official-stable.list
 RUN apt-get update -y
 RUN apt-get install -y \
-mono-complete \
-git-lfs
-RUN apt-get install -y \
 libgtk2.0-0 \
 libgtk-3-0 \
 libgbm-dev \
@@ -39,5 +36,6 @@ libnss3 \
 libxss1 \
 libasound2 \
 libxtst6 \
+mono-complete \
 xauth \
 xvfb
