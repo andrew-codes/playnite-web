@@ -3,6 +3,9 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
+  "mounts": [
+    "source=/mnt/.data,target=/mnt/.data,type=bind,consistency=cached"
+  ],
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/dotnet:2": {
@@ -65,7 +68,6 @@
   "remoteUser": "root",
   "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
   "postStartCommand": "bash -i -c './.devcontainer/post-start.sh'",
-  "postAttachCommand": "bash -i -c './.devcontainer/post-attach.sh'",
   "appPort": [
     "1883:1883",
     "3000:3000",
