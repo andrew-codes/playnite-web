@@ -67,7 +67,6 @@
   },
   "remoteUser": "root",
   "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
-  "postStartCommand": "bash -i -c './.devcontainer/post-start.sh'",
   "appPort": [
     "1883:1883",
     "3000:3000",
