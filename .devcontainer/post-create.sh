@@ -7,6 +7,11 @@ echo -e "{
 /usr/local/share/docker-init.sh
 
 
+corepack enable
+corepack prepare --activate yarn@^4.0.0
+
+yarn dlx cypress install
+
 set -o allexport
 . $PWD/local.env
 set +o allexport
@@ -17,6 +22,8 @@ password_file /etc/mosquitto/passwd
 listener 1883" > /etc/mosquitto/conf.d/default.conf
 
 mkdir -p /.data/mongodb
+docker kill $(docker ps -aq)
+docker container rm $(docker container ls -aq)
 docker run --name playnite-web-db -d \
   --network host \
   -e MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME \
@@ -25,10 +32,3 @@ docker run --name playnite-web-db -d \
   mongo:7.0.3-jammy
 
 mosquitto -c /etc/mosquitto/conf.d/default.conf --daemon --verbose
-
-corepack enable
-corepack prepare --activate yarn@^4.0.0
-
-yarn dlx cypress install
-
-
