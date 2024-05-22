@@ -4,8 +4,7 @@
     "dockerfile": "Dockerfile"
   },
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/dotnet:2": {
       "version": "7.0.403"
     },
@@ -69,10 +68,6 @@
     "1883:1883",
     "3000:3000",
     "3001:3001"
-  ],
-  "runArgs": [
-    "--ipc=host",
-    "--net=host"
   ],
   "containerEnv": {
     "DISPLAY": "localhost:10.0"
