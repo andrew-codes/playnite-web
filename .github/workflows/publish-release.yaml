@@ -163,7 +163,7 @@ jobs:
 
   release:
     name: Release
-    needs: [publish_images, changelog]
+    needs: [publish_images, package, changelog]
     permissions:
       contents: write
       discussions: write
