@@ -13,7 +13,7 @@ afterEach(() => {
 
 test('Connects to MQTT and subscribes to playnite/# topics.', (done) => {
     mockHandler.mockImplementationOnce(() => {
-        expect(mockHandler).toHaveBeenCalledWith('playnite/test', 'test')
+        expect(mockHandler).toHaveBeenCalledWith('playnite/test', Buffer.from('test'))
         done()
     })
 
