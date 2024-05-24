@@ -30,5 +30,10 @@
         "milestone"
       ]
     }
-  ]
+  ],
+  "jest.outputConfig": {
+    "revealOn": "run",
+    "revealWithFocus": "test-results",
+    "clearOnRun": "none"
+  }
 }
