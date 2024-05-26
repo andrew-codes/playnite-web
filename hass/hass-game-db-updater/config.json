@@ -1,12 +1,12 @@
 {
     "name": "Playnite Web Game DB Updater",
+    "url": "https://github.com/andrew-codes/playnite-web",
     "version": "3-dev",
     "slug": "playnite-web-game-db-updater",
     "description": "An add-on to update Playnite web game database using MQTT and MongoDB.",
     "arch": [
         "aarch64",
-        "amd64",
-        "armv7"
+        "amd64"
     ],
     "startup": "services",
     "boot": "auto",
