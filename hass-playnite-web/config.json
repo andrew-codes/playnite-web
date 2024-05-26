@@ -45,7 +45,7 @@
     "ingress_port": "[PORT]",
     "ingress_entry": "/",
     "ingress_stream": false,
-    "image": "ghcr.io/cvele/playnite-web-app",
+    "image": "ghcr.io/andrew-codes/playnite-web-app-hass-addon",
     "map": [
         "config:rw"
     ],

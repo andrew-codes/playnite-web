@@ -33,7 +33,7 @@
         "DB_PASSWORD": "str?",
         "DEBUG": "str"
     },
-    "image": "ghcr.io/cvele/playnite-web-game-db-updater",
+    "image": "ghcr.io/andrew-codes/playnite-web-game-db-updater-hass-addon",
     "map": [
         "config:rw"
     ]
