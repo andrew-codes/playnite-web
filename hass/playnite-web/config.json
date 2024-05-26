@@ -44,5 +44,5 @@
     "map": [
         "config:rw"
     ],
-    "icon": "icon.png"
+    "icon": "../__docs/playnite-icon.png"
 }
