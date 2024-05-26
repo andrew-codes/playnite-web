@@ -3,7 +3,8 @@
     "url": "https://github.com/andrew-codes/playnite-web",
     "version": "3-dev",
     "slug": "playnite-web-game-db-updater",
-    "description": "An add-on to update Playnite web game database using MQTT and MongoDB.",
+    "description": "An add-on to synchronize Playnite Web game database using MQTT and MongoDB.",
+    "icon": "playnite-icon.png",
     "arch": [
         "aarch64",
         "amd64"
@@ -35,6 +36,5 @@
     "image": "ghcr.io/cvele/playnite-web-game-db-updater",
     "map": [
         "config:rw"
-    ],
-    "icon": "playnite-icon.png"
+    ]
 }
