@@ -64,6 +64,7 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 | DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                   |
 | DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access |
 | DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access |
+| DB_URL               | MongoDB connection URL                   | Optional, alternative to individual DB connection options |
 | DEBUG                | `"game-db-updater/*"`                    | Optional, for troubleshooting; send logs to STDIO    |
 
 #### playnite-web-app
@@ -79,6 +80,7 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 | DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                   |
 | DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access |
 | DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access |
+| DB_URL               | MongoDB connection URL                   | Optional, alternative to individual DB connection options |
 | DEBUG                | `"playnite-web/*"`                       | Optional, for troubleshooting; send logs to STDIO    |
 | USERNAME             |                                          | Username used to login                               |
 | PASSWORD             |                                          | Password value used to login                         |
