@@ -2,6 +2,5 @@
     "name": "Playnite Web HASS Add-ons",
     "udev": true,
     "url": "https://github.com/andrew-codes/playnite-web",
-    "maintainer": "andrew-codes"
-  }
-  
+    "maintainer": "https://github.com/andrew-codes/playnite-web/issues"
+}
