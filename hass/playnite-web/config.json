@@ -1,13 +1,14 @@
 {
     "name": "Playnite Web App",
+    "url": "https://github.com/andrew-codes/playnite-web",
     "version": "3-dev",
     "slug": "playnite-web-app",
     "description": "An add-on to provide web interface and API for Playnite.",
     "arch": [
         "aarch64",
-        "amd64",
-        "armv7"
+        "amd64"
     ],
+    "webui": "http://[HOST]:[PORT:3000]",
     "startup": "services",
     "boot": "auto",
     "options": {
@@ -40,6 +41,10 @@
         "MQTT_USERNAME": "str?",
         "MQTT_PASSWORD": "str?"
     },
+    "ingress": true,
+    "ingress_port": "[PORT]",
+    "ingress_entry": "/",
+    "ingress_stream": false,
     "image": "ghcr.io/cvele/playnite-web-app",
     "map": [
         "config:rw"
