@@ -37,9 +37,6 @@ RUN mkdir -p /home/runner/.docker
 RUN mkdir -p /home/runner/.config/docker
 RUN mkdir -p /home/runner/.cache/node/corepack
 RUN chown --recursive runner /home/runner
-RUN corepack enable
-RUN corepack prepare yarn@4.1.1 --activate
-RUN chown --recursive runner /home/runner
 RUN apt-get install -y \
   dirmngr
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
