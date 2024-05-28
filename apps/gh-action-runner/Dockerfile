@@ -46,3 +46,4 @@ RUN apt-get install -y \
 
 USER runner
 RUN echo '{ "features": { "buildkit": true }, "exec-opts": [], "log-driver": "json-file", "log-opts": {"max-size": "10m", "max-file": "3"} }' | tee /home/runner/.config/docker/daemon.json
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
