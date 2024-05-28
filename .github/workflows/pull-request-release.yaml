@@ -156,9 +156,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
       - name: Download Playnite Toolbox
         run: |-
-          mkdir -p .tools/Playnite
-          curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip
-          unzip ./Playnite.zip -d .tools/Playnite
+          mkdir -p .tools/Playnite && curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
