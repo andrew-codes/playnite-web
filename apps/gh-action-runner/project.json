@@ -1,0 +1,32 @@
+{
+  "name": "gh-action-runner",
+  "sourceRoot": "apps/gh-action-runner/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .dist _packaged .test-runs build public/build",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "package": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["bash -c '. ./scripts/package.sh'"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ../.. && docker push $REGISTRY/$OWNER/$REPO_NAME-app:$TAG"
+        ],
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}
