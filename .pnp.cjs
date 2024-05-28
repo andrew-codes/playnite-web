@@ -22,6 +22,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/game-db-updater"\
     },\
     {\
+      "name": "gh-action-runner",\
+      "reference": "workspace:apps/gh-action-runner"\
+    },\
+    {\
       "name": "playnite-web-app",\
       "reference": "workspace:apps/playnite-web"\
     }\
@@ -30,6 +34,7 @@ const RAW_RUNTIME_STATE =
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "fallbackExclusionList": [\
     ["game-db-updater", ["workspace:apps/game-db-updater"]],\
+    ["gh-action-runner", ["workspace:apps/gh-action-runner"]],\
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]]\
@@ -7901,6 +7906,21 @@ const RAW_RUNTIME_STATE =
           ["assert-plus", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["gh-action-runner", [\
+      ["workspace:apps/gh-action-runner", {\
+        "packageLocation": "./apps/gh-action-runner/",\
+        "packageDependencies": [\
+          ["gh-action-runner", "workspace:apps/gh-action-runner"],\
+          ["concurrently", "npm:8.2.2"],\
+          ["cross-env", "npm:7.0.3"],\
+          ["glob", "npm:10.3.10"],\
+          ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:17.1.2"],\
+          ["rimraf", "npm:5.0.5"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["glob", [\
