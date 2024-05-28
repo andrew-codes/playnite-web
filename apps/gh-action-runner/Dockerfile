@@ -23,8 +23,6 @@ bash \
   jq \
   locales \
   lxc ca-certificates iptables \
-  python3-pip \
-  python3.8 \
   sshpass
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
 RUN locale-gen
