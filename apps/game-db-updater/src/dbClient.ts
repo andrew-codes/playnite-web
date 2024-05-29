@@ -2,8 +2,12 @@ import createDebugger from 'debug'
 import { MongoClient } from 'mongodb'
 
 let client: MongoClient
-type DbConnectionOptions = {
+
+type DbConnectionString = {
   url?: string
+}
+
+type DbConnectionOptions = {
   host?: string
   port?: number
   username?: string
@@ -11,17 +15,16 @@ type DbConnectionOptions = {
 }
 
 const getDbClient = async (
-  connectionOptions?: DbConnectionOptions,
+  connectionOptions?: DbConnectionOptions | DbConnectionString,
 ): Promise<MongoClient> => {
   const debug = createDebugger('game-db-updater/mqttClient')
 
   if (!client) {
-    const url = connectionOptions?.url ?? process.env.DB_URL
-    const host = connectionOptions?.host ?? process.env.DB_HOST ?? 'localhost'
-    const port =
-      connectionOptions?.port ?? parseInt(process.env.DB_PORT ?? '27017')
-    const username = connectionOptions?.username ?? process.env.DB_USERNAME
-    const password = connectionOptions?.password ?? process.env.DB_PASSWORD
+    const url = 'url' in connectionOptions ? connectionOptions.url : process.env.DB_URL
+    const host = 'host' in connectionOptions ? connectionOptions.host : process.env.DB_HOST ?? 'localhost'
+    const port = 'port' in connectionOptions ? connectionOptions.port : parseInt(process.env.DB_PORT ?? '27017')
+    const username = 'username' in connectionOptions ? connectionOptions.username : process.env.DB_USERNAME
+    const password = 'password' in connectionOptions ? connectionOptions.password : process.env.DB_PASSWORD
 
     if (url) {
       debug(`Existing DB client not found; creating one with the provided URL: ${url}`)
