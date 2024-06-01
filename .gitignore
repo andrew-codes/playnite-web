@@ -21,3 +21,4 @@ apps/playnite-web/public/build
 apps/playnite-web/public/entry.worker.js
 
 .devcontainer/.devpod-internal/
+apps/PlayniteWebPlugin/src/extension.yaml
