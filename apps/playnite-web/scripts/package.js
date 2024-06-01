@@ -1,12 +1,8 @@
-import path from 'path'
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
 import pkg from '../package.json' assert { type: 'json' }
 
 async function run() {
-  const projectRoot = path.join(__dirname, '../')
-  process.chdir(projectRoot)
-
   sh.cp('-R', 'build/', '_packaged/')
   sh.cp('-R', 'public/', '_packaged/')
   sh.cp('-R', 'server.mjs/', '_packaged')
