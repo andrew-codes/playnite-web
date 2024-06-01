@@ -40,18 +40,14 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "yarn node --loader esbuild-register/loader --require esbuild-register scripts/package.ts"
-        ],
+        "commands": ["yarn node scripts/package.js"],
         "cwd": "{projectRoot}"
       }
     },
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "yarn node --loader esbuild-register/loader --require esbuild-register scripts/publish.ts"
-        ],
+        "commands": ["yarn node scripts/publish.js"],
         "cwd": "{projectRoot}"
       }
     }
