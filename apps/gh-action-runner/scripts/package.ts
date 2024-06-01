@@ -1,12 +1,8 @@
-import path from 'path'
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
 import pkg from '../package.json'
 
 async function run() {
-  const projectRoot = path.join(__dirname, '../')
-  process.chdir(projectRoot)
-
   const { REGISTRY, OWNER, GITHUB_REF } = process.env
 
   if (!REGISTRY || !OWNER || !GITHUB_REF) {
