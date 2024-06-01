@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn node --register esbuild-register scripts/package.js"
+          "yarn node --register esbuild-register scripts/package.ts"
         ],
         "cwd": "{projectRoot}"
       }
@@ -23,7 +23,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn node --register esbuild-register scripts/publish.js"
+          "yarn node --register esbuild-register scripts/publish.ts"
         ],
         "cwd": "{projectRoot}"
       }
