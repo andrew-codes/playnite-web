@@ -14397,8 +14397,6 @@ const RAW_RUNTIME_STATE =
           ["cypress", "npm:13.6.1"],\
           ["debug", "virtual:92a28e392bb7746809827b7e8ebf6aec49c5f04125481214ae6ea6f4de204344bcccbe5eb3a2f4388bb368cfa5d84f03ce0d8f32a9fcc3f5e92ea34723da1c56#npm:4.3.4"],\
           ["dotenv", "npm:16.3.1"],\
-          ["esbuild", "npm:0.17.19"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
           ["express", "npm:4.18.2"],\
           ["framer-motion", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:11.0.3"],\
           ["glob", "npm:10.3.10"],\
@@ -17325,7 +17323,7 @@ const RAW_RUNTIME_STATE =
           ["@types/typescript", null],\
           ["babel-jest", null],\
           ["bs-logger", "npm:0.2.6"],\
-          ["esbuild", "npm:0.17.19"],\
+          ["esbuild", null],\
           ["fast-json-stable-stringify", "npm:2.1.0"],\
           ["jest", null],\
           ["jest-util", "npm:29.7.0"],\

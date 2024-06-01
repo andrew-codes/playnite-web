@@ -12201,8 +12201,6 @@ __metadata:
     cypress: "npm:^13.6.1"
     debug: "npm:^4.3.4"
     dotenv: "npm:^16.3.1"
-    esbuild: "npm:^0.17.3"
-    esbuild-register: "npm:^3.4.2"
     express: "npm:^4.18.2"
     framer-motion: "npm:^11.0.3"
     glob: "npm:^10.3.10"
