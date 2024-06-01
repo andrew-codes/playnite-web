@@ -13,18 +13,14 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "yarn node --register esbuild-register scripts/package.ts"
-        ],
+        "commands": ["yarn node --require esbuild-register scripts/package.ts"],
         "cwd": "{projectRoot}"
       }
     },
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "yarn node --register esbuild-register scripts/publish.ts"
-        ],
+        "commands": ["yarn node --require esbuild-register scripts/publish.ts"],
         "cwd": "{projectRoot}"
       }
     }
