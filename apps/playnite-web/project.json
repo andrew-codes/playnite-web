@@ -40,18 +40,14 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "bash -c 'mkdir -p _packaged/build && cp build/ _packaged -r && cp public/ _packaged -r && cp server.mjs _packaged && cp package.json _packaged'"
-        ],
+        "commands": ["yarn node --require esbuild-register scripts/package.js"],
         "cwd": "{projectRoot}"
       }
     },
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ../.. && docker push $REGISTRY/$OWNER/$REPO_NAME-app:$TAG"
-        ],
+        "commands": ["yarn node --require esbuild-register scripts/publish.js"],
         "cwd": "{projectRoot}"
       }
     }
