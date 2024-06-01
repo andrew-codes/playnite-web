@@ -40,14 +40,14 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["yarn node scripts/package.js"],
+        "commands": ["yarn node --json-modules scripts/package.js"],
         "cwd": "{projectRoot}"
       }
     },
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["yarn node scripts/publish.js"],
+        "commands": ["yarn node --json-modules scripts/publish.js"],
         "cwd": "{projectRoot}"
       }
     }
