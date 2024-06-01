@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.dist"],
       "options": {
-        "command": "yarn node --require esbuild-register ./scripts/build.js",
+        "command": "yarn node --require esbuild-register ./scripts/build.ts",
         "cwd": "{projectRoot}/src"
       }
     },
