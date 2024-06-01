@@ -1,7 +1,7 @@
 {
   "name": "versioning",
   "private": true,
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "dependencies": {
     "semver": "^7.6.2"
   },

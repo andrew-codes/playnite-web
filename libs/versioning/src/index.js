@@ -1,10 +1,7 @@
 import semver from 'semver'
 
-const getDockerTags = async (
-  version: string,
-  ref: string,
-): Promise<string[]> => {
-  let tags: string[] = []
+const getDockerTags = async (version, ref) => {
+  let tags = []
 
   if (/^refs\/pull\//.test(ref)) {
     const prNumber = ref
