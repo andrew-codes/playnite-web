@@ -41,7 +41,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn node --loader esbuild-register/loader scripts/package.ts"
+          "yarn node --loader esbuild-register/loader --require esbuild-register scripts/package.ts"
         ],
         "cwd": "{projectRoot}"
       }
@@ -50,7 +50,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn node --loader esbuild-register/loader scripts/publish.ts"
+          "yarn node --loader esbuild-register/loader --require esbuild-register scripts/publish.ts"
         ],
         "cwd": "{projectRoot}"
       }
