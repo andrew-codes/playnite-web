@@ -1,0 +1,16 @@
+{
+  "name": "versioning",
+  "sourceRoot": "libs/versioning/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}

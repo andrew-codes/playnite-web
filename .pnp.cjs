@@ -28,6 +28,10 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "playnite-web-app",\
       "reference": "workspace:apps/playnite-web"\
+    },\
+    {\
+      "name": "versioning",\
+      "reference": "workspace:libs/versioning"\
     }\
   ],\
   "enableTopLevelFallback": true,\
@@ -37,7 +41,8 @@ const RAW_RUNTIME_STATE =
     ["gh-action-runner", ["workspace:apps/gh-action-runner"]],\
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
-    ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]]\
+    ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]],\
+    ["versioning", ["workspace:libs/versioning"]]\
   ],\
   "fallbackPool": [\
   ],\
@@ -4601,6 +4606,17 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@types/glob", [\
+      ["npm:7.2.0", {\
+        "packageLocation": "../../root/.yarn/berry/cache/@types-glob-npm-7.2.0-772334bf9a-10c0.zip/node_modules/@types/glob/",\
+        "packageDependencies": [\
+          ["@types/glob", "npm:7.2.0"],\
+          ["@types/minimatch", "npm:5.1.2"],\
+          ["@types/node", "npm:20.10.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@types/graceful-fs", [\
       ["npm:4.1.9", {\
         "packageLocation": "../../root/.yarn/berry/cache/@types-graceful-fs-npm-4.1.9-ebd697fe83-10c0.zip/node_modules/@types/graceful-fs/",\
@@ -4730,6 +4746,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../root/.yarn/berry/cache/@types-minimatch-npm-3.0.5-802bb0797f-10c0.zip/node_modules/@types/minimatch/",\
         "packageDependencies": [\
           ["@types/minimatch", "npm:3.0.5"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:5.1.2", {\
+        "packageLocation": "../../root/.yarn/berry/cache/@types-minimatch-npm-5.1.2-aab9c394d3-10c0.zip/node_modules/@types/minimatch/",\
+        "packageDependencies": [\
+          ["@types/minimatch", "npm:5.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4882,6 +4905,17 @@ const RAW_RUNTIME_STATE =
           ["@types/serve-static", "npm:1.15.5"],\
           ["@types/http-errors", "npm:2.0.4"],\
           ["@types/mime", "npm:3.0.4"],\
+          ["@types/node", "npm:20.10.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/shelljs", [\
+      ["npm:0.8.15", {\
+        "packageLocation": "../../root/.yarn/berry/cache/@types-shelljs-npm-0.8.15-4684136e20-10c0.zip/node_modules/@types/shelljs/",\
+        "packageDependencies": [\
+          ["@types/shelljs", "npm:0.8.15"],\
+          ["@types/glob", "npm:7.2.0"],\
           ["@types/node", "npm:20.10.0"]\
         ],\
         "linkType": "HARD"\
@@ -8068,10 +8102,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:3.5.0", {\
-        "packageLocation": "./.yarn/__virtual__/esbuild-register-virtual-1274976c1c/3/root/.yarn/berry/cache/esbuild-register-npm-3.5.0-d823f64ce0-10c0.zip/node_modules/esbuild-register/",\
+      ["virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0", {\
+        "packageLocation": "./.yarn/__virtual__/esbuild-register-virtual-ec06b91938/3/root/.yarn/berry/cache/esbuild-register-npm-3.5.0-d823f64ce0-10c0.zip/node_modules/esbuild-register/",\
         "packageDependencies": [\
-          ["esbuild-register", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:3.5.0"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
           ["@types/esbuild", null],\
           ["debug", "virtual:92a28e392bb7746809827b7e8ebf6aec49c5f04125481214ae6ea6f4de204344bcccbe5eb3a2f4388bb368cfa5d84f03ce0d8f32a9fcc3f5e92ea34723da1c56#npm:4.3.4"],\
           ["esbuild", "npm:0.17.19"]\
@@ -8870,13 +8904,14 @@ const RAW_RUNTIME_STATE =
           ["game-db-updater", "workspace:apps/game-db-updater"],\
           ["@types/jest", "npm:29.5.10"],\
           ["@types/node", "npm:18.18.13"],\
+          ["@types/shelljs", "npm:0.8.15"],\
           ["async-mqtt", "npm:2.6.3"],\
           ["cpy", "npm:11.0.0"],\
           ["cpy-cli", "npm:5.0.0"],\
           ["debug", "virtual:92a28e392bb7746809827b7e8ebf6aec49c5f04125481214ae6ea6f4de204344bcccbe5eb3a2f4388bb368cfa5d84f03ce0d8f32a9fcc3f5e92ea34723da1c56#npm:4.3.4"],\
           ["dotenv", "npm:16.3.1"],\
           ["esbuild", "npm:0.17.19"],\
-          ["esbuild-register", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:3.5.0"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
           ["jest-config", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:29.3.1"],\
           ["jest-when", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:3.6.0"],\
@@ -8886,8 +8921,10 @@ const RAW_RUNTIME_STATE =
           ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
           ["prettier", "npm:3.1.1"],\
           ["rimraf", "npm:5.0.5"],\
+          ["shelljs", "npm:0.8.5"],\
           ["ts-jest", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:29.1.1"],\
-          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"]\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
+          ["versioning", "workspace:libs/versioning"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -9041,12 +9078,18 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./apps/gh-action-runner/",\
         "packageDependencies": [\
           ["gh-action-runner", "workspace:apps/gh-action-runner"],\
+          ["@types/shelljs", "npm:0.8.15"],\
           ["concurrently", "npm:8.2.2"],\
           ["cross-env", "npm:7.0.3"],\
+          ["esbuild", "npm:0.17.19"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
           ["glob", "npm:10.3.10"],\
           ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
           ["rimraf", "npm:5.0.5"],\
-          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"]\
+          ["shelljs", "npm:0.8.5"],\
+          ["ts-jest", "virtual:7ac4a0cea082b1ac81d5301f75b1cf5c6e9ce58a4127c9aec05b6504e83e2b7bc6f25c89b19ca32eb9519c24eecc6f7f8b7547c89724de2ebadf7776ca97a77e#npm:29.1.1"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
+          ["versioning", "workspace:libs/versioning"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -9834,6 +9877,15 @@ const RAW_RUNTIME_STATE =
           ["get-intrinsic", "npm:1.2.2"],\
           ["hasown", "npm:2.0.0"],\
           ["side-channel", "npm:1.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["interpret", [\
+      ["npm:1.4.0", {\
+        "packageLocation": "../../root/.yarn/berry/cache/interpret-npm-1.4.0-17b4b5b0a4-10c0.zip/node_modules/interpret/",\
+        "packageDependencies": [\
+          ["interpret", "npm:1.4.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -14334,6 +14386,7 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:18.18.13"],\
           ["@types/react", "npm:18.2.45"],\
           ["@types/react-dom", "npm:18.2.17"],\
+          ["@types/shelljs", "npm:0.8.15"],\
           ["@types/styled-components", "npm:5.1.34"],\
           ["async-mqtt", "npm:2.6.3"],\
           ["babel-plugin-direct-import", "npm:1.0.0"],\
@@ -14344,6 +14397,8 @@ const RAW_RUNTIME_STATE =
           ["cypress", "npm:13.6.1"],\
           ["debug", "virtual:92a28e392bb7746809827b7e8ebf6aec49c5f04125481214ae6ea6f4de204344bcccbe5eb3a2f4388bb368cfa5d84f03ce0d8f32a9fcc3f5e92ea34723da1c56#npm:4.3.4"],\
           ["dotenv", "npm:16.3.1"],\
+          ["esbuild", "npm:0.17.19"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
           ["express", "npm:4.18.2"],\
           ["framer-motion", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:11.0.3"],\
           ["glob", "npm:10.3.10"],\
@@ -14368,9 +14423,12 @@ const RAW_RUNTIME_STATE =
           ["remix-routes", "npm:1.5.1"],\
           ["remix-utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.5.0"],\
           ["rimraf", "npm:5.0.5"],\
+          ["shelljs", "npm:0.8.5"],\
+          ["ts-jest", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:29.1.1"],\
           ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
           ["typescript-remix-routes-plugin", "npm:1.0.1"],\
-          ["ua-parser-js", "npm:1.0.37"]\
+          ["ua-parser-js", "npm:1.0.37"],\
+          ["versioning", "workspace:libs/versioning"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -14380,11 +14438,17 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./apps/PlayniteWebPlugin/",\
         "packageDependencies": [\
           ["playnite-web-plugin", "workspace:apps/PlayniteWebPlugin"],\
+          ["@types/shelljs", "npm:0.8.15"],\
           ["cpy", "npm:11.0.0"],\
           ["cpy-cli", "npm:5.0.0"],\
+          ["esbuild", "npm:0.17.19"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
           ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
           ["prettier", "npm:3.1.1"],\
-          ["rimraf", "npm:5.0.5"]\
+          ["rimraf", "npm:5.0.5"],\
+          ["shelljs", "npm:0.8.5"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
+          ["versioning", "workspace:libs/versioning"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -15416,6 +15480,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["rechoir", [\
+      ["npm:0.6.2", {\
+        "packageLocation": "../../root/.yarn/berry/cache/rechoir-npm-0.6.2-0df5f171ec-10c0.zip/node_modules/rechoir/",\
+        "packageDependencies": [\
+          ["rechoir", "npm:0.6.2"],\
+          ["resolve", "patch:resolve@npm%3A1.22.8#optional!builtin<compat/resolve>::version=1.22.8&hash=c3c19d"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["redent", [\
       ["npm:3.0.0", {\
         "packageLocation": "../../root/.yarn/berry/cache/redent-npm-3.0.0-31892f4906-10c0.zip/node_modules/redent/",\
@@ -16191,6 +16265,18 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../root/.yarn/berry/cache/shell-quote-npm-1.8.1-fcccf06093-10c0.zip/node_modules/shell-quote/",\
         "packageDependencies": [\
           ["shell-quote", "npm:1.8.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["shelljs", [\
+      ["npm:0.8.5", {\
+        "packageLocation": "../../root/.yarn/berry/cache/shelljs-npm-0.8.5-44be43f84a-10c0.zip/node_modules/shelljs/",\
+        "packageDependencies": [\
+          ["shelljs", "npm:0.8.5"],\
+          ["glob", "npm:7.2.3"],\
+          ["interpret", "npm:1.4.0"],\
+          ["rechoir", "npm:0.6.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -17143,6 +17229,47 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
+      ["virtual:7ac4a0cea082b1ac81d5301f75b1cf5c6e9ce58a4127c9aec05b6504e83e2b7bc6f25c89b19ca32eb9519c24eecc6f7f8b7547c89724de2ebadf7776ca97a77e#npm:29.1.1", {\
+        "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-ccbf3ff161/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
+        "packageDependencies": [\
+          ["ts-jest", "virtual:7ac4a0cea082b1ac81d5301f75b1cf5c6e9ce58a4127c9aec05b6504e83e2b7bc6f25c89b19ca32eb9519c24eecc6f7f8b7547c89724de2ebadf7776ca97a77e#npm:29.1.1"],\
+          ["@babel/core", null],\
+          ["@jest/types", null],\
+          ["@types/babel-jest", null],\
+          ["@types/babel__core", null],\
+          ["@types/esbuild", null],\
+          ["@types/jest", null],\
+          ["@types/jest__types", null],\
+          ["@types/typescript", null],\
+          ["babel-jest", null],\
+          ["bs-logger", "npm:0.2.6"],\
+          ["esbuild", "npm:0.17.19"],\
+          ["fast-json-stable-stringify", "npm:2.1.0"],\
+          ["jest", null],\
+          ["jest-util", "npm:29.7.0"],\
+          ["json5", "npm:2.2.3"],\
+          ["lodash.memoize", "npm:4.1.2"],\
+          ["make-error", "npm:1.3.6"],\
+          ["semver", "npm:7.5.4"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
+          ["yargs-parser", "npm:21.1.1"]\
+        ],\
+        "packagePeers": [\
+          "@babel/core",\
+          "@jest/types",\
+          "@types/babel-jest",\
+          "@types/babel__core",\
+          "@types/esbuild",\
+          "@types/jest",\
+          "@types/jest__types",\
+          "@types/typescript",\
+          "babel-jest",\
+          "esbuild",\
+          "jest",\
+          "typescript"\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.1.1", {\
         "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-e29b62dc7a/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
         "packageDependencies": [\
@@ -17160,6 +17287,47 @@ const RAW_RUNTIME_STATE =
           ["esbuild", null],\
           ["fast-json-stable-stringify", "npm:2.1.0"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
+          ["jest-util", "npm:29.7.0"],\
+          ["json5", "npm:2.2.3"],\
+          ["lodash.memoize", "npm:4.1.2"],\
+          ["make-error", "npm:1.3.6"],\
+          ["semver", "npm:7.5.4"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
+          ["yargs-parser", "npm:21.1.1"]\
+        ],\
+        "packagePeers": [\
+          "@babel/core",\
+          "@jest/types",\
+          "@types/babel-jest",\
+          "@types/babel__core",\
+          "@types/esbuild",\
+          "@types/jest",\
+          "@types/jest__types",\
+          "@types/typescript",\
+          "babel-jest",\
+          "esbuild",\
+          "jest",\
+          "typescript"\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:29.1.1", {\
+        "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-f3ca3816cf/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
+        "packageDependencies": [\
+          ["ts-jest", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:29.1.1"],\
+          ["@babel/core", "npm:7.23.6"],\
+          ["@jest/types", null],\
+          ["@types/babel-jest", null],\
+          ["@types/babel__core", null],\
+          ["@types/esbuild", null],\
+          ["@types/jest", null],\
+          ["@types/jest__types", null],\
+          ["@types/typescript", null],\
+          ["babel-jest", null],\
+          ["bs-logger", "npm:0.2.6"],\
+          ["esbuild", "npm:0.17.19"],\
+          ["fast-json-stable-stringify", "npm:2.1.0"],\
+          ["jest", null],\
           ["jest-util", "npm:29.7.0"],\
           ["json5", "npm:2.2.3"],\
           ["lodash.memoize", "npm:4.1.2"],\
@@ -17869,6 +18037,18 @@ const RAW_RUNTIME_STATE =
           ["extsprintf", "npm:1.4.1"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["versioning", [\
+      ["workspace:libs/versioning", {\
+        "packageLocation": "./libs/versioning/",\
+        "packageDependencies": [\
+          ["versioning", "workspace:libs/versioning"],\
+          ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
+          ["semver", "npm:7.6.2"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["vfile", [\

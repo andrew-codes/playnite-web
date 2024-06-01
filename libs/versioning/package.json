@@ -1,0 +1,11 @@
+{
+  "name": "versioning",
+  "main": "src/index.ts",
+  "dependencies": {
+    "semver": "^7.6.2"
+  },
+  "devDependencies": {
+    "nx": "^19.1.1",
+    "typescript": "^5.3.2"
+  }
+}

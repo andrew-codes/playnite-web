@@ -1,13 +1,19 @@
 {
   "name": "gh-action-runner",
-  "version": "3.1.0",
+  "version": "3.1.4",
   "sideEffects": false,
   "devDependencies": {
+    "@types/shelljs": "^0.8.15",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
+    "esbuild": "^0.17.3",
+    "esbuild-register": "^3.4.2",
     "glob": "^10.3.10",
     "nx": "19.1.1",
     "rimraf": "^5.0.5",
-    "typescript": "^5.3.2"
+    "shelljs": "^0.8.5",
+    "ts-jest": "^29.0.5",
+    "typescript": "^5.3.2",
+    "versioning": "workspace:*"
   }
 }

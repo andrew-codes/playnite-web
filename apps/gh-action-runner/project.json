@@ -13,7 +13,9 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["bash -c '. ./scripts/package.sh'"],
+        "commands": [
+          "yarn node --register esbuild-register scripts/package.js"
+        ],
         "cwd": "{projectRoot}"
       }
     },
@@ -21,7 +23,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-app:$TAG --file Dockerfile ../.. && docker push $REGISTRY/$OWNER/$REPO_NAME-app:$TAG"
+          "yarn node --register esbuild-register scripts/publish.js"
         ],
         "cwd": "{projectRoot}"
       }
