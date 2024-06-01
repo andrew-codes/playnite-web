@@ -6,7 +6,7 @@
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "glob": "^10.3.10",
-    "nx": "17.1.2",
+    "nx": "19.1.1",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.2"
   }

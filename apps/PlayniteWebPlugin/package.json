@@ -6,7 +6,7 @@
   "devDependencies": {
     "cpy": "^11.0.0",
     "cpy-cli": "^5.0.0",
-    "nx": "^17.1.2",
+    "nx": "^19.1.1",
     "prettier": "^3.1.1",
     "rimraf": "^5.0.5"
   }
