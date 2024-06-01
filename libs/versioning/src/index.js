@@ -1,4 +1,4 @@
-import semver from 'semver'
+const semver = require('semver')
 
 const getDockerTags = async (version, ref) => {
   let tags = []
@@ -21,4 +21,4 @@ const getDockerTags = async (version, ref) => {
   return tags
 }
 
-export { getDockerTags }
+module.exports = { getDockerTags }
