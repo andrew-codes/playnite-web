@@ -1,7 +1,7 @@
 import path from 'path'
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
-import pkg from '../package.json' with { type: 'json' }
+import pkg from '../package.json' assert { type: 'json' }
 
 async function run() {
   const projectRoot = path.join(__dirname, '../')

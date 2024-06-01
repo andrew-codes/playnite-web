@@ -1,6 +1,6 @@
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
-import pkg from '../package.json' with { type: 'json' }
+import pkg from '../package.json' assert { type: 'json' }
 
 async function run() {
   const { REGISTRY, OWNER, GITHUB_REF } = process.env
