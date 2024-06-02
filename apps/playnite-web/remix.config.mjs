@@ -19,6 +19,7 @@ const config = {
   ignoredRouteFiles: ['**/.*'],
   publicPath: '/build/',
   serverBuildPath: 'build/index.js',
+  serverDependenciesToBundle: 'all',
 
   // PWA
   entryWorkerFile: './src/entry.worker.ts',
