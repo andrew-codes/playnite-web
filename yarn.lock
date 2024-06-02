@@ -5736,7 +5736,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:^4.3.3":
+"debug@npm:^4.3.3, debug@npm:^4.3.5":
   version: 4.3.5
   resolution: "debug@npm:4.3.5"
   dependencies:
@@ -15142,6 +15142,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "versioning@workspace:libs/versioning"
   dependencies:
+    debug: "npm:^4.3.5"
     lodash: "npm:^4.17.21"
     nx: "npm:^19.1.1"
     semver: "npm:^7.6.2"

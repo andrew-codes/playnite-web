@@ -1,7 +1,11 @@
 const semver = require('semver')
 const { groupBy } = require('lodash')
+const debug = require('debug')('playnite-web/versioning')
 
 const getDockerTags = async (version, ref) => {
+  debug(`version: ${version}`)
+  debug(`ref: ${ref}`)
+
   let tags = []
 
   if (/^refs\/pull\//.test(ref)) {
@@ -37,6 +41,8 @@ const getDockerTags = async (version, ref) => {
   } else if (/^refs\/heads\/main$/.test(ref)) {
     tags.push(`dev`)
   }
+
+  debug(`tags: ${tags.join(', ')}`)
 
   return tags
 }
