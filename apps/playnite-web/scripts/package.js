@@ -8,13 +8,7 @@ async function run() {
   sh.cp('-R', 'build/', '_packaged/')
   sh.cp('-R', 'public/', '_packaged/')
   sh.cp('-R', 'server.mjs/', '_packaged')
-
-  const pkgJson = { ...pkg }
-  delete pkgJson.devDependencies
-  await fs.writeFile(
-    path.join('_packaged', 'package.json'),
-    JSON.stringify(pkgJson, null, 2),
-  )
+  sh.cp('package.json', '_packaged/')
 
   const { REGISTRY, OWNER, GITHUB_REF } = process.env
 
