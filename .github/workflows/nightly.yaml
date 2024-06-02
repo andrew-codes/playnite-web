@@ -54,8 +54,6 @@ jobs:
       OWNER: andrew-codes
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
       - name: Extract major release version from package.json
         uses: sergeysova/jq-action@v2
         id: major_release_version
