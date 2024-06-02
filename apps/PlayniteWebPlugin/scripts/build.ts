@@ -6,8 +6,7 @@ import pkg from '../package.json'
 async function run() {
   process.chdir(path.join(process.cwd(), 'src'))
 
-  await fs.writeFile(
-    path.join(projectRoot, 'extension.yaml'),
+  await fs.writeFile('extension.yaml',
     `
 Id: PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac
 Name: Playnite Web
