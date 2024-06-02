@@ -1,6 +1,6 @@
 {
   "name": "playnite-web",
-  "packageManager": "yarn@4.1.1",
+  "packageManager": "yarn@4.2.2",
   "version": "3.1.4",
   "private": true,
   "engines": {

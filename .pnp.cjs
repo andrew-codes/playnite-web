@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /* eslint-disable */
+// @ts-nocheck
 "use strict";
 
 const RAW_RUNTIME_STATE =
@@ -18,11 +19,11 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/PlayniteWebPlugin"\
     },\
     {\
-      "name": "game-db-updater",\
+      "name": "playnite-web-game-db-updater",\
       "reference": "workspace:apps/game-db-updater"\
     },\
     {\
-      "name": "gh-action-runner",\
+      "name": "playnite-web-gh-action-runner",\
       "reference": "workspace:apps/gh-action-runner"\
     },\
     {\
@@ -37,10 +38,10 @@ const RAW_RUNTIME_STATE =
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "fallbackExclusionList": [\
-    ["game-db-updater", ["workspace:apps/game-db-updater"]],\
-    ["gh-action-runner", ["workspace:apps/gh-action-runner"]],\
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
+    ["playnite-web-game-db-updater", ["workspace:apps/game-db-updater"]],\
+    ["playnite-web-gh-action-runner", ["workspace:apps/gh-action-runner"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]],\
     ["versioning", ["workspace:libs/versioning"]]\
   ],\
@@ -8897,38 +8898,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["game-db-updater", [\
-      ["workspace:apps/game-db-updater", {\
-        "packageLocation": "./apps/game-db-updater/",\
-        "packageDependencies": [\
-          ["game-db-updater", "workspace:apps/game-db-updater"],\
-          ["@types/jest", "npm:29.5.10"],\
-          ["@types/node", "npm:18.18.13"],\
-          ["@types/shelljs", "npm:0.8.15"],\
-          ["async-mqtt", "npm:2.6.3"],\
-          ["cpy", "npm:11.0.0"],\
-          ["cpy-cli", "npm:5.0.0"],\
-          ["debug", "virtual:92a28e392bb7746809827b7e8ebf6aec49c5f04125481214ae6ea6f4de204344bcccbe5eb3a2f4388bb368cfa5d84f03ce0d8f32a9fcc3f5e92ea34723da1c56#npm:4.3.4"],\
-          ["dotenv", "npm:16.3.1"],\
-          ["esbuild", "npm:0.17.19"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
-          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
-          ["jest-config", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:29.3.1"],\
-          ["jest-when", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:3.6.0"],\
-          ["lodash", "npm:4.17.21"],\
-          ["mongodb", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:6.3.0"],\
-          ["nodemon", "npm:2.0.22"],\
-          ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
-          ["prettier", "npm:3.1.1"],\
-          ["rimraf", "npm:5.0.5"],\
-          ["shelljs", "npm:0.8.5"],\
-          ["ts-jest", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:29.1.1"],\
-          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
-          ["versioning", "workspace:libs/versioning"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
     ["gauge", [\
       ["npm:4.0.4", {\
         "packageLocation": "../../root/.yarn/berry/cache/gauge-npm-4.0.4-8f878385e9-10c0.zip/node_modules/gauge/",\
@@ -9071,27 +9040,6 @@ const RAW_RUNTIME_STATE =
           ["assert-plus", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
-      }]\
-    ]],\
-    ["gh-action-runner", [\
-      ["workspace:apps/gh-action-runner", {\
-        "packageLocation": "./apps/gh-action-runner/",\
-        "packageDependencies": [\
-          ["gh-action-runner", "workspace:apps/gh-action-runner"],\
-          ["@types/shelljs", "npm:0.8.15"],\
-          ["concurrently", "npm:8.2.2"],\
-          ["cross-env", "npm:7.0.3"],\
-          ["esbuild", "npm:0.17.19"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
-          ["glob", "npm:10.3.10"],\
-          ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
-          ["rimraf", "npm:5.0.5"],\
-          ["shelljs", "npm:0.8.5"],\
-          ["ts-jest", "virtual:7ac4a0cea082b1ac81d5301f75b1cf5c6e9ce58a4127c9aec05b6504e83e2b7bc6f25c89b19ca32eb9519c24eecc6f7f8b7547c89724de2ebadf7776ca97a77e#npm:29.1.1"],\
-          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
-          ["versioning", "workspace:libs/versioning"]\
-        ],\
-        "linkType": "SOFT"\
       }]\
     ]],\
     ["git-raw-commits", [\
@@ -10683,6 +10631,43 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
+      ["virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.3.1", {\
+        "packageLocation": "./.yarn/__virtual__/jest-config-virtual-639e2fad34/3/root/.yarn/berry/cache/jest-config-npm-29.3.1-7298217c60-10c0.zip/node_modules/jest-config/",\
+        "packageDependencies": [\
+          ["jest-config", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.3.1"],\
+          ["@babel/core", "npm:7.23.3"],\
+          ["@jest/test-sequencer", "npm:29.7.0"],\
+          ["@jest/types", "npm:29.6.3"],\
+          ["@types/node", "npm:18.18.13"],\
+          ["@types/ts-node", null],\
+          ["babel-jest", "virtual:efbaa792afabad7e59bd0fb07075d7b06070f7a67cff195378a7a920ac03fe427a346f259b4de43eb9db852b51f7b85858f7c060f43617f6c270efc014b73f74#npm:29.7.0"],\
+          ["chalk", "npm:4.1.2"],\
+          ["ci-info", "npm:3.9.0"],\
+          ["deepmerge", "npm:4.3.1"],\
+          ["glob", "npm:7.2.3"],\
+          ["graceful-fs", "npm:4.2.11"],\
+          ["jest-circus", "npm:29.7.0"],\
+          ["jest-environment-node", "npm:29.7.0"],\
+          ["jest-get-type", "npm:29.6.3"],\
+          ["jest-regex-util", "npm:29.6.3"],\
+          ["jest-resolve", "npm:29.7.0"],\
+          ["jest-runner", "npm:29.7.0"],\
+          ["jest-util", "npm:29.7.0"],\
+          ["jest-validate", "npm:29.7.0"],\
+          ["micromatch", "npm:4.0.5"],\
+          ["parse-json", "npm:5.2.0"],\
+          ["pretty-format", "npm:29.7.0"],\
+          ["slash", "npm:3.0.0"],\
+          ["strip-json-comments", "npm:3.1.1"],\
+          ["ts-node", null]\
+        ],\
+        "packagePeers": [\
+          "@types/node",\
+          "@types/ts-node",\
+          "ts-node"\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["virtual:349d8bd8a0294be302fd969db85927a7fb1e022570dc1186d7ad7e321f3789330adad5533101f8293ca419f0798b68d837098233880fc73df4e527e968ae992a#npm:29.7.0", {\
         "packageLocation": "./.yarn/__virtual__/jest-config-virtual-01c8d6271e/3/root/.yarn/berry/cache/jest-config-npm-29.7.0-97d8544d74-10c0.zip/node_modules/jest-config/",\
         "packageDependencies": [\
@@ -10761,43 +10746,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/jest-config-virtual-efbaa792af/3/root/.yarn/berry/cache/jest-config-npm-29.7.0-97d8544d74-10c0.zip/node_modules/jest-config/",\
         "packageDependencies": [\
           ["jest-config", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
-          ["@babel/core", "npm:7.23.3"],\
-          ["@jest/test-sequencer", "npm:29.7.0"],\
-          ["@jest/types", "npm:29.6.3"],\
-          ["@types/node", "npm:18.18.13"],\
-          ["@types/ts-node", null],\
-          ["babel-jest", "virtual:efbaa792afabad7e59bd0fb07075d7b06070f7a67cff195378a7a920ac03fe427a346f259b4de43eb9db852b51f7b85858f7c060f43617f6c270efc014b73f74#npm:29.7.0"],\
-          ["chalk", "npm:4.1.2"],\
-          ["ci-info", "npm:3.9.0"],\
-          ["deepmerge", "npm:4.3.1"],\
-          ["glob", "npm:7.2.3"],\
-          ["graceful-fs", "npm:4.2.11"],\
-          ["jest-circus", "npm:29.7.0"],\
-          ["jest-environment-node", "npm:29.7.0"],\
-          ["jest-get-type", "npm:29.6.3"],\
-          ["jest-regex-util", "npm:29.6.3"],\
-          ["jest-resolve", "npm:29.7.0"],\
-          ["jest-runner", "npm:29.7.0"],\
-          ["jest-util", "npm:29.7.0"],\
-          ["jest-validate", "npm:29.7.0"],\
-          ["micromatch", "npm:4.0.5"],\
-          ["parse-json", "npm:5.2.0"],\
-          ["pretty-format", "npm:29.7.0"],\
-          ["slash", "npm:3.0.0"],\
-          ["strip-json-comments", "npm:3.1.1"],\
-          ["ts-node", null]\
-        ],\
-        "packagePeers": [\
-          "@types/node",\
-          "@types/ts-node",\
-          "ts-node"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:29.3.1", {\
-        "packageLocation": "./.yarn/__virtual__/jest-config-virtual-ae55744d4b/3/root/.yarn/berry/cache/jest-config-npm-29.3.1-7298217c60-10c0.zip/node_modules/jest-config/",\
-        "packageDependencies": [\
-          ["jest-config", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:29.3.1"],\
           ["@babel/core", "npm:7.23.3"],\
           ["@jest/test-sequencer", "npm:29.7.0"],\
           ["@jest/types", "npm:29.6.3"],\
@@ -11173,10 +11121,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:3.6.0", {\
-        "packageLocation": "./.yarn/__virtual__/jest-when-virtual-af65f7239c/3/root/.yarn/berry/cache/jest-when-npm-3.6.0-4ff7c62f0d-10c0.zip/node_modules/jest-when/",\
+      ["virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:3.6.0", {\
+        "packageLocation": "./.yarn/__virtual__/jest-when-virtual-47a3b8ede6/3/root/.yarn/berry/cache/jest-when-npm-3.6.0-4ff7c62f0d-10c0.zip/node_modules/jest-when/",\
         "packageDependencies": [\
-          ["jest-when", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:3.6.0"],\
+          ["jest-when", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:3.6.0"],\
           ["@types/jest", "npm:29.5.10"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"]\
         ],\
@@ -12905,10 +12853,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:6.3.0", {\
-        "packageLocation": "./.yarn/__virtual__/mongodb-virtual-ab31733ef0/3/root/.yarn/berry/cache/mongodb-npm-6.3.0-28854d0f74-10c0.zip/node_modules/mongodb/",\
+      ["virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.3.0", {\
+        "packageLocation": "./.yarn/__virtual__/mongodb-virtual-8713cb1625/3/root/.yarn/berry/cache/mongodb-npm-6.3.0-28854d0f74-10c0.zip/node_modules/mongodb/",\
         "packageDependencies": [\
-          ["mongodb", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:6.3.0"],\
+          ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.3.0"],\
           ["@aws-sdk/credential-providers", null],\
           ["@mongodb-js/saslprep", "npm:1.1.1"],\
           ["@mongodb-js/zstd", null],\
@@ -14402,7 +14350,7 @@ const RAW_RUNTIME_STATE =
           ["glob", "npm:10.3.10"],\
           ["isbot", "npm:3.7.1"],\
           ["lodash", "npm:4.17.21"],\
-          ["mongodb", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:6.3.0"],\
+          ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.3.0"],\
           ["npm-run-all", "npm:4.1.5"],\
           ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
           ["prettier", "npm:3.1.1"],\
@@ -14426,6 +14374,59 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
           ["typescript-remix-routes-plugin", "npm:1.0.1"],\
           ["ua-parser-js", "npm:1.0.37"],\
+          ["versioning", "workspace:libs/versioning"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["playnite-web-game-db-updater", [\
+      ["workspace:apps/game-db-updater", {\
+        "packageLocation": "./apps/game-db-updater/",\
+        "packageDependencies": [\
+          ["playnite-web-game-db-updater", "workspace:apps/game-db-updater"],\
+          ["@types/jest", "npm:29.5.10"],\
+          ["@types/node", "npm:18.18.13"],\
+          ["@types/shelljs", "npm:0.8.15"],\
+          ["async-mqtt", "npm:2.6.3"],\
+          ["cpy", "npm:11.0.0"],\
+          ["cpy-cli", "npm:5.0.0"],\
+          ["debug", "virtual:92a28e392bb7746809827b7e8ebf6aec49c5f04125481214ae6ea6f4de204344bcccbe5eb3a2f4388bb368cfa5d84f03ce0d8f32a9fcc3f5e92ea34723da1c56#npm:4.3.4"],\
+          ["dotenv", "npm:16.3.1"],\
+          ["esbuild", "npm:0.17.19"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
+          ["jest-config", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.3.1"],\
+          ["jest-when", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:3.6.0"],\
+          ["lodash", "npm:4.17.21"],\
+          ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.3.0"],\
+          ["nodemon", "npm:2.0.22"],\
+          ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
+          ["prettier", "npm:3.1.1"],\
+          ["rimraf", "npm:5.0.5"],\
+          ["shelljs", "npm:0.8.5"],\
+          ["ts-jest", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.1.1"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
+          ["versioning", "workspace:libs/versioning"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["playnite-web-gh-action-runner", [\
+      ["workspace:apps/gh-action-runner", {\
+        "packageLocation": "./apps/gh-action-runner/",\
+        "packageDependencies": [\
+          ["playnite-web-gh-action-runner", "workspace:apps/gh-action-runner"],\
+          ["@types/shelljs", "npm:0.8.15"],\
+          ["concurrently", "npm:8.2.2"],\
+          ["cross-env", "npm:7.0.3"],\
+          ["esbuild", "npm:0.17.19"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["glob", "npm:10.3.10"],\
+          ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
+          ["rimraf", "npm:5.0.5"],\
+          ["shelljs", "npm:0.8.5"],\
+          ["ts-jest", "virtual:1165a8a8846d4f088a5302c1b61c692564943edd1a3372e3bfbd1a9775a356b26fb98ecd298e69ace9b3935235b021408eebe5c33f10709758a154d7cfe6fe8a#npm:29.1.1"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
           ["versioning", "workspace:libs/versioning"]\
         ],\
         "linkType": "SOFT"\
@@ -17227,10 +17228,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:7ac4a0cea082b1ac81d5301f75b1cf5c6e9ce58a4127c9aec05b6504e83e2b7bc6f25c89b19ca32eb9519c24eecc6f7f8b7547c89724de2ebadf7776ca97a77e#npm:29.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-ccbf3ff161/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
+      ["virtual:1165a8a8846d4f088a5302c1b61c692564943edd1a3372e3bfbd1a9775a356b26fb98ecd298e69ace9b3935235b021408eebe5c33f10709758a154d7cfe6fe8a#npm:29.1.1", {\
+        "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-287dd53c7d/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
         "packageDependencies": [\
-          ["ts-jest", "virtual:7ac4a0cea082b1ac81d5301f75b1cf5c6e9ce58a4127c9aec05b6504e83e2b7bc6f25c89b19ca32eb9519c24eecc6f7f8b7547c89724de2ebadf7776ca97a77e#npm:29.1.1"],\
+          ["ts-jest", "virtual:1165a8a8846d4f088a5302c1b61c692564943edd1a3372e3bfbd1a9775a356b26fb98ecd298e69ace9b3935235b021408eebe5c33f10709758a154d7cfe6fe8a#npm:29.1.1"],\
           ["@babel/core", null],\
           ["@jest/types", null],\
           ["@types/babel-jest", null],\
@@ -17244,6 +17245,47 @@ const RAW_RUNTIME_STATE =
           ["esbuild", "npm:0.17.19"],\
           ["fast-json-stable-stringify", "npm:2.1.0"],\
           ["jest", null],\
+          ["jest-util", "npm:29.7.0"],\
+          ["json5", "npm:2.2.3"],\
+          ["lodash.memoize", "npm:4.1.2"],\
+          ["make-error", "npm:1.3.6"],\
+          ["semver", "npm:7.5.4"],\
+          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
+          ["yargs-parser", "npm:21.1.1"]\
+        ],\
+        "packagePeers": [\
+          "@babel/core",\
+          "@jest/types",\
+          "@types/babel-jest",\
+          "@types/babel__core",\
+          "@types/esbuild",\
+          "@types/jest",\
+          "@types/jest__types",\
+          "@types/typescript",\
+          "babel-jest",\
+          "esbuild",\
+          "jest",\
+          "typescript"\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.1.1", {\
+        "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-0f99d3a231/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
+        "packageDependencies": [\
+          ["ts-jest", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.1.1"],\
+          ["@babel/core", null],\
+          ["@jest/types", null],\
+          ["@types/babel-jest", null],\
+          ["@types/babel__core", null],\
+          ["@types/esbuild", null],\
+          ["@types/jest", "npm:29.5.10"],\
+          ["@types/jest__types", null],\
+          ["@types/typescript", null],\
+          ["babel-jest", null],\
+          ["bs-logger", "npm:0.2.6"],\
+          ["esbuild", "npm:0.17.19"],\
+          ["fast-json-stable-stringify", "npm:2.1.0"],\
+          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
           ["jest-util", "npm:29.7.0"],\
           ["json5", "npm:2.2.3"],\
           ["lodash.memoize", "npm:4.1.2"],\
@@ -17326,47 +17368,6 @@ const RAW_RUNTIME_STATE =
           ["esbuild", null],\
           ["fast-json-stable-stringify", "npm:2.1.0"],\
           ["jest", null],\
-          ["jest-util", "npm:29.7.0"],\
-          ["json5", "npm:2.2.3"],\
-          ["lodash.memoize", "npm:4.1.2"],\
-          ["make-error", "npm:1.3.6"],\
-          ["semver", "npm:7.5.4"],\
-          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
-          ["yargs-parser", "npm:21.1.1"]\
-        ],\
-        "packagePeers": [\
-          "@babel/core",\
-          "@jest/types",\
-          "@types/babel-jest",\
-          "@types/babel__core",\
-          "@types/esbuild",\
-          "@types/jest",\
-          "@types/jest__types",\
-          "@types/typescript",\
-          "babel-jest",\
-          "esbuild",\
-          "jest",\
-          "typescript"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:29.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-0312b8efc8/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
-        "packageDependencies": [\
-          ["ts-jest", "virtual:d056b226fe09b4e480271c5ec0bde811fc595bcfcb070ef40105634d22f710af1111b46fefe143398a7ba686d79adcc9ee301946373452fcf8c3124ff3cddd08#npm:29.1.1"],\
-          ["@babel/core", null],\
-          ["@jest/types", null],\
-          ["@types/babel-jest", null],\
-          ["@types/babel__core", null],\
-          ["@types/esbuild", null],\
-          ["@types/jest", "npm:29.5.10"],\
-          ["@types/jest__types", null],\
-          ["@types/typescript", null],\
-          ["babel-jest", null],\
-          ["bs-logger", "npm:0.2.6"],\
-          ["esbuild", "npm:0.17.19"],\
-          ["fast-json-stable-stringify", "npm:2.1.0"],\
-          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
           ["jest-util", "npm:29.7.0"],\
           ["json5", "npm:2.2.3"],\
           ["lodash.memoize", "npm:4.1.2"],\
@@ -19869,6 +19870,12 @@ class ProxiedFS extends FakeFS {
   rmdirSync(p, opts) {
     return this.baseFs.rmdirSync(this.mapToBase(p), opts);
   }
+  async rmPromise(p, opts) {
+    return this.baseFs.rmPromise(this.mapToBase(p), opts);
+  }
+  rmSync(p, opts) {
+    return this.baseFs.rmSync(this.mapToBase(p), opts);
+  }
   async linkPromise(existingP, newP) {
     return this.baseFs.linkPromise(this.mapToBase(existingP), this.mapToBase(newP));
   }
@@ -20249,6 +20256,18 @@ class NodeFS extends BasePortableFakeFS {
   }
   rmdirSync(p, opts) {
     return this.realFs.rmdirSync(npath.fromPortablePath(p), opts);
+  }
+  async rmPromise(p, opts) {
+    return await new Promise((resolve, reject) => {
+      if (opts) {
+        this.realFs.rm(npath.fromPortablePath(p), opts, this.makeCallback(resolve, reject));
+      } else {
+        this.realFs.rm(npath.fromPortablePath(p), this.makeCallback(resolve, reject));
+      }
+    });
+  }
+  rmSync(p, opts) {
+    return this.realFs.rmSync(npath.fromPortablePath(p), opts);
   }
   async linkPromise(existingP, newP) {
     return await new Promise((resolve, reject) => {
@@ -20905,6 +20924,20 @@ class MountFS extends BasePortableFakeFS {
       return mountFs.rmdirSync(subPath, opts);
     });
   }
+  async rmPromise(p, opts) {
+    return await this.makeCallPromise(p, async () => {
+      return await this.baseFs.rmPromise(p, opts);
+    }, async (mountFs, { subPath }) => {
+      return await mountFs.rmPromise(subPath, opts);
+    });
+  }
+  rmSync(p, opts) {
+    return this.makeCallSync(p, () => {
+      return this.baseFs.rmSync(p, opts);
+    }, (mountFs, { subPath }) => {
+      return mountFs.rmSync(subPath, opts);
+    });
+  }
   async linkPromise(existingP, newP) {
     return await this.makeCallPromise(newP, async () => {
       return await this.baseFs.linkPromise(existingP, newP);
@@ -21543,6 +21576,7 @@ const SYNC_IMPLEMENTATIONS = /* @__PURE__ */ new Set([
   `realpathSync`,
   `renameSync`,
   `rmdirSync`,
+  `rmSync`,
   `statSync`,
   `symlinkSync`,
   `truncateSync`,
@@ -21578,6 +21612,7 @@ const ASYNC_IMPLEMENTATIONS = /* @__PURE__ */ new Set([
   `readlinkPromise`,
   `renamePromise`,
   `rmdirPromise`,
+  `rmPromise`,
   `statPromise`,
   `symlinkPromise`,
   `truncatePromise`,
@@ -23601,6 +23636,27 @@ class ZipFS extends BasePortableFakeFS {
     const index = this.entries.get(resolvedP);
     if (typeof index === `undefined`)
       throw EINVAL(`rmdir '${p}'`);
+    this.deleteEntry(p, index);
+  }
+  async rmPromise(p, opts) {
+    return this.rmSync(p, opts);
+  }
+  rmSync(p, { recursive = false } = {}) {
+    if (this.readOnly)
+      throw EROFS(`rm '${p}'`);
+    if (recursive) {
+      this.removeSync(p);
+      return;
+    }
+    const resolvedP = this.resolveFilename(`rm '${p}'`, p);
+    const directoryListing = this.listings.get(resolvedP);
+    if (!directoryListing)
+      throw ENOTDIR(`rm '${p}'`);
+    if (directoryListing.size > 0)
+      throw ENOTEMPTY(`rm '${p}'`);
+    const index = this.entries.get(resolvedP);
+    if (typeof index === `undefined`)
+      throw EINVAL(`rm '${p}'`);
     this.deleteEntry(p, index);
   }
   hydrateDirectory(resolvedP) {
