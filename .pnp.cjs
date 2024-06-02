@@ -18043,9 +18043,10 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./libs/versioning/",\
         "packageDependencies": [\
           ["versioning", "workspace:libs/versioning"],\
+          ["lodash", "npm:4.17.21"],\
           ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
           ["semver", "npm:7.6.2"],\
-          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"]\
+          ["shelljs", "npm:0.8.5"]\
         ],\
         "linkType": "SOFT"\
       }]\
