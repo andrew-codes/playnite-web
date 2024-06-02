@@ -1,14 +1,11 @@
-import { getDockerTags } from 'versioning'
-import fs from 'fs/promises'
-import path from 'path'
 import sh from 'shelljs'
+import { getDockerTags } from 'versioning'
 import pkg from '../package.json' assert { type: 'json' }
 
 async function run() {
-  sh.cp('-R', 'build/', '_packaged/')
+  sh.mkdir('-p', '_packaged')
+  sh.cp('server.production.js', '_packaged/')
   sh.cp('-R', 'public/', '_packaged/')
-  sh.cp('-R', 'server.mjs/', '_packaged')
-  sh.cp('package.json', '_packaged/')
 
   const { REGISTRY, OWNER, GITHUB_REF } = process.env
 

@@ -4,7 +4,4 @@ LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-w
 WORKDIR /opt/playnite-web-app
 COPY _packaged/ .
 
-RUN corepack enable
-RUN corepack prepare --activate yarn@^4.0.0
-
-ENTRYPOINT ["node", "server.mjs" ]
+ENTRYPOINT ["node", "server.production.js" ]
