@@ -14,8 +14,8 @@
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.dist"],
       "options": {
-        "command": "msbuild PlayniteWeb.csproj -property:Configuration=Release",
-        "cwd": "{projectRoot}/src"
+        "command": "yarn node --require esbuild-register ./scripts/build.ts",
+        "cwd": "{projectRoot}"
       }
     },
     "build/restore": {

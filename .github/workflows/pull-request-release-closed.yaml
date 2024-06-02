@@ -24,4 +24,4 @@ jobs:
           account-type: personal
           keep-at-least: 0
           token: ${{ secrets.PACKAGE_PRUNER_TOKEN }}
-          filter-tags: 'PR${{ github.event.pull_request.number }}'
+          filter-tags: 'PR-${{ github.event.pull_request.number }}'
