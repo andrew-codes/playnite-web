@@ -1,8 +1,7 @@
 {
-  "name": "game-db-updater",
+  "name": "playnite-web-game-db-updater",
   "description": "Service to listen to MQTT messages and update game database.",
-  "version": "3.1.0",
-  "private": true,
+  "version": "3.1.4",
   "dependencies": {
     "async-mqtt": "^2.6.3",
     "debug": "^4.3.4",
@@ -13,6 +12,7 @@
   "devDependencies": {
     "@types/jest": "^29.2.5",
     "@types/node": "^18.11.18",
+    "@types/shelljs": "^0.8.15",
     "cpy": "^11.0.0",
     "cpy-cli": "^5.0.0",
     "dotenv": "^16.3.1",
@@ -22,10 +22,12 @@
     "jest-config": "29.3.1",
     "jest-when": "^3.5.2",
     "nodemon": "^2.0.20",
-    "nx": "^17.1.2",
+    "nx": "^19.1.1",
     "prettier": "^3.1.1",
     "rimraf": "^5.0.5",
+    "shelljs": "^0.8.5",
     "ts-jest": "^29.0.5",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.2",
+    "versioning": "workspace:*"
   }
 }

@@ -1,8 +1,9 @@
-name: 'Publish nightly'
+name: 'Publish latest major- and minor-versions'
 
 on:
   push:
     branches:
+      - main
       - release-*
 
 permissions:

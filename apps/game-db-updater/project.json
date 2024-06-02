@@ -20,16 +20,14 @@
     "package": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["cp -R .dist/ _packaged/"],
+        "commands": ["yarn node --require=esbuild-register scripts/package.ts"],
         "cwd": "{projectRoot}"
       }
     },
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "docker build --tag $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG --file Dockerfile . && docker push $REGISTRY/$OWNER/$REPO_NAME-game-db-updater:$TAG"
-        ],
+        "commands": ["yarn node --require=esbuild-register scripts/publish.ts"],
         "cwd": "{projectRoot}"
       }
     },
