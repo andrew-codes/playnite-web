@@ -15142,9 +15142,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "versioning@workspace:libs/versioning"
   dependencies:
+    lodash: "npm:^4.17.21"
     nx: "npm:^19.1.1"
     semver: "npm:^7.6.2"
-    typescript: "npm:^5.3.2"
+    shelljs: "npm:^0.8.5"
   languageName: unknown
   linkType: soft
 
