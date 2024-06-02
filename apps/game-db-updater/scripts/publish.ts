@@ -12,9 +12,7 @@ async function run() {
   let tags = await getDockerTags(pkg.version, GITHUB_REF)
 
   for (const tag of tags) {
-    sh.exec(
-      `docker push "${REGISTRY}/${OWNER}/playnite-web-game-db-updater:${tag}"`,
-    )
+    sh.exec(`docker push "${REGISTRY}/${OWNER}/${pkg.name}:${tag}"`)
   }
 }
 

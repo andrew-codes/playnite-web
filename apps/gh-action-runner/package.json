@@ -1,5 +1,5 @@
 {
-  "name": "gh-action-runner",
+  "name": "playnite-web-gh-action-runner",
   "version": "3.1.4",
   "sideEffects": false,
   "devDependencies": {

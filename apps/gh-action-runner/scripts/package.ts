@@ -13,7 +13,7 @@ async function run() {
 
   for (const tag of tags) {
     sh.exec(
-      `docker build --tag "${REGISTRY}/${OWNER}/playnite-gh-action-runner:${tag}" -file Dockerfile .`,
+      `docker build --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" -file Dockerfile .`,
     )
   }
 }

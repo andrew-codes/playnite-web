@@ -4,8 +4,7 @@ import sh from 'shelljs'
 import pkg from '../package.json'
 
 async function run() {
-  const projectRoot = path.join(__dirname, '../')
-  process.chdir(projectRoot)
+  process.chdir(path.join(process.cwd(), 'src'))
 
   await fs.writeFile(
     path.join(projectRoot, 'extension.yaml'),

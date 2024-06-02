@@ -15,7 +15,7 @@
       "outputs": ["{projectRoot}/.dist"],
       "options": {
         "command": "yarn node --require esbuild-register ./scripts/build.ts",
-        "cwd": "{projectRoot}/src"
+        "cwd": "{projectRoot}"
       }
     },
     "build/restore": {
