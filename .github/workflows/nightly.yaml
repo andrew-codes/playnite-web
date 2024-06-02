@@ -52,7 +52,6 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      REPO_NAME: playnite-web
     steps:
       - uses: actions/checkout@v4
         with:
@@ -99,7 +98,7 @@ jobs:
           ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
           ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
-          TAG: '${{ steps.major_release_version.outputs.value }}-dev'
+          DEBUG: 'playnite-web/*'
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

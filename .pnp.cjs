@@ -18043,6 +18043,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./libs/versioning/",\
         "packageDependencies": [\
           ["versioning", "workspace:libs/versioning"],\
+          ["debug", "virtual:7aacf32ea01f1c758a9d0d4a25d700b3bcfff7375ecb0894ff8a92d28210f719c44b175d3a338863ee060df8ae035d511d1d0e352a798355f8d44e456f2f0ced#npm:4.3.5"],\
           ["lodash", "npm:4.17.21"],\
           ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
           ["semver", "npm:7.6.2"],\

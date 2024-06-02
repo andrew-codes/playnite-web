@@ -4,6 +4,7 @@
   "private": true,
   "main": "src/index.js",
   "dependencies": {
+    "debug": "^4.3.5",
     "lodash": "^4.17.21",
     "semver": "^7.6.2",
     "shelljs": "^0.8.5"
