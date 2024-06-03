@@ -16,9 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
-      - uses: actions/checkout@v4
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
@@ -38,7 +35,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run all unit tests
-        run: yarn nx affected --target=test/unit --parallel --verbose --exclude='*,!tag:linux'
+        run: yarn nx affected --base=${{ github.base_ref }} --head=${{ github.head_ref }} --target=test/unit --parallel --verbose --exclude='*,!tag:linux'
 
   publish_images:
     name: Package
@@ -50,9 +47,6 @@ jobs:
       OWNER: andrew-codes
       REPO_NAME: playnite-web
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
       - uses: actions/checkout@v4
       - name: Extract major release version from package.json
         uses: sergeysova/jq-action@v2
@@ -80,7 +74,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Publish apps
-        run: yarn nx affected --target=package --parallel --verbose --exclude='*,!tag:linux'
+        run: yarn nx affected --base=${{ github.base_ref }} --head=${{ github.head_ref }} --target=package --parallel --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
       - name: Upload artifacts
@@ -93,9 +87,6 @@ jobs:
     name: Verify PR - Tests (Windows)
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
       - uses: actions/checkout@v4
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
@@ -117,7 +108,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run all unit tests
-        run: yarn nx affected --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
+        run: yarn nx affected --base=${{ github.base_ref }} --head=${{ github.head_ref }} --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
 
   package:
     name: Package extension
@@ -125,9 +116,6 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
       - uses: actions/checkout@v4
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
@@ -154,7 +142,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Package extension
-        run: yarn nx affected --target=package --parallel --verbose --exclude='*,!tag:windows'
+        run: yarn nx affected --base=${{ github.base_ref }} --head=${{ github.head_ref }} --target=package --parallel --verbose --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
       - name: Upload artifacts
