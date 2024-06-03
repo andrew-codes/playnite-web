@@ -74,12 +74,6 @@ jobs:
         run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -89,19 +83,7 @@ jobs:
       - name: Publish specific version for apps
         run: yarn nx run-many --target=publish --parallel --verbose --all
         env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
-          TAG: ${{ github.ref_name }}
-      - name: Publish latest major version for apps
-        run: yarn nx run-many --target=publish --parallel --verbose --all
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          NODE_ENV: production
-          TAG: ${{ steps.major_release_version.outputs.value }}-latest
 
   package:
     name: Publish Extension
@@ -136,18 +118,9 @@ jobs:
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Package extension
         run: yarn nx run playnite-web-plugin:package --verbose
         env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
       - name: Move artifacts
         run: mkdir -p _packaged && mv apps/*/_packaged/** _packaged/
