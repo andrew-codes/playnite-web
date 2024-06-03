@@ -3663,21 +3663,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.11.18":
-  version: 18.18.13
-  resolution: "@types/node@npm:18.18.13"
-  dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 10c0/5f1840f26b4c00e6b4945be678644a46e6689ef10d9d7795d587b76059045b99a14ca6075264296e6e91d73e098fe83df9580881278d9a6ce394b368d9c76700
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:^18.17.5":
   version: 18.19.3
   resolution: "@types/node@npm:18.19.3"
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 10c0/3ed943d06e9dff70a3da793f794f1192cd93b0ababdb9f07425a05680f17cfce649cbc46734265f6fbe52fd9f277496d3a4da26c013f1193a0345f2420ea6cd0
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.14.0":
+  version: 20.14.0
+  resolution: "@types/node@npm:20.14.0"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: 10c0/29ccc7592e9ca6b81d00f3a6673241d08e9042d801b10adfd9ebcbbf326208e0a0133a8d146158db18d02a68b85d9ce1fd94e6e1e5be0da263129bf6e42eb22d
   languageName: node
   linkType: hard
 
@@ -12222,7 +12222,7 @@ __metadata:
     "@remix-run/react": "npm:^2.4.0"
     "@types/express": "npm:^4"
     "@types/lodash": "npm:^4.17.1"
-    "@types/node": "npm:^18.11.18"
+    "@types/node": "npm:^20.14.0"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
     "@types/shelljs": "npm:^0.8.15"
@@ -12275,7 +12275,7 @@ __metadata:
   resolution: "playnite-web-game-db-updater@workspace:apps/game-db-updater"
   dependencies:
     "@types/jest": "npm:^29.2.5"
-    "@types/node": "npm:^18.11.18"
+    "@types/node": "npm:^20.14.0"
     "@types/shelljs": "npm:^0.8.15"
     async-mqtt: "npm:^2.6.3"
     cpy: "npm:^11.0.0"
@@ -12323,7 +12323,7 @@ __metadata:
   resolution: "playnite-web@workspace:."
   dependencies:
     "@types/jest": "npm:^29.2.5"
-    "@types/node": "npm:^18.11.18"
+    "@types/node": "npm:^20.14.0"
     cypress: "npm:^13.6.1"
     dotenv: "npm:^16.3.1"
     glob: "npm:^10.3.10"
