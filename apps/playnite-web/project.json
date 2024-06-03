@@ -6,7 +6,7 @@
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf .dist _packaged .test-runs build public/build",
+        "command": "yarn rimraf server.production.js .dist _packaged .test-runs build public/build",
         "cwd": "{projectRoot}"
       }
     },
@@ -32,7 +32,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn remix-routes && yarn remix build && yarn remix-pwa build"
+          "yarn remix-routes && yarn remix build && yarn remix-pwa build && yarn esbuild server.mjs --bundle --minify --outfile=server.production.js --platform=node --target=node20"
         ],
         "cwd": "{projectRoot}"
       }
