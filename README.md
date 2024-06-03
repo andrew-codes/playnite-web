@@ -1,8 +1,35 @@
 # Playnite-Web
 
-Share your game library online with self-hosted Playnite-Web.
+[![Build Status](https://github.com/andrew-codes/playnite-web/actions/workflows/main.yml/badge.svg)](https://github.com/andrew-codes/playnite-web/actions/workflows/main.yml)
+[![Latest Release](https://img.shields.io/github/v/release/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web/releases/latest)
+[![License](https://img.shields.io/github/license/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web?tab=AGPL-3.0-1-ov-file#readme)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/andrew-codes)](https://github.com/sponsors/andrew-codes)
 
-![Browse screenshot](__docs/browse-screenshot.png)
+Share and remote control your game library online with self-hosted Playnite-Web.
+
+Playnite-web offers:
+
+- a beautiful web UI for your Playnite library to share with friends
+- remote control of staring and stopping games with home automation; locked behind a username/password login screen
+- a graph API to help you build other unique experiences
+
+![Browse screenshot](docs/assets/images/browse-screenshot.png)
+
+## Table of Contents
+
+- [Playnite-Web](#playnite-web)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Deployment](#deployment)
+      - [MQTT Broker](#mqtt-broker)
+      - [Database](#database)
+      - [Playnite-Web Plugin](#playnite-web-plugin)
+      - [game-db-updater](#game-db-updater)
+        - [Environment Variables](#environment-variables)
+      - [playnite-web-app](#playnite-web-app)
+        - [Environment Variables](#environment-variables-1)
+    - [Post Deployment Steps](#post-deployment-steps)
+  - [Contributing](#contributing)
 
 ## Getting Started
 
@@ -44,9 +71,9 @@ Recommended to use docker image [`mongo:focal`](https://hub.docker.com/_/mongo/)
 1. Download (latest) version [release](https://github.com/andrew-codes/playnite-web/releases) of Playnite extension (release asset named "PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_0_1.pext").
 1. Open Playnite and drag downloaded file into the Playnite. It should prompt to install the plugin.
 1. Open the plugin's settings and enter the MQTT connection information to your MQTT broker.
-   > ![Mqtt connection settings screenshot](__docs/mqtt-connection-screenshot.png)
+   > ![Mqtt connection settings screenshot](docs/assets/images/mqtt-connection-screenshot.png)
 1. Open the plugin's settings and enter the a device ID and device name under Topics.
-   > ![Topics settings screenshot](__docs/topics-screenshot.png)
+   > ![Topics settings screenshot](docs/assets/images/topics-screenshot.png)
 
 #### game-db-updater
 
@@ -54,18 +81,18 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 
 ##### Environment Variables
 
-| Environment Variable | Value                                    | Notes                                                |
-| :------------------- | :--------------------------------------- | :--------------------------------------------------- |
-| MQTT_HOST            | IP address/hostname of MQTT broker.      |                                                      |
-| MQTT_PORT            | Port of MQTT broker                      | Default for MQTT image is 1883                       |
-| MQTT_USERNAME        | Username to access MQTT broker           | Optional, only required if disabled anonymous access |
-| MQTT_PASSWORD        | Password to access MQTT broker           | Optional, only required if disabled anonymous access |
-| DB_HOST              | IP address/hostname of Mongo DB database |                                                      |
-| DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                   |
-| DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access |
-| DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access |
+| Environment Variable | Value                                    | Notes                                                     |
+| :------------------- | :--------------------------------------- | :-------------------------------------------------------- |
+| MQTT_HOST            | IP address/hostname of MQTT broker.      |                                                           |
+| MQTT_PORT            | Port of MQTT broker                      | Default for MQTT image is 1883                            |
+| MQTT_USERNAME        | Username to access MQTT broker           | Optional, only required if disabled anonymous access      |
+| MQTT_PASSWORD        | Password to access MQTT broker           | Optional, only required if disabled anonymous access      |
+| DB_HOST              | IP address/hostname of Mongo DB database |                                                           |
+| DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                        |
+| DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access      |
+| DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access      |
 | DB_URL               | MongoDB connection URL                   | Optional, alternative to individual DB connection options |
-| DEBUG                | `"game-db-updater/*"`                    | Optional, for troubleshooting; send logs to STDIO    |
+| DEBUG                | `"game-db-updater/*"`                    | Optional, for troubleshooting; send logs to STDIO         |
 
 #### playnite-web-app
 
@@ -73,25 +100,31 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 
 ##### Environment Variables
 
-| Environment Variable | Value                                    | Notes                                                |
-| :------------------- | :--------------------------------------- | :--------------------------------------------------- |
-| PORT                 | Defaults to 3000                         | Port in which web application is accessible.         |
-| DB_HOST              | IP address/hostname of Mongo DB database |                                                      |
-| DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                   |
-| DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access |
-| DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access |
+| Environment Variable | Value                                    | Notes                                                     |
+| :------------------- | :--------------------------------------- | :-------------------------------------------------------- |
+| PORT                 | Defaults to 3000                         | Port in which web application is accessible.              |
+| DB_HOST              | IP address/hostname of Mongo DB database |                                                           |
+| DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                        |
+| DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access      |
+| DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access      |
 | DB_URL               | MongoDB connection URL                   | Optional, alternative to individual DB connection options |
-| DEBUG                | `"playnite-web/*"`                       | Optional, for troubleshooting; send logs to STDIO    |
-| USERNAME             |                                          | Username used to login                               |
-| PASSWORD             |                                          | Password value used to login                         |
-| SECRET               |                                          | Secret used to protect credentials                   |
-| MQTT_HOST            | IP address/hostname of MQTT broker.      |                                                      |
-| MQTT_PORT            | Port of MQTT broker                      | Default for MQTT image is 1883                       |
-| MQTT_USERNAME        | Username to access MQTT broker           | Optional, only required if disabled anonymous access |
-| MQTT_PASSWORD        | Password to access MQTT broker           | Optional, only required if disabled anonymous access |
+| DEBUG                | `"playnite-web/*"`                       | Optional, for troubleshooting; send logs to STDIO         |
+| USERNAME             |                                          | Username used to login                                    |
+| PASSWORD             |                                          | Password value used to login                              |
+| SECRET               |                                          | Secret used to protect credentials                        |
+| MQTT_HOST            | IP address/hostname of MQTT broker.      |                                                           |
+| MQTT_PORT            | Port of MQTT broker                      | Default for MQTT image is 1883                            |
+| MQTT_USERNAME        | Username to access MQTT broker           | Optional, only required if disabled anonymous access      |
+| MQTT_PASSWORD        | Password to access MQTT broker           | Optional, only required if disabled anonymous access      |
 
 ### Post Deployment Steps
 
 1. Open Playnite and select and "Sync Library" from Playnite Web's menu setting. This is only required once.
-   > ![Sync Library menu setting](__docs/sync-library-menu-setting.png)
+   > ![Sync Library menu setting](docs/assets/images/sync-library-menu-setting.png)
 1. Navigate to the web app; `http://$PLAYNITE_WEB_APP_IP:$PORT`
+
+## Contributing
+
+1. Read through our [contributing guidelines](docs/CONTRIBUTING.md).
+2. Next, read and set up your [development environment](docs/contributing/development-environment.md).
+3. Additionally, refer to the [design docs](docs/design).
