@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
@@ -36,17 +34,11 @@ jobs:
         run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:linux
+        run: yarn nx affected --target=test/unit --parallel --verbose --exclude='*,!tag:linux'
 
   publish_images:
-    name: Publish images
+    name: Package
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -56,8 +48,6 @@ jobs:
       REPO_NAME: playnite-web
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
       - name: Extract major release version from package.json
         uses: sergeysova/jq-action@v2
         id: major_release_version
@@ -81,27 +71,11 @@ jobs:
         run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ env.OWNER }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Publish apps
-        run: yarn nx run-many --target=publish --parallel --verbose
+        run: yarn nx affected --target=package --parallel --verbose --exclude='*,!tag:linux'
         env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
-          TAG: 'PR${{ github.event.pull_request.number }}'
           NODE_ENV: production
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -114,8 +88,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
@@ -135,14 +107,8 @@ jobs:
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value}}
       - name: Install deps
         run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
+        run: yarn nx affected --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
 
   package:
     name: Package extension
@@ -177,18 +143,9 @@ jobs:
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
-      - name: Prepare
-        run: yarn nx run-many --target=prepare --parallel --all --verbose
-        env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
       - name: Package extension
-        run: yarn nx run playnite-web-plugin:package --verbose
+        run: yarn nx affected --target=package --parallel --verbose --exclude='*,!tag:windows'
         env:
-          ONEPASSWORD_TOKEN: ${{ secrets.ONEPASSWORD_TOKEN }}
-          ONEPASSWORD_SERVER_URL: ${{ secrets.ONEPASSWORD_SERVER_URL }}
-          ONEPASSWORD_VAULT_ID: ${{ secrets.ONEPASSWORD_VAULT_ID }}
           NODE_ENV: production
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
