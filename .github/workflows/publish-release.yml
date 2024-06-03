@@ -92,8 +92,6 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
       - name: Download Playnite Toolbox

@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/checkout@v4
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
@@ -47,6 +50,9 @@ jobs:
       OWNER: andrew-codes
       REPO_NAME: playnite-web
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/checkout@v4
       - name: Extract major release version from package.json
         uses: sergeysova/jq-action@v2
@@ -88,6 +94,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/checkout@v4
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
@@ -118,7 +127,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          ref: main
+      - uses: actions/checkout@v4
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
       - name: Download Playnite Toolbox
