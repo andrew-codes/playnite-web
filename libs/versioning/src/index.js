@@ -9,10 +9,8 @@ const getDockerTags = async (version, ref) => {
   let tags = []
 
   if (/^refs\/pull\//.test(ref)) {
-    const prNumber = ref
-      .replace(/^refs\/pull\//, '')
-      .split('/')
-      .pop()
+    const prNumber = ref.replace(/^refs\/pull\//, '').replace(/\/merge$/, '')
+
     if (prNumber) {
       tags.push(`PR-${prNumber}`)
     }
