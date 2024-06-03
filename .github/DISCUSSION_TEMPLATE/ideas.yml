@@ -1,0 +1,35 @@
+title: '[Ideas and Feature Requests] '
+labels: ['rfc']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea or a proposal for a new feature? Submit an RFC!
+
+        > See our [RFC process documentation](https://github.com/andrew-codes/playnite-web/blob/main/docs/contributing/rfc.md) for more information.
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: A short description of your idea or proposal
+    validations:
+      required: true
+  - type: textarea
+    id: rfc_goal
+    attributes:
+      label: Goal
+      description: Describe your proposal in one or two paragraphs. Focus on the goal, without diving too deeply into the "why", "why now", "how", etc. Ensure anyone opening the document will form a clear understanding of the RFCs intent from reading this paragraph(s).
+    validations:
+      required: true
+  - type: textarea
+    id: rfc_background
+    attributes:
+      label: Background
+      description: Provide the full context for the RFC. This should include the problem you're trying to solve, the current state of things, and any relevant history.  This may include any links to additional resources, discussions, or other relevant information.
+      required: true
+  - type: textarea
+    id: rfc_proposal
+    attributes:
+      label: Proposal
+      description: Describe your proposed solution. This should be a detailed explanation of what you're proposing, and how it will solve the problem you've outlined in the background section.
+      required: true
