@@ -4,6 +4,7 @@
 [![Latest Release](https://img.shields.io/github/v/release/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web/releases/latest)
 [![License](https://img.shields.io/github/license/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web?tab=AGPL-3.0-1-ov-file#readme)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/andrew-codes)](https://github.com/sponsors/andrew-codes)
+![Discord](https://img.shields.io/discord/1247204516756066377)
 
 ## How to contribute to Playnite-Web
 
@@ -46,7 +47,7 @@ Changes that are cosmetic in nature and do not add anything substantial to the s
 
 ### Do you have questions about the source code?
 
-- Ask any question about Playnite-Web via Discord (coming soon).
+- Ask any question about Playnite-Web by joining our [Discord](https://discord.gg/J9rNp4C5mC).
 
 ## Thank you
 
