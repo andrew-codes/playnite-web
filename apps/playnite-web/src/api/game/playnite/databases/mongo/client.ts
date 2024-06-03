@@ -20,7 +20,7 @@ const computeUrl = (
   connectionOptions?: DbConnectionOptions | DbConnectionString,
 ): string => {
   if (!connectionOptions) {
-    return `mongodb://localhost:27017`
+    return `mongodb://${process.env.DB_HOST ?? 'localhost'}:27017`
   }
   if ('url' in connectionOptions) {
     return connectionOptions.url
@@ -39,8 +39,8 @@ const getDbClient = (
 
   if (!client) {
     const url = computeUrl(connectionOptions)
-    const username = connectionOptions?.username
-    const password = connectionOptions?.password
+    const username = connectionOptions?.username ?? process.env.DB_USERNAME
+    const password = connectionOptions?.password ?? process.env.DB_PASSWORD
 
     debug(`Existing DB client not found; creating one with the provided URL`)
     if (!username && !password) {
