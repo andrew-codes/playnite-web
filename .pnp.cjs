@@ -23,10 +23,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/game-db-updater"\
     },\
     {\
-      "name": "playnite-web-gh-action-runner",\
-      "reference": "workspace:apps/gh-action-runner"\
-    },\
-    {\
       "name": "playnite-web-app",\
       "reference": "workspace:apps/playnite-web"\
     },\
@@ -41,7 +37,6 @@ const RAW_RUNTIME_STATE =
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
     ["playnite-web-game-db-updater", ["workspace:apps/game-db-updater"]],\
-    ["playnite-web-gh-action-runner", ["workspace:apps/gh-action-runner"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]],\
     ["versioning", ["workspace:libs/versioning"]]\
   ],\
@@ -14454,27 +14449,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["playnite-web-gh-action-runner", [\
-      ["workspace:apps/gh-action-runner", {\
-        "packageLocation": "./apps/gh-action-runner/",\
-        "packageDependencies": [\
-          ["playnite-web-gh-action-runner", "workspace:apps/gh-action-runner"],\
-          ["@types/shelljs", "npm:0.8.15"],\
-          ["concurrently", "npm:8.2.2"],\
-          ["cross-env", "npm:7.0.3"],\
-          ["esbuild", "npm:0.21.4"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
-          ["glob", "npm:10.3.10"],\
-          ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
-          ["rimraf", "npm:5.0.5"],\
-          ["shelljs", "npm:0.8.5"],\
-          ["ts-jest", "virtual:1165a8a8846d4f088a5302c1b61c692564943edd1a3372e3bfbd1a9775a356b26fb98ecd298e69ace9b3935235b021408eebe5c33f10709758a154d7cfe6fe8a#npm:29.1.1"],\
-          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
-          ["versioning", "workspace:libs/versioning"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
     ["playnite-web-plugin", [\
       ["workspace:apps/PlayniteWebPlugin", {\
         "packageLocation": "./apps/PlayniteWebPlugin/",\
@@ -17257,47 +17231,6 @@ const RAW_RUNTIME_STATE =
           ["ts-jest", "npm:29.1.1"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["virtual:1165a8a8846d4f088a5302c1b61c692564943edd1a3372e3bfbd1a9775a356b26fb98ecd298e69ace9b3935235b021408eebe5c33f10709758a154d7cfe6fe8a#npm:29.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-287dd53c7d/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
-        "packageDependencies": [\
-          ["ts-jest", "virtual:1165a8a8846d4f088a5302c1b61c692564943edd1a3372e3bfbd1a9775a356b26fb98ecd298e69ace9b3935235b021408eebe5c33f10709758a154d7cfe6fe8a#npm:29.1.1"],\
-          ["@babel/core", null],\
-          ["@jest/types", null],\
-          ["@types/babel-jest", null],\
-          ["@types/babel__core", null],\
-          ["@types/esbuild", null],\
-          ["@types/jest", null],\
-          ["@types/jest__types", null],\
-          ["@types/typescript", null],\
-          ["babel-jest", null],\
-          ["bs-logger", "npm:0.2.6"],\
-          ["esbuild", "npm:0.21.4"],\
-          ["fast-json-stable-stringify", "npm:2.1.0"],\
-          ["jest", null],\
-          ["jest-util", "npm:29.7.0"],\
-          ["json5", "npm:2.2.3"],\
-          ["lodash.memoize", "npm:4.1.2"],\
-          ["make-error", "npm:1.3.6"],\
-          ["semver", "npm:7.5.4"],\
-          ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
-          ["yargs-parser", "npm:21.1.1"]\
-        ],\
-        "packagePeers": [\
-          "@babel/core",\
-          "@jest/types",\
-          "@types/babel-jest",\
-          "@types/babel__core",\
-          "@types/esbuild",\
-          "@types/jest",\
-          "@types/jest__types",\
-          "@types/typescript",\
-          "babel-jest",\
-          "esbuild",\
-          "jest",\
-          "typescript"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.1.1", {\
         "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-0f99d3a231/3/root/.yarn/berry/cache/ts-jest-npm-29.1.1-04e888e48e-10c0.zip/node_modules/ts-jest/",\
