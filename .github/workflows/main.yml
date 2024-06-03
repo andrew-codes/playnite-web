@@ -1,10 +1,9 @@
-name: 'Publish latest major- and minor-versions'
+name: 'Latest dev version'
 
 on:
   push:
     branches:
       - main
-      - release-*
 
 permissions:
   contents: read
