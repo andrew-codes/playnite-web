@@ -4,7 +4,7 @@
 [![Latest Release](https://img.shields.io/github/v/release/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web/releases/latest)
 [![License](https://img.shields.io/github/license/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web?tab=AGPL-3.0-1-ov-file#readme)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/andrew-codes)](https://github.com/sponsors/andrew-codes)
-[![Discord](https://img.shields.io/discord/1247204516756066377)](https://discord.gg/J9rNp4C5mC)
+[![Join Chat](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmatrix.org%2F_matrix%2Fclient%2Funstable%2Fim.nheko.summary%2Fsummary%2F%2523playnite-web%3Agitter.im&query=num_joined_members&label=Chat%20Members)](https://matrix.to/#/#playnite-web:gitter.im)
 
 ## How to contribute to Playnite-Web
 
@@ -47,7 +47,7 @@ Changes that are cosmetic in nature and do not add anything substantial to the s
 
 ### Do you have questions about the source code?
 
-- Ask any question about Playnite-Web by joining our [Discord](https://discord.gg/J9rNp4C5mC).
+- Ask any question about Playnite-Web by joining our [chat](https://matrix.to/#/#playnite-web:gitter.im).
 
 ## Thank you
 
