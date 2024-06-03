@@ -3,4 +3,4 @@
 ## I found a security vulnerability
 
 1. **Do not open up a GitHub issue if the bug is a security vulnerability**
-2. Do send a direct message on Discord to [andrew-codes](https://discord.com/users/106497686798094336)
+2. Do [submit the security item via GitHub](https://github.com/andrew-codes/playnite-web/security/advisories/new).
