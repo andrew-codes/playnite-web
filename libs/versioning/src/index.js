@@ -1,5 +1,6 @@
 const semver = require('semver')
 const { groupBy } = require('lodash')
+const sh = require('shelljs')
 const debug = require('debug')('playnite-web/versioning')
 
 const getDockerTags = async (version, ref) => {
