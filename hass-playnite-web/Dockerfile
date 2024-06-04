@@ -1,5 +1,7 @@
 FROM ghcr.io/andrew-codes/playnite-web-app:3-dev
 
+RUN apt-get install -y curl
+
 ENV BASHIO_VERSION="0.16.2"
 RUN mkdir -p /tmp/bashio && \
     curl -sSL "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" | tar -xzf - --strip 1 -C /tmp/bashio && \
