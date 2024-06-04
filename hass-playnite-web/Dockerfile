@@ -6,8 +6,8 @@ RUN mkdir -p /tmp/bashio && \
     mv /tmp/bashio/lib /usr/lib/bashio && \
     ln -s /usr/lib/bashio/bashio /usr/bin/bashio && \
     rm -rf /tmp/bashio
-    
-COPY run.sh /
+
+COPY src/run.sh /
 RUN chmod a+x /run.sh
 
 CMD [ "/run.sh" ]
