@@ -93,11 +93,6 @@ jobs:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
           PLATFORM: ${{ matrix.platform }}
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: packaged-apps
-          path: apps/*/_packaged/**
 
   unit_tests_windows:
     name: Verify PR - Tests (Windows)
