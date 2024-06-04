@@ -3,8 +3,7 @@ const { groupBy } = require('lodash')
 const sh = require('shelljs')
 const debug = require('debug')('playnite-web/versioning')
 
-const getDockerTags = async (tag, ref) => {
-  const version = tag.replace(/^v/, '')
+const getDockerTags = async (version, ref) => {
   debug(`version: ${version}`)
   debug(`ref: ${ref}`)
 
@@ -20,12 +19,12 @@ const getDockerTags = async (tag, ref) => {
     const major = semver.major(version)
     const minor = semver.minor(version)
     tags.push(`${major}.${minor}-latest`)
-
     const latestMajors = Object.entries(
       groupBy(
         sh
           .exec(`git tag --sort=-creatordate`)
           .stdout.split('\n')
+          .filter((tag) => tag)
           .map((tag) => tag.replace(/^v/, ''))
           .sort(semver.compare),
         semver.major,
