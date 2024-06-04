@@ -47,6 +47,14 @@ jobs:
       OWNER: andrew-codes
       REPO_NAME: playnite-web
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm/v6
+          - linux/arm/v7
+          - linux/arm64
 
     steps:
       - name: Checkout
@@ -80,17 +88,15 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.OWNER }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-        with:
-          platforms: linux/amd64, linux/arm64
-
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Publish specific version for apps
         run: yarn nx run-many --target=publish --parallel --verbose --all
         env:
           NODE_ENV: production
+          PLATFORM: ${{ matrix.platform }}
 
   package:
     name: Publish Extension

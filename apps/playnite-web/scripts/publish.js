@@ -3,7 +3,7 @@ import { getDockerTags } from 'versioning'
 import pkg from '../package.json' assert { type: 'json' }
 
 async function run() {
-  const { REGISTRY, OWNER, GITHUB_REF } = process.env
+  const { REGISTRY, OWNER, GITHUB_REF, PLATFORM } = process.env
 
   if (!REGISTRY || !OWNER || !GITHUB_REF) {
     throw new Error('Missing environment variables')

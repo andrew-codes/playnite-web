@@ -48,6 +48,14 @@ jobs:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
       REPO_NAME: playnite-web
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm/v6
+          - linux/arm/v7
+          - linux/arm64
     steps:
       - uses: actions/checkout@v4
         with:
@@ -75,16 +83,16 @@ jobs:
         run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-        with:
-          platforms: linux/amd64, linux/arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Publish apps
         run: yarn nx affected --base=origin/main --head=HEAD --target=package --parallel --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
+          DEBUG: 'playnite-web/*'
+          PLATFORM: ${{ matrix.platform }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
