@@ -5,7 +5,7 @@ import pkg from '../package.json'
 async function run() {
   sh.cp('-R', '.dist/', '_packaged/')
 
-  const { REGISTRY, OWNER, GITHUB_REF } = process.env
+  const { REGISTRY, OWNER, GITHUB_REF, PLATFORM } = process.env
 
   if (!REGISTRY || !OWNER || !GITHUB_REF) {
     throw new Error('Missing environment variables')
@@ -15,7 +15,7 @@ async function run() {
 
   for (const tag of tags) {
     sh.exec(
-      `docker build --platform $(docker buildx inspect --bootstrap | awk -F 'Platforms: ' '{if (NF>1) print $2}' | sed -e 's/ //g') --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
+      `docker build --platform ${PLATFORM} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
     )
   }
 }
