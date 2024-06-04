@@ -75,12 +75,12 @@ jobs:
         run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
         with:
           platforms: linux/amd64, linux/arm64
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Publish apps
         run: yarn nx affected --base=origin/main --head=HEAD --target=package --parallel --verbose --exclude='*,!tag:linux'
         env:
