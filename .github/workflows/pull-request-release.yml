@@ -116,8 +116,8 @@ jobs:
       - name: Run all unit tests
         run: yarn nx affected --base=origin/main --head=HEAD --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
 
-  package:
-    name: Package extension
+  build_extension:
+    name: Build extension
     runs-on: windows-latest
     permissions:
       packages: write
@@ -127,9 +127,6 @@ jobs:
           fetch-depth: 0
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
-      - name: Download Playnite Toolbox
-        run: |-
-          mkdir -p .tools/Playnite && curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
@@ -149,12 +146,7 @@ jobs:
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
-      - name: Package extension
-        run: yarn nx affected --base=origin/main --head=HEAD --target=package --parallel --verbose --exclude='*,!tag:windows'
+      - name: Build extension
+        run: yarn nx affected --base=origin/main --head=HEAD --target=build --parallel --verbose --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: playnite-extension
-          path: apps/*/_packaged/**
