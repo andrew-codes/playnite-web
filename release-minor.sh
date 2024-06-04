@@ -1,1 +1,1 @@
-yarn lerna version --no-private minor && yarn nx run-many --target=version --all && cat package.json | jq '.version' | xargs -I {} git tag -d "v{}" && cat package.json | jq '.version' | xargs -I {} git tag "v{}"
+yarn lerna version --no-private minor && yarn nx run-many --target=version --all && cat lerna.json | jq '.version' | xargs -I {} git tag -d "v{}" && cat lerna.json | jq '.version' | xargs -I {} git tag "v{}"
