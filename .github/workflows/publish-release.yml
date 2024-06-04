@@ -135,11 +135,6 @@ jobs:
           NODE_ENV: production
       - name: Move artifacts
         run: mkdir -p _packaged && mv apps/*/_packaged/** _packaged/
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: playnite-extension
-          path: _packaged/**
 
   release:
     name: Release
