@@ -96,6 +96,7 @@ jobs:
         run: yarn nx run-many --target=publish --parallel --verbose --all
         env:
           NODE_ENV: production
+          DEBUG: 'playnite-web/*'
           PLATFORM: ${{ matrix.platform }}
 
   package:
