@@ -5,7 +5,7 @@
       "cache": true
     },
     "package": {
-      "dependsOn": ["clean", "build"],
+      "dependsOn": ["clean", "build", "^package"],
       "cache": false
     },
     "publish": {
