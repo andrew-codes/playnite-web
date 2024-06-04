@@ -1,7 +1,8 @@
-FROM ghcr.io/andrew-codes/playnite-web-app:3-dev
+ARG VERSION
+FROM ghcr.io/andrew-codes/playnite-web-app:$VERSION
 
-RUN apt-get install -y curl
-
+USER root
+RUN apk add curl
 ENV BASHIO_VERSION="0.16.2"
 RUN mkdir -p /tmp/bashio && \
     curl -sSL "https://github.com/hassio-addons/bashio/archive/v${BASHIO_VERSION}.tar.gz" | tar -xzf - --strip 1 -C /tmp/bashio && \
