@@ -1,4 +1,5 @@
-FROM ghcr.io/andrew-codes/playnite-web-game-db-updater:3-dev
+ARG VERSION
+FROM ghcr.io/andrew-codes/playnite-web-game-db-updater:$VERSION
 
 ENV BASHIO_VERSION="0.16.2"
 RUN mkdir -p /tmp/bashio && \
@@ -7,7 +8,7 @@ RUN mkdir -p /tmp/bashio && \
     ln -s /usr/lib/bashio/bashio /usr/bin/bashio && \
     rm -rf /tmp/bashio
 
-COPY run.sh /
+COPY src/run.sh /
 RUN chmod a+x /run.sh
 
 CMD [ "/run.sh" ]

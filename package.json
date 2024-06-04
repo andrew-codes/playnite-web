@@ -9,7 +9,8 @@
   },
   "workspaces": [
     "apps/*",
-    "libs/**/*"
+    "libs/**/*",
+    "hass-*/"
   ],
   "devDependencies": {
     "@types/jest": "^29.2.5",

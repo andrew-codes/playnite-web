@@ -3548,6 +3548,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.17.4":
+  version: 4.17.4
+  resolution: "@types/lodash@npm:4.17.4"
+  checksum: 10c0/0124c64cb9fe7a0f78b6777955abd05ef0d97844d49118652eae45f8fa57bfb7f5a7a9bccc0b5a84c0a6dc09631042e4590cb665acb9d58dfd5e6543c75341ec
+  languageName: node
+  linkType: hard
+
 "@types/mdast@npm:^3.0.0":
   version: 3.0.15
   resolution: "@types/mdast@npm:3.0.15"
@@ -6281,7 +6288,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-register@npm:^3.4.2":
+"esbuild-register@npm:^3.4.2, esbuild-register@npm:^3.5.0":
   version: 3.5.0
   resolution: "esbuild-register@npm:3.5.0"
   dependencies:
@@ -12148,7 +12155,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playnite-web-app@workspace:apps/playnite-web":
+"playnite-web-app-hass-addon@workspace:hass-playnite-web":
+  version: 0.0.0-use.local
+  resolution: "playnite-web-app-hass-addon@workspace:hass-playnite-web"
+  dependencies:
+    "@types/lodash": "npm:^4.17.4"
+    "@types/shelljs": "npm:^0.8.15"
+    esbuild: "npm:^0.21.4"
+    esbuild-register: "npm:^3.5.0"
+    lodash: "npm:^4.17.21"
+    nx: "npm:^19.1.1"
+    playnite-web-app: "workspace:*"
+    shelljs: "npm:^0.8.5"
+    versioning: "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"playnite-web-app@workspace:*, playnite-web-app@workspace:apps/playnite-web":
   version: 0.0.0-use.local
   resolution: "playnite-web-app@workspace:apps/playnite-web"
   dependencies:
@@ -12221,7 +12244,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"playnite-web-game-db-updater@workspace:apps/game-db-updater":
+"playnite-web-game-db-updater-hass-addon@workspace:hass-game-db-updater":
+  version: 0.0.0-use.local
+  resolution: "playnite-web-game-db-updater-hass-addon@workspace:hass-game-db-updater"
+  dependencies:
+    "@types/lodash": "npm:^4.17.4"
+    "@types/shelljs": "npm:^0.8.15"
+    esbuild: "npm:^0.21.4"
+    esbuild-register: "npm:^3.5.0"
+    lodash: "npm:^4.17.21"
+    nx: "npm:^19.1.1"
+    playnite-web-game-db-updater: "workspace:*"
+    shelljs: "npm:^0.8.5"
+    versioning: "workspace:*"
+  languageName: unknown
+  linkType: soft
+
+"playnite-web-game-db-updater@workspace:*, playnite-web-game-db-updater@workspace:apps/game-db-updater":
   version: 0.0.0-use.local
   resolution: "playnite-web-game-db-updater@workspace:apps/game-db-updater"
   dependencies:
