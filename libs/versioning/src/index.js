@@ -29,14 +29,18 @@ const getDockerTags = async (version, ref) => {
           .stdout.split('\n')
           .filter((tag) => tag)
           .map((tag) => tag.replace(/^v/, ''))
-          .sort(semver.compare),
+          .sort(semver.rcompare),
         semver.major,
       ),
-    ).map(([major, tags]) => [major, tags[0]])
+    ).map(([major, tags]) => [
+      major,
+      tags.filter((tag) => !semver.eq(version, tag))[0],
+    ])
+    debug(`latestMajors: ${JSON.stringify(latestMajors, null, 2)}`)
 
     const matchingLatestMajor = latestMajors.find(
       ([major, tag]) =>
-        major === semver.major(version) && semver.gt(version, tag),
+        major === semver.major(version).toString() && semver.gt(version, tag),
     )
     if (matchingLatestMajor) {
       tags.push(`${matchingLatestMajor[0]}-latest`)
