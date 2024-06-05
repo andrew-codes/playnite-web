@@ -1,7 +1,7 @@
 {
   "name": "playnite-web-game-db-updater",
   "description": "Service to listen to MQTT messages and update game database.",
-  "version": "3.1.4",
+  "version": "3.2.0",
   "dependencies": {
     "async-mqtt": "^2.6.3",
     "debug": "^4.3.4",
