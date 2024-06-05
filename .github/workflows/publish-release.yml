@@ -58,6 +58,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Extract major release version from package.json
         uses: sergeysova/jq-action@v2
         id: major_release_version
