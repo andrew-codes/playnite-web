@@ -16,9 +16,12 @@ const getDockerTags = async (version, ref) => {
       tags.push(`PR-${prNumber}`)
     }
   } else if (/^refs\/tags\//.test(ref)) {
+    tags.push(version)
+
     const major = semver.major(version)
     const minor = semver.minor(version)
     tags.push(`${major}.${minor}-latest`)
+
     const latestMajors = Object.entries(
       groupBy(
         sh
@@ -32,7 +35,8 @@ const getDockerTags = async (version, ref) => {
     ).map(([major, tags]) => [major, tags[0]])
 
     const matchingLatestMajor = latestMajors.find(
-      ([major, tag]) => major === semver.major(version) && version === tag,
+      ([major, tag]) =>
+        major === semver.major(version) && semver.gt(version, tag),
     )
     if (matchingLatestMajor) {
       tags.push(`${matchingLatestMajor[0]}-latest`)
