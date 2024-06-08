@@ -6,7 +6,7 @@ import handlers from './handlers'
 import { getMqttClient } from './mqttClient'
 
 const run: () => Promise<AsyncMqttClient> = async () => {
-  const debug = createDebugger('game-db-updater/index')
+  const debug = createDebugger('playnite-web/game-db-updater/index')
   debug('Starting game-db-updater')
 
   dotenv.config({

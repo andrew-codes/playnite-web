@@ -2,7 +2,9 @@ import createDebugger from 'debug'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 import { getDbClient } from '../dbClient'
 
-const debug = createDebugger('game-db-updater/handler/persistGameEntities')
+const debug = createDebugger(
+  'playnite-web/game-db-updater/handler/persistGameEntities',
+)
 
 const topicMatch =
   /^playnite\/.*\/entity\/(?<entityType>[a-z0-9\-]+)\/(?<entityId>[a-z0-9\-]+)$/

@@ -29,6 +29,7 @@
     "isbot": "^3.7.1",
     "lodash": "^4.17.21",
     "mongodb": "^6.3.0",
+    "playnite-web-game-db-updater": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
