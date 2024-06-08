@@ -11,7 +11,7 @@ import {
   TagEntity,
 } from './types'
 
-const debug = createDebugger('playnite-web-app/MongoDbApi')
+const debug = createDebugger('playnite-web/app/MongoDbApi')
 
 class MongoDb implements MongoDbApi {
   private client: MongoClient

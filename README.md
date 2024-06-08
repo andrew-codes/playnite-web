@@ -6,7 +6,7 @@
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/andrew-codes)](https://github.com/sponsors/andrew-codes)
 [![Join Chat](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmatrix.org%2F_matrix%2Fclient%2Funstable%2Fim.nheko.summary%2Fsummary%2F%2523playnite-web%3Agitter.im&query=num_joined_members&label=Chat%20Members)](https://matrix.to/#/#playnite-web:gitter.im)
 
-Share and remote control your game library online with self-hosted Playnite-Web.
+Share, remote control, and automate your game library online with self-hosted Playnite-Web.
 
 Playnite-web offers:
 
@@ -25,26 +25,25 @@ Playnite-web offers:
       - [MQTT Broker](#mqtt-broker)
       - [Database](#database)
       - [Playnite-Web Plugin](#playnite-web-plugin)
-      - [game-db-updater](#game-db-updater)
-        - [Environment Variables](#environment-variables)
       - [playnite-web-app](#playnite-web-app)
-        - [Environment Variables](#environment-variables-1)
+        - [Environment Variables](#environment-variables)
     - [Post Deployment Steps](#post-deployment-steps)
   - [Contributing](#contributing)
 
 ## Getting Started
 
-Playnite-Web consists of several components packaged as Docker images that work together.
+Playnite-Web consists the following:
 
 > All components are required.
 
-| Component           | Deployment Mechanism              | Purpose                                                                                                   |
-| :------------------ | :-------------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| MQTT broker         | Docker image / bring your own     | Provides a communication mechanism between Playnite and Playnite-Web.                                     |
-| Playnite-Web Plugin | Extension installed into Playnite | The plugin sends and receives messages via MQTT when data in Playnite is changed.                         |
-| game-db-updater     | Docker image                      | Receives MQTT messages from plugin and updates game data in database.                                     |
-| database            | Docker image / bring your own     | Mongo DB database that stores game data in `games` database.                                              |
-| Playnite-Web App    | Docker image                      | Web application and UI to browse and view game library. Can be exposed to Internet to share with friends. |
+| Component           | Deployment Mechanism              | Purpose                                                                                                                                              |
+| :------------------ | :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| database            | Docker image / bring your own     | Mongo DB database that stores game data in `games` database.                                                                                         |
+| MQTT broker         | Docker image / bring your own     | Provides a communication mechanism between Playnite and Playnite-Web.                                                                                |
+| Playnite-Web Plugin | Extension installed into Playnite | The plugin sends and receives messages via MQTT when data in Playnite is changed.                                                                    |
+| Playnite-Web App    | Docker image                      | Web application and UI to browse and view game library. Updates database from Playnite-Web Plugin. Can be exposed to Internet to share with friends. |
+
+> Note, if you want to update your game library only, and not run Playnite-Web, you may do so by running the `playnite-web-game-db-updater`. However, do not run both this and Playnite-Web App. See the [playnite-web-game-db-updater documentation](docs/install/playnite-web-game-db-updater.md) for more details.
 
 ### Deployment
 
@@ -71,29 +70,12 @@ Recommended to use docker image [`mongo:focal`](https://hub.docker.com/_/mongo/)
 
 1. Download (latest) version [release](https://github.com/andrew-codes/playnite-web/releases) of Playnite extension (release asset named "PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_0_1.pext").
 1. Open Playnite and drag downloaded file into the Playnite. It should prompt to install the plugin.
-1. Open the plugin's settings and enter the MQTT connection information to your MQTT broker.
-   > ![Mqtt connection settings screenshot](docs/assets/images/mqtt-connection-screenshot.png)
-1. Open the plugin's settings and enter the a device ID and device name under Topics.
+1. <details><summary>Open the plugin's settings and enter the MQTT connection information to your MQTT broker.</summary>
+      > ![Mqtt connection settings screenshot](docs/assets/images/mqtt-connection-screenshot.png)
+   </details>
+1. <details><summary>Open the plugin's settings and enter the a device ID and device name under Topics.</summary>
    > ![Topics settings screenshot](docs/assets/images/topics-screenshot.png)
-
-#### game-db-updater
-
-Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkgs/container/playnite-web-game-db-updater) from the repo. Ensure you are using the same release version as the Plugin (above). Example image: `ghcr.io/andrew-codes/playnite-web-game-db-updater:1.0.0`
-
-##### Environment Variables
-
-| Environment Variable | Value                                    | Notes                                                     |
-| :------------------- | :--------------------------------------- | :-------------------------------------------------------- |
-| MQTT_HOST            | IP address/hostname of MQTT broker.      |                                                           |
-| MQTT_PORT            | Port of MQTT broker                      | Default for MQTT image is 1883                            |
-| MQTT_USERNAME        | Username to access MQTT broker           | Optional, only required if disabled anonymous access      |
-| MQTT_PASSWORD        | Password to access MQTT broker           | Optional, only required if disabled anonymous access      |
-| DB_HOST              | IP address/hostname of Mongo DB database |                                                           |
-| DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                        |
-| DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access      |
-| DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access      |
-| DB_URL               | MongoDB connection URL                   | Optional, alternative to individual DB connection options |
-| DEBUG                | `"game-db-updater/*"`                    | Optional, for troubleshooting; send logs to STDIO         |
+   </details>
 
 #### playnite-web-app
 

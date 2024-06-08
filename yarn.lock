@@ -12226,6 +12226,7 @@ __metadata:
     mongodb: "npm:^6.3.0"
     npm-run-all: "npm:^4.1.5"
     nx: "npm:19.1.1"
+    playnite-web-game-db-updater: "workspace:*"
     prettier: "npm:^3.1.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"

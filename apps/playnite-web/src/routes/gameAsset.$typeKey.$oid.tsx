@@ -5,7 +5,7 @@ import getGameApi from '../api/game/index.server'
 import { CompositeOid } from '../domain/Oid'
 
 async function loader({ request, params }: LoaderFunctionArgs) {
-  const debug = createDebugger('playnite-web-app/route/coverArt')
+  const debug = createDebugger('playnite-web/app/route/coverArt')
   try {
     const { oid, typeKey } = $params('/gameAsset/:typeKey/:oid', params)
     const relatedOid = new CompositeOid(oid)

@@ -13,7 +13,7 @@ type MqttConnectionOptions = {
 const getMqttClient = async (
   connectionOptions?: MqttConnectionOptions,
 ): Promise<mqtt.AsyncMqttClient> => {
-  const debug = createDebugger('playnite-web-app/api/mqttClient')
+  const debug = createDebugger('playnite-web/app/api/mqttClient')
 
   if (!mqttClient) {
     const host = connectionOptions?.host ?? process.env.MQTT_HOST ?? 'localhost'
