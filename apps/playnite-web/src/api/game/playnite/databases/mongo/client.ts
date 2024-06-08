@@ -35,7 +35,7 @@ const computeUrl = (
 const getDbClient = (
   connectionOptions?: DbConnectionOptions | DbConnectionString,
 ): MongoClient => {
-  const debug = createDebugger('playnite-web-app/MongoDbClient')
+  const debug = createDebugger('playnite-web/app/MongoDbClient')
 
   if (!client) {
     const url = computeUrl(connectionOptions)
