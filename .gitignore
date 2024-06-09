@@ -13,6 +13,7 @@ _packaged
 *.user
 *.env
 !local.env
+.test-runs
 
 apps/playnite-web/.cache
 apps/playnite-web/build

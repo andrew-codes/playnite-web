@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "types": [
+      "cypress"
+    ],
+    "module": "ESNext"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "*.tsx",
+    "*.ts",
+    "cypress.config.mjs",
+    "cypress/**/*.js",
+    "cypress/**/*.ts"
+  ],
+  "exclude": [
+    "**/__tests__/*.*"
+  ]
+}
