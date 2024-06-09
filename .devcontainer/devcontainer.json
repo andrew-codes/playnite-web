@@ -9,7 +9,8 @@
       "version": "7.0.403"
     },
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "20.9.0"
+      "version": "20.9.0",
+      "nodeGypDependencies": true
     },
     "ghcr.io/devcontainers/features/powershell:1": {}
   },
@@ -70,9 +71,9 @@
     "3001:3001"
   ],
   "containerEnv": {
-    "DISPLAY": "localhost:10.0"
+    "DISPLAY": "${localEnv:DISPLAY}"
   },
   "remoteEnv": {
-    "DISPLAY": "localhost:10.0"
+    "DISPLAY": "${localEnv:DISPLAY}"
   }
 }
