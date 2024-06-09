@@ -41,6 +41,8 @@ libxss1 \
 libxtst6 \
 mono-complete \
 xauth \
+x11-apps \
+x11-common \
 xvfb
 RUN (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
 && sudo mkdir -p -m 755 /etc/apt/keyrings \
