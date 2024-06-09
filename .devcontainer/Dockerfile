@@ -9,13 +9,15 @@ mosquitto-clients
 
 # MongoDB
 RUN apt-get install -y \
+apt-transport-https \
+ca-certificates \
 curl \
+dirmngr \
 gnupg \
 gnupg2 \
-dirmngr \
-apt-transport-https \
-software-properties-common \
-ca-certificates
+iputils-ping \
+net-tools \
+software-properties-common
 RUN curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | apt-key add -
 RUN echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/debian bullseye/mongodb-org/7.0 main" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 RUN apt-get update
@@ -28,13 +30,14 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E03280
 RUN echo "deb https://download.mono-project.com/repo/debian stable-buster main" > /etc/apt/sources.list.d/mono-official-stable.list
 RUN apt-get update -y
 RUN apt-get install -y \
-libgtk2.0-0 \
-libgtk-3-0 \
+libasound2 \
 libgbm-dev \
+libgconf-2-4 \
+libgtk-3-0 \
+libgtk2.0-0 \
 libnotify-dev \
 libnss3 \
 libxss1 \
-libasound2 \
 libxtst6 \
 mono-complete \
 xauth \
