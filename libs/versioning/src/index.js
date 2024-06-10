@@ -19,32 +19,20 @@ const getDockerTags = async (version, ref) => {
     tags.push(version)
 
     const major = semver.major(version)
+    tags.push(`${major}-latest`)
+
     const minor = semver.minor(version)
     tags.push(`${major}.${minor}-latest`)
 
-    const latestMajors = Object.entries(
-      groupBy(
-        sh
-          .exec(`git tag --sort=-creatordate`)
-          .stdout.split('\n')
-          .filter((tag) => tag)
-          .map((tag) => tag.replace(/^v/, ''))
-          .sort(semver.rcompare),
-        semver.major,
-      ),
-    ).map(([major, tags]) => [
-      major,
-      tags.find((tag) => !semver.eq(version, tag)),
-    ])
-    debug(`latestMajors: ${JSON.stringify(latestMajors, null, 2)}`)
+    const latestVersion = sh
+      .exec(`git tag --sort=-creatordate`)
+      .stdout.split('\n')
+      .filter((tag) => tag)
+      .map((tag) => tag.replace(/^v/, ''))
+      .sort(semver.rcompare)[0]
 
-    const matchingLatestMajor = latestMajors.find(
-      ([major, tag]) =>
-        major === semver.major(version).toString() &&
-        (tag === null || semver.gt(version, tag)),
-    )
-    if (matchingLatestMajor) {
-      tags.push(`${matchingLatestMajor[0]}-latest`)
+    if (latestVersion === version) {
+      tags.push('latest')
     }
   } else if (/^refs\/heads\/main$/.test(ref)) {
     tags.push(`dev`)
