@@ -34,13 +34,14 @@ const getDockerTags = async (version, ref) => {
       ),
     ).map(([major, tags]) => [
       major,
-      tags.filter((tag) => !semver.eq(version, tag))[0],
+      tags.find((tag) => !semver.eq(version, tag)),
     ])
     debug(`latestMajors: ${JSON.stringify(latestMajors, null, 2)}`)
 
     const matchingLatestMajor = latestMajors.find(
       ([major, tag]) =>
-        major === semver.major(version).toString() && semver.gt(version, tag),
+        major === semver.major(version).toString() &&
+        (tag === null || semver.gt(version, tag)),
     )
     if (matchingLatestMajor) {
       tags.push(`${matchingLatestMajor[0]}-latest`)
