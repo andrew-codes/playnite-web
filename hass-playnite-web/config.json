@@ -1,7 +1,7 @@
 {
   "name": "Playnite Web App",
   "url": "https://github.com/andrew-codes/playnite-web",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "slug": "playnite-web-app",
   "description": "An add-on to provide web interface and API for Playnite.",
   "arch": [

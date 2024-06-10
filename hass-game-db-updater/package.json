@@ -1,6 +1,6 @@
 {
   "name": "playnite-web-game-db-updater-hass-addon",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "dependencies": {
     "playnite-web-game-db-updater": "workspace:*"
   },
