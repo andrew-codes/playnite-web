@@ -1,7 +1,7 @@
 {
   "name": "playnite-web-plugin",
   "description": "Playnite extension required for Playnite Web.",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "devDependencies": {
     "@types/shelljs": "^0.8.15",
     "cpy": "^11.0.0",
