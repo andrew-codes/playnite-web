@@ -43,14 +43,6 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm/v6
-          - linux/arm/v7
-          - linux/arm64
     steps:
       - uses: actions/checkout@v4
       - name: Extract major release version from package.json
@@ -91,7 +83,7 @@ jobs:
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
-          PLATFORM: ${{ matrix.platform }}
+          PLATFORM: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
 
   unit_tests_windows:
     name: Verify PR - Tests (Windows)
