@@ -18369,7 +18369,7 @@ const RAW_RUNTIME_STATE =
           ["remix-pwa", "npm:3.0.19"],\
           ["remix-routes", "npm:1.5.1"],\
           ["remix-utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.5.0"],\
-          ["rimraf", "npm:5.0.5"],\
+          ["rimraf", "npm:5.0.7"],\
           ["shelljs", "npm:0.8.5"],\
           ["ts-jest", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:29.1.1"],\
           ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
@@ -18423,7 +18423,7 @@ const RAW_RUNTIME_STATE =
           ["nodemon", "npm:2.0.22"],\
           ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
           ["prettier", "npm:3.1.1"],\
-          ["rimraf", "npm:5.0.5"],\
+          ["rimraf", "npm:5.0.7"],\
           ["shelljs", "npm:0.8.5"],\
           ["ts-jest", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.1.1"],\
           ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
@@ -18462,7 +18462,7 @@ const RAW_RUNTIME_STATE =
           ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
           ["nx", "virtual:231b41c796fb4c3a1878ccc2b284d7acc71e342654f1dcf3bec9e756c379469380938482d22d651d850cf92850f594f3b751114f8c7660ab24c8aee2d7081537#npm:19.1.1"],\
           ["prettier", "npm:3.1.1"],\
-          ["rimraf", "npm:5.0.5"],\
+          ["rimraf", "npm:5.0.7"],\
           ["shelljs", "npm:0.8.5"],\
           ["typescript", "patch:typescript@npm%3A5.3.2#optional!builtin<compat/typescript>::version=5.3.2&hash=e012d7"],\
           ["versioning", "workspace:libs/versioning"]\
@@ -20104,10 +20104,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:5.0.5", {\
-        "packageLocation": "../../.yarn/berry/cache/rimraf-npm-5.0.5-19228633fd-10c0.zip/node_modules/rimraf/",\
+      ["npm:5.0.7", {\
+        "packageLocation": "../../.yarn/berry/cache/rimraf-npm-5.0.7-5c7aa1db5b-10c0.zip/node_modules/rimraf/",\
         "packageDependencies": [\
-          ["rimraf", "npm:5.0.5"],\
+          ["rimraf", "npm:5.0.7"],\
           ["glob", "npm:10.3.10"]\
         ],\
         "linkType": "HARD"\
@@ -22767,7 +22767,7 @@ const RAW_RUNTIME_STATE =
           ["launch-editor", "npm:2.6.1"],\
           ["open", "npm:10.1.0"],\
           ["p-retry", "npm:6.2.0"],\
-          ["rimraf", "npm:5.0.5"],\
+          ["rimraf", "npm:5.0.7"],\
           ["schema-utils", "npm:4.2.0"],\
           ["selfsigned", "npm:2.4.1"],\
           ["serve-index", "npm:1.9.1"],\
