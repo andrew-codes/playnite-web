@@ -15,7 +15,7 @@ async function run() {
 
   for (const tag of tags) {
     sh.exec(
-      `docker buildx build --load --platform ${PLATFORM} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile --build-arg VERSION=${tag} .`,
+      `docker buildx build --platform ${PLATFORM} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile --build-arg VERSION=${tag} .`,
     )
   }
 }
