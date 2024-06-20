@@ -69,7 +69,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.20.7, @babel/core@npm:^7.21.8, @babel/core@npm:^7.23.6":
+"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3, @babel/core@npm:^7.20.7, @babel/core@npm:^7.21.8":
   version: 7.24.6
   resolution: "@babel/core@npm:7.24.6"
   dependencies:
@@ -89,6 +89,29 @@ __metadata:
     json5: "npm:^2.2.3"
     semver: "npm:^6.3.1"
   checksum: 10c0/e0762a8daef7f417494d555929418cfacd6848c7fc3310ec00e6dd8cecac20b7f590e760bfc9365d2af07874a3f5599832f9c9ff7f1a9d126a168f77ba67945a
+  languageName: node
+  linkType: hard
+
+"@babel/core@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/core@npm:7.24.7"
+  dependencies:
+    "@ampproject/remapping": "npm:^2.2.0"
+    "@babel/code-frame": "npm:^7.24.7"
+    "@babel/generator": "npm:^7.24.7"
+    "@babel/helper-compilation-targets": "npm:^7.24.7"
+    "@babel/helper-module-transforms": "npm:^7.24.7"
+    "@babel/helpers": "npm:^7.24.7"
+    "@babel/parser": "npm:^7.24.7"
+    "@babel/template": "npm:^7.24.7"
+    "@babel/traverse": "npm:^7.24.7"
+    "@babel/types": "npm:^7.24.7"
+    convert-source-map: "npm:^2.0.0"
+    debug: "npm:^4.1.0"
+    gensync: "npm:^1.0.0-beta.2"
+    json5: "npm:^2.2.3"
+    semver: "npm:^6.3.1"
+  checksum: 10c0/4004ba454d3c20a46ea66264e06c15b82e9f6bdc35f88819907d24620da70dbf896abac1cb4cc4b6bb8642969e45f4d808497c9054a1388a386cf8c12e9b9e0d
   languageName: node
   linkType: hard
 
@@ -659,6 +682,16 @@ __metadata:
     "@babel/template": "npm:^7.24.6"
     "@babel/types": "npm:^7.24.6"
   checksum: 10c0/e5b5c0919fd6fa56ae11c15a72962d8de0ac19db524849554af28cf08ac32f9ae5aee49a43146eb150f54418cefb8e890fa2b2f33d029434dc7777dbcdfd5bac
+  languageName: node
+  linkType: hard
+
+"@babel/helpers@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/helpers@npm:7.24.7"
+  dependencies:
+    "@babel/template": "npm:^7.24.7"
+    "@babel/types": "npm:^7.24.7"
+  checksum: 10c0/aa8e230f6668773e17e141dbcab63e935c514b4b0bf1fed04d2eaefda17df68e16b61a56573f7f1d4d1e605ce6cc162b5f7e9fdf159fde1fd9b77c920ae47d27
   languageName: node
   linkType: hard
 
@@ -1828,7 +1861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-react@npm:^7.23.6":
+"@babel/preset-react@npm:^7.24.7":
   version: 7.24.7
   resolution: "@babel/preset-react@npm:7.24.7"
   dependencies:
@@ -1856,6 +1889,21 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 10c0/e72b654c7f0f08b35d7e1c0e3a59c0c13037f295c425760b8b148aa7dde01e6ddd982efc525710f997a1494fafdd55cb525738c016609e7e4d703d02014152b7
+  languageName: node
+  linkType: hard
+
+"@babel/preset-typescript@npm:^7.24.7":
+  version: 7.24.7
+  resolution: "@babel/preset-typescript@npm:7.24.7"
+  dependencies:
+    "@babel/helper-plugin-utils": "npm:^7.24.7"
+    "@babel/helper-validator-option": "npm:^7.24.7"
+    "@babel/plugin-syntax-jsx": "npm:^7.24.7"
+    "@babel/plugin-transform-modules-commonjs": "npm:^7.24.7"
+    "@babel/plugin-transform-typescript": "npm:^7.24.7"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 10c0/986bc0978eedb4da33aba8e1e13a3426dd1829515313b7e8f4ba5d8c18aff1663b468939d471814e7acf4045d326ae6cff37239878d169ac3fe53a8fde71f8ee
   languageName: node
   linkType: hard
 
@@ -7739,58 +7787,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:*":
-  version: 13.11.0
-  resolution: "cypress@npm:13.11.0"
-  dependencies:
-    "@cypress/request": "npm:^3.0.0"
-    "@cypress/xvfb": "npm:^1.2.4"
-    "@types/sinonjs__fake-timers": "npm:8.1.1"
-    "@types/sizzle": "npm:^2.3.2"
-    arch: "npm:^2.2.0"
-    blob-util: "npm:^2.0.2"
-    bluebird: "npm:^3.7.2"
-    buffer: "npm:^5.7.1"
-    cachedir: "npm:^2.3.0"
-    chalk: "npm:^4.1.0"
-    check-more-types: "npm:^2.24.0"
-    cli-cursor: "npm:^3.1.0"
-    cli-table3: "npm:~0.6.1"
-    commander: "npm:^6.2.1"
-    common-tags: "npm:^1.8.0"
-    dayjs: "npm:^1.10.4"
-    debug: "npm:^4.3.4"
-    enquirer: "npm:^2.3.6"
-    eventemitter2: "npm:6.4.7"
-    execa: "npm:4.1.0"
-    executable: "npm:^4.1.1"
-    extract-zip: "npm:2.0.1"
-    figures: "npm:^3.2.0"
-    fs-extra: "npm:^9.1.0"
-    getos: "npm:^3.2.1"
-    is-ci: "npm:^3.0.1"
-    is-installed-globally: "npm:~0.4.0"
-    lazy-ass: "npm:^1.6.0"
-    listr2: "npm:^3.8.3"
-    lodash: "npm:^4.17.21"
-    log-symbols: "npm:^4.0.0"
-    minimist: "npm:^1.2.8"
-    ospath: "npm:^1.2.2"
-    pretty-bytes: "npm:^5.6.0"
-    process: "npm:^0.11.10"
-    proxy-from-env: "npm:1.0.0"
-    request-progress: "npm:^3.0.0"
-    semver: "npm:^7.5.3"
-    supports-color: "npm:^8.1.1"
-    tmp: "npm:~0.2.1"
-    untildify: "npm:^4.0.0"
-    yauzl: "npm:^2.10.0"
-  bin:
-    cypress: bin/cypress
-  checksum: 10c0/a78eca7c26279928a86110d136a8ffcb339e81a04345eff155b0bc1b58f39bcce669f72f9d4e8303d038daf477525e727be2e1814ae04c100a3700c5f6f922f2
-  languageName: node
-  linkType: hard
-
 "cypress@npm:^13.12.0":
   version: 13.12.0
   resolution: "cypress@npm:13.12.0"
@@ -8400,7 +8396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:^5.16.0":
+"enhanced-resolve@npm:^5.0.0, enhanced-resolve@npm:^5.16.0":
   version: 5.17.0
   resolution: "enhanced-resolve@npm:5.17.0"
   dependencies:
@@ -13245,7 +13241,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromatch@npm:^4.0.2":
+"micromatch@npm:^4.0.0, micromatch@npm:^4.0.2":
   version: 4.0.7
   resolution: "micromatch@npm:4.0.7"
   dependencies:
@@ -15156,10 +15152,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "playnite-web-app@workspace:apps/playnite-web"
   dependencies:
-    "@babel/core": "npm:^7.23.6"
-    "@babel/plugin-transform-typescript": "npm:^7.24.7"
+    "@babel/core": "npm:^7.24.7"
     "@babel/preset-env": "npm:^7.24.7"
-    "@babel/preset-react": "npm:^7.23.6"
+    "@babel/preset-react": "npm:^7.24.7"
+    "@babel/preset-typescript": "npm:^7.24.7"
     "@emotion/cache": "npm:^11.11.0"
     "@emotion/react": "npm:^11.11.4"
     "@emotion/styled": "npm:^11.11.0"
@@ -15229,6 +15225,7 @@ __metadata:
     rimraf: "npm:^5.0.5"
     shelljs: "npm:^0.8.5"
     ts-jest: "npm:^29.0.5"
+    ts-loader: "npm:^9.5.1"
     tslib: "npm:^2.6.3"
     typescript: "npm:^5.4.5"
     typescript-remix-routes-plugin: "npm:^1.0.1"
@@ -15322,6 +15319,8 @@ __metadata:
     typescript-remix-routes-plugin: "npm:^1.0.1"
   dependenciesMeta:
     "@nx/jest@17.1.3":
+      unplugged: true
+    cypress@13.12.0:
       unplugged: true
     prettier@3.3.2:
       unplugged: true
@@ -17149,7 +17148,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:^0.7.0, source-map@npm:^0.7.3":
+"source-map@npm:^0.7.0, source-map@npm:^0.7.3, source-map@npm:^0.7.4":
   version: 0.7.4
   resolution: "source-map@npm:0.7.4"
   checksum: 10c0/dc0cf3768fe23c345ea8760487f8c97ef6fca8a73c83cd7c9bf2fde8bc2c34adb9c0824d6feb14bc4f9e37fb522e18af621543f1289038a66ac7586da29aa7dc
@@ -17959,6 +17958,22 @@ __metadata:
   bin:
     ts-jest: cli.js
   checksum: 10c0/5c1baf4d23342e138745d6283ae530b07957b779b103abc99fd6713e1fd7fc65d4a4638695d5a76e177f78c46c80ec53598b365f245997db5d3d00617940bf87
+  languageName: node
+  linkType: hard
+
+"ts-loader@npm:^9.5.1":
+  version: 9.5.1
+  resolution: "ts-loader@npm:9.5.1"
+  dependencies:
+    chalk: "npm:^4.1.0"
+    enhanced-resolve: "npm:^5.0.0"
+    micromatch: "npm:^4.0.0"
+    semver: "npm:^7.3.4"
+    source-map: "npm:^0.7.4"
+  peerDependencies:
+    typescript: "*"
+    webpack: ^5.0.0
+  checksum: 10c0/7dc1e3e5d3d032b6ef27836032f02c57077dfbcdf5817cbbc16b7b8609e7ed1d0ec157a03eaac07960161d8ad4a9e030c4d6722fe33540cf6ee75156c7f9c33d
   languageName: node
   linkType: hard
 

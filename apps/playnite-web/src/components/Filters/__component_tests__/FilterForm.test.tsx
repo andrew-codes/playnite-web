@@ -1,5 +1,5 @@
-import FilterForm from '../FilterForm'
 import React from 'react'
+import FilterForm from '../FilterForm'
 
 describe('FilterForm', () => {
   it('should render', () => {

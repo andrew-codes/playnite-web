@@ -1,26 +1,13 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "baseUrl": "../node_modules",
+    "baseUrl": ".",
     "types": [
-      "cypress",
+      "@types/cypress",
       "@types/node",
       "@types/react"
     ],
-    "outDir": "dist",
-    "jsx": "react",
-    "module": "ESNext"
+    "jsx": "react"
   },
-  "include": [
-    "src/**/*.js",
-    "src/**/*.ts",
-    "src/**/*.jsx",
-    "src/**/*.tsx",
-    "*.js",
-    "*.ts",
-    "cypress.config.js",
-    "cypress/**/*.js",
-    "cypress/**/*.ts"
-  ],
   "extends": "../tsconfig.json"
 }
