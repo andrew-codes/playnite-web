@@ -8,6 +8,7 @@
   - [Setup: Directly on Local Machine](#setup-directly-on-local-machine)
     - [Directly: Required Software](#directly-required-software)
     - [Directly: Preparing Codebase](#directly-preparing-codebase)
+  - [Runninng Locally](#runninng-locally)
 
 ## Overview
 
@@ -38,10 +39,10 @@ Install the following software on your local development machine:
 2. Clone your forked repo to your local development machine.
 3. Open the repo in vscode.
 4. Ensure your XServer application is running (if running Cypress tests).
-    - Ensure your XServer is configured to Authenticate and Allow Connections from network clients
+   - Ensure your XServer is configured to Authenticate and Allow Connections from network clients
 5. Once in vscode, Devcontainers: Rebuild and Reopen in container.
-    - This can be done via the command palette (`Cmd + Shift + P`/`Ctrl + Shift + P`) and typing in `Rebuild and reopen in container`.
-    - This will build a docker image based on the repo's `.devcontainer/Dockerfile`, start, and then open the repo in that container.
+   - This can be done via the command palette (`Cmd + Shift + P`/`Ctrl + Shift + P`) and typing in `Rebuild and reopen in container`.
+   - This will build a docker image based on the repo's `.devcontainer/Dockerfile`, start, and then open the repo in that container.
 
 Note that MongoDB and Mosquitto (MQTT) are already setup and installed for localhost when using a devcontainer. See the `./local.env` file for their connection details.
 
@@ -56,14 +57,15 @@ Install the following software on your local development machine:
 3. [vscode](https://code.visualstudio.com/Download)
 4. [Docker](https://www.docker.com/products/docker-desktop/) (for Mongodb and MQTT dependencies)
 5. [Node.js@>=20.9.0](https://nodejs.org/en/download/package-manager) (recommend using `nvm` to manage Node.js installations)
-    - [nvm for OSX](https://github.com/nvm-sh/nvm)
-    - [nvm for Windows](https://github.com/coreybutler/nvm-windows)
+   - [nvm for OSX](https://github.com/nvm-sh/nvm)
+   - [nvm for Windows](https://github.com/coreybutler/nvm-windows)
 6. [yarn@^4.0.0](https://yarnpkg.com/getting-started)
 7. MQTT server (optional, only used for updating game db from Plugin or publishing commands for remote control).
-    - recommend [Eclipse Mosquitto](https://mosquitto.org/) Docker image.
+   - recommend [Eclipse Mosquitto](https://mosquitto.org/) Docker image.
 8. MongoDB `games` database.
-    - recommend using a Docker image.
-    - repo contains seed data for a sample games database:
+   - recommend using a Docker image.
+   - repo contains seed data for a sample games database and can be restored via `mongorestore --nsInclude games.* ./.data/games`
+     - or use the below snippet if running via Docker:
 
 ```bash
 # Run from root of repo
@@ -97,3 +99,12 @@ fi
 3. Open the repo in vscode.
 4. Ensure MQTT is running
 5. Ensure database is running
+
+## Runninng Locally
+
+| Application      | Command                                             | Notes                                                                                                                                                                                    |
+| :--------------- | :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Playnite-Web App | `yarn nx run playnite-web-app:start`                | Run Playnite-Web application locally. Navigate to [http://localhost:3000](http://localhost:3000) in a browser. Environment variables are pulled from `./apps/game-db-updater/local.env`. |
+| Playnite-Web App | `yarn nx run playnite-web-app:test/components`      | Run component tests for development.                                                                                                                                                     |
+| game-db-updater  | `yarn nx run playnite-web-game-db-updater:start`    | Run game-db-updater locally. Environment variables are pulled from `./apps/game-db-updater/local.env`.                                                                                   |
+| game-db-updater  | `yarn nx run playnite-web-game-db-updater:test/e2e` | Run e2e tests.env`.                                                                                                                                                                      |
