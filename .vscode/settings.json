@@ -4,7 +4,7 @@
     "**/.pnp.*": true
   },
   "dotnet.defaultSolution": "PlayniteWebPlugin.sln",
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "prettier.prettierPath": ".yarn/unplugged/prettier-npm-3.3.2-efeafcaa4b/node_modules/prettier",
   "jest.jestCommandLine": "yarn jest",

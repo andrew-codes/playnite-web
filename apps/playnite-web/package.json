@@ -1,5 +1,6 @@
 {
   "name": "playnite-web-app",
+  "type": "module",
   "version": "4.0.1",
   "sideEffects": false,
   "dependencies": {
@@ -44,10 +45,10 @@
     "ua-parser-js": "^1.0.37"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.6",
-    "@babel/plugin-transform-typescript": "^7.24.7",
+    "@babel/core": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
-    "@babel/preset-react": "^7.23.6",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
     "@remix-pwa/dev": "2.0.31",
     "@remix-pwa/worker-runtime": "^2.0.8",
     "@remix-run/dev": "^2.4.0",
@@ -79,6 +80,7 @@
     "rimraf": "^5.0.5",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.0.5",
+    "ts-loader": "^9.5.1",
     "tslib": "^2.6.3",
     "typescript": "^5.4.5",
     "typescript-remix-routes-plugin": "^1.0.1",

@@ -3,20 +3,15 @@
   "compilerOptions": {
     "jsx": "react",
     "esModuleInterop": true,
+    "noEmit": false,
     "allowJs": true,
-    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "rootDir": "src",
     "types": [
-      "cypress"
+      "@types/cypress",
+      "@types/node",
+      "@types/react"
     ],
-    "module": "ESNext"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "*.tsx",
-    "*.ts",
-    "cypress.config.*",
-    "cypress/**/*.js",
-    "cypress/**/*.ts"
-  ]
 }
