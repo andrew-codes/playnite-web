@@ -9,8 +9,6 @@ echo -e "{
 corepack enable
 corepack prepare --activate yarn@^4.0.0
 
-yarn dlx cypress install
-
 set -o allexport
 . $PWD/local.env
 set +o allexport

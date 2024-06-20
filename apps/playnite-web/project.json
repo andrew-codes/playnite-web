@@ -24,7 +24,7 @@
     "test/components": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cypress open",
+        "command": "yarn cypress open --component",
         "cwd": "{projectRoot}"
       }
     },
