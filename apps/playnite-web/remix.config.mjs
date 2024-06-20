@@ -19,7 +19,7 @@ const config = {
   ignoredRouteFiles: ['**/.*'],
   publicPath: '/build/',
   serverBuildPath: 'build/index.js',
-  serverDependenciesToBundle: 'all',
+  // serverDependenciesToBundle: 'all',
   serverMinify: true,
 
   // PWA
