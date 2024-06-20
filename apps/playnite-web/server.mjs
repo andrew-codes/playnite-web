@@ -5,7 +5,7 @@ import createDebugger from 'debug'
 import dotenv from 'dotenv'
 import express from 'express'
 import path from 'path'
-import run from 'playnite-web-game-db-updater'
+// import run from 'playnite-web-game-db-updater'
 import * as build from './build/index.js'
 
 const debug = createDebugger('playnite-web/app/server')
@@ -36,4 +36,4 @@ app.listen(port, () => {
   debug(`App listening on http://localhost:${port}`)
 })
 
-run()
+// run()
