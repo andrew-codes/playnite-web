@@ -1,8 +1,5 @@
-import babelPluginTsTransform from '@babel/plugin-transform-typescript'
-import babelPresetEnv from '@babel/preset-env'
-import babelPresetReact from '@babel/preset-react'
-import { defineConfig } from 'cypress'
-import fs from 'fs'
+const { defineConfig } = require('cypress')
+const fs = require('fs')
 
 const config = {
   chromeWebSecurity: false,
@@ -29,18 +26,14 @@ const config = {
                 use: {
                   loader: 'babel-loader',
                   options: {
-                    presets: [babelPresetEnv, babelPresetReact],
-                    plugins: [babelPluginTsTransform],
+                    presets: ['@babel/preset-react'],
+                    plugins: ['@babel/plugin-transform-typescript'],
                   },
                 },
               },
             ],
           },
-          plugins: [
-            // new webpack.ProvidePlugin({
-            //   React: 'react',
-            // }),
-          ],
+          plugins: [],
         }
         return config
       },
@@ -85,4 +78,4 @@ const config = {
   },
 }
 
-export default defineConfig(config)
+module.exports = defineConfig(config)

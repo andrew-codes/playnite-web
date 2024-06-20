@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "types": [
+      "cypress"
+    ],
+    "module": "ESNext"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "*.tsx",
+    "*.ts",
+    "cypress.config.*",
+    "cypress/**/*.js",
+    "cypress/**/*.ts"
+  ]
+}
