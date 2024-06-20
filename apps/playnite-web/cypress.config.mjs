@@ -1,11 +1,11 @@
-const { defineConfig } = require('cypress')
-const fs = require('fs')
+import { defineConfig } from 'cypress'
+import fs from 'fs'
 
 const config = {
   chromeWebSecurity: false,
   viewportWidth: 1920,
   viewportHeight: 1080,
-  reporter: require.resolve('mocha-junit-reporter'),
+  reporter: 'mocha-junit-reporter',
   reporterOptions: {
     mochaFile: '.test-runs/functional-component-tests-[hash].xml',
   },
@@ -23,15 +23,25 @@ const config = {
             rules: [
               {
                 test: /\.?tsx?$/,
-                use: {
-                  loader: 'babel-loader',
-                  options: {
-                    presets: ['@babel/preset-react'],
-                    plugins: ['@babel/plugin-transform-typescript'],
-                  },
+                loader: 'babel-loader',
+                options: {
+                  presets: [
+                    '@babel/preset-env',
+                    ['@babel/preset-react', { typescript: true }],
+                    [
+                      '@babel/preset-typescript',
+                      {
+                        isTSX: true,
+                        allExtensions: true,
+                      },
+                    ],
+                  ],
                 },
               },
             ],
+          },
+          resolve: {
+            extensions: ['.ts', '.tsx', '.js', '.json'],
           },
           plugins: [],
         }
@@ -78,4 +88,4 @@ const config = {
   },
 }
 
-module.exports = defineConfig(config)
+export default defineConfig(config)
