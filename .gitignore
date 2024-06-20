@@ -2,6 +2,8 @@
 .data/mongodb
 node_modules
 
+.nx
+
 .nx/cache
 
 .dist
