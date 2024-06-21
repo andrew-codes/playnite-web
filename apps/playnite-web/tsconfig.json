@@ -14,4 +14,10 @@
       "@types/react"
     ],
   },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.js",
+    "src/**/*.jsx"
+  ],
 }
