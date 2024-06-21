@@ -4,15 +4,15 @@
   "version": "4.0.1",
   "devDependencies": {
     "@types/shelljs": "^0.8.15",
-    "cpy": "^11.0.0",
+    "cpy": "^11.0.1",
     "cpy-cli": "^5.0.0",
-    "esbuild": "^0.21.4",
-    "esbuild-register": "^3.4.2",
+    "esbuild": "^0.21.5",
+    "esbuild-register": "^3.5.0",
     "nx": "^19.3.0",
     "prettier": "^3.3.2",
-    "rimraf": "^5.0.5",
+    "rimraf": "^5.0.7",
     "shelljs": "^0.8.5",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.2",
     "versioning": "workspace:*"
   }
 }
