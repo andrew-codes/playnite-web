@@ -1,5 +1,5 @@
 import 'cypress-plugin-tab'
-import { mount } from 'cypress/react'
+import { mount } from 'cypress/react18'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
