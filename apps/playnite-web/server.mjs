@@ -31,6 +31,7 @@ async function run() {
             server: { middlewareMode: true },
           }),
         )
+  console.log(viteDevServer)
   app.use(
     viteDevServer ? viteDevServer.middlewares : express.static('build/client'),
   )
@@ -39,7 +40,7 @@ async function run() {
 
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
-    : await import('./build/server/index.mjs')
+    : await import('./build/server/index')
   app.all('*', createRequestHandler({ build }))
 
   app.listen(port, () => {
