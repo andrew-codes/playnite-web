@@ -1,6 +1,6 @@
 {
   "name": "playnite-web-app-hass-addon",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "dependencies": {
     "playnite-web-app": "workspace:*"
   },
