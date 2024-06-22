@@ -1,4 +1,4 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles'
+import * as styles from '@mui/material/styles'
 import mediaQuery from 'css-mediaquery'
 
 declare module '@mui/material/styles' {
@@ -27,8 +27,8 @@ const ssrMatchMedia =
 const theme = (
   deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown' = 'unknown',
 ) => {
-  return responsiveFontSizes(
-    createTheme({
+  return styles.responsiveFontSizes(
+    styles.createTheme({
       palette: {
         mode: 'dark',
         background: {
