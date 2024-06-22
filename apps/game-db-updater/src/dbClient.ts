@@ -19,25 +19,20 @@ const getDbClient = async (
 ): Promise<MongoClient> => {
   const debug = createDebugger('playnite-web/game-db-updater/mqttClient')
 
+  const options = connectionOptions ?? {}
+
   if (!client) {
-    const url =
-      'url' in connectionOptions ? connectionOptions.url : process.env.DB_URL
+    const url = 'url' in options ? options.url : process.env.DB_URL
     const host =
-      'host' in connectionOptions
-        ? connectionOptions.host
-        : process.env.DB_HOST ?? 'localhost'
+      'host' in options ? options.host : process.env.DB_HOST ?? 'localhost'
     const port =
-      'port' in connectionOptions
-        ? connectionOptions.port
+      'port' in options
+        ? options.port
         : parseInt(process.env.DB_PORT ?? '27017')
     const username =
-      'username' in connectionOptions
-        ? connectionOptions.username
-        : process.env.DB_USERNAME
+      'username' in options ? options.username : process.env.DB_USERNAME
     const password =
-      'password' in connectionOptions
-        ? connectionOptions.password
-        : process.env.DB_PASSWORD
+      'password' in options ? options.password : process.env.DB_PASSWORD
 
     if (url) {
       debug(
