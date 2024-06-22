@@ -38,9 +38,10 @@ Install the following software on your local development machine:
 1. [Fork the playnite-web repo](https://github.com/andrew-codes/playnite-web/fork)
 2. Clone your forked repo to your local development machine.
 3. Open the repo in vscode.
-4. Ensure your XServer application is running (if running Cypress tests).
+4. Run `yarn`
+5. Ensure your XServer application is running (if running Cypress tests).
    - Ensure your XServer is configured to Authenticate and Allow Connections from network clients
-5. Once in vscode, Devcontainers: Rebuild and Reopen in container.
+6. Once in vscode, Devcontainers: Rebuild and Reopen in container.
    - This can be done via the command palette (`Cmd + Shift + P`/`Ctrl + Shift + P`) and typing in `Rebuild and reopen in container`.
    - This will build a docker image based on the repo's `.devcontainer/Dockerfile`, start, and then open the repo in that container.
 
@@ -97,8 +98,9 @@ fi
 1. [Fork the playnite-web repo](https://github.com/andrew-codes/playnite-web/fork)
 2. Clone your forked repo to your local development machine.
 3. Open the repo in vscode.
-4. Ensure MQTT is running
-5. Ensure database is running
+4. Run `yarn`
+5. Ensure MQTT is running
+6. Ensure database is running
 
 ## Runninng Locally
 

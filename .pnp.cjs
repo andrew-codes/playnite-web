@@ -19015,6 +19015,7 @@ const RAW_RUNTIME_STATE =
           ["debug", "virtual:7aacf32ea01f1c758a9d0d4a25d700b3bcfff7375ecb0894ff8a92d28210f719c44b175d3a338863ee060df8ae035d511d1d0e352a798355f8d44e456f2f0ced#npm:4.3.5"],\
           ["dotenv", "npm:16.4.5"],\
           ["esbuild", "npm:0.21.5"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
           ["express", "npm:4.19.2"],\
           ["framer-motion", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:11.2.11"],\
           ["glob", "npm:10.4.2"],\
