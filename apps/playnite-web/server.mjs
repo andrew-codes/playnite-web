@@ -4,7 +4,7 @@ import createDebugger from 'debug'
 import dotenv from 'dotenv'
 import express from 'express'
 import path from 'node:path'
-// import run from 'playnite-web-game-db-updater'
+import gameDbUpdaterRun from 'playnite-web-game-db-updater'
 
 const debug = createDebugger('playnite-web/app/server')
 
@@ -49,4 +49,4 @@ async function run() {
 }
 
 run()
-// run()
+gameDbUpdaterRun()
