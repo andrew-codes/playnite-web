@@ -1,6 +1,6 @@
 {
   "version": "4.0.1",
-  "packages": ["apps/*", "hass-*"],
+  "packages": ["apps/*", "hass-*", "libs/**/*"],
   "npmClient": "yarn",
   "command": {
     "version": {
