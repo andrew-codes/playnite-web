@@ -11,8 +11,9 @@
     "mongodb": "^6.7.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.14.7",
+    "@types/node": "^20.14.8",
     "@types/shelljs": "^0.8.15",
     "cpy": "^11.0.1",
     "cpy-cli": "^5.0.0",
@@ -23,7 +24,7 @@
     "jest-config": "29.7.0",
     "jest-when": "^3.6.0",
     "nodemon": "^2.0.22",
-    "nx": "^19.3.0",
+    "nx": "^19.3.1",
     "prettier": "^3.3.2",
     "rimraf": "^5.0.7",
     "shelljs": "^0.8.5",

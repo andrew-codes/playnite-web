@@ -1,23 +1,25 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
     "esModuleInterop": true,
     "noEmit": false,
     "allowJs": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
-    "rootDir": "src",
+    "moduleResolution": "Bundler",
     "types": [
       "@types/cypress",
       "@types/node",
-      "@types/react"
+      "@types/react",
+      "vite/client",
+      "@vite-pwa/remix/remix-sw"
     ],
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.js",
-    "src/**/*.jsx"
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "build/server/index.mjs"
   ],
 }

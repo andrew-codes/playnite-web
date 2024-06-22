@@ -6,7 +6,7 @@
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf server.production.js .dist _packaged .test-runs build public/build",
+        "command": "yarn rimraf vite.config.ts.* server.production.js .dist _packaged .test-runs build",
         "cwd": "{projectRoot}"
       }
     },
@@ -14,11 +14,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "commands": [
-          "yarn remix-routes -w",
-          "yarn cross-env DEBUG='playnite-web-app/*' yarn remix dev -c \"node server.mjs\"",
-          "yarn remix-pwa dev"
-        ]
+        "command": "yarn cross-env DEBUG='playnite-web/*' yarn node ./server.mjs"
       }
     },
     "test/components": {
@@ -28,12 +24,17 @@
         "cwd": "{projectRoot}"
       }
     },
+    "test/components/ci": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn cross-env CI=true yarn cypress run --component",
+        "cwd": "{projectRoot}"
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "yarn remix-routes && yarn remix build && yarn remix-pwa build && yarn esbuild server.mjs --bundle --minify --outfile=server.production.js --platform=node --target=node20"
-        ],
+        "command": "yarn remix vite:build",
         "cwd": "{projectRoot}"
       }
     },
