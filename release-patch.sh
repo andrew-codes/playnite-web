@@ -1,1 +1,1 @@
-yarn lerna version --no-private patch && yarn nx run-many --target=version --all&& git add . && git commit --amend --no-edit && cat lerna.json | jq '.version' | xargs -I {} git tag -d "v{}" && cat lerna.json | jq '.version' | xargs -I {} git tag "v{}"
+yarn lerna version --no-private patch && yarn nx run-many --target=version --all && yarn && git add . && git commit --amend --no-edit && cat lerna.json | jq '.version' | xargs -I {} git tag -d "v{}" && cat lerna.json | jq '.version' | xargs -I {} git tag "v{}"
