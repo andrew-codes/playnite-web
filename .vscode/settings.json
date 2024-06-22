@@ -35,5 +35,9 @@
     "revealOn": "run",
     "revealWithFocus": "test-results",
     "clearOnRun": "none"
+  },
+  "jest.runMode": {
+    "type": "on-demand",
+    "deferred": true
   }
 }
