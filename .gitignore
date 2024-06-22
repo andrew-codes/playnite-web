@@ -28,3 +28,6 @@ apps/playnite-web/vite.config.ts*
 
 .devcontainer/.devpod-internal/
 apps/PlayniteWebPlugin/src/extension.yaml
+
+.yarn/**/*darwin*
+.yarn/**/*linux*
