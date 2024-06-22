@@ -62,17 +62,12 @@ jobs:
         id: node_version
         with:
           cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
-      - name: Extract yarn version from package.json
-        uses: sergeysova/jq-action@v2
-        id: yarn_version
-        with:
-          cmd: jq .engines.yarn package.json -r | sed -e 's/"//g'
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '${{ steps.node_version.outputs.value }}'
       - name: Use Yarn
-        run: corepack enable && corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+        run: corepack enable
       - name: Install deps
         run: yarn
       - name: Log in to the Container registry
