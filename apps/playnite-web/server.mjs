@@ -9,10 +9,13 @@ async function run() {
     register()
   }
 
+  debug('Starting Playnite Web applications...')
+  debug('Starting Playnite Web app...')
   const app = await import('./app.mjs')
   app.default()
 
   try {
+    debug('Starting Playnite Web game-db-updater...')
     const gameDbUpdater = await import('playnite-web-game-db-updater')
     gameDbUpdater.default.default()
   } catch (error) {
