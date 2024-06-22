@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "command": "yarn cross-env DEBUG='playnite-web/*' yarn node ./server.mjs"
+        "command": "yarn cross-env DEBUG='playnite-web/*' yarn node --loader esbuild-register/loader --require esbuild-register ./server.ts"
       }
     },
     "test/components": {
@@ -34,7 +34,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn remix vite:build && yarn esbuild server.mjs --bundle --minify --outfile=server.production.js --platform=node --target=node20 --define:process.env.NODE_ENV=\\\"production\\\"",
+        "command": "yarn remix vite:build && yarn esbuild server.ts --bundle --minify --outfile=server.production.js --platform=node --target=node20 --define:process.env.NODE_ENV=\\\"production\\\"",
         "cwd": "{projectRoot}"
       }
     },
