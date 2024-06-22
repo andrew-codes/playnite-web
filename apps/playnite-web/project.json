@@ -34,7 +34,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn remix vite:build",
+        "command": "yarn remix vite:build && yarn esbuild server.mjs --bundle --minify --outfile=server.production.js --platform=node --target=node20 --define:process.env.NODE_ENV=\\\"production\\\"",
         "cwd": "{projectRoot}"
       }
     },

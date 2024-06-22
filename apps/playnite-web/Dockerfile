@@ -4,6 +4,4 @@ LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-w
 WORKDIR /opt/playnite-web-app
 COPY _packaged/ .
 
-RUN npm install --omit=dev
-
-ENTRYPOINT ["node", "server.mjs" ]
+ENTRYPOINT ["node", "server.production.js" ]
