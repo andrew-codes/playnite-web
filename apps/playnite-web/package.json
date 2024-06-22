@@ -1,6 +1,7 @@
 {
   "name": "playnite-web-app",
   "version": "4.0.1",
+  "type": "module",
   "sideEffects": false,
   "dependencies": {
     "@emotion/cache": "^11.11.0",
