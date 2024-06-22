@@ -38,6 +38,16 @@ const config = {
                   ],
                 },
               },
+              {
+                test: /\.tsx?/,
+                loader: 'ts-loader',
+                options: {
+                  transpileOnly: true,
+                  compilerOptions: {
+                    jsx: 'react-jsx',
+                  },
+                },
+              },
             ],
           },
           resolve: {

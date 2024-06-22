@@ -1,5 +1,4 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
-import { LiveReload, useSWEffect } from '@remix-pwa/sw'
 import { LinksFunction, LoaderFunctionArgs, json } from '@remix-run/node'
 import {
   Links,
@@ -81,8 +80,6 @@ const Head = createHead(() => (
 ))
 
 const App: FC<{}> = () => {
-  useSWEffect()
-
   const { device, user } = useLoaderData<{
     device: {
       type: 'desktop' | 'tablet' | 'mobile'
@@ -161,7 +158,6 @@ const App: FC<{}> = () => {
       </ThemeProvider>
       <ScrollRestoration />
       <Scripts />
-      <LiveReload />
     </>
   )
 }

@@ -7,13 +7,12 @@
       "@types/node",
       "@types/react"
     ],
-    "jsx": "react"
   },
   "extends": "../tsconfig.json",
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.js",
-    "src/**/*.jsx"
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx"
   ],
 }

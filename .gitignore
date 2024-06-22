@@ -23,6 +23,8 @@ apps/playnite-web/build
 apps/playnite-web/public/build
 apps/playnite-web/public/entry.worker.js
 apps/playnite-web/server.production.js
+apps/playnite-web/vite.config.ts*
+!apps/playnite-web/vite.config.ts
 
 .devcontainer/.devpod-internal/
 apps/PlayniteWebPlugin/src/extension.yaml

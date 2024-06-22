@@ -1,12 +1,10 @@
 import { createRequestHandler } from '@remix-run/express'
-import { broadcastDevReady } from '@remix-run/node'
 import compression from 'compression'
 import createDebugger from 'debug'
 import dotenv from 'dotenv'
 import express from 'express'
-import path from 'path'
+import path from 'node:path'
 // import run from 'playnite-web-game-db-updater'
-import * as build from './build/index.js'
 
 const debug = createDebugger('playnite-web/app/server')
 
@@ -19,21 +17,35 @@ dotenv.config({
   override: true,
 })
 
-const { PORT } = process.env
-const port = PORT ? parseInt(PORT, 10) : 3000
+async function run() {
+  const { PORT } = process.env
+  const port = PORT ? parseInt(PORT, 10) : 3000
 
-const app = express()
-app.use(express.static('public'))
+  const app = express()
 
-app.use(compression())
-app.all('*', createRequestHandler({ build }))
+  const viteDevServer =
+    process.env.NODE_ENV === 'production'
+      ? null
+      : await import('vite').then((vite) =>
+          vite.createServer({
+            server: { middlewareMode: true },
+          }),
+        )
+  app.use(
+    viteDevServer ? viteDevServer.middlewares : express.static('build/client'),
+  )
 
-app.listen(port, () => {
-  if (process.env.NODE_ENV === 'development') {
-    debug('sending dev-ready')
-    broadcastDevReady(build)
-  }
-  debug(`App listening on http://localhost:${port}`)
-})
+  app.use(compression())
 
+  const build = viteDevServer
+    ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
+    : await import('./build/server/index.mjs')
+  app.all('*', createRequestHandler({ build }))
+
+  app.listen(port, () => {
+    debug(`App listening on http://localhost:${port}`)
+  })
+}
+
+run()
 // run()
