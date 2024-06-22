@@ -20,7 +20,7 @@ const computeUrl = (
   connectionOptions?: DbConnectionOptions | DbConnectionString,
 ): string => {
   if (!connectionOptions) {
-    return `mongodb://${process.env.DB_HOST ?? 'localhost'}:27017`
+    return `mongodb://${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? '27017'}`
   }
   if ('url' in connectionOptions) {
     return connectionOptions.url
