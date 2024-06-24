@@ -10684,12 +10684,12 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:2e71ccda0bb8e9b150eba16d9555040ae3f5a03be41bbaba1c15a7310399806e2c8e36c9e19d1b8015c6bb7294dccf844594ece9e99a12b6d5722662eca0b9b2#npm:3.2.7", {\
-        "packageLocation": "./.yarn/__virtual__/debug-virtual-40e471c348/0/cache/debug-npm-3.2.7-754e818c7a-37d96ae42c.zip/node_modules/debug/",\
+      ["virtual:33f4db03df5cb0a9b65cd83d4a160375f85a7e77735be4fe22ba0f32d7046e6ea2dc2852727ba6ed8ca64f8738f7114c71efc960773f2df5deb72715fe30d8b5#npm:4.3.5", {\
+        "packageLocation": "./.yarn/__virtual__/debug-virtual-d237ae8253/0/cache/debug-npm-4.3.5-b5001f59b7-082c375a2b.zip/node_modules/debug/",\
         "packageDependencies": [\
-          ["debug", "virtual:2e71ccda0bb8e9b150eba16d9555040ae3f5a03be41bbaba1c15a7310399806e2c8e36c9e19d1b8015c6bb7294dccf844594ece9e99a12b6d5722662eca0b9b2#npm:3.2.7"],\
+          ["debug", "virtual:33f4db03df5cb0a9b65cd83d4a160375f85a7e77735be4fe22ba0f32d7046e6ea2dc2852727ba6ed8ca64f8738f7114c71efc960773f2df5deb72715fe30d8b5#npm:4.3.5"],\
           ["@types/supports-color", null],\
-          ["ms", "npm:2.1.3"],\
+          ["ms", "npm:2.1.2"],\
           ["supports-color", "npm:5.5.0"]\
         ],\
         "packagePeers": [\
@@ -17678,17 +17678,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["nodemon", [\
-      ["npm:2.0.22", {\
-        "packageLocation": "./.yarn/unplugged/nodemon-npm-2.0.22-2e71ccda0b/node_modules/nodemon/",\
+      ["npm:3.1.4", {\
+        "packageLocation": "./.yarn/unplugged/nodemon-npm-3.1.4-33f4db03df/node_modules/nodemon/",\
         "packageDependencies": [\
-          ["nodemon", "npm:2.0.22"],\
+          ["nodemon", "npm:3.1.4"],\
           ["chokidar", "npm:3.5.3"],\
-          ["debug", "virtual:2e71ccda0bb8e9b150eba16d9555040ae3f5a03be41bbaba1c15a7310399806e2c8e36c9e19d1b8015c6bb7294dccf844594ece9e99a12b6d5722662eca0b9b2#npm:3.2.7"],\
+          ["debug", "virtual:33f4db03df5cb0a9b65cd83d4a160375f85a7e77735be4fe22ba0f32d7046e6ea2dc2852727ba6ed8ca64f8738f7114c71efc960773f2df5deb72715fe30d8b5#npm:4.3.5"],\
           ["ignore-by-default", "npm:1.0.1"],\
           ["minimatch", "npm:3.1.2"],\
           ["pstree.remy", "npm:1.1.8"],\
-          ["semver", "npm:5.7.2"],\
-          ["simple-update-notifier", "npm:1.1.0"],\
+          ["semver", "npm:7.5.4"],\
+          ["simple-update-notifier", "npm:2.0.0"],\
           ["supports-color", "npm:5.5.0"],\
           ["touch", "npm:3.1.0"],\
           ["undefsafe", "npm:2.0.5"]\
@@ -19102,7 +19102,7 @@ const RAW_RUNTIME_STATE =
           ["jest-when", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:3.6.0"],\
           ["lodash", "npm:4.17.21"],\
           ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.7.0"],\
-          ["nodemon", "npm:2.0.22"],\
+          ["nodemon", "npm:3.1.4"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.3.1"],\
           ["prettier", "npm:3.3.2"],\
           ["rimraf", "npm:5.0.7"],\
@@ -20987,13 +20987,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:7.0.0", {\
-        "packageLocation": "./.yarn/cache/semver-npm-7.0.0-218e8c00ca-7fd341680a.zip/node_modules/semver/",\
-        "packageDependencies": [\
-          ["semver", "npm:7.0.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:7.5.4", {\
         "packageLocation": "./.yarn/cache/semver-npm-7.5.4-c4ad957fcd-5160b06975.zip/node_modules/semver/",\
         "packageDependencies": [\
@@ -21294,11 +21287,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["simple-update-notifier", [\
-      ["npm:1.1.0", {\
-        "packageLocation": "./.yarn/cache/simple-update-notifier-npm-1.1.0-92878518a3-3cbbbc71a5.zip/node_modules/simple-update-notifier/",\
+      ["npm:2.0.0", {\
+        "packageLocation": "./.yarn/cache/simple-update-notifier-npm-2.0.0-4d6e5dba61-2a00bd03bf.zip/node_modules/simple-update-notifier/",\
         "packageDependencies": [\
-          ["simple-update-notifier", "npm:1.1.0"],\
-          ["semver", "npm:7.0.0"]\
+          ["simple-update-notifier", "npm:2.0.0"],\
+          ["semver", "npm:7.5.4"]\
         ],\
         "linkType": "HARD"\
       }]\
