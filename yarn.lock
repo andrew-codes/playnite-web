@@ -16737,8 +16737,8 @@ __metadata:
   linkType: hard
 
 "remix-routes@npm:^1.7.5":
-  version: 1.7.5
-  resolution: "remix-routes@npm:1.7.5"
+  version: 1.7.6
+  resolution: "remix-routes@npm:1.7.6"
   dependencies:
     chokidar: "npm:^3.5.2"
     ejs: "npm:^3.1.9"
@@ -16748,7 +16748,7 @@ __metadata:
     typescript-remix-routes-plugin: "npm:1.0.1"
   bin:
     remix-routes: lib/cli.js
-  checksum: 10c0/9e03b51de212ee44f3d91cfd257e2c6fbe62c41418866c3d18a1df09ab93cab8a4529daf76c5edcb7292b438a531df75cbc2561090b8d516d5efeaba372fb0ec
+  checksum: 10c0/ab04399a2689eb6f7f239c7a648a9759434cd7782049250190795e9ba14f3714c7efe910fa14f7687b19293cb636e0c178b46ddef3b7b5edfe763fe805756018
   languageName: node
   linkType: hard
 
