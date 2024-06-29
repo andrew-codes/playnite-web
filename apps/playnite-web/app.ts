@@ -4,7 +4,7 @@ import createDebugger from 'debug'
 import dotenv from 'dotenv'
 import express from 'express'
 import path from 'node:path'
-
+import api from './src/server/api'
 const debug = createDebugger('playnite-web/app/server')
 
 dotenv.config({
@@ -20,7 +20,7 @@ async function run() {
   const { PORT } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
 
-  const app = express()
+  let app = express()
 
   const viteDevServer =
     process.env.NODE_ENV === 'production'
@@ -36,9 +36,13 @@ async function run() {
 
   app.use(compression())
 
+  const signingKey = process.env.SECRET ?? 'secret'
+  app = api(signingKey)(app)
+
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
     : await import('./build/server/index')
+
   app.all('*', createRequestHandler({ build }))
 
   app.listen(port, () => {

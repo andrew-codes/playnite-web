@@ -21,7 +21,6 @@
     "**/*.js",
     "**/*.jsx",
     "build/server/index.mjs",
-    "server.ts",
-    "server.mjs"
+    "*.mjs",
   ],
 }
