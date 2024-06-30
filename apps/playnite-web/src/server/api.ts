@@ -2,9 +2,9 @@ import { Express } from 'express'
 import graphql from './graphql'
 
 const server =
-  (secret: string) =>
+  (route: string, secret: string) =>
   (app: Express): Express => {
-    app.use('/api', graphql(secret, '/api'))
+    app.all(route, graphql(secret, route))
 
     return app
   }

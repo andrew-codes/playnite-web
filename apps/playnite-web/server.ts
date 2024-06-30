@@ -1,6 +1,17 @@
 import createDebugger from 'debug'
+import dotenv from 'dotenv'
+import path from 'path'
 import gameDbUpdater from 'playnite-web-game-db-updater'
 import app from './app'
+
+dotenv.config({
+  path: path.join(process.cwd(), 'local.env'),
+  override: true,
+})
+dotenv.config({
+  path: path.join(process.cwd(), 'overrides.env'),
+  override: true,
+})
 
 const debug = createDebugger('playnite-web/app/server')
 

@@ -14,7 +14,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "command": "yarn cross-env NODE_ENV=development yarn node --experimental-json-modules buildServer.js && yarn cross-env DEBUG='playnite-web/*' yarn node server.development.js"
+        "command": "yarn cross-env NODE_ENV=development DEBUG='playnite-web/*' yarn node --experimental-json-modules scripts/utils/startDevServer.js"
       }
     },
     "test/components": {
@@ -34,7 +34,7 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn remix vite:build && yarn cross-env NODE_ENV=production yarn node buildServer.js",
+        "command": "yarn remix vite:build && yarn cross-env NODE_ENV=production yarn node scripts/utils/buildServer.js",
         "cwd": "{projectRoot}"
       }
     },

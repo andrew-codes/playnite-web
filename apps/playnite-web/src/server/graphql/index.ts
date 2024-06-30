@@ -1,14 +1,20 @@
 import { useCSRFPrevention } from '@graphql-yoga/plugin-csrf-prevention'
 import { useJWT } from '@graphql-yoga/plugin-jwt'
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
+import createDebugger from 'debug'
 import { NextFunction, Request, Response } from 'express'
 import { createYoga } from 'graphql-yoga'
 import helmet from 'helmet'
+import createSchema from './schema'
+
+const debug = createDebugger('playnite-web/server/graphql')
 
 const graphql =
   (signingKey: string, endpoint: string) =>
   async (req: Request, resp: Response, next: NextFunction) => {
+    const schema = createSchema({ signingKey, domain: 'localhost' })
     const yoga = createYoga({
+      schema,
       graphqlEndpoint: endpoint,
       cors: {
         origin: ['http://localhost:3000'],
