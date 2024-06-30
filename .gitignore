@@ -33,3 +33,6 @@ apps/PlayniteWebPlugin/src/extension.yaml
 
 .yarn/**/*darwin*
 .yarn/**/*linux*
+
+**/cypress/videos/
+**/cypress/screenshots/

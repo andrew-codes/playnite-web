@@ -5,10 +5,6 @@ const config = {
   chromeWebSecurity: false,
   viewportWidth: 1920,
   viewportHeight: 1080,
-  reporter: 'mocha-junit-reporter',
-  reporterOptions: {
-    mochaFile: '.test-runs/functional-component-tests-[hash].xml',
-  },
   component: {
     specPattern: '**/__component_tests__/**/*.test.tsx',
     excludeSpecPattern: [],

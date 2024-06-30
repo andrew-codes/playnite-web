@@ -16,6 +16,10 @@
       "dependsOn": ["test/unit/restore", "test/unit/build"],
       "cache": true
     },
+    "test/unit/ci": {
+      "dependsOn": ["test/unit/restore", "test/unit/build"],
+      "cache": true
+    },
     "test/unit/restore": {
       "dependsOn": ["build/restore"],
       "cache": false
