@@ -1,5 +1,5 @@
-import { defineConfig } from 'cypress'
-import fs from 'fs'
+const { defineConfig } = require('cypress')
+const fs = require('fs')
 
 const config = {
   chromeWebSecurity: false,
@@ -98,4 +98,4 @@ const config = {
   },
 }
 
-export default defineConfig(config)
+module.exports = defineConfig(config)
