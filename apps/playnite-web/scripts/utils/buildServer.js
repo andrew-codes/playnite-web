@@ -5,9 +5,7 @@ build({
   entryPoints: ['server.ts'],
   bundle: true,
   minify: true,
-  external: ['lightningcss', 'esbuild'].concat(
-    Object.keys(pkg.devDependencies),
-  ),
+  external: ['lightningcss', 'esbuild'],
   outfile: `server.${process.env.NODE_ENV ?? 'development'}.js`,
   platform: 'node',
   sourcemap: process.env.NODE_ENV !== 'production',
