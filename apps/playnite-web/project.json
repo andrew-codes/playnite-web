@@ -31,6 +31,20 @@
         "cwd": "{projectRoot}"
       }
     },
+    "test/e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cypress open --e2e'",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test/e2e/ci": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cypress run --e2e'",
+        "cwd": "{projectRoot}"
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/build", "{projectRoot}/server.production.js"],
