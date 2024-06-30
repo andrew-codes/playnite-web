@@ -3,9 +3,7 @@ import { getDockerTags } from 'versioning'
 import pkg from '../package.json' assert { type: 'json' }
 
 async function run() {
-  sh.mkdir('-p', '_packaged/build')
-  sh.cp('server.production.js', '_packaged/')
-  sh.cp('-R', 'build/client', '_packaged/build/')
+  await import('./packageFiles')
 
   const { REGISTRY, OWNER, GITHUB_REF, PLATFORM } = process.env
 
