@@ -33,6 +33,7 @@
     },
     "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build", "{projectRoot}/server.production.js"],
       "options": {
         "command": "yarn remix vite:build && yarn cross-env NODE_ENV=production yarn node scripts/utils/buildServer.js",
         "cwd": "{projectRoot}"
@@ -40,9 +41,10 @@
     },
     "package": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/_packaged"],
       "options": {
         "commands": [
-          "yarn node --experimental-json-modules scripts/package.js"
+          "yarn node --require esbuild-register --experimental-json-modules scripts/package.ts"
         ],
         "cwd": "{projectRoot}"
       }
@@ -51,7 +53,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn node --experimental-json-modules scripts/publish.js"
+          "yarn node --require esbuild-register --experimental-json-modules scripts/publish.ts"
         ],
         "cwd": "{projectRoot}"
       }
