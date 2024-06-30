@@ -1,5 +1,6 @@
 .DS_Store
 .data/mongodb
+.data/mongodb-e2e
 node_modules
 
 .nx
