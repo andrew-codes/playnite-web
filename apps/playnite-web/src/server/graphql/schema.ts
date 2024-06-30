@@ -2,7 +2,7 @@ import createDebugger from 'debug'
 import { GraphQLError } from 'graphql'
 import { createSchema } from 'graphql-yoga'
 import jwt from 'jsonwebtoken'
-import { getUserByLogin, User } from '../user'
+import { getUserById, getUserByLogin, User } from '../user'
 
 const debug = createDebugger('playnite-web/graphql/schema')
 
@@ -14,26 +14,28 @@ type SchemaOptions = {
 const schema = ({ signingKey, domain }: SchemaOptions) => {
   return createSchema({
     typeDefs: `
+type User {
+id: ID!
+name: String!
+isAuthenticated: Boolean!
+}
+
     type Query {
       me: User
     }
 
     type Mutation {
       login(username: String!, password: String!, rememberMe: Boolean!): String
-      logout(): String
+      logout: String
     }
   `,
-
     resolvers: {
       Query: {
         me: (parent, args, ctx) => {
-          if (!ctx.jwt) {
-            return 'not authenticated'
-          }
+          // debug(ctx.jwt)
+          const user = getUserById('User:NULL')
 
-          debug(ctw.jwt)
-
-          return 'hello world'
+          return user
         },
       },
       Mutation: {

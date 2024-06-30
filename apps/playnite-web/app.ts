@@ -1,20 +1,9 @@
 import { createRequestHandler } from '@remix-run/express'
 import compression from 'compression'
 import createDebugger from 'debug'
-import dotenv from 'dotenv'
 import express from 'express'
-import path from 'node:path'
 import api from './src/server/api'
 const debug = createDebugger('playnite-web/app/server')
-
-dotenv.config({
-  path: path.join(process.cwd(), 'local.env'),
-  override: true,
-})
-dotenv.config({
-  path: path.join(process.cwd(), 'overrides.env'),
-  override: true,
-})
 
 async function run() {
   const { PORT } = process.env
@@ -37,13 +26,19 @@ async function run() {
   app.use(compression())
 
   const signingKey = process.env.SECRET ?? 'secret'
-  app = api(signingKey)(app)
+  app = api('/api', signingKey)(app)
 
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
     : await import('./build/server/index')
 
-  app.all('*', createRequestHandler({ build }))
+  const remixHandler = createRequestHandler({ build })
+  app.all('*', (req, resp, next) => {
+    console.log(req.path)
+    if (!req.path.startsWith('/api')) {
+      remixHandler(req, resp, next)
+    }
+  })
 
   app.listen(port, () => {
     debug(`App listening on http://localhost:${port}`)

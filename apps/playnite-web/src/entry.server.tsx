@@ -4,11 +4,11 @@ import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { createReadableStreamFromReadable } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { isbot } from 'isbot'
-import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
 import { Helmet } from 'react-helmet'
 import { Provider } from 'react-redux'
 import { renderHeadToString } from 'remix-island'
+import { PassThrough } from 'stream'
 // import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
 import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
@@ -16,7 +16,7 @@ import { Head } from './root'
 
 const ABORT_DELAY = 5_000
 
-export default function handleRequest(
+function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
@@ -162,3 +162,5 @@ function handleBrowserRequest(
     setTimeout(abort, ABORT_DELAY)
   })
 }
+
+export default handleRequest
