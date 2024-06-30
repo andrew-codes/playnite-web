@@ -34,7 +34,6 @@ async function run() {
 
   const remixHandler = createRequestHandler({ build })
   app.all('*', (req, resp, next) => {
-    console.log(req.path)
     if (!req.path.startsWith('/api')) {
       remixHandler(req, resp, next)
     }
