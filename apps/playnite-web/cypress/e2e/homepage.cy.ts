@@ -1,6 +1,6 @@
 describe('Homepage', () => {
-  it('should load homepage', () => {
+  it('Homepage Library', () => {
     cy.visit('/')
-    cy.get('[data-test=homepage]')
+    cy.contains('h2', 'Library')
   })
 })

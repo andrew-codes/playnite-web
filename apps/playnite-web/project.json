@@ -31,8 +31,24 @@
         "cwd": "{projectRoot}"
       }
     },
+    "test/e2e/prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash -c '.devcontainer/manually-start-services.sh'"
+      }
+    },
+    "test/e2e/ci/prepare": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "outputs": ["{projectRoot}/_packaged"],
+      "options": {
+        "command": "yarn node --require esbuild-register --experimental-json-modules scripts/packageFiles.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test/e2e": {
       "executor": "nx:run-commands",
+      "dependsOn": ["test/e2e/prepare"],
       "options": {
         "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cypress open --e2e'",
         "cwd": "{projectRoot}"
@@ -40,8 +56,9 @@
     },
     "test/e2e/ci": {
       "executor": "nx:run-commands",
+      "dependsOn": ["test/e2e/prepare", "test/e2e/ci/prepare"],
       "options": {
-        "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cypress run --e2e'",
+        "command": "yarn start-server-and-test 'yarn node _packaged/server.production.js' http://localhost:3000 'yarn cypress run --e2e'",
         "cwd": "{projectRoot}"
       }
     },
