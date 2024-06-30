@@ -54,7 +54,7 @@ jobs:
         run: yarn nx run-many --target=test/components/ci --parallel --verbose --projects=tag:linux
 
   e2e_tests_linux:
-    name: Verify PR - Component Tests (Linux)
+    name: Verify PR - e2e Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
