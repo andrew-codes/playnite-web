@@ -1,12 +1,12 @@
 set -o allexport
-. $PWD/local.env
+. $PWD/apps/playnite-web/local.env
 set +o allexport
 
 docker stop playnite-web-db mqtt || true
 docker container rm playnite-web-db mqtt || true
 
 mongoDataExists=$(ls .data/mongodb | wc -l)
-mkdir -p /.data/mongodb
+mkdir -p .data/mongodb
 docker run --name playnite-web-db -d \
   -p 27017:27017 \
   -e MONGO_INITDB_ROOT_USERNAME=$DB_USERNAME \
@@ -17,6 +17,11 @@ docker run --name playnite-web-db -d \
 
 if [ $mongoDataExists -eq 0 ]; then
   docker exec -t playnite-web-db mongorestore --nsInclude games.* /data/backup
+fi
+
+if [ $(ls apps/playnite-web/public/assets-by-id | wc -l) -eq 0 ]; then
+  echo "Copying development environment game assets"
+  cp -r .data/games/assets-by-id apps/playnite-web/public
 fi
 
 docker run --name mqtt -d \
