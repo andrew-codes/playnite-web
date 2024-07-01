@@ -53,11 +53,13 @@ jobs:
       - name: Run all component tests
         run: yarn nx run-many --target=test/components/ci --parallel --verbose --projects=tag:linux
       - name: Upload test video artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: component-cypress-videos
           path: apps/playnite-web/cypress/videos
       - name: Upload test screenshot artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: component-cypress-videos
@@ -86,16 +88,19 @@ jobs:
       - name: Run all visual regression tests
         run: yarn nx affected --base=origin/main --head=HEAD --target=test/components/visual/ci --verbose --exclude='*,!tag:linux'
       - name: Upload visual regression artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: visual-regression-comparisons
           path: apps/playnite-web/visual-regression-tests/screenshots
       - name: Upload test video artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: visual-regression-cypress-videos
           path: apps/playnite-web/cypress/videos
       - name: Upload test screenshot artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: visual-regression-cypress-screenshots
@@ -124,11 +129,13 @@ jobs:
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
       - name: Upload test video artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: e2e-cypress-videos
           path: apps/playnite-web/cypress/videos
       - name: Upload test screenshot artifacts
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
           name: e2e-cypress-screenshots
