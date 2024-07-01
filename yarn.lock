@@ -2141,6 +2141,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cypress/webpack-preprocessor@npm:^5.0.0":
+  version: 5.17.1
+  resolution: "@cypress/webpack-preprocessor@npm:5.17.1"
+  dependencies:
+    bluebird: "npm:3.7.1"
+    debug: "npm:^4.3.4"
+    lodash: "npm:^4.17.20"
+  peerDependencies:
+    "@babel/core": ^7.0.1
+    "@babel/preset-env": ^7.0.0
+    babel-loader: ^8.0.2 || ^9
+    webpack: ^4 || ^5
+  checksum: 10c0/2f8a43c70ef4d36167c2a13157d67c299ef15bc6d1b25c96e55cafb5b115fda879b9d62903b8fe99081dce0607062b0b2dbfaa9b0f099a2bbbaf9959e9d439e4
+  languageName: node
+  linkType: hard
+
 "@cypress/xvfb@npm:^1.2.4":
   version: 1.2.4
   resolution: "@cypress/xvfb@npm:1.2.4"
@@ -6844,6 +6860,13 @@ __metadata:
   version: 2.0.2
   resolution: "blob-util@npm:2.0.2"
   checksum: 10c0/ed82d587827e5c86be122301a7c250f8364963e9582f72a826255bfbd32f8d69cc10169413d666667bb1c4fc8061329ae89d176ffe46fee8f32080af944ccddc
+  languageName: node
+  linkType: hard
+
+"bluebird@npm:3.7.1":
+  version: 3.7.1
+  resolution: "bluebird@npm:3.7.1"
+  checksum: 10c0/ed3aa4e0de2b794afa95deb78d868b832e51df5a3e4564da09a6a6a0956d46b6e3bfdc62f075230eed96347329bc5c70729d52b5d3d5c4fc118cf6db63574eb7
   languageName: node
   linkType: hard
 
@@ -16166,6 +16189,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.24.7"
     "@babel/preset-react": "npm:^7.24.7"
     "@babel/preset-typescript": "npm:^7.24.7"
+    "@cypress/webpack-preprocessor": "npm:^5.0.0"
     "@emotion/cache": "npm:^11.11.0"
     "@emotion/react": "npm:^11.11.4"
     "@emotion/styled": "npm:^11.11.5"

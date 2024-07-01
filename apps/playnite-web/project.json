@@ -71,7 +71,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["test/e2e/prepare"],
       "options": {
-        "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cypress open --e2e'",
+        "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e yarn cypress open --e2e'",
         "cwd": "{projectRoot}"
       }
     },
@@ -79,7 +79,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["test/e2e/prepare", "test/e2e/ci/prepare"],
       "options": {
-        "command": "yarn start-server-and-test 'yarn node _packaged/server.production.js' http://localhost:3000 'yarn cypress run --e2e'",
+        "command": "yarn start-server-and-test 'yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
         "cwd": "{projectRoot}"
       }
     },
