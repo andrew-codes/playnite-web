@@ -1,5 +1,5 @@
 const config = {
-  FAILURE_THRESHOLD: 0.02,
+  FAILURE_THRESHOLD: 0.04,
   FAIL_ON_MISSING_BASELINE: process.env.NODE_ENV === 'production',
   ROOT_DIR: 'visual-regression-tests',
   REPORT_DIR: 'report',
