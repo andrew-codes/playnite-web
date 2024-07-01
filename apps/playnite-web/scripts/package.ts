@@ -1,10 +1,10 @@
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
 import pkg from '../package.json' assert { type: 'json' }
+import packageFiles from './utils/packageFiles'
 
 async function run() {
-  await import('./packageFiles.ts')
-
+  packageFiles()
   const { REGISTRY, OWNER, GITHUB_REF, PLATFORM } = process.env
 
   if (!REGISTRY || !OWNER || !GITHUB_REF) {

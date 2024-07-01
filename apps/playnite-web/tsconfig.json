@@ -3,7 +3,6 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true,
     "noEmit": false,
     "allowJs": true,
     "module": "ESNext",
