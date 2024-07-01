@@ -22,7 +22,9 @@ async function run() {
 
   try {
     debug('Starting Playnite Web game-db-updater...')
-    gameDbUpdater()
+    gameDbUpdater({
+      assetSaveDirectoryPath: path.join(process.cwd(), 'public/asset-by-id'),
+    })
   } catch (error) {
     console.log(
       'Failed to run gameDbUpdater. Playnite Web will still work, but the game database will not be updated.',
