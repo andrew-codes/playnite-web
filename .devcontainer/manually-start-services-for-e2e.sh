@@ -18,4 +18,5 @@ docker run --name mqtt -d \
   --network host \
   eclipse-mosquitto:latest
 
-cp -r .data/games/assets-by-id apps/playnite-web/public
+rm -rf apps/playnite-web/public/assets-by-id
+cp -r .data/asset-by-id apps/playnite-web/public
