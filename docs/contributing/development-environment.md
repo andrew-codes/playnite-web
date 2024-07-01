@@ -8,7 +8,7 @@
   - [Setup: Directly on Local Machine](#setup-directly-on-local-machine)
     - [Directly: Required Software](#directly-required-software)
     - [Directly: Preparing Codebase](#directly-preparing-codebase)
-  - [Runninng Locally](#runninng-locally)
+  - [Running Locally](#running-locally)
 
 ## Overview
 
@@ -102,11 +102,13 @@ fi
 5. Ensure MQTT is running
 6. Ensure database is running
 
-## Runninng Locally
+## Running Locally
 
-| Application      | Command                                             | Notes                                                                                                                                                                                    |
-| :--------------- | :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Playnite-Web App | `yarn nx run playnite-web-app:start`                | Run Playnite-Web application locally. Navigate to [http://localhost:3000](http://localhost:3000) in a browser. Environment variables are pulled from `./apps/game-db-updater/local.env`. |
-| Playnite-Web App | `yarn nx run playnite-web-app:test/components`      | Run component tests for development.                                                                                                                                                     |
-| game-db-updater  | `yarn nx run playnite-web-game-db-updater:start`    | Run game-db-updater locally. Environment variables are pulled from `./apps/game-db-updater/local.env`.                                                                                   |
-| game-db-updater  | `yarn nx run playnite-web-game-db-updater:test/e2e` | Run e2e tests.env`.                                                                                                                                                                      |
+| Application      | Command                                                      | Notes                                                                                                                                                                                    |
+| :--------------- | :----------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Playnite-Web App | `yarn nx run playnite-web-app:start`                         | Run Playnite-Web application locally. Navigate to [http://localhost:3000](http://localhost:3000) in a browser. Environment variables are pulled from `./apps/game-db-updater/local.env`. |
+| Playnite-Web App | `yarn nx run playnite-web-app:test/components`               | Run component tests for development.                                                                                                                                                     |
+| Playnite-Web App | `yarn nx run playnite-web-app:test/components/visual`        | Run visual regression component tests for development.                                                                                                                                   |
+| Playnite-Web App | `yarn nx run playnite-web-app:test/components/visual/update` | Run visual regression tests with intention to update a baseline screenshot.                                                                                                              |
+| Playnite-Web App | `yarn nx run playnite-web-app:test/e2e`                      | Run end-to-end (e2e) tests for development.                                                                                                                                              |
+| Playnite-Web App | `yarn nx run playnite-web-app:test/**/ci`                    | Suffix any test target with `/ci` to run the tests in CI mode; the same as what is run in CI.                                                                                            |

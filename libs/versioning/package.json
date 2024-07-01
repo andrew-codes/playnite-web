@@ -11,6 +11,6 @@
   "devDependencies": {
     "@types/semver": "^7.5.8",
     "@types/shelljs": "^0.8.15",
-    "nx": "^19.3.1"
+    "nx": "^19.3.2"
   }
 }
