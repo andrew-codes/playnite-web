@@ -43,6 +43,7 @@ const getDbClient = (
     const password = connectionOptions?.password ?? process.env.DB_PASSWORD
 
     debug(`Existing DB client not found; creating one with the provided URL`)
+    debug(url)
     if (!username && !password) {
       debug(`No username or password provided; connecting without auth`)
       client = new MongoClient(url)

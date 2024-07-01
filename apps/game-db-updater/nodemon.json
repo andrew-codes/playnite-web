@@ -1,9 +1,0 @@
-{
-  "verbose": true,
-  "ignore": ["__tests__/**/*.*", "fixtures/*"],
-  "execMap": {
-    "js": "yarn node -r esbuild-register",
-    "ts": "yarn node -r esbuild-register"
-  },
-  "watch": ["src"]
-}

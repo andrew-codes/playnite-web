@@ -1,5 +1,6 @@
 .DS_Store
 .data/mongodb
+.data/mongodb-e2e
 node_modules
 
 .nx
@@ -22,7 +23,9 @@ apps/playnite-web/.cache
 apps/playnite-web/build
 apps/playnite-web/public/build
 apps/playnite-web/public/entry.worker.js
-apps/playnite-web/server.production.js
+apps/playnite-web/server.production.js*
+apps/playnite-web/server.development.js*
+apps/plyanite-web/app.mjs
 apps/playnite-web/vite.config.ts*
 !apps/playnite-web/vite.config.ts
 
@@ -31,3 +34,9 @@ apps/PlayniteWebPlugin/src/extension.yaml
 
 .yarn/**/*darwin*
 .yarn/**/*linux*
+
+**/cypress/videos/
+**/cypress/screenshots/
+**/visual-regression-tests/**/comparison/
+**/visual-regression-tests/**/diff/
+**/visual-regression-tests/report

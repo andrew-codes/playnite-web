@@ -1,22 +1,11 @@
 import { type AsyncMqttClient } from 'async-mqtt'
 import createDebugger from 'debug'
-import dotenv from 'dotenv'
-import path from 'path'
 import handlers from './handlers'
 import { getMqttClient } from './mqttClient'
 
 const run: () => Promise<AsyncMqttClient> = async () => {
   const debug = createDebugger('playnite-web/game-db-updater/index')
   debug('Starting game-db-updater')
-
-  dotenv.config({
-    path: path.join(__dirname, '..', 'local.env'),
-    override: true,
-  })
-  dotenv.config({
-    path: path.join(__dirname, '..', 'overrides.env'),
-    override: true,
-  })
 
   const mqttClient = await getMqttClient()
   mqttClient.subscribe('playnite/#')
@@ -30,10 +19,6 @@ const run: () => Promise<AsyncMqttClient> = async () => {
   })
 
   return mqttClient
-}
-
-if (require.main === module) {
-  run()
 }
 
 export default run

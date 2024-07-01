@@ -9,5 +9,8 @@
         "tag": "route",
       }
     ]
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
