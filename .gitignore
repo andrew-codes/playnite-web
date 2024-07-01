@@ -37,3 +37,6 @@ apps/PlayniteWebPlugin/src/extension.yaml
 
 **/cypress/videos/
 **/cypress/screenshots/
+**/visual-regression-tests/**/comparison/
+**/visual-regression-tests/**/diff/
+**/visual-regression-tests/report

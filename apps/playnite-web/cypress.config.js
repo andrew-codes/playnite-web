@@ -9,7 +9,10 @@ const config = {
     baseUrl: 'http://localhost:3000',
   },
   component: {
-    specPattern: '**/__component_tests__/**/*.test.tsx',
+    specPattern:
+      process.env.VISUAL === 'true'
+        ? '**/__component_tests__/**/*.visual.tsx'
+        : '**/__component_tests__/**/*.test.tsx',
     excludeSpecPattern: [],
     devServer: {
       framework: 'react',
@@ -93,6 +96,8 @@ const config = {
           }
         }
       })
+
+      return require('cypress-image-diff-js/plugin')(on, config)
     },
   },
 }

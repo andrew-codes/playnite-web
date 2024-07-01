@@ -31,6 +31,27 @@
         "cwd": "{projectRoot}"
       }
     },
+    "test/components/visual": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn cross-env VISUAL=true yarn cypress open --component --browser electron",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test/components/visual/update": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "(yarn cross-env CI=true VISUAL=true yarn cypress run --component --browser electron || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test/components/visual/ci": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn cross-env CI=true VISUAL=true yarn cypress run --component --browser electron",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test/e2e/prepare": {
       "executor": "nx:run-commands",
       "options": {
