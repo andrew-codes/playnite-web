@@ -1,4 +1,4 @@
-import { jest, test } from '@jest/globals'
+import { expect, jest, test } from '@jest/globals'
 import { AsyncMqttClient } from 'async-mqtt'
 import run, { Options } from '..'
 import { getMqttClient } from '../mqttClient'

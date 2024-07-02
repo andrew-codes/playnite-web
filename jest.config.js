@@ -15,15 +15,15 @@ const defaultConfig = {
   modulePathIgnorePatterns: ['<rootDir>/.*/\\.dist/'],
   passWithNoTests: true,
   coverageDirectory: '<rootDir>/.test-runs/unit',
-  collectCoverage: true,
+  collectCoverage: false,
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts'],
-  collectCoverageFrom: ['<rootDir>/**/src/**'],
+  collectCoverageFrom: ['<rootDir>/**/src/**/*.ts'],
   coveragePathIgnorePatterns: [
     '/__tests__/',
     '/__mocks__/',
     '/__component_tests__/',
   ],
-  setupFiles: setupFiles,
+  // setupFiles: setupFiles,
 }
 
 module.exports = defaultConfig
