@@ -92,6 +92,9 @@ const config = {
     },
   },
   component: {
+    codeCoverage: {
+      exclude: ['**/testUtils/**', '**/cypress/**'],
+    },
     specPattern:
       process.env.VISUAL === 'true'
         ? '**/__component_tests__/**/*.visual.tsx'
