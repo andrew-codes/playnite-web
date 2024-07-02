@@ -1,4 +1,4 @@
-type SignInInput {
+input SignInInput {
   username: String!
   password: String!
   rememberMe: Boolean

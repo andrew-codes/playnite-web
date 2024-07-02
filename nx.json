@@ -6,7 +6,7 @@
     },
     "prepare": {
       "dependsOn": ["^prepare"],
-      "cache": true
+      "cache": false
     },
     "start": {
       "dependsOn": ["prepare", "start/prepare"],

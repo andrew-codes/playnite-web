@@ -1,5 +1,6 @@
 const nodemon = require('nodemon')
 const path = require('path')
+const sh = require('shelljs')
 const { createProjectGraphAsync } = require('@nx/devkit')
 const pkg = require('../../package.json')
 
@@ -17,11 +18,32 @@ createProjectGraphAsync().then((graph) => {
       ts: 'yarn node --require esbuild-register',
     },
     watch: [
-      path.join(__dirname, 'startDevServer.js'),
-      path.join(__dirname, '..', '..', 'src', 'server'),
+      path.join(__dirname, '..', '..', 'src', 'server', '*.*'),
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        'src',
+        'server',
+        'graphql',
+        'context.ts',
+      ),
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        'src',
+        'server',
+        'graphql',
+        'modules',
+        '**',
+        '*.ts',
+      ),
+      path.join(__dirname, '..', '..', 'src', 'server', 'graphql', 'index.ts'),
       path.join(__dirname, '..', '..', 'server.ts'),
       path.join(__dirname, '..', '..', 'app.ts'),
       path.join(__dirname, '..', '..', '*.env'),
+      path.join(__dirname, '..', '..', 'src', '**', '*.graphql'),
     ].concat(
       workspaceDeps.map((p) => path.join(__dirname, '..', '..', '..', '..', p)),
     ),
@@ -40,6 +62,6 @@ createProjectGraphAsync().then((graph) => {
       process.exit()
     })
     .on('restart', function (files) {
-      console.log('App is rebuilding and restarting...')
+      sh.exec(`yarn nx run playnite-web-app:prepare`)
     })
 })
