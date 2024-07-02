@@ -3719,17 +3719,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@cypress/webpack-preprocessor", [\
-      ["npm:5.17.1", {\
-        "packageLocation": "./.yarn/cache/@cypress-webpack-preprocessor-npm-5.17.1-7b290668a7-2f8a43c70e.zip/node_modules/@cypress/webpack-preprocessor/",\
+      ["npm:6.0.2", {\
+        "packageLocation": "./.yarn/cache/@cypress-webpack-preprocessor-npm-6.0.2-294c2fe013-0aae4e6266.zip/node_modules/@cypress/webpack-preprocessor/",\
         "packageDependencies": [\
-          ["@cypress/webpack-preprocessor", "npm:5.17.1"]\
+          ["@cypress/webpack-preprocessor", "npm:6.0.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.17.1", {\
-        "packageLocation": "./.yarn/__virtual__/@cypress-webpack-preprocessor-virtual-cde9b4729e/0/cache/@cypress-webpack-preprocessor-npm-5.17.1-7b290668a7-2f8a43c70e.zip/node_modules/@cypress/webpack-preprocessor/",\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.0.2", {\
+        "packageLocation": "./.yarn/__virtual__/@cypress-webpack-preprocessor-virtual-8af37232ee/0/cache/@cypress-webpack-preprocessor-npm-6.0.2-294c2fe013-0aae4e6266.zip/node_modules/@cypress/webpack-preprocessor/",\
         "packageDependencies": [\
-          ["@cypress/webpack-preprocessor", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.17.1"],\
+          ["@cypress/webpack-preprocessor", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.0.2"],\
           ["@babel/core", "npm:7.24.7"],\
           ["@babel/preset-env", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.24.7"],\
           ["@types/babel-loader", null],\
@@ -19839,7 +19839,7 @@ const RAW_RUNTIME_STATE =
           ["@babel/preset-env", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.24.7"],\
           ["@babel/preset-react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.24.7"],\
           ["@babel/preset-typescript", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.24.7"],\
-          ["@cypress/webpack-preprocessor", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.17.1"],\
+          ["@cypress/webpack-preprocessor", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.0.2"],\
           ["@emotion/cache", "npm:11.11.0"],\
           ["@emotion/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:11.11.4"],\
           ["@emotion/styled", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:11.11.5"],\
