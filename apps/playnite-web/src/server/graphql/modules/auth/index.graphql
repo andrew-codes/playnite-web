@@ -1,0 +1,10 @@
+type SignInInput {
+  username: String!
+  password: String!
+  rememberMe: Boolean
+}
+
+extend type Mutation {
+  signIn(input: SignInInput): User
+  signOut: User
+}
