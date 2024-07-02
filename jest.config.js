@@ -2,7 +2,7 @@ const { defaults } = require('jest-config')
 const glob = require('glob')
 
 const setupFiles = glob
-  .sync('**/.tests/setupFiles.ts')
+  .sync('**/testsUtils/setupFile.ts')
   .map((path) => `<rootDir>/${path}`)
 
 const defaultConfig = {
@@ -23,7 +23,7 @@ const defaultConfig = {
     '/__mocks__/',
     '/__component_tests__/',
   ],
-  // setupFiles: setupFiles,
+  setupFiles: setupFiles,
 }
 
 module.exports = defaultConfig
