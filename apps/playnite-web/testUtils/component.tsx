@@ -37,4 +37,4 @@ const Boundary: FC<PropsWithChildren<{ maxWidth?: number }>> = ({
 }
 
 export * from './'
-export { Boundary, TestWrapper, useBreakpoint }
+export { Boundary, TestWrapper }
