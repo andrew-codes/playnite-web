@@ -49,7 +49,6 @@ const OuterScroll: FC<PropsWithChildren<{}>> = ({ children }) => {
         },
         [theme.breakpoints.down('lg')]: {
           overflowY: 'auto',
-          scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
         },
       })}
     >

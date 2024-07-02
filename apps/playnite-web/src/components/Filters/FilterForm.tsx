@@ -228,7 +228,6 @@ const FilterForm: FC<{
               maxHeight: '100%',
               height: `calc(100% - ${theme.spacing(6)})`,
               padding: '24px',
-              scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
 
               '.MuiDialogContent-root': {
                 overflow: 'hidden',
