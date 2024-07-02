@@ -1,24 +1,10 @@
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files'
 import type { CodegenConfig } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
-  schema: './src/server/graphql/modules/**/typedefs/*.graphql',
+  schema: './src/server/graphql/modules/*/*.graphql',
   generates: {
-    './src/server/graphql/modules/': {
-      preset: 'graphql-modules',
-      presetConfig: {
-        baseTypesPath: '../generated-types/graphql.ts',
-        filename: 'generated-types/module-types.ts',
-      },
-      plugins: [
-        {
-          add: {
-            content: '/* eslint-disable */',
-          },
-        },
-        'typescript',
-        'typescript-resolvers',
-      ],
-    },
+    './src/server/graphql': defineConfig(),
   },
 }
 export default config
