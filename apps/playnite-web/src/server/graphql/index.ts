@@ -1,23 +1,24 @@
 import { useCSRFPrevention } from '@graphql-yoga/plugin-csrf-prevention'
 import { useJWT } from '@graphql-yoga/plugin-jwt'
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
-import createDebugger from 'debug'
 import { NextFunction, Request, Response } from 'express'
-import { createYoga } from 'graphql-yoga'
+import { createSchema, createYoga } from 'graphql-yoga'
 import helmet from 'helmet'
-import createSchema from './schema'
-
-const debug = createDebugger('playnite-web/server/graphql')
+import type { PlayniteContext } from './context'
+import { resolvers } from './resolvers.generated'
+import { typeDefs } from './typeDefs.generated'
 
 const graphql =
   (signingKey: string, endpoint: string) =>
   async (req: Request, resp: Response, next: NextFunction) => {
-    const schema = createSchema({ signingKey, domain: 'localhost' })
     const yoga = createYoga({
-      schema,
+      schema: createSchema({
+        typeDefs,
+        resolvers,
+      }),
       graphqlEndpoint: endpoint,
       cors: {
-        origin: ['http://localhost:3000'],
+        origin: ['http://localhost'],
         credentials: true,
         allowedHeaders: ['X-Custom-Header'],
         methods: ['GET', 'POST'],
@@ -26,12 +27,26 @@ const graphql =
         useCSRFPrevention({ requestHeaders: ['x-graphql-yoga-csrf'] }),
         useCookies(),
         useJWT({
-          issuer: 'playnite-web',
+          issuer: 'http://localhost',
           signingKey,
-          getToken: async ({ request }) =>
-            (await request.cookieStore?.get('authorization'))?.value,
+          algorithms: ['HS256'],
+          getToken: async ({ request }) => {
+            const [type, token] =
+              (await request.cookieStore?.get('authorization'))?.value.split(
+                ' ',
+              ) ?? []
+
+            if (type !== 'Bearer') return undefined
+
+            return token ?? undefined
+          },
         }),
       ],
+      context: (req): PlayniteContext => ({
+        signingKey,
+        domain: 'localhost',
+        ...req,
+      }),
     })
     helmet({
       contentSecurityPolicy: {
