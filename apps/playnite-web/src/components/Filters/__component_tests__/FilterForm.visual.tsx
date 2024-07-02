@@ -1,4 +1,5 @@
-import { TestWrapper, useBreakpoint } from '../../../../testUtils/component'
+import { useBreakpoint } from '../../../../testUtils'
+import { TestWrapper } from '../../../../testUtils/component'
 import FilterForm from '../FilterForm'
 
 describe('FilterForm', () => {

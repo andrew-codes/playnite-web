@@ -17,3 +17,6 @@ docker exec -t playnite-web-db mongorestore --nsInclude games.* /data/backup
 docker run --name mqtt -d \
   --network host \
   eclipse-mosquitto:latest
+
+rm -rf apps/playnite-web/public/assets-by-id
+cp -r .data/asset-by-id apps/playnite-web/public

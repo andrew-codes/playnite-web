@@ -9,7 +9,6 @@ type AssetTypeKey = 'background' | 'cover' | 'icon'
 
 type GameAsset = {
   id: string
-  file: Buffer
   related: IIdentifyDomainObjects
   typeKey: AssetTypeKey
 }

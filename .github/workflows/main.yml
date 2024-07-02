@@ -29,8 +29,15 @@ jobs:
         run: yarn
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit/ci --parallel --verbose --projects=tag:linux
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: '**/.test-runs/unit/lcov.info'
+          flags: unit-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  compnent_tests_linux:
+  component_tests_linux:
     name: Verify PR - Component Tests (Linux)
     runs-on: ubuntu-latest
     steps:
@@ -64,8 +71,15 @@ jobs:
         with:
           name: component-cypress-videos
           path: apps/playnite-web/cypress/screenshots
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: '**/.test-runs/component/lcov.info'
+          flags: component-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  visual_compnent_tests_linux:
+  visual_component_tests_linux:
     name: Verify PR - Component Visual Regression Tests (Linux)
     runs-on: ubuntu-latest
     steps:
@@ -128,6 +142,12 @@ jobs:
         run: yarn
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
+      - name: Upload visual regression artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-e2e-comparisons
+          path: apps/playnite-web/visual-regression-tests/screenshots
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4

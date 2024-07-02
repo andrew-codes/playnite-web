@@ -1,3 +1,4 @@
+import '@cypress/code-coverage/support'
 import compareSnapshotCommand from 'cypress-image-diff-js/command'
 import 'cypress-plugin-tab'
 import { mount } from 'cypress/react18'

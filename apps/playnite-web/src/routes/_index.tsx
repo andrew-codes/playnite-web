@@ -86,7 +86,7 @@ function Index() {
           <Typography variant="h2">Library</Typography>
         </Header>
         {gameListPlaylists.map((playlist, index) => (
-          <section key={`${playlist.toString()}${index}`}>
+          <section data-test="playlist" key={`${playlist.toString()}${index}`}>
             <Typography variant="h4">{playlist.toString()}</Typography>
             <HorizontalGameList
               games={playlist.games as unknown as IList<Match<IGame>>}

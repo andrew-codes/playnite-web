@@ -37,7 +37,6 @@ const Description = styled('div')(({ theme }) => ({
   overflowY: 'auto',
   height: 'calc(100vh - 196px)',
   marginTop: theme.spacing(2),
-  scrollbarColor: `#fff ${theme.palette.background.default}`,
   textWrap: 'wrap',
 
   img: {
