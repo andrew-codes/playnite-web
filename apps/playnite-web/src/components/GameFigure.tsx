@@ -47,7 +47,7 @@ const GameFigure: FC<
   const [imageHasError, setImageHasError] = useState(false)
 
   return (
-    <Figure style={style} ref={ref} width={width}>
+    <Figure data-test="GameFigure" style={style} ref={ref} width={width}>
       {hasBeenInViewBefore || noDefer
         ? [
             <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
