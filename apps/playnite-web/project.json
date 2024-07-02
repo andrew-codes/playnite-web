@@ -24,6 +24,22 @@
         "command": "yarn cross-env NODE_ENV=development DEBUG='playnite-web/*' yarn node --experimental-json-modules scripts/utils/startDevServer.js"
       }
     },
+    "test/unit": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "options": {
+        "command": "yarn jest --config jest.config.js",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test/unit/ci": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "options": {
+        "command": "yarn jest --config jest.config.js",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test/components": {
       "executor": "nx:run-commands",
       "options": {

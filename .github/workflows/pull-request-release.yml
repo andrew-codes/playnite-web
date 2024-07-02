@@ -33,6 +33,13 @@ jobs:
         run: yarn
       - name: Run all unit tests
         run: yarn nx affected --base=origin/main --head=HEAD --target=test/unit/ci --parallel --verbose --exclude='*,!tag:linux'
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: '**/.test-runs/unit/lcov.info'
+          flags: unit-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   component_tests_linux:
     name: Verify PR - Component Tests (Linux)
@@ -68,6 +75,13 @@ jobs:
         with:
           name: component-cypress-videos
           path: apps/playnite-web/cypress/screenshots
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: '**/.test-runs/component/lcov.info'
+          flags: component-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   visual_component_tests_linux:
     name: Verify PR - Component Visual Regression Tests (Linux)
