@@ -23,16 +23,21 @@ const slice = createSlice({
   name: 'deviceFeatures',
   initialState,
   selectors: {
-    getDeviceFeatures: memoize((state) => ({
-      device: {
-        type: state.device?.type,
-        vendor: state.device?.vendor,
-        model: state.device?.model,
-      },
-      isTouchEnabled: state.isTouchEnabled,
-      isPwa: state.isPwa,
-      orientation: state.orientation,
-    })),
+    getDeviceFeatures: memoize((state: typeof initialState) => {
+      if (!state) {
+        return null
+      }
+      return {
+        device: {
+          type: state.device?.type,
+          vendor: state.device?.vendor,
+          model: state.device?.model,
+        },
+        isTouchEnabled: state.isTouchEnabled,
+        isPwa: state.isPwa,
+        orientation: state.orientation,
+      }
+    }),
   },
   reducers: {
     setDeviceFeatures(

@@ -43,4 +43,5 @@ function createNull(assetType: DomainType): IIdentify {
   return fromString(`${assetType}:NULL`)
 }
 
-export { DomainType, IIdentify, create, createNull, domainTypes, fromString }
+export { create, createNull, domainTypes, fromString }
+export type { DomainType, IIdentify }
