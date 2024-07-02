@@ -1,25 +1,23 @@
 const { defaults } = require('jest-config')
-const glob = require('glob')
-
-const setupFiles = glob
-  .sync('**/.tests/setupFiles.ts')
-  .map((path) => `<rootDir>/${path}`)
 
 const defaultConfig = {
+  testEnvironment: 'node',
   transform: {
     '^.+\\.(j|t)s$': ['ts-jest', {}],
   },
-  testEnvironment: 'node',
   testMatch: ['**/__tests__/**/*.(test).((j|t)s)'],
   resetMocks: true,
-  modulePathIgnorePatterns: ['<rootDir>/.*/\\.dist/'],
-  passWithNoTests: true,
+  modulePathIgnorePatterns: ['<rootDir>/\\.dist/'],
+  passWithNoTests: false,
   coverageDirectory: '<rootDir>/.test-runs/unit',
   collectCoverage: true,
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts'],
-  collectCoverageFrom: ['<rootDir>/**/src/**'],
-  coveragePathIgnorePatterns: ['/__tests__/', '/__mocks__/'],
-  setupFiles: setupFiles,
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  coveragePathIgnorePatterns: [
+    '/__tests__/',
+    '/__mocks__/',
+    '/__component_tests__/',
+  ],
 }
 
 module.exports = defaultConfig

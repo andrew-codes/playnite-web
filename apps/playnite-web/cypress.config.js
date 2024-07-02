@@ -2,6 +2,7 @@ const { defineConfig } = require('cypress')
 const fs = require('fs')
 const webpackPreprocessor = require('@cypress/webpack-preprocessor')
 const { merge } = require('lodash')
+const codeCoverage = require('@cypress/code-coverage/task')
 
 const config = {
   chromeWebSecurity: false,
@@ -120,6 +121,7 @@ const config = {
                       },
                     ],
                   ],
+                  plugins: ['babel-plugin-istanbul'],
                 },
               },
               {
@@ -179,6 +181,7 @@ const config = {
         }
       })
 
+      codeCoverage(on, config)
       return require('cypress-image-diff-js/plugin')(on, config)
     },
   },
