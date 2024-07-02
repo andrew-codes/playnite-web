@@ -11,6 +11,11 @@ describe('Homepage', () => {
     cy.visit('/')
     cy.contains('h4', 'Playing')
       .parents('[data-test="playlist"]')
-      .compareSnapshot('homepage-playing-playlist')
+      .compareSnapshot({
+        name: 'homepage-playing-playlist',
+        cypressScreenshotOptions: {
+          blackout: ['[data-test="GameFigure"] img'],
+        },
+      })
   })
 })
