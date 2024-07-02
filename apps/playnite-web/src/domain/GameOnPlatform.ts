@@ -176,7 +176,7 @@ class GameOnPlatform implements IGameOnPlatform {
   }
 
   get source(): Source {
-    return this._gameOnPlatform.source
+    return this._gameOnPlatform.source ?? { id: 'source:NULL', name: 'Unknown' }
   }
 
   get tags(): Tag[] {

@@ -59,7 +59,6 @@ const MyLibrary: FC<{
             margin: '0 auto',
             [theme.breakpoints.up('lg')]: {
               overflowY: 'auto',
-              scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
             },
             [theme.breakpoints.up('xl')]: {
               width: `${width}px`,

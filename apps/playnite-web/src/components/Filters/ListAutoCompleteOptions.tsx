@@ -4,7 +4,6 @@ import { AutoCompleteItem, RenderOptions } from '../AutoComplete'
 
 const FullHeightList = styled(List)(({ theme }) => ({
   overflowY: 'auto',
-  scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.paper}`,
   backgroundColor: theme.palette.background.paper,
   marginTop: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
@@ -56,7 +55,6 @@ const HeightBoundListAutoCompleteOptions: RenderOptions = (props) => {
         }),
         '& ul': {
           overflowY: 'auto',
-          scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
         },
       })}
     >

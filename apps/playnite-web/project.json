@@ -10,11 +10,34 @@
         "cwd": "{projectRoot}"
       }
     },
+    "start/prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash -c '.devcontainer/manually-start-services.sh'"
+      }
+    },
     "start": {
       "executor": "nx:run-commands",
+      "dependsOn": ["start/prepare"],
       "options": {
         "cwd": "{projectRoot}",
         "command": "yarn cross-env NODE_ENV=development DEBUG='playnite-web/*' yarn node --experimental-json-modules scripts/utils/startDevServer.js"
+      }
+    },
+    "test/unit": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "options": {
+        "command": "yarn jest --config jest.config.js",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test/unit/ci": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "options": {
+        "command": "yarn jest --config jest.config.js",
+        "cwd": "{projectRoot}"
       }
     },
     "test/components": {
@@ -71,7 +94,15 @@
       "executor": "nx:run-commands",
       "dependsOn": ["test/e2e/prepare"],
       "options": {
-        "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cypress open --e2e'",
+        "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e yarn cypress open --e2e'",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test/e2e/update": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["test/e2e/prepare"],
+      "options": {
+        "command": "((yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
         "cwd": "{projectRoot}"
       }
     },
@@ -79,7 +110,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["test/e2e/prepare", "test/e2e/ci/prepare"],
       "options": {
-        "command": "yarn start-server-and-test 'yarn node _packaged/server.production.js' http://localhost:3000 'yarn cypress run --e2e'",
+        "command": "yarn start-server-and-test 'yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
         "cwd": "{projectRoot}"
       }
     },

@@ -28,7 +28,8 @@ const graphql =
         useJWT({
           issuer: 'playnite-web',
           signingKey,
-          getToken: ({ request }) => request.cookieStore?.get('authorization'),
+          getToken: async ({ request }) =>
+            (await request.cookieStore?.get('authorization'))?.value,
         }),
       ],
     })

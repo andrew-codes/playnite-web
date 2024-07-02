@@ -98,7 +98,6 @@ class PlayniteWebApi implements IGameApi {
   ): Promise<GameAsset[]> {
     return (await this._mongo.getAssetsByType(oid, typeKey)).map((asset) => ({
       id: asset.id,
-      file: Buffer.from(asset.file.value()),
       related: new Oid(`${asset.relatedType}:${asset.relatedId}`),
       typeKey: asset.typeKey as GameAssetType,
     }))
