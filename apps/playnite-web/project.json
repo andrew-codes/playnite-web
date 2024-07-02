@@ -10,7 +10,13 @@
         "cwd": "{projectRoot}"
       }
     },
-    "generate": {},
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn graphql-codegen --config codegen.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
     "start/prepare": {
       "executor": "nx:run-commands",
       "options": {
