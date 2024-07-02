@@ -32,7 +32,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run all unit tests
-        run: yarn nx affected --base=origin/main --head=HEAD --target=test/unit/ci --parallel --verbose --exclude='*,!tag:linux'
+        run: yarn nx run-many --target=test/unit/ci --parallel --verbose --exclude='*,!tag:linux'
       - uses: codecov/codecov-action@v4
         if: always()
         with:
@@ -62,7 +62,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run all component tests
-        run: yarn nx affected --base=origin/main --head=HEAD --target=test/components/ci --verbose --exclude='*,!tag:linux'
+        run: yarn nx run-many --target=test/components/ci --verbose --exclude='*,!tag:linux'
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4

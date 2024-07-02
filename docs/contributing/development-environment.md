@@ -44,6 +44,8 @@ Install the following software on your local development machine:
    - Note that MQTT and Mongo will be started via docker automatically.
    - Mongo will restore a default database if no database already exists (if there are no files in `.data/mongodb`).
    - Note MQTT currently starts with no username/password configured.
+6. \[Optional\]: override environment variables when running locally via `cp apps/playnite-web/local.env apps/playnite-web/overrides.env`
+   - **REMEMBER: do not commit `overrides.env` or sensitive information in `local.env`.**
 
 ## Running Locally
 
