@@ -10,6 +10,14 @@
         "cwd": "{projectRoot}"
       }
     },
+    "test/unit": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "options": {
+        "command": "yarn jest --config jest.config.js",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test/unit/ci": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.test-runs/unit"],

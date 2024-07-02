@@ -18,7 +18,11 @@ const defaultConfig = {
   collectCoverage: true,
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts'],
   collectCoverageFrom: ['<rootDir>/**/src/**'],
-  coveragePathIgnorePatterns: ['/__tests__/', '/__mocks__/'],
+  coveragePathIgnorePatterns: [
+    '/__tests__/',
+    '/__mocks__/',
+    '/__component_tests__/',
+  ],
   setupFiles: setupFiles,
 }
 
