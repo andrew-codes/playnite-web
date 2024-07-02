@@ -1,7 +1,7 @@
 const nodemon = require('nodemon')
 const path = require('path')
-const pkg = require('../../package.json')
 const { createProjectGraphAsync } = require('@nx/devkit')
+const pkg = require('../../package.json')
 
 createProjectGraphAsync().then((graph) => {
   const workspaceDeps = graph.dependencies['playnite-web-app']
