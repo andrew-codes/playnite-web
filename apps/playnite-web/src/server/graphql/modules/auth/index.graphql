@@ -4,7 +4,12 @@ input SignInInput {
   rememberMe: Boolean
 }
 
+type Claim {
+  user: User!
+  credential: String!
+}
+
 extend type Mutation {
-  signIn(input: SignInInput): User
+  signIn(input: SignInInput): Claim
   signOut: User
 }

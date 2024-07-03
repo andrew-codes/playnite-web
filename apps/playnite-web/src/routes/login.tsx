@@ -1,4 +1,3 @@
-import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import {
   Button,
   Checkbox,
@@ -10,25 +9,15 @@ import {
 } from '@mui/material'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { FormEventHandler, useEffect } from 'react'
-import { mutations, queries } from '../queries'
+import { useSignIn } from '../queryHooks'
 
 const TallStack = muiStyled(Stack)`
   height: 100vh;
 `
 
 const LoginForm = () => {
-  const [mutateFunction, { data, loading, error }] = useMutation(
-    mutations.signIn,
-    {
-      update: (cache, mutationResult) => {
-        const user = mutationResult.data
-        cache.updateQuery({ query: queries.me }, (data) => ({
-          ...data,
-          me: { ...user },
-        }))
-      },
-    },
-  )
+  const [mutateFunction, { data, loading, error }] = useSignIn()
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault()
     const formData = new FormData(evt.currentTarget)
@@ -42,11 +31,11 @@ const LoginForm = () => {
   const navigate = useNavigate()
   const location = useLocation()
   useEffect(() => {
-    if (data?.signIn.isAuthenticated) {
+    if (data?.signIn.user.isAuthenticated) {
       const returnTo = new URLSearchParams(location.search).get('returnTo')
       navigate(returnTo ?? '/')
     }
-  }, [location.search, data?.signIn?.isAuthenticated])
+  }, [location.search, data?.signIn.user.isAuthenticated])
 
   return (
     <form method="POST" onSubmit={handleSubmit}>

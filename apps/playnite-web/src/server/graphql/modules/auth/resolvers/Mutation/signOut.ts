@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { nullUser } from '../../../user/api/NullUser'
 import type { MutationResolvers } from './../../../../types.generated'
 
 const { omit } = _
@@ -7,8 +8,8 @@ export const signOut: NonNullable<MutationResolvers['signOut']> = async (
   _arg,
   _ctx,
 ) => {
-  const user = _ctx.jwt
+  const claim = _ctx.jwt
   _ctx.request.cookieStore?.delete('authorization')
 
-  return omit(user, 'password')
+  return claim?.user ?? nullUser
 }

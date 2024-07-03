@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
 import _ from 'lodash'
+import { PasswordCredential } from '../../api'
 import type { MutationResolvers } from './../../../../types.generated'
 
 const { merge } = _
@@ -13,19 +14,14 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
   if (!_arg.input?.username || !_arg.input?.password) {
     throw new GraphQLError('Missing username or password')
   }
-  const user = _ctx.api.user.getUserByLogin(_arg.input.username)
-  const userWithPassword = merge({}, user, {
-    password: _arg.input.password,
-  })
-  _ctx.api.auth.authenticate(userWithPassword)
-  const token = jwt.sign(
-    merge({}, userWithPassword, { isAuthenticated: true }),
-    _ctx.signingKey,
-    {
-      issuer: 'http://localhost',
-      algorithm: 'HS256',
-    },
+  const authenticatedClaim = await _ctx.api.auth.authenticate(
+    new PasswordCredential(_arg.input.username, _arg.input.password),
   )
+
+  const token = jwt.sign(authenticatedClaim, _ctx.signingKey, {
+    issuer: 'http://localhost',
+    algorithm: 'HS256',
+  })
   _ctx.request.cookieStore?.set({
     name: 'authorization',
     sameSite: 'strict',
@@ -38,6 +34,5 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
     httpOnly: true,
   })
 
-  user.isAuthenticated = true
-  return user
+  return authenticatedClaim
 }

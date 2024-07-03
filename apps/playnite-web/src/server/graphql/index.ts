@@ -28,14 +28,23 @@ const graphql =
           signingKey,
           algorithms: ['HS256'],
           getToken: async ({ request }) => {
+            const headerAuthorization = request.headers.get('authorization')
+            if (headerAuthorization) {
+              const [type, token] =
+                decodeURIComponent(headerAuthorization).split(' ')
+              if (type === 'Bearer') {
+                return token
+              }
+            }
+
             const [type, token] =
               (await request.cookieStore?.get('authorization'))?.value.split(
                 ' ',
               ) ?? []
 
-            if (type !== 'Bearer') return undefined
-
-            return token ?? undefined
+            if (type === 'Bearer') {
+              return token
+            }
           },
         }),
       ],
