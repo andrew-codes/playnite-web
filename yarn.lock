@@ -11987,6 +11987,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"graphql-scalars@npm:^1.23.0":
+  version: 1.23.0
+  resolution: "graphql-scalars@npm:1.23.0"
+  dependencies:
+    tslib: "npm:^2.5.0"
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 10c0/7666c305b8367528c4fbb583a2731d93d52f36043d71f4957ecc1d2db71d710d268e25535243beb1b2497db921daa94d3cfa83daaf4a3101a667f358ddbf3436
+  languageName: node
+  linkType: hard
+
 "graphql-tag@npm:^2.11.0, graphql-tag@npm:^2.12.6":
   version: 2.12.6
   resolution: "graphql-tag@npm:2.12.6"
@@ -17982,6 +17993,7 @@ __metadata:
     glob: "npm:^10.4.2"
     graphql: "npm:^16.9.0"
     graphql-modules: "npm:^2.3.0"
+    graphql-scalars: "npm:^1.23.0"
     graphql-yoga: "npm:^5.5.0"
     helmet: "npm:^7.1.0"
     html-webpack-plugin: "npm:^5.6.0"

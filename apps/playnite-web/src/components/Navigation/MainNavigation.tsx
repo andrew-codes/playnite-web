@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { AccountCircle, Home, LocalLibrary } from '@mui/icons-material'
 import {
   List,
@@ -11,7 +10,7 @@ import {
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
 import { FC } from 'react'
-import { mutations, queries } from '../../queries'
+import { useMe, useSignOut } from '../../queryHooks'
 
 const Navigation = styled('nav')(({ theme }) => ({
   display: 'flex',
@@ -33,15 +32,7 @@ const NavigationList = styled(List, {
 const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   const navigate = useNavigate()
 
-  const [signOut] = useMutation(mutations.signOut, {
-    update: (cache, mutationResult) => {
-      const user = mutationResult.data
-      cache.updateQuery({ query: queries.me }, (data) => ({
-        ...data,
-        me: { ...user },
-      }))
-    },
-  })
+  const [signOut] = useSignOut()
 
   const handleSignOut = () => {
     signOut()
@@ -54,7 +45,7 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
 
   const theme = useTheme()
 
-  const { data } = useQuery(queries.me)
+  const { data } = useMe()
   const isAuthenticated = data?.me?.isAuthenticated ?? false
 
   return (

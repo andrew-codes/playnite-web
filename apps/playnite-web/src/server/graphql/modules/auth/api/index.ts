@@ -1,36 +1,66 @@
 import { GraphQLError } from 'graphql'
+import jwt from 'jsonwebtoken'
 import * as oid from '../../../../oid'
 import { autoBind, type DomainApi } from '../../../Domain'
-import { User } from '../../../types.generated'
+import { Claim, User } from '../../../types.generated'
 
 function create(this: DomainApi) {
-  return {
-    ...autoBind(this, { authenticate }),
-  }
-}
-
-let loadedPasswords = false
-const passwordStore: Record<string, string> = {}
-
-const loadPasswords = () => {
+  const passwordStore: Record<string, string> = {}
   const { PASSWORD } = process.env
-  if (PASSWORD && !loadedPasswords) {
+  if (PASSWORD) {
     passwordStore[oid.create('User', '1').toString()] = PASSWORD
-    loadedPasswords = true
+  }
+
+  return {
+    ...autoBind(this, {
+      authenticate,
+      getPasswordForUser(user: User) {
+        return passwordStore[user.id] ?? null
+      },
+    }),
   }
 }
 
-function authenticate(
+interface Credential {
+  applyCredential(api: DomainApi): Promise<Claim | null>
+}
+
+class PasswordCredential implements Credential {
+  constructor(
+    private username: string,
+    private password: string,
+  ) {}
+
+  async applyCredential(api: DomainApi) {
+    const user = api.user.getUserByLogin(this.username)
+    const password = api.auth.getPasswordForUser(user)
+    if (!password || password !== this.password) {
+      return null
+    }
+
+    user.isAuthenticated = true
+
+    return {
+      user,
+      credential: jwt.sign(password, process.env.SECRET ?? 'secret'),
+    }
+  }
+}
+
+async function authenticate(
   this: DomainApi,
-  user: User & { password: string },
-): void {
-  loadPasswords()
-  const isAuthenticated = passwordStore[user.id] === user.password
-  if (!isAuthenticated) {
+  credential: Credential,
+): Promise<Claim> {
+  const appliedCredential = await credential.applyCredential(this)
+  if (!appliedCredential) {
     throw new GraphQLError(
       'Failed to authenticate. Invalid username or password',
     )
   }
+
+  return appliedCredential
 }
 
 export default create
+export { PasswordCredential }
+export type { Credential }

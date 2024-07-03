@@ -11,6 +11,7 @@ const config: CodegenConfig = {
       typesPluginsConfig: {
         contextType: './context#PlayniteContext',
       },
+      scalarsModule: require.resolve('graphql-scalars'),
     }),
   },
 }

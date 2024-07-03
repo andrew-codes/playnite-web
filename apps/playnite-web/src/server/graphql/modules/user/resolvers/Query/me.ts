@@ -8,7 +8,7 @@ export const me: NonNullable<QueryResolvers['me']> = async (
   _arg,
   _ctx,
 ) => {
-  const user = _ctx.jwt ?? nullUser
+  const user = _ctx.jwt?.user ?? nullUser
 
-  return omit(user, 'password')
+  return user
 }

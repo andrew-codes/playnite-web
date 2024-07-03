@@ -15854,6 +15854,29 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["graphql-scalars", [\
+      ["npm:1.23.0", {\
+        "packageLocation": "./.yarn/cache/graphql-scalars-npm-1.23.0-afcf92cba2-7666c305b8.zip/node_modules/graphql-scalars/",\
+        "packageDependencies": [\
+          ["graphql-scalars", "npm:1.23.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.23.0", {\
+        "packageLocation": "./.yarn/__virtual__/graphql-scalars-virtual-bb5848e205/0/cache/graphql-scalars-npm-1.23.0-afcf92cba2-7666c305b8.zip/node_modules/graphql-scalars/",\
+        "packageDependencies": [\
+          ["graphql-scalars", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.23.0"],\
+          ["@types/graphql", null],\
+          ["graphql", "npm:16.9.0"],\
+          ["tslib", "npm:2.6.3"]\
+        ],\
+        "packagePeers": [\
+          "@types/graphql",\
+          "graphql"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["graphql-tag", [\
       ["npm:2.12.6", {\
         "packageLocation": "./.yarn/cache/graphql-tag-npm-2.12.6-99a5a7f6de-7763a72011.zip/node_modules/graphql-tag/",\
@@ -22531,6 +22554,7 @@ const RAW_RUNTIME_STATE =
           ["glob", "npm:10.4.2"],\
           ["graphql", "npm:16.9.0"],\
           ["graphql-modules", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.3.0"],\
+          ["graphql-scalars", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.23.0"],\
           ["graphql-yoga", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.5.0"],\
           ["helmet", "npm:7.1.0"],\
           ["html-webpack-plugin", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.6.0"],\

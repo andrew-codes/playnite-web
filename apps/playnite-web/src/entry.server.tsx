@@ -16,9 +16,11 @@ import { renderHeadToString } from 'remix-island'
 import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
 import { Head } from './root'
+import { PlayniteContext } from './server/graphql/context'
 import { Domain } from './server/graphql/Domain'
 import { nullUser } from './server/graphql/modules/user/api/NullUser'
 import schema from './server/graphql/schema'
+import { Claim } from './server/graphql/types.generated'
 // import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
 
 const debug = createDebugger('playnite-web/entry.server.tsx')
@@ -56,15 +58,20 @@ function handleBotRequest(
     const clientSideCache = createEmotionCache()
     const store = configureStore({ reducer })
 
+    let claim: Claim = { user: nullUser, credential: '' }
+
     const client = new ApolloClient({
       ssrMode: true,
       cache: new InMemoryCache(),
       link: new SchemaLink({
         schema,
         context: {
-          signingKey: process.env.SECRET ?? 'secret',
-          domain: 'localhost',
-          api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
+          context: {
+            signingKey: process.env.SECRET ?? 'secret',
+            domain: 'localhost',
+            jwt: claim,
+            api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
+          } as Partial<PlayniteContext>,
         },
       }),
     })
@@ -123,7 +130,7 @@ async function handleBrowserRequest(
   return new Promise((resolve, reject) => {
     const clientSideCache = createEmotionCache()
     const store = configureStore({ reducer })
-    let user = nullUser
+    let claim: Claim = { user: nullUser, credential: '' }
     try {
       const value = decodeURIComponent(
         request.headers.get('Cookie')?.split('=')?.[1] ?? '',
@@ -132,10 +139,11 @@ async function handleBrowserRequest(
       if (type !== 'Bearer') {
         throw new Error('Invalid token')
       }
-      user = jwt.decode(token, process.env.SECRET ?? 'secret', {
+      claim = jwt.decode(token, process.env.SECRET ?? 'secret', {
         issuer: 'http://localhost',
         algorithm: 'HS256',
       })
+      console.log(claim)
     } catch (error) {
       debug(error)
     }
@@ -147,9 +155,9 @@ async function handleBrowserRequest(
         context: {
           signingKey: process.env.SECRET ?? 'secret',
           domain: 'localhost',
-          jwt: user,
+          jwt: claim,
           api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
-        },
+        } as Partial<PlayniteContext>,
       }),
     })
     const App = (
