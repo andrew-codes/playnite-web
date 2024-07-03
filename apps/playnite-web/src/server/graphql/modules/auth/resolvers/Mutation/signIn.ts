@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
-import { getUserByLogin } from '../../../user/api/getUser'
+import { merge } from 'lodash'
 import type { MutationResolvers } from './../../../../types.generated'
 
 export const signIn: NonNullable<MutationResolvers['signIn']> = async (
@@ -11,14 +11,19 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
   if (!_arg.input?.username || !_arg.input?.password) {
     throw new GraphQLError('Missing username or password')
   }
-  const user = getUserByLogin(_arg.input.username, _arg.input.password)
-  if (!user.isAuthenticated) {
-    throw new GraphQLError('Invalid username or password')
-  }
-  const token = jwt.sign(user, _ctx.signingKey, {
-    issuer: 'http://localhost',
-    algorithm: 'HS256',
+  const user = _ctx.api.user.getUserByLogin(_arg.input.username)
+  const userWithPassword = merge({}, user, {
+    password: _arg.input.password,
   })
+  _ctx.api.auth.authenticate(userWithPassword)
+  const token = jwt.sign(
+    merge({}, userWithPassword, { isAuthenticated: true }),
+    _ctx.signingKey,
+    {
+      issuer: 'http://localhost',
+      algorithm: 'HS256',
+    },
+  )
   _ctx.request.cookieStore?.set({
     name: 'authorization',
     sameSite: 'strict',

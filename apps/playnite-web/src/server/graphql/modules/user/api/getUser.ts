@@ -1,15 +1,10 @@
-import { merge } from 'lodash'
-import { create, createNull, fromString } from '../../../../oid'
+import { create } from '../../../../oid'
+import { DomainApi } from '../../../Domain'
 import { User } from '../../../types.generated'
+import { nullUser } from './NullUser'
 
-const nullUser: User = {
-  id: createNull('User').toString(),
-  name: '',
-  isAuthenticated: false,
-}
 let loadedUser = false
 const userStore: Record<string, User> = {}
-const passwordStore: Record<string, string> = {}
 
 const loadUsers = () => {
   const { USERNAME, PASSWORD } = process.env
@@ -17,32 +12,24 @@ const loadUsers = () => {
     const user: User = {
       id: create('User', '1').toString(),
       name: USERNAME,
-      isAuthenticated: true,
+      username: USERNAME,
+      isAuthenticated: false,
     }
     userStore[user.id.toString()] = user
-    passwordStore[user.id.toString()] = PASSWORD
-    loadedUser
+    loadedUser = true
   }
 }
 
-const getUserByLogin = (username: string, password: string): User => {
+function getUserByLogin(this: DomainApi, username: string): User {
   loadUsers()
   const users = Object.values(userStore ?? {})
   const user = users.find((user) => user.name === username)
-  if (!user) {
-    return nullUser
-  }
-  if (passwordStore[user.id.toString()] !== password) {
-    return nullUser
-  }
 
-  return merge({}, user, { isAuthenticated: true })
+  return user ?? nullUser
 }
-const getUserById = (id: string): User => {
+function getUserById(this: DomainApi, id: string): User {
   loadUsers()
-  const users = Object.values(userStore ?? {})
-
-  return users.find((user) => fromString(user.id).isEqual(id)) ?? nullUser
+  return userStore[id] ?? nullUser
 }
 
 export { getUserById, getUserByLogin }

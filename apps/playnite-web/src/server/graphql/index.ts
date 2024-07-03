@@ -5,6 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 import { createSchema, createYoga } from 'graphql-yoga'
 import helmet from 'helmet'
 import type { PlayniteContext } from './context'
+import { Domain } from './domain'
 import { resolvers } from './resolvers.generated'
 import { typeDefs } from './typeDefs.generated'
 
@@ -43,9 +44,10 @@ const graphql =
         }),
       ],
       context: (req): PlayniteContext => ({
+        ...req,
         signingKey,
         domain: 'localhost',
-        ...req,
+        api: new Domain(signingKey, 'localhost'),
       }),
     })
     helmet({
