@@ -146,6 +146,8 @@ jobs:
         run: yarn
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
+        env:
+          E2E: 'true'
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
