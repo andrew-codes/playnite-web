@@ -5,9 +5,9 @@ import packageFiles from './utils/packageFiles'
 
 async function run() {
   packageFiles()
-  const { REGISTRY, OWNER, GITHUB_REF, PLATFORM, CI } = process.env
+  const { REGISTRY, OWNER, GITHUB_REF, PLATFORM, E2E } = process.env
 
-  if (CI !== 'true') {
+  if (E2E === 'true') {
     return
   }
 
