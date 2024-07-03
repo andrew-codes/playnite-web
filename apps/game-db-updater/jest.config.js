@@ -13,7 +13,7 @@ const defaultConfig = {
   moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts', 'ts'],
   collectCoverageFrom: ['<rootDir>/src/**'],
   coveragePathIgnorePatterns: ['/__tests__/', '/__mocks__/'],
-  setupFiles: ['<rootDir>/.tests/setupFiles.ts'],
+  setupFiles: [],
 }
 
 module.exports = defaultConfig
