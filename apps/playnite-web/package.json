@@ -3,6 +3,7 @@
   "version": "4.0.2",
   "sideEffects": false,
   "dependencies": {
+    "@apollo/client": "^3.10.8",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",

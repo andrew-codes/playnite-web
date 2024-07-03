@@ -1,7 +1,9 @@
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
-import { merge } from 'lodash'
+import _ from 'lodash'
 import type { MutationResolvers } from './../../../../types.generated'
+
+const { merge } = _
 
 export const signIn: NonNullable<MutationResolvers['signIn']> = async (
   _parent,
@@ -36,5 +38,6 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
     httpOnly: true,
   })
 
+  user.isAuthenticated = true
   return user
 }

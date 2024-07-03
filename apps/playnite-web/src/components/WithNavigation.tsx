@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import {
   AccountCircle,
   Home,
@@ -31,6 +32,7 @@ import {
 import { useSelector } from 'react-redux'
 import { $path } from 'remix-routes'
 import { getIsAuthenticated } from '../api/client/state/authSlice'
+import { mutations, queries } from '../queries'
 
 const { debounce, merge, stubTrue } = _
 
@@ -105,6 +107,20 @@ const WithNavigation: FC<
     setAnchorEl(null)
   }
 
+  const [signOut] = useMutation(mutations.signOut, {
+    update: (cache, mutationResult) => {
+      const user = mutationResult.data
+      cache.updateQuery({ query: queries.me }, (data) => ({
+        ...data,
+        me: { ...user },
+      }))
+    },
+  })
+
+  const handleSignOut = () => {
+    signOut()
+  }
+
   return (
     <>
       <AppBar position="sticky">
@@ -151,10 +167,7 @@ const WithNavigation: FC<
           </MenuItem>
         )}
         {isAuthenticated && (
-          <MenuItem
-            href={$path('/logout', { returnTo: pathname })}
-            component={Link}
-          >
+          <MenuItem onClick={handleSignOut} component={Link}>
             Sign Out
           </MenuItem>
         )}
