@@ -17,6 +17,20 @@ function create(this: DomainApi) {
       getPasswordForUser(user: User) {
         return passwordStore[user.id] ?? null
       },
+      async authorize(this: DomainApi, claim: Claim) {
+        const password = jwt.decode(
+          claim.credential,
+          process.env.SECRET ?? 'secret',
+        )
+        const authenticatedUser = await this.auth.authenticate(
+          new PasswordCredential(claim.user.username, password),
+        )
+        if (!authenticatedUser.user.isAuthenticated) {
+          throw new GraphQLError(
+            'User failed authorization, not authenticated.',
+          )
+        }
+      },
     }),
   }
 }
