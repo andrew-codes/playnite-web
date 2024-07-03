@@ -5,7 +5,7 @@ interface IIdentify {
   get id(): string
   get type(): DomainType
   get moment(): Date
-  isEqual(other: IIdentify): boolean
+  isEqual(other: IIdentify | string): boolean
   toString(): string
   toJSON()
 }
@@ -24,6 +24,10 @@ function fromString(oidString: string): IIdentify {
       return moment ? new Date(moment) : new Date()
     },
     isEqual(other: IIdentify) {
+      if (typeof other === 'string') {
+        return fromString(other).isEqual(this)
+      }
+
       return other.id === id && other.type === type
     },
     toString() {

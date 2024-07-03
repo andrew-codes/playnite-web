@@ -10,8 +10,7 @@ import {
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
 import { FC } from 'react'
-import { useSelector } from 'react-redux'
-import { getIsAuthenticated } from '../../api/client/state/authSlice'
+import { useMe, useSignOut } from '../../queryHooks'
 
 const Navigation = styled('nav')(({ theme }) => ({
   display: 'flex',
@@ -32,6 +31,13 @@ const NavigationList = styled(List, {
 
 const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   const navigate = useNavigate()
+
+  const [signOut] = useSignOut()
+
+  const handleSignOut = () => {
+    signOut()
+  }
+
   const handleNavigation = (href: string) => (evt: any) => {
     evt.preventDefault()
     navigate(href)
@@ -39,7 +45,8 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
 
   const theme = useTheme()
 
-  const isAuthenticated = useSelector(getIsAuthenticated)
+  const { data } = useMe()
+  const isAuthenticated = data?.me.isAuthenticated ?? false
 
   return (
     <Navigation
@@ -102,7 +109,9 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
         </ListItem>
         <ListItem disablePadding sx={{ display: 'block' }}>
           <ListItemButton
-            onClick={handleNavigation(isAuthenticated ? '/logout' : '/login')}
+            onClick={
+              isAuthenticated ? handleSignOut : handleNavigation('/login')
+            }
             sx={{
               minHeight: theme.spacing(6),
               justifyContent: open ? 'initial' : 'center',
