@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
+import { User } from '../server/graphql/types.generated'
 
 const Me = gql`
   query Me {
@@ -10,6 +11,6 @@ const Me = gql`
   }
 `
 
-const useMe = () => useQuery(Me)
+const useMe = () => useQuery<{ me: User }>(Me)
 
 export { Me, useMe }
