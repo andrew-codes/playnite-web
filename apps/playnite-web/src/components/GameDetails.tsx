@@ -60,17 +60,18 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
   )
   const [selectedIndex, setSelectedIndex] = useState(0)
   const handlePlay = (selectedIndex) => (evt) => {
-    fetch('/activate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      credentials: 'same-origin',
-      body: new URLSearchParams({
-        id: game.id.toString(),
-        platformId: platformOptions[selectedIndex].id.id,
-      }),
-    })
+    // TODO: replace with graphql mutation
+    // fetch('/activate', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    //   credentials: 'same-origin',
+    //   body: new URLSearchParams({
+    //     id: game.id.toString(),
+    //     platformId: platformOptions[selectedIndex].id.id,
+    //   }),
+    // })
   }
 
   const [open, setOpen] = useState(false)
