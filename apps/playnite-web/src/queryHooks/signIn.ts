@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
+import { Claim } from '../server/graphql/types.generated'
 import { Me } from './me'
 
 const signIn = gql`
@@ -13,14 +14,11 @@ const signIn = gql`
   }
 `
 const useSignIn = () =>
-  useMutation(signIn, {
+  useMutation<{ signIn: Claim }>(signIn, {
     update: (cache, mutationResult) => {
-      const {
-        signIn: { user },
-      } = mutationResult.data
       cache.updateQuery({ query: Me }, (data) => ({
         ...data,
-        me: { ...user },
+        me: { ...mutationResult.data?.signIn.user },
       }))
     },
   })

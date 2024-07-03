@@ -28,10 +28,8 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { useSelector } from 'react-redux'
 import { $path } from 'remix-routes'
-import { getIsAuthenticated } from '../api/client/state/authSlice'
-import { useSignOut } from '../queryHooks'
+import { useMe, useSignOut } from '../queryHooks'
 
 const { debounce, merge, stubTrue } = _
 
@@ -96,7 +94,10 @@ const WithNavigation: FC<
   }, [])
 
   const { pathname } = useLocation()
-  const isAuthenticated = useSelector(getIsAuthenticated)
+
+  const { data } = useMe()
+  const isAuthenticated = data?.me.isAuthenticated ?? false
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {

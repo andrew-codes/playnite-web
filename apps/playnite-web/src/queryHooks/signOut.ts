@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
+import { User } from '../server/graphql/types.generated'
 import { Me } from './me'
 
 const signOut = gql`
@@ -11,12 +12,11 @@ const signOut = gql`
   }
 `
 const useSignOut = () =>
-  useMutation(signOut, {
+  useMutation<{ signOut: User }>(signOut, {
     update: (cache, mutationResult) => {
-      const { signOut } = mutationResult.data
       cache.updateQuery({ query: Me }, (data) => ({
         ...data,
-        me: { ...signOut },
+        me: { ...mutationResult.data?.signOut },
       }))
     },
   })

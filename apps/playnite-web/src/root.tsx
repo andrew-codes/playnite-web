@@ -14,8 +14,6 @@ import { AnimatePresence } from 'framer-motion'
 import { FC, useEffect } from 'react'
 import { useStore } from 'react-redux'
 import { createHead } from 'remix-island'
-import { authenticator } from './api/auth/auth.server'
-import { signedIn, signedOut } from './api/client/state/authSlice'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
 import { UAParser } from './api/layout.server'
 import Layout from './components/Layout'
@@ -55,8 +53,6 @@ const links: LinksFunction = () => {
 }
 
 async function loader({ request }: LoaderFunctionArgs) {
-  const user = await authenticator.isAuthenticated(request)
-
   const ua = UAParser(request.headers.get('user-agent'))
   const type = ua?.device?.type ?? 'desktop'
   const device = {
@@ -66,7 +62,6 @@ async function loader({ request }: LoaderFunctionArgs) {
   }
 
   return json({
-    user,
     device,
   })
 }
@@ -91,14 +86,6 @@ const App: FC<{}> = () => {
   }>()
 
   const store = useStore()
-
-  useEffect(() => {
-    if (!!user) {
-      store.dispatch(signedIn())
-    } else {
-      store.dispatch(signedOut())
-    }
-  }, [])
 
   useEffect(() => {
     let isTouchEnabled = false

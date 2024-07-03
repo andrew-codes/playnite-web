@@ -46,7 +46,7 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   const theme = useTheme()
 
   const { data } = useMe()
-  const isAuthenticated = data?.me?.isAuthenticated ?? false
+  const isAuthenticated = data?.me.isAuthenticated ?? false
 
   return (
     <Navigation
