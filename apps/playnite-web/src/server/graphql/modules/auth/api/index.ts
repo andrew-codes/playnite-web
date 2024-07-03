@@ -14,7 +14,7 @@ function create(this: DomainApi) {
   return {
     ...autoBind(this, {
       authenticate,
-      getPasswordForUser(user: User) {
+      getPasswordForUser(this: DomainApi, user: User) {
         return passwordStore[user.id] ?? null
       },
       async authorize(this: DomainApi, claim: Claim) {
