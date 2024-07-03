@@ -1,19 +1,29 @@
+import { ApolloClient, InMemoryCache } from '@apollo/client/core/core.cjs'
+import { SchemaLink } from '@apollo/client/link/schema/schema.cjs'
+import { ApolloProvider } from '@apollo/client/react/react.cjs'
+import { getDataFromTree } from '@apollo/client/react/ssr'
 import { CacheProvider } from '@emotion/react'
 import { configureStore } from '@reduxjs/toolkit'
 import type { AppLoadContext, EntryContext } from '@remix-run/node'
-import { createReadableStreamFromReadable } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
+import createDebugger from 'debug'
 import { isbot } from 'isbot'
-import { renderToPipeableStream } from 'react-dom/server'
+import jwt from 'jsonwebtoken'
+import { renderToStaticMarkup } from 'react-dom/server'
 import { Helmet } from 'react-helmet'
 import { Provider } from 'react-redux'
 import { renderHeadToString } from 'remix-island'
-import { PassThrough } from 'stream'
-// import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
 import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
 import { Head } from './root'
+import { PlayniteContext } from './server/graphql/context'
+import { Domain } from './server/graphql/Domain'
+import { nullUser } from './server/graphql/modules/user/api/NullUser'
+import schema from './server/graphql/schema'
+import { Claim } from './server/graphql/types.generated'
+// import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
 
+const debug = createDebugger('playnite-web/entry.server.tsx')
 const ABORT_DELAY = 5_000
 
 function handleRequest(
@@ -45,11 +55,28 @@ function handleBotRequest(
   remixContext: EntryContext,
 ) {
   return new Promise((resolve, reject) => {
-    let shellRendered = false
     const clientSideCache = createEmotionCache()
     const store = configureStore({ reducer })
-    const { pipe, abort } = renderToPipeableStream(
-      <CacheProvider value={clientSideCache}>
+
+    let claim: Claim = { user: nullUser, credential: '' }
+
+    const client = new ApolloClient({
+      ssrMode: true,
+      cache: new InMemoryCache(),
+      link: new SchemaLink({
+        schema,
+        context: {
+          context: {
+            signingKey: process.env.SECRET ?? 'secret',
+            domain: 'localhost',
+            jwt: claim,
+            api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
+          } as Partial<PlayniteContext>,
+        },
+      }),
+    })
+    const App = (
+      <ApolloProvider client={client}>
         <Provider store={store}>
           <RemixServer
             context={remixContext}
@@ -57,60 +84,84 @@ function handleBotRequest(
             abortDelay={ABORT_DELAY}
           />
         </Provider>
-      </CacheProvider>,
-      {
-        onAllReady() {
-          shellRendered = true
-          const head = renderHeadToString({ request, remixContext, Head })
-          const body = new PassThrough()
-          const stream = createReadableStreamFromReadable(body)
-
-          responseHeaders.set('Content-Type', 'text/html')
-
-          resolve(
-            new Response(stream, {
-              headers: responseHeaders,
-              status: responseStatusCode,
-            }),
-          )
-
-          body.write(
-            `<!DOCTYPE html><html lang="en-US"><head>${head}</head><body><div id="root">`,
-          )
-          pipe(body)
-          body.write(`</div></body></html>`)
-        },
-        onShellError(error: unknown) {
-          reject(error)
-        },
-        onError(error: unknown) {
-          responseStatusCode = 500
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
-          if (shellRendered) {
-            console.error(error)
-          }
-        },
-      },
+      </ApolloProvider>
     )
 
-    setTimeout(abort, ABORT_DELAY)
+    return getDataFromTree(App).then(() => {
+      // Extract the entirety of the Apollo Client cache's current state
+      const initialState = client.extract()
+
+      const renderedOutput = renderToStaticMarkup(
+        <>
+          <CacheProvider value={clientSideCache}>{App}</CacheProvider>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__APOLLO_STATE__=${JSON.stringify(
+                initialState,
+              ).replace(/</g, '\\u003c')}`, // The replace call escapes the < character to prevent cross-site scripting attacks that are possible via the presence of </script> in a string literal
+            }}
+          />
+        </>,
+      )
+
+      const head = renderHeadToString({ request, remixContext, Head })
+      const helmet = Helmet.renderStatic()
+
+      responseHeaders.set('Content-Type', 'text/html')
+      resolve(
+        new Response(
+          `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body><div id="root">${renderedOutput}</div></body></html>`,
+          {
+            headers: responseHeaders,
+            status: responseStatusCode,
+          },
+        ),
+      )
+    })
   })
 }
 
-function handleBrowserRequest(
+async function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
   return new Promise((resolve, reject) => {
-    let shellRendered = false
     const clientSideCache = createEmotionCache()
     const store = configureStore({ reducer })
-    const { pipe, abort } = renderToPipeableStream(
-      <CacheProvider value={clientSideCache}>
+    let claim: Claim = { user: nullUser, credential: '' }
+    try {
+      const value = decodeURIComponent(
+        request.headers.get('Cookie')?.split('=')?.[1] ?? '',
+      )
+      const [type, token] = value.split(' ')
+      if (type !== 'Bearer') {
+        throw new Error('Invalid token')
+      }
+      claim = jwt.decode(token, process.env.SECRET ?? 'secret', {
+        issuer: 'http://localhost',
+        algorithm: 'HS256',
+      })
+      console.log(claim)
+    } catch (error) {
+      debug(error)
+    }
+    const client = new ApolloClient({
+      ssrMode: true,
+      cache: new InMemoryCache(),
+      link: new SchemaLink({
+        schema,
+        context: {
+          signingKey: process.env.SECRET ?? 'secret',
+          domain: 'localhost',
+          jwt: claim,
+          api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
+        } as Partial<PlayniteContext>,
+      }),
+    })
+    const App = (
+      <ApolloProvider client={client}>
         <Provider store={store}>
           <RemixServer
             context={remixContext}
@@ -118,48 +169,40 @@ function handleBrowserRequest(
             abortDelay={ABORT_DELAY}
           />
         </Provider>
-      </CacheProvider>,
-      {
-        onAllReady() {
-          // preloadRouteAssets(remixContext, responseHeaders)
-        },
-        onShellReady() {
-          shellRendered = true
-          const head = renderHeadToString({ request, remixContext, Head })
-          const helmet = Helmet.renderStatic()
-          const body = new PassThrough()
-          const stream = createReadableStreamFromReadable(body)
-
-          responseHeaders.set('Content-Type', 'text/html')
-
-          resolve(
-            new Response(stream, {
-              headers: responseHeaders,
-              status: responseStatusCode,
-            }),
-          )
-          body.write(
-            `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body><div id="root">`,
-          )
-          pipe(body)
-          body.write(`</div></body></html>`)
-        },
-        onShellError(error: unknown) {
-          reject(error)
-        },
-        onError(error: unknown) {
-          responseStatusCode = 500
-          // Log streaming rendering errors from inside the shell.  Don't log
-          // errors encountered during initial shell rendering since they'll
-          // reject and get logged in handleDocumentRequest.
-          if (shellRendered) {
-            console.error(error)
-          }
-        },
-      },
+      </ApolloProvider>
     )
 
-    setTimeout(abort, ABORT_DELAY)
+    return getDataFromTree(App).then(() => {
+      // Extract the entirety of the Apollo Client cache's current state
+      const initialState = client.extract()
+
+      const renderedOutput = renderToStaticMarkup(
+        <>
+          <CacheProvider value={clientSideCache}>{App}</CacheProvider>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__APOLLO_STATE__=${JSON.stringify(
+                initialState,
+              ).replace(/</g, '\\u003c')}`, // The replace call escapes the < character to prevent cross-site scripting attacks that are possible via the presence of </script> in a string literal
+            }}
+          />
+        </>,
+      )
+
+      const head = renderHeadToString({ request, remixContext, Head })
+      const helmet = Helmet.renderStatic()
+
+      responseHeaders.set('Content-Type', 'text/html')
+      resolve(
+        new Response(
+          `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body><div id="root">${renderedOutput}</div></body></html>`,
+          {
+            headers: responseHeaders,
+            status: responseStatusCode,
+          },
+        ),
+      )
+    })
   })
 }
 

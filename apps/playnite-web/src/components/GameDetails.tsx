@@ -13,9 +13,8 @@ import {
   styled,
 } from '@mui/material'
 import { FC, useMemo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { getIsAuthenticated } from '../api/client/state/authSlice'
 import { IGame, IPlatform } from '../domain/types'
+import { useMe } from '../queryHooks'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -53,7 +52,7 @@ const sortGameActionPlatforms = (platforms: IPlatform[]): IPlatform[] => {
 }
 
 const GameDetails: FC<{ game: IGame }> = ({ game }) => {
-  const isAuthenticated = useSelector(getIsAuthenticated)
+  const { data } = useMe()
 
   const platformOptions = useMemo(
     () => sortGameActionPlatforms(game.platformGames.map((gp) => gp.platform)),
@@ -61,17 +60,18 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
   )
   const [selectedIndex, setSelectedIndex] = useState(0)
   const handlePlay = (selectedIndex) => (evt) => {
-    fetch('/activate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      credentials: 'same-origin',
-      body: new URLSearchParams({
-        id: game.id.toString(),
-        platformId: platformOptions[selectedIndex].id.id,
-      }),
-    })
+    // TODO: replace with graphql mutation
+    // fetch('/activate', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    //   credentials: 'same-origin',
+    //   body: new URLSearchParams({
+    //     id: game.id.toString(),
+    //     platformId: platformOptions[selectedIndex].id.id,
+    //   }),
+    // })
   }
 
   const [open, setOpen] = useState(false)
@@ -102,7 +102,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
       <Typography variant="h4">{game.toString()}</Typography>
 
       <Actions ref={platformsAnchorEl}>
-        {isAuthenticated && (
+        {data?.me.isAuthenticated && (
           <>
             <ButtonGroup
               variant="contained"

@@ -1,0 +1,15 @@
+input SignInInput {
+  username: String!
+  password: String!
+  rememberMe: Boolean
+}
+
+type Claim {
+  user: User!
+  credential: String!
+}
+
+extend type Mutation {
+  signIn(input: SignInInput): Claim
+  signOut: User
+}

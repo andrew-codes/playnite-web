@@ -10,6 +10,13 @@
         "cwd": "{projectRoot}"
       }
     },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn graphql-codegen --config codegen.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
     "start/prepare": {
       "executor": "nx:run-commands",
       "options": {
@@ -18,7 +25,6 @@
     },
     "start": {
       "executor": "nx:run-commands",
-      "dependsOn": ["start/prepare"],
       "options": {
         "cwd": "{projectRoot}",
         "command": "yarn cross-env NODE_ENV=development DEBUG='playnite-web/*' yarn node --experimental-json-modules scripts/utils/startDevServer.js"
@@ -81,18 +87,8 @@
         "command": "bash -c '.devcontainer/manually-start-services-for-e2e.sh'"
       }
     },
-    "test/e2e/ci/prepare": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["build"],
-      "outputs": ["{projectRoot}/_packaged"],
-      "options": {
-        "command": "yarn node --require esbuild-register --experimental-json-modules scripts/packageFiles.ts",
-        "cwd": "{projectRoot}"
-      }
-    },
     "test/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": ["test/e2e/prepare"],
       "options": {
         "command": "yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e yarn cypress open --e2e'",
         "cwd": "{projectRoot}"
@@ -100,15 +96,13 @@
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
-      "dependsOn": ["test/e2e/prepare"],
       "options": {
-        "command": "((yarn start-server-and-test 'yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
+        "command": "((yarn start-server-and-test 'yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
         "cwd": "{projectRoot}"
       }
     },
     "test/e2e/ci": {
       "executor": "nx:run-commands",
-      "dependsOn": ["test/e2e/prepare", "test/e2e/ci/prepare"],
       "options": {
         "command": "yarn start-server-and-test 'yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
         "cwd": "{projectRoot}"
