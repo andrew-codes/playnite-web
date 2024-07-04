@@ -1,5 +1,5 @@
 type Feature {
   id: String!
   name: String!
-  gamesReleases: [GameRelease]!
+  gameReleases: [GameRelease]!
 }

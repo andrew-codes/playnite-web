@@ -4,3 +4,8 @@ type Game {
   description: String
   releases: [GameRelease]!
 }
+
+extend type Query {
+  game(id: String!): Game
+  games: [Game]!
+}
