@@ -1,0 +1,5 @@
+type Platform {
+  id: String!
+  name: String!
+  gameReleases: [GameRelease]!
+}

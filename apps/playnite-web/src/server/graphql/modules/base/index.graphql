@@ -1,3 +1,5 @@
-# src/schema/base/schema.graphql
 type Query
 type Mutation
+
+scalar Date
+scalar DateTime
