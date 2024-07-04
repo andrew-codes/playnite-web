@@ -16,10 +16,12 @@
     ],
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    "**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.jsx",
+    "testUtils/**/*.ts",
+    "testUtils/**/*.tsx",
+    "*.ts"
   ],
   "exclude": [
     "node_modules"
