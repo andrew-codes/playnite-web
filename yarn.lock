@@ -17984,6 +17984,7 @@ __metadata:
     cypress-image-diff-html-report: "npm:^2.1.2"
     cypress-image-diff-js: "npm:^2.2.1"
     cypress-plugin-tab: "npm:^1.0.5"
+    dataloader: "npm:^2.2.2"
     debug: "npm:^4.3.5"
     dotenv: "npm:^16.4.5"
     esbuild: "npm:0.21.5"

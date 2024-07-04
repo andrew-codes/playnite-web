@@ -1,5 +1,5 @@
 type CompletionStatus {
   id: String!
   name: String!
-  gamesReleases: [GameRelease]!
+  gameReleases: [GameRelease]!
 }
