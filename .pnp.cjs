@@ -22545,6 +22545,7 @@ const RAW_RUNTIME_STATE =
           ["cypress-image-diff-html-report", "npm:2.1.2"],\
           ["cypress-image-diff-js", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.2.1"],\
           ["cypress-plugin-tab", "npm:1.0.5"],\
+          ["dataloader", "npm:2.2.2"],\
           ["debug", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:4.3.5"],\
           ["dotenv", "npm:16.4.5"],\
           ["esbuild", "npm:0.21.5"],\

@@ -1,0 +1,11 @@
+type Game {
+  id: String!
+  name: String!
+  description: String
+  releases: [GameRelease]!
+}
+
+extend type Query {
+  game(id: String!): Game
+  games: [Game]!
+}

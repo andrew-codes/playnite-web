@@ -12,7 +12,7 @@ createProjectGraphAsync().then((graph) => {
 
   nodemon({
     script: path.join(__dirname, '..', '..', 'server.ts'),
-    ext: 'ts tsx js jsx json',
+    ext: 'ts tsx js jsx json graphql env',
     execMap: {
       js: 'yarn node',
       ts: 'yarn node --require esbuild-register',
@@ -43,7 +43,18 @@ createProjectGraphAsync().then((graph) => {
       path.join(__dirname, '..', '..', 'server.ts'),
       path.join(__dirname, '..', '..', 'app.ts'),
       path.join(__dirname, '..', '..', '*.env'),
-      path.join(__dirname, '..', '..', 'src', '**', '*.graphql'),
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        'src',
+        'server',
+        'graphql',
+        'modules',
+        '**',
+        '*.graphql',
+      ),
+      path.join(__dirname, '..', '..', 'codegen.ts'),
     ].concat(
       workspaceDeps.map((p) => path.join(__dirname, '..', '..', '..', '..', p)),
     ),

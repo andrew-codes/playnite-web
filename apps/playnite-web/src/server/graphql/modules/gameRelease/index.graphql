@@ -1,0 +1,16 @@
+type GameRelease {
+  id: String!
+  name: String!
+  description: String
+  communityScore: Int
+  criticScore: Int
+  gameId: String!
+  hidden: Boolean!
+  releaseDate: Date!
+  recentActivity: DateTime
+  runState: String!
+  platform: Platform!
+  game: Game!
+  completionStatus: CompletionStatus!
+  features: [Feature]!
+}
