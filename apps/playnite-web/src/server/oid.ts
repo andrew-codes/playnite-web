@@ -1,4 +1,11 @@
-const domainTypes = ['User'] as const
+const domainTypes = [
+  'CompletionStatus',
+  'Feature',
+  'Game',
+  'GameRelease',
+  'Platform',
+  'User',
+] as const
 type DomainType = (typeof domainTypes)[number]
 
 interface IIdentify {

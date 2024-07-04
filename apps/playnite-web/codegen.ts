@@ -9,9 +9,16 @@ const config: CodegenConfig = {
   generates: {
     './src/server/graphql': defineConfig({
       typesPluginsConfig: {
+        mappers: {
+          CompletionStatus: './data/types#CompletionStatusEntity',
+          Feature: './data/types#FeatureEntity',
+          Game: './data/types#GameEntity',
+          GameRelease: './data/types#GameReleaseEntity',
+          Platform: './data/types#PlatformEntity',
+        },
         contextType: './context#PlayniteContext',
       },
-      scalarsModule: require.resolve('graphql-scalars'),
+      //scalarsModule: require.resolve('graphql-scalars'),
     }),
   },
 }
