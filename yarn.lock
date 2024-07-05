@@ -13473,10 +13473,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isbot@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "isbot@npm:4.4.0"
-  checksum: 10c0/8cccbd8151a859c4a6c46578aa25984a5cad90ff91b375ab644c20f0a2bf02defa5429739b2de94f68b045d37766837e12991d858ad7cdf5f01e0071d4342e49
+"isbot@npm:^5.1.11":
+  version: 5.1.11
+  resolution: "isbot@npm:5.1.11"
+  checksum: 10c0/a36bef977e1a947dd25e84b1adda1eac6c6ed9a5156cdf9393be74f315afed360f3211053b5d03115f2a87581285853e0852058176020ebbbc354ceb38965cdf
   languageName: node
   linkType: hard
 
@@ -18022,7 +18022,7 @@ __metadata:
     html-webpack-plugin: "npm:^5.6.0"
     intl-parse-accept-language: "npm:^1.0.0"
     is-ip: "npm:^5.0.1"
-    isbot: "npm:^4.4.0"
+    isbot: "npm:^5.1.11"
     istanbul-lib-coverage: "npm:^3.2.2"
     jest: "npm:^29.7.0"
     jest-config: "npm:^29.7.0"
