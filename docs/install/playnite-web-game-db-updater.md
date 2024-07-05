@@ -6,7 +6,7 @@ This is not needed with when using Playnite-Web App. It is only available for us
 
 Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkgs/container/playnite-web-game-db-updater) from the repo. Ensure you are using the same release version as the Plugin (above). Example image: `ghcr.io/andrew-codes/playnite-web-game-db-updater:1.0.0`
 
-##### Environment Variables
+## Environment Variables
 
 | Environment Variable | Value                                    | Notes                                                     |
 | :------------------- | :--------------------------------------- | :-------------------------------------------------------- |
