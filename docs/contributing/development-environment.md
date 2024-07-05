@@ -33,6 +33,7 @@ Install the following software on your local development machine:
    - [nvm for Windows](https://github.com/coreybutler/nvm-windows)
 6. [yarn@^4.0.0](https://yarnpkg.com/getting-started)
    - With Node.js installed, run `corepack enable && corepack prepare --activate yarn@^4.0.0 && yarn set version berry`
+7. Run `yarn nx run devenv:prepare` to ensure consistent developer experience with GraphQL, formatting, etc.
 
 ### Directly: Preparing Codebase
 

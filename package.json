@@ -9,13 +9,15 @@
   "workspaces": [
     "apps/*",
     "libs/**/*",
-    "hass-*/"
+    "hass-*/",
+    ".devcontainer"
   ],
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.9",
     "dotenv": "^16.4.5",
     "glob": "^10.4.2",
+    "graphql-config": "^5.0.3",
     "jest": "^29.7.0",
     "jest-config": "^29.7.0",
     "lerna": "^8.1.5",
