@@ -1,0 +1,16 @@
+{
+  "name": "devenv",
+  "sourceRoot": ".devcontainer/src",
+  "projectType": "library",
+  "targets": {
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn node --require esbuild-register --experimental-json-modules ./scripts/prepare.ts",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}
