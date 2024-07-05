@@ -15,6 +15,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:."\
     },\
     {\
+      "name": "devenv",\
+      "reference": "workspace:.devcontainer"\
+    },\
+    {\
       "name": "playnite-web-plugin",\
       "reference": "workspace:apps/PlayniteWebPlugin"\
     },\
@@ -42,6 +46,7 @@ const RAW_RUNTIME_STATE =
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "fallbackExclusionList": [\
+    ["devenv", ["workspace:.devcontainer"]],\
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
     ["playnite-web-app-hass-addon", ["workspace:hass-playnite-web"]],\
@@ -9571,6 +9576,14 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
+      ["npm:20.14.10", {\
+        "packageLocation": "./.yarn/cache/@types-node-npm-20.14.10-5efcbc9009-0b06cff143.zip/node_modules/@types/node/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:20.14.10"],\
+          ["undici-types", "npm:5.26.5"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:20.14.9", {\
         "packageLocation": "./.yarn/cache/@types-node-npm-20.14.9-a4571e1932-911ffa444d.zip/node_modules/@types/node/",\
         "packageDependencies": [\
@@ -13497,20 +13510,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:4.3.5", {\
-        "packageLocation": "./.yarn/__virtual__/debug-virtual-292c65b876/0/cache/debug-npm-4.3.5-b5001f59b7-082c375a2b.zip/node_modules/debug/",\
-        "packageDependencies": [\
-          ["debug", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:4.3.5"],\
-          ["@types/supports-color", null],\
-          ["ms", "npm:2.1.2"],\
-          ["supports-color", null]\
-        ],\
-        "packagePeers": [\
-          "@types/supports-color",\
-          "supports-color"\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["virtual:e00153819bb6939a231acf612ec6916877777a55116d3f57b0912f1efed0bfe1f427d9805420d8f51f4cb2217efddf1e16aa40eb5852cdab74500daa3ae51efb#npm:4.3.4", {\
         "packageLocation": "./.yarn/__virtual__/debug-virtual-9dad016d01/0/cache/debug-npm-4.3.4-4513954577-cedbec4529.zip/node_modules/debug/",\
         "packageDependencies": [\
@@ -13531,6 +13530,20 @@ const RAW_RUNTIME_STATE =
           ["debug", "virtual:e0cd6afa69db469de21c754be1546e018ea723a8653bf7c1fdbb52b3d67b9c4065461f2d7632852c8644c3b36b5304269483ba2eb51ad39f9eae03847036d7a9#npm:2.6.9"],\
           ["@types/supports-color", null],\
           ["ms", "npm:2.0.0"],\
+          ["supports-color", null]\
+        ],\
+        "packagePeers": [\
+          "@types/supports-color",\
+          "supports-color"\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5", {\
+        "packageLocation": "./.yarn/__virtual__/debug-virtual-6fda35da91/0/cache/debug-npm-4.3.5-b5001f59b7-082c375a2b.zip/node_modules/debug/",\
+        "packageDependencies": [\
+          ["debug", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5"],\
+          ["@types/supports-color", null],\
+          ["ms", "npm:2.1.2"],\
           ["supports-color", null]\
         ],\
         "packagePeers": [\
@@ -13852,6 +13865,21 @@ const RAW_RUNTIME_STATE =
           ["detect-node", "npm:2.1.0"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["devenv", [\
+      ["workspace:.devcontainer", {\
+        "packageLocation": "./.devcontainer/",\
+        "packageDependencies": [\
+          ["devenv", "workspace:.devcontainer"],\
+          ["@types/node", "npm:20.14.10"],\
+          ["@types/shelljs", "npm:0.8.15"],\
+          ["debug", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5"],\
+          ["esbuild", "npm:0.21.5"],\
+          ["esbuild-register", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.5.0"],\
+          ["shelljs", "npm:0.8.5"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["diff", [\
@@ -14566,10 +14594,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0", {\
-        "packageLocation": "./.yarn/__virtual__/esbuild-register-virtual-ec06b91938/0/cache/esbuild-register-npm-3.5.0-d823f64ce0-9ccd0573cb.zip/node_modules/esbuild-register/",\
+      ["virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.5.0", {\
+        "packageLocation": "./.yarn/__virtual__/esbuild-register-virtual-88ef185afb/0/cache/esbuild-register-npm-3.5.0-d823f64ce0-9ccd0573cb.zip/node_modules/esbuild-register/",\
         "packageDependencies": [\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["esbuild-register", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.5.0"],\
           ["@types/esbuild", null],\
           ["debug", "virtual:4b12ba5111caf7e8338099bdbc7cb046a9f8e079a44e74d0c03dca469876e3071ebbe671c5e90ae6b78ae33e22c205fa5ed32169a4aabd1404b13c56d09986e1#npm:4.3.4"],\
           ["esbuild", "npm:0.21.5"]\
@@ -22844,10 +22872,10 @@ const RAW_RUNTIME_STATE =
           ["cypress-image-diff-js", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.2.1"],\
           ["cypress-plugin-tab", "npm:1.0.5"],\
           ["dataloader", "npm:2.2.2"],\
-          ["debug", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:4.3.5"],\
+          ["debug", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5"],\
           ["dotenv", "npm:16.4.5"],\
           ["esbuild", "npm:0.21.5"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["esbuild-register", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.5.0"],\
           ["express", "npm:4.19.2"],\
           ["framer-motion", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:11.2.11"],\
           ["glob", "npm:10.4.2"],\
@@ -22913,7 +22941,7 @@ const RAW_RUNTIME_STATE =
           ["@types/lodash", "npm:4.17.6"],\
           ["@types/shelljs", "npm:0.8.15"],\
           ["esbuild", "npm:0.21.5"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["esbuild-register", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.5.0"],\
           ["lodash", "npm:4.17.21"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.3.2"],\
           ["playnite-web-app", "workspace:apps/playnite-web"],\
@@ -22935,10 +22963,10 @@ const RAW_RUNTIME_STATE =
           ["async-mqtt", "npm:2.6.3"],\
           ["cpy", "npm:11.0.1"],\
           ["cpy-cli", "npm:5.0.0"],\
-          ["debug", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:4.3.5"],\
+          ["debug", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5"],\
           ["dotenv", "npm:16.4.5"],\
           ["esbuild", "npm:0.21.5"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["esbuild-register", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.5.0"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
           ["jest-config", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
           ["jest-when", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:3.6.0"],\
@@ -22963,7 +22991,7 @@ const RAW_RUNTIME_STATE =
           ["@types/lodash", "npm:4.17.6"],\
           ["@types/shelljs", "npm:0.8.15"],\
           ["esbuild", "npm:0.21.5"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["esbuild-register", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.5.0"],\
           ["lodash", "npm:4.17.21"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.3.2"],\
           ["playnite-web-game-db-updater", "workspace:apps/game-db-updater"],\
@@ -22982,7 +23010,7 @@ const RAW_RUNTIME_STATE =
           ["cpy", "npm:11.0.1"],\
           ["cpy-cli", "npm:5.0.0"],\
           ["esbuild", "npm:0.21.5"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["esbuild-register", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.5.0"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.3.2"],\
           ["prettier", "npm:3.3.2"],\
           ["rimraf", "npm:5.0.7"],\
@@ -25748,7 +25776,7 @@ const RAW_RUNTIME_STATE =
           ["arg", "npm:5.0.2"],\
           ["bluebird", "npm:3.7.2"],\
           ["check-more-types", "npm:2.24.0"],\
-          ["debug", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:4.3.5"],\
+          ["debug", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5"],\
           ["execa", "npm:5.1.1"],\
           ["lazy-ass", "npm:1.6.0"],\
           ["ps-tree", "npm:1.2.0"],\
@@ -27695,7 +27723,7 @@ const RAW_RUNTIME_STATE =
           ["versioning", "workspace:libs/versioning"],\
           ["@types/semver", "npm:7.5.8"],\
           ["@types/shelljs", "npm:0.8.15"],\
-          ["debug", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:4.3.5"],\
+          ["debug", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.3.2"],\
           ["semver", "npm:7.6.2"],\
           ["shelljs", "npm:0.8.5"]\
