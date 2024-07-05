@@ -1,0 +1,22 @@
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 10%
+        base: auto
+        branches:
+          - main
+          - release-*
+        if_ci_failed: error
+        only_pulls: false
+    patch:
+      default:
+        target: 80%
+        threshold: 10%
+        base: auto
+        branches:
+          - master
+          - release-*
+        if_ci_failed: error
+        only_pulls: false
