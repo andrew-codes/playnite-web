@@ -21,7 +21,8 @@
     "src/**/*.jsx",
     "testUtils/**/*.ts",
     "testUtils/**/*.tsx",
-    "*.ts"
+    "*.ts",
+    "../../graphql.config.ts"
   ],
   "exclude": [
     "node_modules"
