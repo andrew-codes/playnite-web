@@ -11936,7 +11936,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-config@npm:^5.0.2":
+"graphql-config@npm:^5.0.2, graphql-config@npm:^5.0.3":
   version: 5.0.3
   resolution: "graphql-config@npm:5.0.3"
   dependencies:
@@ -18117,6 +18117,7 @@ __metadata:
     "@types/node": "npm:^20.14.9"
     dotenv: "npm:^16.4.5"
     glob: "npm:^10.4.2"
+    graphql-config: "npm:^5.0.3"
     jest: "npm:^29.7.0"
     jest-config: "npm:^29.7.0"
     lerna: "npm:^8.1.5"
