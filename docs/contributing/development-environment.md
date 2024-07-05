@@ -40,7 +40,7 @@ Install the following software on your local development machine:
 2. Clone your forked repo to your local development machine.
 3. Open the repo in vscode.
 4. Run `yarn`
-5. Run `yarr nx run playnite-web-app:start` and navigate to [http://localhost:3000](http://localhost:3000)
+5. Run `yarn nx run playnite-web-app:start` and navigate to [http://localhost:3000](http://localhost:3000)
    - Note that MQTT and Mongo will be started via docker automatically.
    - Mongo will restore a default database if no database already exists (if there are no files in `.data/mongodb`).
    - Note MQTT currently starts with no username/password configured.
