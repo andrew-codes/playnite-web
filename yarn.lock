@@ -2327,8 +2327,8 @@ __metadata:
   linkType: hard
 
 "@eddeee888/gcg-typescript-resolver-files@npm:^0.10.1":
-  version: 0.10.1
-  resolution: "@eddeee888/gcg-typescript-resolver-files@npm:0.10.1"
+  version: 0.10.2
+  resolution: "@eddeee888/gcg-typescript-resolver-files@npm:0.10.2"
   dependencies:
     "@eddeee888/gcg-server-config": "npm:0.2.2"
     "@graphql-codegen/add": "npm:^5.0.2"
@@ -2343,7 +2343,7 @@ __metadata:
     tslib: "npm:^2.3.0"
   peerDependencies:
     graphql: ^15.0.0 || ^16.0.0
-  checksum: 10c0/5a76affbfb64e799a85232aecb8c62c63b8689551dd216f8d9df32f06ae8d082117369a696a2451116b2674c7b6696474d76b19ec7a313653d839dff0a8f270f
+  checksum: 10c0/4e72f8656a56262b019f03e041f258d5cbad82a39c73eef02dda3cb418e37d19dd694de65ad8b3df6d689ec5696aebce6e989675a17c6b096e8982a4d99db184
   languageName: node
   linkType: hard
 
