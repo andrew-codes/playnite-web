@@ -18397,22 +18397,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"playnite-web-game-db-updater-hass-addon@workspace:hass-game-db-updater":
-  version: 0.0.0-use.local
-  resolution: "playnite-web-game-db-updater-hass-addon@workspace:hass-game-db-updater"
-  dependencies:
-    "@types/lodash": "npm:^4.17.6"
-    "@types/shelljs": "npm:^0.8.15"
-    esbuild: "npm:^0.21.5"
-    esbuild-register: "npm:^3.5.0"
-    lodash: "npm:^4.17.21"
-    nx: "npm:^19.3.2"
-    playnite-web-game-db-updater: "workspace:*"
-    shelljs: "npm:^0.8.5"
-    versioning: "workspace:*"
-  languageName: unknown
-  linkType: soft
-
 "playnite-web-game-db-updater@workspace:*, playnite-web-game-db-updater@workspace:apps/game-db-updater":
   version: 0.0.0-use.local
   resolution: "playnite-web-game-db-updater@workspace:apps/game-db-updater"

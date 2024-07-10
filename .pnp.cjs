@@ -27,10 +27,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/playnite-web"\
     },\
     {\
-      "name": "playnite-web-game-db-updater-hass-addon",\
-      "reference": "workspace:hass-game-db-updater"\
-    },\
-    {\
       "name": "playnite-web-app-hass-addon",\
       "reference": "workspace:hass-playnite-web"\
     },\
@@ -46,7 +42,6 @@ const RAW_RUNTIME_STATE =
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
     ["playnite-web-app-hass-addon", ["workspace:hass-playnite-web"]],\
     ["playnite-web-game-db-updater", ["workspace:apps/game-db-updater"]],\
-    ["playnite-web-game-db-updater-hass-addon", ["workspace:hass-game-db-updater"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]],\
     ["versioning", ["workspace:libs/versioning"]]\
   ],\
@@ -23115,24 +23110,6 @@ const RAW_RUNTIME_STATE =
           ["shelljs", "npm:0.8.5"],\
           ["ts-jest", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.1.5"],\
           ["typescript", "patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=379a07"],\
-          ["versioning", "workspace:libs/versioning"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["playnite-web-game-db-updater-hass-addon", [\
-      ["workspace:hass-game-db-updater", {\
-        "packageLocation": "./hass-game-db-updater/",\
-        "packageDependencies": [\
-          ["playnite-web-game-db-updater-hass-addon", "workspace:hass-game-db-updater"],\
-          ["@types/lodash", "npm:4.17.6"],\
-          ["@types/shelljs", "npm:0.8.15"],\
-          ["esbuild", "npm:0.21.5"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
-          ["lodash", "npm:4.17.21"],\
-          ["nx", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:19.3.2"],\
-          ["playnite-web-game-db-updater", "workspace:apps/game-db-updater"],\
-          ["shelljs", "npm:0.8.5"],\
           ["versioning", "workspace:libs/versioning"]\
         ],\
         "linkType": "SOFT"\
