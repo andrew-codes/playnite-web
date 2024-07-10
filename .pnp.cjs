@@ -23153,7 +23153,8 @@ const RAW_RUNTIME_STATE =
           ["rimraf", "npm:5.0.7"],\
           ["shelljs", "npm:0.8.5"],\
           ["typescript", "patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=379a07"],\
-          ["versioning", "workspace:libs/versioning"]\
+          ["versioning", "workspace:libs/versioning"],\
+          ["yaml", "npm:2.4.5"]\
         ],\
         "linkType": "SOFT"\
       }]\

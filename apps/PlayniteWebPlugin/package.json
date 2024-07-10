@@ -13,6 +13,7 @@
     "rimraf": "^5.0.7",
     "shelljs": "^0.8.5",
     "typescript": "^5.5.2",
-    "versioning": "workspace:*"
+    "versioning": "workspace:*",
+    "yaml": "^2.4.5"
   }
 }
