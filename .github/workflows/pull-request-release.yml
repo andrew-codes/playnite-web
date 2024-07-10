@@ -168,8 +168,8 @@ jobs:
           name: e2e-cypress-screenshots
           path: apps/playnite-web/cypress/screenshots
 
-  publish_images:
-    name: Package
+  package_linux:
+    name: Package non-Windows projects
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -203,7 +203,11 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Publish apps
+      - name: Run version
+        run: yarn nx affected --base=origin/main --head=HEAD --target=version --exclude='*,!tag:linux'
+        env:
+          NODE_ENV: production
+      - name: Package projects
         run: yarn nx affected --base=origin/main --head=HEAD --target=package --parallel --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
@@ -239,8 +243,8 @@ jobs:
       - name: Run all unit tests
         run: yarn nx affected --base=origin/main --head=HEAD --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
 
-  build_extension:
-    name: Build extension
+  package_windows:
+    name: Package Windows projects
     runs-on: windows-latest
     permissions:
       packages: write
@@ -269,7 +273,16 @@ jobs:
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
-      - name: Build extension
+      - name: Run Version
+        run: yarn nx affected --base=origin/main --head=HEAD --target=version --exclude='*,!tag:windows'
+        env:
+          NODE_ENV: production
+      - name: Package projects
         run: yarn nx affected --base=origin/main --head=HEAD --target=build --parallel --verbose --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: playnite-web-extension
+          path: apps/*/_packaged/**
