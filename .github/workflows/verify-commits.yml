@@ -1,0 +1,279 @@
+name: 'Verify Commits'
+
+on:
+  push:
+    branches:
+      - main
+      - release-*
+      - next
+
+permissions:
+  contents: read
+
+jobs:
+  unit_tests_linux:
+    name: Verify Tests (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install deps
+        run: yarn
+      - name: Run all unit tests
+        run: yarn nx run-many --target=test/unit/ci --parallel --verbose --projects=tag:linux
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: '**/.test-runs/unit/lcov.info'
+          flags: unit-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  component_tests_linux:
+    name: Verify PR - Component Tests (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install deps
+        run: yarn
+      - name: Run all component tests
+        run: yarn nx run-many --target=test/components/ci --parallel --verbose --projects=tag:linux
+      - name: Upload test video artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-cypress-videos
+          path: apps/playnite-web/cypress/videos
+      - name: Upload test screenshot artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-cypress-videos
+          path: apps/playnite-web/cypress/screenshots
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: '**/.test-runs/component/lcov.info'
+          flags: component-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  visual_component_tests_linux:
+    name: Verify PR - Component Visual Regression Tests (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install deps
+        run: yarn
+      - name: Run all visual regression tests
+        run: yarn nx affected --base=origin/main --head=HEAD --target=test/components/visual/ci --verbose --exclude='*,!tag:linux'
+      - name: Upload visual regression artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-comparisons
+          path: apps/playnite-web/visual-regression-tests/screenshots
+      - name: Upload test video artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-cypress-videos
+          path: apps/playnite-web/cypress/videos
+      - name: Upload test screenshot artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-cypress-screenshots
+          path: apps/playnite-web/cypress/screenshots
+
+  e2e_tests_linux:
+    name: Verify PR - e2e Tests (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install deps
+        run: yarn
+      - name: Run all e2e tests
+        run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
+        env:
+          E2E: 'true'
+      - name: Upload visual regression artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-e2e-comparisons
+          path: apps/playnite-web/visual-regression-tests/screenshots
+      - name: Upload test video artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-cypress-videos
+          path: apps/playnite-web/cypress/videos
+      - name: Upload test screenshot artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-cypress-screenshots
+          path: apps/playnite-web/cypress/screenshots
+
+  publish_images:
+    name: Publish images
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      OWNER: andrew-codes
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract major release version from package.json
+        uses: sergeysova/jq-action@v2
+        id: major_release_version
+        with:
+          cmd: jq .version package.json -r | cut -d. -f1
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install deps
+        run: yarn
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY}}
+          username: ${{ env.OWNER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Publish apps
+        run: yarn nx run-many --target=publish --parallel --verbose
+        env:
+          NODE_ENV: production
+          DEBUG: 'playnite-web/*'
+          PLATFORM: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+
+  unit_tests_windows:
+    name: Verify PR - Tests (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+      - name: Read Node version
+        run: echo "value=$(./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: node_version
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Read Yarn version
+        run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: yarn_version
+      - name: Enable yarn
+        run: corepack enable
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+      - name: Install deps
+        run: yarn
+      - name: Run all unit tests
+        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
+
+  package:
+    name: Package extension
+    runs-on: windows-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      - name: Download Playnite Toolbox
+        run: |-
+          mkdir -p .tools/Playnite && curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
+      - name: Install jq
+        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+      - name: Read Node version
+        run: echo "value=$(./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: node_version
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Read Yarn version
+        run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: yarn_version
+      - name: Enable yarn
+        run: corepack enable
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+      - name: Install deps
+        run: yarn
+      - name: Package extension
+        run: yarn nx run playnite-web-plugin:package --verbose
+        env:
+          NODE_ENV: production
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: playnite-web-extension
+          path: apps/*/_packaged/**

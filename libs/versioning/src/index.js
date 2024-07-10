@@ -1,4 +1,5 @@
 const semver = require('semver')
+const { isEmpty } = require('lodash')
 const sh = require('shelljs')
 const debug = require('debug')('playnite-web/versioning')
 
@@ -14,13 +15,26 @@ const getDockerTags = async (version, ref) => {
     if (prNumber) {
       tags.push(`PR-${prNumber}`)
     }
-  } else if (/^refs\/tags\//.test(ref)) {
-    tags.push(version)
-
-    const major = semver.major(version)
+  } else if (/^refs\/heads\/main$/.test(ref)) {
+    tags.push(`dev`)
+  } else if (/^refs\/heads\/next$/.test(ref)) {
+    tags.push(`dev-next`)
+  } else if (/^refs\/head\/release-.*/.test(ref)) {
+    const nextVersion = ref.replace(/^refs\/heads\/release-/, '')
+    tags.push(nextVersion)
+    const major = semver.major(nextVersion)
     tags.push(`${major}-latest`)
 
-    const minor = semver.minor(version)
+    const minor = semver.minor(nextVersion)
+    tags.push(`${major}.${minor}-latest`)
+  } else if (!isEmpty(version)) {
+    const nextVersion = version.replace(/^v/, '')
+    tags.push(nextVersion)
+
+    const major = semver.major(nextVersion)
+    tags.push(`${major}-latest`)
+
+    const minor = semver.minor(nextVersion)
     tags.push(`${major}.${minor}-latest`)
 
     const latestVersion = sh
@@ -30,11 +44,9 @@ const getDockerTags = async (version, ref) => {
       .map((tag) => tag.replace(/^v/, ''))
       .sort(semver.rcompare)[0]
 
-    if (latestVersion === version) {
+    if (latestVersion === nextVersion) {
       tags.push('latest')
     }
-  } else if (/^refs\/heads\/main$/.test(ref)) {
-    tags.push(`dev`)
   }
 
   debug(`tags: ${tags.join(', ')}`)
