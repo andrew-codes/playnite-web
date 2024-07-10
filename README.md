@@ -36,14 +36,12 @@ Playnite-Web consists the following:
 
 > All components are required.
 
-| Component           | Deployment Mechanism              | Purpose                                                                                                                                              |
-| :------------------ | :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
-| database            | Docker image / bring your own     | Mongo DB database that stores game data in `games` database.                                                                                         |
-| MQTT broker         | Docker image / bring your own     | Provides a communication mechanism between Playnite and Playnite-Web.                                                                                |
-| Playnite-Web Plugin | Extension installed into Playnite | The plugin sends and receives messages via MQTT when data in Playnite is changed.                                                                    |
-| Playnite-Web App    | Docker image                      | Web application and UI to browse and view game library. Updates database from Playnite-Web Plugin. Can be exposed to Internet to share with friends. |
-
-> Note, if you want to update your game library only, and not run Playnite-Web, you may do so by running the `playnite-web-game-db-updater`. However, do not run both this and Playnite-Web App. See the [playnite-web-game-db-updater documentation](docs/install/playnite-web-game-db-updater.md) for more details.
+| Component           | Deployment Mechanism              | Purpose                                                                                                        |
+| :------------------ | :-------------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| (game) database     | Docker image / bring your own     | Mongo DB database that stores game data in `games` database.                                                   |
+| MQTT broker         | Docker image / bring your own     | Provides a communication mechanism between Playnite and Playnite-Web.                                          |
+| Playnite-Web Plugin | Extension installed into Playnite | The plugin sends and receives messages via MQTT when data in Playnite is changed.                              |
+| Playnite-Web App    | Docker image                      | Syncs Playnite games to game database, web UI, and GraphQL API that may be used to power your own experiences. |
 
 ### Deployment
 
