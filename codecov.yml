@@ -8,6 +8,7 @@ coverage:
         branches:
           - main
           - release-*
+          - next
         if_ci_failed: error
         only_pulls: false
     patch:
@@ -18,5 +19,6 @@ coverage:
         branches:
           - master
           - release-*
+          - next
         if_ci_failed: error
         only_pulls: false
