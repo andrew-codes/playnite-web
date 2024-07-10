@@ -6045,17 +6045,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@remix-run/dev", [\
-      ["npm:2.9.2", {\
-        "packageLocation": "./.yarn/cache/@remix-run-dev-npm-2.9.2-f1be19c032-0d773a4b94.zip/node_modules/@remix-run/dev/",\
+      ["npm:2.10.2", {\
+        "packageLocation": "./.yarn/cache/@remix-run-dev-npm-2.10.2-42b646bc09-77280aea8a.zip/node_modules/@remix-run/dev/",\
         "packageDependencies": [\
-          ["@remix-run/dev", "npm:2.9.2"]\
+          ["@remix-run/dev", "npm:2.10.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2", {\
-        "packageLocation": "./.yarn/__virtual__/@remix-run-dev-virtual-c08250f70e/0/cache/@remix-run-dev-npm-2.9.2-f1be19c032-0d773a4b94.zip/node_modules/@remix-run/dev/",\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.10.2", {\
+        "packageLocation": "./.yarn/__virtual__/@remix-run-dev-virtual-d23bff9566/0/cache/@remix-run-dev-npm-2.10.2-42b646bc09-77280aea8a.zip/node_modules/@remix-run/dev/",\
         "packageDependencies": [\
-          ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
+          ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.10.2"],\
           ["@babel/core", "npm:7.24.6"],\
           ["@babel/generator", "npm:7.23.6"],\
           ["@babel/parser", "npm:7.23.6"],\
@@ -6066,11 +6066,11 @@ const RAW_RUNTIME_STATE =
           ["@babel/types", "npm:7.23.4"],\
           ["@mdx-js/mdx", "npm:2.3.0"],\
           ["@npmcli/package-json", "npm:4.0.1"],\
-          ["@remix-run/node", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
+          ["@remix-run/node", "virtual:d23bff9566a5cf8571febd9798ff14dc177b89e55cd972fc06fc533ff499b723179c40200ba0c0867649c1a8959169a8b37536b6c0f1c022addc9aa02d06829d#npm:2.10.2"],\
           ["@remix-run/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
-          ["@remix-run/router", "npm:1.16.1"],\
+          ["@remix-run/router", "npm:1.17.1"],\
           ["@remix-run/serve", null],\
-          ["@remix-run/server-runtime", "virtual:c08250f70e1b8a3e0f7c3694643d92c49bc5e8cda00743b6a91215f56b55335674895ffe7770b0a59d764c12efd2b08712b18b963a755593bc30e114bd86097c#npm:2.9.2"],\
+          ["@remix-run/server-runtime", "virtual:d23bff9566a5cf8571febd9798ff14dc177b89e55cd972fc06fc533ff499b723179c40200ba0c0867649c1a8959169a8b37536b6c0f1c022addc9aa02d06829d#npm:2.10.2"],\
           ["@types/mdx", "npm:2.0.10"],\
           ["@types/remix-run__react", null],\
           ["@types/remix-run__serve", null],\
@@ -6165,6 +6165,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@remix-run/node", [\
+      ["npm:2.10.2", {\
+        "packageLocation": "./.yarn/cache/@remix-run-node-npm-2.10.2-640df5d05d-50096d1d6d.zip/node_modules/@remix-run/node/",\
+        "packageDependencies": [\
+          ["@remix-run/node", "npm:2.10.2"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["npm:2.4.1", {\
         "packageLocation": "./.yarn/cache/@remix-run-node-npm-2.4.1-fbab3f0566-109ea16f44.zip/node_modules/@remix-run/node/",\
         "packageDependencies": [\
@@ -6183,7 +6190,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@remix-run-node-virtual-43c2752643/0/cache/@remix-run-node-npm-2.9.2-d7594a9748-4cbe37eec5.zip/node_modules/@remix-run/node/",\
         "packageDependencies": [\
           ["@remix-run/node", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
-          ["@remix-run/server-runtime", "virtual:c08250f70e1b8a3e0f7c3694643d92c49bc5e8cda00743b6a91215f56b55335674895ffe7770b0a59d764c12efd2b08712b18b963a755593bc30e114bd86097c#npm:2.9.2"],\
+          ["@remix-run/server-runtime", "virtual:43c2752643700893d3712abef4bb1168bb38a032cfa5bbed985f94b211b69151719bf668b51f2969871c2054ed33ddd20e2d3eb4e2cca29e2038aec4d2b59eee#npm:2.9.2"],\
           ["@remix-run/web-fetch", "npm:4.4.2"],\
           ["@types/typescript", null],\
           ["@web3-storage/multipart-parser", "npm:1.0.0"],\
@@ -6192,6 +6199,26 @@ const RAW_RUNTIME_STATE =
           ["stream-slice", "npm:0.1.2"],\
           ["typescript", "patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=379a07"],\
           ["undici", "npm:6.18.2"]\
+        ],\
+        "packagePeers": [\
+          "@types/typescript",\
+          "typescript"\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["virtual:d23bff9566a5cf8571febd9798ff14dc177b89e55cd972fc06fc533ff499b723179c40200ba0c0867649c1a8959169a8b37536b6c0f1c022addc9aa02d06829d#npm:2.10.2", {\
+        "packageLocation": "./.yarn/__virtual__/@remix-run-node-virtual-efc71ac805/0/cache/@remix-run-node-npm-2.10.2-640df5d05d-50096d1d6d.zip/node_modules/@remix-run/node/",\
+        "packageDependencies": [\
+          ["@remix-run/node", "virtual:d23bff9566a5cf8571febd9798ff14dc177b89e55cd972fc06fc533ff499b723179c40200ba0c0867649c1a8959169a8b37536b6c0f1c022addc9aa02d06829d#npm:2.10.2"],\
+          ["@remix-run/server-runtime", "virtual:d23bff9566a5cf8571febd9798ff14dc177b89e55cd972fc06fc533ff499b723179c40200ba0c0867649c1a8959169a8b37536b6c0f1c022addc9aa02d06829d#npm:2.10.2"],\
+          ["@remix-run/web-fetch", "npm:4.4.2"],\
+          ["@types/typescript", null],\
+          ["@web3-storage/multipart-parser", "npm:1.0.0"],\
+          ["cookie-signature", "npm:1.2.1"],\
+          ["source-map-support", "npm:0.5.21"],\
+          ["stream-slice", "npm:0.1.2"],\
+          ["typescript", "patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=379a07"],\
+          ["undici", "npm:6.19.2"]\
         ],\
         "packagePeers": [\
           "@types/typescript",\
@@ -6234,7 +6261,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@remix-run/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
           ["@remix-run/router", "npm:1.16.1"],\
-          ["@remix-run/server-runtime", "virtual:c08250f70e1b8a3e0f7c3694643d92c49bc5e8cda00743b6a91215f56b55335674895ffe7770b0a59d764c12efd2b08712b18b963a755593bc30e114bd86097c#npm:2.9.2"],\
+          ["@remix-run/server-runtime", "virtual:43c2752643700893d3712abef4bb1168bb38a032cfa5bbed985f94b211b69151719bf668b51f2969871c2054ed33ddd20e2d3eb4e2cca29e2038aec4d2b59eee#npm:2.9.2"],\
           ["@types/react", "npm:18.3.3"],\
           ["@types/react-dom", "npm:18.3.0"],\
           ["@types/typescript", null],\
@@ -6270,9 +6297,23 @@ const RAW_RUNTIME_STATE =
           ["@remix-run/router", "npm:1.16.1"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:1.17.1", {\
+        "packageLocation": "./.yarn/cache/@remix-run-router-npm-1.17.1-66731364d9-bee1631feb.zip/node_modules/@remix-run/router/",\
+        "packageDependencies": [\
+          ["@remix-run/router", "npm:1.17.1"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@remix-run/server-runtime", [\
+      ["npm:2.10.2", {\
+        "packageLocation": "./.yarn/cache/@remix-run-server-runtime-npm-2.10.2-89284daf10-745abb5cf7.zip/node_modules/@remix-run/server-runtime/",\
+        "packageDependencies": [\
+          ["@remix-run/server-runtime", "npm:2.10.2"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["npm:2.4.1", {\
         "packageLocation": "./.yarn/cache/@remix-run-server-runtime-npm-2.4.1-b9f99c8509-95f38f5e0d.zip/node_modules/@remix-run/server-runtime/",\
         "packageDependencies": [\
@@ -6287,10 +6328,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:c08250f70e1b8a3e0f7c3694643d92c49bc5e8cda00743b6a91215f56b55335674895ffe7770b0a59d764c12efd2b08712b18b963a755593bc30e114bd86097c#npm:2.9.2", {\
-        "packageLocation": "./.yarn/__virtual__/@remix-run-server-runtime-virtual-676bd4324d/0/cache/@remix-run-server-runtime-npm-2.9.2-1dbb794e7f-0ac11c8bca.zip/node_modules/@remix-run/server-runtime/",\
+      ["virtual:43c2752643700893d3712abef4bb1168bb38a032cfa5bbed985f94b211b69151719bf668b51f2969871c2054ed33ddd20e2d3eb4e2cca29e2038aec4d2b59eee#npm:2.9.2", {\
+        "packageLocation": "./.yarn/__virtual__/@remix-run-server-runtime-virtual-080c706e86/0/cache/@remix-run-server-runtime-npm-2.9.2-1dbb794e7f-0ac11c8bca.zip/node_modules/@remix-run/server-runtime/",\
         "packageDependencies": [\
-          ["@remix-run/server-runtime", "virtual:c08250f70e1b8a3e0f7c3694643d92c49bc5e8cda00743b6a91215f56b55335674895ffe7770b0a59d764c12efd2b08712b18b963a755593bc30e114bd86097c#npm:2.9.2"],\
+          ["@remix-run/server-runtime", "virtual:43c2752643700893d3712abef4bb1168bb38a032cfa5bbed985f94b211b69151719bf668b51f2969871c2054ed33ddd20e2d3eb4e2cca29e2038aec4d2b59eee#npm:2.9.2"],\
           ["@remix-run/router", "npm:1.16.1"],\
           ["@types/cookie", "npm:0.6.0"],\
           ["@types/typescript", null],\
@@ -6299,6 +6340,26 @@ const RAW_RUNTIME_STATE =
           ["set-cookie-parser", "npm:2.6.0"],\
           ["source-map", "npm:0.7.4"],\
           ["turbo-stream", "npm:2.1.0"],\
+          ["typescript", "patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=379a07"]\
+        ],\
+        "packagePeers": [\
+          "@types/typescript",\
+          "typescript"\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["virtual:d23bff9566a5cf8571febd9798ff14dc177b89e55cd972fc06fc533ff499b723179c40200ba0c0867649c1a8959169a8b37536b6c0f1c022addc9aa02d06829d#npm:2.10.2", {\
+        "packageLocation": "./.yarn/__virtual__/@remix-run-server-runtime-virtual-afe065be7b/0/cache/@remix-run-server-runtime-npm-2.10.2-89284daf10-745abb5cf7.zip/node_modules/@remix-run/server-runtime/",\
+        "packageDependencies": [\
+          ["@remix-run/server-runtime", "virtual:d23bff9566a5cf8571febd9798ff14dc177b89e55cd972fc06fc533ff499b723179c40200ba0c0867649c1a8959169a8b37536b6c0f1c022addc9aa02d06829d#npm:2.10.2"],\
+          ["@remix-run/router", "npm:1.17.1"],\
+          ["@types/cookie", "npm:0.6.0"],\
+          ["@types/typescript", null],\
+          ["@web3-storage/multipart-parser", "npm:1.0.0"],\
+          ["cookie", "npm:0.6.0"],\
+          ["set-cookie-parser", "npm:2.6.0"],\
+          ["source-map", "npm:0.7.4"],\
+          ["turbo-stream", "npm:2.2.0"],\
           ["typescript", "patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=379a07"]\
         ],\
         "packagePeers": [\
@@ -7787,7 +7848,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@vite-pwa-remix-virtual-35032996b1/0/cache/@vite-pwa-remix-npm-0.1.0-1dedb387cb-be1063522d.zip/node_modules/@vite-pwa/remix/",\
         "packageDependencies": [\
           ["@vite-pwa/remix", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.1.0"],\
-          ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
+          ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.10.2"],\
           ["@types/remix-run__dev", null],\
           ["@types/vite-plugin-pwa", null],\
           ["@types/vite-pwa__assets-generator", null],\
@@ -18988,7 +19049,7 @@ const RAW_RUNTIME_STATE =
           ["@mui/material", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.20"],\
           ["@mui/utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.15.20"],\
           ["@reduxjs/toolkit", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.2.5"],\
-          ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
+          ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.10.2"],\
           ["@remix-run/express", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
           ["@remix-run/node", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
           ["@remix-run/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.9.2"],\
@@ -22697,6 +22758,13 @@ const RAW_RUNTIME_STATE =
           ["turbo-stream", "npm:2.1.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:2.2.0", {\
+        "packageLocation": "./.yarn/cache/turbo-stream-npm-2.2.0-bbcd833e95-894f832ee9.zip/node_modules/turbo-stream/",\
+        "packageDependencies": [\
+          ["turbo-stream", "npm:2.2.0"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["tweetnacl", [\
@@ -22976,6 +23044,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/undici-npm-6.18.2-c1115b72ab-271df2f77f.zip/node_modules/undici/",\
         "packageDependencies": [\
           ["undici", "npm:6.18.2"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:6.19.2", {\
+        "packageLocation": "./.yarn/cache/undici-npm-6.19.2-a9aa1269bb-3b7b9238c0.zip/node_modules/undici/",\
+        "packageDependencies": [\
+          ["undici", "npm:6.19.2"]\
         ],\
         "linkType": "HARD"\
       }]\
