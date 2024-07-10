@@ -18458,6 +18458,7 @@ __metadata:
     shelljs: "npm:^0.8.5"
     typescript: "npm:^5.5.2"
     versioning: "workspace:*"
+    yaml: "npm:^2.4.5"
   languageName: unknown
   linkType: soft
 
@@ -23531,7 +23532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.3.1":
+"yaml@npm:^2.3.1, yaml@npm:^2.4.5":
   version: 2.4.5
   resolution: "yaml@npm:2.4.5"
   bin:
