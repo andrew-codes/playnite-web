@@ -4999,7 +4999,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@lerna/create", "npm:8.1.4"],\
           ["@npmcli/run-script", "npm:7.0.2"],\
-          ["@nx/devkit", "virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.1.1"],\
+          ["@nx/devkit", "virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.4.2"],\
           ["@octokit/plugin-enterprise-rest", "npm:6.0.1"],\
           ["@octokit/rest", "npm:19.0.11"],\
           ["byte-size", "npm:8.1.1"],\
@@ -5551,11 +5551,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@nrwl/devkit", [\
-      ["npm:19.1.1", {\
-        "packageLocation": "./.yarn/cache/@nrwl-devkit-npm-19.1.1-fdfacd27af-1f2098f362.zip/node_modules/@nrwl/devkit/",\
+      ["npm:19.4.2", {\
+        "packageLocation": "./.yarn/cache/@nrwl-devkit-npm-19.4.2-98d6e58e0f-4c641294b8.zip/node_modules/@nrwl/devkit/",\
         "packageDependencies": [\
-          ["@nrwl/devkit", "npm:19.1.1"],\
-          ["@nx/devkit", "virtual:fdfacd27af7c671930c1788cec0d2994440eb28c5ea25d97e18cff5fd778be68e814d6b5d0226fb48c319a4b76c70726610de86d5a769c4a525e8ec71e142d72#npm:19.1.1"]\
+          ["@nrwl/devkit", "npm:19.4.2"],\
+          ["@nx/devkit", "virtual:98d6e58e0f103cf0b1bc22976fa7dbcd40be9b59f36fad1f524495b79386bdfb4269f861aaa4fb2af2679e1859e0d4d65d4b8fea4c45d5e591d961c93dd4d7f9#npm:19.4.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5581,24 +5581,24 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@nx/devkit", [\
-      ["npm:19.1.1", {\
-        "packageLocation": "./.yarn/cache/@nx-devkit-npm-19.1.1-2da39196bd-5abe5d31ce.zip/node_modules/@nx/devkit/",\
+      ["npm:19.4.2", {\
+        "packageLocation": "./.yarn/cache/@nx-devkit-npm-19.4.2-89e2e34dbc-82fadff430.zip/node_modules/@nx/devkit/",\
         "packageDependencies": [\
-          ["@nx/devkit", "npm:19.1.1"]\
+          ["@nx/devkit", "npm:19.4.2"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/@nx-devkit-virtual-123ceaa8a3/0/cache/@nx-devkit-npm-19.1.1-2da39196bd-5abe5d31ce.zip/node_modules/@nx/devkit/",\
+      ["virtual:98d6e58e0f103cf0b1bc22976fa7dbcd40be9b59f36fad1f524495b79386bdfb4269f861aaa4fb2af2679e1859e0d4d65d4b8fea4c45d5e591d961c93dd4d7f9#npm:19.4.2", {\
+        "packageLocation": "./.yarn/__virtual__/@nx-devkit-virtual-3b97cb05c6/0/cache/@nx-devkit-npm-19.4.2-89e2e34dbc-82fadff430.zip/node_modules/@nx/devkit/",\
         "packageDependencies": [\
-          ["@nx/devkit", "virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.1.1"],\
-          ["@nrwl/devkit", "npm:19.1.1"],\
+          ["@nx/devkit", "virtual:98d6e58e0f103cf0b1bc22976fa7dbcd40be9b59f36fad1f524495b79386bdfb4269f861aaa4fb2af2679e1859e0d4d65d4b8fea4c45d5e591d961c93dd4d7f9#npm:19.4.2"],\
+          ["@nrwl/devkit", "npm:19.4.2"],\
           ["@types/nx", null],\
           ["ejs", "npm:3.1.10"],\
           ["enquirer", "npm:2.3.6"],\
           ["ignore", "npm:5.2.4"],\
           ["minimatch", "npm:9.0.3"],\
-          ["nx", "virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.1.1"],\
+          ["nx", null],\
           ["semver", "npm:7.5.4"],\
           ["tmp", "npm:0.2.1"],\
           ["tslib", "npm:2.6.2"],\
@@ -5610,17 +5610,17 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["virtual:fdfacd27af7c671930c1788cec0d2994440eb28c5ea25d97e18cff5fd778be68e814d6b5d0226fb48c319a4b76c70726610de86d5a769c4a525e8ec71e142d72#npm:19.1.1", {\
-        "packageLocation": "./.yarn/__virtual__/@nx-devkit-virtual-dca0139ead/0/cache/@nx-devkit-npm-19.1.1-2da39196bd-5abe5d31ce.zip/node_modules/@nx/devkit/",\
+      ["virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.4.2", {\
+        "packageLocation": "./.yarn/__virtual__/@nx-devkit-virtual-18c6769c68/0/cache/@nx-devkit-npm-19.4.2-89e2e34dbc-82fadff430.zip/node_modules/@nx/devkit/",\
         "packageDependencies": [\
-          ["@nx/devkit", "virtual:fdfacd27af7c671930c1788cec0d2994440eb28c5ea25d97e18cff5fd778be68e814d6b5d0226fb48c319a4b76c70726610de86d5a769c4a525e8ec71e142d72#npm:19.1.1"],\
-          ["@nrwl/devkit", "npm:19.1.1"],\
+          ["@nx/devkit", "virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.4.2"],\
+          ["@nrwl/devkit", "npm:19.4.2"],\
           ["@types/nx", null],\
           ["ejs", "npm:3.1.10"],\
           ["enquirer", "npm:2.3.6"],\
           ["ignore", "npm:5.2.4"],\
           ["minimatch", "npm:9.0.3"],\
-          ["nx", null],\
+          ["nx", "virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.1.1"],\
           ["semver", "npm:7.5.4"],\
           ["tmp", "npm:0.2.1"],\
           ["tslib", "npm:2.6.2"],\
@@ -15574,7 +15574,7 @@ const RAW_RUNTIME_STATE =
           ["lerna", "npm:8.1.4"],\
           ["@lerna/create", "npm:8.1.4"],\
           ["@npmcli/run-script", "npm:7.0.2"],\
-          ["@nx/devkit", "virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.1.1"],\
+          ["@nx/devkit", "virtual:faaa486b7f9c2ca0555de5028c3aade0fc3ceb38588ea212d9dcecdd50d5617ba0f00130f147157caf2489dbda185923fc15a0272a3915a9649e54b46ed899e1#npm:19.4.2"],\
           ["@octokit/plugin-enterprise-rest", "npm:6.0.1"],\
           ["@octokit/rest", "npm:19.0.11"],\
           ["byte-size", "npm:8.1.1"],\
