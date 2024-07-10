@@ -1,6 +1,5 @@
 import fs from 'fs/promises'
 import path from 'path'
-import sh from 'shelljs'
 import { parse, stringify } from 'yaml'
 
 async function run() {
@@ -12,11 +11,9 @@ async function run() {
   if (!VERSION) {
     throw new Error('Missing environment variables')
   }
-  extensionDefinition.Version = VERSION
+  extensionDefinition.Version = VERSION ?? extensionDefinition.Version
 
   await fs.writeFile('extension.yaml', stringify(extensionDefinition), 'utf8')
-
-  sh.exec(`msbuild PlayniteWeb.csproj -property:Configuration=Release`)
 }
 
 run()
