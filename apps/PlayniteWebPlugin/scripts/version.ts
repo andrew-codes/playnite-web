@@ -8,8 +8,11 @@ async function run() {
   const extensionDefinition = parse(extensionDefinitionContent)
 
   const { VERSION } = process.env
-  extensionDefinition.Version = VERSION ?? extensionDefinition.Version
+  if (!VERSION) {
+    return
+  }
 
+  extensionDefinition.Version = VERSION
   await fs.writeFile('extension.yaml', stringify(extensionDefinition), 'utf8')
 }
 
