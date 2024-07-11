@@ -1,39 +1,48 @@
 import DataLoader from 'dataloader'
-import { Document, Filter, WithId } from 'mongodb'
+import { omit } from 'lodash'
+import { Document, Filter } from 'mongodb'
 import { autoBind, type DomainApi } from '../../../Domain'
-import { GameReleaseEntity } from '../../../data/types'
+import { GameReleaseEntity } from '../../../resolverTypes'
 
 function create(this: DomainApi) {
-  const loader = new DataLoader<string, WithId<GameReleaseEntity>>(
-    async (ids) => {
-      return (await this.db())
-        .collection<GameReleaseEntity>('game')
-        .find({ id: { $in: ids } })
-        .toArray()
-    },
-  )
+  const loader = new DataLoader<string, GameReleaseEntity>(async (ids) => {
+    const releases = await (
+      await this.db()
+    )
+      .collection<GameReleaseEntity>('game')
+      .find({ id: { $in: ids } })
+      .toArray()
+
+    return releases.map((gameRelease) => omit(gameRelease, '_id'))
+  })
 
   return autoBind(this, {
     async getById(this: DomainApi, id: string) {
       return loader.load(id)
     },
     async getAll(this: DomainApi) {
-      return (await this.db())
+      const releases = await (await this.db())
         .collection<GameReleaseEntity>('game')
         .find()
         .toArray()
+
+      return releases.map((gameRelease) => omit(gameRelease, '_id'))
     },
     async getByName(this: DomainApi, name: string) {
-      return (await this.db())
+      const releases = await (await this.db())
         .collection<GameReleaseEntity>('game')
         .find({ name: name })
         .toArray()
+
+      return releases.map((gameRelease) => omit(gameRelease, '_id'))
     },
     async getBy(this: DomainApi, query: Filter<Document>) {
-      return (await this.db())
+      const releases = await (await this.db())
         .collection<GameReleaseEntity>('game')
         .find(query)
         .toArray()
+
+      return releases.map((gameRelease) => omit(gameRelease, '_id'))
     },
   })
 }

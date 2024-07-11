@@ -1,6 +1,4 @@
-import { Document, WithId } from 'mongodb'
-
-type PlatformDbEntity = {
+type PlatformEntity = {
   specificationId: string
   icon: string
   cover: string
@@ -9,27 +7,34 @@ type PlatformDbEntity = {
   id: string
 }
 
-type FeatureDbEntity = WithId<Document> & {
+type FeatureEntity = {
   name: string
   id: string
 }
 
-type CompletionStatusDbEntity = WithId<Document> & {
+type CompletionStatusEntity = {
   name: string
   id: string
 }
 
-type TagDbEntity = WithId<Document> & {
+type TagEntity = {
   id: string
   name: string
 }
 
-type SourceDbEntity = {
+type SourceEntity = {
   id: string
   name: string
 }
 
-type GameReleaseDbEntity = WithId<Document> & {
+type PlatformSourceEntity = {
+  id: string
+  name: string
+}
+
+type GameEntity = Array<GameReleaseEntity>
+
+type GameReleaseEntity = {
   added: string
   ageRating: string
   backgroundImage: string
@@ -57,7 +62,8 @@ type GameReleaseDbEntity = WithId<Document> & {
   isUninstalling: boolean
   links: { name: string; url: string }[]
   name: string
-  platforms: PlatformDbEntity[]
+  platformSource: PlatformSourceEntity
+  platforms: Array<PlatformEntity>
   platformsIds: string[]
   publishers: { id: string; name: string }[]
   publishersIds: string[]
@@ -69,31 +75,33 @@ type GameReleaseDbEntity = WithId<Document> & {
   seriesIds: string[]
   sortingName?: string
   sortName: string
-  source: SourceDbEntity
+  source: SourceEntity
   sourceId: string | null
-  tags: Array<TagDbEntity> | null
+  tags: Array<TagEntity> | null
   tagsIds: string[]
 }
 
-type GameAssetDbType = 'background' | 'cover' | 'icon'
+type GameAssetType = 'background' | 'cover' | 'icon'
 
-type GameAssetEntityDbType = 'games' | 'platforms'
+type GameAssetEntityType = 'games' | 'platforms'
 
-type GameAssetDbEntity = {
+type GameAssetEntity = {
   id: string
   relatedId: string
-  relatedType: GameAssetEntityDbType
-  typeKey: GameAssetDbType
+  relatedType: GameAssetEntityType
+  typeKey: GameAssetType
 }
 
 export type {
-  CompletionStatusDbEntity,
-  FeatureDbEntity,
-  GameAssetDbEntity,
-  GameAssetDbType,
-  GameAssetEntityDbType,
-  GameReleaseDbEntity,
-  PlatformDbEntity,
-  SourceDbEntity,
-  TagDbEntity,
+  CompletionStatusEntity,
+  FeatureEntity,
+  GameAssetEntity,
+  GameAssetEntityType,
+  GameAssetType,
+  GameEntity,
+  GameReleaseEntity,
+  PlatformEntity,
+  PlatformSourceEntity,
+  SourceEntity,
+  TagEntity,
 }

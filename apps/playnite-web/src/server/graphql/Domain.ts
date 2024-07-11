@@ -3,16 +3,18 @@ import { getDbClient } from './data/mongo'
 import createAuthApi from './modules/auth/api'
 import createCompletionStatusApi from './modules/completionStatus/api'
 import createFeatureApi from './modules/feature/api'
-import createGameApi from './modules/gameRelease/api'
+import createGameApi from './modules/game/api'
+import createGameReleaseApi from './modules/gameRelease/api'
 import createPlatformApi from './modules/platform/api'
 import createUserApi from './modules/user/api'
 import { getUserById, getUserByLogin } from './modules/user/api/getUser'
 
 interface DomainApi {
   db(): Promise<Db>
+  get game(): ReturnType<typeof createGameApi>
   get user(): ReturnType<typeof createUserApi>
   get auth(): ReturnType<typeof createAuthApi>
-  get gameRelease(): ReturnType<typeof createGameApi>
+  get gameRelease(): ReturnType<typeof createGameReleaseApi>
   get platform(): ReturnType<typeof createPlatformApi>
   get feature(): ReturnType<typeof createFeatureApi>
   get completionStatus(): ReturnType<typeof createCompletionStatusApi>
@@ -61,7 +63,8 @@ class Domain implements DomainApi {
   }
 
   auth: DomainApi['auth'] = createAuthApi.call(this)
-  gameRelease: DomainApi['gameRelease'] = createGameApi.call(this)
+  game: DomainApi['game'] = createGameApi.call(this)
+  gameRelease: DomainApi['gameRelease'] = createGameReleaseApi.call(this)
   platform: DomainApi['platform'] = createPlatformApi.call(this)
   feature: DomainApi['feature'] = createFeatureApi.call(this)
   completionStatus: DomainApi['completionStatus'] =

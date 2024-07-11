@@ -1,15 +1,17 @@
 import DataLoader from 'dataloader'
 import { Document, Filter, WithId } from 'mongodb'
 import { autoBind, type DomainApi } from '../../../Domain'
-import { PlatformEntity } from '../../../data/types'
+import { PlatformDbEntity } from '../../../data/types'
 
 function create(this: DomainApi) {
-  const loader = new DataLoader<string, WithId<PlatformEntity>>(async (ids) => {
-    return (await this.db())
-      .collection<PlatformEntity>('platform')
-      .find({ id: { $in: ids } })
-      .toArray()
-  })
+  const loader = new DataLoader<string, WithId<PlatformDbEntity>>(
+    async (ids) => {
+      return (await this.db())
+        .collection<PlatformDbEntity>('platform')
+        .find({ id: { $in: ids } })
+        .toArray()
+    },
+  )
 
   return autoBind(this, {
     async getById(this: DomainApi, id: string) {
@@ -17,13 +19,13 @@ function create(this: DomainApi) {
     },
     async getAll(this: DomainApi) {
       return (await this.db())
-        .collection<PlatformEntity>('platform')
+        .collection<PlatformDbEntity>('platform')
         .find()
         .toArray()
     },
     async getBy(this: DomainApi, query: Filter<Document>) {
       return (await this.db())
-        .collection<PlatformEntity>('platform')
+        .collection<PlatformDbEntity>('platform')
         .find(query)
         .toArray()
     },

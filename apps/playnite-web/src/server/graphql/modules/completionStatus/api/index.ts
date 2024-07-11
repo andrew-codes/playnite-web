@@ -2,12 +2,15 @@ import DataLoader from 'dataloader'
 import _ from 'lodash'
 import { Document, Filter, ObjectId, WithId } from 'mongodb'
 import { autoBind, type DomainApi } from '../../../Domain'
-import { CompletionStatusEntity, GameReleaseEntity } from '../../../data/types'
+import {
+  CompletionStatusDbEntity,
+  GameReleaseEntity,
+} from '../../../data/types'
 
 const { merge, uniqBy } = _
 
 function create(this: DomainApi) {
-  const loader = new DataLoader<string, WithId<CompletionStatusEntity>>(
+  const loader = new DataLoader<string, WithId<CompletionStatusDbEntity>>(
     async (ids) => {
       return uniqBy(
         await (
