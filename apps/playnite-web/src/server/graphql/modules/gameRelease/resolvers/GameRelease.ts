@@ -23,6 +23,24 @@ export const GameRelease: GameReleaseResolvers = {
         )
       : null
   },
+  recentActivity: async (_parent, _arg, _ctx) => {
+    return _parent.recentActivity ? new Date(_parent.recentActivity) : null
+  },
+  runState: async (_parent, _arg, _ctx) => {
+    if (_parent.isRunning) {
+      return 'running'
+    } else if (_parent.isLaunching) {
+      return 'launching'
+    } else if (_parent.isInstalling) {
+      return 'installing'
+    } else if (_parent.isInstalled) {
+      return 'installed'
+    } else if (_parent.isUninstalling) {
+      return 'uninstalling'
+    }
+
+    return 'not installed'
+  },
   features: async (_parent, _arg, _ctx) => {
     return Promise.all(
       (_parent.featureIds ?? []).map((id) => {

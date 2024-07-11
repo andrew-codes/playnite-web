@@ -70,7 +70,6 @@ type GameReleaseEntity = {
   recentActivity: string
   releaseDate: { month: number; day: number; year: number }
   releaseYear: number
-  runState: string
   series: { id: string; name: string }[]
   seriesIds: string[]
   sortingName?: string

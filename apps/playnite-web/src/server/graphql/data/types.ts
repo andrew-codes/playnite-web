@@ -64,7 +64,6 @@ type GameReleaseDbEntity = WithId<Document> & {
   recentActivity: string
   releaseDate: string
   releaseYear: number
-  runState: string
   series: { id: string; name: string }[]
   seriesIds: string[]
   sortingName?: string
