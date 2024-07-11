@@ -8,7 +8,7 @@ export const CompletionStatus: CompletionStatusResolvers = {
     }
     return create('CompletionStatus', _parent.id).toString()
   },
-  gameReleases: async (_parent, _arg, _ctx) => {
+  releases: async (_parent, _arg, _ctx) => {
     if (_parent.id === '00000000-0000-0000-0000-000000000000') {
       return []
     }
