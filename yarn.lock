@@ -6726,6 +6726,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^20.14.10":
+  version: 20.14.10
+  resolution: "@types/node@npm:20.14.10"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: 10c0/0b06cff14365c2d0085dc16cc8cbea5c40ec09cfc1fea966be9eeecf35562760bfde8f88e86de6edfaf394501236e229d9c1084fad04fb4dec472ae245d8ae69
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^20.14.11":
   version: 20.14.11
   resolution: "@types/node@npm:20.14.11"
@@ -10316,6 +10325,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"devenv@workspace:.devcontainer":
+  version: 0.0.0-use.local
+  resolution: "devenv@workspace:.devcontainer"
+  dependencies:
+    "@types/node": "npm:^20.14.10"
+    "@types/shelljs": "npm:^0.8.15"
+    debug: "npm:^4.3.5"
+    esbuild: "npm:^0.21.5"
+    esbuild-register: "npm:^3.5.0"
+    shelljs: "npm:^0.8.5"
+  languageName: unknown
+  linkType: soft
+
 "diff-sequences@npm:^29.6.3":
   version: 29.6.3
   resolution: "diff-sequences@npm:29.6.3"
@@ -11060,7 +11082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.21.3":
+"esbuild@npm:^0.21.3, esbuild@npm:^0.21.5":
   version: 0.21.5
   resolution: "esbuild@npm:0.21.5"
   dependencies:
