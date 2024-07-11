@@ -16,7 +16,9 @@ export const GameRelease: GameReleaseResolvers = {
   },
   features: async (_parent, _arg, _ctx) => {
     return Promise.all(
-      (_parent.featureIds ?? []).map((id) => _ctx.api.feature.getById(id)),
+      (_parent.featureIds ?? []).map((id) => {
+        return _ctx.api.feature.getById(id)
+      }),
     )
   },
 }

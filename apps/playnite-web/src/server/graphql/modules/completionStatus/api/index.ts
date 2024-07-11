@@ -1,51 +1,33 @@
 import DataLoader from 'dataloader'
-import _ from 'lodash'
-import { Document, Filter, ObjectId, WithId } from 'mongodb'
+import { omit } from 'lodash'
 import { autoBind, type DomainApi } from '../../../Domain'
-import {
-  CompletionStatusDbEntity,
-  GameReleaseEntity,
-} from '../../../data/types'
-
-const { merge, uniqBy } = _
+import { GameReleaseDbEntity } from '../../../data/types'
+import { CompletionStatusEntity } from '../../../resolverTypes'
 
 function create(this: DomainApi) {
-  const loader = new DataLoader<string, WithId<CompletionStatusDbEntity>>(
-    async (ids) => {
-      return uniqBy(
-        await (
-          await this.db()
-        )
-          .collection<GameReleaseEntity>('game')
-          .find({ completionStatusId: { $in: ids } })
-          .toArray(),
-        (gameRelease) => gameRelease.completionStatusId,
-      )
-        .map((gameRelease) =>
-          merge({}, gameRelease.completionStatus, { _id: new ObjectId() }),
-        )
-        .map((status) => {
-          if (status.name) {
-            return merge({}, status, { _id: new ObjectId() })
-          }
+  const loader = new DataLoader<string, CompletionStatusEntity>(async (ids) => {
+    const items = await (
+      await this.db()
+    )
+      .collection<GameReleaseDbEntity>('completionstatus')
+      .find({ id: { $in: ids } })
+      .toArray()
 
-          return merge({}, status, {
-            _id: new ObjectId(),
-            name: 'Unknown',
-          })
-        })
-    },
-  )
+    return items.map((item) =>
+      omit(item, ['_id']),
+    ) as Array<CompletionStatusEntity>
+  })
 
   return autoBind(this, {
     async getById(this: DomainApi, id: string) {
+      if (id === '00000000-0000-0000-0000-000000000000') {
+        return {
+          id: '00000000-0000-0000-0000-000000000000',
+          name: 'Unknown',
+        }
+      }
+
       return loader.load(id)
-    },
-    async getAll(this: DomainApi) {
-      throw new Error('Not implemented')
-    },
-    async getBy(this: DomainApi, query: Filter<Document>) {
-      throw new Error('Not implemented')
     },
   })
 }
