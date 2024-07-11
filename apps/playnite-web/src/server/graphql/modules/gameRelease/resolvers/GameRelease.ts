@@ -6,7 +6,7 @@ export const GameRelease: GameReleaseResolvers = {
     return create('GameRelease', _parent.id).toString()
   },
   platform: async (_parent, _arg, _ctx) => {
-    return _ctx.api.platform.getById(_parent.platformIds[0])
+    return _parent.platformSource
   },
   game: async (_parent, _arg, _ctx) => {
     return _ctx.api.gameRelease.getByName(_parent.name)

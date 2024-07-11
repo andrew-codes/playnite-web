@@ -10,11 +10,11 @@ const config: CodegenConfig = {
     './src/server/graphql': defineConfig({
       typesPluginsConfig: {
         mappers: {
-          CompletionStatus: './data/types#CompletionStatusEntity',
-          Feature: './data/types#FeatureEntity',
-          Game: './data/types#GameEntity',
-          GameRelease: './data/types#GameReleaseEntity',
-          Platform: './data/types#PlatformEntity',
+          CompletionStatus: './resolverTypes#CompletionStatusEntity',
+          Feature: './resolverTypes#FeatureEntity',
+          Game: './resolverTypes#GameEntity',
+          GameRelease: './resolverTypes#GameReleaseEntity',
+          Platform: './resolverTypes#PlatformSourceEntity',
         },
         contextType: './context#PlayniteContext',
       },
