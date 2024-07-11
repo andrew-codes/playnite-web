@@ -6,6 +6,7 @@ const domainTypes = [
   'Platform',
   'User',
   'GameAsset',
+  'Playlist',
 ] as const
 type DomainType = (typeof domainTypes)[number]
 

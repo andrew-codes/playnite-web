@@ -16,6 +16,7 @@ const config: CodegenConfig = {
           GameRelease: './resolverTypes#GameReleaseEntity',
           Platform: './resolverTypes#PlatformSourceEntity',
           GameAsset: './resolverTypes#GameAssetEntity',
+          Playlist: './resolverTypes#TagEntity'
         },
         contextType: './context#PlayniteContext',
       },
