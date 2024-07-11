@@ -68,7 +68,7 @@ type GameReleaseEntity = {
   publishers: { id: string; name: string }[]
   publishersIds: string[]
   recentActivity: string
-  releaseDate: string
+  releaseDate: { month: number; day: number; year: number }
   releaseYear: number
   runState: string
   series: { id: string; name: string }[]
