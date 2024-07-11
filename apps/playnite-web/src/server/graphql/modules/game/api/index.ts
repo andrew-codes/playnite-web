@@ -1,7 +1,6 @@
 import DataLoader from 'dataloader'
 import { groupBy, merge, omit, toLower } from 'lodash'
-import { Document, Filter } from 'mongodb'
-import { createNull, fromString } from '../../../../oid'
+import { fromString } from '../../../../oid'
 import { GameReleaseDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
 import {
@@ -45,8 +44,7 @@ const getPlatforms = (
 }
 
 const unknownPlatform = {
-  id: createNull('Platform').toString(),
-  name: 'Unknown',
+  id: '00000000-0000-0000-0000-000000000000',
 }
 
 const toGameEntity = (
@@ -91,9 +89,6 @@ function create(this: DomainApi) {
       return Object.values(groupedReleases).map((releases) =>
         toGameEntity(releases),
       )
-    },
-    async getBy(this: DomainApi, query: Filter<Document>) {
-      throw new Error('Not implemented')
     },
   })
 }

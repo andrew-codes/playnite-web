@@ -1,6 +1,7 @@
 import DataLoader from 'dataloader'
 import { omit } from 'lodash'
 import { Document, Filter } from 'mongodb'
+import { GameReleaseDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { GameReleaseEntity } from '../../../resolverTypes'
 
@@ -9,11 +10,13 @@ function create(this: DomainApi) {
     const releases = await (
       await this.db()
     )
-      .collection<GameReleaseEntity>('game')
+      .collection<GameReleaseDbEntity>('game')
       .find({ id: { $in: ids } })
       .toArray()
 
-    return releases.map((gameRelease) => omit(gameRelease, '_id'))
+    return releases.map((gameRelease) =>
+      omit(gameRelease, '_id'),
+    ) as Array<GameReleaseEntity>
   })
 
   return autoBind(this, {
