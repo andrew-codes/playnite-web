@@ -18,7 +18,6 @@ const config: CodegenConfig = {
         },
         contextType: './context#PlayniteContext',
       },
-      scalarsModule: require.resolve('graphql-scalars'),
     }),
   },
 }
