@@ -6,7 +6,7 @@ export const GameRelease: GameReleaseResolvers = {
     return create('GameRelease', _parent.id).toString()
   },
   platform: async (_parent, _arg, _ctx) => {
-    return _ctx.api.platform.getById(_parent.platformIds[0])
+    return _parent.platformSource
   },
   game: async (_parent, _arg, _ctx) => {
     return _ctx.api.gameRelease.getByName(_parent.name)
@@ -14,9 +14,38 @@ export const GameRelease: GameReleaseResolvers = {
   completionStatus: async (_parent, _arg, _ctx) => {
     return _ctx.api.completionStatus.getById(_parent.completionStatusId)
   },
+  releaseDate: async (_parent, _arg, _ctx) => {
+    return _parent.releaseDate
+      ? new Date(
+          _parent.releaseDate.year,
+          _parent.releaseDate.month - 1,
+          _parent.releaseDate.day,
+        )
+      : null
+  },
+  recentActivity: async (_parent, _arg, _ctx) => {
+    return _parent.recentActivity ? new Date(_parent.recentActivity) : null
+  },
+  runState: async (_parent, _arg, _ctx) => {
+    if (_parent.isRunning) {
+      return 'running'
+    } else if (_parent.isLaunching) {
+      return 'launching'
+    } else if (_parent.isInstalling) {
+      return 'installing'
+    } else if (_parent.isInstalled) {
+      return 'installed'
+    } else if (_parent.isUninstalling) {
+      return 'uninstalling'
+    }
+
+    return 'not installed'
+  },
   features: async (_parent, _arg, _ctx) => {
     return Promise.all(
-      (_parent.featureIds ?? []).map((id) => _ctx.api.feature.getById(id)),
+      (_parent.featureIds ?? []).map((id) => {
+        return _ctx.api.feature.getById(id)
+      }),
     )
   },
 }
