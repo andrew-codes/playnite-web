@@ -24,7 +24,7 @@
     "framer-motion": "^11.2.11",
     "intl-parse-accept-language": "^1.0.0",
     "is-ip": "^5.0.1",
-    "isbot": "^4.4.0",
+    "isbot": "^5.1.12",
     "lodash": "^4.17.21",
     "mongodb": "^6.7.0",
     "playnite-web-game-db-updater": "workspace:*",

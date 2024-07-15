@@ -14566,10 +14566,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["isbot", [\
-      ["npm:4.4.0", {\
-        "packageLocation": "./.yarn/cache/isbot-npm-4.4.0-9da33b558e-8cccbd8151.zip/node_modules/isbot/",\
+      ["npm:5.1.12", {\
+        "packageLocation": "./.yarn/cache/isbot-npm-5.1.12-7b8289c2e5-831e7305bb.zip/node_modules/isbot/",\
         "packageDependencies": [\
-          ["isbot", "npm:4.4.0"]\
+          ["isbot", "npm:5.1.12"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -19022,7 +19022,7 @@ const RAW_RUNTIME_STATE =
           ["html-webpack-plugin", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.6.0"],\
           ["intl-parse-accept-language", "npm:1.0.0"],\
           ["is-ip", "npm:5.0.1"],\
-          ["isbot", "npm:4.4.0"],\
+          ["isbot", "npm:5.1.12"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
           ["lightningcss", "npm:1.25.1"],\
           ["lodash", "npm:4.17.21"],\
