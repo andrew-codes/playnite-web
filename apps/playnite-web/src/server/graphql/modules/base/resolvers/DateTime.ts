@@ -1,14 +1,15 @@
 import { GraphQLScalarType } from 'graphql'
+import { DateTimeResolver } from 'graphql-scalars'
 export const DateTime = new GraphQLScalarType({
   name: 'DateTime',
   description: 'DateTime description',
   serialize: (value) => {
-    /* Implement logic to turn the returned value from resolvers to a value that can be sent to clients */
+    return DateTimeResolver.serialize(value)
   },
   parseValue: (value) => {
-    /* Implement logic to parse input that was sent to the server as variables */
+    return DateTimeResolver.parseValue(value)
   },
   parseLiteral: (ast) => {
-    /* Implement logic to parse input that was sent to the server as literal values (string, number, or boolean) */
+    return DateTimeResolver.parseLiteral(ast)
   },
 })
