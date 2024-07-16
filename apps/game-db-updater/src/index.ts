@@ -1,8 +1,7 @@
-import { type AsyncMqttClient } from 'async-mqtt'
 import createDebugger from 'debug'
 import fs from 'fs/promises'
+import { AsyncMqttClient, createConnectedMqttClient } from 'mqtt-client'
 import handlers from './handlers'
-import { getMqttClient } from './mqttClient'
 
 type Options = {
   assetSaveDirectoryPath: string
@@ -12,7 +11,7 @@ const run = async (options: Options): Promise<AsyncMqttClient> => {
   const debug = createDebugger('playnite-web/game-db-updater/index')
   debug('Starting game-db-updater')
 
-  const mqttClient = await getMqttClient()
+  const mqttClient = await createConnectedMqttClient()
   mqttClient.subscribe('playnite/#')
 
   await fs.mkdir(options.assetSaveDirectoryPath, { recursive: true })
