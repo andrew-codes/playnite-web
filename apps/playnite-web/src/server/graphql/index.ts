@@ -6,13 +6,14 @@ import { useServer } from 'graphql-ws/lib/use/ws'
 import { createYoga } from 'graphql-yoga'
 import helmet from 'helmet'
 import { createServer } from 'http'
+import { AsyncMqttClient } from 'mqtt-client'
 import { WebSocketServer } from 'ws'
 import type { PlayniteContext } from './context'
 import { Domain } from './Domain'
 import schema from './schema'
 
 const graphql =
-  (signingKey: string, endpoint: string) =>
+  (signingKey: string, endpoint: string, mqttClient: AsyncMqttClient) =>
   async (req: Request, resp: Response, next: NextFunction) => {
     const yoga = createYoga({
       schema,
@@ -56,6 +57,7 @@ const graphql =
         signingKey,
         domain: 'localhost',
         api: new Domain(signingKey, 'localhost'),
+        mqttClient,
       }),
     })
     helmet({
