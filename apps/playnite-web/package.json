@@ -29,6 +29,7 @@
     "framer-motion": "^11.2.11",
     "graphql": "^16.9.0",
     "graphql-scalars": "^1.23.0",
+    "graphql-ws": "^5.16.0",
     "graphql-yoga": "^5.5.0",
     "helmet": "^7.1.0",
     "intl-parse-accept-language": "^1.0.0",
@@ -51,7 +52,7 @@
     "remix-routes": "^1.7.6",
     "remix-utils": "^7.6.0",
     "ua-parser-js": "^1.0.38",
-    "ws": "^8.17.1",
+    "ws": "^8.18.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

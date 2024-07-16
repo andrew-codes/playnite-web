@@ -1,12 +1,16 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client/core/core.cjs'
+import apolloClient, { Operation } from '@apollo/client'
 import { SchemaLink } from '@apollo/client/link/schema/schema.cjs'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions/subscriptions.cjs'
 import { ApolloProvider } from '@apollo/client/react/react.cjs'
 import { getDataFromTree } from '@apollo/client/react/ssr'
+import { getMainDefinition } from '@apollo/client/utilities'
 import { CacheProvider } from '@emotion/react'
 import { configureStore } from '@reduxjs/toolkit'
 import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import createDebugger from 'debug'
+import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql'
+import { createClient } from 'graphql-ws'
 import { isbot } from 'isbot'
 import jwt from 'jsonwebtoken'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -25,6 +29,8 @@ import { Claim } from './server/graphql/types.generated'
 
 const debug = createDebugger('playnite-web/entry.server.tsx')
 const ABORT_DELAY = 5_000
+
+const { ApolloClient, InMemoryCache, split } = apolloClient
 
 function handleRequest(
   request: Request,
@@ -147,18 +153,48 @@ async function handleBrowserRequest(
     } catch (error) {
       debug(error)
     }
+
+    const requestUrl = new URL(request.url)
+    console.log(requestUrl.host, requestUrl.hostname)
+    const wsLink = new GraphQLWsLink(
+      createClient({
+        url: `ws://${requestUrl.host}/api`,
+        connectionParams: {
+          'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+          credentials: true,
+        },
+        on: {
+          connected: () => console.log('GraphQLWsLink connected'),
+          closed: () => console.log('GraphQLWsLink closed'),
+        },
+      }),
+    )
+    const schemaLink = new SchemaLink({
+      schema,
+      context: {
+        signingKey: process.env.SECRET ?? 'secret',
+        domain: requestUrl.hostname,
+        jwt: claim,
+        api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
+      } as Partial<PlayniteContext>,
+    })
+
+    const link = split(
+      ({ query }: Operation) => {
+        const mainDefinition: OperationDefinitionNode | FragmentDefinitionNode =
+          getMainDefinition(query)
+        return (
+          mainDefinition.kind === 'OperationDefinition' &&
+          mainDefinition.operation === 'subscription'
+        )
+      },
+      wsLink,
+      schemaLink,
+    )
     const client = new ApolloClient({
       ssrMode: true,
       cache: new InMemoryCache(),
-      link: new SchemaLink({
-        schema,
-        context: {
-          signingKey: process.env.SECRET ?? 'secret',
-          domain: 'localhost',
-          jwt: claim,
-          api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
-        } as Partial<PlayniteContext>,
-      }),
+      link,
     })
     const App = (
       <ApolloProvider client={client}>

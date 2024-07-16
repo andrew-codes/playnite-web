@@ -1,8 +1,10 @@
 import DataLoader from 'dataloader'
-import { omit } from 'lodash'
+import _ from 'lodash'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { FeatureDbEntity } from '../../../data/types'
 import { FeatureEntity } from '../../../resolverTypes'
+
+const { omit } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, FeatureEntity>(async (ids) => {
