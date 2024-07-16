@@ -14,3 +14,7 @@ type GameRelease {
   completionStatus: CompletionStatus!
   features: [Feature]!
 }
+
+extend type Subscription {
+  gameRunStateChanged: GameRelease
+}
