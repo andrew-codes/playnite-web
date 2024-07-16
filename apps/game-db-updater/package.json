@@ -4,11 +4,11 @@
   "version": "4.0.2",
   "main": "src/index.ts",
   "dependencies": {
-    "async-mqtt": "^2.6.3",
     "debug": "^4.3.5",
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
-    "mongodb": "^6.8.0"
+    "mongodb": "^6.8.0",
+    "mqtt-client": "workspace:*"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",

@@ -1,10 +1,11 @@
 import { expect, jest, test } from '@jest/globals'
-import { AsyncMqttClient } from 'async-mqtt'
+import { AsyncMqttClient, createConnectedMqttClient } from 'mqtt-client'
 import run, { Options } from '..'
-import { getMqttClient } from '../mqttClient'
 
-jest.mock('../mqttClient')
-let mockGetMqttClient = getMqttClient as jest.Mock<typeof getMqttClient>
+jest.mock('mqtt-client')
+let mockGetMqttClient = createConnectedMqttClient as jest.Mock<
+  typeof createConnectedMqttClient
+>
 
 let options: Options
 describe('game-db-updater run()', () => {
