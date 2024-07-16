@@ -46,7 +46,7 @@ const RAW_RUNTIME_STATE =
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
     ["playnite-web-app-hass-addon", ["workspace:hass-playnite-web"]],\
-    ["playnite-web-game-db-updater", ["workspace:apps/game-db-updater"]],\
+    ["playnite-web-game-db-updater", ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#workspace:apps/game-db-updater", "workspace:apps/game-db-updater"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]],\
     ["versioning", ["workspace:libs/versioning"]]\
   ],\
@@ -22999,7 +22999,6 @@ const RAW_RUNTIME_STATE =
           ["@vite-pwa/remix", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.1.0"],\
           ["@whatwg-node/server", "npm:0.9.36"],\
           ["@whatwg-node/server-plugin-cookies", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.0.2"],\
-          ["async-mqtt", "npm:2.6.3"],\
           ["babel-loader", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:9.1.3"],\
           ["babel-plugin-direct-import", "npm:1.0.0"],\
           ["babel-plugin-istanbul", "npm:6.1.1"],\
@@ -23037,11 +23036,12 @@ const RAW_RUNTIME_STATE =
           ["lightningcss", "npm:1.25.1"],\
           ["lodash", "npm:4.17.21"],\
           ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.8.0"],\
+          ["mqtt-client", "workspace:libs/mqtt-client"],\
           ["nodemon", "npm:3.1.4"],\
           ["npm-run-all", "npm:4.1.5"],\
           ["nx", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:19.3.2"],\
           ["nyc", "npm:17.0.0"],\
-          ["playnite-web-game-db-updater", "workspace:apps/game-db-updater"],\
+          ["playnite-web-game-db-updater", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#workspace:apps/game-db-updater"],\
           ["prettier", "npm:3.3.2"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:18.3.1"],\
@@ -23094,6 +23094,41 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["playnite-web-game-db-updater", [\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#workspace:apps/game-db-updater", {\
+        "packageLocation": "./.yarn/__virtual__/playnite-web-game-db-updater-virtual-bd0fe0f3fe/1/apps/game-db-updater/",\
+        "packageDependencies": [\
+          ["playnite-web-game-db-updater", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#workspace:apps/game-db-updater"],\
+          ["@jest/globals", "npm:29.7.0"],\
+          ["@types/jest", "npm:29.5.12"],\
+          ["@types/mqtt-client", null],\
+          ["@types/node", "npm:20.14.9"],\
+          ["@types/shelljs", "npm:0.8.15"],\
+          ["cpy", "npm:11.0.1"],\
+          ["cpy-cli", "npm:5.0.0"],\
+          ["debug", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:4.3.5"],\
+          ["dotenv", "npm:16.4.5"],\
+          ["esbuild", "npm:0.21.5"],\
+          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
+          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
+          ["jest-config", "virtual:0325a7f29f92a6e1a250aeb4a0a7a5b35211c2ff841d6761136d36cf9d4d63b6947801b2d89f6f9bdb661a7d017f21dc39e03954d2aa8916ed1260e42cc74757#npm:29.7.0"],\
+          ["jest-when", "virtual:0325a7f29f92a6e1a250aeb4a0a7a5b35211c2ff841d6761136d36cf9d4d63b6947801b2d89f6f9bdb661a7d017f21dc39e03954d2aa8916ed1260e42cc74757#npm:3.6.0"],\
+          ["lodash", "npm:4.17.21"],\
+          ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.8.0"],\
+          ["mqtt-client", "workspace:libs/mqtt-client"],\
+          ["nx", "virtual:8b961202921a000c9cddc595e93f7c0ea3dc7228b540b3977c5125212a157e54d4e61bb52b063a9f396ae5dd87d01faf940076a512119b238f1065b0a375ef9d#npm:19.3.2"],\
+          ["prettier", "npm:3.3.2"],\
+          ["rimraf", "npm:5.0.7"],\
+          ["shelljs", "npm:0.8.5"],\
+          ["ts-jest", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.1.5"],\
+          ["typescript", "patch:typescript@npm%3A5.5.2#optional!builtin<compat/typescript>::version=5.5.2&hash=379a07"],\
+          ["versioning", "workspace:libs/versioning"]\
+        ],\
+        "packagePeers": [\
+          "@types/mqtt-client",\
+          "mqtt-client"\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["workspace:apps/game-db-updater", {\
         "packageLocation": "./apps/game-db-updater/",\
         "packageDependencies": [\

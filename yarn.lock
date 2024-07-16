@@ -18323,7 +18323,6 @@ __metadata:
     "@vite-pwa/remix": "npm:^0.1.0"
     "@whatwg-node/server": "npm:^0.9.36"
     "@whatwg-node/server-plugin-cookies": "npm:^1.0.2"
-    async-mqtt: "npm:^2.6.3"
     babel-loader: "npm:^9.1.3"
     babel-plugin-direct-import: "npm:^1.0.0"
     babel-plugin-istanbul: "npm:^6.1.1"
@@ -18361,6 +18360,7 @@ __metadata:
     lightningcss: "npm:^1.25.1"
     lodash: "npm:^4.17.21"
     mongodb: "npm:^6.8.0"
+    mqtt-client: "workspace:*"
     nodemon: "npm:^3.1.4"
     npm-run-all: "npm:^4.1.5"
     nx: "npm:^19.3.2"
@@ -18425,6 +18425,8 @@ __metadata:
     ts-jest: "npm:^29.1.5"
     typescript: "npm:^5.5.2"
     versioning: "workspace:*"
+  peerDependencies:
+    mqtt-client: "workspace:*"
   languageName: unknown
   linkType: soft
 

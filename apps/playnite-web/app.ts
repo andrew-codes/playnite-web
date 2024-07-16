@@ -2,10 +2,11 @@ import { createRequestHandler } from '@remix-run/express'
 import compression from 'compression'
 import createDebugger from 'debug'
 import express from 'express'
+import { AsyncMqttClient } from 'mqtt-client'
 import api from './src/server/api'
 const debug = createDebugger('playnite-web/app/server')
 
-async function run() {
+async function run(mqttClient: AsyncMqttClient) {
   const { PORT } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
 
@@ -26,7 +27,7 @@ async function run() {
   app.use(compression())
 
   const signingKey = process.env.SECRET ?? 'secret'
-  app = api('/api', signingKey)(app)
+  app = api('/api', signingKey, mqttClient)(app)
 
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
