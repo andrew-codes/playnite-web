@@ -1,5 +1,4 @@
 const { build } = require('esbuild')
-const pkg = require('../../package.json')
 
 build({
   entryPoints: ['server.ts'],
