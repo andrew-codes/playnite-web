@@ -66,7 +66,7 @@ Recommended to use docker image [`mongo:focal`](https://hub.docker.com/_/mongo/)
 
 #### Playnite-Web Plugin
 
-1. Download (latest) version [release](https://github.com/andrew-codes/playnite-web/releases) of Playnite extension (release asset named "PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_0_1.pext").
+1. Download (latest) version [release](https://github.com/andrew-codes/playnite-web/releases) of Playnite extension (release asset named "PlayniteWeb\*ec3439e3-51ee-43cb-9a8a-5d82cf45edac\*.pext").
 1. Open Playnite and drag downloaded file into the Playnite. It should prompt to install the plugin.
 1. <details><summary>Open the plugin's settings and enter the MQTT connection information to your MQTT broker.</summary>
       > ![Mqtt connection settings screenshot](docs/assets/images/mqtt-connection-screenshot.png)
