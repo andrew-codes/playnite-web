@@ -7,6 +7,6 @@ namespace PlayniteWeb.Services.Publishers
     public int? ProcessId { get; set; }
     public string State { get; set; }
 
-    public Guid GameId { get; set; }
+    public Guid Id { get; set; }
   }
 }
