@@ -36,9 +36,17 @@ async function run(mqttClient: AsyncMqttClient) {
     helmet({
       contentSecurityPolicy: {
         directives: {
-          'style-src': ["'self'", 'unpkg.com'],
-          'script-src': ["'self'", 'unpkg.com', "'unsafe-inline'"],
-          'img-src': ["'self'", 'raw.githubusercontent.com'],
+          'default-src': ["'self'"],
+          'connect-src': ["'self'", 'ws://localhost:3000'],
+          'style-src': [
+            "'self'",
+            "'unsafe-inline'",
+            '*.googleapis.com',
+            '*.gstatic.com',
+          ],
+          'script-src': ["'self'", "'unsafe-inline'"],
+          'img-src': ["'self'"],
+          'font-src': ["'self'", '*.googleapis.com', '*.gstatic.com'],
         },
       },
     }),
