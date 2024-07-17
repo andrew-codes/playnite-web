@@ -30,10 +30,9 @@ const clientSideCache = createEmotionCache()
 startTransition(() => {
   const store = configureStore({ reducer })
 
-  const requestUrl = new URL(location.host)
   const wsLink = new GraphQLWsLink(
     createClient({
-      url: `ws://${requestUrl.host}/api`,
+      url: `ws://localhost:3000/api`,
       connectionParams: {
         'Access-Control-Allow-Origin': '*', // Required for CORS support to work
         credentials: true,
@@ -45,7 +44,7 @@ startTransition(() => {
     }),
   )
   const httpLink = new HttpLink({
-    uri: `http://${requestUrl.host}/api`,
+    uri: `http://localhost:3000/api`,
     credentials: 'same-origin',
   })
 

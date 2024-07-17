@@ -69,8 +69,12 @@ async function loader({ request }: LoaderFunctionArgs) {
 const Head = createHead(() => (
   <>
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/public/icons/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/public/icons/apple-touch-icon.png" />
+    <link rel="icon" href="/icons/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/icons/apple-touch-icon.png"
+    />
     <Meta />
     <Links />
   </>
