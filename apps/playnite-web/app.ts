@@ -2,9 +2,11 @@ import { createRequestHandler } from '@remix-run/express'
 import compression from 'compression'
 import createDebugger from 'debug'
 import express from 'express'
+import fs from 'fs'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import helmet from 'helmet'
 import { AsyncMqttClient } from 'mqtt-client'
+import spdy from 'spdy'
 import { WebSocketServer } from 'ws'
 import createYoga from './src/server/graphql'
 
@@ -28,8 +30,6 @@ async function run(mqttClient: AsyncMqttClient) {
     viteDevServer ? viteDevServer.middlewares : express.static('build/client'),
   )
 
-  app.use(compression())
-
   const signingKey = process.env.SECRET ?? 'secret'
   const yoga = createYoga('/api', signingKey, mqttClient)
   app.use(
@@ -37,7 +37,11 @@ async function run(mqttClient: AsyncMqttClient) {
       contentSecurityPolicy: {
         directives: {
           'default-src': ["'self'"],
-          'connect-src': ["'self'", 'ws://localhost:3000'],
+          'connect-src': [
+            "'self'",
+            'ws://localhost:3000',
+            'wss://localhost:3000',
+          ],
           'style-src': [
             "'self'",
             "'unsafe-inline'",
@@ -64,8 +68,29 @@ async function run(mqttClient: AsyncMqttClient) {
     }
   })
 
-  const server = app.listen(port, () => {
-    debug(`App listening on http://localhost:${port}`)
+  app.use(compression())
+
+  let httpServer = app
+  let useSsl = false
+  try {
+    const sslKey =
+      process.env.SSL_KEY ?? fs.readFileSync('./cert/server.key')?.toString()
+    const sslCert =
+      process.env.SSL_CERT ?? fs.readFileSync('./cert/server.cert')?.toString()
+    if (sslKey != 'false' && sslCert !== 'false' && sslKey && sslCert) {
+      useSsl = true
+      httpServer = spdy.createServer(
+        {
+          key: sslKey,
+          cert: sslCert,
+        },
+        app,
+      )
+    }
+  } catch (error) {}
+
+  const server = httpServer.listen(port, () => {
+    debug(`App listening on http${useSsl ? 's' : ''}://localhost:${port}`)
 
     const wsServer = new WebSocketServer({ server, path: '/api' })
     useServer(

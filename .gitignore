@@ -29,6 +29,7 @@ apps/playnite-web/vite.config.ts*
 !apps/playnite-web/vite.config.ts
 apps/playnite-web/public/asset-by-id/
 apps/playnite-web/**/*.generated.*
+apps/playnite-web/cert
 
 .devcontainer/.devpod-internal/
 
