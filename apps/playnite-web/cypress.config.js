@@ -9,7 +9,7 @@ const config = {
   viewportWidth: 1920,
   viewportHeight: 1080,
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'https://localhost:3000',
     setupNodeEvents: (on, config) => {
       const { viewportWidth, viewportHeight } = config
       on('before:browser:launch', (browser, launchOptions) => {
