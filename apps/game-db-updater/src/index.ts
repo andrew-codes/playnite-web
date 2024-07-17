@@ -7,7 +7,10 @@ type Options = {
   assetSaveDirectoryPath: string
 }
 
-const run = async (options: Options, mqttClient: AsyncMqttClient): void => {
+const run = async (
+  options: Options,
+  mqttClient: AsyncMqttClient,
+): Promise<void> => {
   const debug = createDebugger('playnite-web/game-db-updater/index')
   debug('Starting game-db-updater')
 
