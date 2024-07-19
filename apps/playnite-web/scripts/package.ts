@@ -1,6 +1,6 @@
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
-import pkg from '../package.json' assert { type: 'json' }
+import pkg from '../package.json' with { type: 'json' }
 import packageFiles from './utils/packageFiles'
 
 async function run() {

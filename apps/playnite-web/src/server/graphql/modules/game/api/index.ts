@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader'
-import { groupBy, merge, omit, toLower } from 'lodash'
+import _ from 'lodash'
 import { fromString } from '../../../../oid'
 import { GameReleaseDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
@@ -8,6 +8,8 @@ import {
   GameReleaseEntity,
   PlatformSourceEntity,
 } from '../../../resolverTypes'
+
+const { groupBy, merge, omit, toLower } = _
 
 const getPlatforms = (
   gameRelease: GameReleaseDbEntity | GameReleaseEntity,

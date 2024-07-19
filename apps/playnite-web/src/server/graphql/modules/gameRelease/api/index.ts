@@ -1,9 +1,11 @@
 import DataLoader from 'dataloader'
-import { omit } from 'lodash'
+import _ from 'lodash'
 import { Document, Filter } from 'mongodb'
 import { GameReleaseDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { GameReleaseEntity } from '../../../resolverTypes'
+
+const { omit } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, GameReleaseEntity>(async (ids) => {

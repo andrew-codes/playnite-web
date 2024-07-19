@@ -62,6 +62,7 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+      - run: yarn dlx cypress install
       - name: Run all component tests
         run: yarn nx run-many --target=test/components/ci --verbose --exclude='*,!tag:linux'
       - name: Upload test video artifacts
@@ -104,6 +105,7 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+      - run: yarn dlx cypress install
       - name: Run all visual regression tests
         run: yarn nx affected --base=origin/main --head=HEAD --target=test/components/visual/ci --verbose --exclude='*,!tag:linux'
       - name: Upload visual regression artifacts
@@ -145,6 +147,7 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+      - run: yarn dlx cypress install
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
         env:
@@ -241,7 +244,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run all unit tests
-        run: yarn nx affected --base=origin/main --head=HEAD --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
 
   package_windows:
     name: Package Windows projects
