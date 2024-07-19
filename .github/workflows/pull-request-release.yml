@@ -244,7 +244,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run all unit tests
-        run: yarn nx affected --base=origin/main --head=HEAD --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
 
   package_windows:
     name: Package Windows projects
