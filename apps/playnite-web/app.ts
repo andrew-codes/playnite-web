@@ -77,7 +77,7 @@ async function run(mqttClient: AsyncMqttClient) {
       process.env.SSL_KEY ?? fs.readFileSync('./cert/server.key')?.toString()
     const sslCert =
       process.env.SSL_CERT ?? fs.readFileSync('./cert/server.cert')?.toString()
-    if (sslKey != 'false' && sslCert !== 'false' && sslKey && sslCert) {
+    if (sslKey && sslCert) {
       useSsl = true
       httpServer = spdy.createServer(
         {
