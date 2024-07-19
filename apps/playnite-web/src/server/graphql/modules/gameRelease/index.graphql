@@ -14,3 +14,14 @@ type GameRelease {
   completionStatus: CompletionStatus!
   features: [Feature]!
 }
+
+type GameReleaseSubscriptionPayload {
+  id: String!
+  gameId: String!
+  runState: String!
+  processId: String!
+}
+
+extend type Subscription {
+  gameRunStateChanged: GameReleaseSubscriptionPayload
+}

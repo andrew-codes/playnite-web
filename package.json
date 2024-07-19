@@ -3,7 +3,7 @@
   "version": "3.1.4",
   "private": true,
   "engines": {
-    "node": "20.5.1",
+    "node": "22.5.0",
     "yarn": "^4.0.0"
   },
   "workspaces": [
@@ -19,17 +19,17 @@
     "@semantic-release/github": "^10.1.0",
     "@semantic-release/release-notes-generator": "^14.0.1",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.14.8",
+    "@types/node": "^20.14.11",
     "dotenv": "^16.4.5",
-    "glob": "^10.4.2",
+    "glob": "^10.4.5",
     "jest": "^29.7.0",
     "jest-config": "^29.7.0",
-    "nx": "^19.3.1",
-    "prettier": "^3.3.2",
+    "nx": "^19.5.1",
+    "prettier": "^3.3.3",
     "semantic-release": "^24.0.0",
-    "ts-jest": "^29.1.5",
+    "ts-jest": "^29.2.3",
     "tslib": "^2.6.3",
-    "typescript": "^5.5.2",
+    "typescript": "^5.5.3",
     "typescript-remix-routes-plugin": "^1.0.1"
   },
   "dependenciesMeta": {
@@ -46,7 +46,7 @@
   "resolutions": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "cypress": "^13.12.0",
+    "cypress": "^13.13.1",
     "ws@^7.4.5": "^7.5.10",
     "ws@^7.5.5": "^7.5.10",
     "braces@~3.0.2": "^3.0.3",

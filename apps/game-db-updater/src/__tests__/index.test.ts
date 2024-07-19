@@ -1,14 +1,14 @@
 import { expect, jest, test } from '@jest/globals'
-import { AsyncMqttClient, createConnectedMqttClient } from 'mqtt-client'
+import { AsyncMqttClient } from 'mqtt-client'
 import run, { Options } from '..'
 
-jest.mock('mqtt-client')
-let mockGetMqttClient = createConnectedMqttClient as jest.Mock<
-  typeof createConnectedMqttClient
->
-
-let options: Options
 describe('game-db-updater run()', () => {
+  const mqttClient = {
+    on: jest.fn(),
+    subscribe: jest.fn(),
+  } as unknown as jest.Mocked<AsyncMqttClient>
+
+  let options: Options
   beforeEach(() => {
     options = {
       assetSaveDirectoryPath: 'test',
@@ -16,12 +16,7 @@ describe('game-db-updater run()', () => {
   })
 
   test('Subscribes to "playnite/#" topics.', async () => {
-    const mqttClient = {
-      subscribe: jest.fn(),
-      on: jest.fn(),
-    } as unknown as jest.Mocked<AsyncMqttClient>
-    mockGetMqttClient.mockResolvedValue(mqttClient)
-    await run(options)
+    await run(options, mqttClient)
 
     expect(mqttClient.subscribe).toHaveBeenCalledWith('playnite/#')
   })

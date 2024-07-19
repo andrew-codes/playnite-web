@@ -41,7 +41,7 @@ Install the following software on your local development machine:
 2. Clone your forked repo to your local development machine.
 3. Open the repo in vscode.
 4. Run `yarn`
-5. Run `yarn nx run playnite-web-app:start` and navigate to [http://localhost:3000](http://localhost:3000)
+5. Run `yarn nx run playnite-web-app:start` and navigate to [https://localhost:3000](https://localhost:3000)
    - Note that MQTT and Mongo will be started via docker automatically.
    - Mongo will restore a default database if no database already exists (if there are no files in `.data/mongodb`).
    - Note MQTT currently starts with no username/password configured.
@@ -52,7 +52,7 @@ Install the following software on your local development machine:
 
 | Application      | Command                                                      | Notes                                                                                                                                                                                                      |
 | :--------------- | :----------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Playnite-Web App | `yarn nx run playnite-web-app:start`                         | Run Playnite-Web application locally. Navigate to [http://localhost:3000](http://localhost:3000) in a browser. Environment variables are pulled from `./apps/playnite-web/local.env`.                      |
+| Playnite-Web App | `yarn nx run playnite-web-app:start`                         | Run Playnite-Web application locally. Navigate to [https://localhost:3000](https://localhost:3000) in a browser. Environment variables are pulled from `./apps/playnite-web/local.env`.                    |
 | Playnite-Web App | `yarn nx run playnite-web-app:test/components`               | Run component tests for development.                                                                                                                                                                       |
 | Playnite-Web App | `yarn nx run playnite-web-app:test/components/visual`        | Run visual regression component tests for development.                                                                                                                                                     |
 | Playnite-Web App | `yarn nx run playnite-web-app:test/components/visual/update` | Run visual regression tests with intention to update a baseline screenshot.                                                                                                                                |
