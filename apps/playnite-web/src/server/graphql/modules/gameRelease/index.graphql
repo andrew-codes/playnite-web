@@ -25,3 +25,7 @@ type GameReleaseSubscriptionPayload {
 extend type Subscription {
   gameRunStateChanged: GameReleaseSubscriptionPayload
 }
+
+extend type Mutation {
+  activateGameRelease(id: String!): GameRelease!
+}
