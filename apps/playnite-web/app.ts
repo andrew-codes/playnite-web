@@ -72,8 +72,8 @@ async function run(mqttClient: AsyncMqttClient) {
   app.use(compression())
 
   let httpServer = app
-  let useSsl = false
-  try {
+  let useSsl = process.env.USE_SSL === 'true'
+  if (useSsl) {
     const sslKey =
       process.env.SSL_KEY ?? fs.readFileSync('./cert/server.key')?.toString()
     const sslCert =
@@ -88,7 +88,7 @@ async function run(mqttClient: AsyncMqttClient) {
         app,
       )
     }
-  } catch (error) {}
+  }
 
   const server = httpServer.listen(port, () => {
     debug(`App listening on http${useSsl ? 's' : ''}://localhost:${port}`)
