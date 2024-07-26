@@ -40,10 +40,6 @@ function autoBind<TFunctionMap extends Record<string, Function>>(
 
 class Domain implements DomainApi {
   private dbConnected = false
-  constructor(
-    private signingKey: string,
-    private domain: string,
-  ) {}
 
   public async db() {
     const client = getDbClient()

@@ -82,24 +82,27 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 
 ##### Environment Variables
 
-| Environment Variable | Value                                    | Notes                                                     |
-| :------------------- | :--------------------------------------- | :-------------------------------------------------------- |
-| PORT                 | Defaults to 3000                         | Port in which web application is accessible.              |
-| DB_HOST              | IP address/hostname of Mongo DB database |                                                           |
-| DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                        |
-| DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access      |
-| DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access      |
-| DB_URL               | MongoDB connection URL                   | Optional, alternative to individual DB connection options |
-| DEBUG                | `"playnite-web/*"`                       | Optional, for troubleshooting; send logs to STDIO         |
-| USERNAME             |                                          | Username used to login                                    |
-| PASSWORD             |                                          | Password value used to login                              |
-| SECRET               |                                          | Secret used to protect credentials                        |
-| MQTT_HOST            | IP address/hostname of MQTT broker.      |                                                           |
-| MQTT_PORT            | Port of MQTT broker                      | Default for MQTT image is 1883                            |
-| MQTT_USERNAME        | Username to access MQTT broker           | Optional, only required if disabled anonymous access      |
-| MQTT_PASSWORD        | Password to access MQTT broker           | Optional, only required if disabled anonymous access      |
-| SSL_KEY              | Contents of an SSL key                   | Optional. Enables HTTPS which is required for HTTP/2.     |
-| SSL_CERT             | Contents of an SSL certificate           | Optional. Enables HTTPS which is required for HTTP/2.     |
+| Environment Variable | Value                                            | Required? | Notes                                                             |
+| :------------------- | :----------------------------------------------- | :-------- | :---------------------------------------------------------------- |
+| PORT                 | Defaults to 3000                                 | Required  | Port in which web application is accessible.                      |
+| HOST                 | Defaults to `localhost`                          |           | The domain name or IP address of the server running Playnite-Web. |
+| ADDITIONAL_ORIGINS   | Additional origins allowed to request graph API. |           | Multiple values may be provided via a comma-delimited string.     |
+| DB_HOST              | IP address/hostname of Mongo DB database         | Required  |                                                                   |
+| DB_PORT              | Port of Mongo DB database                        |           | Default for MongoDB image is 27017                                |
+| DB_USERNAME          | Username to access database                      |           | Only required if disabled anonymous access                        |
+| DB_PASSWORD          | Password to access database                      |           | Only required if disabled anonymous access                        |
+| DB_URL               | MongoDB connection URL                           |           | Alternative to individual DB connection options                   |
+| DEBUG                | `"playnite-web/*"`                               |           | For troubleshooting; send logs to STDIO                           |
+| USERNAME             |                                                  |           | Username used to login                                            |
+| PASSWORD             |                                                  |           | Password value used to login                                      |
+| SECRET               |                                                  |           | Secret used to protect credentials                                |
+| MQTT_HOST            | IP address/hostname of MQTT broker.              | Required  |                                                                   |
+| MQTT_PORT            | Port of MQTT broker                              |           | Default for MQTT image is 1883                                    |
+| MQTT_USERNAME        | Username to access MQTT broker                   |           | Only required if disabled anonymous access                        |
+| MQTT_PASSWORD        | Password to access MQTT broker                   |           | Only required if disabled anonymous access                        |
+| USE_SSL              | Use local SSL cert to enable HTTP/2 and HTTPS.   |           | To enable, use the string value `true`.                           |
+| SSL_KEY              | Contents of an SSL key                           |           | Enables HTTPS which is required for HTTP/2.                       |
+| SSL_CERT             | Contents of an SSL certificate                   |           | Enables HTTPS which is required for HTTP/2.                       |
 
 ###### Enabling HTTP/2
 

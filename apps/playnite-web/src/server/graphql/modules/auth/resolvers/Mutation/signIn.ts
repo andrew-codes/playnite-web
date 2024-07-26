@@ -19,7 +19,7 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
   )
 
   const token = jwt.sign(authenticatedClaim, _ctx.signingKey, {
-    issuer: 'http://localhost',
+    issuer: _ctx.domain,
     algorithm: 'HS256',
   })
   _ctx.request.cookieStore?.set({
