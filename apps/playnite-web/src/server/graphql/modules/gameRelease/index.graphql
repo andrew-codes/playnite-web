@@ -12,6 +12,7 @@ type GameRelease {
   platform: Platform!
   game: Game!
   completionStatus: CompletionStatus!
+  cover: GameAsset
   features: [Feature]!
 }
 

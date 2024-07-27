@@ -9,6 +9,9 @@ const Game_By_Id_Query = gql`
       id
       name
       description
+      cover {
+        id
+      }
       releases {
         id
         platform {
