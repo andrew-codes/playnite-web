@@ -44,6 +44,9 @@ const All_Games_Query = gql`
   query allGames {
     games {
       id
+      cover {
+        id
+      }
       name
       description
       releases {
@@ -95,7 +98,7 @@ function Browse() {
   }, [location.pathname])
   const handleSelection = useCallback((evt, game: Game) => {
     setRightDrawerOpen(true)
-    navigate(`/browse/${game.id.toString()}`)
+    navigate(`/browse/${game.id}`)
   }, [])
 
   return (

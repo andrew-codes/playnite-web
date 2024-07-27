@@ -15,6 +15,7 @@ const config: CodegenConfig = {
           Game: './resolverTypes#GameEntity',
           GameRelease: './resolverTypes#GameReleaseEntity',
           Platform: './resolverTypes#PlatformSourceEntity',
+          GameAsset: './resolverTypes#GameAssetEntity',
         },
         contextType: './context#PlayniteContext',
       },

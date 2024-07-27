@@ -1,5 +1,6 @@
 import { Db } from 'mongodb'
 import { getDbClient } from './data/mongo'
+import createAssetApi from './modules/asset/api'
 import createAuthApi from './modules/auth/api'
 import createCompletionStatusApi from './modules/completionStatus/api'
 import createFeatureApi from './modules/feature/api'
@@ -18,6 +19,7 @@ interface DomainApi {
   get platform(): ReturnType<typeof createPlatformApi>
   get feature(): ReturnType<typeof createFeatureApi>
   get completionStatus(): ReturnType<typeof createCompletionStatusApi>
+  get asset(): ReturnType<typeof createAssetApi>
 }
 
 function autoBind<TFunctionMap extends Record<string, Function>>(
@@ -65,6 +67,7 @@ class Domain implements DomainApi {
   feature: DomainApi['feature'] = createFeatureApi.call(this)
   completionStatus: DomainApi['completionStatus'] =
     createCompletionStatusApi.call(this)
+  asset: DomainApi['asset'] = createAssetApi.call(this)
 }
 
 export { autoBind, Domain }
