@@ -27,7 +27,15 @@ apps/playnite-web/server.production.js*
 apps/playnite-web/server.development.js*
 apps/playnite-web/vite.config.ts*
 !apps/playnite-web/vite.config.ts
-apps/playnite-web/public/asset-by-id/
+
+apps/playnite-web/public/asset-by-id/*
+!apps/playnite-web/public/asset-by-id/pc-windows*
+!apps/playnite-web/public/asset-by-id/pc-linux*
+!apps/playnite-web/public/asset-by-id/macintosh*
+!apps/playnite-web/public/asset-by-id/sony-playstation*
+!apps/playnite-web/public/asset-by-id/xbox-*
+!apps/playnite-web/public/asset-by-id/nintendo-*
+
 apps/playnite-web/**/*.generated.*
 
 .devcontainer/.devpod-internal/

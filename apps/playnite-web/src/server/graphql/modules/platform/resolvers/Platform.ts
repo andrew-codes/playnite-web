@@ -18,7 +18,7 @@ export const Platform: PlatformResolvers = {
     const asset = await _ctx.api.asset.getByRelation(_parent.id, 'icon')
 
     return merge({}, asset, {
-      id: _parent.name.toLowerCase().replace(/[ ]/g, '-').replace(/[()]/g, ''),
+      id: `${_parent.name.toLowerCase().replace(/[ ]/g, '-').replace(/[()]/g, '')}.webp`,
     })
   },
 }
