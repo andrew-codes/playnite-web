@@ -1,11 +1,8 @@
 import { Box, Button, Stack, styled } from '@mui/material'
-import _ from 'lodash'
 import { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
-import type { IGame } from '../domain/types'
+import { Game } from '../server/graphql/types.generated'
 import PlatformList from './PlatformList'
-
-const { uniqWith } = _
 
 const Figure = styled('figure', {
   shouldForwardProp: (prop) => prop !== 'width',
@@ -27,12 +24,12 @@ const Image = styled('img', {
 
 const GameFigure: FC<
   PropsWithChildren<{
-    game: IGame
+    game: Game
     style?: any
     width: string
     height: string
     noDefer: boolean
-    onSelect?: (evt, game: IGame) => void
+    onSelect?: (evt, game: Game) => void
   }>
 > = ({ children, game, style, noDefer, onSelect, width, height }) => {
   const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
@@ -54,7 +51,7 @@ const GameFigure: FC<
               <Button onClick={(evt) => onSelect?.(evt, game)}>
                 {!imageHasError ? (
                   <Image
-                    src={game.cover}
+                    src={`/gameAsset/cover/${game.id}`}
                     alt={game.name}
                     width={width}
                     loading="eager"
@@ -79,7 +76,7 @@ const GameFigure: FC<
                 })}
               >
                 <PlatformList
-                  platforms={game.platformGames.map((gp) => gp.platform)}
+                  platforms={game.releases.map((release) => release.platform)}
                 />
               </Box>
             </Box>,

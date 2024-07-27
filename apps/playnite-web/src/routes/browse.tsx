@@ -1,3 +1,5 @@
+import { gql } from '@apollo/client/core'
+import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { FilterAlt } from '@mui/icons-material'
 import { Button, styled } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
@@ -8,7 +10,7 @@ import {
   useLocation,
   useNavigate,
 } from '@remix-run/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { scrollTo } from '../api/client/state/layoutSlice'
 import { setFilterTypeValues } from '../api/client/state/librarySlice'
@@ -18,32 +20,15 @@ import IconButton from '../components/IconButton'
 import MyLibrary from '../components/MyLibrary'
 import Drawer from '../components/Navigation/Drawer'
 import RightDrawer from '../components/RightDrawer'
-import Game from '../domain/Game'
-import GameOnPlatform from '../domain/GameOnPlatform'
-import { GameOnPlatformDto, IGame } from '../domain/types'
+import { Game } from '../server/graphql/types.generated'
 
 const isOnDetailsPage = (pathname) => /\/browse\/.+$/.test(pathname)
 
 async function loader({ request }: LoaderFunctionArgs) {
   const api = getGameApi()
-  const games = await api.getGames()
-  games.sort((a, b) => {
-    const aName = a.toString()
-    const bName = b.toString()
-    if (aName > bName) {
-      return 1
-    }
-    if (aName < bName) {
-      return -1
-    }
-
-    return 0
-  })
-
   const features = await api.getFeatures()
 
   return json({
-    games: games,
     filterValues: {
       feature: features,
     },
@@ -55,9 +40,24 @@ const Title = styled('span')(({ theme }) => ({
   flex: 1,
 }))
 
+const All_Games_Query = gql`
+  query allGames {
+    games {
+      id
+      name
+      description
+      releases {
+        id
+        platform {
+          id
+          name
+        }
+      }
+    }
+  }
+`
 function Browse() {
-  const data = (useLoaderData() || {}) as unknown as {
-    games: GameOnPlatformDto[][]
+  const { filterValues } = (useLoaderData() || {}) as unknown as {
     filterValues:
       | {
           feature: { id: string; name: string }[]
@@ -65,12 +65,14 @@ function Browse() {
       | undefined
   }
 
+  const { loading, data, error } = useQuery(All_Games_Query, {})
+
   const dispatch = useDispatch()
   useEffect(() => {
-    Object.entries(data.filterValues ?? {}).forEach(([key, value]) => {
+    Object.entries(filterValues ?? {}).forEach(([key, value]) => {
       dispatch(setFilterTypeValues({ filterTypeName: key, values: value }))
     })
-  }, [data.filterValues])
+  }, [filterValues])
 
   const handleScrollTop = useCallback(() => {
     dispatch(scrollTo(0))
@@ -91,18 +93,10 @@ function Browse() {
 
     navigate(`/browse`)
   }, [location.pathname])
-  const handleSelection = useCallback((evt, game: IGame) => {
+  const handleSelection = useCallback((evt, game: Game) => {
     setRightDrawerOpen(true)
     navigate(`/browse/${game.id.toString()}`)
   }, [])
-
-  const games = useMemo(
-    () =>
-      data.games.map((g) => {
-        return new Game(g.map((gp) => new GameOnPlatform(gp)))
-      }),
-    [data.games],
-  )
 
   return (
     <Drawer
@@ -125,7 +119,7 @@ function Browse() {
         </IconButton>
       }
     >
-      <MyLibrary games={games ?? []} onSelect={handleSelection} />
+      <MyLibrary games={loading ? [] : data.games} onSelect={handleSelection} />
       <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
         {isFiltersInDrawer ? <Filters onClose={handleClose} /> : <Outlet />}
       </RightDrawer>

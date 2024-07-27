@@ -6,7 +6,7 @@ import { $params } from 'remix-routes'
 import { Readable } from 'stream'
 import getGameApi from '../api/game/index.server'
 import { AssetTypeKey } from '../api/game/types'
-import { CompositeOid } from '../domain/Oid'
+import { fromString } from '../server/oid'
 
 async function loader({ request, params }: LoaderFunctionArgs) {
   const debug = createDebugger(
@@ -20,7 +20,7 @@ async function loader({ request, params }: LoaderFunctionArgs) {
       })
     }
 
-    const relatedOid = new CompositeOid(oid)
+    const relatedOid = fromString(oid)
 
     const api = getGameApi()
     const assets = await api.getAssetsRelatedTo(

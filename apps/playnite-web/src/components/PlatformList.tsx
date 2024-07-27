@@ -1,9 +1,9 @@
 import { Chip, styled } from '@mui/material'
 import _ from 'lodash'
 import { FC, useMemo } from 'react'
-import { IPlatform } from '../domain/types'
+import { Platform } from '../server/graphql/types.generated'
 
-const { chunk, uniqWith } = _
+const { uniqWith } = _
 
 const platformDisplays = {
   pc: { matcher: /PC/ },
@@ -22,7 +22,7 @@ const sortOrder = [
 const PlatformImage = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
 }))
-const PlatformListItem: FC<{ platform: IPlatform | IPlatform[] }> = ({
+const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
   platform,
 }) => {
   if (Array.isArray(platform)) {
@@ -40,7 +40,7 @@ const PlatformListItem: FC<{ platform: IPlatform | IPlatform[] }> = ({
   return (
     <li>
       <PlatformImage
-        alt={platform.toString()}
+        alt={platform.name}
         src={`/gameAsset/icon/${platform.id}`}
       />
     </li>
@@ -76,13 +76,14 @@ const List = styled('ol')(({ theme }) => ({
   },
 }))
 
-const PlatformList: FC<{ platforms: IPlatform[] }> = ({ platforms }) => {
+const PlatformList: FC<{ platforms: Array<Platform> }> = ({ platforms }) => {
   const condensedPlatforms = useMemo(() => {
-    const sortedPlatforms: IPlatform[] = uniqWith(platforms, (a, b) =>
-      a.id.isEqual(b.id),
+    const sortedPlatforms: Array<Platform> = uniqWith(
+      platforms,
+      (a, b) => a.id === b.id,
     ).sort((a, b) => {
-      const aSort = sortOrder.findIndex((p) => p.matcher.test(a.toString()))
-      const bSort = sortOrder.findIndex((p) => p.matcher.test(b.toString()))
+      const aSort = sortOrder.findIndex((p) => p.matcher.test(a.name))
+      const bSort = sortOrder.findIndex((p) => p.matcher.test(b.name))
       if (aSort > bSort) {
         return 1
       }
@@ -91,15 +92,15 @@ const PlatformList: FC<{ platforms: IPlatform[] }> = ({ platforms }) => {
       }
       return 0
     })
-    return (sortedPlatforms.slice(0, 3) as (IPlatform | IPlatform[])[]).concat([
-      sortedPlatforms.slice(3),
-    ])
+    return (sortedPlatforms.slice(0, 3) as (Platform | Array<Platform>)[])
+      .concat([sortedPlatforms.slice(3)])
+      .filter((platform) => platform)
   }, [platforms])
 
   return (
     <List>
-      {condensedPlatforms.map((platform) => (
-        <PlatformListItem platform={platform} key={platform.toString()} />
+      {condensedPlatforms.map((platform, index) => (
+        <PlatformListItem platform={platform} key={index} />
       ))}
     </List>
   )

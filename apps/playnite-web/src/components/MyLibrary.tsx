@@ -1,29 +1,23 @@
 import { Box, Typography } from '@mui/material'
-import { FC, useMemo } from 'react'
+import { FC } from 'react'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 import { getFilter } from '../api/client/state/librarySlice'
 import GameGrid from '../components/GameGrid'
 import Header from '../components/Header'
-import FilteredGameList from '../domain/FilteredGameList'
-import GameList from '../domain/GameList'
-import type { IGame } from '../domain/types'
+import { Game } from '../server/graphql/types.generated'
 import OuterScroll from './OuterScroll'
 import useThemeWidth from './useThemeWidth'
 
 const MyLibrary: FC<{
-  games: IGame[]
-  onSelect?: (evt, game: IGame) => void
-}> = ({ games = [] as IGame[], onSelect }) => {
-  const gameList = useMemo(() => {
-    return new GameList(games)
-  }, [games])
-
+  games: Array<Game>
+  onSelect?: (evt, game: Game) => void
+}> = ({ games, onSelect }) => {
   const filter = useSelector(getFilter)
-  const filteredGames = useMemo(
-    () => new FilteredGameList(gameList, filter),
-    [gameList, filter],
-  )
+  // const filteredGames = useMemo(
+  //   () => new FilteredGameList(games, filter),
+  //   [gameList, filter],
+  // )
 
   const width = useThemeWidth()
 
@@ -32,14 +26,14 @@ const MyLibrary: FC<{
   return (
     <>
       <Helmet>
-        {gameList.items
+        {games
           .filter((game, index) => index <= noDeferCount)
           .map((game) => (
             <link
               key={game.id.toString()}
               rel="preload"
               as="image"
-              href={game.cover}
+              href={`/gameAsset/cover/${game.id}`}
             />
           ))}
       </Helmet>
@@ -48,7 +42,7 @@ const MyLibrary: FC<{
           <div>
             <Typography variant="h2">My Games</Typography>
             <Typography variant="subtitle1">
-              {gameList.items.length} games in my library
+              <span>{games.length}</span>&nbsp;games in library
             </Typography>
           </div>
         </Header>
@@ -66,7 +60,7 @@ const MyLibrary: FC<{
           })}
         >
           <GameGrid
-            games={filteredGames}
+            games={games}
             noDeferCount={noDeferCount}
             onSelect={onSelect}
           />
