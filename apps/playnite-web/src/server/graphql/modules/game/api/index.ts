@@ -18,6 +18,8 @@ const platformDisplays = {
   ps5: { matcher: /PlayStation 5/ },
   ps4: { matcher: /PlayStation 4/ },
   ps3: { matcher: /PlayStation 3/ },
+  p2: { matcher: /PlayStation 2/ },
+  ps1: { matcher: /PlayStation/ },
 }
 
 const sortOrder = [
@@ -27,6 +29,8 @@ const sortOrder = [
   platformDisplays.ps5,
   platformDisplays.ps4,
   platformDisplays.ps3,
+  platformDisplays.p2,
+  platformDisplays.ps1,
 ]
 
 const getPlatforms = (
@@ -48,9 +52,6 @@ const getPlatforms = (
     case 'Uplay':
     case 'Battle.net':
     case 'EA':
-      if (gameRelease.name === 'Rise of the Tomb Raider') {
-        console.log(gameRelease.platforms)
-      }
       return gameRelease.platforms
         .filter(
           (platform) =>
@@ -119,16 +120,15 @@ const toGameEntity = (
 function create(this: DomainApi) {
   const loader = new DataLoader<string, GameEntity>(async (ids) => {
     const gameReleaseIds = ids.map((id) => fromString(id).id.split(','))
-    return await Promise.all(
-      gameReleaseIds.map(async (ids) => {
-        const releases = await Promise.all(
-          ids.map((id) => {
-            return this.gameRelease.getById(id)
-          }),
-        )
-        return toGameEntity(releases)
-      }),
-    )
+    const releases = await this.gameRelease.getBy({
+      id: { $in: gameReleaseIds.flatMap((id) => id) },
+    })
+
+    return gameReleaseIds.map((ids) => {
+      return toGameEntity(
+        releases.filter((release) => ids.includes(release.id)),
+      )
+    })
   })
 
   return autoBind(this, {
@@ -146,3 +146,4 @@ function create(this: DomainApi) {
 }
 
 export default create
+export { unknownPlatform }
