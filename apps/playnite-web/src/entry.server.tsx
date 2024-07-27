@@ -184,7 +184,6 @@ async function handleBrowserRequest(
         issuer: domain,
         algorithm: 'HS256',
       })
-      console.log(claim)
     } catch (error) {
       debug(error)
     }

@@ -27,13 +27,13 @@ const MyLibrary: FC<{
     <>
       <Helmet>
         {games
-          .filter((game, index) => index <= noDeferCount)
+          .filter((game, index) => index <= noDeferCount && game.cover?.id)
           .map((game) => (
             <link
-              key={game.id.toString()}
+              key={game.id}
               rel="preload"
               as="image"
-              href={`/gameAsset/cover/${game.id}`}
+              href={`/asset-by-id/${game.cover?.id}`}
             />
           ))}
       </Helmet>

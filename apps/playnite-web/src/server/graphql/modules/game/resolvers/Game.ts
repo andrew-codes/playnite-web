@@ -15,13 +15,12 @@ export const Game: GameResolvers = {
     return _parent
   },
   cover: async (_parent, _arg, _ctx) => {
-    const covers = (
-      await Promise.all(
-        _parent.map((release) => _ctx.api.asset.getByRelation(release.id)),
-      )
-    ).map((releaseAssets) =>
-      releaseAssets.find((asset) => asset.typeKey === 'cover'),
+    const covers = await Promise.all(
+      _parent.map((release) =>
+        _ctx.api.asset.getByRelation(release.id, 'cover'),
+      ),
     )
+
     return covers.find((cover) => cover) ?? null
   },
 }

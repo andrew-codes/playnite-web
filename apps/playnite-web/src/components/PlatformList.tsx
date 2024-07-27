@@ -1,23 +1,6 @@
 import { Chip, styled } from '@mui/material'
-import _ from 'lodash'
 import { FC, useMemo } from 'react'
 import { Platform } from '../server/graphql/types.generated'
-
-const { uniqWith } = _
-
-const platformDisplays = {
-  pc: { matcher: /PC/ },
-  ps5: { matcher: /PlayStation 5/ },
-  ps4: { matcher: /PlayStation 4/ },
-  ps3: { matcher: /PlayStation 3/ },
-}
-
-const sortOrder = [
-  platformDisplays.pc,
-  platformDisplays.ps5,
-  platformDisplays.ps4,
-  platformDisplays.ps3,
-]
 
 const PlatformImage = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -41,7 +24,7 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
     <li>
       <PlatformImage
         alt={platform.name}
-        src={`/gameAsset/icon/${platform.id}`}
+        src={`/asset-by-id/${platform.icon?.id}`}
       />
     </li>
   )
@@ -78,22 +61,8 @@ const List = styled('ol')(({ theme }) => ({
 
 const PlatformList: FC<{ platforms: Array<Platform> }> = ({ platforms }) => {
   const condensedPlatforms = useMemo(() => {
-    const sortedPlatforms: Array<Platform> = uniqWith(
-      platforms,
-      (a, b) => a.id === b.id,
-    ).sort((a, b) => {
-      const aSort = sortOrder.findIndex((p) => p.matcher.test(a.name))
-      const bSort = sortOrder.findIndex((p) => p.matcher.test(b.name))
-      if (aSort > bSort) {
-        return 1
-      }
-      if (aSort < bSort) {
-        return -1
-      }
-      return 0
-    })
-    return (sortedPlatforms.slice(0, 3) as (Platform | Array<Platform>)[])
-      .concat([sortedPlatforms.slice(3)])
+    return (platforms.slice(0, 3) as (Platform | Array<Platform>)[])
+      .concat([platforms.slice(3)])
       .filter((platform) => platform)
   }, [platforms])
 

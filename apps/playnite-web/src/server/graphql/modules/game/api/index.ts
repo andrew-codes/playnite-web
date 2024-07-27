@@ -11,6 +11,24 @@ import {
 
 const { groupBy, merge, omit, toLower } = _
 
+const platformDisplays = {
+  pc: { matcher: /PC/ },
+  osx: { matcher: /Macintosh/ },
+  linux: { matcher: /Linux/ },
+  ps5: { matcher: /PlayStation 5/ },
+  ps4: { matcher: /PlayStation 4/ },
+  ps3: { matcher: /PlayStation 3/ },
+}
+
+const sortOrder = [
+  platformDisplays.pc,
+  platformDisplays.osx,
+  platformDisplays.linux,
+  platformDisplays.ps5,
+  platformDisplays.ps4,
+  platformDisplays.ps3,
+]
+
 const getPlatforms = (
   gameRelease: GameReleaseDbEntity | GameReleaseEntity,
 ): Array<PlatformSourceEntity> => {
@@ -30,12 +48,27 @@ const getPlatforms = (
     case 'Uplay':
     case 'Battle.net':
     case 'EA':
-      return gameRelease.platforms.filter(
-        (platform) =>
-          platform.name === 'PC (Windows)' ||
-          platform.name === 'Linux' ||
-          platform.name === 'Macintosh',
-      )
+      if (gameRelease.name === 'Rise of the Tomb Raider') {
+        console.log(gameRelease.platforms)
+      }
+      return gameRelease.platforms
+        .filter(
+          (platform) =>
+            platform.name === 'PC (Windows)' ||
+            platform.name === 'Linux' ||
+            platform.name === 'Macintosh',
+        )
+        .sort((a, b) => {
+          const aSort = sortOrder.findIndex((p) => p.matcher.test(a.name))
+          const bSort = sortOrder.findIndex((p) => p.matcher.test(b.name))
+          if (aSort > bSort) {
+            return 1
+          }
+          if (aSort < bSort) {
+            return -1
+          }
+          return 0
+        })
     case 'Nintendo':
       return gameRelease.platforms.filter((platform) =>
         toLower(platform.name).includes('nintendo'),
@@ -55,16 +88,32 @@ const toGameEntity = (
 ): GameEntity => {
   const releasesGroupedBySource = groupBy(gameReleases, 'source.name')
 
-  return Object.values(releasesGroupedBySource).flatMap((releases) =>
-    releases.map((release, index) =>
-      omit(
-        merge({}, release, {
-          platformSource: getPlatforms(release)[index] ?? unknownPlatform,
-        }),
-        '_id',
+  return Object.values(releasesGroupedBySource)
+    .flatMap((releases) =>
+      releases.map((release, index) =>
+        omit(
+          merge({}, release, {
+            platformSource: getPlatforms(release)[index] ?? unknownPlatform,
+          }),
+          '_id',
+        ),
       ),
-    ),
-  ) as GameEntity
+    )
+    .sort((a, b) => {
+      const aSort = sortOrder.findIndex((p) =>
+        p.matcher.test(a.platformSource.name),
+      )
+      const bSort = sortOrder.findIndex((p) =>
+        p.matcher.test(b.platformSource.name),
+      )
+      if (aSort > bSort) {
+        return 1
+      }
+      if (aSort < bSort) {
+        return -1
+      }
+      return 0
+    }) as GameEntity
 }
 
 function create(this: DomainApi) {
