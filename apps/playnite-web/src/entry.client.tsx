@@ -30,7 +30,7 @@ const clientSideCache = createEmotionCache()
 startTransition(() => {
   const store = configureStore({ reducer })
 
-  const host = location.hostname
+  const host = location.host
 
   const wsLink = new GraphQLWsLink(
     createClient({

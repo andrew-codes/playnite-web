@@ -7,7 +7,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { FC, useMemo } from 'react'
-import type { IGame, IList, Match } from '../domain/types'
+import { Game } from '../server/graphql/types.generated'
 import GameFigure from './GameFigure'
 import useThemeWidth from './useThemeWidth'
 
@@ -17,9 +17,9 @@ const ImageListWithoutOverflow = styled(ImageList)`
 `
 
 const GameGrid: FC<{
-  games: IList<Match<IGame>>
+  games: Array<Game>
   noDeferCount: number
-  onSelect?: (evt, game: IGame) => void
+  onSelect?: (evt, game: Game) => void
 }> = ({ games, noDeferCount, onSelect }) => {
   const theme = useTheme()
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
@@ -46,11 +46,10 @@ const GameGrid: FC<{
   return (
     <>
       <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
-        {games.items.map((game, gameIndex) => (
+        {games.map((game, gameIndex) => (
           <ImageListItem
-            key={game.id.toString()}
+            key={game.id}
             sx={(theme) => ({
-              ...(!game.matches ? { display: 'none' } : {}),
               alignItems: 'center',
             })}
           >
@@ -80,7 +79,7 @@ const GameGrid: FC<{
                   WebkitBoxOrient: 'vertical ',
                 }}
               >
-                {game.toString()}
+                {game.name}
               </Typography>
               <Typography
                 variant="body2"
@@ -98,7 +97,7 @@ const GameGrid: FC<{
                   WebkitBoxOrient: 'vertical ',
                 }}
               >
-                {game.completionStatus.toString()}
+                {/* {game.completionStatus.toString()} */}
               </Typography>
             </GameFigure>
           </ImageListItem>

@@ -13,8 +13,9 @@ import createYoga from './src/server/graphql'
 const debug = createDebugger('playnite-web/app/server')
 
 async function run(mqttClient: AsyncMqttClient) {
-  const { PORT } = process.env
+  const { PORT, HOST } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
+  const domain = HOST ?? 'localhost'
 
   let app = express()
 
@@ -32,6 +33,7 @@ async function run(mqttClient: AsyncMqttClient) {
 
   const signingKey = process.env.SECRET ?? 'secret'
   const yoga = createYoga('/api', signingKey, mqttClient)
+
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -39,8 +41,10 @@ async function run(mqttClient: AsyncMqttClient) {
           'default-src': ["'self'"],
           'connect-src': [
             "'self'",
-            'ws://localhost:3000',
-            'wss://localhost:3000',
+            `ws://${domain}:*`,
+            `wss://${domain}:*`,
+            `http://${domain}:*`,
+            `https://${domain}:*`,
           ],
           'style-src': [
             "'self'",
