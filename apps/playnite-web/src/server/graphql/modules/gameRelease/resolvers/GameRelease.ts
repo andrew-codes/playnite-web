@@ -49,7 +49,6 @@ export const GameRelease: GameReleaseResolvers = {
     )
   },
   cover: async (_parent, _arg, _ctx) => {
-    const assets = await _ctx.api.asset.getByRelation(_parent.id)
-    return assets.find((asset) => asset.typeKey === 'cover') ?? null
+    return _ctx.api.asset.getByRelation(_parent.id, 'cover')
   },
 }

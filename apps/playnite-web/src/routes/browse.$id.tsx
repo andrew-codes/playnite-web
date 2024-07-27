@@ -17,6 +17,9 @@ const Game_By_Id_Query = gql`
         platform {
           id
           name
+          icon {
+            id
+          }
         }
       }
     }
@@ -28,7 +31,7 @@ function GameBrowseDetails() {
   const { loading, data, error } = useQuery(Game_By_Id_Query, {
     variables: { id: params.id },
   })
-  if (loading) {
+  if (loading || error) {
     return null
   }
   return <GameDetails game={data.game} />

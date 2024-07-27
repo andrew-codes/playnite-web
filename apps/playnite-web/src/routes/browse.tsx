@@ -54,6 +54,9 @@ const All_Games_Query = gql`
         platform {
           id
           name
+          icon {
+            id
+          }
         }
       }
     }
@@ -68,7 +71,8 @@ function Browse() {
       | undefined
   }
 
-  const { loading, data, error } = useQuery(All_Games_Query, {})
+  const { loading, data, error } = useQuery(All_Games_Query)
+  const games = !loading && !error ? data.games : []
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -122,7 +126,7 @@ function Browse() {
         </IconButton>
       }
     >
-      <MyLibrary games={loading ? [] : data.games} onSelect={handleSelection} />
+      <MyLibrary games={games} onSelect={handleSelection} />
       <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
         {isFiltersInDrawer ? <Filters onClose={handleClose} /> : <Outlet />}
       </RightDrawer>

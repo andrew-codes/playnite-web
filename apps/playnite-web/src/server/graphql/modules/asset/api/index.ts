@@ -2,6 +2,7 @@ import DataLoader from 'dataloader'
 import _ from 'lodash'
 import { GameAssetDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
+import { GameAssetType } from '../../../resolverTypes'
 
 const { groupBy } = _
 
@@ -12,16 +13,32 @@ function create(this: DomainApi) {
       .find({ id: { $in: ids } })
       .toArray()
   })
-  const relatedLoader = new DataLoader<string, Array<GameAssetDbEntity>>(
+  const relatedCoverLoader = new DataLoader<string, GameAssetDbEntity>(
     async (ids) => {
       const assets = await (
         await this.db()
       )
         .collection<GameAssetDbEntity>('assets')
-        .find({ relatedId: { $in: ids } })
+        .find({ relatedId: { $in: ids }, typeKey: 'cover' })
         .toArray()
 
-      return Object.values(groupBy(assets, 'relatedId'))
+      const assetsById = groupBy(assets, 'relatedId')
+
+      return ids.map((id) => assetsById[id]?.[0] ?? null)
+    },
+  )
+  const relatedIconLoader = new DataLoader<string, GameAssetDbEntity>(
+    async (ids) => {
+      const assets = await (
+        await this.db()
+      )
+        .collection<GameAssetDbEntity>('assets')
+        .find({ relatedId: { $in: ids }, typeKey: 'icon' })
+        .toArray()
+
+      const assetsById = groupBy(assets, 'relatedId')
+
+      return ids.map((id) => assetsById[id]?.[0] ?? null)
     },
   )
 
@@ -29,8 +46,18 @@ function create(this: DomainApi) {
     async getById(this: DomainApi, id: string) {
       return loader.load(id)
     },
-    async getByRelation(this: DomainApi, relatedId: string) {
-      return relatedLoader.load(relatedId)
+    async getByRelation(
+      this: DomainApi,
+      relatedId: string,
+      typeKey: GameAssetType,
+    ) {
+      if (typeKey === 'cover') {
+        return relatedCoverLoader.load(relatedId)
+      } else if (typeKey === 'icon') {
+        return relatedIconLoader.load(relatedId)
+      }
+
+      throw new Error(`Unsupported typeKey: ${typeKey}`)
     },
   })
 }
