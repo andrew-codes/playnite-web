@@ -10,19 +10,17 @@ export const games: NonNullable<QueryResolvers['games']> = async (
 ) => {
   return (await _ctx.api.game.getAll())
     .filter((game) => {
-      if (!_arg.criteria) {
+      if (!_arg.filter) {
         return true
       }
 
       const filters: Array<boolean> = []
-      if (_arg.criteria.name) {
-        if (exactMatch.test(_arg.criteria.name)) {
-          filters.push(game[0].name === _arg.criteria.name.slice(1, -1))
+      if (_arg.filter.name) {
+        if (exactMatch.test(_arg.filter.name)) {
+          filters.push(game[0].name === _arg.filter.name.slice(1, -1))
         } else {
           filters.push(
-            game[0].name
-              .toLowerCase()
-              .includes(_arg.criteria.name.toLowerCase()),
+            game[0].name.toLowerCase().includes(_arg.filter.name.toLowerCase()),
           )
         }
       }

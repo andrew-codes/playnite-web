@@ -33,6 +33,7 @@ const GameGrid: FC<{
   const rowHeight = useMemo(() => {
     return columnWidth + 96
   }, [columnWidth])
+  const rowCount = Math.ceil(games.length / columns)
 
   const gridRef = createRef<{
     scrollToItem: (params: { rowIndex: number; columnIndex: number }) => void
@@ -60,6 +61,9 @@ const GameGrid: FC<{
 
   const Cell = ({ columnIndex, rowIndex, style }) => {
     const game = games[rowIndex * columns + columnIndex]
+    if (!game) {
+      return null
+    }
 
     return (
       <div
@@ -128,7 +132,7 @@ const GameGrid: FC<{
       columnWidth={columnWidth + horizontalGutter}
       height={height}
       innerElementType={innerElementType}
-      rowCount={games.length}
+      rowCount={rowCount}
       rowHeight={rowHeight + verticalGutter}
       width={width + horizontalGutter * 2}
     >

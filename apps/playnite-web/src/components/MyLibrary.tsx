@@ -1,9 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import { FC } from 'react'
 import { Helmet } from 'react-helmet'
-import { useSelector } from 'react-redux'
 import useDimensions from 'react-use-dimensions'
-import { getFilter } from '../api/client/state/librarySlice'
 import GameGrid from '../components/GameGrid'
 import Header from '../components/Header'
 import { Game } from '../server/graphql/types.generated'
@@ -14,12 +12,6 @@ const MyLibrary: FC<{
   games: Array<Game>
   onSelect?: (evt, game: Game) => void
 }> = ({ games, onSelect }) => {
-  const filter = useSelector(getFilter)
-  // const filteredGames = useMemo(
-  //   () => new FilteredGameList(games, filter),
-  //   [gameList, filter],
-  // )
-
   const width = useThemeWidth()
   const [ref, dims] = useDimensions({ liveMeasure: true })
 
@@ -28,7 +20,7 @@ const MyLibrary: FC<{
       <Helmet>
         {games
           .filter((game) => game.cover?.id)
-          .slice(0, 20)
+          .slice(0, 15)
           .map((game) => (
             <link
               key={game.id}
