@@ -2,11 +2,9 @@ import { createRequestHandler } from '@remix-run/express'
 import compression from 'compression'
 import createDebugger from 'debug'
 import express from 'express'
-import fs from 'fs'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import helmet from 'helmet'
 import { AsyncMqttClient } from 'mqtt-client'
-import spdy from 'spdy'
 import { WebSocketServer } from 'ws'
 import createYoga from './src/server/graphql'
 
@@ -75,27 +73,8 @@ async function run(mqttClient: AsyncMqttClient) {
 
   app.use(compression())
 
-  let httpServer = app
-  let useSsl = process.env.USE_SSL === 'true'
-  if (useSsl) {
-    const sslKey =
-      process.env.SSL_KEY ?? fs.readFileSync('./cert/server.key')?.toString()
-    const sslCert =
-      process.env.SSL_CERT ?? fs.readFileSync('./cert/server.cert')?.toString()
-    if (!sslKey || !sslCert) {
-      throw new Error('SSL enabled, but no KEY or CERT provided.')
-    }
-    httpServer = spdy.createServer(
-      {
-        key: sslKey,
-        cert: sslCert,
-      },
-      app,
-    )
-  }
-
-  const server = httpServer.listen(port, () => {
-    debug(`App listening on http${useSsl ? 's' : ''}://localhost:${port}`)
+  const server = app.listen(port, () => {
+    debug(`App listening on http://${domain}:${port}`)
 
     const wsServer = new WebSocketServer({ server, path: '/api' })
     useServer(

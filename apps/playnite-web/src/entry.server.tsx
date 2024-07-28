@@ -68,12 +68,11 @@ function handleBotRequest(
     const store = configureStore({ reducer })
     const domain = process.env.HOST ?? 'localhost'
     const port = process.env.PORT ?? '3000'
-    const useSsl = process.env.USE_SSL === 'true'
 
     let claim: Claim = { user: nullUser, credential: '' }
     const wsLink = new GraphQLWsLink(
       createClient({
-        url: `${useSsl ? 'wss' : 'ws'}://${domain}:${port}/api`,
+        url: `ws://${domain}:${port}/api`,
         connectionParams: {
           'Access-Control-Allow-Origin': '*', // Required for CORS support to work
           credentials: true,
@@ -170,7 +169,6 @@ async function handleBrowserRequest(
     let claim: Claim = { user: nullUser, credential: '' }
     const domain = process.env.HOST ?? 'localhost'
     const port = process.env.PORT ?? '3000'
-    const useSsl = process.env.USE_SSL === 'true'
 
     try {
       const value = decodeURIComponent(
@@ -190,7 +188,7 @@ async function handleBrowserRequest(
 
     const wsLink = new GraphQLWsLink(
       createClient({
-        url: `${useSsl ? 'wss' : 'ws'}://${domain}:${port}/api`,
+        url: `ws://${domain}:${port}/api`,
         connectionParams: {
           'Access-Control-Allow-Origin': '*', // Required for CORS support to work
           credentials: true,
