@@ -17,6 +17,7 @@ const GameGrid: FC<{
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
   const isSm = useMediaQuery(theme.breakpoints.up('sm'))
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
+  const useMoreSpacing = useMediaQuery(theme.breakpoints.down('lg')) && isSm
   const columns = useMemo(() => {
     if (isXl) return 5
     if (isLg) return 4
@@ -41,7 +42,7 @@ const GameGrid: FC<{
     gridRef.current?.scrollToItem({ rowIndex: 0, columnIndex: 0 })
   })
 
-  const horizontalGutter = 12
+  const horizontalGutter = useMoreSpacing ? 16 : 8
   const verticalGutter = 6
   const innerElementType = forwardRef<HTMLDivElement, { style: any }>(
     ({ style, ...rest }, ref) => (
@@ -129,7 +130,7 @@ const GameGrid: FC<{
       innerElementType={innerElementType}
       rowCount={games.length}
       rowHeight={rowHeight + verticalGutter}
-      width={width}
+      width={width + horizontalGutter * 2}
     >
       {Cell}
     </Grid>
