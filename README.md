@@ -27,7 +27,6 @@ Playnite-web offers:
       - [Playnite-Web Plugin](#playnite-web-plugin)
       - [playnite-web-app](#playnite-web-app)
         - [Environment Variables](#environment-variables)
-          - [Enabling HTTP/2](#enabling-http2)
     - [Post Deployment Steps](#post-deployment-steps)
   - [Contributing](#contributing)
 
@@ -100,14 +99,6 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 | MQTT_PORT            | Port of MQTT broker                              |           | Default for MQTT image is 1883                                    |
 | MQTT_USERNAME        | Username to access MQTT broker                   |           | Only required if disabled anonymous access                        |
 | MQTT_PASSWORD        | Password to access MQTT broker                   |           | Only required if disabled anonymous access                        |
-
-###### Enabling HTTP/2
-
-HTTP/2 will provide a performance boost to loading pages and assets (images). However, it requires the use of HTTPS. Playnite Web requires an SSL key and certificate to enable HTTP/2. This may be provided either via environment variables or as files located in the application's `cert` directory. For docker users, this will require mounting a volume and placing the key and certificate files within the mounted volume. Example shown below:
-
-```sh
-docker run -v $PWD/cert:/opt/playnite-web-app/cert ghcr.io/andrew-codes/playnite-web-app:latest
-```
 
 ### Post Deployment Steps
 
