@@ -12,12 +12,12 @@ import {
 } from '@remix-run/react'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { scrollTo } from '../api/client/state/layoutSlice'
 import { setFilterTypeValues } from '../api/client/state/librarySlice'
 import getGameApi from '../api/game/index.server'
 import Filters from '../components/Filters'
 import IconButton from '../components/IconButton'
 import MyLibrary from '../components/MyLibrary'
+import { useNavigateInGrid } from '../components/NavigateInGrid/context'
 import Drawer from '../components/Navigation/Drawer'
 import RightDrawer from '../components/RightDrawer'
 import { Game } from '../server/graphql/types.generated'
@@ -81,9 +81,10 @@ function Browse() {
     })
   }, [filterValues])
 
-  const handleScrollTop = useCallback(() => {
-    dispatch(scrollTo(0))
-  }, [])
+  const [trigger] = useNavigateInGrid()
+  const handleScrollTop = (evt) => {
+    trigger(0, 0)
+  }
 
   const location = useLocation()
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(

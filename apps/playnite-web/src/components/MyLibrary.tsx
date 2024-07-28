@@ -2,11 +2,12 @@ import { Box, Typography } from '@mui/material'
 import { FC } from 'react'
 import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
+import useDimensions from 'react-use-dimensions'
 import { getFilter } from '../api/client/state/librarySlice'
 import GameGrid from '../components/GameGrid'
 import Header from '../components/Header'
 import { Game } from '../server/graphql/types.generated'
-import OuterScroll from './OuterScroll'
+import OuterContainer from './OuterContainer'
 import useThemeWidth from './useThemeWidth'
 
 const MyLibrary: FC<{
@@ -20,12 +21,14 @@ const MyLibrary: FC<{
   // )
 
   const width = useThemeWidth()
+  const [ref, dims] = useDimensions({ liveMeasure: true })
 
   return (
     <>
       <Helmet>
         {games
           .filter((game) => game.cover?.id)
+          .slice(0, 20)
           .map((game) => (
             <link
               key={game.id}
@@ -35,7 +38,7 @@ const MyLibrary: FC<{
             />
           ))}
       </Helmet>
-      <OuterScroll>
+      <OuterContainer>
         <Header>
           <div>
             <Typography variant="h2">My Games</Typography>
@@ -45,9 +48,12 @@ const MyLibrary: FC<{
           </div>
         </Header>
         <Box
+          ref={ref}
           sx={(theme) => ({
             flexGrow: 1,
             width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
             margin: '0 auto',
             [theme.breakpoints.up('lg')]: {
               overflowY: 'auto',
@@ -57,9 +63,13 @@ const MyLibrary: FC<{
             },
           })}
         >
-          <GameGrid games={games} onSelect={onSelect} />
+          <GameGrid
+            games={games}
+            height={dims.height ?? 0}
+            onSelect={onSelect}
+          />
         </Box>
-      </OuterScroll>
+      </OuterContainer>
     </>
   )
 }
