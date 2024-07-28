@@ -82,16 +82,16 @@ async function run(mqttClient: AsyncMqttClient) {
       process.env.SSL_KEY ?? fs.readFileSync('./cert/server.key')?.toString()
     const sslCert =
       process.env.SSL_CERT ?? fs.readFileSync('./cert/server.cert')?.toString()
-    if (sslKey && sslCert) {
-      useSsl = true
-      httpServer = spdy.createServer(
-        {
-          key: sslKey,
-          cert: sslCert,
-        },
-        app,
-      )
+    if (!sslKey || !sslCert) {
+      throw new Error('SSL enabled, but no KEY or CERT provided.')
     }
+    httpServer = spdy.createServer(
+      {
+        key: sslKey,
+        cert: sslCert,
+      },
+      app,
+    )
   }
 
   const server = httpServer.listen(port, () => {
