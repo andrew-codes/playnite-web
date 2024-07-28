@@ -6,7 +6,11 @@ type Game {
   releases: [GameRelease!]!
 }
 
+input Filter {
+  name: String
+}
+
 extend type Query {
   game(id: String!): Game
-  games: [Game]!
+  games(criteria: Filter): [Game!]!
 }
