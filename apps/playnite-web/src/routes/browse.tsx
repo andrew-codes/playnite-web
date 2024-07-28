@@ -11,8 +11,11 @@ import {
   useNavigate,
 } from '@remix-run/react'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { setFilterTypeValues } from '../api/client/state/librarySlice'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  getFilter,
+  setFilterTypeValues,
+} from '../api/client/state/librarySlice'
 import getGameApi from '../api/game/index.server'
 import Filters from '../components/Filters'
 import IconButton from '../components/IconButton'
@@ -41,8 +44,8 @@ const Title = styled('span')(({ theme }) => ({
 }))
 
 const All_Games_Query = gql`
-  query allGames {
-    games {
+  query allGames($filter: Filter) {
+    games(filter: $filter) {
       id
       cover {
         id
@@ -71,7 +74,12 @@ function Browse() {
       | undefined
   }
 
-  const { loading, data, error } = useQuery(All_Games_Query)
+  const filter = useSelector(getFilter)
+  const { loading, data, error, refetch } = useQuery(All_Games_Query)
+  useEffect(() => {
+    refetch({ filter })
+  }, [filter])
+
   const games = !loading && !error ? data.games : []
 
   const dispatch = useDispatch()
