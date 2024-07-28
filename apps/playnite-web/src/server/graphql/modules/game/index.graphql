@@ -12,5 +12,5 @@ input Filter {
 
 extend type Query {
   game(id: String!): Game
-  games(criteria: Filter): [Game!]!
+  games(filter: Filter): [Game!]!
 }
