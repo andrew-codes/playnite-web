@@ -18,7 +18,7 @@ const graphql = (
   signingKey: string,
   mqttClient: AsyncMqttClient,
 ) => {
-  const domainApi = new Domain(signingKey, 'localhost')
+  const domainApi = new Domain()
   mqttClient.on('message', async (topic, message) => {
     try {
       debug('Received message on topic: %s', topic)
@@ -47,6 +47,8 @@ const graphql = (
     }
   })
 
+  const domain = process.env.HOST ?? 'localhost'
+
   return createYoga({
     schema,
     graphqlEndpoint: endpoint,
@@ -54,7 +56,7 @@ const graphql = (
       subscriptionsProtocol: 'WS',
     },
     cors: {
-      origin: ['http://localhost'],
+      origin: [domain].concat(process.env.ADDITIONAL_ORIGINS?.split(',') ?? []),
       credentials: true,
       allowedHeaders: ['X-Custom-Header'],
       methods: ['GET', 'POST'],
@@ -63,7 +65,7 @@ const graphql = (
       useCSRFPrevention({ requestHeaders: ['x-graphql-yoga-csrf'] }),
       useCookies(),
       useJWT({
-        issuer: 'http://localhost',
+        issuer: domain,
         signingKey,
         algorithms: ['HS256'],
         getToken: async ({ request }) => {
@@ -90,8 +92,8 @@ const graphql = (
     context: (req): PlayniteContext => ({
       ...req,
       signingKey,
-      domain: 'localhost',
-      api: new Domain(signingKey, 'localhost'),
+      domain,
+      api: new Domain(),
       mqttClient,
       subscriptionPublisher,
     }),

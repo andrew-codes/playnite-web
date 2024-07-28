@@ -1,6 +1,6 @@
 import createDebugger from 'debug'
 import { Filter, MongoClient } from 'mongodb'
-import { IIdentifyDomainObjects } from '../../../../../domain/types'
+import { IIdentify } from '../../../../../server/oid'
 import { AssetTypeKey } from '../../../types'
 import { getDbClient } from './client'
 import {
@@ -79,7 +79,7 @@ class MongoDb implements MongoDbApi {
   }
 
   async getAssetsByType(
-    oid: IIdentifyDomainObjects,
+    oid: IIdentify,
     typeKey?: AssetTypeKey,
   ): Promise<GameAssetEntity[]> {
     await this.connect()

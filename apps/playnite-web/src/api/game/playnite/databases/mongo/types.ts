@@ -1,8 +1,6 @@
 import { Binary, Document, Filter, WithId } from 'mongodb'
-import type {
-  GameAssetType,
-  IIdentifyDomainObjects,
-} from '../../../../../domain/types'
+import type { GameAssetType } from '../../../../../domain/types'
+import { IIdentify } from '../../../../../server/oid'
 import { AssetTypeKey } from '../../../types'
 
 type PlatformEntity = {
@@ -88,7 +86,7 @@ interface MongoDbApi {
     filterTypeName: string,
   ): Promise<{ id: string; name: string }[]>
   getAssetsByType(
-    oid: IIdentifyDomainObjects,
+    oid: IIdentify,
     typeKey?: AssetTypeKey,
   ): Promise<GameAssetEntity[]>
   getTagsGames(tagIds: string[]): Promise<[TagEntity, GameEntity[]][]>

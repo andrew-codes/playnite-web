@@ -42,7 +42,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
-    "react-intersection-observer": "^9.13.0",
     "react-redux": "^9.1.2",
     "react-use-dimensions": "^1.2.1",
     "react-window": "^1.8.10",
@@ -51,7 +50,6 @@
     "remix-island": "^0.2.0",
     "remix-routes": "^1.7.6",
     "remix-utils": "^7.6.0",
-    "spdy": "^4.0.2",
     "ua-parser-js": "^1.0.38",
     "ws": "^8.18.0",
     "zod": "^3.23.8"

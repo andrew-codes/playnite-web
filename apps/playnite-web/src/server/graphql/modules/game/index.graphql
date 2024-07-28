@@ -2,7 +2,8 @@ type Game {
   id: String!
   name: String!
   description: String
-  releases: [GameRelease]!
+  cover: GameAsset
+  releases: [GameRelease!]!
 }
 
 extend type Query {
