@@ -18,9 +18,8 @@ const ImageListWithoutOverflow = styled(ImageList)`
 
 const GameGrid: FC<{
   games: Array<Game>
-  noDeferCount: number
   onSelect?: (evt, game: Game) => void
-}> = ({ games, noDeferCount, onSelect }) => {
+}> = ({ games, onSelect }) => {
   const theme = useTheme()
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
@@ -56,7 +55,6 @@ const GameGrid: FC<{
             <GameFigure
               game={game}
               height={`${rowHeight}px`}
-              noDefer={gameIndex <= noDeferCount}
               width={`calc(${columnWidth}px)`}
               onSelect={(evt) => {
                 onSelect?.(evt, game)

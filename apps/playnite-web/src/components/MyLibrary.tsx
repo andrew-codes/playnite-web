@@ -21,13 +21,11 @@ const MyLibrary: FC<{
 
   const width = useThemeWidth()
 
-  const noDeferCount = 25
-
   return (
     <>
       <Helmet>
         {games
-          .filter((game, index) => index <= noDeferCount && game.cover?.id)
+          .filter((game) => game.cover?.id)
           .map((game) => (
             <link
               key={game.id}
@@ -59,11 +57,7 @@ const MyLibrary: FC<{
             },
           })}
         >
-          <GameGrid
-            games={games}
-            noDeferCount={noDeferCount}
-            onSelect={onSelect}
-          />
+          <GameGrid games={games} onSelect={onSelect} />
         </Box>
       </OuterScroll>
     </>
