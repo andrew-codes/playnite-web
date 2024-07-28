@@ -48,4 +48,7 @@ export const GameRelease: GameReleaseResolvers = {
       }),
     )
   },
+  cover: async (_parent, _arg, _ctx) => {
+    return _ctx.api.asset.getByRelation(_parent.id, 'cover')
+  },
 }

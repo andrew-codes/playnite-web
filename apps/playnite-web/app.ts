@@ -2,19 +2,18 @@ import { createRequestHandler } from '@remix-run/express'
 import compression from 'compression'
 import createDebugger from 'debug'
 import express from 'express'
-import fs from 'fs'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import helmet from 'helmet'
 import { AsyncMqttClient } from 'mqtt-client'
-import spdy from 'spdy'
 import { WebSocketServer } from 'ws'
 import createYoga from './src/server/graphql'
 
 const debug = createDebugger('playnite-web/app/server')
 
 async function run(mqttClient: AsyncMqttClient) {
-  const { PORT } = process.env
+  const { PORT, HOST } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
+  const domain = HOST ?? 'localhost'
 
   let app = express()
 
@@ -32,6 +31,7 @@ async function run(mqttClient: AsyncMqttClient) {
 
   const signingKey = process.env.SECRET ?? 'secret'
   const yoga = createYoga('/api', signingKey, mqttClient)
+
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -39,8 +39,10 @@ async function run(mqttClient: AsyncMqttClient) {
           'default-src': ["'self'"],
           'connect-src': [
             "'self'",
-            'ws://localhost:3000',
-            'wss://localhost:3000',
+            `ws://${domain}:*`,
+            `wss://${domain}:*`,
+            `http://${domain}:*`,
+            `https://${domain}:*`,
           ],
           'style-src': [
             "'self'",
@@ -71,27 +73,8 @@ async function run(mqttClient: AsyncMqttClient) {
 
   app.use(compression())
 
-  let httpServer = app
-  let useSsl = false
-  try {
-    const sslKey =
-      process.env.SSL_KEY ?? fs.readFileSync('./cert/server.key')?.toString()
-    const sslCert =
-      process.env.SSL_CERT ?? fs.readFileSync('./cert/server.cert')?.toString()
-    if (sslKey && sslCert) {
-      useSsl = true
-      httpServer = spdy.createServer(
-        {
-          key: sslKey,
-          cert: sslCert,
-        },
-        app,
-      )
-    }
-  } catch (error) {}
-
-  const server = httpServer.listen(port, () => {
-    debug(`App listening on http${useSsl ? 's' : ''}://localhost:${port}`)
+  const server = app.listen(port, () => {
+    debug(`App listening on http://${domain}:${port}`)
 
     const wsServer = new WebSocketServer({ server, path: '/api' })
     useServer(

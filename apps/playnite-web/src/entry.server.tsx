@@ -66,12 +66,13 @@ function handleBotRequest(
   return new Promise((resolve, reject) => {
     const clientSideCache = createEmotionCache()
     const store = configureStore({ reducer })
+    const domain = process.env.HOST ?? 'localhost'
+    const port = process.env.PORT ?? '3000'
 
     let claim: Claim = { user: nullUser, credential: '' }
-    const requestUrl = new URL(request.url)
     const wsLink = new GraphQLWsLink(
       createClient({
-        url: `ws://${requestUrl.host}/api`,
+        url: `ws://${domain}:${port}/api`,
         connectionParams: {
           'Access-Control-Allow-Origin': '*', // Required for CORS support to work
           credentials: true,
@@ -86,9 +87,9 @@ function handleBotRequest(
       schema,
       context: {
         signingKey: process.env.SECRET ?? 'secret',
-        domain: requestUrl.hostname,
+        domain,
         jwt: claim,
-        api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
+        api: new Domain(),
       } as Partial<PlayniteContext>,
     })
 
@@ -166,6 +167,9 @@ async function handleBrowserRequest(
     const clientSideCache = createEmotionCache()
     const store = configureStore({ reducer })
     let claim: Claim = { user: nullUser, credential: '' }
+    const domain = process.env.HOST ?? 'localhost'
+    const port = process.env.PORT ?? '3000'
+
     try {
       const value = decodeURIComponent(
         request.headers.get('Cookie')?.split('=')?.[1] ?? '',
@@ -175,18 +179,16 @@ async function handleBrowserRequest(
         throw new Error('Invalid token')
       }
       claim = jwt.decode(token, process.env.SECRET ?? 'secret', {
-        issuer: 'http://localhost',
+        issuer: domain,
         algorithm: 'HS256',
       })
-      console.log(claim)
     } catch (error) {
       debug(error)
     }
 
-    const requestUrl = new URL(request.url)
     const wsLink = new GraphQLWsLink(
       createClient({
-        url: `ws://${requestUrl.host}/api`,
+        url: `ws://${domain}:${port}/api`,
         connectionParams: {
           'Access-Control-Allow-Origin': '*', // Required for CORS support to work
           credentials: true,
@@ -201,9 +203,9 @@ async function handleBrowserRequest(
       schema,
       context: {
         signingKey: process.env.SECRET ?? 'secret',
-        domain: requestUrl.hostname,
+        domain: domain,
         jwt: claim,
-        api: new Domain(process.env.SECRET ?? 'secret', 'localhost'),
+        api: new Domain(),
       } as Partial<PlayniteContext>,
     })
 

@@ -13,4 +13,7 @@ export default defineConfig({
     }),
     remixRoutes(),
   ],
+  define: {
+    'globalThis.__DEV__': JSON.stringify(false),
+  },
 })

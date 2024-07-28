@@ -1,3 +1,5 @@
+import { gql } from '@apollo/client/core'
+import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import { ArrowDropDown } from '@mui/icons-material'
 import {
   Button,
@@ -13,8 +15,8 @@ import {
   styled,
 } from '@mui/material'
 import { FC, useMemo, useRef, useState } from 'react'
-import { IGame, IPlatform } from '../domain/types'
 import { useMe } from '../queryHooks'
+import { Game, Platform } from '../server/graphql/types.generated'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -43,35 +45,40 @@ const Description = styled('div')(({ theme }) => ({
   },
 }))
 
-const sortGameActionPlatforms = (platforms: IPlatform[]): IPlatform[] => {
+const Activate_Mutation = gql`
+  mutation Activate($gameReleaseId: String!) {
+    activateGameRelease(gameReleaseId: $gameReleaseId) {
+      id
+    }
+  }
+`
+
+const sortGameActionPlatforms = (platforms: Platform[]): Platform[] => {
   const sortedPlatforms = platforms.slice()
   sortedPlatforms.sort((a, b) => {
-    return a.toString().localeCompare(b.toString())
+    return a.name.localeCompare(b.name)
   })
   return sortedPlatforms
 }
 
-const GameDetails: FC<{ game: IGame }> = ({ game }) => {
+const GameDetails: FC<{ game: Game }> = ({ game }) => {
   const { data } = useMe()
 
-  const platformOptions = useMemo(
-    () => sortGameActionPlatforms(game.platformGames.map((gp) => gp.platform)),
-    [game.platformGames],
+  const platforms = useMemo(
+    () =>
+      sortGameActionPlatforms(game.releases.map((release) => release.platform)),
+    [game.releases],
   )
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [activate] = useMutation(Activate_Mutation)
+
   const handlePlay = (selectedIndex) => (evt) => {
-    // TODO: replace with graphql mutation
-    // fetch('/activate', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/x-www-form-urlencoded',
-    //   },
-    //   credentials: 'same-origin',
-    //   body: new URLSearchParams({
-    //     id: game.id.toString(),
-    //     platformId: platformOptions[selectedIndex].id.id,
-    //   }),
-    // })
+    const gameRelease = platforms[selectedIndex]
+    activate({
+      variables: {
+        gameReleaseId: gameRelease.id,
+      },
+    })
   }
 
   const [open, setOpen] = useState(false)
@@ -99,7 +106,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
 
   return (
     <Details>
-      <Typography variant="h4">{game.toString()}</Typography>
+      <Typography variant="h4">{game.name}</Typography>
 
       <Actions ref={platformsAnchorEl}>
         {data?.me.isAuthenticated && (
@@ -110,7 +117,7 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
               aria-label="Platforms in which to play the game"
             >
               <Button onClick={handlePlay(selectedIndex)}>
-                {platformOptions[selectedIndex].toString()}
+                {platforms[selectedIndex].name}
               </Button>
               <Button
                 size="small"
@@ -144,15 +151,15 @@ const GameDetails: FC<{ game: IGame }> = ({ game }) => {
                   <Paper>
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList id="split-button-menu" autoFocusItem>
-                        {platformOptions.map((option, index) => (
+                        {platforms.map((option, index) => (
                           <MenuItem
-                            key={option.id.toString()}
+                            key={option.id}
                             selected={index === selectedIndex}
                             onClick={(event) =>
                               handleMenuItemClick(event, index)
                             }
                           >
-                            {option.toString()}
+                            {option.name}
                           </MenuItem>
                         ))}
                       </MenuList>

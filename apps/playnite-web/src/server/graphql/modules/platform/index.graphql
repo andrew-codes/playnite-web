@@ -2,4 +2,5 @@ type Platform {
   id: String!
   name: String!
   releases: [GameRelease]!
+  icon: GameAsset
 }

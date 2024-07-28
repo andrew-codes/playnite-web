@@ -30,9 +30,11 @@ const clientSideCache = createEmotionCache()
 startTransition(() => {
   const store = configureStore({ reducer })
 
+  const host = location.host
+
   const wsLink = new GraphQLWsLink(
     createClient({
-      url: `ws://localhost:3000/api`,
+      url: `${location.protocol === 'https:' ? 'wss' : 'ws'}://${host}/api`,
       connectionParams: {
         'Access-Control-Allow-Origin': '*', // Required for CORS support to work
         credentials: true,
@@ -44,7 +46,7 @@ startTransition(() => {
     }),
   )
   const httpLink = new HttpLink({
-    uri: `http://localhost:3000/api`,
+    uri: `${location.protocol}//${host}/api`,
     credentials: 'same-origin',
   })
 
@@ -62,7 +64,7 @@ startTransition(() => {
   )
   const client = new ApolloClient({
     cache: new InMemoryCache().restore(window.__APOLLO_STATE__),
-    uri: 'http://localhost:3000/api',
+    uri: `${location.protocol}//${host}/api`,
     link,
   })
 
