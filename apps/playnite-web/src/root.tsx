@@ -17,6 +17,7 @@ import { createHead } from 'remix-island'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
 import { UAParser } from './api/layout.server'
 import Layout from './components/Layout'
+import { configure, Provider } from './components/NavigateInGrid/context'
 import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
@@ -140,6 +141,8 @@ const App: FC<{}> = () => {
 
   const theme = muiTheme(device.type ?? 'unknown')
 
+  const navigateInGrid = configure()
+
   return (
     <>
       <Head />
@@ -168,7 +171,9 @@ const App: FC<{}> = () => {
         />
         <Layout>
           <AnimatePresence mode="wait" initial={false}>
-            <div>{outlet}</div>
+            <Provider value={navigateInGrid}>
+              <div>{outlet}</div>
+            </Provider>
           </AnimatePresence>
         </Layout>
       </ThemeProvider>
