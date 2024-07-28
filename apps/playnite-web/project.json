@@ -90,21 +90,21 @@
     "test/e2e": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env USE_SSL=\"true\" DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' https-get://localhost:3000 'yarn cross-env TEST=e2e yarn cypress open --e2e'",
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e yarn cypress open --e2e'",
         "cwd": "{projectRoot}"
       }
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "((yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env USE_SSL=\"true\" yarn node _packaged/server.production.js' https-get://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
+        "command": "((yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
         "cwd": "{projectRoot}"
       }
     },
     "test/e2e/ci": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env USE_SSL=\"true\" yarn node _packaged/server.production.js' https-get://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
         "cwd": "{projectRoot}"
       }
     },

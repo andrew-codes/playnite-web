@@ -100,9 +100,6 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 | MQTT_PORT            | Port of MQTT broker                              |           | Default for MQTT image is 1883                                    |
 | MQTT_USERNAME        | Username to access MQTT broker                   |           | Only required if disabled anonymous access                        |
 | MQTT_PASSWORD        | Password to access MQTT broker                   |           | Only required if disabled anonymous access                        |
-| USE_SSL              | Use local SSL cert to enable HTTP/2 and HTTPS.   |           | To enable, use the string value `true`.                           |
-| SSL_KEY              | Contents of an SSL key                           |           | Enables HTTPS which is required for HTTP/2.                       |
-| SSL_CERT             | Contents of an SSL certificate                   |           | Enables HTTPS which is required for HTTP/2.                       |
 
 ###### Enabling HTTP/2
 
