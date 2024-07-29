@@ -27,19 +27,15 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
   debug(
     `Persisting game entity ${entityType} with id ${entityId} for topic ${topic}`,
   )
-  try {
-    const entity = JSON.parse(payload.toString())
+  const entity = JSON.parse(payload.toString())
 
-    const collectionName = entityType[0].toLowerCase() + entityType.slice(1)
+  const collectionName = entityType[0].toLowerCase() + entityType.slice(1)
 
-    const client = await getDbClient()
-    client
-      .db('games')
-      .collection(collectionName)
-      .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
-  } catch (e) {
-    console.error(e)
-  }
+  const client = await getDbClient()
+  client
+    .db('games')
+    .collection(collectionName)
+    .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
 }
 
 export default handler
