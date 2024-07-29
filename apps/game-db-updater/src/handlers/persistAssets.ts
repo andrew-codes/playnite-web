@@ -29,11 +29,17 @@ const create =
     const { assetId, assetTypeKey, entityType, entityId } = match.groups
     const filename = `${path.basename(assetId, path.extname(assetId))}.webp`
     const image = sharp(payload)
-    const metadata = await image.metadata()
-    if (metadata.width && metadata.width > 320) {
+    if (assetTypeKey === 'cover') {
+      const metadata = await image.metadata()
+      if (metadata.width && metadata.width > 256) {
+        await image
+          .resize(256, 256)
+          .webp()
+          .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
+      }
+    } else {
       await image
-        .resize(320, 320)
-        .webp({ lossless: true })
+        .webp()
         .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
     }
 
