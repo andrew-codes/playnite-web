@@ -3,7 +3,6 @@ import dotenv from 'dotenv'
 import { createConnectedMqttClient } from 'mqtt-client'
 import path from 'path'
 import app from './app'
-import gameDbUpdater from './playnite-web-game-db-updater'
 
 dotenv.config({
   path: path.join(process.cwd(), 'local.env'),
@@ -26,15 +25,6 @@ async function run() {
 
   try {
     debug('Starting Playnite Web game-db-updater...')
-    gameDbUpdater(
-      {
-        assetSaveDirectoryPath: path.join(
-          process.cwd(),
-          'public/assets/asset-by-id',
-        ),
-      },
-      mqttClient,
-    )
   } catch (error) {
     console.log(
       'Failed to run gameDbUpdater. Playnite Web will still work, but the game database will not be updated.',
