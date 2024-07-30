@@ -4,14 +4,16 @@ import { createConnectedMqttClient } from 'mqtt-client'
 import path from 'path'
 import app from './app'
 
-dotenv.config({
-  path: path.join(process.cwd(), 'local.env'),
-  override: true,
-})
-dotenv.config({
-  path: path.join(process.cwd(), 'overrides.env'),
-  override: true,
-})
+if (process.env.NODE_ENV === 'development') {
+  dotenv.config({
+    path: path.join(process.cwd(), 'local.env'),
+    override: true,
+  })
+  dotenv.config({
+    path: path.join(process.cwd(), 'overrides.env'),
+    override: true,
+  })
+}
 
 const debug = createDebugger('playnite-web/app/server')
 
