@@ -19033,7 +19033,6 @@ __metadata:
     remix-routes: "npm:^1.7.6"
     remix-utils: "npm:^7.6.0"
     rimraf: "npm:^5.0.9"
-    sharp: "npm:^0.33.4"
     shelljs: "npm:^0.8.5"
     start-server-and-test: "npm:^2.0.4"
     ts-jest: "npm:^29.2.3"
