@@ -8,6 +8,7 @@ import createGameApi from './modules/game/api'
 import createGameReleaseApi from './modules/gameRelease/api'
 import createPlatformApi from './modules/platform/api'
 import createUserApi from './modules/user/api'
+import createTagApi from './modules/tag/api'
 import { getUserById, getUserByLogin } from './modules/user/api/getUser'
 
 interface DomainApi {
@@ -20,6 +21,7 @@ interface DomainApi {
   get feature(): ReturnType<typeof createFeatureApi>
   get completionStatus(): ReturnType<typeof createCompletionStatusApi>
   get asset(): ReturnType<typeof createAssetApi>
+  get tag(): ReturnType<typeof createTagApi>
 }
 
 function autoBind<TFunctionMap extends Record<string, Function>>(
@@ -68,6 +70,7 @@ class Domain implements DomainApi {
   completionStatus: DomainApi['completionStatus'] =
     createCompletionStatusApi.call(this)
   asset: DomainApi['asset'] = createAssetApi.call(this)
+  tag: DomainApi['tag'] = createTagApi.call(this)
 }
 
 export { autoBind, Domain }

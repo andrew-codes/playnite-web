@@ -1,0 +1,9 @@
+type Playlist {
+  id: String!
+  name: String!
+  games: [Game]!
+}
+
+extend type Query {
+  playlists: [Playlist]!
+}
