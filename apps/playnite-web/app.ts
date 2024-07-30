@@ -59,6 +59,7 @@ async function run(mqttClient: AsyncMqttClient) {
     }),
   )
   app.use('/api', yoga)
+  app.use(express.static('./public/assets', { maxAge: '1y' }))
 
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')

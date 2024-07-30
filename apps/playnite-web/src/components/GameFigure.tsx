@@ -38,7 +38,7 @@ const GameFigure: FC<
         <Button onClick={(evt) => onSelect?.(evt, game)}>
           {!imageHasError && game.cover?.id ? (
             <Image
-              src={`/asset-by-id/${game.cover?.id}`}
+              src={`/assets/asset-by-id/${game.cover?.id}`}
               alt={game.name}
               width={width}
               loading="eager"

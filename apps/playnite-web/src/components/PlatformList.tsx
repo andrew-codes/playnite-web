@@ -24,7 +24,7 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
     <li>
       <PlatformImage
         alt={platform.name}
-        src={`/platforms/${platform.icon?.id}`}
+        src={`/assets/platforms/${platform.icon?.id}`}
       />
     </li>
   )
