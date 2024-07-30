@@ -21,6 +21,6 @@ docker run --name mqtt -d \
   eclipse-mosquitto:latest
 
 rm -rf apps/playnite-web/public/assets-by-id
-cp -r .data/asset-by-id apps/playnite-web/public
+cp -r .data/asset-by-id apps/playnite-web/public/assets
 
 echo 'Dependent services started.'

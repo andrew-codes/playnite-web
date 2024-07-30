@@ -31,6 +31,7 @@ apps/playnite-web/vite.config.ts*
 
 apps/playnite-web/playnite-web-game-db-updater
 
+apps/playnite-web/public/assets/asset-by-id/*
 
 apps/playnite-web/**/*.generated.*
 
