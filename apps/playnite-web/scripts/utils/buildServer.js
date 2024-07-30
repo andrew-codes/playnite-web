@@ -30,6 +30,7 @@ build({
     '@img/sharp-wasm32',
     '@img/sharp-win32-ia32',
     '@img/sharp-win32-x64',
+    'playnite-web-game-db-updater/index.js',
   ],
   outfile: `server.${process.env.NODE_ENV ?? 'development'}.js`,
   platform: 'node',

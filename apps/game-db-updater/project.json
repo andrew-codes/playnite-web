@@ -12,9 +12,9 @@
     },
     "build": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.dist"],
+      "outputs": ["{projectRoot}/../playnite-web/playnite-web-game-db-updater"],
       "options": {
-        "command": "yarn esbuild --bundle --platform=node --target=node16 --external:sharp --format=cjs --outdir=.dist src/index.ts",
+        "command": "yarn esbuild --bundle --platform=node --target=node16 --external:sharp --format=cjs --outdir=./../playnite-web/playnite-web-game-db-updater src/index.ts",
         "cwd": "{projectRoot}"
       }
     },
