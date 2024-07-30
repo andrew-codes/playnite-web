@@ -1,22 +1,9 @@
 const gameDbUpdater = require('./playnite-web-game-db-updater')
-const createDebugger = require('debug')
-
-dotenv.config({
-  path: path.join(process.cwd(), 'local.env'),
-  override: true,
-})
-dotenv.config({
-  path: path.join(process.cwd(), 'overrides.env'),
-  override: true,
-})
-
-const debug = createDebugger('playnite-web/app/game-db-updater')
 
 async function run() {
   const mqttClient = await createConnectedMqttClient()
 
   try {
-    debug('Starting Playnite Web game-db-updater...')
     gameDbUpdater(
       {
         assetSaveDirectoryPath: path.join(
