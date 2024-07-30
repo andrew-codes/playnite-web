@@ -1,7 +1,9 @@
 import { GraphQLError } from 'graphql'
 import { create, fromString } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../types.generated'
-export const activateGameRelease: NonNullable<MutationResolvers['activateGameRelease']> = async (_parent, _arg, _ctx) => {
+export const activateGameRelease: NonNullable<
+  MutationResolvers['activateGameRelease']
+> = async (_parent, _arg, _ctx) => {
   if (!_ctx.jwt?.user.isAuthenticated) {
     throw new GraphQLError('Unauthorized')
   }

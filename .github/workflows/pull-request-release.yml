@@ -157,7 +157,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Run all e2e tests
-        run: yarn nx run-many --target=test/e2e/ci --verbose --exclude='tag:windows'
+        run: yarn nx run-many --target=test/e2e/ci --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
@@ -217,11 +217,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Run version
-        run: yarn nx affected --base=origin/main --head=HEAD --target=version --exclude='tag:windows'
+        run: yarn nx affected --base=origin/main --head=HEAD --target=version --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
       - name: Package projects
-        run: yarn nx affected --base=origin/main --head=HEAD --target=package --parallel --verbose --exclude='tag:windows'
+        run: yarn nx affected --base=origin/main --head=HEAD --target=package --parallel --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'

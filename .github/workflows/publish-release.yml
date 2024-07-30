@@ -142,7 +142,7 @@ jobs:
         run: yarn
       - run: yarn dlx cypress install
       - name: Run all e2e tests
-        run: yarn nx run-many --target=test/e2e/ci --verbose --exclude='tag:windows'
+        run: yarn nx run-many --target=test/e2e/ci --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
