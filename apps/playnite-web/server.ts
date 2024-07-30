@@ -22,15 +22,6 @@ async function run() {
 
   debug('Starting Playnite Web app...')
   app(mqttClient)
-
-  try {
-    debug('Starting Playnite Web game-db-updater...')
-  } catch (error) {
-    console.log(
-      'Failed to run gameDbUpdater. Playnite Web will still work, but the game database will not be updated.',
-    )
-    debug(error)
-  }
 }
 
 run()
