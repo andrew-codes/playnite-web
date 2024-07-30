@@ -3,6 +3,7 @@ LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-w
 
 WORKDIR /opt/playnite-web-app
 COPY _packaged/ .
+COPY playnite-web-game-db-updater .
 RUN npm install --cpu=x64 --os=linux --libc=musl sharp
 RUN npm install --cpu=arm/v6 --os=linux --libc=musl sharp
 RUN npm install --cpu=arm/v7 --os=linux --libc=musl sharp

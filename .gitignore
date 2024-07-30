@@ -29,7 +29,8 @@ apps/playnite-web/server.development.js*
 apps/playnite-web/vite.config.ts*
 !apps/playnite-web/vite.config.ts
 
-apps/playnite-web/public/asset-by-id/*
+apps/playnite-web/playnite-web-game-db-updater
+
 
 apps/playnite-web/**/*.generated.*
 
