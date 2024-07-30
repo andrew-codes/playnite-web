@@ -11,4 +11,4 @@ RUN npm install --cpu=arm/v6 --os=linux --libc=musl sharp
 RUN npm install --cpu=arm/v7 --os=linux --libc=musl sharp
 RUN npm install --cpu=arm64 --os=linux --libc=musl sharp
 
-ENTRYPOINT ["run.sh"]
+ENTRYPOINT ["./run.sh"]

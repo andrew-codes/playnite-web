@@ -11,6 +11,6 @@ RUN ln -s /usr/lib/bashio/bashio /usr/bin/bashio
 RUN rm -rf /tmp/bashio
 
 COPY src/run-with-ha.sh .
-RUN chmod a+x /run-with-ha.sh
+RUN chmod a+x run-with-ha.sh
 
-CMD [ "/run-with-ha.sh" ]
+CMD [ "./run-with-ha.sh" ]
