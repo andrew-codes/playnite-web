@@ -10,6 +10,14 @@
         "cwd": "{projectRoot}"
       }
     },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.dist"],
+      "options": {
+        "command": "yarn esbuild --bundle --platform=node --target=node16 --external:sharp --format=cjs --outdir=.dist src/index.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test/unit": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.test-runs/unit"],
