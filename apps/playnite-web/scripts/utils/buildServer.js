@@ -40,6 +40,7 @@ build({
 })
   .then((v) => {
     console.log('Server build complete.')
+    process.exit(0)
   })
   .catch((e) => {
     console.error(e)

@@ -4,13 +4,10 @@ set +o allexport
 
 docker kill playnite-web-db mqtt || true
 docker container rm playnite-web-db mqtt || true
-docker network rm e2e || true
-
-docker network create --attachable e2e
 
 docker run --name playnite-web-db -d \
   -p 27017:27017 \
-  --network e2e \
+  --network host \
   -v $PWD/.data/games:/data/backup/games \
   -e MONGO_INITDB_ROOT_USERNAME=$DB_USERNAME \
   -e MONGO_INITDB_ROOT_PASSWORD=$DB_PASSWORD \
@@ -20,7 +17,7 @@ docker exec -t playnite-web-db mongorestore --nsInclude games.* /data/backup
 
 docker run --name mqtt -d \
   -p 1883:1883 \
-  --network e2e \
+  --network host \
   eclipse-mosquitto:latest
 
 rm -rf apps/playnite-web/public/assets-by-id
