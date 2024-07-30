@@ -19,19 +19,25 @@ const createConnectedMqttClient = async (
   const username =
     connectionOptions?.username ?? process.env.MQTT_USERNAME ?? ''
   const password =
-    connectionOptions?.password ?? process.env.MQTT_PASSWORD ?? ''
+    connectionOptions?.password ?? process.env.MQTT_PASSWORD ?? null
 
-  debug(
-    `Existing MQTT client not found; creating one with the following options: host=${host}, port=${port}, username=${username}`,
-  )
-  const mqttClient = await connectAsync(`tcp://${host}`, {
-    password,
-    port,
-    username,
-  })
-  debug('MQTT client connected')
-
-  return mqttClient
+  if (!password) {
+    debug(
+      `Creating mqtt client without username/password with the following options: host=${host}, port=${port}`,
+    )
+    return connectAsync(`tcp://${host}`, {
+      port,
+    })
+  } else {
+    debug(
+      `Creating mqtt client with the following options: host=${host}, port=${port}, username=${username}`,
+    )
+    return connectAsync(`tcp://${host}`, {
+      password,
+      port,
+      username,
+    })
+  }
 }
 
 export { createConnectedMqttClient }

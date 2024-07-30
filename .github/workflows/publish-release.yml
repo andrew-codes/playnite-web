@@ -120,8 +120,8 @@ jobs:
           name: visual-regression-cypress-screenshots
           path: apps/playnite-web/cypress/screenshots
 
-  e2e_tests_linux:
-    name: Verify PR - e2e Tests (Linux)
+  e2e_tests_non_windows:
+    name: Verify PR - e2e Tests (Non-Windows)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -142,9 +142,11 @@ jobs:
         run: yarn
       - run: yarn dlx cypress install
       - name: Run all e2e tests
-        run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
+        run: yarn nx run-many --target=test/e2e/ci --verbose --exclude='tag:windows'
         env:
-          E2E: 'true'
+          NODE_ENV: production
+          DEBUG: 'playnite-web/*'
+          PLATFORM: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -197,7 +199,7 @@ jobs:
       - unit_tests_linux
       - component_tests_linux
       - visual_component_tests_linux
-      - e2e_tests_linux
+      - e2e_tests_non_windows
     permissions:
       contents: write
       issues: write

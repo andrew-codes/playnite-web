@@ -7,7 +7,7 @@ const getDockerTags = async (version, ref) => {
   debug(`version: ${version}`)
   debug(`ref: ${ref}`)
 
-  let tags = []
+  let tags = ['e2e']
 
   if (/^refs\/pull\//.test(ref)) {
     const prNumber = ref.replace(/^refs\/pull\//, '').replace(/\/merge$/, '')

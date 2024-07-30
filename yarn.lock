@@ -10534,7 +10534,7 @@ __metadata:
     "@types/node": "npm:^20.14.10"
     "@types/shelljs": "npm:^0.8.15"
     debug: "npm:^4.3.5"
-    esbuild: "npm:^0.21.5"
+    esbuild: "npm:^0.23.0"
     esbuild-register: "npm:^3.5.0"
     shelljs: "npm:^0.8.5"
   languageName: unknown
@@ -11284,7 +11284,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.21.3, esbuild@npm:^0.21.5":
+"esbuild@npm:^0.21.3":
   version: 0.21.5
   resolution: "esbuild@npm:0.21.5"
   dependencies:

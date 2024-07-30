@@ -25,5 +25,5 @@ if [ $(ls apps/playnite-web/public/asset-by-id | wc -l) -eq 0 ]; then
 fi
 
 docker run --name mqtt -d \
-  --network host \
+  -p 1883:1883 \
   eclipse-mosquitto:latest
