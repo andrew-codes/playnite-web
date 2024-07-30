@@ -18,6 +18,7 @@ async function run() {
       `docker buildx build --platform ${PLATFORM} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
     )
   }
+  console.log('Finished packaging.')
 }
 
 run()

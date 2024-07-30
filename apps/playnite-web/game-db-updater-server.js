@@ -1,4 +1,4 @@
-const gameDbUpdater = require('./playnite-web-db-game-updater')
+const gameDbUpdater = require('./playnite-web-game-db-updater')
 const createDebugger = require('debug')
 
 dotenv.config({
