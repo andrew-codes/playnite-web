@@ -1,6 +1,8 @@
-import { lowerCase, startCase } from 'lodash'
+import _ from 'lodash'
 import { create } from '../../../../oid'
 import type { PlaylistResolvers } from './../../../types.generated'
+
+const { startCase, lowerCase } = _
 
 export const Playlist: PlaylistResolvers = {
   id: async (_parent, _arg, _ctx) => {
@@ -12,6 +14,13 @@ export const Playlist: PlaylistResolvers = {
     )
   },
   games: async (_parent, _arg, _ctx) => {
-    return []
+    const allGames = await _ctx.api.game.getAll()
+    return allGames.filter((game) => {
+      return game.some((release) => {
+        return release.tags?.some((tag) => {
+          return tag.name === _parent.name
+        })
+      })
+    })
   },
 }
