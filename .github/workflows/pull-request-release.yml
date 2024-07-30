@@ -129,8 +129,6 @@ jobs:
 
   e2e_tests_non_windows:
     name: Verify PR - e2e Tests (Non-Windows)
-  e2e_tests_linux:
-    name: Verify PR - e2e Tests (Linux)
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
