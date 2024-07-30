@@ -2,6 +2,11 @@
   "name": "playnite-web-app",
   "version": "4.0.2",
   "sideEffects": false,
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
   "dependencies": {
     "@apollo/client": "^3.10.8",
     "@emotion/cache": "^11.12.0",

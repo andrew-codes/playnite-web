@@ -6,7 +6,12 @@ import { createConnectedMqttClient } from '..'
 jest.mock('async-mqtt')
 
 describe('mqtt-client', () => {
-  beforeEach(() => {})
+  beforeEach(() => {
+    delete process.env.MQTT_HOST
+    delete process.env.MQTT_PORT
+    delete process.env.MQTT_USERNAME
+    delete process.env.MQTT_PASSWORD
+  })
 
   test(`Create a connected client.`, async () => {
     const expected = jest.mocked(AsyncMqttClient)
@@ -58,9 +63,7 @@ describe('mqtt-client', () => {
     const expected = jest.mocked(AsyncMqttClient)
     when(connectAsync)
       .calledWith('tcp://localhost', {
-        password: '',
         port: 1883,
-        username: '',
       })
       .mockResolvedValue(expected)
 

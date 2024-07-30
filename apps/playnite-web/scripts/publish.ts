@@ -13,7 +13,9 @@ async function run() {
     throw new Error('Missing environment variables')
   }
 
-  let tags = await getDockerTags(VERSION ?? null, GITHUB_REF)
+  let tags = (await getDockerTags(VERSION ?? null, GITHUB_REF)).filter(
+    (tag) => tag !== 'e2e',
+  )
 
   for (const tag of tags) {
     sh.exec(

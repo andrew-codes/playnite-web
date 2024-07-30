@@ -5,11 +5,7 @@ import packageFiles from './utils/packageFiles'
 
 async function run() {
   packageFiles()
-  const { REGISTRY, OWNER, GITHUB_REF, PLATFORM, VERSION, E2E } = process.env
-
-  if (E2E === 'true') {
-    return
-  }
+  const { REGISTRY, OWNER, GITHUB_REF, PLATFORM, VERSION } = process.env
 
   if (!REGISTRY || !OWNER || !GITHUB_REF || !PLATFORM) {
     throw new Error('Missing environment variables')
