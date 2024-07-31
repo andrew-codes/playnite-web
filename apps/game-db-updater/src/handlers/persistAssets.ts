@@ -1,6 +1,5 @@
 import createDebugger from 'debug'
 import path from 'path'
-import sharp from 'sharp'
 import type { Options } from '..'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 import { getDbClient } from '../dbClient'
@@ -28,6 +27,8 @@ const create =
 
     const { assetId, assetTypeKey, entityType, entityId } = match.groups
     const filename = `${path.basename(assetId, path.extname(assetId))}.webp`
+    const { default: sharp } = await import('sharp')
+
     const image = sharp(payload)
     if (assetTypeKey === 'cover') {
       const metadata = await image.metadata()

@@ -11,8 +11,6 @@ RUN npm install --cpu=arm/v7 --os=linux --libc=musl sharp
 RUN npm install --cpu=arm64 --os=linux --libc=musl sharp
 
 COPY _packaged/ .
-COPY playnite-web-game-db-updater/ ./playnite-web-game-db-updater
-COPY game-db-updater-server.js .
 COPY run.sh .
 
 ENTRYPOINT ["./run.sh"]

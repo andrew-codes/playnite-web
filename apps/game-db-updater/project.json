@@ -10,11 +10,10 @@
         "cwd": "{projectRoot}"
       }
     },
-    "build": {
+    "start": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/../playnite-web/playnite-web-game-db-updater"],
       "options": {
-        "command": "yarn esbuild --bundle --platform=node --target=node16 --external:sharp --format=cjs --outdir=./../playnite-web/playnite-web-game-db-updater src/index.ts",
+        "command": "yarn node --require esbuild-register src/server.js",
         "cwd": "{projectRoot}"
       }
     },
