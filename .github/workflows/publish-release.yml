@@ -141,6 +141,16 @@ jobs:
       - name: Install deps
         run: yarn
       - run: yarn dlx cypress install
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY}}
+          username: ${{ env.OWNER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --exclude='*,!tag:linux'
         env:
@@ -228,6 +238,16 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY}}
+          username: ${{ env.OWNER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Semantic Release
         run: yarn dlx semantic-release
         env:
