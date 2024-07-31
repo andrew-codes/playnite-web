@@ -105,7 +105,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
   }
 
   return (
-    <Details>
+    <Details data-test="GameDetails">
       <Typography variant="h4">{game.name}</Typography>
 
       <Actions ref={platformsAnchorEl}>
