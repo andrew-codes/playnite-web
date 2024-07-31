@@ -9,11 +9,13 @@ async function run() {
 
   const { REGISTRY, OWNER, GITHUB_REF, PLATFORM, VERSION } = process.env
 
-  if (!REGISTRY || !OWNER || !GITHUB_REF) {
+  if (!REGISTRY || !OWNER || !GITHUB_REF || !PLATFORM) {
     throw new Error('Missing environment variables')
   }
 
-  let tags = await getDockerTags(VERSION ?? null, GITHUB_REF)
+  let tags = (await getDockerTags(VERSION ?? null, GITHUB_REF)).filter(
+    (tag) => tag !== 'e2e',
+  )
 
   for (const tag of tags) {
     sh.exec(

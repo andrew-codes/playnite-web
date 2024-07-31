@@ -130,6 +130,10 @@ jobs:
   e2e_tests_linux:
     name: Verify PR - e2e Tests (Linux)
     runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      OWNER: andrew-codes
+      REPO_NAME: playnite-web
     steps:
       - uses: actions/checkout@v4
         with:
@@ -148,10 +152,16 @@ jobs:
       - name: Install deps
         run: yarn
       - run: yarn dlx cypress install
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
         env:
-          E2E: 'true'
+          NODE_ENV: production
+          DEBUG: 'playnite-web/*'
+          PLATFORM: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
