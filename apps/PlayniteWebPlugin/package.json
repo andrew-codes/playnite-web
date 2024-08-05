@@ -10,7 +10,7 @@
     "esbuild-register": "^3.5.0",
     "nx": "^19.3.1",
     "prettier": "^3.3.2",
-    "rimraf": "^5.0.7",
+    "rimraf": "^6.0.1",
     "shelljs": "^0.8.5",
     "typescript": "^5.5.2",
     "versioning": "workspace:*"
