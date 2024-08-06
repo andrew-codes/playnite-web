@@ -36,8 +36,9 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="MQTTnet, Version=4.3.3.952, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
-      <HintPath>..\..\..\.nuget\MQTTnet.4.3.3.952\lib\net461\MQTTnet.dll</HintPath>
+    <Reference Include="MQTTnet, Version=4.3.6.1152, Culture=neutral, PublicKeyToken=fdb7629f2e364a63">
+      <HintPath>..\..\..\.nuget/MQTTnet.4.3.6.1152/lib/net461/MQTTnet.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Playnite.SDK, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\PlayniteSDK.6.11.0\lib\net462\Playnite.SDK.dll</HintPath>
