@@ -10,6 +10,13 @@
         "cwd": "{projectRoot}"
       }
     },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn global add sharp@0.33.4",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test/unit": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/.test-runs/unit"],
