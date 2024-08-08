@@ -2,6 +2,8 @@ import { expect, jest, test } from '@jest/globals'
 import { AsyncMqttClient } from 'mqtt-client'
 import run, { Options } from '..'
 
+jest.mock('../handlers')
+
 describe('game-db-updater run()', () => {
   const mqttClient = {
     on: jest.fn(),
