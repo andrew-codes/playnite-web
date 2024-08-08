@@ -1,4 +1,4 @@
-import type { SubscriptionResolvers } from './../../../../types.generated'
+import type { SubscriptionResolvers } from '../../../../../../../.generated/types.generated'
 
 export const gameRunStateChanged: NonNullable<
   SubscriptionResolvers['gameRunStateChanged']

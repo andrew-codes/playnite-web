@@ -22,7 +22,10 @@
     "testUtils/**/*.ts",
     "testUtils/**/*.tsx",
     "*.ts",
-    "../../graphql.config.ts"
+    "../../graphql.config.ts",
+    ".generated/resolvers.generated.ts",
+    ".generated/typeDefs.generated.ts",
+    ".generated/types.generated.ts"
   ],
   "exclude": [
     "node_modules"

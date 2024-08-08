@@ -12,6 +12,7 @@
     },
     "prepare": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.generated"],
       "options": {
         "command": "yarn graphql-codegen --config codegen.ts",
         "cwd": "{projectRoot}"
