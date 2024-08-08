@@ -37,7 +37,7 @@ async function run() {
               `Building image for ${platform} with cpu_arch ${cpuArch} and docker base image of ${baseImage}.`,
             )
             const child = sh.exec(
-              `docker buildx build --platform ${platform} --build-arg cpu_arch=${cpuArch} --build-arg base_image=${baseImage} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
+              `docker buildx build ${process.env.PUBLISH === 'true' ? '--push' : ''} --platform ${platform} --build-arg cpu_arch=${cpuArch} --build-arg base_image=${baseImage} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
               { async: true },
             )
             child.on('exit', resolve)

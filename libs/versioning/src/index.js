@@ -7,7 +7,7 @@ const getDockerTags = async (version, ref) => {
   debug(`version: ${version}`)
   debug(`ref: ${ref}`)
 
-  let tags = ['e2e']
+  let tags = []
 
   if (/^refs\/pull\//.test(ref)) {
     const prNumber = ref.replace(/^refs\/pull\//, '').replace(/\/merge$/, '')
@@ -27,7 +27,9 @@ const getDockerTags = async (version, ref) => {
 
     const minor = semver.minor(nextVersion)
     tags.push(`${major}.${minor}-latest`)
-  } else if (!isEmpty(version)) {
+  }
+
+  if (!isEmpty(version)) {
     const nextVersion = version.replace(/^v/, '')
     tags.push(nextVersion)
 
