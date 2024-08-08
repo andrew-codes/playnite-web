@@ -9,7 +9,7 @@
       "cache": false
     },
     "start": {
-      "dependsOn": ["prepare", "start/prepare"],
+      "dependsOn": ["prepare", "^start/prepare", "start/prepare"],
       "cache": false
     },
     "package": {

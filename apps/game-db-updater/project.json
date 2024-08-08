@@ -10,7 +10,7 @@
         "cwd": "{projectRoot}"
       }
     },
-    "prepare": {
+    "start/prepare": {
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn global add sharp@0.33.4",
