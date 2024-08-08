@@ -5,14 +5,11 @@ LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-w
 
 ARG cpu_arch
 
-# RUN apk add --update --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
-#   vips-dev
-
 RUN apk add \
   bash
 
 WORKDIR /opt/playnite-web-app
-RUN npm install --cpu $cpu_arch --os linux --libc musl sharp
+RUN npm install --cpu $cpu_arch sharp
 
 COPY _packaged/ .
 

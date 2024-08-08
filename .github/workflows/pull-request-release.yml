@@ -161,7 +161,7 @@ jobs:
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
-          PLATFORM: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+          PLATFORM: linux/amd64,linux/arm64
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -225,7 +225,7 @@ jobs:
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
-          PLATFORM: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+          PLATFORM: linux/amd64,linux/arm64
 
   unit_tests_windows:
     name: Verify PR - Tests (Windows)

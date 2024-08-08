@@ -232,4 +232,4 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
-          PLATFORM: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
+          PLATFORM: linux/amd64,linux/arm64
