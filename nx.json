@@ -57,7 +57,7 @@
       "cache": false
     },
     "test/e2e/ci": {
-      "dependsOn": ["prepare", "test/e2e/prepare", "package"],
+      "dependsOn": ["prepare", "test/e2e/prepare"],
       "cache": false
     },
     "test/e2e/update": {

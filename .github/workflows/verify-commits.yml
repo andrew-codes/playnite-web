@@ -127,6 +127,11 @@ jobs:
   e2e_tests_linux:
     name: Verify PR - e2e Tests (Linux)
     runs-on: ubuntu-latest
+    needs:
+      - package_linux
+    env:
+      REGISTRY: ghcr.io
+      OWNER: andrew-codes
     steps:
       - uses: actions/checkout@v4
         with:
@@ -148,7 +153,8 @@ jobs:
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
         env:
-          E2E: 'true'
+          NODE_ENV: production
+          DEBUG: 'playnite-web/*'
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -176,6 +182,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
+      PUBLISH: true
     steps:
       - uses: actions/checkout@v4
       - name: Extract major release version from package.json
@@ -211,7 +218,7 @@ jobs:
         env:
           NODE_ENV: production
       - name: Package projects
-        run: yarn nx run-many --target=publish --parallel --verbose --exclude '*,!tag:linux'
+        run: yarn nx run-many --target=package --parallel --verbose --exclude '*,!tag:linux'
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
