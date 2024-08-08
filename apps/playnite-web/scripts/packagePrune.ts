@@ -12,7 +12,7 @@ async function run() {
   await Promise.all(
     tags.map(async (tag) =>
       fetch(
-        `https://api.github.com/user/packages/container/${OWNER}%2Fplaynite-web-app/${tag}`,
+        `https://api.github.com/user/packages/container/${OWNER}/playnite-web-app%2F${tag}`,
         {
           method: 'DELETE',
           headers: {
