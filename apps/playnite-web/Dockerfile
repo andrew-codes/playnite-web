@@ -5,7 +5,6 @@ RUN apk add \
   bash
 
 WORKDIR /opt/playnite-web-app
-RUN npm install --os=linux --libc=musl sharp
 
 COPY _packaged/ .
 
