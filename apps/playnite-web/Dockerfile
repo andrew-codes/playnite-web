@@ -1,7 +1,7 @@
 FROM node:22-slim
 LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-web
 
-RUN apk add \
+RUN apt-get install -y \
   bash
 
 WORKDIR /opt/playnite-web-app
