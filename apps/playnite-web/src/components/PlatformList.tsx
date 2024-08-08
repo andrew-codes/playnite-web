@@ -1,6 +1,6 @@
 import { Chip, styled } from '@mui/material'
 import { FC, useMemo } from 'react'
-import { Platform } from '../server/graphql/types.generated'
+import { Platform } from '../../.generated/types.generated'
 
 const PlatformImage = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,

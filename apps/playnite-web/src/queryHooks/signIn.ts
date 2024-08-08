@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import _ from 'lodash'
-import { Claim } from '../server/graphql/types.generated'
+import { Claim } from '../../.generated/types.generated'
 import { Me } from './me'
 
 const { omit } = _

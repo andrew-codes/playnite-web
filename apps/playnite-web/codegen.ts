@@ -7,7 +7,7 @@ const config: CodegenConfig = {
     afterAllFileWrite: ['yarn prettier --write'],
   },
   generates: {
-    './src/server/graphql': defineConfig({
+    './.generated': defineConfig({
       typesPluginsConfig: {
         mappers: {
           CompletionStatus: './resolverTypes#CompletionStatusEntity',
@@ -16,7 +16,7 @@ const config: CodegenConfig = {
           GameRelease: './resolverTypes#GameReleaseEntity',
           Platform: './resolverTypes#PlatformSourceEntity',
           GameAsset: './resolverTypes#GameAssetEntity',
-          Playlist: './resolverTypes#TagEntity'
+          Playlist: './resolverTypes#TagEntity',
         },
         contextType: './context#PlayniteContext',
       },

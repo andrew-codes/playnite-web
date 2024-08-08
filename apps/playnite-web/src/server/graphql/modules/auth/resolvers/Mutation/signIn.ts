@@ -1,8 +1,8 @@
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
 import _ from 'lodash'
+import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
 import { PasswordCredential } from '../../api'
-import type { MutationResolvers } from './../../../../types.generated'
 
 const { merge } = _
 

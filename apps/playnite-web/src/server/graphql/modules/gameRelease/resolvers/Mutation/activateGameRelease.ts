@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql'
+import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
 import { create, fromString } from '../../../../../oid'
-import type { MutationResolvers } from './../../../../types.generated'
 export const activateGameRelease: NonNullable<
   MutationResolvers['activateGameRelease']
 > = async (_parent, _arg, _ctx) => {

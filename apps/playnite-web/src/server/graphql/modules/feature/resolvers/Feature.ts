@@ -1,5 +1,5 @@
+import type { FeatureResolvers } from '../../../../../../.generated/types.generated'
 import { create } from '../../../../oid'
-import type { FeatureResolvers } from './../../../types.generated'
 
 export const Feature: FeatureResolvers = {
   id: async (_parent, _arg, _ctx) => {
