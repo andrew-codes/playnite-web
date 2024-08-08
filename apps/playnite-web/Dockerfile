@@ -1,6 +1,7 @@
 FROM node:22-alpine3.20
 LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-web
 
+RUN apk add --update --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community vips
 RUN apk add \
   bash
 
