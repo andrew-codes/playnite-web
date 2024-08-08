@@ -153,10 +153,6 @@ jobs:
       - name: Install deps
         run: yarn
       - run: yarn dlx cypress install
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
         env:
