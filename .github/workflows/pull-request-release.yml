@@ -180,6 +180,11 @@ jobs:
         with:
           name: e2e-cypress-screenshots
           path: apps/playnite-web/cypress/screenshots
+      - name: Prune PR images
+        run: yarn nx run-many --target=package/prune --verbose
+        env:
+          DEBUG: 'playnite-web/*'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   package_linux:
     name: Package non-Windows projects
@@ -223,11 +228,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Run version
-        run: yarn nx affected --base=origin/main --head=HEAD --target=version --exclude='*,!tag:linux'
+        run: yarn nx run-many --target=version --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
       - name: Package projects
-        run: yarn nx affected --base=origin/main --head=HEAD --target=package --parallel --verbose --exclude='*,!tag:linux'
+        run: yarn nx run-many --target=package --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
@@ -293,11 +298,11 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run Version
-        run: yarn nx affected --base=origin/main --head=HEAD --target=version --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=version --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
       - name: Package projects
-        run: yarn nx affected --base=origin/main --head=HEAD --target=build --parallel --verbose --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=build --parallel --verbose --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
       - name: Upload artifacts

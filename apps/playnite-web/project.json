@@ -127,12 +127,19 @@
         "cwd": "{projectRoot}"
       }
     },
-    "publish": {
+    "package/prune": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn node --require esbuild-register --experimental-json-modules scripts/publish.ts"
+          "yarn node --require esbuild-register --experimental-json-modules scripts/packagePrune.ts"
         ],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["echo 'Publishing'"],
         "cwd": "{projectRoot}"
       }
     }
