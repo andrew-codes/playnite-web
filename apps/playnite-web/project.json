@@ -105,7 +105,7 @@
     "test/e2e/ci": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn node --require esbuild-register scripts/startE2e.ts' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn node --require esbuild-register scripts/utils/startE2e.ts' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
         "cwd": "{projectRoot}"
       }
     },
