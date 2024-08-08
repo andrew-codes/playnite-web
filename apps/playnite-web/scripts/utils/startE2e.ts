@@ -1,9 +1,7 @@
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
-import packageFiles from './utils/packageFiles'
 
 async function run() {
-  packageFiles()
   const { REGISTRY, OWNER, GITHUB_REF } = process.env
 
   if (!REGISTRY || !OWNER || !GITHUB_REF) {
