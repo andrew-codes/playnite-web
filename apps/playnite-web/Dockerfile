@@ -1,15 +1,11 @@
-ARG base_image=node
-
-FROM $base_image:22-alpine3.20
-LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-web
-
-ARG cpu_arch
+FROM node:22-alpine3.20
+LABEL org.opencontainers.image.source=https://github.com/andrew-codes/playnite-web
 
 RUN apk add \
   bash
 
 WORKDIR /opt/playnite-web-app
-RUN npm install --cpu $cpu_arch sharp
+RUN npm install sharp
 
 COPY _packaged/ .
 
