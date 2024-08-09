@@ -1,5 +1,5 @@
+import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
 import { unknownPlatform } from '../../api'
-import type { QueryResolvers } from './../../../../types.generated'
 
 const exactMatch = /(".*")|('.*')/
 

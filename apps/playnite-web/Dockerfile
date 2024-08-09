@@ -1,7 +1,13 @@
-FROM node:22-alpine3.19
-LABEL org.opencontainers.image.source https://github.com/andrew-codes/playnite-web
+FROM node:22-alpine3.20
+LABEL org.opencontainers.image.source=https://github.com/andrew-codes/playnite-web
+
+RUN apk add \
+  bash
 
 WORKDIR /opt/playnite-web-app
-COPY _packaged/ .
+RUN npm install sharp
 
-ENTRYPOINT ["node", "server.production.js" ]
+COPY _packaged/ .
+RUN chmod +x server.production.js
+
+ENTRYPOINT ["node", "server.production.js"]

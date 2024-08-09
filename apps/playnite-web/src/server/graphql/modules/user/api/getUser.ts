@@ -1,6 +1,6 @@
+import { User } from '../../../../../../.generated/types.generated'
 import { create } from '../../../../oid'
 import { DomainApi } from '../../../Domain'
-import { User } from '../../../types.generated'
 import { nullUser } from './NullUser'
 
 let loadedUser = false

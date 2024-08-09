@@ -33,7 +33,7 @@ if [ $mongoDataExists -eq 0 ]; then
   docker exec -t playnite-web-db mongorestore --nsInclude games.* /data/backup
 fi
 
-if [ $(ls apps/playnite-web/public/asset-by-id | wc -l) -eq 0 ]; then
+if [ $(ls apps/playnite-web/public/assets/asset-by-id/ | wc -l) -eq 0 ]; then
   echo "Copying development environment game assets"
-  cp -r .data/asset-by-id apps/playnite-web/public
+  cp -r .data/asset-by-id/ apps/playnite-web/public/assets
 fi

@@ -1,7 +1,7 @@
 import { Typography, useMediaQuery, useTheme } from '@mui/material'
 import { createRef, FC, forwardRef, useMemo } from 'react'
 import { FixedSizeGrid as Grid } from 'react-window'
-import { Game } from '../server/graphql/types.generated'
+import { Game } from '../../.generated/types.generated'
 import GameFigure from './GameFigure'
 import { useNavigateInGrid } from './NavigateInGrid/context'
 import useThemeWidth from './useThemeWidth'

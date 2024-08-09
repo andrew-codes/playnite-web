@@ -1,4 +1,4 @@
-import type { GameAssetResolvers } from './../../../types.generated'
+import type { GameAssetResolvers } from '../../../../../../.generated/types.generated'
 export const GameAsset: GameAssetResolvers = {
   id: (parent) => parent.id,
   type: (parent) => parent.relatedType,

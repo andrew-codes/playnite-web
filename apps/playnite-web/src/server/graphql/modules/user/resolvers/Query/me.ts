@@ -1,6 +1,6 @@
 import _ from 'lodash'
+import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
 import { nullUser } from '../../api/NullUser'
-import type { QueryResolvers } from './../../../../types.generated'
 
 const { omit } = _
 export const me: NonNullable<QueryResolvers['me']> = async (
