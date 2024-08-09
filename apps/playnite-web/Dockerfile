@@ -8,5 +8,6 @@ WORKDIR /opt/playnite-web-app
 RUN npm install sharp
 
 COPY _packaged/ .
+RUN chmod +x server.production.js
 
 ENTRYPOINT ["node server.production.js"]
