@@ -15,7 +15,7 @@ async function run() {
   }
 
   sh.exec(
-    `docker run -d -e DEBUG=\"playnite-web/*\" -v $PWD/public/:/opt/playnite-web-app/public --env-file e2e.env -p 3000:3000 --network host ghcr.io/andrew-codes/playnite-web-app:${e2eTag}`,
+    `docker run -e DEBUG=\"playnite-web/*\" -v $PWD/public/:/opt/playnite-web-app/public --env-file e2e.env -p 3000:3000 --network host ghcr.io/andrew-codes/playnite-web-app:${e2eTag}`,
   )
 }
 

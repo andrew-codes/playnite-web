@@ -14,7 +14,7 @@
     },
     "package": {
       "dependsOn": ["clean", "build", "^package"],
-      "cache": true
+      "cache": false
     },
     "publish": {
       "dependsOn": ["package"],
