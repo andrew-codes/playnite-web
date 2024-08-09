@@ -7,7 +7,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { FC, useMemo } from 'react'
-import { Game } from '../server/graphql/types.generated'
+import { Game } from '../../.generated/types.generated'
 import GameFigure from './GameFigure'
 import useThemeWidth from './useThemeWidth'
 
@@ -43,7 +43,7 @@ const HorizontalGameList: FC<{
     return columnWidth + 64
   }, [columnWidth])
 
-  const columns = games.length;
+  const columns = games.length
 
   return (
     <>

@@ -1,6 +1,6 @@
 import _ from 'lodash'
+import type { PlatformResolvers } from '../../../../../../.generated/types.generated'
 import { create } from '../../../../oid'
-import type { PlatformResolvers } from './../../../types.generated'
 
 const { merge } = _
 

@@ -1,8 +1,8 @@
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
+import { Claim, User } from '../../../../../../.generated/types.generated'
 import * as oid from '../../../../oid'
 import { autoBind, type DomainApi } from '../../../Domain'
-import { Claim, User } from '../../../types.generated'
 
 function create(this: DomainApi) {
   const passwordStore: Record<string, string> = {}

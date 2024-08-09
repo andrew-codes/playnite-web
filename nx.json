@@ -6,15 +6,15 @@
     },
     "prepare": {
       "dependsOn": ["^prepare"],
-      "cache": false
+      "cache": true
     },
     "start": {
-      "dependsOn": ["prepare", "start/prepare"],
+      "dependsOn": ["prepare", "^start/prepare", "start/prepare"],
       "cache": false
     },
     "package": {
       "dependsOn": ["clean", "build", "^package"],
-      "cache": true
+      "cache": false
     },
     "publish": {
       "dependsOn": ["package"],
@@ -57,7 +57,7 @@
       "cache": false
     },
     "test/e2e/ci": {
-      "dependsOn": ["prepare", "test/e2e/prepare", "package"],
+      "dependsOn": ["prepare", "test/e2e/prepare"],
       "cache": false
     },
     "test/e2e/update": {

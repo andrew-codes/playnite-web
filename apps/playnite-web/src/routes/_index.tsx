@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material'
 import { useCallback, useState } from 'react'
+import { Game } from '../../.generated/types.generated'
 import GameDetails from '../components/GameDetails'
 import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
@@ -7,7 +8,6 @@ import Drawer from '../components/Navigation/Drawer'
 import OuterContainer from '../components/OuterContainer'
 import RightDrawer from '../components/RightDrawer'
 import { usePlaylists } from '../queryHooks/playlists'
-import { Game } from '../server/graphql/types.generated'
 
 function Index() {
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(false)
@@ -19,8 +19,8 @@ function Index() {
     setGame(game)
     setRightDrawerOpen(true)
   }, [])
-  const { data, loading, refetch, error } = usePlaylists();
-  const playlists = data?.playlists;
+  const { data, loading, refetch, error } = usePlaylists()
+  const playlists = data?.playlists
 
   return (
     <Drawer>

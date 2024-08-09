@@ -58,6 +58,7 @@ async function run(mqttClient: AsyncMqttClient) {
       },
     }),
   )
+  app.use(express.static('./public/assets', { maxAge: '1y' }))
   app.use('/api', yoga)
 
   const build = viteDevServer

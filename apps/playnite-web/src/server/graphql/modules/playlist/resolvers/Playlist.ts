@@ -1,6 +1,6 @@
 import _ from 'lodash'
+import type { PlaylistResolvers } from '../../../../../../.generated/types.generated'
 import { create } from '../../../../oid'
-import type { PlaylistResolvers } from './../../../types.generated'
 
 const { startCase, lowerCase } = _
 

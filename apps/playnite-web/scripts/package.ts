@@ -5,23 +5,27 @@ import packageFiles from './utils/packageFiles'
 
 async function run() {
   packageFiles()
-  const { REGISTRY, OWNER, GITHUB_REF, PLATFORM, VERSION, E2E } = process.env
-
-  if (E2E === 'true') {
-    return
-  }
+  const { REGISTRY, OWNER, GITHUB_REF, PLATFORM, VERSION } = process.env
 
   if (!REGISTRY || !OWNER || !GITHUB_REF || !PLATFORM) {
     throw new Error('Missing environment variables')
   }
 
   let tags = await getDockerTags(VERSION ?? null, GITHUB_REF)
+  const platforms = PLATFORM.split(',')
 
-  for (const tag of tags) {
-    sh.exec(
-      `docker buildx build --platform ${PLATFORM} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
-    )
-  }
+  await Promise.all(
+    tags.flatMap(
+      (tag) =>
+        new Promise((resolve) => {
+          const child = sh.exec(
+            `docker buildx build ${process.env.PUBLISH === 'true' ? '--push' : ''} --platform ${PLATFORM} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
+            { async: true },
+          )
+          child.on('exit', resolve)
+        }),
+    ),
+  )
 }
 
 run()
