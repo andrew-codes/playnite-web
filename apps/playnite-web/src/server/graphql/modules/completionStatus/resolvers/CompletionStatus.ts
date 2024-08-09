@@ -1,5 +1,5 @@
+import type { CompletionStatusResolvers } from '../../../../../../.generated/types.generated'
 import { create, createNull } from '../../../../oid'
-import type { CompletionStatusResolvers } from './../../../types.generated'
 
 export const CompletionStatus: CompletionStatusResolvers = {
   id: async (_parent, _arg, _ctx) => {

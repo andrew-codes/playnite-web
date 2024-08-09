@@ -12,6 +12,7 @@ import {
 } from '@remix-run/react'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Game } from '../../.generated/types.generated'
 import {
   getFilter,
   setFilterTypeValues,
@@ -23,7 +24,6 @@ import MyLibrary from '../components/MyLibrary'
 import { useNavigateInGrid } from '../components/NavigateInGrid/context'
 import Drawer from '../components/Navigation/Drawer'
 import RightDrawer from '../components/RightDrawer'
-import { Game } from '../server/graphql/types.generated'
 
 const isOnDetailsPage = (pathname) => /\/browse\/.+$/.test(pathname)
 

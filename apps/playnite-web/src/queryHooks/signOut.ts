@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
-import { User } from '../server/graphql/types.generated'
+import { User } from '../../.generated/types.generated'
 import { Me } from './me'
 
 const signOut = gql`

@@ -1,6 +1,6 @@
 import _ from 'lodash'
+import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
 import { nullUser } from '../../../user/api/NullUser'
-import type { MutationResolvers } from './../../../../types.generated'
 
 const { omit } = _
 export const signOut: NonNullable<MutationResolvers['signOut']> = async (

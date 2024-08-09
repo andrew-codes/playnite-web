@@ -27,7 +27,9 @@ const getDockerTags = async (version, ref) => {
 
     const minor = semver.minor(nextVersion)
     tags.push(`${major}.${minor}-latest`)
-  } else if (!isEmpty(version)) {
+  }
+
+  if (!isEmpty(version)) {
     const nextVersion = version.replace(/^v/, '')
     tags.push(nextVersion)
 

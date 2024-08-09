@@ -1,6 +1,4 @@
 import createDebugger from 'debug'
-import fs from 'fs/promises'
-import { Binary } from 'mongodb'
 import path from 'path'
 import type { Options } from '..'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
@@ -28,23 +26,34 @@ const create =
     }
 
     const { assetId, assetTypeKey, entityType, entityId } = match.groups
+    const filename = `${path.basename(assetId, path.extname(assetId))}.webp`
+    const { default: sharp } = await import('sharp')
+
+    const image = sharp(payload)
+    if (assetTypeKey === 'cover') {
+      const metadata = await image.metadata()
+      if (metadata.width && metadata.width > 256) {
+        await image
+          .resize(256, 256)
+          .webp()
+          .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
+      }
+    } else {
+      await image
+        .webp()
+        .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
+    }
+
     debug(
-      `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId} and with asset ID ${assetId}`,
+      `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId} and with asset ID ${filename}`,
     )
-    const binaryFile = new Binary(payload)
     const relatedId = entityId
     const assetDoc = {
-      id: assetId,
+      id: filename,
       relatedId,
       relatedType: entityType,
       typeKey: assetTypeKey,
     }
-
-    await fs.writeFile(
-      path.join(options.assetSaveDirectoryPath, `${assetId}`),
-      binaryFile.buffer,
-      'binary',
-    )
 
     const client = await getDbClient()
     client

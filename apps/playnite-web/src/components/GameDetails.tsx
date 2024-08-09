@@ -15,8 +15,8 @@ import {
   styled,
 } from '@mui/material'
 import { FC, useMemo, useRef, useState } from 'react'
+import { Game, Platform } from '../../.generated/types.generated'
 import { useMe } from '../queryHooks'
-import { Game, Platform } from '../server/graphql/types.generated'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {

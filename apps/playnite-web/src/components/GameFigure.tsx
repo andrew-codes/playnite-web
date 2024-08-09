@@ -1,6 +1,6 @@
 import { Box, Button, Stack, styled } from '@mui/material'
 import { FC, PropsWithChildren, useState } from 'react'
-import { Game } from '../server/graphql/types.generated'
+import { Game } from '../../.generated/types.generated'
 import PlatformList from './PlatformList'
 
 const Figure = styled('figure', {

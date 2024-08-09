@@ -1,5 +1,5 @@
+import type { GameResolvers } from '../../../../../../.generated/types.generated'
 import { create } from '../../../../oid'
-import type { GameResolvers } from './../../../types.generated'
 
 export const Game: GameResolvers = {
   id: async (_parent, _arg, _ctx) => {

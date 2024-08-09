@@ -12,6 +12,7 @@
     },
     "prepare": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.generated"],
       "options": {
         "command": "yarn graphql-codegen --config codegen.ts",
         "cwd": "{projectRoot}"
@@ -104,7 +105,7 @@
     "test/e2e/ci": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn node --require esbuild-register scripts/utils/startE2e.ts' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
         "cwd": "{projectRoot}"
       }
     },
@@ -126,12 +127,19 @@
         "cwd": "{projectRoot}"
       }
     },
-    "publish": {
+    "package/prune": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "yarn node --require esbuild-register --experimental-json-modules scripts/publish.ts"
+          "yarn node --require esbuild-register --experimental-json-modules scripts/packagePrune.ts"
         ],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["echo 'Publishing'"],
         "cwd": "{projectRoot}"
       }
     }

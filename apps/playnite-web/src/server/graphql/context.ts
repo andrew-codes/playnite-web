@@ -1,8 +1,8 @@
 import { YogaInitialContext } from 'graphql-yoga'
 import { AsyncMqttClient } from 'mqtt-client'
+import { Claim } from '../../../.generated/types.generated'
 import { DomainApi } from './Domain'
 import { subscriptionPublisher } from './subscriptionPublisher'
-import { Claim } from './types.generated'
 
 type PlayniteContext = {
   signingKey: string

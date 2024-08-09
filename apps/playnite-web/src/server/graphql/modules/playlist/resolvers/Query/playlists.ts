@@ -1,4 +1,4 @@
-import type { QueryResolvers } from './../../../../types.generated'
+import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
 
 export const playlists: NonNullable<QueryResolvers['playlists']> = async (
   _parent,
