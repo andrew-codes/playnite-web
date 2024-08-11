@@ -5,7 +5,6 @@ const config = {
     [
       '@semantic-release/commit-analyzer',
       {
-        preset: 'conventionalcommits',
         releaseRules: [
           {
             breaking: true,
@@ -37,11 +36,6 @@ const config = {
     [
       '@semantic-release/release-notes-generator',
       {
-        /*
-            use conventionalcommits instead of conventional-changelog-angular (default)
-            to introduce new sections in changelog
-        */
-        preset: 'conventionalcommits',
         presetConfig: {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
