@@ -21,7 +21,6 @@
     "@semantic-release/release-notes-generator": "^14.0.1",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.11",
-    "commitizen": "^4.3.0",
     "conventional-changelog-conventionalcommits": "^8.0.0",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.4.5",
@@ -60,15 +59,6 @@
     "graphql": "16.9.0"
   },
   "packageManager": "yarn@4.3.1",
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog",
-      "disableScopeLowerCase": false,
-      "disableSubjectLowerCase": false,
-      "maxHeaderWidth": 200,
-      "maxLineWidth": 1000
-    }
-  },
   "scripts": {
     "prepare": "husky"
   }

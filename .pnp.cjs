@@ -70,7 +70,6 @@ const RAW_RUNTIME_STATE =
           ["@semantic-release/release-notes-generator", "virtual:9869a19b9cac301da62b60e4309d3a1bba47ad8222f27bd70feaff25a104c869d506dded55468019f6fee38fd7baa67c620ade0e78cbd82fc702ae439516efaa#npm:14.0.1"],\
           ["@types/jest", "npm:29.5.12"],\
           ["@types/node", "npm:20.14.11"],\
-          ["commitizen", "npm:4.3.0"],\
           ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
           ["cz-conventional-changelog", "npm:3.3.0"],\
           ["dotenv", "npm:16.4.5"],\
@@ -25210,7 +25209,6 @@ const RAW_RUNTIME_STATE =
           ["@semantic-release/release-notes-generator", "virtual:9869a19b9cac301da62b60e4309d3a1bba47ad8222f27bd70feaff25a104c869d506dded55468019f6fee38fd7baa67c620ade0e78cbd82fc702ae439516efaa#npm:14.0.1"],\
           ["@types/jest", "npm:29.5.12"],\
           ["@types/node", "npm:20.14.11"],\
-          ["commitizen", "npm:4.3.0"],\
           ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
           ["cz-conventional-changelog", "npm:3.3.0"],\
           ["dotenv", "npm:16.4.5"],\
