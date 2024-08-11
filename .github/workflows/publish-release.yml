@@ -221,6 +221,7 @@ jobs:
     name: Publish release
     needs:
       - unit_tests_linux
+      - unit_tests_windows
       - component_tests_linux
       - visual_component_tests_linux
       - e2e_tests_linux
