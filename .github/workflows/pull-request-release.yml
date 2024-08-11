@@ -195,11 +195,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Extract major release version from package.json
-        uses: sergeysova/jq-action@v2
-        id: major_release_version
-        with:
-          cmd: jq .version package.json -r | cut -d. -f1
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
