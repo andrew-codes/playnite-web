@@ -3,7 +3,6 @@ import _ from 'lodash'
 import And from '../../../domain/filters/And'
 import NoFilter from '../../../domain/filters/NoFilter'
 import MatchFeature from '../../../domain/filters/playnite/MatchFeature'
-import MatchName from '../../../domain/filters/playnite/MatchName'
 
 const { keyBy, memoize, merge } = _
 
@@ -24,7 +23,7 @@ const initialState: {
 const noFilter = new NoFilter()
 
 const getNameFilter = memoize((state: typeof initialState) =>
-  !state.activeNameFilters ? noFilter : new MatchName(state.activeNameFilters),
+  !state.activeNameFilters ? {} : { name: state.activeNameFilters },
 )
 
 const getFeatureFilter = memoize((state: typeof initialState) => {
@@ -43,7 +42,7 @@ const slice = createSlice({
   selectors: {
     getFilter: createSelector(
       [getNameFilter, getFeatureFilter],
-      (nameFilter, featureFilter) => new And(nameFilter, featureFilter),
+      (nameFilter, featureFilter) => merge({}, nameFilter),
     ),
     getFilterValues: (state) => ({
       nameFilter: state.activeNameFilters ?? '',

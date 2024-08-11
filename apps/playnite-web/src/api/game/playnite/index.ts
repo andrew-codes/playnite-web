@@ -14,6 +14,7 @@ import type {
   IPlaylist,
   RunState,
 } from '../../../domain/types'
+import { IIdentify } from '../../../server/oid'
 import { AssetTypeKey, GameAsset, IGameApi } from '../types'
 import MongoDb from './databases/mongo/index.server'
 import { GameEntity, MongoDbApi, PlatformEntity } from './databases/mongo/types'
@@ -93,12 +94,11 @@ class PlayniteWebApi implements IGameApi {
   }
 
   async getAssetsRelatedTo(
-    oid: IIdentifyDomainObjects,
+    oid: IIdentify,
     typeKey?: AssetTypeKey,
   ): Promise<GameAsset[]> {
     return (await this._mongo.getAssetsByType(oid, typeKey)).map((asset) => ({
       id: asset.id,
-      file: Buffer.from(asset.file.value()),
       related: new Oid(`${asset.relatedType}:${asset.relatedId}`),
       typeKey: asset.typeKey as GameAssetType,
     }))

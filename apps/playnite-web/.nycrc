@@ -1,0 +1,6 @@
+{
+  "report-dir": ".test-runs/component",
+  "all": true,
+  "include": ["src/**/*.tsx"],
+  "exclude": ["cypress", "testUtils"]
+}

@@ -1,7 +1,7 @@
 {
   "name": "versioning",
   "sourceRoot": "libs/versioning/src",
-  "projectType": "application",
+  "projectType": "library",
   "targets": {
     "clean": {
       "executor": "nx:run-commands",

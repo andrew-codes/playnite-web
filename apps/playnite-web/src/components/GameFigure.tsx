@@ -1,11 +1,7 @@
 import { Box, Button, Stack, styled } from '@mui/material'
-import _ from 'lodash'
-import { FC, PropsWithChildren, useCallback, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
-import type { IGame } from '../domain/types'
+import { FC, PropsWithChildren, useState } from 'react'
+import { Game } from '../../.generated/types.generated'
 import PlatformList from './PlatformList'
-
-const { uniqWith } = _
 
 const Figure = styled('figure', {
   shouldForwardProp: (prop) => prop !== 'width',
@@ -27,70 +23,56 @@ const Image = styled('img', {
 
 const GameFigure: FC<
   PropsWithChildren<{
-    game: IGame
+    game: Game
     style?: any
     width: string
     height: string
-    noDefer: boolean
-    onSelect?: (evt, game: IGame) => void
+    onSelect?: (evt, game: Game) => void
   }>
-> = ({ children, game, style, noDefer, onSelect, width, height }) => {
-  const [hasBeenInViewBefore, setHasBeenInViewBefore] = useState(false)
-  const handleChange = useCallback((inView) => {
-    if (!inView) {
-      return
-    }
-    setHasBeenInViewBefore(true)
-  }, [])
-  const { ref } = useInView({ onChange: handleChange })
-
+> = ({ children, game, style, onSelect, width, height }) => {
   const [imageHasError, setImageHasError] = useState(false)
 
   return (
-    <Figure style={style} ref={ref} width={width}>
-      {hasBeenInViewBefore || noDefer
-        ? [
-            <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
-              <Button onClick={(evt) => onSelect?.(evt, game)}>
-                {!imageHasError ? (
-                  <Image
-                    src={game.cover}
-                    alt={game.name}
-                    width={width}
-                    loading="eager"
-                    onError={(e) => {
-                      setImageHasError(true)
-                    }}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      height: `${width}`,
-                      width: `${width}`,
-                    }}
-                  />
-                )}
-              </Button>
-              <Box
-                sx={(theme) => ({
-                  position: 'absolute',
-                  bottom: '12px',
-                  right: theme.spacing(),
-                })}
-              >
-                <PlatformList
-                  platforms={game.platformGames.map((gp) => gp.platform)}
-                />
-              </Box>
-            </Box>,
-            <Stack
-              sx={{ height: `calc(${height} - ${width})` }}
-              key={`${game.id}-details`}
-            >
-              {children}
-            </Stack>,
-          ]
-        : []}
+    <Figure data-test="GameFigure" style={style} width={width}>
+      <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
+        <Button onClick={(evt) => onSelect?.(evt, game)}>
+          {!imageHasError && game.cover?.id ? (
+            <Image
+              src={`/asset-by-id/${game.cover?.id}`}
+              alt={game.name}
+              width={width}
+              loading="eager"
+              onError={(e) => {
+                setImageHasError(true)
+              }}
+            />
+          ) : (
+            <Box
+              sx={{
+                height: `${width}`,
+                width: `${width}`,
+              }}
+            />
+          )}
+        </Button>
+        <Box
+          sx={(theme) => ({
+            position: 'absolute',
+            bottom: '12px',
+            right: theme.spacing(),
+          })}
+        >
+          <PlatformList
+            platforms={game.releases.map((release) => release.platform)}
+          />
+        </Box>
+      </Box>
+      <Stack
+        sx={{ height: `calc(${height} - ${width})` }}
+        key={`${game.id}-details`}
+      >
+        {children}
+      </Stack>
     </Figure>
   )
 }

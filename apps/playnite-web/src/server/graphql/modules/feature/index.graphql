@@ -1,0 +1,5 @@
+type Feature {
+  id: String!
+  name: String!
+  releases: [GameRelease]!
+}

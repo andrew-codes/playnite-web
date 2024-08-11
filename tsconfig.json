@@ -9,5 +9,19 @@
         "tag": "route",
       }
     ]
-  }
+  },
+  "include": [
+    "**/src/**/*.ts",
+    "**/src/**/*.tsx",
+    "**/src/**/*.jsx",
+    "**/testUtils/**/*.ts",
+    "**/testUtils/**/*.tsx",
+    "*.ts",
+    "**/cypress/*.ts",
+    "**/scripts/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".yarn"
+  ]
 }

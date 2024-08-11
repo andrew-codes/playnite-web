@@ -4,12 +4,12 @@ import {
   IIdentifyDomainObjects,
   IPlaylist,
 } from '../../domain/types'
+import { IIdentify } from '../../server/oid'
 
 type AssetTypeKey = 'background' | 'cover' | 'icon'
 
 type GameAsset = {
   id: string
-  file: Buffer
   related: IIdentifyDomainObjects
   typeKey: AssetTypeKey
 }
@@ -21,7 +21,7 @@ interface IGameApi {
   getGames(): Promise<IGame[]>
   getFeatures(): Promise<Feature[]>
   getAssetsRelatedTo(
-    oid: IIdentifyDomainObjects,
+    oid: IIdentify,
     typeKey?: AssetTypeKey,
   ): Promise<GameAsset[]>
 }

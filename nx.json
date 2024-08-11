@@ -1,8 +1,16 @@
 {
   "targetDefaults": {
     "build": {
-      "dependsOn": ["clean", "^build", "build/restore"],
+      "dependsOn": ["clean", "prepare", "^build", "build/restore"],
       "cache": true
+    },
+    "prepare": {
+      "dependsOn": ["^prepare"],
+      "cache": true
+    },
+    "start": {
+      "dependsOn": ["prepare", "^start/prepare", "start/prepare"],
+      "cache": false
     },
     "package": {
       "dependsOn": ["clean", "build", "^package"],
@@ -13,11 +21,47 @@
       "cache": false
     },
     "test/unit": {
-      "dependsOn": ["test/unit/restore", "test/unit/build"],
-      "cache": true
+      "dependsOn": ["prepare", "test/unit/restore", "test/unit/build"],
+      "cache": false
+    },
+    "test/unit/ci": {
+      "dependsOn": ["prepare", "test/unit/restore", "test/unit/build"],
+      "cache": false
     },
     "test/unit/restore": {
       "dependsOn": ["build/restore"],
+      "cache": true
+    },
+    "test/components": {
+      "dependsOn": ["prepare"],
+      "cache": false
+    },
+    "test/components/ci": {
+      "dependsOn": ["prepare"],
+      "cache": false
+    },
+    "test/components/visual": {
+      "dependsOn": ["prepare"],
+      "cache": false
+    },
+    "test/components/visual/update": {
+      "dependsOn": ["prepare"],
+      "cache": false
+    },
+    "test/components/visual/ci": {
+      "dependsOn": ["prepare"],
+      "cache": false
+    },
+    "test/e2e": {
+      "dependsOn": ["prepare", "test/e2e/prepare"],
+      "cache": false
+    },
+    "test/e2e/ci": {
+      "dependsOn": ["prepare", "test/e2e/prepare"],
+      "cache": false
+    },
+    "test/e2e/update": {
+      "dependsOn": ["prepare", "test/e2e/prepare"],
       "cache": false
     }
   },

@@ -1,0 +1,10 @@
+type User {
+  id: String!
+  username: String!
+  name: String!
+  isAuthenticated: Boolean!
+}
+
+extend type Query {
+  me: User
+}

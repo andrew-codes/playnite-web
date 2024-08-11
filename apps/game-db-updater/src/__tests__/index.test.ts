@@ -1,31 +1,25 @@
-import { afterEach, expect, jest, test } from '@jest/globals'
-import { type AsyncMqttClient } from 'async-mqtt'
-import app from '..'
+import { expect, jest, test } from '@jest/globals'
+import { AsyncMqttClient } from 'mqtt-client'
+import run, { Options } from '..'
 
-const mockHandler = jest.fn()
-jest.mock('../handlers', () => {
-  const realHandlers = jest.requireActual<{
-    default: Array<(topic: string, message: Buffer) => void>
-  }>('../handlers').default
-  return realHandlers.concat([mockHandler])
-})
+jest.mock('../handlers')
 
-let testMqttClient: AsyncMqttClient
-afterEach(() => {
-  testMqttClient?.end()
-})
+describe('game-db-updater run()', () => {
+  const mqttClient = {
+    on: jest.fn(),
+    subscribe: jest.fn(),
+  } as unknown as jest.Mocked<AsyncMqttClient>
 
-test('Connects to MQTT and subscribes to playnite/# topics.', (done) => {
-  mockHandler.mockImplementationOnce(() => {
-    expect(mockHandler).toHaveBeenCalledWith(
-      'playnite/test',
-      Buffer.from('test'),
-    )
-    done()
+  let options: Options
+  beforeEach(() => {
+    options = {
+      assetSaveDirectoryPath: 'test',
+    }
   })
 
-  app().then((mqttClient) => {
-    testMqttClient = mqttClient
-    testMqttClient.publish('playnite/test', 'test')
+  test('Subscribes to "playnite/#" topics.', async () => {
+    await run(options, mqttClient)
+
+    expect(mqttClient.subscribe).toHaveBeenCalledWith('playnite/#')
   })
 })

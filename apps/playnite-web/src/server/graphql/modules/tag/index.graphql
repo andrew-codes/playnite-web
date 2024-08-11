@@ -1,0 +1,5 @@
+type Tag {
+  id: String!
+  name: String!
+  games: [Game]!
+}

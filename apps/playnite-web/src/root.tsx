@@ -1,5 +1,6 @@
+import { css, Global } from '@emotion/react'
 import { CssBaseline, ThemeProvider } from '@mui/material'
-import { LinksFunction, LoaderFunctionArgs, json } from '@remix-run/node'
+import { json, LinksFunction, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Links,
   Meta,
@@ -13,11 +14,10 @@ import { AnimatePresence } from 'framer-motion'
 import { FC, useEffect } from 'react'
 import { useStore } from 'react-redux'
 import { createHead } from 'remix-island'
-import { authenticator } from './api/auth/auth.server'
-import { signedIn, signedOut } from './api/client/state/authSlice'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
 import { UAParser } from './api/layout.server'
 import Layout from './components/Layout'
+import { configure, Provider } from './components/NavigateInGrid/context'
 import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
@@ -54,8 +54,6 @@ const links: LinksFunction = () => {
 }
 
 async function loader({ request }: LoaderFunctionArgs) {
-  const user = await authenticator.isAuthenticated(request)
-
   const ua = UAParser(request.headers.get('user-agent'))
   const type = ua?.device?.type ?? 'desktop'
   const device = {
@@ -65,7 +63,6 @@ async function loader({ request }: LoaderFunctionArgs) {
   }
 
   return json({
-    user,
     device,
   })
 }
@@ -73,7 +70,12 @@ async function loader({ request }: LoaderFunctionArgs) {
 const Head = createHead(() => (
   <>
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="data:image/x-icon;base64,AA" />
+    <link rel="icon" href="/icons/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/icons/apple-touch-icon.png"
+    />
     <Meta />
     <Links />
   </>
@@ -90,14 +92,6 @@ const App: FC<{}> = () => {
   }>()
 
   const store = useStore()
-
-  useEffect(() => {
-    if (!!user) {
-      store.dispatch(signedIn())
-    } else {
-      store.dispatch(signedOut())
-    }
-  }, [])
 
   useEffect(() => {
     let isTouchEnabled = false
@@ -145,14 +139,41 @@ const App: FC<{}> = () => {
 
   const outlet = useOutlet()
 
+  const theme = muiTheme(device.type ?? 'unknown')
+
+  const navigateInGrid = configure()
+
   return (
     <>
       <Head />
-      <ThemeProvider theme={muiTheme(device.type ?? 'unknown')}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
+        <Global
+          styles={css`
+            * {
+              scrollbar-color: ${theme.palette.text.primary}
+                ${theme.palette.background.default};
+            }
+            ::-webkit-scrollbar {
+              background-color: ${theme.palette.background.default};
+            }
+            ::-webkit-scrollbar-thumb {
+              background-color: ${theme.palette.text.primary};
+              border-radius: 10px;
+            }
+            ::-webkit-scrollbar-button {
+              display: none;
+            }
+            ::-webkit-scrollbar-track {
+              background-color: ${theme.palette.background.default};
+            }
+          `}
+        />
         <Layout>
           <AnimatePresence mode="wait" initial={false}>
-            <div>{outlet}</div>
+            <Provider value={navigateInGrid}>
+              <div>{outlet}</div>
+            </Provider>
           </AnimatePresence>
         </Layout>
       </ThemeProvider>

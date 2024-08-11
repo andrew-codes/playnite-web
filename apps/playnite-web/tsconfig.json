@@ -8,20 +8,26 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": [
-      "@types/cypress",
-      "@types/node",
-      "@types/react",
+      "cypress",
+      "node",
+      "react",
       "vite/client",
       "@vite-pwa/remix/remix-sw"
     ],
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    "**/*.jsx",
-    "build/server/index.mjs",
-    "server.ts",
-    "server.mjs"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.jsx",
+    "testUtils/**/*.ts",
+    "testUtils/**/*.tsx",
+    "*.ts",
+    "../../graphql.config.ts",
+    ".generated/resolvers.generated.ts",
+    ".generated/typeDefs.generated.ts",
+    ".generated/types.generated.ts"
   ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -32,7 +32,6 @@
         "workbench.colorTheme": "Dracula Pro"
       },
       "extensions": [
-        "andrew-codes.jest-snippets",
         "arcanis.vscode-zipfs",
         "bierner.github-markdown-preview",
         "bierner.markdown-yaml-preamble",
@@ -49,7 +48,7 @@
         "GitHub.copilot",
         "github.vscode-github-actions",
         "GitHub.vscode-pull-request-github",
-        "humao.rest-client",
+        "GraphQL.vscode-graphql",
         "johnuphoff.vscode-styled-sort",
         "kisstkondoros.vscode-codemetrics",
         "mikestead.dotenv",
@@ -62,7 +61,7 @@
         "rpdswtk.vsmqtt",
         "sburg.vscode-javascript-booster",
         "streetsidesoftware.code-spell-checker",
-        "unifiedjs.vscode-mdx"
+        "yzhang.markdown-all-in-one"
       ]
     }
   },

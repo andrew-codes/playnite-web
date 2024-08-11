@@ -1,46 +1,40 @@
-import { styled } from '@mui/material'
-import { LoaderFunctionArgs, json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import { useMemo } from 'react'
-import { $params } from 'remix-routes'
-import getGameApi from '../api/game/index.server'
+import { gql } from '@apollo/client/core'
+import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
+import { useParams } from '@remix-run/react'
 import GameDetails from '../components/GameDetails'
-import Game from '../domain/Game'
-import GameOnPlatform from '../domain/GameOnPlatform'
-import { CompositeOid } from '../domain/Oid'
-import { GameOnPlatformDto } from '../domain/types'
 
-async function loader({ request, params }: LoaderFunctionArgs) {
-  try {
-    const { id } = $params('/browse/:id', params)
-
-    const api = getGameApi()
-    const game = await api.getGameById(new CompositeOid(id))
-    return json({
-      game: game ?? [],
-    })
-  } catch (e) {
-    return new Response(null, {
-      status: 500,
-    })
+const Game_By_Id_Query = gql`
+  query game($id: String!) {
+    game(id: $id) {
+      id
+      name
+      description
+      cover {
+        id
+      }
+      releases {
+        id
+        platform {
+          id
+          name
+          icon {
+            id
+          }
+        }
+      }
+    }
   }
-}
-
-const BrowseGameRoot = styled('div')({
-  textWrap: 'wrap',
-})
+`
 
 function GameBrowseDetails() {
-  const data = (useLoaderData() || {}) as unknown as {
-    game: GameOnPlatformDto[]
+  const params = useParams()
+  const { loading, data, error } = useQuery(Game_By_Id_Query, {
+    variables: { id: params.id },
+  })
+  if (loading || error) {
+    return null
   }
-  const game = useMemo(
-    () => new Game(data.game.map((gp) => new GameOnPlatform(gp))),
-    [data.game],
-  )
-
-  return <GameDetails game={game} />
+  return <GameDetails game={data.game} />
 }
 
 export default GameBrowseDetails
-export { loader }

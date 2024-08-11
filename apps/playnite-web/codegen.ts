@@ -1,0 +1,26 @@
+import { defineConfig } from '@eddeee888/gcg-typescript-resolver-files'
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: './src/server/graphql/modules/*/*.graphql',
+  hooks: {
+    afterAllFileWrite: ['yarn prettier --write'],
+  },
+  generates: {
+    './.generated': defineConfig({
+      typesPluginsConfig: {
+        mappers: {
+          CompletionStatus: './resolverTypes#CompletionStatusEntity',
+          Feature: './resolverTypes#FeatureEntity',
+          Game: './resolverTypes#GameEntity',
+          GameRelease: './resolverTypes#GameReleaseEntity',
+          Platform: './resolverTypes#PlatformSourceEntity',
+          GameAsset: './resolverTypes#GameAssetEntity',
+          Playlist: './resolverTypes#TagEntity',
+        },
+        contextType: './context#PlayniteContext',
+      },
+    }),
+  },
+}
+export default config
