@@ -70,6 +70,7 @@ const RAW_RUNTIME_STATE =
           ["@semantic-release/release-notes-generator", "virtual:9869a19b9cac301da62b60e4309d3a1bba47ad8222f27bd70feaff25a104c869d506dded55468019f6fee38fd7baa67c620ade0e78cbd82fc702ae439516efaa#npm:14.0.1"],\
           ["@types/jest", "npm:29.5.12"],\
           ["@types/node", "npm:20.14.11"],\
+          ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
           ["dotenv", "npm:16.4.5"],\
           ["glob", "npm:10.4.5"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
@@ -14580,6 +14581,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["conventional-changelog-conventionalcommits", [\
+      ["npm:8.0.0", {\
+        "packageLocation": "./.yarn/cache/conventional-changelog-conventionalcommits-npm-8.0.0-b17be6f278-368ee22450.zip/node_modules/conventional-changelog-conventionalcommits/",\
+        "packageDependencies": [\
+          ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
+          ["compare-func", "npm:2.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["conventional-changelog-writer", [\
       ["npm:8.0.0", {\
         "packageLocation": "./.yarn/cache/conventional-changelog-writer-npm-8.0.0-356cbecdca-fd4afe58c5.zip/node_modules/conventional-changelog-writer/",\
@@ -24804,6 +24815,7 @@ const RAW_RUNTIME_STATE =
           ["@semantic-release/release-notes-generator", "virtual:9869a19b9cac301da62b60e4309d3a1bba47ad8222f27bd70feaff25a104c869d506dded55468019f6fee38fd7baa67c620ade0e78cbd82fc702ae439516efaa#npm:14.0.1"],\
           ["@types/jest", "npm:29.5.12"],\
           ["@types/node", "npm:20.14.11"],\
+          ["conventional-changelog-conventionalcommits", "npm:8.0.0"],\
           ["dotenv", "npm:16.4.5"],\
           ["glob", "npm:10.4.5"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
