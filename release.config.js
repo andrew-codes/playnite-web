@@ -1,12 +1,60 @@
-const { verify } = require('crypto')
-
 const config = {
   dryRun: true,
   branches: ['main', 'next'],
   plugins: [
-    '@semantic-release/commit-analyzer',
-    '@semantic-release/release-notes-generator',
-
+    [
+      '@semantic-release/commit-analyzer',
+      {
+        preset: 'conventionalcommits',
+        releaseRules: [
+          {
+            breaking: true,
+            release: 'major',
+          },
+          {
+            type: 'feat',
+            release: 'minor',
+          },
+          {
+            type: 'fix',
+            release: 'patch',
+          },
+          {
+            type: 'docs',
+            scope: 'README',
+            release: 'patch',
+          },
+          {
+            type: 'chore',
+            release: 'patch',
+          },
+        ],
+        parserOpts: {
+          noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING'],
+        },
+      },
+    ],
+    [
+      '@semantic-release/release-notes-generator',
+      {
+        /*
+            use conventionalcommits instead of conventional-changelog-angular (default)
+            to introduce new sections in changelog
+        */
+        preset: 'conventionalcommits',
+        presetConfig: {
+          types: [
+            { type: 'feat', section: 'Features', hidden: false },
+            { type: 'fix', section: 'Bug Fixes', hidden: false },
+            { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
+            { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
+          ],
+        },
+        parserOpts: {
+          noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING'],
+        },
+      },
+    ],
     [
       '@semantic-release/exec',
       {
@@ -17,14 +65,19 @@ const config = {
       },
     ],
     [
+      '@semantic-release/changelog',
+      {
+        changelogFile: 'CHANGELOG.md',
+      },
+    ],
+    [
       '@semantic-release/git',
       {
-        assets: ['hass-*/config.js'],
+        assets: ['hass-*/config.js', 'CHANGELOG.md'],
         message: 'chore(release): update HASS add-on version. [skip ci]',
       },
     ],
     '@semantic-release/github',
-    '@semantic-release/changelog',
   ],
 }
 
