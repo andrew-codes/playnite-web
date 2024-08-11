@@ -1,0 +1,1 @@
+exec </dev/tty && yarn dlx git-cz --hook || true
