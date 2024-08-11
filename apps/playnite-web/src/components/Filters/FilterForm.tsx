@@ -174,7 +174,11 @@ const FilterForm: FC<{
   )
 
   return (
-    <Form onSubmit={onSubmit} onReset={handleResetFilters}>
+    <Form
+      data-test="FilterForm"
+      onSubmit={onSubmit}
+      onReset={handleResetFilters}
+    >
       <TextField
         name="nameFilter"
         InputProps={{
@@ -199,7 +203,7 @@ const FilterForm: FC<{
         <Select
           labelId="filterByLabel"
           label="Filter By"
-          value={state.filterBy}
+          value={state.filterBy ?? ''}
           onChange={handleFilterByChange}
         >
           <MenuItem value="platform">Platform</MenuItem>
@@ -224,7 +228,6 @@ const FilterForm: FC<{
               maxHeight: '100%',
               height: `calc(100% - ${theme.spacing(6)})`,
               padding: '24px',
-              scrollbarColor: `${theme.palette.text.primary} ${theme.palette.background.default}`,
 
               '.MuiDialogContent-root': {
                 overflow: 'hidden',

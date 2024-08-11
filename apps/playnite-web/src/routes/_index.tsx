@@ -1,101 +1,44 @@
 import { Typography } from '@mui/material'
-import type { LoaderFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import { useCallback, useMemo, useState } from 'react'
-import getGameApi from '../api/game/index.server'
+import { useCallback, useState } from 'react'
+import { Game } from '../../.generated/types.generated'
 import GameDetails from '../components/GameDetails'
 import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
 import Drawer from '../components/Navigation/Drawer'
-import OuterScroll from '../components/OuterScroll'
+import OuterContainer from '../components/OuterContainer'
 import RightDrawer from '../components/RightDrawer'
-import FilteredGameList from '../domain/FilteredGameList'
-import Game from '../domain/Game'
-import GameList from '../domain/GameList'
-import GameOnPlatform from '../domain/GameOnPlatform'
-import { CompletionStatusPlaylist } from '../domain/Playlist'
-import NoFilter from '../domain/filters/NoFilter'
-import { GameOnPlatformDto, IGame, IList, Match } from '../domain/types'
-
-async function loader({ request }: LoaderFunctionArgs) {
-  try {
-    const api = getGameApi()
-    const games = await api.getGames()
-
-    return json({
-      lists: [
-        new CompletionStatusPlaylist({
-          completionStatusName: 'Playing',
-          games: new GameList(games),
-        }),
-        new CompletionStatusPlaylist({
-          completionStatusName: 'Plan to Play',
-          games: new GameList(games),
-        }),
-      ],
-    })
-  } catch (e) {
-    console.error(e)
-    return json({
-      lists: [],
-    })
-  }
-}
-
-const noFilter = new NoFilter()
+import { usePlaylists } from '../queryHooks/playlists'
 
 function Index() {
-  const data = (useLoaderData() || {}) as unknown as {
-    lists: { completionStatusName: string; games: GameOnPlatformDto[][] }[]
-  }
-
-  const gameListPlaylists = useMemo(() => {
-    return (
-      data.lists.map(
-        (list) =>
-          new CompletionStatusPlaylist({
-            completionStatusName: list.completionStatusName,
-            games: new FilteredGameList(
-              new GameList(
-                list.games.map(
-                  (g) => new Game(g.map((gp) => new GameOnPlatform(gp))),
-                ),
-              ),
-              noFilter,
-            ),
-          }),
-      ) ?? []
-    )
-  }, [data.lists])
-
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(false)
-  const [game, setGame] = useState<IGame | null>(null)
+  const [game, setGame] = useState<Game | null>(null)
   const handleClose = useCallback(() => {
     setRightDrawerOpen(false)
   }, [])
-  const handleGameSelect = useCallback((evt, game: IGame) => {
+  const handleGameSelect = useCallback((evt, game: Game) => {
     setGame(game)
     setRightDrawerOpen(true)
   }, [])
+  const { data, loading, refetch, error } = usePlaylists()
+  const playlists = data?.playlists
 
   return (
     <Drawer>
-      <OuterScroll>
+      <OuterContainer>
         <Header>
           <Typography variant="h2">Library</Typography>
         </Header>
-        {gameListPlaylists.map((playlist, index) => (
-          <section key={`${playlist.toString()}${index}`}>
-            <Typography variant="h4">{playlist.toString()}</Typography>
+        {playlists?.map((playlist) => (
+          <section data-test="playlist" key={`${playlist.id}`}>
+            <Typography variant="h4">{playlist.name}</Typography>
             <HorizontalGameList
-              games={playlist.games as unknown as IList<Match<IGame>>}
+              games={playlist?.games ?? []}
               noDeferCount={5}
               onSelect={handleGameSelect}
             />
           </section>
         ))}
-      </OuterScroll>
+      </OuterContainer>
       <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
         {game && <GameDetails game={game} />}
       </RightDrawer>
@@ -104,4 +47,3 @@ function Index() {
 }
 
 export default Index
-export { loader }

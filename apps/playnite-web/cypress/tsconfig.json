@@ -3,9 +3,9 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "types": [
-      "@types/cypress",
-      "@types/node",
-      "@types/react"
+      "cypress",
+      "node",
+      "react"
     ],
   },
   "extends": "../tsconfig.json",

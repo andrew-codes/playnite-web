@@ -1,0 +1,16 @@
+type Game {
+  id: String!
+  name: String!
+  description: String
+  cover: GameAsset
+  releases: [GameRelease!]!
+}
+
+input Filter {
+  name: String
+}
+
+extend type Query {
+  game(id: String!): Game
+  games(filter: Filter): [Game!]!
+}

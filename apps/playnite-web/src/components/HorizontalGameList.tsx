@@ -7,7 +7,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { FC, useMemo } from 'react'
-import type { IGame, IList, Match } from '../domain/types'
+import { Game } from '../../.generated/types.generated'
 import GameFigure from './GameFigure'
 import useThemeWidth from './useThemeWidth'
 
@@ -17,9 +17,9 @@ const ImageListWithoutOverflow = styled(ImageList)`
 `
 
 const HorizontalGameList: FC<{
-  games: IList<Match<IGame>>
+  games: Array<Game>
   noDeferCount: number
-  onSelect?: (evt, game: IGame) => void
+  onSelect?: (evt, game: Game) => void
 }> = ({ games, noDeferCount, onSelect }) => {
   const theme = useTheme()
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
@@ -43,18 +43,15 @@ const HorizontalGameList: FC<{
     return columnWidth + 64
   }, [columnWidth])
 
-  const columns = useMemo(() => {
-    return games.items.filter((game) => game.matches).length
-  }, [games.items])
+  const columns = games.length
 
   return (
     <>
       <ImageListWithoutOverflow rowHeight={rowHeight} cols={columns}>
-        {games.items.map((game, gameIndex) => (
+        {games.map((game) => (
           <ImageListItem
-            key={game.id.toString()}
-            sx={(theme) => ({
-              ...(!game.matches ? { display: 'none' } : {}),
+            key={game.id}
+            sx={() => ({
               alignItems: 'center',
               margin: '0 16px',
             })}
@@ -62,7 +59,6 @@ const HorizontalGameList: FC<{
             <GameFigure
               game={game}
               height={`${rowHeight}px`}
-              noDefer={gameIndex <= noDeferCount}
               onSelect={onSelect}
               width={`calc(${columnWidth}px)`}
             >
@@ -83,9 +79,9 @@ const HorizontalGameList: FC<{
                   WebkitBoxOrient: 'vertical ',
                 }}
               >
-                {game.toString()}
+                {game.name}
               </Typography>
-              <Typography
+              {/* <Typography
                 variant="body2"
                 component="div"
                 sx={{
@@ -102,7 +98,7 @@ const HorizontalGameList: FC<{
                 }}
               >
                 {game.developers.map((d) => d.name).join(', ')}
-              </Typography>
+              </Typography> */}
             </GameFigure>
           </ImageListItem>
         ))}

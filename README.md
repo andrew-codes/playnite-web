@@ -36,14 +36,12 @@ Playnite-Web consists the following:
 
 > All components are required.
 
-| Component           | Deployment Mechanism              | Purpose                                                                                                                                              |
-| :------------------ | :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
-| database            | Docker image / bring your own     | Mongo DB database that stores game data in `games` database.                                                                                         |
-| MQTT broker         | Docker image / bring your own     | Provides a communication mechanism between Playnite and Playnite-Web.                                                                                |
-| Playnite-Web Plugin | Extension installed into Playnite | The plugin sends and receives messages via MQTT when data in Playnite is changed.                                                                    |
-| Playnite-Web App    | Docker image                      | Web application and UI to browse and view game library. Updates database from Playnite-Web Plugin. Can be exposed to Internet to share with friends. |
-
-> Note, if you want to update your game library only, and not run Playnite-Web, you may do so by running the `playnite-web-game-db-updater`. However, do not run both this and Playnite-Web App. See the [playnite-web-game-db-updater documentation](docs/install/playnite-web-game-db-updater.md) for more details.
+| Component           | Deployment Mechanism              | Purpose                                                                                                        |
+| :------------------ | :-------------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| (game) database     | Docker image / bring your own     | Mongo DB database that stores game data in `games` database.                                                   |
+| MQTT broker         | Docker image / bring your own     | Provides a communication mechanism between Playnite and Playnite-Web.                                          |
+| Playnite-Web Plugin | Extension installed into Playnite | The plugin sends and receives messages via MQTT when data in Playnite is changed.                              |
+| Playnite-Web App    | Docker image                      | Syncs Playnite games to game database, web UI, and GraphQL API that may be used to power your own experiences. |
 
 ### Deployment
 
@@ -68,7 +66,7 @@ Recommended to use docker image [`mongo:focal`](https://hub.docker.com/_/mongo/)
 
 #### Playnite-Web Plugin
 
-1. Download (latest) version [release](https://github.com/andrew-codes/playnite-web/releases) of Playnite extension (release asset named "PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_0_1.pext").
+1. Download (latest) version [release](https://github.com/andrew-codes/playnite-web/releases) of Playnite extension (release asset named "PlayniteWeb\*ec3439e3-51ee-43cb-9a8a-5d82cf45edac\*.pext").
 1. Open Playnite and drag downloaded file into the Playnite. It should prompt to install the plugin.
 1. <details><summary>Open the plugin's settings and enter the MQTT connection information to your MQTT broker.</summary>
       > ![Mqtt connection settings screenshot](docs/assets/images/mqtt-connection-screenshot.png)
@@ -83,22 +81,24 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 
 ##### Environment Variables
 
-| Environment Variable | Value                                    | Notes                                                     |
-| :------------------- | :--------------------------------------- | :-------------------------------------------------------- |
-| PORT                 | Defaults to 3000                         | Port in which web application is accessible.              |
-| DB_HOST              | IP address/hostname of Mongo DB database |                                                           |
-| DB_PORT              | Port of Mongo DB database                | Default for MongoDB image is 27017                        |
-| DB_USERNAME          | Username to access database              | Optional, only required if disabled anonymous access      |
-| DB_PASSWORD          | Password to access database              | Optional, only required if disabled anonymous access      |
-| DB_URL               | MongoDB connection URL                   | Optional, alternative to individual DB connection options |
-| DEBUG                | `"playnite-web/*"`                       | Optional, for troubleshooting; send logs to STDIO         |
-| USERNAME             |                                          | Username used to login                                    |
-| PASSWORD             |                                          | Password value used to login                              |
-| SECRET               |                                          | Secret used to protect credentials                        |
-| MQTT_HOST            | IP address/hostname of MQTT broker.      |                                                           |
-| MQTT_PORT            | Port of MQTT broker                      | Default for MQTT image is 1883                            |
-| MQTT_USERNAME        | Username to access MQTT broker           | Optional, only required if disabled anonymous access      |
-| MQTT_PASSWORD        | Password to access MQTT broker           | Optional, only required if disabled anonymous access      |
+| Environment Variable | Value                                            | Required? | Notes                                                             |
+| :------------------- | :----------------------------------------------- | :-------- | :---------------------------------------------------------------- |
+| PORT                 | Defaults to 3000                                 | Required  | Port in which web application is accessible.                      |
+| HOST                 | Defaults to `localhost`                          |           | The domain name or IP address of the server running Playnite-Web. |
+| ADDITIONAL_ORIGINS   | Additional origins allowed to request graph API. |           | Multiple values may be provided via a comma-delimited string.     |
+| DB_HOST              | IP address/hostname of Mongo DB database         | Required  |                                                                   |
+| DB_PORT              | Port of Mongo DB database                        |           | Default for MongoDB image is 27017                                |
+| DB_USERNAME          | Username to access database                      |           | Only required if disabled anonymous access                        |
+| DB_PASSWORD          | Password to access database                      |           | Only required if disabled anonymous access                        |
+| DB_URL               | MongoDB connection URL                           |           | Alternative to individual DB connection options                   |
+| DEBUG                | `"playnite-web/*"`                               |           | For troubleshooting; send logs to STDIO                           |
+| USERNAME             |                                                  |           | Username used to login                                            |
+| PASSWORD             |                                                  |           | Password value used to login                                      |
+| SECRET               |                                                  |           | Secret used to protect credentials                                |
+| MQTT_HOST            | IP address/hostname of MQTT broker.              | Required  |                                                                   |
+| MQTT_PORT            | Port of MQTT broker                              |           | Default for MQTT image is 1883                                    |
+| MQTT_USERNAME        | Username to access MQTT broker                   |           | Only required if disabled anonymous access                        |
+| MQTT_PASSWORD        | Password to access MQTT broker                   |           | Only required if disabled anonymous access                        |
 
 ### Post Deployment Steps
 

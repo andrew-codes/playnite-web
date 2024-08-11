@@ -1,39 +1,33 @@
-import { type AsyncMqttClient } from 'async-mqtt'
 import createDebugger from 'debug'
-import dotenv from 'dotenv'
-import path from 'path'
+import fs from 'fs/promises'
+import { AsyncMqttClient } from 'mqtt-client'
 import handlers from './handlers'
-import { getMqttClient } from './mqttClient'
 
-const run: () => Promise<AsyncMqttClient> = async () => {
+type Options = {
+  assetSaveDirectoryPath: string
+}
+
+const run = async (
+  options: Options,
+  mqttClient: AsyncMqttClient,
+): Promise<void> => {
   const debug = createDebugger('playnite-web/game-db-updater/index')
   debug('Starting game-db-updater')
 
-  dotenv.config({
-    path: path.join(__dirname, '..', 'local.env'),
-    override: true,
-  })
-  dotenv.config({
-    path: path.join(__dirname, '..', 'overrides.env'),
-    override: true,
-  })
-
-  const mqttClient = await getMqttClient()
   mqttClient.subscribe('playnite/#')
+
+  await fs.mkdir(options.assetSaveDirectoryPath, { recursive: true })
 
   mqttClient.on('message', async (topic, payload) => {
     try {
-      await Promise.all(handlers.map((handler) => handler(topic, payload)))
+      await Promise.all(
+        handlers(options).map((handler) => handler(topic, payload)),
+      )
     } catch (error) {
       console.error(error)
     }
   })
-
-  return mqttClient
-}
-
-if (require.main === module) {
-  run()
 }
 
 export default run
+export type { Options }

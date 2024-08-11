@@ -1,0 +1,6 @@
+type Query
+type Mutation
+type Subscription
+
+scalar Date
+scalar DateTime
