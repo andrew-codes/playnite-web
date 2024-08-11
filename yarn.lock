@@ -9622,7 +9622,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commitizen@npm:^4.0.3, commitizen@npm:^4.3.0":
+"commitizen@npm:^4.0.3":
   version: 4.3.0
   resolution: "commitizen@npm:4.3.0"
   dependencies:
@@ -19471,7 +19471,6 @@ __metadata:
     "@semantic-release/release-notes-generator": "npm:^14.0.1"
     "@types/jest": "npm:^29.5.12"
     "@types/node": "npm:^20.14.11"
-    commitizen: "npm:^4.3.0"
     conventional-changelog-conventionalcommits: "npm:^8.0.0"
     cz-conventional-changelog: "npm:^3.3.0"
     dotenv: "npm:^16.4.5"
