@@ -282,16 +282,16 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Download plugin artifact
         uses: actions/download-artifact@v4
         with:
           name: playnite-web-extension
           path: '_packaged'
       - run: ls -aR _packaged
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
