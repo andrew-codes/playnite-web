@@ -1,4 +1,4 @@
-if [ "$PUBLISH" == "true" ]; then
+if [ "$PUBLISH" = "true" ]; then
   exit 0
 fi
 
