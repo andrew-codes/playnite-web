@@ -6,7 +6,7 @@
     "clean": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf vite.config.ts.* server.production.js .dist _packaged .test-runs build",
+        "command": "yarn rimraf server.production.js .dist _packaged .test-runs build",
         "cwd": "{projectRoot}"
       }
     },
