@@ -1,5 +1,5 @@
 const config = {
-  dryRun: true,
+  dryRun: false,
   branches: ['main', 'next'],
   plugins: [
     [
