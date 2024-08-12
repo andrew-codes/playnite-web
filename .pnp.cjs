@@ -80,7 +80,6 @@ const RAW_RUNTIME_STATE =
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.5.1"],\
           ["prettier", "npm:3.3.3"],\
           ["semantic-release", "npm:24.0.0"],\
-          ["stream-buffers", "npm:3.0.3"],\
           ["ts-jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.2.3"],\
           ["tslib", "npm:2.6.3"],\
           ["typescript", "patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>::version=5.5.3&hash=379a07"],\
@@ -25210,7 +25209,6 @@ const RAW_RUNTIME_STATE =
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.5.1"],\
           ["prettier", "npm:3.3.3"],\
           ["semantic-release", "npm:24.0.0"],\
-          ["stream-buffers", "npm:3.0.3"],\
           ["ts-jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.2.3"],\
           ["tslib", "npm:2.6.3"],\
           ["typescript", "patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>::version=5.5.3&hash=379a07"],\
@@ -28402,15 +28400,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/statuses-npm-2.0.1-81d2b97fee-34378b207a.zip/node_modules/statuses/",\
         "packageDependencies": [\
           ["statuses", "npm:2.0.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["stream-buffers", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/cache/stream-buffers-npm-3.0.3-17fb3cdc45-d052e6344f.zip/node_modules/stream-buffers/",\
-        "packageDependencies": [\
-          ["stream-buffers", "npm:3.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\

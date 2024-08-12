@@ -1,5 +1,5 @@
 import semanticRelease from 'semantic-release'
-import { WritableStreamBuffer } from 'stream-buffers'
+import stream from 'stream'
 
 run()
 
@@ -42,8 +42,16 @@ async function run() {
     ],
   }
 
-  const stdoutBuffer = new WritableStreamBuffer()
-  const stderrBuffer = new WritableStreamBuffer()
+  const stdoutBuffer = new stream.Writable({
+    write: (chunk, encoding, next) => {
+      next()
+    },
+  })
+  const stderrBuffer = new stream.Writable({
+    write: (chunk, encoding, next) => {
+      next()
+    },
+  })
 
   try {
     const result = await semanticRelease(config, {
