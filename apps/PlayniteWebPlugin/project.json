@@ -35,7 +35,7 @@
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "ls ./playnite-web/_packaged/playnite-web-extension && gh release upload $VERSION ./playnite-web/_packaged/playnite-web-extension/*.*"
+        "command": "ls -a ./home/runner/work/playnite-web/playnite-web/_packaged && gh release upload $VERSION /home/runner/work/playnite-web/playnite-web/_packaged/playnite-web-extension/*.*"
       }
     },
     "version": {
