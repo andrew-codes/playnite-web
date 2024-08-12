@@ -1,7 +1,7 @@
 const exclude = process.env.EXCLUDE ? `--exclude='${process.env.EXCLUDE}'` : ''
 
 const config = {
-  dryRun: false,
+  dryRun: process.env.INCLUDE_GH_RELEASE !== 'true',
   branches: ['main', 'next'],
   plugins: [
     [
