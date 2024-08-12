@@ -217,6 +217,52 @@ jobs:
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
 
+  package_windows:
+    name: Package Windows projects
+    runs-on: windows-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      - name: Download Playnite Toolbox
+        run: |-
+          mkdir -p .tools/Playnite && curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
+      - name: Install jq
+        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+      - name: Read Node version
+        run: echo "value=$(./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: node_version
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Read Yarn version
+        run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: yarn_version
+      - name: Enable yarn
+        run: corepack enable
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
+      - name: Install deps
+        run: yarn
+      - name: Get next version
+        run: yarn node nextVersion.js >> $GITHUB_OUTPUT
+        shell: bash
+        id: nextVersion
+      - name: Run Version
+        run: yarn nx run-many --target=version --exclude='*,!tag:windows'
+        env:
+          NODE_ENV: production
+          VERSION: '${{ steps.nextVersion.outputs.value }}'
+      - name: Package projects
+        run: yarn nx run-many --target=publish --exclude='*,!tag:windows'
+        env:
+          NODE_ENV: production
+          VERSION: '${{ steps.nextVersion.outputs.value }}'
+
   publish_release:
     name: Publish release
     needs:
@@ -225,6 +271,7 @@ jobs:
       - component_tests_linux
       - visual_component_tests_linux
       - e2e_tests_linux
+      - package_windows
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
@@ -282,55 +329,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXCLUDE: '*,!tag:linux'
           INCLUDE_GH_RELEASE: 'true'
-
-  publish_windows_package:
-    name: Package Windows projects
-    runs-on: windows-latest
-    needs:
-      - publish_release
-    permissions:
-      packages: write
-      contents: write
-      issues: write
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
-      - name: Download Playnite Toolbox
-        run: |-
-          mkdir -p .tools/Playnite && curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
-      - name: Install jq
-        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
-      - name: Read Node version
-        run: echo "value=$(./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g')" >> $GITHUB_OUTPUT
-        shell: bash
-        id: node_version
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '${{ steps.node_version.outputs.value }}'
-      - name: Read Yarn version
-        run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
-        shell: bash
-        id: yarn_version
-      - name: Enable yarn
-        run: corepack enable
-      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
-      - name: Install deps
-        run: yarn
-      - name: Run Version
-        run: yarn nx run-many --target=version --exclude='*,!tag:windows'
-        env:
-          NODE_ENV: production
-      - name: Package projects
-        run: yarn nx run-many --target=package --exclude='*,!tag:windows'
-        env:
-          NODE_ENV: production
-      - name: Semantic Release
-        run: yarn dlx semantic-release
-        env:
-          NODE_ENV: production
-          DEBUG: 'playnite-web/*'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXCLUDE: '*,!tag:windows'
