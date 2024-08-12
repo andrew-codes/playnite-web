@@ -35,8 +35,7 @@
     "publish": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "gh release upload $VERSION _packaged/*.pext",
-        "cwd": "{projectRoot}"
+        "command": "gh release upload $VERSION '_packaged/**/*.pext'"
       }
     },
     "version": {
