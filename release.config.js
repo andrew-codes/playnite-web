@@ -1,5 +1,3 @@
-const path = require('path')
-
 const config = {
   dryRun: false,
   branches: ['main', 'next'],
@@ -58,12 +56,6 @@ const config = {
           'yarn cross-env VERSION=${nextRelease.version} yarn nx run-many --target=version --all',
         publishCmd:
           "yarn cross-env VERSION=${nextRelease.version} yarn nx run-many --target=publish  --exclude '*,!tag:linux'",
-      },
-    ],
-    [
-      '@semantic-release/changelog',
-      {
-        changelogFile: 'CHANGELOG.md',
       },
     ],
     [

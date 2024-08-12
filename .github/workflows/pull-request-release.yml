@@ -190,7 +190,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      PUBLISH: true
+      PUBLISH: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
