@@ -285,7 +285,9 @@ jobs:
       - name: Download plugin artifact
         uses: actions/download-artifact@v4
         with:
+          name: playnite-web-extension
           path: '_packaged'
+      - run: ls -aR _packaged
       - name: Checkout
         uses: actions/checkout@v4
         with:
