@@ -249,7 +249,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Get next version
-        run: yarn node --require esbuild-register nextVersion.js >> $GITHUB_OUTPUT
+        run: yarn node --require esbuild-register nextVersion.ts >> $GITHUB_OUTPUT
         shell: bash
         id: nextVersion
       - name: Run Version
