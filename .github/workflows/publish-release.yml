@@ -126,7 +126,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      PUBLISH: true
+      PUBLISH: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -274,7 +274,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      PUBLISH: true
+      PUBLISH: 'true'
     permissions:
       contents: write
       issues: write
@@ -324,7 +324,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY}}
           username: ${{ env.OWNER }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ steps.generate_token.outputs.token }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -332,8 +332,6 @@ jobs:
       - name: Semantic Release
         run: yarn dlx semantic-release
         env:
-          PUBLISH: true
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
           PLATFORM: linux/amd64,linux/arm64
