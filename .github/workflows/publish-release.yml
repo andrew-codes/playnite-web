@@ -290,6 +290,9 @@ jobs:
       - publish_release
     permissions:
       packages: write
+      contents: write
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - name: Add msbuild to PATH
