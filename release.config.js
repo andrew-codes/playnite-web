@@ -1,3 +1,5 @@
+const path = require('path')
+
 const config = {
   dryRun: false,
   branches: ['main', 'next'],
@@ -71,7 +73,17 @@ const config = {
         message: 'chore(release): update HASS add-on version. [skip ci]',
       },
     ],
-    '@semantic-release/github',
+    [
+      '@semantic-release/github',
+      {
+        assets: [
+          {
+            path: path.join('apps', 'PlayniteWebPlugin', '_packaged', '*.pext'),
+            label: 'Playnite Web Plugin',
+          },
+        ],
+      },
+    ],
   ],
 }
 

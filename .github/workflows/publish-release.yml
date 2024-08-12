@@ -233,7 +233,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: 'Generate token'
         id: generate_token
@@ -246,17 +246,32 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ steps.generate_token.outputs.token }}
-      - name: Extract node version from package.json
-        uses: sergeysova/jq-action@v2
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      - name: Download Playnite Toolbox
+        run: |-
+          mkdir -p .tools/Playnite && curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
+      - name: Install jq
+        run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
+      - name: Read Node version
+        run: echo "value=$(./jq.exe -r .engines.node package.json | sed -e 's/>=//g' | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
         id: node_version
+      - name: Use Node.js
+        uses: actions/setup-node@v4
         with:
-          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Read Yarn version
+        run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
+        shell: bash
+        id: yarn_version
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '${{ steps.node_version.outputs.value }}'
       - name: Use Yarn
         run: corepack enable
+      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
       - name: Semantic Release
