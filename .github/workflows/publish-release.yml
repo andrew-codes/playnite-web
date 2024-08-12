@@ -250,7 +250,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Get next version
-        run: echo "$(yarn node nextVersion.js)" >> $GITHUB_OUTPUT
+        run: echo "value=$(yarn node nextVersion.js)" >> $GITHUB_OUTPUT
         shell: bash
         id: nextVersion
       - name: Run Version
