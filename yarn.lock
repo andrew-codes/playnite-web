@@ -11295,6 +11295,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esbuild-register@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "esbuild-register@npm:3.6.0"
+  dependencies:
+    debug: "npm:^4.3.4"
+  peerDependencies:
+    esbuild: ">=0.12 <1"
+  checksum: 10c0/77193b7ca32ba9f81b35ddf3d3d0138efb0b1429d71b39480cfee932e1189dd2e492bd32bf04a4d0bc3adfbc7ec7381ceb5ffd06efe35f3e70904f1f686566d5
+  languageName: node
+  linkType: hard
+
 "esbuild@npm:0.17.6":
   version: 0.17.6
   resolution: "esbuild@npm:0.17.6"
@@ -19465,6 +19476,8 @@ __metadata:
     cross-env: "npm:^7.0.3"
     cz-conventional-changelog: "npm:^3.3.0"
     dotenv: "npm:^16.4.5"
+    esbuild: "npm:^0.23.0"
+    esbuild-register: "npm:^3.6.0"
     glob: "npm:^10.4.5"
     husky: "npm:^9.1.4"
     jest: "npm:^29.7.0"
