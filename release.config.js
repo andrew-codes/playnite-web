@@ -71,7 +71,7 @@ const config = {
       {
         assets: [
           {
-            path: '_packaged/*.pext',
+            path: '_packaged/**/*.pext',
             label: 'Playnite Web Plugin',
           },
         ],
