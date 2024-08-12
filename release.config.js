@@ -1,7 +1,7 @@
 const exclude = process.env.EXCLUDE ? `--exclude='${process.env.EXCLUDE}'` : ''
 
 const config = {
-  dryRun: process.env.INCLUDE_GH_RELEASE !== 'true',
+  dryRun: false,
   branches: ['main', 'next'],
   plugins: [
     [
@@ -58,21 +58,18 @@ const config = {
         publishCmd: `yarn cross-env VERSION='\${nextRelease.version}' PUBLISH='true' yarn nx run-many --target=publish ${exclude}`,
       },
     ],
+    [
+      '@semantic-release/github',
+      {
+        assets: [
+          {
+            path: '_packaged/**/*.*',
+            label: 'Playnite Web Plugin',
+          },
+        ],
+      },
+    ],
   ],
-}
-
-if (process.env.INCLUDE_GH_RELEASE === 'true') {
-  config.plugins.push([
-    '@semantic-release/github',
-    {
-      assets: [
-        {
-          path: '_packaged/**/*.*',
-          label: 'Playnite Web Plugin',
-        },
-      ],
-    },
-  ])
 }
 
 module.exports = config
