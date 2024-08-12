@@ -235,11 +235,17 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
+      - name: 'Generate token'
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.RELEASE_BOT_ID }}
+          private_key: ${{ secrets.RELEASE_BOT_SECRET }}
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          token: ${{ steps.generate_token.outputs.token }}
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
@@ -260,4 +266,4 @@ jobs:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
           PLATFORM: linux/amd64,linux/arm64
-          GITHUB_TOKEN: ${{ secrets.CI_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
