@@ -19472,6 +19472,7 @@ __metadata:
     nx: "npm:^19.5.1"
     prettier: "npm:^3.3.3"
     semantic-release: "npm:^24.0.0"
+    stream-buffers: "npm:^3.0.3"
     ts-jest: "npm:^29.2.3"
     tslib: "npm:^2.6.3"
     typescript: "npm:^5.5.3"
@@ -22061,6 +22062,13 @@ __metadata:
   version: 1.5.0
   resolution: "statuses@npm:1.5.0"
   checksum: 10c0/e433900956357b3efd79b1c547da4d291799ac836960c016d10a98f6a810b1b5c0dcc13b5a7aa609a58239b5190e1ea176ad9221c2157d2fd1c747393e6b2940
+  languageName: node
+  linkType: hard
+
+"stream-buffers@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "stream-buffers@npm:3.0.3"
+  checksum: 10c0/d052e6344fba340b27dfbe8d6568f600b7f81fdc57b2659e82c8d58a3ef855a4852c56736b1078a511a7f4458db96ee89b11c42c96d116b9073a99deb29a6f05
   languageName: node
   linkType: hard
 
