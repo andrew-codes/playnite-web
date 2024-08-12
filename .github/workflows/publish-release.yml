@@ -239,6 +239,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
@@ -259,3 +260,4 @@ jobs:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
           PLATFORM: linux/amd64,linux/arm64
+          GITHUB_TOKEN: ${{ secrets.CI_GITHUB_TOKEN }}
