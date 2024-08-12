@@ -1,9 +1,9 @@
-import semanticRelease from 'semantic-release'
-import stream from 'stream'
+const stream = require('stream')
 
 run()
 
 async function run() {
+  const { default: semanticRelease } = await import('semantic-release')
   const config = {
     dryRun: true,
     branches: ['main', 'next'],
@@ -65,9 +65,11 @@ async function run() {
       const { nextRelease } = result
       console.log(nextRelease.version)
     } else {
-      process.exit(`No result`)
+      console.log('No result')
+      process.exit(1)
     }
   } catch (err) {
-    process.exit(`The automated release failed with ${err}`)
+    console.error(err)
+    process.exit(1)
   }
 }
