@@ -276,6 +276,7 @@ jobs:
       OWNER: andrew-codes
       PUBLISH: 'true'
     permissions:
+      packages: write
       contents: write
       issues: write
       pull-requests: write
