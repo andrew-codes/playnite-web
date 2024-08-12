@@ -69,7 +69,11 @@ const config = {
     [
       '@semantic-release/git',
       {
-        assets: ['hass-*/config.js', 'CHANGELOG.md'],
+        assets: [
+          path.join('hass-playnite-web', 'config.js'),
+          'CHANGELOG.md',
+          path.join('apps', 'PlayniteWebPlugin', 'src', 'extension.yaml'),
+        ],
         message: 'chore(release): update HASS add-on version. [skip ci]',
       },
     ],
