@@ -176,11 +176,6 @@ jobs:
         with:
           name: e2e-cypress-screenshots
           path: apps/playnite-web/cypress/screenshots
-      - name: Prune PR images
-        run: yarn nx run-many --target=package/prune --verbose
-        env:
-          DEBUG: 'playnite-web/*'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   package_linux:
     name: Package non-Windows projects
