@@ -12,7 +12,6 @@ async function run() {
   }
 
   let tags = await getDockerTags(VERSION ?? null, GITHUB_REF)
-  const platforms = PLATFORM.split(',')
 
   await Promise.all(
     tags.flatMap(
