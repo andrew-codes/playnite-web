@@ -20,6 +20,10 @@ async function run() {
     return
   }
 
+  console.log(
+    `Removing package ${packageToRemove.id} with tags ${packageToRemove.metadata.container.tags.join(', ')}`,
+  )
+
   await fetch(
     `https://api.github.com/user/packages/container/${OWNER}/playnite-web-app/versions/${packageToRemove.id}`,
     {

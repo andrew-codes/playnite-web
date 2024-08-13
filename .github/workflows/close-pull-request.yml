@@ -41,5 +41,5 @@ jobs:
         run: yarn nx run-many --target=package/prune --verbose
         env:
           DEBUG: 'playnite-web/*'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PKG_DELETE_TOKEN }}
           PR_NUMBER: ${{ github.event.number }}
