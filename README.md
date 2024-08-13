@@ -1,6 +1,6 @@
 # Playnite-Web
 
-[![Build Status](https://github.com/andrew-codes/playnite-web/actions/workflows/main.yml/badge.svg)](https://github.com/andrew-codes/playnite-web/actions/workflows/main.yml)
+[![Build Status](https://github.com/andrew-codes/playnite-web/actions/workflows/verify-commits.yml/badge.svg)](https://github.com/andrew-codes/playnite-web/actions/workflows/verify-commits.yml)
 [![Latest Release](https://img.shields.io/github/v/release/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web/releases/latest)
 [![License](https://img.shields.io/github/license/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web?tab=AGPL-3.0-1-ov-file#readme)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/andrew-codes)](https://github.com/sponsors/andrew-codes)
@@ -26,6 +26,7 @@ Playnite-web offers:
       - [Database](#database)
       - [Playnite-Web Plugin](#playnite-web-plugin)
       - [playnite-web-app](#playnite-web-app)
+        - [Data Volumes](#data-volumes)
         - [Environment Variables](#environment-variables)
     - [Post Deployment Steps](#post-deployment-steps)
   - [Contributing](#contributing)
@@ -79,6 +80,10 @@ Recommended to use docker image [`mongo:focal`](https://hub.docker.com/_/mongo/)
 
 Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkgs/container/playnite-web-app) from the repo. Ensure you are using the same release version as the Plugin (above). Example image: `ghcr.io/andrew-codes/playnite-web-app:1.0.0`
 
+##### Data Volumes
+
+Ensure you mount a volume to persist game assets, such as cover-art, backgrounds, and icons. The mount location within the running container should be `/opt/playnite-web-app/public/assets/asset-by-id`.
+
 ##### Environment Variables
 
 | Environment Variable | Value                                            | Required? | Notes                                                             |
@@ -102,7 +107,7 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 
 ### Post Deployment Steps
 
-1. Open Playnite and select and "Sync Library" from Playnite Web's menu setting. This is only required once.
+1. Open Playnite and select and "Sync Library" from Playnite Web's menu setting. This is generally only required once. Future game updates in Playnite will automatically sync to Playnite-Web.
    > ![Sync Library menu setting](docs/assets/images/sync-library-menu-setting.png)
 1. Navigate to the web app; `http://$PLAYNITE_WEB_APP_IP:$PORT`
 
