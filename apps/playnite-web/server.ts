@@ -28,7 +28,10 @@ async function run() {
     debug('Starting Playnite Web game-db-updater...')
     gameDbUpdater(
       {
-        assetSaveDirectoryPath: path.join(process.cwd(), 'public/asset-by-id'),
+        assetSaveDirectoryPath: path.join(
+          process.cwd(),
+          'public/assets/asset-by-id',
+        ),
       },
       mqttClient,
     )
