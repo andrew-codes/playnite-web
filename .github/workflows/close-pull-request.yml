@@ -1,0 +1,45 @@
+name: 'Closed Pull Request'
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+      - release-*
+      - next
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  prune_images:
+    name: Prune pull request images
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      OWNER: andrew-codes
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install deps
+        run: yarn
+      - name: Prune PR images
+        run: yarn nx run-many --target=package/prune --verbose
+        env:
+          DEBUG: 'playnite-web/*'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}

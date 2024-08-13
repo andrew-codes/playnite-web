@@ -1,26 +1,33 @@
-import { getDockerTags } from 'versioning'
-
 async function run() {
-  const { REGISTRY, OWNER, GITHUB_REF, GITHUB_TOKEN } = process.env
+  const { REGISTRY, OWNER, PR_NUMBER, GITHUB_TOKEN } = process.env
 
-  if (!REGISTRY || !OWNER || !GITHUB_REF || !GITHUB_TOKEN) {
+  if (!REGISTRY || !OWNER || !PR_NUMBER || !GITHUB_TOKEN) {
     throw new Error('Missing environment variables')
   }
 
-  let tags = await getDockerTags(null, GITHUB_REF)
+  const packages = await (
+    await fetch(
+      `https://api.github.com/users/${OWNER}/packages/container/playnite-web-app/versions?per_page=1000`,
+      { method: 'GET', headers: { Authorization: `Bearer ${GITHUB_TOKEN}` } },
+    )
+  ).json()
 
-  await Promise.all(
-    tags.map(async (tag) =>
-      fetch(
-        `https://api.github.com/user/packages/container/${OWNER}/playnite-web-app%2F${tag}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${GITHUB_TOKEN}`,
-          },
-        },
-      ),
-    ),
+  const packageToRemove = packages.find((pkg) =>
+    pkg.metadata.container.tags.includes(PR_NUMBER),
+  )
+
+  if (!packageToRemove) {
+    return
+  }
+
+  await fetch(
+    `https://api.github.com/user/packages/container/${OWNER}/playnite-web-app/versions/${packageToRemove.id}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+      },
+    },
   )
 }
 
