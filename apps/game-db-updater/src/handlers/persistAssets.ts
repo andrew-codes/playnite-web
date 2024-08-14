@@ -56,7 +56,7 @@ const create =
       }
 
       const client = await getDbClient()
-      client
+      await client
         .db('games')
         .collection('assets')
         .updateOne(

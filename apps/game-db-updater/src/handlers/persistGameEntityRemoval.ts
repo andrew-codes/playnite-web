@@ -29,7 +29,10 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
     const collectionName = entityType[0].toLowerCase() + entityType.slice(1)
 
     const client = await getDbClient()
-    client.db('games').collection(collectionName).deleteOne({ id: entityId })
+    await client
+      .db('games')
+      .collection(collectionName)
+      .deleteOne({ id: entityId })
   } catch (e) {
     console.error(e)
   }
