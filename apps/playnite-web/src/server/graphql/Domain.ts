@@ -7,8 +7,8 @@ import createFeatureApi from './modules/feature/api'
 import createGameApi from './modules/game/api'
 import createGameReleaseApi from './modules/gameRelease/api'
 import createPlatformApi from './modules/platform/api'
-import createUserApi from './modules/user/api'
 import createTagApi from './modules/tag/api'
+import createUserApi from './modules/user/api'
 import { getUserById, getUserByLogin } from './modules/user/api/getUser'
 
 interface DomainApi {
@@ -43,14 +43,8 @@ function autoBind<TFunctionMap extends Record<string, Function>>(
 }
 
 class Domain implements DomainApi {
-  private dbConnected = false
-
   public async db() {
-    const client = getDbClient()
-    if (!this.dbConnected) {
-      await client.connect()
-      this.dbConnected = true
-    }
+    const client = await getDbClient()
 
     return client.db('games')
   }

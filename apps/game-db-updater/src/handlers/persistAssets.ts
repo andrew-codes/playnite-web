@@ -14,56 +14,60 @@ const topicMatch =
 const create =
   (options: Options): IHandlePublishedTopics =>
   async (topic, payload) => {
-    if (!topicMatch.test(topic)) {
-      return
-    }
+    try {
+      if (!topicMatch.test(topic)) {
+        return
+      }
+      debug(`Received game entity asset for topic ${topic}`)
 
-    debug(`Received game entity asset for topic ${topic}`)
+      const match = topicMatch.exec(topic)
+      if (!match?.groups) {
+        return
+      }
 
-    const match = topicMatch.exec(topic)
-    if (!match?.groups) {
-      return
-    }
+      const { assetId, assetTypeKey, entityType, entityId } = match.groups
+      const filename = `${path.basename(assetId, path.extname(assetId))}.webp`
+      const { default: sharp } = await import('sharp')
 
-    const { assetId, assetTypeKey, entityType, entityId } = match.groups
-    const filename = `${path.basename(assetId, path.extname(assetId))}.webp`
-    const { default: sharp } = await import('sharp')
-
-    const image = sharp(payload)
-    if (assetTypeKey === 'cover') {
-      const metadata = await image.metadata()
-      if (metadata.width && metadata.width > 256) {
+      const image = sharp(payload)
+      if (assetTypeKey === 'cover') {
+        const metadata = await image.metadata()
+        if (metadata.width && metadata.width > 256) {
+          await image
+            .resize(256, 256)
+            .webp()
+            .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
+        }
+      } else {
         await image
-          .resize(256, 256)
           .webp()
           .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
       }
-    } else {
-      await image
-        .webp()
-        .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
-    }
 
-    debug(
-      `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId} and with asset ID ${filename}`,
-    )
-    const relatedId = entityId
-    const assetDoc = {
-      id: filename,
-      relatedId,
-      relatedType: entityType,
-      typeKey: assetTypeKey,
-    }
-
-    const client = await getDbClient()
-    client
-      .db('games')
-      .collection('assets')
-      .updateOne(
-        { relatedId, relatedType: entityType, typeKey: assetTypeKey },
-        { $set: assetDoc },
-        { upsert: true },
+      debug(
+        `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId} and with asset ID ${filename}`,
       )
+      const relatedId = entityId
+      const assetDoc = {
+        id: filename,
+        relatedId,
+        relatedType: entityType,
+        typeKey: assetTypeKey,
+      }
+
+      const client = await getDbClient()
+      client
+        .db('games')
+        .collection('assets')
+        .updateOne(
+          { relatedId, relatedType: entityType, typeKey: assetTypeKey },
+          { $set: assetDoc },
+          { upsert: true },
+        )
+    } catch (error) {
+      debug(`Error processing topic ${topic}`)
+      console.error(error)
+    }
   }
 
 export default create
