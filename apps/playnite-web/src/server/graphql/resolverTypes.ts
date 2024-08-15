@@ -36,8 +36,8 @@ type GameEntity = {
   id: string
   name: string
   description: string
-  cover: string
   releases: string[]
+  playlists: string[]
 }
 
 type GameReleaseEntity = {

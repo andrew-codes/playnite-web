@@ -5,6 +5,5 @@ export const playlists: NonNullable<QueryResolvers['playlists']> = async (
   _arg,
   _ctx,
 ) => {
-  const tags = await _ctx.api.tag.getAll()
-  return tags.filter((tag) => tag.name.startsWith('playlist-')) || []
+  return (await _ctx.api.playlist.getAll()) ?? []
 }
