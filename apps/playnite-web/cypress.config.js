@@ -10,6 +10,8 @@ const config = {
   viewportHeight: 1080,
   e2e: {
     baseUrl: 'http://localhost:3000',
+    video: process.env.CI === 'true',
+    videoCompression: 32,
     setupNodeEvents: (on, config) => {
       const { viewportWidth, viewportHeight } = config
       on('before:browser:launch', (browser, launchOptions) => {
