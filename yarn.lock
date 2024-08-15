@@ -5709,9 +5709,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/dev@npm:^2.10.3":
-  version: 2.10.3
-  resolution: "@remix-run/dev@npm:2.10.3"
+"@remix-run/dev@npm:^2.11.2":
+  version: 2.11.2
+  resolution: "@remix-run/dev@npm:2.11.2"
   dependencies:
     "@babel/core": "npm:^7.21.8"
     "@babel/generator": "npm:^7.21.5"
@@ -5723,9 +5723,9 @@ __metadata:
     "@babel/types": "npm:^7.22.5"
     "@mdx-js/mdx": "npm:^2.3.0"
     "@npmcli/package-json": "npm:^4.0.1"
-    "@remix-run/node": "npm:2.10.3"
-    "@remix-run/router": "npm:1.18.0"
-    "@remix-run/server-runtime": "npm:2.10.3"
+    "@remix-run/node": "npm:2.11.2"
+    "@remix-run/router": "npm:1.19.1"
+    "@remix-run/server-runtime": "npm:2.11.2"
     "@types/mdx": "npm:^2.0.5"
     "@vanilla-extract/integration": "npm:^6.2.0"
     arg: "npm:^5.0.1"
@@ -5767,8 +5767,8 @@ __metadata:
     tsconfig-paths: "npm:^4.0.0"
     ws: "npm:^7.4.5"
   peerDependencies:
-    "@remix-run/react": ^2.10.3
-    "@remix-run/serve": ^2.10.3
+    "@remix-run/react": ^2.11.2
+    "@remix-run/serve": ^2.11.2
     typescript: ^5.1.0
     vite: ^5.1.0
     wrangler: ^3.28.2
@@ -5783,7 +5783,7 @@ __metadata:
       optional: true
   bin:
     remix: dist/cli.js
-  checksum: 10c0/25d1896b822ca6bdd81f40c58ebe807083a92eab11b521444dac74ee21909c14572d7f3957ba9136201ea822b3cb567f8dd0117b28974669db8908527ff7d917
+  checksum: 10c0/58535bb6c0c4998717aeb2ce8f8960f04b60f087f9fa54b325ff4ffc33b14eeebad43478fb2df30b0cb4fac9a8f0881766b20de95a402c96208f8b58a997b1c4
   languageName: node
   linkType: hard
 
@@ -5819,6 +5819,26 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/4028b9d28134ecf109b8b632d4ed291534eb7a542420cc97b46a31eb5e715942f4f71b147f9dc3228bebe70c69ea96e35b3ad5f90f5c79876d038bcabea99302
+  languageName: node
+  linkType: hard
+
+"@remix-run/node@npm:2.11.2":
+  version: 2.11.2
+  resolution: "@remix-run/node@npm:2.11.2"
+  dependencies:
+    "@remix-run/server-runtime": "npm:2.11.2"
+    "@remix-run/web-fetch": "npm:^4.4.2"
+    "@web3-storage/multipart-parser": "npm:^1.0.0"
+    cookie-signature: "npm:^1.1.0"
+    source-map-support: "npm:^0.5.21"
+    stream-slice: "npm:^0.1.2"
+    undici: "npm:^6.11.1"
+  peerDependencies:
+    typescript: ^5.1.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/0531bf278dcb2edd5fe671ac9c0a831c69d3c104b330f708d25dac84bd275eb771388ed23f31382f56cc7154411ace0f5ed22e7f1477384743d05040c925ceb4
   languageName: node
   linkType: hard
 
@@ -5903,6 +5923,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@remix-run/router@npm:1.19.1":
+  version: 1.19.1
+  resolution: "@remix-run/router@npm:1.19.1"
+  checksum: 10c0/9101fc96646e5107b6b0ef248d4c93bd965590c37ac02d35bcc57d1902467db7fc6eeec0a1fb97d0ce5bc96fae58e75239555e44a983239a61badba18e82d3b8
+  languageName: node
+  linkType: hard
+
 "@remix-run/server-runtime@npm:*, @remix-run/server-runtime@npm:2.4.1":
   version: 2.4.1
   resolution: "@remix-run/server-runtime@npm:2.4.1"
@@ -5939,6 +5966,26 @@ __metadata:
     typescript:
       optional: true
   checksum: 10c0/b587e3828d1c588c58fbd59f3c986055356994acda171fc21640f92834462ceb487b7f15d79d2f14c8b9700a6c245f0deb7b7e458ae90e7e8f734a452e8fbea1
+  languageName: node
+  linkType: hard
+
+"@remix-run/server-runtime@npm:2.11.2":
+  version: 2.11.2
+  resolution: "@remix-run/server-runtime@npm:2.11.2"
+  dependencies:
+    "@remix-run/router": "npm:1.19.1"
+    "@types/cookie": "npm:^0.6.0"
+    "@web3-storage/multipart-parser": "npm:^1.0.0"
+    cookie: "npm:^0.6.0"
+    set-cookie-parser: "npm:^2.4.8"
+    source-map: "npm:^0.7.3"
+    turbo-stream: "npm:2.3.0"
+  peerDependencies:
+    typescript: ^5.1.0
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/3091dfa44bbceae3491450a3d3d767055626e49a402299f5a420e51ffe61f185e557324f1881b7799a6cc5644b50f8c8ab1b38395b3c9aaf483a2020bfaab598
   languageName: node
   linkType: hard
 
@@ -19316,7 +19363,7 @@ __metadata:
     "@mui/utils": "npm:^5.16.4"
     "@nx/devkit": "npm:^19.5.1"
     "@reduxjs/toolkit": "npm:^2.2.6"
-    "@remix-run/dev": "npm:^2.10.3"
+    "@remix-run/dev": "npm:^2.11.2"
     "@remix-run/express": "npm:^2.10.3"
     "@remix-run/node": "npm:^2.10.3"
     "@remix-run/react": "npm:^2.10.3"
@@ -23016,6 +23063,13 @@ __metadata:
   version: 2.2.0
   resolution: "turbo-stream@npm:2.2.0"
   checksum: 10c0/894f832ee9f627f9f6eb261afd349d92750c0814bfcfffda170bc93dfe24c836bd4237c891bbfbbca7c3867b1a63fec8c65347e544b4f6732e4b9fb855e31f0d
+  languageName: node
+  linkType: hard
+
+"turbo-stream@npm:2.3.0":
+  version: 2.3.0
+  resolution: "turbo-stream@npm:2.3.0"
+  checksum: 10c0/ba753821b00c3bfebde7263a98b96182f0949131494cfbada3ba981d56cba5394a0b139df84dcbf1685eb32a1d3cb28119ca1a30266a8ffe7b3d9ff51dd5916c
   languageName: node
   linkType: hard
 
