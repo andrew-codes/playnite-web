@@ -5,20 +5,30 @@ import { GameReleaseDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { GameReleaseEntity } from '../../../resolverTypes'
 
-const { groupBy, merge, omit, toLower } = _
+const { omit } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, GameReleaseEntity>(async (ids) => {
-    const releases = await (
+    const results = await (
       await this.db()
     )
       .collection<GameReleaseDbEntity>('game')
       .find({ id: { $in: ids } })
       .toArray()
 
-    return releases.map((gameRelease) =>
-      omit(gameRelease, '_id'),
-    ) as Array<GameReleaseEntity>
+    return results
+      .map((item) => omit(item, '_id'))
+      .sort((a, b) => {
+        const aSort = ids.findIndex((id) => id === a.id)
+        const bSort = ids.findIndex((id) => id === b.id)
+        if (aSort > bSort) {
+          return 1
+        }
+        if (aSort < bSort) {
+          return -1
+        }
+        return 0
+      }) as Array<GameReleaseEntity>
   })
 
   return autoBind(this, {

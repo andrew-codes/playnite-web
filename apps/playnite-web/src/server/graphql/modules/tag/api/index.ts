@@ -1,14 +1,32 @@
-import DataLoader from "dataloader"
-import { WithId } from "mongodb"
-import { TagEntity } from "../../../data/types"
-import { DomainApi, autoBind } from "../../../Domain"
+import DataLoader from 'dataloader'
+import _ from 'lodash'
+import { DomainApi, autoBind } from '../../../Domain'
+import { TagEntity } from '../../../resolverTypes'
+
+const { omit } = _
 
 function create(this: DomainApi) {
-  const loader = new DataLoader<string, WithId<TagEntity>>(async (ids) => {
-    return (await this.db())
+  const loader = new DataLoader<string, TagEntity>(async (ids) => {
+    const results = await (
+      await this.db()
+    )
       .collection<TagEntity>('tag')
       .find({ id: { $in: ids } })
       .toArray()
+
+    return results
+      .map((item) => omit(item, '_id'))
+      .sort((a, b) => {
+        const aSort = ids.findIndex((id) => id === a.id)
+        const bSort = ids.findIndex((id) => id === b.id)
+        if (aSort > bSort) {
+          return 1
+        }
+        if (aSort < bSort) {
+          return -1
+        }
+        return 0
+      }) as Array<TagEntity>
   })
 
   return autoBind(this, {
@@ -16,10 +34,7 @@ function create(this: DomainApi) {
       return loader.load(id)
     },
     async getAll(this: DomainApi) {
-      return (await this.db())
-        .collection<TagEntity>('tag')
-        .find()
-        .toArray()
+      return (await this.db()).collection<TagEntity>('tag').find().toArray()
     },
   })
 }

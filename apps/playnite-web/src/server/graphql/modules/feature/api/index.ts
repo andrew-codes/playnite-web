@@ -8,14 +8,26 @@ const { omit } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, FeatureEntity>(async (ids) => {
-    const items = await (
+    const results = await (
       await this.db()
     )
       .collection<FeatureDbEntity>('gamefeature')
       .find({ id: { $in: ids } })
       .toArray()
 
-    return items.map((item) => omit(item, ['_id'])) as Array<FeatureEntity>
+    return results
+      .map((item) => omit(item, '_id'))
+      .sort((a, b) => {
+        const aSort = ids.findIndex((id) => id === a.id)
+        const bSort = ids.findIndex((id) => id === b.id)
+        if (aSort > bSort) {
+          return 1
+        }
+        if (aSort < bSort) {
+          return -1
+        }
+        return 0
+      }) as Array<FeatureEntity>
   })
 
   return autoBind(this, {
