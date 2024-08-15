@@ -5,7 +5,7 @@ import { GameReleaseDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { GameReleaseEntity } from '../../../resolverTypes'
 
-const { omit } = _
+const { groupBy, merge, omit, toLower } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, GameReleaseEntity>(async (ids) => {
