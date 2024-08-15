@@ -56,7 +56,7 @@ const getDbClient = async (
         },
       })
     }
-    debug('Connecting dtabase client.')
+    debug('Connecting database client.')
     client = await client.connect()
   }
 

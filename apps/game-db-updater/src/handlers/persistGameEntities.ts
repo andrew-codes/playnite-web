@@ -59,7 +59,6 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
             name: entity.name,
             releases: [entityId],
             description: entity.description,
-            cover: entity.cover,
           })
       } else {
         await client

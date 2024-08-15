@@ -131,14 +131,18 @@ export const Game: GameResolvers = {
   },
   releases: async (_parent, _arg, _ctx) => {
     const releases = await Promise.all(
-      _parent.releases.map((releaseId) =>
+      _parent.releases.map(async (releaseId) =>
         _ctx.api.gameRelease.getById(releaseId),
       ),
     )
 
-    return toGameReleases(releases)
+    return toGameReleases(releases).filter(
+      (gameRelease) => gameRelease.platformSource.id !== unknownPlatform.id,
+    )
   },
   cover: async (_parent, _arg, _ctx) => {
-    return _parent.cover ?? null
+    return (
+      (await _ctx.api.asset.getByRelation(_parent.releases[0], 'cover')) ?? null
+    )
   },
 }
