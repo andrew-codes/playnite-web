@@ -32,7 +32,13 @@ type PlatformSourceEntity = {
   name: string
 }
 
-type GameEntity = Array<GameReleaseEntity>
+type GameEntity = {
+  id: string
+  name: string
+  description: string
+  releases: string[]
+  playlists: string[]
+}
 
 type GameReleaseEntity = {
   added: string

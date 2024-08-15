@@ -14,13 +14,6 @@ export const Playlist: PlaylistResolvers = {
     )
   },
   games: async (_parent, _arg, _ctx) => {
-    const allGames = await _ctx.api.game.getAll()
-    return allGames.filter((game) => {
-      return game.some((release) => {
-        return release.tags?.some((tag) => {
-          return tag.name === _parent.name
-        })
-      })
-    })
+    return await _ctx.api.game.getBy({ playlists: _parent.id })
   },
 }

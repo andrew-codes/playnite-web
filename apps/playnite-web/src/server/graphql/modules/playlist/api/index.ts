@@ -1,21 +1,26 @@
 import DataLoader from 'dataloader'
 import _ from 'lodash'
-import { DomainApi, autoBind } from '../../../Domain'
+import { TagDbEntity } from '../../../data/types'
+import { autoBind, type DomainApi } from '../../../Domain'
 import { TagEntity } from '../../../resolverTypes'
 
-const { omit } = _
+const { merge, omit } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, TagEntity>(async (ids) => {
     const results = await (
       await this.db()
     )
-      .collection<TagEntity>('tag')
+      .collection<TagDbEntity>('tag')
       .find({ id: { $in: ids } })
       .toArray()
 
     return results
-      .map((item) => omit(item, '_id'))
+      .map((item) =>
+        merge({}, omit(item, '_id'), {
+          name: item.name.replace(/playlist-/i, ''),
+        }),
+      )
       .sort((a, b) => {
         const aSort = ids.findIndex((id) => id === a.id)
         const bSort = ids.findIndex((id) => id === b.id)
@@ -34,7 +39,18 @@ function create(this: DomainApi) {
       return loader.load(id)
     },
     async getAll(this: DomainApi) {
-      return (await this.db()).collection<TagEntity>('tag').find().toArray()
+      const tags = await (
+        await this.db()
+      )
+        .collection<TagEntity>('tag')
+        .find({ name: { $regex: /^playlist-/i } })
+        .toArray()
+
+      return tags.map((item) =>
+        merge({}, omit(item, '_id'), {
+          name: item.name.replace(/playlist-/i, ''),
+        }),
+      )
     },
   })
 }
