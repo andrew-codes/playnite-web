@@ -1,6 +1,8 @@
 import createDebugger from 'debug'
 import { MongoClient } from 'mongodb'
 
+const debug = createDebugger('playnite-web/graphql/mongo')
+
 let client: MongoClient
 
 type DbConnectionString = {
@@ -32,18 +34,17 @@ const computeUrl = (
   return `mongodb://$${host}:${port}`
 }
 
-const getDbClient = (
+const getDbClient = async (
   connectionOptions?: DbConnectionOptions | DbConnectionString,
-): MongoClient => {
-  const debug = createDebugger('playnite-web/app/MongoDbClient')
-
+): Promise<MongoClient> => {
   if (!client) {
     const url = computeUrl(connectionOptions)
     const username = connectionOptions?.username ?? process.env.DB_USERNAME
     const password = connectionOptions?.password ?? process.env.DB_PASSWORD
 
-    debug(`Existing DB client not found; creating one with the provided URL`)
-    debug(url)
+    debug(
+      `Existing DB client not found; creating one with the provided URL: ${url}`,
+    )
     if (!username && !password) {
       debug(`No username or password provided; connecting without auth`)
       client = new MongoClient(url)
@@ -55,6 +56,8 @@ const getDbClient = (
         },
       })
     }
+    debug('Connecting dtabase client.')
+    client = await client.connect()
   }
 
   return client

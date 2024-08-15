@@ -21,18 +21,23 @@ const graphql = (
   const domainApi = new Domain()
   mqttClient.on('message', async (topic, message) => {
     try {
-      debug('Received message on topic: %s', topic)
+      debug(`Received message on topic: ${topic}`)
       if (gameRunStateTopicMatcher.test(topic)) {
         const payload = JSON.parse(message.toString())
         if (!payload.id || !payload.state) {
           debug(
             `Invalid payload received, no gameId or state: ${message.toString()}`,
           )
+
+          return
         }
+
         const gameRelease = await domainApi.gameRelease.getById(payload.id)
 
         if (!gameRelease) {
           debug(`Game release not found for gameId: ${payload.gameId}`)
+
+          return
         }
 
         subscriptionPublisher.publish('gameRunStateChanged', {
@@ -43,7 +48,8 @@ const graphql = (
         })
       }
     } catch (error) {
-      debug(`Error processing message: ${error}`)
+      debug(`Error processing message for topic: ${topic}`)
+      console.error(error)
     }
   })
 
