@@ -10,6 +10,8 @@ const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameEntities',
 )
 
+const isPlaylistTag = /playlist-/i
+
 const topicMatch =
   /^playnite\/.*\/entity\/(?<entityType>[a-z0-9\-]+)\/(?<entityId>[a-z0-9\-]+)$/
 
@@ -59,12 +61,52 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
             name: entity.name,
             releases: [entityId],
             description: entity.description,
+            playlists:
+              entity?.tags
+                ?.filter((tag) => isPlaylistTag.test(tag.name))
+                ?.map((tag) => tag.id) ?? [],
           })
       } else {
         await client
           .db('games')
           .collection<{ releases: string[] }>('consolidated-games')
           .updateOne({ name: entity.name }, { $push: { releases: entityId } })
+        const cursor = await client
+          .db('games')
+          .collection<{ name: string; releases: string[] }>(
+            'consolidated-games',
+          )
+          .aggregate([
+            {
+              $match: { name: entity.name },
+            },
+            {
+              $project: {
+                playlists: {
+                  $concatArrays:
+                    entity?.tags
+                      ?.filter((tag) => isPlaylistTag.test(tag.name))
+                      ?.map((tag) => tag.id) ?? [],
+                },
+              },
+            },
+          ])
+
+        for await (const doc of cursor) {
+          await client
+            .db('games')
+            .collection<{ name: string; playlists: Array<string> }>(
+              'consolidated-games',
+            )
+            .updateOne(
+              { name: entity.name },
+              {
+                $set: {
+                  playlists: doc.playlists ?? [],
+                },
+              },
+            )
+        }
       }
     }
   } catch (e) {
