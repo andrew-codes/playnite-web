@@ -1,5 +1,4 @@
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
-import { unknownPlatform } from '../../api'
 
 const exactMatch = /(".*")|('.*')/
 
@@ -17,21 +16,15 @@ export const games: NonNullable<QueryResolvers['games']> = async (
       const filters: Array<boolean> = []
       if (_arg.filter.name) {
         if (exactMatch.test(_arg.filter.name)) {
-          filters.push(game[0].name === _arg.filter.name.slice(1, -1))
+          filters.push(game.name === _arg.filter.name.slice(1, -1))
         } else {
           filters.push(
-            game[0].name.toLowerCase().includes(_arg.filter.name.toLowerCase()),
+            game.name.toLowerCase().includes(_arg.filter.name.toLowerCase()),
           )
         }
       }
 
       return filters.every((filter) => filter)
     })
-    .map((gameReleases) =>
-      gameReleases.filter(
-        (release) => release.platformSource.id !== unknownPlatform.id,
-      ),
-    )
-    .filter((releases) => releases.length > 0)
-    .sort((a, b) => a[0].name.localeCompare(b[0].name))
+    .sort((a, b) => a.name.localeCompare(b.name))
 }
