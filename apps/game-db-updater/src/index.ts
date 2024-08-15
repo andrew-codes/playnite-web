@@ -20,10 +20,12 @@ const run = async (
 
   mqttClient.on('message', async (topic, payload) => {
     try {
+      debug(`Processing topic ${topic}`)
       await Promise.all(
         handlers(options).map((handler) => handler(topic, payload)),
       )
     } catch (error) {
+      debug(`Error processing topic ${topic}`)
       console.error(error)
     }
   })

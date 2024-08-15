@@ -17,14 +17,15 @@ type DbConnectionOptions = {
 const getDbClient = async (
   connectionOptions?: DbConnectionOptions | DbConnectionString,
 ): Promise<MongoClient> => {
-  const debug = createDebugger('playnite-web/game-db-updater/mqttClient')
+  const debug = createDebugger('playnite-web/game-db-updater/dbClient')
 
   const options = connectionOptions ?? {}
 
   if (!client) {
+    debug('Creating db client.')
     const url = 'url' in options ? options.url : process.env.DB_URL
     const host =
-      'host' in options ? options.host : process.env.DB_HOST ?? 'localhost'
+      'host' in options ? options.host : (process.env.DB_HOST ?? 'localhost')
     const port =
       'port' in options
         ? options.port
@@ -54,10 +55,11 @@ const getDbClient = async (
         })
       }
     }
+    client = await client.connect()
   }
-  await client.connect()
 
   debug('Returning mongoDB client')
+
   return client
 }
 
