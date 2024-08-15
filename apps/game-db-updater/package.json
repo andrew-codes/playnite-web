@@ -8,7 +8,8 @@
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
     "mongodb": "6.8.0",
-    "sharp": "0.33.4"
+    "sharp": "0.33.4",
+    "uuid": "^10.0.0"
   },
   "peerDependencies": {
     "mqtt-client": "workspace:*"

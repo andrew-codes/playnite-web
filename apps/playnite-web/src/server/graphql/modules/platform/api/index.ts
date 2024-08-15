@@ -7,6 +7,11 @@ import { PlatformEntity } from '../../../resolverTypes'
 
 const { omit } = _
 
+const unknownPlatform = {
+  id: '00000000-0000-0000-0000-000000000000',
+  name: 'Unknown',
+}
+
 function create(this: DomainApi) {
   const loader = new DataLoader<string, PlatformEntity>(async (ids) => {
     const items = await (
@@ -50,3 +55,4 @@ function create(this: DomainApi) {
 }
 
 export default create
+export { unknownPlatform }
