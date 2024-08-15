@@ -45,7 +45,7 @@ const create =
       }
 
       debug(
-        `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId} and with asset ID ${filename}`,
+        `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId}. Original filename: ${path.basename(assetId)}. New asset ID ${filename}`,
       )
       const relatedId = entityId
       const assetDoc = {

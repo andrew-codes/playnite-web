@@ -36,7 +36,7 @@
     "isbot": "^4.4.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "mongodb": "^6.8.0",
+    "mongodb": "6.8.0",
     "mqtt-client": "workspace:*",
     "playnite-web-game-db-updater": "workspace:*",
     "react": "^18.3.1",
