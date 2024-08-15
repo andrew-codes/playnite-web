@@ -1,4 +1,5 @@
 import DataLoader from 'dataloader'
+import createDebugger from 'debug'
 import _ from 'lodash'
 import { fromString } from '../../../../oid'
 import { GameReleaseDbEntity } from '../../../data/types'
@@ -10,6 +11,7 @@ import {
 } from '../../../resolverTypes'
 
 const { groupBy, merge, omit, toLower } = _
+const debug = createDebugger('playnite-web/graphql/game/api')
 
 const platformDisplays = {
   pc: { matcher: /PC/ },
@@ -36,6 +38,14 @@ const sortOrder = [
 const getPlatforms = (
   gameRelease: GameReleaseDbEntity | GameReleaseEntity,
 ): Array<PlatformSourceEntity> => {
+  if (!gameRelease.source?.name) {
+    debug(
+      `Expecting game release (${gameRelease.name}) to have a source name, but it did not have one. Please check this game release in Playnite and ensure it has a source name.`,
+      gameRelease,
+    )
+
+    return []
+  }
   switch (gameRelease.source.name) {
     case 'PlayStation':
       return gameRelease.platforms.filter((platform) =>
