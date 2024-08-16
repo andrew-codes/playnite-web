@@ -12,7 +12,12 @@ export const GameRelease: GameReleaseResolvers = {
     return _ctx.api.gameRelease.getByName(_parent.name)
   },
   completionStatus: async (_parent, _arg, _ctx) => {
-    return _ctx.api.completionStatus.getById(_parent.completionStatusId)
+    return (
+      _parent.completionStatus ?? {
+        id: '00000000-0000-0000-0000-000000000000',
+        name: 'Unknown',
+      }
+    )
   },
   releaseDate: async (_parent, _arg, _ctx) => {
     return _parent.releaseDate
