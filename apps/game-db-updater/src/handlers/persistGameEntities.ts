@@ -4,7 +4,7 @@ import { v6 as guid } from 'uuid'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 import { getDbClient } from '../dbClient'
 
-const { isEmpty } = _
+const { isEmpty, uniq } = _
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameEntities',
@@ -53,60 +53,79 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
 
       if (isEmpty(consolidatedGames)) {
         const id = guid()
+        await client.db('games').collection('consolidated-games').insertOne({
+          id,
+          name: entity.name,
+          releases: [],
+          description: entity.description,
+          playlists: [],
+        })
+      }
+
+      const releaseCursor = await client
+        .db('games')
+        .collection<{ name: string; releases: string[] }>('consolidated-games')
+        .aggregate([
+          {
+            $match: { name: entity.name },
+          },
+          {
+            $project: {
+              releases: {
+                $concatArrays: ['$releases', [entityId]],
+              },
+            },
+          },
+        ])
+      for await (const doc of releaseCursor) {
         await client
           .db('games')
-          .collection('consolidated-games')
-          .insertOne({
-            id,
-            name: entity.name,
-            releases: [entityId],
-            description: entity.description,
-            playlists:
-              entity?.tags
-                ?.filter((tag) => isPlaylistTag.test(tag.name))
-                ?.map((tag) => tag.id) ?? [],
-          })
-      } else {
-        await client
-          .db('games')
-          .collection<{ releases: string[] }>('consolidated-games')
-          .updateOne({ name: entity.name }, { $push: { releases: entityId } })
-        const cursor = await client
-          .db('games')
-          .collection<{ name: string; releases: string[] }>(
+          .collection<{ name: string; releases: Array<string> }>(
             'consolidated-games',
           )
-          .aggregate([
+          .updateOne(
+            { name: entity.name },
             {
-              $match: { name: entity.name },
-            },
-            {
-              $project: {
-                playlists: {
-                  $concatArrays:
-                    entity?.tags
-                      ?.filter((tag) => isPlaylistTag.test(tag.name))
-                      ?.map((tag) => tag.id) ?? [],
-                },
+              $set: {
+                releases: uniq(doc.releases ?? []),
               },
             },
-          ])
+          )
+      }
 
-        for await (const doc of cursor) {
-          await client
-            .db('games')
-            .collection<{ name: string; playlists: Array<string> }>(
-              'consolidated-games',
-            )
-            .updateOne(
-              { name: entity.name },
-              {
-                $set: {
-                  playlists: doc.playlists ?? [],
-                },
+      const playlists =
+        entity?.tags
+          ?.filter((tag) => isPlaylistTag.test(tag.name))
+          ?.map((tag) => tag.id) ?? []
+      const cursor = await client
+        .db('games')
+        .collection<{ name: string; releases: string[] }>('consolidated-games')
+        .aggregate([
+          {
+            $match: { name: entity.name },
+          },
+          {
+            $project: {
+              playlists: {
+                $concatArrays: ['$playlists', playlists],
               },
-            )
-        }
+            },
+          },
+        ])
+      for await (const doc of cursor) {
+        await client
+          .db('games')
+          .collection<{ name: string; playlists: Array<string> }>(
+            'consolidated-games',
+          )
+          .updateOne(
+            { name: entity.name },
+            {
+              $set: {
+                playlists: uniq(doc.playlists ?? []),
+              },
+            },
+          )
       }
     }
   } catch (e) {
