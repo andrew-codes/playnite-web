@@ -4,30 +4,23 @@ import { autoBind, type DomainApi } from '../../../Domain'
 import { GameReleaseDbEntity } from '../../../data/types'
 import { CompletionStatusEntity } from '../../../resolverTypes'
 
-const { omit } = _
+const { keyBy, omit } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, CompletionStatusEntity>(async (ids) => {
-    const results = await (
-      await this.db()
+    const results = keyBy(
+      await (
+        await this.db()
+      )
+        .collection<GameReleaseDbEntity>('completionstatus')
+        .find({ id: { $in: ids } })
+        .toArray(),
+      'id',
     )
-      .collection<GameReleaseDbEntity>('completionstatus')
-      .find({ id: { $in: ids } })
-      .toArray()
 
-    return results
-      .map((item) => omit(item, '_id'))
-      .sort((a, b) => {
-        const aSort = ids.findIndex((id) => id === a.id)
-        const bSort = ids.findIndex((id) => id === b.id)
-        if (aSort > bSort) {
-          return 1
-        }
-        if (aSort < bSort) {
-          return -1
-        }
-        return 0
-      }) as Array<CompletionStatusEntity>
+    return ids.map((id) =>
+      results[id] ? omit(results[id], '_id') : null,
+    ) as Array<CompletionStatusEntity>
   })
 
   return autoBind(this, {
@@ -40,6 +33,16 @@ function create(this: DomainApi) {
       }
 
       return loader.load(id)
+    },
+    async getBy(this: DomainApi, query: any) {
+      const items = await (await this.db())
+        .collection<GameReleaseDbEntity>('completionstatus')
+        .find(query)
+        .toArray()
+
+      return items.map((item) =>
+        omit(item, ['_id']),
+      ) as Array<CompletionStatusEntity>
     },
   })
 }

@@ -4,34 +4,29 @@ import { TagDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { TagEntity } from '../../../resolverTypes'
 
-const { merge, omit } = _
+const { keyBy, merge, omit } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, TagEntity>(async (ids) => {
-    const results = await (
-      await this.db()
-    )
-      .collection<TagDbEntity>('tag')
-      .find({ id: { $in: ids } })
-      .toArray()
-
-    return results
-      .map((item) =>
+    const results = keyBy(
+      (
+        await (
+          await this.db()
+        )
+          .collection<TagDbEntity>('tag')
+          .find({ id: { $in: ids } })
+          .toArray()
+      ).map((item) =>
         merge({}, omit(item, '_id'), {
           name: item.name.replace(/playlist-/i, ''),
         }),
-      )
-      .sort((a, b) => {
-        const aSort = ids.findIndex((id) => id === a.id)
-        const bSort = ids.findIndex((id) => id === b.id)
-        if (aSort > bSort) {
-          return 1
-        }
-        if (aSort < bSort) {
-          return -1
-        }
-        return 0
-      }) as Array<TagEntity>
+      ),
+      'id',
+    )
+
+    return ids.map((id) =>
+      results[id] ? omit(results[id], '_id') : null,
+    ) as Array<TagEntity>
   })
 
   return autoBind(this, {

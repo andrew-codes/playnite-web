@@ -4,30 +4,23 @@ import { GameAssetDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { GameAssetType } from '../../../resolverTypes'
 
-const { groupBy, omit } = _
+const { groupBy, keyBy, omit } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, GameAssetDbEntity>(async (ids) => {
-    const results = await (
-      await this.db()
+    const results = keyBy(
+      await (
+        await this.db()
+      )
+        .collection<GameAssetDbEntity>('assets')
+        .find({ id: { $in: ids } })
+        .toArray(),
+      'id',
     )
-      .collection<GameAssetDbEntity>('assets')
-      .find({ id: { $in: ids } })
-      .toArray()
 
-    return results
-      .map((item) => omit(item, '_id'))
-      .sort((a, b) => {
-        const aSort = ids.findIndex((id) => id === a.id)
-        const bSort = ids.findIndex((id) => id === b.id)
-        if (aSort > bSort) {
-          return 1
-        }
-        if (aSort < bSort) {
-          return -1
-        }
-        return 0
-      }) as Array<GameAssetDbEntity>
+    return ids.map((id) =>
+      results[id] ? omit(results[id], '_id') : null,
+    ) as Array<GameAssetDbEntity>
   })
   const relatedCoverLoader = new DataLoader<string, GameAssetDbEntity>(
     async (ids) => {

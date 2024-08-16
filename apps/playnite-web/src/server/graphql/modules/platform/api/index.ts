@@ -5,7 +5,7 @@ import { autoBind, type DomainApi } from '../../../Domain'
 import { PlatformDbEntity } from '../../../data/types'
 import { PlatformEntity } from '../../../resolverTypes'
 
-const { omit } = _
+const { keyBy, omit } = _
 
 const unknownPlatform = {
   id: '00000000-0000-0000-0000-000000000000',
@@ -14,26 +14,19 @@ const unknownPlatform = {
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, PlatformEntity>(async (ids) => {
-    const results = await (
-      await this.db()
+    const results = keyBy(
+      await (
+        await this.db()
+      )
+        .collection<PlatformDbEntity>('platform')
+        .find({ id: { $in: ids } })
+        .toArray(),
+      'id',
     )
-      .collection<PlatformDbEntity>('platform')
-      .find({ id: { $in: ids } })
-      .toArray()
 
-    return results
-      .map((item) => omit(item, '_id'))
-      .sort((a, b) => {
-        const aSort = ids.findIndex((id) => id === a.id)
-        const bSort = ids.findIndex((id) => id === b.id)
-        if (aSort > bSort) {
-          return 1
-        }
-        if (aSort < bSort) {
-          return -1
-        }
-        return 0
-      }) as Array<PlatformEntity>
+    return ids.map((id) =>
+      results[id] ? omit(results[id], '_id') : null,
+    ) as Array<PlatformEntity>
   })
 
   return autoBind(this, {
