@@ -11,10 +11,10 @@ describe('Homepage', () => {
     cy.viewport(1366, 1080)
     cy.visit('/')
     cy.contains('h4', 'On Deck').parents('[data-test="playlist"]')
-    cy.get('[data-test="GameFigure"]').should('have.length', 8)
+    cy.get('[data-test="GameFigure"]').should('have.length', 9)
     cy.get('[data-test="GameFigure"]')
       .eq(0)
-      .should('have.text', 'Black Myth: Wukong')
+      .should('have.text', 'Star Ocean: The Second Story R')
 
     cy.get('[data-test="playlist"] ul').compareSnapshot({
       name: 'homepage-playing-playlist',
@@ -37,9 +37,13 @@ describe('Homepage', () => {
     cy.get('[data-test="GameFigure"] span').eq(0).click({ force: true })
     cy.get('[data-test="GameDetails"] h4').should(
       'have.text',
-      'Black Myth: Wukong',
+      'Star Ocean: The Second Story R',
     )
-    const description = `Black Myth: Wukong is an action RPG rooted in Chinese mythology. The story is based on Journey to the West, one of the Four Great Classical Novels of Chinese literature. You shall set out as the Destined One to venture into the challenges and marvels ahead, to uncover the obscured truth beneath the veil of a glorious legend from the past.`
+    const description = `Two worlds, one fateful encounter.
+
+In an endless sea of stars, at the edge of the universe, two people who live in different worlds go on a journey to save planet Expel.
+
+Choose your path and witness an awakened destiny.`
     cy.get('[data-test="GameDetails"]').should('contain.text', description)
     cy.get('[name="close-drawer"]').click()
     cy.get('[data-test="GameDetails"]').should('not.exist')
