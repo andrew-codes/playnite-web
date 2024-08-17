@@ -86,24 +86,25 @@ Ensure you mount a volume to persist game assets, such as cover-art, backgrounds
 
 ##### Environment Variables
 
-| Environment Variable | Value                                            | Required? | Notes                                                             |
-| :------------------- | :----------------------------------------------- | :-------- | :---------------------------------------------------------------- |
-| PORT                 | Defaults to 3000                                 | Required  | Port in which web application is accessible.                      |
-| HOST                 | Defaults to `localhost`                          |           | The domain name or IP address of the server running Playnite-Web. |
-| ADDITIONAL_ORIGINS   | Additional origins allowed to request graph API. |           | Multiple values may be provided via a comma-delimited string.     |
-| DB_HOST              | IP address/hostname of Mongo DB database         | Required  |                                                                   |
-| DB_PORT              | Port of Mongo DB database                        |           | Default for MongoDB image is 27017                                |
-| DB_USERNAME          | Username to access database                      |           | Only required if disabled anonymous access                        |
-| DB_PASSWORD          | Password to access database                      |           | Only required if disabled anonymous access                        |
-| DB_URL               | MongoDB connection URL                           |           | Alternative to individual DB connection options                   |
-| DEBUG                | `"playnite-web/*"`                               |           | For troubleshooting; send logs to STDIO                           |
-| USERNAME             |                                                  |           | Username used to login                                            |
-| PASSWORD             |                                                  |           | Password value used to login                                      |
-| SECRET               |                                                  |           | Secret used to protect credentials                                |
-| MQTT_HOST            | IP address/hostname of MQTT broker.              | Required  |                                                                   |
-| MQTT_PORT            | Port of MQTT broker                              |           | Default for MQTT image is 1883                                    |
-| MQTT_USERNAME        | Username to access MQTT broker                   |           | Only required if disabled anonymous access                        |
-| MQTT_PASSWORD        | Password to access MQTT broker                   |           | Only required if disabled anonymous access                        |
+| Environment Variable | Value                                                                         | Required? | Notes                                                             |
+| :------------------- | :---------------------------------------------------------------------------- | :-------- | :---------------------------------------------------------------- |
+| PORT                 | Defaults to 3000                                                              | Required  | Port in which web application is accessible.                      |
+| HOST                 | Defaults to `localhost`                                                       |           | The domain name or IP address of the server running Playnite-Web. |
+| ADDITIONAL_ORIGINS   | Additional origins allowed to request graph API.                              |           | Multiple values may be provided via a comma-delimited string.     |
+| CSP_ORIGINS          | Origins in which images, styles, fonts, and scripts are allowed to be loaded. |           | Multiple values may be provided via a comma-delimited string.     |
+| DB_HOST              | IP address/hostname of Mongo DB database                                      | Required  |                                                                   |
+| DB_PORT              | Port of Mongo DB database                                                     |           | Default for MongoDB image is 27017                                |
+| DB_USERNAME          | Username to access database                                                   |           | Only required if disabled anonymous access                        |
+| DB_PASSWORD          | Password to access database                                                   |           | Only required if disabled anonymous access                        |
+| DB_URL               | MongoDB connection URL                                                        |           | Alternative to individual DB connection options                   |
+| DEBUG                | `"playnite-web/*"`                                                            |           | For troubleshooting; send logs to STDIO                           |
+| USERNAME             |                                                                               |           | Username used to login                                            |
+| PASSWORD             |                                                                               |           | Password value used to login                                      |
+| SECRET               |                                                                               |           | Secret used to protect credentials                                |
+| MQTT_HOST            | IP address/hostname of MQTT broker.                                           | Required  |                                                                   |
+| MQTT_PORT            | Port of MQTT broker                                                           |           | Default for MQTT image is 1883                                    |
+| MQTT_USERNAME        | Username to access MQTT broker                                                |           | Only required if disabled anonymous access                        |
+| MQTT_PASSWORD        | Password to access MQTT broker                                                |           | Only required if disabled anonymous access                        |
 
 ### Post Deployment Steps
 
