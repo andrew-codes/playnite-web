@@ -149,7 +149,7 @@ namespace PlayniteWeb
 
     private void SyncLibraryFromMenu(MainMenuItemActionArgs args)
     {
-      Task.WhenAll(SyncLibrary()).Wait();
+      Task.WaitAll(SyncLibrary().ToArray());
     }
 
     private IEnumerable<Task> SyncLibrary()
@@ -178,31 +178,31 @@ namespace PlayniteWeb
     public override void OnGameInstalled(OnGameInstalledEventArgs args)
     {
       var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-      Task.WhenAll(gameStatePublisher.Publish(args.Game)).Wait();
+      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
     }
 
     public override void OnGameStarted(OnGameStartedEventArgs args)
     {
       var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer, args.StartedProcessId);
-      Task.WhenAll(gameStatePublisher.Publish(args.Game)).Wait();
+      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
     }
 
     public override void OnGameStarting(OnGameStartingEventArgs args)
     {
       var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-      Task.WhenAll(gameStatePublisher.Publish(args.Game)).Wait();
+      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
     }
 
     public override void OnGameStopped(OnGameStoppedEventArgs args)
     {
       var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-      Task.WhenAll(gameStatePublisher.Publish(args.Game)).Wait();
+      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
     }
 
     public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
     {
       var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-      Task.WhenAll(gameStatePublisher.Publish(args.Game)).Wait();
+      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
     }
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
@@ -250,7 +250,7 @@ namespace PlayniteWeb
       {
         PlayniteApi.UninstallGame(e);
         var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-        Task.WhenAll(gameStatePublisher.Publish(game)).Wait();
+        Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
       }
     }
 
@@ -261,7 +261,7 @@ namespace PlayniteWeb
       {
         PlayniteApi.InstallGame(e);
         var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-        Task.WhenAll(gameStatePublisher.Publish(game)).Wait();
+        Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
       }
     }
 
@@ -283,33 +283,34 @@ namespace PlayniteWeb
 
     private void Publisher_LibraryRefreshRequest(object sender, Task e)
     {
-      Task.WhenAll(SyncLibrary()).ContinueWith((t) => e);
+      Task.WaitAll(SyncLibrary().ToArray());
+      e.Start();
     }
 
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Game> e)
     {
       var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
-      Task.WhenAll(updatedGamesData.SelectMany(item => gamePublisher.Publish(item))
+      Task.WaitAll(updatedGamesData.SelectMany(item => gamePublisher.Publish(item)).ToArray()
      );
     }
 
     private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
     {
       var updatedPlatforms = e.UpdatedItems.Select(g => g.NewData);
-      Task.WhenAll(updatedPlatforms.SelectMany(item => platformPublisher.Publish(item))
+      Task.WaitAll(updatedPlatforms.SelectMany(item => platformPublisher.Publish(item)).ToArray()
      );
     }
 
     private void HandleOtherGameEntitiesUpdated(object sender, ItemUpdatedEventArgs<DatabaseObject> e)
     {
       var updates = e.UpdatedItems.Select(g => g.NewData);
-      Task.WhenAll(updates.SelectMany(item => gameEntityPublisher.Publish(item))
+      Task.WaitAll(updates.SelectMany(item => gameEntityPublisher.Publish(item)).ToArray()
      );
     }
 
     private void HandleCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
     {
-      Task.WhenAll(e.AddedItems.SelectMany(item =>
+      Task.WaitAll(e.AddedItems.SelectMany(item =>
       {
         if (item.GetType() == typeof(Game))
         {
@@ -321,9 +322,9 @@ namespace PlayniteWeb
         }
 
         return gameEntityPublisher.Publish(item);
-      }));
+      }).ToArray());
 
-      Task.WhenAll(e.RemovedItems.SelectMany(item => gameEntityRemovalPublisher.Publish(item)));
+      Task.WaitAll(e.RemovedItems.SelectMany(item => gameEntityRemovalPublisher.Publish(item)).ToArray());
     }
 
     public override ISettings GetSettings(bool firstRunSettings)
