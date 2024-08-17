@@ -80,7 +80,10 @@ function Browse() {
     refetch({ filter })
   }, [filter])
 
-  const games = !loading && !error ? data.games : []
+  const games = !loading ? data.games : []
+  if (error) {
+    console.error(error, data)
+  }
 
   const dispatch = useDispatch()
   useEffect(() => {
