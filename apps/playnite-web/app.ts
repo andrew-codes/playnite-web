@@ -32,6 +32,9 @@ async function run(mqttClient: AsyncMqttClient) {
   const signingKey = process.env.SECRET ?? 'secret'
   const yoga = createYoga('/api', signingKey, mqttClient)
 
+  const cspOrigins = (process.env.CSP_ORIGINS ?? '')
+    .split(',')
+    .map((origin) => origin.trim())
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -50,10 +53,14 @@ async function run(mqttClient: AsyncMqttClient) {
             'unpkg.com',
             '*.googleapis.com',
             '*.gstatic.com',
-          ],
-          'script-src': ["'self'", "'unsafe-inline'", 'unpkg.com'],
-          'img-src': ["'self'", 'raw.githubusercontent.com'],
-          'font-src': ["'self'", '*.googleapis.com', '*.gstatic.com'],
+          ].concat(cspOrigins),
+          'script-src': ["'self'", "'unsafe-inline'", 'unpkg.com'].concat(
+            cspOrigins,
+          ),
+          'img-src': ["'self'", 'raw.githubusercontent.com'].concat(cspOrigins),
+          'font-src': ["'self'", '*.googleapis.com', '*.gstatic.com'].concat(
+            cspOrigins,
+          ),
         },
       },
     }),
