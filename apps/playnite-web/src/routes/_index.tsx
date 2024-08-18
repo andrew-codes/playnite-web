@@ -19,7 +19,7 @@ function Index() {
     setGame(game)
     setRightDrawerOpen(true)
   }, [])
-  const { data, loading, refetch, error } = usePlaylists()
+  const { data, loading, error } = usePlaylists()
   const playlists = data?.playlists
 
   return (

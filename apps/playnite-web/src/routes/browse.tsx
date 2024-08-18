@@ -4,19 +4,11 @@ import { FilterAlt } from '@mui/icons-material'
 import { Button, styled } from '@mui/material'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import {
-  Outlet,
-  useLoaderData,
-  useLocation,
-  useNavigate,
-} from '@remix-run/react'
-import { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { Outlet, useLocation, useNavigate } from '@remix-run/react'
+import { useCallback, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Game } from '../../.generated/types.generated'
-import {
-  getFilter,
-  setFilterTypeValues,
-} from '../api/client/state/librarySlice'
+import { getFilterValues } from '../api/client/state/librarySlice'
 import getGameApi from '../api/game/index.server'
 import Filters from '../components/Filters'
 import IconButton from '../components/IconButton'
@@ -66,31 +58,15 @@ const All_Games_Query = gql`
   }
 `
 function Browse() {
-  const { filterValues } = (useLoaderData() || {}) as unknown as {
-    filterValues:
-      | {
-          feature: { id: string; name: string }[]
-        }
-      | undefined
-  }
+  const { nameFilter } = useSelector(getFilterValues)
+  const { loading, data, error } = useQuery(All_Games_Query, {
+    variables: { filter: { name: nameFilter } },
+  })
 
-  const filter = useSelector(getFilter)
-  const { loading, data, error, refetch } = useQuery(All_Games_Query)
-  useEffect(() => {
-    refetch({ filter })
-  }, [filter])
-
-  const games = !loading ? data?.games : []
+  const games = !loading ? (data?.games ?? []) : []
   if (error) {
     console.error(error, data)
   }
-
-  const dispatch = useDispatch()
-  useEffect(() => {
-    Object.entries(filterValues ?? {}).forEach(([key, value]) => {
-      dispatch(setFilterTypeValues({ filterTypeName: key, values: value }))
-    })
-  }, [filterValues])
 
   const [trigger] = useNavigateInGrid()
   const handleScrollTop = (evt) => {
