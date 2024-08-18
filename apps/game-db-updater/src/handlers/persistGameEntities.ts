@@ -44,14 +44,24 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
       .collection(collectionName)
       .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
 
+    await client
+      .db('games')
+      .createIndex(collectionName, { id: 1 }, { unique: true })
+    await client.db('games').createIndex(collectionName, { name: 1 })
+
     if (collectionName === 'game') {
-      const consolidatedGames = await client
+      await client
+        .db('games')
+        .createIndex('consolidated-games', { id: 1 }, { unique: true })
+      await client
+        .db('games')
+        .createIndex('consolidated-games', { name: 1 }, { unique: true })
+      let consolidatedGame = await client
         .db('games')
         .collection('consolidated-games')
-        .find({ name: entity.name })
-        .toArray()
+        .findOne({ name: entity.name })
 
-      if (isEmpty(consolidatedGames)) {
+      if (!consolidatedGame) {
         const id = guid()
         await client.db('games').collection('consolidated-games').insertOne({
           id,
@@ -62,71 +72,57 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
         })
       }
 
-      const releaseCursor = await client
+      consolidatedGame = await client
         .db('games')
-        .collection<{ name: string; releases: string[] }>('consolidated-games')
-        .aggregate([
-          {
-            $match: { name: entity.name },
-          },
-          {
-            $project: {
-              releases: {
-                $concatArrays: ['$releases', [entityId]],
-              },
-            },
-          },
-        ])
-      for await (const doc of releaseCursor) {
-        await client
-          .db('games')
-          .collection<{ name: string; releases: Array<string> }>(
-            'consolidated-games',
-          )
-          .updateOne(
-            { name: entity.name },
-            {
-              $set: {
-                releases: uniq(doc.releases ?? []),
-              },
-            },
-          )
+        .collection<{
+          releases: string[]
+          playlists: string[]
+        }>('consolidated-games')
+        .findOne({ name: entity.name })
+
+      if (!consolidatedGame) {
+        console.error(
+          `Could not find consolidated game for game ${entity.name}`,
+          JSON.stringify(entity, null, 2),
+        )
+        return
       }
+
+      await client
+        .db('games')
+        .collection<{ name: string; releases: Array<string> }>(
+          'consolidated-games',
+        )
+        .updateOne(
+          { _id: consolidatedGame._id },
+          {
+            $set: {
+              releases: uniq(
+                [entityId].concat(consolidatedGame.releases ?? []),
+              ),
+            },
+          },
+        )
 
       const playlists =
         entity?.tags
           ?.filter((tag) => isPlaylistTag.test(tag.name))
           ?.map((tag) => tag.id) ?? []
-      const cursor = await client
+      await client
         .db('games')
-        .collection<{ name: string; releases: string[] }>('consolidated-games')
-        .aggregate([
+        .collection<{ name: string; playlists: Array<string> }>(
+          'consolidated-games',
+        )
+        .updateOne(
+          { _id: consolidatedGame._id },
           {
-            $match: { name: entity.name },
-          },
-          {
-            $project: {
-              playlists: {
-                $concatArrays: ['$playlists', playlists],
-              },
+            $set: {
+              playlists: uniq(
+                playlists.concat(consolidatedGame.playlists ?? []),
+              ),
             },
           },
-        ])
-      for await (const doc of cursor) {
-        await client
-          .db('games')
-          .collection<{ name: string; playlists: Array<string> }>(
-            'consolidated-games',
-          )
-          .updateOne(
-            { name: entity.name },
-            {
-              $set: {
-                playlists: uniq(doc.playlists ?? []),
-              },
-            },
-          )
-      }
+        )
     }
   } catch (e) {
     console.error(e)
