@@ -59,6 +59,11 @@ const create =
       await client
         .db('games')
         .collection('assets')
+        .createIndex({ relatedId: 1, typeKey: 1 }, { unique: true })
+
+      await client
+        .db('games')
+        .collection('assets')
         .updateOne(
           { relatedId, relatedType: entityType, typeKey: assetTypeKey },
           { $set: assetDoc },
