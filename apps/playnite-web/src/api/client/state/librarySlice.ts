@@ -1,10 +1,7 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 import _ from 'lodash'
-import And from '../../../domain/filters/And'
-import NoFilter from '../../../domain/filters/NoFilter'
-import MatchFeature from '../../../domain/filters/playnite/MatchFeature'
 
-const { keyBy, memoize, merge } = _
+const { keyBy, merge } = _
 
 const initialState: {
   activeNameFilters: string | null
@@ -20,18 +17,6 @@ const initialState: {
   platformFilterValues: {},
 }
 
-const noFilter = new NoFilter()
-
-const getNameFilter = memoize((state: typeof initialState) =>
-  !state.activeNameFilters ? {} : { name: state.activeNameFilters },
-)
-
-const getFeatureFilter = memoize((state: typeof initialState) => {
-  return state.activeFeatureFilters.length === 0
-    ? noFilter
-    : new And(...state.activeFeatureFilters.map((id) => new MatchFeature(id)))
-})
-
 const alphabeticalOrder = (a: { name: string }, b: { name: string }) => {
   return a.name.localeCompare(b.name)
 }
@@ -40,30 +25,33 @@ const slice = createSlice({
   name: 'library',
   initialState,
   selectors: {
-    getFilter: createSelector(
-      [getNameFilter, getFeatureFilter],
-      (nameFilter, featureFilter) => merge({}, nameFilter),
+    getFilterValues: createSelector(
+      (state) => state,
+      (state) => ({
+        nameFilter: state.activeNameFilters ?? '',
+        featureFilter:
+          state.activeFeatureFilters.map(
+            (id) => state.featureFilterValues[id],
+          ) ?? [],
+        platformFilter:
+          state.activePlatformFilters.map(
+            (id) => state.platformFilterValues[id],
+          ) ?? [],
+      }),
     ),
-    getFilterValues: (state) => ({
-      nameFilter: state.activeNameFilters ?? '',
-      featureFilter:
-        state.activeFeatureFilters.map((id) => state.featureFilterValues[id]) ??
-        [],
-      platformFilter:
-        state.activePlatformFilters.map(
-          (id) => state.platformFilterValues[id],
-        ) ?? [],
-    }),
-    getAllPossibleFilterValues: (state) => {
-      return Object.entries(state).reduce((acc, [key, value]) => {
-        if (key.endsWith('FilterValues')) {
-          acc[key.replace('FilterValues', '')] = Object.values(
-            value as Record<string, { id: string; name: string }>,
-          ).sort(alphabeticalOrder)
-        }
-        return acc
-      }, {})
-    },
+    getAllPossibleFilterValues: createSelector(
+      (state) => state,
+      (state) => {
+        return Object.entries(state).reduce((acc, [key, value]) => {
+          if (key.endsWith('FilterValues')) {
+            acc[key.replace('FilterValues', '')] = Object.values(
+              value as Record<string, { id: string; name: string }>,
+            ).sort(alphabeticalOrder)
+          }
+          return acc
+        }, {})
+      },
+    ),
   },
   reducers: {
     setFilterTypeValues(state, action) {
@@ -91,5 +79,4 @@ const slice = createSlice({
 export const { reducer } = slice
 export const { setFilterTypeValues, setSelectedFilter, activateFilters } =
   slice.actions
-export const { getAllPossibleFilterValues, getFilter, getFilterValues } =
-  slice.selectors
+export const { getAllPossibleFilterValues, getFilterValues } = slice.selectors
