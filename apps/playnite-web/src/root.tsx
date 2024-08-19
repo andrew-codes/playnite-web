@@ -11,7 +11,7 @@ import {
   useOutlet,
 } from '@remix-run/react'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useStore } from 'react-redux'
 import { createHead } from 'remix-island'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
@@ -71,6 +71,8 @@ const Head = createHead(() => (
   <>
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/icons/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
