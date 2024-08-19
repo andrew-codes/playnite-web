@@ -7,13 +7,18 @@ import {
   MetaFunction,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
+  useOutlet,
 } from '@remix-run/react'
 import { AnimatePresence } from 'framer-motion'
+import { useEffect } from 'react'
+import { useStore } from 'react-redux'
 import { createHead } from 'remix-island'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
 import { UAParser } from './api/layout.server'
 import Layout from './components/Layout'
-import { Provider } from './components/NavigateInGrid/context'
+import { configure, Provider } from './components/NavigateInGrid/context'
+import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
   return [
