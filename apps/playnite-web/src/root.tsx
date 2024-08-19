@@ -7,18 +7,13 @@ import {
   MetaFunction,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
-  useOutlet,
 } from '@remix-run/react'
 import { AnimatePresence } from 'framer-motion'
-import { FC, useEffect } from 'react'
-import { useStore } from 'react-redux'
 import { createHead } from 'remix-island'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
 import { UAParser } from './api/layout.server'
 import Layout from './components/Layout'
-import { configure, Provider } from './components/NavigateInGrid/context'
-import muiTheme from './muiTheme'
+import { Provider } from './components/NavigateInGrid/context'
 
 const meta: MetaFunction = () => {
   return [
@@ -71,6 +66,8 @@ const Head = createHead(() => (
   <>
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/icons/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
