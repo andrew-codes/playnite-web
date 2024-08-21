@@ -1,0 +1,9 @@
+type FilterItem {
+  name: String!
+  field: String!
+  allowedValues: [String!]!
+}
+
+extend type Query {
+  filterItems: [FilterItem!]!
+}
