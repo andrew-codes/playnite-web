@@ -48,6 +48,7 @@ type GameEntity = WithId<Document> & {
   isLaunching: boolean
   isRunning: boolean
   isUninstalling: boolean
+  lastActivity: string
   links: { name: string; url: string }[]
   name: string
   platforms: PlatformEntity[] | null

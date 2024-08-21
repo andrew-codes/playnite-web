@@ -6,6 +6,7 @@ type GameRelease {
   criticScore: Int
   gameId: String!
   hidden: Boolean!
+  lastActivity:DateTime
   releaseDate: Date
   recentActivity: DateTime
   runState: String!
