@@ -39,9 +39,6 @@ export const Playlist: PlaylistResolvers = {
                 Date.parse(releaseA.lastActivity)
               )
             })
-
-            console.log(releasesByGame.map((r) => r.lastActivity))
-
             return { ...game, releasesSortedByActivity: sortedReleases }
           }),
         )
@@ -54,16 +51,6 @@ export const Playlist: PlaylistResolvers = {
             releasesSortedByActivity: Array<GameRelease>
           },
         ) => {
-          console.log(
-            'sort outer A',
-            gameA.name,
-            gameA.releasesSortedByActivity.map((r) => r.lastActivity),
-          )
-          console.log(
-            'sort outer B',
-            gameB.name,
-            gameB.releasesSortedByActivity.map((r) => r.lastActivity),
-          )
           const mostRecentActivityA =
             gameA.releasesSortedByActivity?.[0]?.lastActivity
           const mostRecentActivityB =
@@ -73,31 +60,11 @@ export const Playlist: PlaylistResolvers = {
             return gameA.name.localeCompare(gameB.name)
           } else if (!mostRecentActivityA) return 1
           else if (!mostRecentActivityB) return -1
-
-          console.log('parsed b date', Date.parse(mostRecentActivityB))
-          console.log('parsed a date', Date.parse(mostRecentActivityA))
-          console.log(
-            'subtraction result',
-            Date.parse(mostRecentActivityB) - Date.parse(mostRecentActivityA),
-          )
           return (
             Date.parse(mostRecentActivityB) - Date.parse(mostRecentActivityA)
           )
         },
       )
-
-      console.log(
-        'games',
-        JSON.stringify(
-          gamesByMostRecentActivity.map((game) => ({
-            name: game.name,
-            releases: game.releasesSortedByActivity.map((r) => r.lastActivity),
-          })),
-          null,
-          2,
-        ),
-      )
-
       return gamesByMostRecentActivity
     } else {
       return await _ctx.api.game.getBy({ playlists: _parent.id })
