@@ -14,16 +14,16 @@ import { getUserById, getUserByLogin } from './modules/user/api/getUser'
 
 interface DomainApi {
   db(): Promise<Db>
-  get game(): ReturnType<typeof createGameApi>
-  get user(): ReturnType<typeof createUserApi>
+  get asset(): ReturnType<typeof createAssetApi>
   get auth(): ReturnType<typeof createAuthApi>
+  get completionStatus(): ReturnType<typeof createCompletionStatusApi>
+  get feature(): ReturnType<typeof createFeatureApi>
+  get game(): ReturnType<typeof createGameApi>
   get gameRelease(): ReturnType<typeof createGameReleaseApi>
   get platform(): ReturnType<typeof createPlatformApi>
   get playlist(): ReturnType<typeof createPlaylistApi>
-  get feature(): ReturnType<typeof createFeatureApi>
-  get completionStatus(): ReturnType<typeof createCompletionStatusApi>
-  get asset(): ReturnType<typeof createAssetApi>
   get tag(): ReturnType<typeof createTagApi>
+  get user(): ReturnType<typeof createUserApi>
 }
 
 function autoBind<TFunctionMap extends Record<string, Function>>(
@@ -58,15 +58,15 @@ class Domain implements DomainApi {
     }
   }
 
+  asset: DomainApi['asset'] = createAssetApi.call(this)
   auth: DomainApi['auth'] = createAuthApi.call(this)
+  completionStatus: DomainApi['completionStatus'] =
+    createCompletionStatusApi.call(this)
+  feature: DomainApi['feature'] = createFeatureApi.call(this)
   game: DomainApi['game'] = createGameApi.call(this)
   gameRelease: DomainApi['gameRelease'] = createGameReleaseApi.call(this)
   platform: DomainApi['platform'] = createPlatformApi.call(this)
   playlist: DomainApi['playlist'] = createPlaylistApi.call(this)
-  feature: DomainApi['feature'] = createFeatureApi.call(this)
-  completionStatus: DomainApi['completionStatus'] =
-    createCompletionStatusApi.call(this)
-  asset: DomainApi['asset'] = createAssetApi.call(this)
   tag: DomainApi['tag'] = createTagApi.call(this)
 }
 
