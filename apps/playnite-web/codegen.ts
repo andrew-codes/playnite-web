@@ -10,15 +10,16 @@ const config: CodegenConfig = {
     './.generated': defineConfig({
       typesPluginsConfig: {
         mappers: {
-          CompletionStatus: './resolverTypes#CompletionStatusEntity',
-          Feature: './resolverTypes#FeatureEntity',
-          Game: './resolverTypes#GameEntity',
-          GameRelease: './resolverTypes#GameReleaseEntity',
-          Platform: './resolverTypes#PlatformSourceEntity',
-          GameAsset: './resolverTypes#GameAssetEntity',
-          Playlist: './resolverTypes#TagEntity',
+          CompletionStatus:
+            '../src/server/graphql/resolverTypes#CompletionStatusEntity',
+          Feature: '../src/server/graphql/resolverTypes#FeatureEntity',
+          Game: '../src/server/graphql/resolverTypes#GameEntity',
+          GameRelease: '../src/server/graphql/resolverTypes#GameReleaseEntity',
+          Platform: '../src/server/graphql/resolverTypes#PlatformSourceEntity',
+          GameAsset: '../src/server/graphql/resolverTypes#GameAssetEntity',
+          Playlist: '../src/server/graphql/resolverTypes#TagEntity',
         },
-        contextType: './context#PlayniteContext',
+        contextType: '../src/server/graphql/context#PlayniteContext',
       },
     }),
   },
