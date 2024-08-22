@@ -35,7 +35,7 @@ const GameFigure: FC<
   return (
     <Figure data-test="GameFigure" style={style} width={width}>
       <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
-        <Button onClick={(evt) => onSelect?.(evt, game)}>
+        <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
           {!imageHasError && game.cover?.id ? (
             <Image
               src={`/asset-by-id/${game.cover?.id}`}
@@ -68,7 +68,10 @@ const GameFigure: FC<
         </Box>
       </Box>
       <Stack
-        sx={{ height: `calc(${height} - ${width})` }}
+        sx={(theme) => ({
+          height: `calc(${height} - ${width})`,
+          padding: theme.spacing(1),
+        })}
         key={`${game.id}-details`}
       >
         {children}
