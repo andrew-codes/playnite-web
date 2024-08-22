@@ -3,7 +3,7 @@ import { FC, useMemo } from 'react'
 import { Platform } from '../../.generated/types.generated'
 
 const PlatformImage = styled('img')(({ theme }) => ({
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: theme.shape.borderRadius / 2,
 }))
 const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
   platform,
