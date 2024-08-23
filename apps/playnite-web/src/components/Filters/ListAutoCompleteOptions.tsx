@@ -31,9 +31,9 @@ const ListAutoCompleteOptions: RenderOptions = ({
       {(groupedOptions as AutoCompleteItem[]).map((option, index) => (
         <SelectableListItem
           {...getOptionProps({ option, index })}
-          key={option.id}
+          key={option.value}
         >
-          {option.name}
+          {option.display}
         </SelectableListItem>
       ))}
     </FullHeightList>

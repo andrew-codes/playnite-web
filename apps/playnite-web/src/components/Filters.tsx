@@ -2,8 +2,8 @@ import { Typography } from '@mui/material'
 import { FC, FormEvent, MouseEvent, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  $filterValues,
   activateFilters,
-  getFilterValues,
 } from '../api/client/state/librarySlice'
 import FilterForm from './Filters/FilterForm'
 
@@ -24,18 +24,28 @@ const Filters: FC<{
       evt.preventDefault()
       const formData = new FormData(evt.currentTarget)
       const name = ((formData.get('nameFilter') as string) ?? '').trim()
-      const feature = (formData.getAll('featureFilter') as string[]) ?? []
-      const platform = (formData.getAll('platformFilter') as string[]) ?? []
+      const filters = Array.from(formData.keys())
+        .filter((key) => key !== 'nameFilter')
+        .map((key) => {
+          return {
+            field: key,
+            value: formData.getAll(key) as string[],
+          }
+        })
 
       dispatch(
-        activateFilters({ name: name === '' ? null : name, feature, platform }),
+        activateFilters({
+          name: name === '' ? null : name,
+          filterItems: filters,
+        }),
       )
+
       onClose(evt)
     },
     [onClose],
   )
 
-  const activeFilters = useSelector(getFilterValues)
+  const activeFilters = useSelector($filterValues)
 
   return (
     <>
@@ -43,7 +53,8 @@ const Filters: FC<{
       <FilterForm
         onCancel={handleFilterCancel}
         onSubmit={handleFilterSubmit}
-        {...activeFilters}
+        nameFilter={activeFilters.nameFilter}
+        filterItems={activeFilters.filterItems}
       />
     </>
   )

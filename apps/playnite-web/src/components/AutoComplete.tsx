@@ -106,8 +106,8 @@ const StyledTag = styled(Tag)<TagProps>(
 )
 
 type AutoCompleteItem = {
-  id: string
-  name: string
+  display: string
+  value: string
 }
 type RenderOptionProps = {
   groupedOptions:
@@ -151,8 +151,8 @@ const AutoComplete: FC<{
   } = useAutocomplete({
     defaultValue: initialDefaultValue,
     disableCloseOnSelect: true,
-    getOptionLabel: (option) => option.name,
-    isOptionEqualToValue: (option, value) => option.id === value.id,
+    getOptionLabel: (option) => option.display,
+    isOptionEqualToValue: (option, value) => option.value === value.value,
     multiple: true,
     options: options,
     onChange: (_, newValue) => {
@@ -180,7 +180,7 @@ const AutoComplete: FC<{
         <Label {...getInputLabelProps()}>{label}</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
           {value.map((option: AutoCompleteItem, index: number) => (
-            <StyledTag label={option.name} {...getTagProps({ index })} />
+            <StyledTag label={option.display} {...getTagProps({ index })} />
           ))}
           <input
             {...restInputProps}
