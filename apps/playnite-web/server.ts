@@ -36,7 +36,7 @@ async function run() {
       mqttClient,
     )
   } catch (error) {
-    console.log(
+    console.info(
       'Failed to run gameDbUpdater. Playnite Web will still work, but the game database will not be updated.',
     )
     debug(error)
