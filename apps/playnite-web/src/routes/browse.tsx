@@ -2,14 +2,11 @@ import { gql } from '@apollo/client/core'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { FilterAlt } from '@mui/icons-material'
 import { Button, styled } from '@mui/material'
-import type { LoaderFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
 import { Outlet, useLocation, useNavigate } from '@remix-run/react'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Game } from '../../.generated/types.generated'
-import { getFilterValues } from '../api/client/state/librarySlice'
-import getGameApi from '../api/game/index.server'
+import { $filterValuesForQuery } from '../api/client/state/librarySlice'
 import Filters from '../components/Filters'
 import IconButton from '../components/IconButton'
 import MyLibrary from '../components/MyLibrary'
@@ -18,17 +15,6 @@ import Drawer from '../components/Navigation/Drawer'
 import RightDrawer from '../components/RightDrawer'
 
 const isOnDetailsPage = (pathname) => /\/browse\/.+$/.test(pathname)
-
-async function loader({ request }: LoaderFunctionArgs) {
-  const api = getGameApi()
-  const features = await api.getFeatures()
-
-  return json({
-    filterValues: {
-      feature: features,
-    },
-  })
-}
 
 const Title = styled('span')(({ theme }) => ({
   textAlign: 'center',
@@ -58,9 +44,10 @@ const All_Games_Query = gql`
   }
 `
 function Browse() {
-  const { nameFilter } = useSelector(getFilterValues)
+  const { nameFilter, filterItems } = useSelector($filterValuesForQuery)
+
   const { loading, data, error } = useQuery(All_Games_Query, {
-    variables: { filter: { name: nameFilter } },
+    variables: { filter: { name: nameFilter, filterItems } },
   })
 
   const games = !loading ? (data?.games ?? []) : []
