@@ -40,8 +40,8 @@ startTransition(() => {
         credentials: true,
       },
       on: {
-        connected: () => console.log('GraphQLWsLink connected'),
-        closed: () => console.log('GraphQLWsLink closed'),
+        connected: () => console.info('GraphQLWsLink connected'),
+        closed: () => console.info('GraphQLWsLink closed'),
       },
     }),
   )

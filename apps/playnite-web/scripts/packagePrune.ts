@@ -13,14 +13,14 @@ async function run() {
   ).json()
 
   const packageToRemove = packages.find((pkg) =>
-    pkg.metadata.container.tags.some(tag => tag.includes(PR_NUMBER))
+    pkg.metadata.container.tags.some((tag) => tag.includes(PR_NUMBER)),
   )
 
   if (!packageToRemove) {
     return
   }
 
-  console.log(
+  console.info(
     `Removing package ${packageToRemove.id} with tags ${packageToRemove.metadata.container.tags.join(', ')}`,
   )
 

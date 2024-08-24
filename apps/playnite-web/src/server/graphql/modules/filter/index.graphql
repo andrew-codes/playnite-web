@@ -1,0 +1,14 @@
+type FilterItemValue {
+  value: String!
+  display: String!
+}
+
+type FilterItem {
+  name: String!
+  field: String!
+  allowedValues: [FilterItemValue!]!
+}
+
+extend type Query {
+  filterItems: [FilterItem!]!
+}

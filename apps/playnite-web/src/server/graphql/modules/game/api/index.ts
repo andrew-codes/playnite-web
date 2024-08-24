@@ -28,13 +28,13 @@ function create(this: DomainApi) {
     },
     async getBy(this: DomainApi, query: any) {
       return await (await this.db())
-        .collection('consolidated-games')
+        .collection<GameEntity>('consolidated-games')
         .find(query)
         .toArray()
     },
     async getAll(this: DomainApi) {
       return await (await this.db())
-        .collection('consolidated-games')
+        .collection<GameEntity>('consolidated-games')
         .find()
         .toArray()
     },
