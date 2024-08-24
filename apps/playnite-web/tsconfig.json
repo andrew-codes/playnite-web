@@ -21,6 +21,7 @@
     "src/**/*.jsx",
     "testUtils/**/*.ts",
     "testUtils/**/*.tsx",
+    "cypress/support/*.ts",
     "*.ts",
     "../../graphql.config.ts",
     ".generated/resolvers.generated.ts",
