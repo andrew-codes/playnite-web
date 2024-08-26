@@ -1,4 +1,4 @@
-import { Binary, Document, Filter, WithId } from 'mongodb'
+import { Document, Filter, WithId } from 'mongodb'
 import type { GameAssetType } from '../../../../../domain/types'
 import { IIdentify } from '../../../../../server/oid'
 import { AssetTypeKey } from '../../../types'
@@ -72,7 +72,6 @@ type GameAssetEntityType = 'games' | 'platforms'
 
 type GameAssetEntity = {
   id: string
-  file: Binary
   relatedId: string
   relatedType: GameAssetEntityType
   typeKey: GameAssetType
