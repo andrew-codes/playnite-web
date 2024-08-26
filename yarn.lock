@@ -12491,9 +12491,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.3.8":
-  version: 11.3.8
-  resolution: "framer-motion@npm:11.3.8"
+"framer-motion@npm:^11.3.30":
+  version: 11.3.30
+  resolution: "framer-motion@npm:11.3.30"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -12507,7 +12507,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/71c7ff866694f531d01d4d6f44c2eef620abab1acf52436716b3c82e5ae45be544b4cf45b1a15686e17daa214a89fae3523077624919e6f9df9a53d3c46509f0
+  checksum: 10c0/58355809d13f65bbd7a903de755cf1b78d9d3d5039de9b2ae0e25a6ab77748e3429c93e8056ad6fab378e4d0f1cf256133c11cd51f07b9b4d64550feea675b54
   languageName: node
   linkType: hard
 
@@ -19350,7 +19350,7 @@ __metadata:
     esbuild: "npm:^0.23.0"
     esbuild-register: "npm:^3.5.0"
     express: "npm:^4.19.2"
-    framer-motion: "npm:^11.3.8"
+    framer-motion: "npm:^11.3.30"
     glob: "npm:^10.4.5"
     graphql: "npm:^16.9.0"
     graphql-modules: "npm:^2.3.0"
