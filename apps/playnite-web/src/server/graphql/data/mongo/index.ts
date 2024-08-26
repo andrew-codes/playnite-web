@@ -47,13 +47,14 @@ const getDbClient = async (
     )
     if (!username && !password) {
       debug(`No username or password provided; connecting without auth`)
-      client = new MongoClient(url)
+      client = new MongoClient(url, { enableUtf8Validation: false })
     } else {
       client = new MongoClient(url, {
         auth: {
           username,
           password,
         },
+        enableUtf8Validation: false,
       })
     }
     debug('Connecting database client.')
