@@ -30,7 +30,7 @@
     "mqtt-client": "workspace:*",
     "nx": "^19.5.1",
     "prettier": "^3.3.3",
-    "rimraf": "^5.0.9",
+    "rimraf": "^6.0.1",
     "shelljs": "^0.8.5",
     "ts-jest": "^29.2.3",
     "typescript": "^5.5.3",
