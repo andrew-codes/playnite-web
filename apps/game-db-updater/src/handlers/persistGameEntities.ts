@@ -44,18 +44,7 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
       .collection(collectionName)
       .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
 
-    await client
-      .db('games')
-      .createIndex(collectionName, { id: 1 }, { unique: true })
-    await client.db('games').createIndex(collectionName, { name: 1 })
-
     if (collectionName === 'game') {
-      await client
-        .db('games')
-        .createIndex('consolidated-games', { id: 1 }, { unique: true })
-      await client
-        .db('games')
-        .createIndex('consolidated-games', { name: 1 }, { unique: true })
       let consolidatedGame = await client
         .db('games')
         .collection('consolidated-games')
