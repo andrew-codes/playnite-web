@@ -141,8 +141,9 @@ export const Game: GameResolvers = {
     )
   },
   cover: async (_parent, _arg, _ctx) => {
-    return (
-      (await _ctx.api.asset.getByRelation(_parent.releases[0], 'cover')) ?? null
-    )
+    return _parent.releases[0]
+      ? ((await _ctx.api.asset.getByRelation(_parent.releases[0], 'cover')) ??
+          null)
+      : null
   },
 }
