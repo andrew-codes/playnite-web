@@ -55,7 +55,6 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
-      - run: yarn dlx cypress install
       - name: Run all component tests
         run: yarn nx run-many --target=test/components/ci --parallel --verbose --projects=tag:linux
       - name: Upload test video artifacts
@@ -98,7 +97,6 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
-      - run: yarn dlx cypress install
       - name: Run all visual regression tests
         run: yarn nx affected --base=origin/main --head=HEAD --target=test/components/visual/ci --verbose --exclude='*,!tag:linux'
       - name: Upload visual regression artifacts
@@ -144,7 +142,6 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
-      - run: yarn dlx cypress install
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
