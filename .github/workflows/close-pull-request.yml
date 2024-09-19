@@ -37,6 +37,8 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: '0'
       - name: Prune PR images
         run: yarn nx run-many --target=package/prune --verbose
         env:

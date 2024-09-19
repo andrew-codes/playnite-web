@@ -59,6 +59,8 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all component tests
         run: yarn nx run-many --target=test/components/ci --parallel --verbose --projects=tag:linux
       - name: Upload test video artifacts
@@ -101,6 +103,8 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all visual regression tests
         run: yarn nx run-many --target=test/components/visual/ci --verbose --exclude='*,!tag:linux'
       - name: Upload visual regression artifacts
@@ -147,6 +151,8 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all e2e tests
         run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
         env:
@@ -195,6 +201,8 @@ jobs:
         run: corepack enable
       - name: Install deps
         run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: '0'
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -240,6 +248,8 @@ jobs:
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
 
@@ -274,6 +284,8 @@ jobs:
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run Version
         run: yarn nx run-many --target=version --exclude='*,!tag:windows'
         env:
