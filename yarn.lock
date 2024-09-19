@@ -19340,7 +19340,7 @@ __metadata:
     cross-env: "npm:^7.0.3"
     crypto-js: "npm:^4.2.0"
     css-mediaquery: "npm:^0.1.2"
-    cypress: "npm:^13.13.3"
+    cypress: "npm:^13.14.2"
     cypress-image-diff-html-report: "npm:^2.2.0"
     cypress-image-diff-js: "npm:^2.2.1"
     cypress-plugin-tab: "npm:^1.0.5"
