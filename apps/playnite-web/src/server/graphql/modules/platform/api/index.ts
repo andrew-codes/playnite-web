@@ -3,13 +3,14 @@ import _ from 'lodash'
 import { Document, Filter } from 'mongodb'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { PlatformDbEntity } from '../../../data/types'
-import { PlatformEntity } from '../../../resolverTypes'
+import { PlatformEntity, PlatformSourceEntity } from '../../../resolverTypes'
 
 const { keyBy, omit } = _
 
-const unknownPlatform = {
+const unknownPlatform: PlatformSourceEntity = {
   id: '00000000-0000-0000-0000-000000000000',
   name: 'Unknown',
+  source: 'Unknown',
 }
 
 function create(this: DomainApi) {
