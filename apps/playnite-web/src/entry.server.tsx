@@ -171,17 +171,24 @@ async function handleBrowserRequest(
     const port = process.env.PORT ?? '3000'
 
     try {
-      const value = decodeURIComponent(
-        request.headers.get('Cookie')?.split('=')?.[1] ?? '',
-      )
-      const [type, token] = value.split(' ')
-      if (type !== 'Bearer') {
-        throw new Error('Invalid token')
+      const cookieValues =
+        request.headers
+          .get('Cookie')
+          ?.split('\n')
+          .map((cookieString) => cookieString.split('=')) ?? []
+      const authCookie = cookieValues.find(([key]) => key === 'authorization')
+
+      if (authCookie) {
+        const value = decodeURIComponent(authCookie[1] ?? '')
+        const [type, token] = value.split(' ')
+        if (type !== 'Bearer') {
+          throw new Error('Invalid token')
+        }
+        claim = jwt.decode(token, process.env.SECRET ?? 'secret', {
+          issuer: domain,
+          algorithm: 'HS256',
+        })
       }
-      claim = jwt.decode(token, process.env.SECRET ?? 'secret', {
-        issuer: domain,
-        algorithm: 'HS256',
-      })
     } catch (error) {
       debug(error)
     }
