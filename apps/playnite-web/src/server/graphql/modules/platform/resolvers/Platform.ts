@@ -21,4 +21,10 @@ export const Platform: PlatformResolvers = {
       id: `${_parent.name.toLowerCase().replace(/[ ]/g, '-').replace(/[()]/g, '')}.webp`,
     })
   },
+  source: async (_parent, _arg, _ctx) => {
+    return _parent.source
+  },
+  isConsole: async (_parent, _arg, _ctx) => {
+    return !/(PC)|(Macintosh)|(Linux)/.test(_parent.name)
+  },
 }

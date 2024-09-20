@@ -30,6 +30,7 @@ type SourceEntity = {
 type PlatformSourceEntity = {
   id: string
   name: string
+  source: string
 }
 
 type GameEntity = {

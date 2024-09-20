@@ -17,6 +17,15 @@ const AllPlaylists = gql`
         releases {
           id
           name
+          platform {
+            id
+            isConsole
+            name
+            source
+            icon {
+              id
+            }
+          }
         }
       }
     }

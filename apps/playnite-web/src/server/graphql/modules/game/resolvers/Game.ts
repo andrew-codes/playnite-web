@@ -17,7 +17,7 @@ const platformDisplays = {
   ps5: { matcher: /PlayStation 5/ },
   ps4: { matcher: /PlayStation 4/ },
   ps3: { matcher: /PlayStation 3/ },
-  p2: { matcher: /PlayStation 2/ },
+  ps2: { matcher: /PlayStation 2/ },
   ps1: { matcher: /PlayStation/ },
 }
 
@@ -28,12 +28,12 @@ const sortOrder = [
   platformDisplays.ps5,
   platformDisplays.ps4,
   platformDisplays.ps3,
-  platformDisplays.p2,
+  platformDisplays.ps2,
   platformDisplays.ps1,
 ]
 
 const getPlatforms = (
-  gameRelease: GameReleaseDbEntity | GameReleaseEntity,
+  gameRelease: Omit<GameReleaseDbEntity, '_id'> | GameReleaseEntity,
 ): Array<PlatformSourceEntity> => {
   if (!gameRelease.source?.name) {
     debug(
@@ -57,6 +57,7 @@ const getPlatforms = (
     case 'GOG':
     case 'Origin':
     case 'Uplay':
+    case 'Ubisoft Connect':
     case 'Battle.net':
     case 'EA':
       return gameRelease.platforms
@@ -87,7 +88,7 @@ const getPlatforms = (
 }
 
 const toGameReleases = (
-  gameReleases: Array<GameReleaseDbEntity>,
+  gameReleases: Array<Omit<GameReleaseDbEntity, '_id'>>,
 ): Array<GameReleaseEntity> => {
   const releasesGroupedBySource = groupBy(gameReleases, 'source.name')
 
@@ -96,7 +97,11 @@ const toGameReleases = (
       releases.map((release, index) =>
         omit(
           merge({}, release, {
-            platformSource: getPlatforms(release)[index] ?? unknownPlatform,
+            platformSource: merge(
+              {},
+              getPlatforms(release)[index] ?? unknownPlatform,
+              { source: release.source.name },
+            ),
           }),
           '_id',
         ),
