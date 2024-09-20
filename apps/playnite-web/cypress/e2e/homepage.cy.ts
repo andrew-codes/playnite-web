@@ -10,6 +10,7 @@ describe('Homepage', () => {
 - Playing playlist shows games that have the game state: "On Deck".`, () => {
     cy.viewport(1366, 1080)
     cy.visit('/')
+
     cy.contains('h4', 'On Deck').parents('[data-test="playlist"]')
     cy.get('[data-test="GameFigure"]').should('have.length', 9)
     cy.get('[data-test="GameFigure"]')
@@ -33,6 +34,7 @@ describe('Homepage', () => {
     - Game details display the game name and description`, () => {
     cy.viewport(1366, 1080)
     cy.visit('/')
+
     cy.contains('h4', 'On Deck').parents('[data-test="playlist"]')
     cy.get('[data-test="GameFigure"] span').eq(0).click({ force: true })
     cy.get('[data-test="GameDetails"] h4').should(
