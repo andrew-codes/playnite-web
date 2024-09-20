@@ -47,7 +47,7 @@ const Description = styled('div')(({ theme }) => ({
 
 const Activate_Mutation = gql`
   mutation Activate($gameReleaseId: String!) {
-    activateGameRelease(gameReleaseId: $gameReleaseId) {
+    activateGameRelease(id: $gameReleaseId) {
       id
     }
   }
@@ -58,6 +58,7 @@ const sortGameActionPlatforms = (platforms: Platform[]): Platform[] => {
   sortedPlatforms.sort((a, b) => {
     return a.name.localeCompare(b.name)
   })
+
   return sortedPlatforms
 }
 
@@ -118,6 +119,9 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
             >
               <Button onClick={handlePlay(selectedIndex)}>
                 {platforms[selectedIndex].name}
+                {!platforms[selectedIndex].isConsole && (
+                  <> via {platforms[selectedIndex].source}</>
+                )}
               </Button>
               <Button
                 size="small"
@@ -160,6 +164,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                             }
                           >
                             {option.name}
+                            {!option.isConsole && <> via {option.source}</>}
                           </MenuItem>
                         ))}
                       </MenuList>

@@ -16,7 +16,9 @@ const Game_By_Id_Query = gql`
         id
         platform {
           id
+          isConsole
           name
+          source
           icon {
             id
           }
