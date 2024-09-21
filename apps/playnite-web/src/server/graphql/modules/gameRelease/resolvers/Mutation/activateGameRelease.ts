@@ -1,28 +1,26 @@
 import { GraphQLError } from 'graphql'
 import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
-import { create, fromString } from '../../../../../oid'
+import { fromString } from '../../../../../oid'
 export const activateGameRelease: NonNullable<
   MutationResolvers['activateGameRelease']
 > = async (_parent, _arg, _ctx) => {
   if (!_ctx.jwt?.user.isAuthenticated) {
     throw new GraphQLError('Unauthorized')
   }
-  const id = fromString(_arg.id).id
-  const gameRelease = await _ctx.api.gameRelease.getById(id)
 
-  const allGameReleaseIds = (
-    await _ctx.api.gameRelease.getBy({
-      name: gameRelease.name,
-    })
-  ).map((gameRelease) => gameRelease.id)
+  const gameId = fromString(_arg.gameId).id
+  const platformId = fromString(_arg.platformId).id
 
-  const gameId = create('Game', allGameReleaseIds.join(','))
-  const gameReleases = await _ctx.api.game.getById(gameId.toString())
-
-  const gameReleaseToActivate = gameReleases.find(
-    (release) => release.id === id,
+  const game = await _ctx.api.game.getById(gameId)
+  const gameReleases = _ctx.api.game.toGameReleases(
+    await Promise.all(
+      game.releases.map((releaseId) => _ctx.api.gameRelease.getById(releaseId)),
+    ),
   )
 
+  const gameReleaseToActivate = gameReleases.find(
+    (release) => release.platformSource.id === platformId,
+  )
   if (!gameReleaseToActivate) {
     throw new GraphQLError('No game release found')
   }
