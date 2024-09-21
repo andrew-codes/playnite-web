@@ -28,5 +28,5 @@ extend type Subscription {
 }
 
 extend type Mutation {
-  activateGameRelease(id: String!): GameRelease!
+  activateGameRelease(gameId: String!, platformId: String!): GameRelease!
 }
