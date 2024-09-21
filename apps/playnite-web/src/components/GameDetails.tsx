@@ -46,8 +46,8 @@ const Description = styled('div')(({ theme }) => ({
 }))
 
 const Activate_Mutation = gql`
-  mutation Activate($gameReleaseId: String!) {
-    activateGameRelease(id: $gameReleaseId) {
+  mutation Activate($gameId: String!, $platformId: String!) {
+    activateGameRelease(gameId: $gameId, platformId: $platformId) {
       id
     }
   }
@@ -55,8 +55,38 @@ const Activate_Mutation = gql`
 
 const sortGameActionPlatforms = (platforms: Platform[]): Platform[] => {
   const sortedPlatforms = platforms.slice()
+  const platformDisplays = {
+    pc: { matcher: /PC/ },
+    osx: { matcher: /Macintosh/ },
+    linux: { matcher: /Linux/ },
+    ps5: { matcher: /PlayStation 5/ },
+    ps4: { matcher: /PlayStation 4/ },
+    ps3: { matcher: /PlayStation 3/ },
+    ps2: { matcher: /PlayStation 2/ },
+    ps1: { matcher: /PlayStation/ },
+  }
+
+  const sortOrder = [
+    platformDisplays.pc,
+    platformDisplays.osx,
+    platformDisplays.linux,
+    platformDisplays.ps5,
+    platformDisplays.ps4,
+    platformDisplays.ps3,
+    platformDisplays.ps2,
+    platformDisplays.ps1,
+  ]
+
   sortedPlatforms.sort((a, b) => {
-    return a.name.localeCompare(b.name)
+    const aSort = sortOrder.findIndex((p) => p.matcher.test(a.name))
+    const bSort = sortOrder.findIndex((p) => p.matcher.test(b.name))
+    if (aSort > bSort) {
+      return 1
+    }
+    if (aSort < bSort) {
+      return -1
+    }
+    return 0
   })
 
   return sortedPlatforms
@@ -74,10 +104,10 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
   const [activate] = useMutation(Activate_Mutation)
 
   const handlePlay = (selectedIndex) => (evt) => {
-    const gameRelease = platforms[selectedIndex]
     activate({
       variables: {
-        gameReleaseId: gameRelease.id,
+        gameId: game.id,
+        platformId: platforms[selectedIndex].id,
       },
     })
   }
