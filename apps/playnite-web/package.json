@@ -25,7 +25,7 @@
     "debug": "^4.3.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "framer-motion": "^11.3.8",
+    "framer-motion": "^11.5.6",
     "graphql": "^16.9.0",
     "graphql-scalars": "^1.23.0",
     "graphql-ws": "^5.16.0",
