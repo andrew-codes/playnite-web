@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\.dist\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -93,6 +93,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventHandlers.cs" />
+    <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\Playlist.cs" />
+    <Compile Include="Models\Release.cs" />
     <Compile Include="Services\AssetType.cs" />
     <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\Publishers\GameStatePayload.cs" />
@@ -107,11 +110,13 @@
     <Compile Include="Services\Publishers\Mqtt\IGetFilePath.cs" />
     <Compile Include="Services\Publishers\Mqtt\MqttPublisher.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishAsset.cs" />
+    <Compile Include="Services\Publishers\Mqtt\PublishPlaylist.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGameState.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGameEntityRemoval.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGameEntity.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishPlatform.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGame.cs" />
+    <Compile Include="Services\Publishers\Mqtt\PublishRelease.cs" />
     <Compile Include="Services\Subscribers\ISubscribeToPlayniteWeb.cs" />
     <Compile Include="Services\Subscribers\Mqtt\PlayniteWebSubscriber.cs" />
     <Compile Include="StringExtensions.cs" />

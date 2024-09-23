@@ -4,6 +4,7 @@ using Playnite.SDK;
 using Playnite.SDK.Events;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
+using PlayniteWeb.Models;
 using PlayniteWeb.Services;
 using PlayniteWeb.Services.Publishers;
 using PlayniteWeb.Services.Publishers.Mqtt;
@@ -18,6 +19,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -29,13 +31,15 @@ namespace PlayniteWeb
     private readonly ISubscribeToPlayniteWeb subscriber;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
     private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
-    private readonly Subject<ItemUpdatedEventArgs<Game>> gameUpdates;
+    private readonly Subject<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>> gameUpdates;
     private readonly ISerializeObjects serializer;
     private readonly IPublishToPlayniteWeb gamePublisher;
+    private readonly IPublishToPlayniteWeb playlistPublisher;
+    private readonly IPublishToPlayniteWeb releasePublisher;
     private readonly IPublishToPlayniteWeb platformPublisher;
     private readonly IPublishToPlayniteWeb gameEntityPublisher;
     private readonly IPublishToPlayniteWeb gameEntityRemovalPublisher;
-    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Game>>> gameUpdated;
+    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>>> gameUpdated;
     private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> otherEntityUpdates;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> otherEntityUpdated;
     private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> collectionUpdates;
@@ -58,14 +62,16 @@ namespace PlayniteWeb
         HasSettings = true
       };
       serializer = new ObjectSerializer();
-      gamePublisher = new PublishGame((IMqttClient)publisher, topicManager, serializer, api.Database);
+      releasePublisher = new PublishRelease((IMqttClient)publisher, topicManager, serializer, api.Database);
+      gamePublisher = new PublishGame((IMqttClient)publisher, topicManager, serializer, api.Database, releasePublisher);
+      playlistPublisher = new PublishPlaylist((IMqttClient)publisher, topicManager, serializer, api.Database);
       platformPublisher = new PublishPlatform((IMqttClient)publisher, topicManager, serializer, api.Database);
       gameEntityPublisher = new PublishGameEntity((IMqttClient)publisher, topicManager, serializer, api.Database);
       gameEntityRemovalPublisher = new PublishGameEntityRemoval((IMqttClient)publisher, topicManager, serializer, api.Database);
 
-      gameUpdates = new Subject<ItemUpdatedEventArgs<Game>>();
+      gameUpdates = new Subject<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>>();
       gameUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
-      gameUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<Game>>(h => PlayniteApi.Database.Games.ItemUpdated += h, h => PlayniteApi.Database.Games.ItemUpdated -= h);
+      gameUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>>(h => PlayniteApi.Database.Games.ItemUpdated += h, h => PlayniteApi.Database.Games.ItemUpdated -= h);
       gameUpdated.Subscribe(e => gameUpdates.OnNext(e.EventArgs));
 
       platformUpdates = new Subject<ItemUpdatedEventArgs<Platform>>();
@@ -113,7 +119,7 @@ namespace PlayniteWeb
         PlayniteApi.Database.Companies.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Company>(h);
         PlayniteApi.Database.CompletionStatuses.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<CompletionStatus>(h);
         PlayniteApi.Database.Features.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<GameFeature>(h);
-        PlayniteApi.Database.Games.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Game>(h);
+        PlayniteApi.Database.Games.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Playnite.SDK.Models.Game>(h);
         PlayniteApi.Database.Genres.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Genre>(h);
         PlayniteApi.Database.Platforms.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Platform>(h);
         PlayniteApi.Database.Regions.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Region>(h);
@@ -128,7 +134,7 @@ namespace PlayniteWeb
         PlayniteApi.Database.Companies.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Company>();
         PlayniteApi.Database.CompletionStatuses.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<CompletionStatus>();
         PlayniteApi.Database.Features.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<GameFeature>();
-        PlayniteApi.Database.Games.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Game>();
+        PlayniteApi.Database.Games.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Playnite.SDK.Models.Game>();
         PlayniteApi.Database.Genres.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Genre>();
         PlayniteApi.Database.Platforms.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Platform>();
         PlayniteApi.Database.Regions.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Region>();
@@ -154,7 +160,9 @@ namespace PlayniteWeb
 
     private IEnumerable<Task> SyncLibrary()
     {
-      var gamePublications = PlayniteApi.Database.Games.SelectMany(game => gamePublisher.Publish(game));
+      var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name).Select(groupedByName => new Models.Game(groupedByName)).Where(g => !g.Id.Equals(Guid.Empty));
+
+      var gamePublications = games.SelectMany(game => gamePublisher.Publish(game));
       var platformPublications = PlayniteApi.Database.Platforms.SelectMany(platform => platformPublisher.Publish(platform));
 
       IEnumerable<string> ignored = new List<string> {
@@ -167,8 +175,12 @@ namespace PlayniteWeb
         .SelectMany(propertyInfo => (IEnumerable<DatabaseObject>)propertyInfo.GetValue(PlayniteApi.Database));
       var otherGameEntityPublications = gameEntities.SelectMany(entity => gameEntityPublisher.Publish(entity));
 
+      var playlistPublications = PlayniteApi.Database.Tags
+        .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
+        .Select(tag => new Playlist(tag.Name.Substring(0, 9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
+        .SelectMany(playlist => playlistPublisher.Publish(playlist));
 
-      return gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications);
+      return gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications).Concat(playlistPublications);
     }
 
     public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
@@ -287,11 +299,18 @@ namespace PlayniteWeb
       e.Start();
     }
 
-    private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Game> e)
+    private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Playnite.SDK.Models.Game> e)
     {
+      var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name).Select(groupedByName => new Models.Game(groupedByName)).Where(g => !g.Id.Equals(Guid.Empty));
       var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
-      Task.WaitAll(updatedGamesData.SelectMany(item => gamePublisher.Publish(item)).ToArray()
-     );
+      var updatedGames = updatedGamesData.Select(g => games.First(game => game.Name == g.Name));
+      Task.WaitAll(updatedGames.SelectMany(item => gamePublisher.Publish(item)).ToArray());
+
+      var affectedPlaylists = updatedGamesData
+        .SelectMany(g => g.Tags)
+        .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
+        .Select(tag => new Playlist(tag.Name.Substring(0, 9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))));
+      Task.WaitAll(affectedPlaylists.SelectMany(item => playlistPublisher.Publish(item)).ToArray());
     }
 
     private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
@@ -312,7 +331,7 @@ namespace PlayniteWeb
     {
       Task.WaitAll(e.AddedItems.SelectMany(item =>
       {
-        if (item.GetType() == typeof(Game))
+        if (item.GetType() == typeof(Playnite.SDK.Models.Game))
         {
           return gameEntityPublisher.Publish(item);
         }
