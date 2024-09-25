@@ -177,7 +177,7 @@ namespace PlayniteWeb
 
       var playlistPublications = PlayniteApi.Database.Tags
         .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
-        .Select(tag => new Playlist(tag.Name.Substring(0, 9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
+        .Select(tag => new Playlist(tag.Name.Substring(9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
         .SelectMany(playlist => playlistPublisher.Publish(playlist));
 
       return gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications).Concat(playlistPublications);
