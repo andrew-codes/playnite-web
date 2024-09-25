@@ -8,46 +8,36 @@ export const activateGameRelease: NonNullable<
     throw new GraphQLError('Unauthorized')
   }
 
-  const gameId = fromString(_arg.gameId).id
-  const platformId = fromString(_arg.platformId).id
+  const releaseId = fromString(_arg.releaseId).id
 
-  const game = await _ctx.api.game.getById(gameId)
-  const gameReleases = _ctx.api.game.toGameReleases(
-    await Promise.all(
-      game.releases.map((releaseId) => _ctx.api.gameRelease.getById(releaseId)),
-    ),
-  )
-
-  const gameReleaseToActivate = gameReleases.find(
-    (release) => release.platformSource.id === platformId,
-  )
-  if (!gameReleaseToActivate) {
+  const release = await _ctx.api.gameRelease.getById(releaseId)
+  if (!release) {
     throw new GraphQLError('No game release found')
   }
 
   let install =
-    !gameReleaseToActivate.isRunning &&
-    !gameReleaseToActivate.isInstalled &&
-    !gameReleaseToActivate.isInstalling &&
-    !gameReleaseToActivate.isUninstalling &&
-    !gameReleaseToActivate.isLaunching
+    !release.isRunning &&
+    !release.isInstalled &&
+    !release.isInstalling &&
+    !release.isUninstalling &&
+    !release.isLaunching
 
   await _ctx.mqttClient.publish(
     `playnite/request/game/activate`,
     JSON.stringify({
       game: {
-        id: gameReleaseToActivate.id,
-        gameId: gameReleaseToActivate.gameId,
-        name: gameReleaseToActivate.name,
+        id: release.id,
+        gameId: release.gameId,
+        name: release.name,
         platform: {
-          id: gameReleaseToActivate.platformSource.id,
-          name: gameReleaseToActivate.platformSource.name,
+          id: release.platform.id,
+          name: release.platform.name,
         },
-        source: gameReleaseToActivate.source,
+        source: release.source,
         install,
       },
     }),
   )
 
-  return gameReleaseToActivate
+  return release
 }

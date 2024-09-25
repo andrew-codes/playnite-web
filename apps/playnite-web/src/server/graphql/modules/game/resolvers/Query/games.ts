@@ -1,7 +1,8 @@
-import { WithId } from 'mongodb'
+import _ from 'lodash'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
 import { GameEntity } from '../../../../resolverTypes'
 
+const { merge } = _
 const exactMatch = /(".*")|('.*')/
 
 export const games: NonNullable<QueryResolvers['games']> = async (
@@ -43,13 +44,7 @@ export const games: NonNullable<QueryResolvers['games']> = async (
                   return false
                 }
 
-                const releases = await Promise.all(
-                  game.releases.map((release) =>
-                    _ctx.api.gameRelease.getById(release),
-                  ),
-                )
-
-                return releases.some((release) => {
+                return game.releases.some((release) => {
                   const gameValue = release[filterItem.field]
                   if (gameValue === undefined) {
                     return false
@@ -78,10 +73,10 @@ export const games: NonNullable<QueryResolvers['games']> = async (
             }),
           )
         },
-        [] as Array<Promise<WithId<GameEntity> | null>>,
+        [] as Array<Promise<GameEntity | null>>,
       ),
     )
-  ).filter((game) => game !== null) as Array<WithId<GameEntity>>
+  ).filter((game) => game !== null)
 
   return matchedGames.sort((a, b) => a.name.localeCompare(b.name))
 }

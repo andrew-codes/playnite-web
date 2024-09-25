@@ -6,6 +6,6 @@ export const Feature: FeatureResolvers = {
     return create('Feature', _parent.id).toString()
   },
   releases: async (_parent, _arg, _ctx) => {
-    return _ctx.api.gameRelease.getBy({ featureIds: _parent.id })
+    return _ctx.api.gameRelease.getBy({ feature: { id: _parent.id } })
   },
 }

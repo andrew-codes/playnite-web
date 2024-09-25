@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { DomainApi, autoBind } from '../../../Domain'
 import { TagEntity } from '../../../resolverTypes'
 
-const { keyBy, omit } = _
+const { keyBy } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, TagEntity>(async (ids) => {
@@ -17,9 +17,7 @@ function create(this: DomainApi) {
       'id',
     )
 
-    return ids.map((id) =>
-      results[id] ? omit(results[id], '_id') : null,
-    ) as Array<TagEntity>
+    return ids.map((id) => results[id] ?? null) as Array<TagEntity>
   })
 
   return autoBind(this, {

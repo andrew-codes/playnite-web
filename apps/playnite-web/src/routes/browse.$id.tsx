@@ -18,7 +18,6 @@ const Game_By_Id_Query = gql`
           id
           isConsole
           name
-          source
           icon {
             id
           }

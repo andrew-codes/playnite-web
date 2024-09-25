@@ -5,7 +5,7 @@ import { GameReleaseDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { GameReleaseEntity } from '../../../resolverTypes'
 
-const { omit, keyBy } = _
+const { keyBy, merge } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, GameReleaseEntity>(async (ids) => {
@@ -13,15 +13,15 @@ function create(this: DomainApi) {
       await (
         await this.db()
       )
-        .collection<GameReleaseDbEntity>('game')
+        .collection<GameReleaseDbEntity>('release')
         .find({ id: { $in: ids } })
         .toArray(),
       'id',
     )
 
-    return ids.map((id) =>
-      results[id] ? omit(results[id], '_id') : null,
-    ) as Array<GameReleaseEntity>
+    return ids.map(
+      (id) => (results[id] as unknown as GameReleaseEntity) ?? null,
+    )
   })
 
   return autoBind(this, {
@@ -29,28 +29,22 @@ function create(this: DomainApi) {
       return loader.load(id)
     },
     async getAll(this: DomainApi) {
-      const releases = await (await this.db())
-        .collection<GameReleaseEntity>('game')
+      return (await this.db())
+        .collection<GameReleaseDbEntity>('release')
         .find()
         .toArray()
-
-      return releases.map((gameRelease) => omit(gameRelease, '_id'))
     },
     async getByName(this: DomainApi, name: string) {
-      const releases = await (await this.db())
-        .collection<GameReleaseEntity>('game')
+      return (await this.db())
+        .collection<GameReleaseDbEntity>('release')
         .find({ name: name })
         .toArray()
-
-      return releases.map((gameRelease) => omit(gameRelease, '_id'))
     },
     async getBy(this: DomainApi, query: Filter<Document>) {
-      const releases = await (await this.db())
-        .collection<GameReleaseEntity>('game')
+      return (await this.db())
+        .collection<GameReleaseDbEntity>('release')
         .find(query)
         .toArray()
-
-      return releases.map((gameRelease) => omit(gameRelease, '_id'))
     },
   })
 }

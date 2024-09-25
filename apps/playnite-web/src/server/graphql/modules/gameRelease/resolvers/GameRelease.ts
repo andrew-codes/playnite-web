@@ -6,10 +6,7 @@ export const GameRelease: GameReleaseResolvers = {
     return create('GameRelease', _parent.id).toString()
   },
   platform: async (_parent, _arg, _ctx) => {
-    return _parent.platformSource
-  },
-  game: async (_parent, _arg, _ctx) => {
-    return _ctx.api.gameRelease.getByName(_parent.name)
+    return _parent.platform
   },
   completionStatus: async (_parent, _arg, _ctx) => {
     return (
@@ -47,11 +44,7 @@ export const GameRelease: GameReleaseResolvers = {
     return 'not installed'
   },
   features: async (_parent, _arg, _ctx) => {
-    return Promise.all(
-      (_parent.featureIds ?? []).map((id) => {
-        return _ctx.api.feature.getById(id)
-      }),
-    )
+    return Promise.all(_parent.features ?? [])
   },
   cover: async (_parent, _arg, _ctx) => {
     return _ctx.api.asset.getByRelation(_parent.id, 'cover')

@@ -149,9 +149,6 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
             >
               <Button onClick={handlePlay(selectedIndex)}>
                 {platforms[selectedIndex].name}
-                {!platforms[selectedIndex].isConsole && (
-                  <> via {platforms[selectedIndex].source}</>
-                )}
               </Button>
               <Button
                 size="small"
@@ -194,7 +191,6 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                             }
                           >
                             {option.name}
-                            {!option.isConsole && <> via {option.source}</>}
                           </MenuItem>
                         ))}
                       </MenuList>
