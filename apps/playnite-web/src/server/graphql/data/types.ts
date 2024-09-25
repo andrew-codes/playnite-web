@@ -35,18 +35,14 @@ type GameReleaseDbEntity = WithId<Document> & {
   backgroundImage: string
   communityScore: number | null
   completionStatus: { id: string; name: string }
-  completionStatusId: string
   cover: string
   coverImage: string
   criticScore: number | null
   description: string
   developers: { id: string; name: string }[]
-  developersIds: string[]
   features: { id: string; name: string }[]
-  featureIds: string[] | null
   gameId: string
   genres: { id: string; name: string }[]
-  genresIds: string[]
   hidden: boolean
   id: string
   isCustomGame: boolean
@@ -57,21 +53,34 @@ type GameReleaseDbEntity = WithId<Document> & {
   isUninstalling: boolean
   links: { name: string; url: string }[]
   name: string
-  platforms: PlatformDbEntity[]
-  platformsIds: string[]
+  platform: PlatformDbEntity
   publishers: { id: string; name: string }[]
-  publishersIds: string[]
   recentActivity: string
-  releaseDate: string
+  releaseDate: {
+    day: number
+    month: number
+    year: number
+  }
   releaseYear: number
   series: { id: string; name: string }[]
-  seriesIds: string[]
   sortingName?: string
   sortName: string
   source: SourceDbEntity
   sourceId: string | null
   tags: Array<TagDbEntity> | null
-  tagsIds: string[]
+}
+
+type PlaylistDbEntity = {
+  id: string
+  name: string
+  games: Array<GameDbEntity>
+}
+
+type GameDbEntity = {
+  id: string
+  name: string
+  description: string
+  releases: GameReleaseDbEntity[]
 }
 
 type GameAssetDbType = 'background' | 'cover' | 'icon'
@@ -91,8 +100,10 @@ export type {
   GameAssetDbEntity,
   GameAssetDbType,
   GameAssetEntityDbType,
+  GameDbEntity,
   GameReleaseDbEntity,
   PlatformDbEntity,
+  PlaylistDbEntity,
   SourceDbEntity,
   TagDbEntity,
 }

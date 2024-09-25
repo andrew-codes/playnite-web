@@ -36,7 +36,6 @@ const All_Games_Query = gql`
           id
           isConsole
           name
-          source
           icon {
             id
           }
@@ -112,4 +111,3 @@ function Browse() {
 }
 
 export default Browse
-export { loader }
