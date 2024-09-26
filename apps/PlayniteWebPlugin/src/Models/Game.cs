@@ -43,12 +43,14 @@ namespace PlayniteWeb.Models
 
     private IEnumerable<Release> GetReleases(IGrouping<GameSource, Playnite.SDK.Models.Game> groupedBySource)
     {
+      IList<Platform> publishedPlatforms= new List<Platform>();
+
       for (int i = 0; i < groupedBySource.Count(); i++)
       {
         Platform platform = null;
         try
         {
-          platform = groupedBySource.ElementAt(i).Platforms.Where(p => IsMatchingPlatform(groupedBySource.Key, p)).OrderBy(p => p, platformSorter).First();
+          platform = groupedBySource.ElementAt(i).Platforms.Where(p => IsMatchingPlatform(groupedBySource.Key, p)).Where(p => !publishedPlatforms.Any(pp => p.Id == pp.Id)).OrderBy(p => p, platformSorter).First();
         }
         catch { }
         if (platform == null)
@@ -56,6 +58,7 @@ namespace PlayniteWeb.Models
           continue;
         }
 
+        publishedPlatforms.Add(platform);
         yield return new Release(groupedBySource.ElementAt(i), platform);
       }
     }
