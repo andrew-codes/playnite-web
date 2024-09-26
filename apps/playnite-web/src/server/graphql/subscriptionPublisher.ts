@@ -10,7 +10,7 @@ export type PubSubChannels = {
     },
   ]
   gameActivationStateChanged: [
-    { active: boolean | null | undefined; restarted?: boolean },
+    { id: string; active: boolean | null | undefined; restarted?: boolean },
   ]
 }
 

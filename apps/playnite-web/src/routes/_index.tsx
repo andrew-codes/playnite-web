@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import { useCallback, useState } from 'react'
-import { Game } from '../../.generated/types.generated'
+import { Game, Playlist } from '../../.generated/types.generated'
 import GameDetails from '../components/GameDetails'
 import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
@@ -11,16 +11,21 @@ import { usePlaylists } from '../queryHooks/playlists'
 
 function Index() {
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(false)
-  const [game, setGame] = useState<Game | null>(null)
+  const [[playlistId, gameId], setGameSelection] = useState<
+    [string | null, string | null]
+  >([null, null])
   const handleClose = useCallback(() => {
     setRightDrawerOpen(false)
   }, [])
-  const handleGameSelect = useCallback((evt, game: Game) => {
-    setGame(game)
+  const handleGameSelect = (playlist: Playlist) => (evt, game: Game) => {
+    setGameSelection([playlist.id, game.id])
     setRightDrawerOpen(true)
-  }, [])
+  }
   const { data, loading, error } = usePlaylists()
   const playlists = data?.playlists
+  const game = playlists
+    ?.find((p) => p.id === playlistId)
+    ?.games.find((g) => g.id === gameId)
 
   return (
     <Drawer>
@@ -34,7 +39,7 @@ function Index() {
             <HorizontalGameList
               games={playlist?.games ?? []}
               noDeferCount={5}
-              onSelect={handleGameSelect}
+              onSelect={handleGameSelect(playlist)}
             />
           </section>
         ))}

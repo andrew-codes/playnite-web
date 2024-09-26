@@ -37,6 +37,7 @@ export const restartGameRelease: NonNullable<
   )
 
   _ctx.subscriptionPublisher.publish('gameActivationStateChanged', {
+    id: releaseId,
     active: true,
     restarted: true,
   })
