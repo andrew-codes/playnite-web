@@ -12,10 +12,10 @@ describe('Homepage', () => {
     cy.visit('/')
 
     cy.contains('h4', 'On Deck').parents('[data-test="playlist"]')
-    cy.get('[data-test="GameFigure"]').should('have.length', 9)
+    cy.get('[data-test="GameFigure"]').should('have.length', 8)
     cy.get('[data-test="GameFigure"]')
       .eq(0)
-      .should('have.text', 'Star Ocean: The Second Story R')
+      .should('have.text', 'Star Wars Outlaws')
 
     cy.get('[data-test="playlist"] ul').compareSnapshot({
       name: 'homepage-playing-playlist',
@@ -39,13 +39,9 @@ describe('Homepage', () => {
     cy.get('[data-test="GameFigure"] span').eq(0).click({ force: true })
     cy.get('[data-test="GameDetails"] h4').should(
       'have.text',
-      'Star Ocean: The Second Story R',
+      'Star Wars Outlaws',
     )
-    const description = `Two worlds, one fateful encounter.
-
-In an endless sea of stars, at the edge of the universe, two people who live in different worlds go on a journey to save planet Expel.
-
-Choose your path and witness an awakened destiny.`
+    const description = `Experience the first-ever open world Star Wars game, set between the events of The Empire Strikes Back and Return of the Jedi. Explore distinct planets across the galaxy, both iconic and new. Risk it all as Kay Vess, an emerging scoundrel seeking freedom and the means to start a new life, along with her companion Nix. Fight, steal, and outwit your way through the galaxy’s crime syndicates as you join the galaxy’s most wanted.`
     cy.get('[data-test="GameDetails"]').should('contain.text', description)
     cy.get('[name="close-drawer"]').click()
     cy.get('[data-test="GameDetails"]').should('not.exist')

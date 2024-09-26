@@ -9,11 +9,9 @@ export const Playlist: PlaylistResolvers = {
     return create('Playlist', _parent.id).toString()
   },
   name: async (_parent, _arg, _ctx) => {
-    return startCase(
-      lowerCase(_parent.name.replace('playlist-', '').replaceAll('-', ' ')),
-    )
+    return startCase(lowerCase(_parent.name))
   },
   games: async (_parent, _arg, _ctx) => {
-    return await _ctx.api.game.getBy({ playlists: _parent.id })
+    return _parent.games
   },
 }

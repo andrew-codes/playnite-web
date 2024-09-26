@@ -10,10 +10,11 @@ type GameRelease {
   recentActivity: DateTime
   runState: String!
   platform: Platform!
-  game: Game!
   completionStatus: CompletionStatus!
   cover: GameAsset
   features: [Feature]!
+  source: Source!
+  active: Boolean!
 }
 
 type GameReleaseSubscriptionPayload {
@@ -28,5 +29,5 @@ extend type Subscription {
 }
 
 extend type Mutation {
-  activateGameRelease(gameId: String!, platformId: String!): GameRelease!
+  activateGameRelease(releaseId: String!): GameRelease!
 }

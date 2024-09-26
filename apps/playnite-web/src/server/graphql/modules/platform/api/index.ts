@@ -3,15 +3,9 @@ import _ from 'lodash'
 import { Document, Filter } from 'mongodb'
 import { autoBind, type DomainApi } from '../../../Domain'
 import { PlatformDbEntity } from '../../../data/types'
-import { PlatformEntity, PlatformSourceEntity } from '../../../resolverTypes'
+import { PlatformEntity } from '../../../resolverTypes'
 
 const { keyBy, omit } = _
-
-const unknownPlatform: PlatformSourceEntity = {
-  id: '00000000-0000-0000-0000-000000000000',
-  name: 'Unknown',
-  source: 'Unknown',
-}
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, PlatformEntity>(async (ids) => {
@@ -61,4 +55,3 @@ function create(this: DomainApi) {
 }
 
 export default create
-export { unknownPlatform }

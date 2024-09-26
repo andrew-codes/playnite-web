@@ -1,5 +1,3 @@
-import { gql } from '@apollo/client/core'
-import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { FilterAlt } from '@mui/icons-material'
 import { Button, styled } from '@mui/material'
 import { Outlet, useLocation, useNavigate } from '@remix-run/react'
@@ -13,6 +11,7 @@ import MyLibrary from '../components/MyLibrary'
 import { useNavigateInGrid } from '../components/NavigateInGrid/context'
 import Drawer from '../components/Navigation/Drawer'
 import RightDrawer from '../components/RightDrawer'
+import { useAllGames } from '../queryHooks/allGames'
 
 const isOnDetailsPage = (pathname) => /\/browse\/.+$/.test(pathname)
 
@@ -21,34 +20,10 @@ const Title = styled('span')(({ theme }) => ({
   flex: 1,
 }))
 
-const All_Games_Query = gql`
-  query allGames($filter: Filter) {
-    games(filter: $filter) {
-      id
-      cover {
-        id
-      }
-      name
-      description
-      releases {
-        id
-        platform {
-          id
-          isConsole
-          name
-          source
-          icon {
-            id
-          }
-        }
-      }
-    }
-  }
-`
 function Browse() {
   const { nameFilter, filterItems } = useSelector($filterValuesForQuery)
 
-  const { loading, data, error } = useQuery(All_Games_Query, {
+  const { loading, data, error } = useAllGames({
     variables: { filter: { name: nameFilter, filterItems } },
   })
 
@@ -112,4 +87,3 @@ function Browse() {
 }
 
 export default Browse
-export { loader }

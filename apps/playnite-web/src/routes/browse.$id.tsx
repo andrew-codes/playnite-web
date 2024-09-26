@@ -1,39 +1,13 @@
-import { gql } from '@apollo/client/core'
-import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { useParams } from '@remix-run/react'
 import GameDetails from '../components/GameDetails'
-
-const Game_By_Id_Query = gql`
-  query game($id: String!) {
-    game(id: $id) {
-      id
-      name
-      description
-      cover {
-        id
-      }
-      releases {
-        id
-        platform {
-          id
-          isConsole
-          name
-          source
-          icon {
-            id
-          }
-        }
-      }
-    }
-  }
-`
+import { useGameById } from '../queryHooks/gameById'
 
 function GameBrowseDetails() {
   const params = useParams()
-  const { loading, data, error } = useQuery(Game_By_Id_Query, {
+  const { loading, data, error } = useGameById({
     variables: { id: params.id },
   })
-  if (loading || error) {
+  if (loading || error || !data?.game) {
     return null
   }
   return <GameDetails game={data.game} />

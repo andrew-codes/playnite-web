@@ -1,0 +1,5 @@
+type Source {
+  id: String!
+  name: String!
+  releases: [GameRelease]!
+}
