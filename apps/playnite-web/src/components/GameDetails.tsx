@@ -12,13 +12,12 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import _ from 'lodash'
 import { FC, useMemo, useRef, useState } from 'react'
 import { Game, GameRelease } from '../../.generated/types.generated'
 import { useMe } from '../queryHooks'
-import { useStartRelease } from '../queryHooks/startGameRelease'
-
-const { merge } = _
+import { useRestartRelease } from '../queryHooks/restartRelease'
+import { useStartRelease } from '../queryHooks/startRelease'
+import { useStopRelease } from '../queryHooks/stopRelease'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -31,6 +30,8 @@ const Details = styled('div')(({ theme }) => ({
 }))
 const Actions = styled('div')(({ theme }) => ({
   height: theme.spacing(4.5),
+  display: 'flex',
+  justifyContent: 'space-between',
 }))
 
 const Description = styled('div')(({ theme }) => ({
@@ -96,18 +97,10 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
     [game.releases],
   )
 
-  console.log(game.releases)
-
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [startRelease] = useStartRelease()
-
-  const handlePlay = (selectedIndex) => (evt) => {
-    startRelease({
-      variables: {
-        releaseId: releases[selectedIndex].id,
-      },
-    })
-  }
+  const [stopRelease] = useStopRelease()
+  const [restartRelease] = useRestartRelease()
 
   const [open, setOpen] = useState(false)
   const handleMenuItemClick = (
@@ -144,7 +137,16 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
               color="primary"
               aria-label="Platforms in which to play the game"
             >
-              <Button onClick={handlePlay(selectedIndex)}>
+              <Button
+                sx={{ minWidth: '296px !important' }}
+                onClick={(evt) => {
+                  startRelease({
+                    variables: {
+                      releaseId: releases[selectedIndex].id,
+                    },
+                  })
+                }}
+              >
                 {releases[selectedIndex].platform.name} via{' '}
                 {releases[selectedIndex].source.name}
               </Button>
@@ -204,10 +206,20 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                 <Button
                   variant="contained"
                   color="secondary"
+                  onClick={(evt) =>
+                    restartRelease({
+                      variables: { releaseId: releases[selectedIndex].id },
+                    })
+                  }
                 >{`Restart game`}</Button>
                 <Button
                   variant="contained"
                   color="secondary"
+                  onClick={(evt) =>
+                    stopRelease({
+                      variables: { releaseId: releases[selectedIndex].id },
+                    })
+                  }
                 >{`Stop game`}</Button>
               </>
             )}

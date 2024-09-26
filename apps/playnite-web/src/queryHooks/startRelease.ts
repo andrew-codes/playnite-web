@@ -3,7 +3,6 @@ import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import { GameRelease } from 'apps/playnite-web/.generated/types.generated'
 import _ from 'lodash'
 import { PlaylistEntity } from '../server/graphql/resolverTypes'
-import { Game_By_Id_Query } from './gameById'
 import { AllPlaylists } from './playlists'
 
 const { merge } = _
@@ -19,27 +18,7 @@ const Activate_Mutation = gql`
 const useStartRelease = () => {
   return useMutation<{ startGameRelease: GameRelease }>(Activate_Mutation, {
     update: (cache, mutationResult) => {
-      let data: any = cache.readQuery<{
-        game: { releases: Array<GameRelease> }
-      }>({ query: Game_By_Id_Query })
-
-      if (data) {
-        cache.writeQuery({
-          query: Game_By_Id_Query,
-          data: merge({}, data, {
-            game: {
-              releases: data.game.releases.map((release) =>
-                merge({}, release, {
-                  active:
-                    release.id === mutationResult.data?.startGameRelease.id,
-                }),
-              ),
-            },
-          }),
-        })
-      }
-
-      data = cache.readQuery<{ playlists: Array<PlaylistEntity> }>({
+      let data = cache.readQuery<{ playlists: Array<PlaylistEntity> }>({
         query: AllPlaylists,
       })
       if (data) {

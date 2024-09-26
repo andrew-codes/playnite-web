@@ -11,7 +11,6 @@ export const stopGameRelease: NonNullable<
 
   const releaseId = fromString(_arg.releaseId).id
 
-  await _ctx.api.game.updateGameReleases({ id: releaseId }, { active: false })
   await _ctx.api.game.updateGameReleases(
     { 'releases.id': releaseId },
     { active: false },
@@ -22,7 +21,7 @@ export const stopGameRelease: NonNullable<
     { arrayFilters: [{ 'release.id': releaseId }] },
   )
 
-  const game = await _ctx.api.game.getBy({ games: { id: releaseId } })
+  const game = await _ctx.api.game.getBy({ 'releases.id': releaseId })
   const release = game?.[0]?.releases.find((r) => r.id === releaseId)
   if (!release) {
     throw new GraphQLError('No game release found')

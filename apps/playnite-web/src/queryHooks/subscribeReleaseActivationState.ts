@@ -5,6 +5,7 @@ const Subscribe_Release_Activation_State = gql`
   subscription releaseActivationStateChanged {
     releaseActivationStateChanged {
       id
+      state
     }
   }
 `

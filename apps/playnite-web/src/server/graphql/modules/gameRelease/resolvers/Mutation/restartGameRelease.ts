@@ -11,7 +11,8 @@ export const restartGameRelease: NonNullable<
 
   const releaseId = fromString(_arg.releaseId).id
 
-  const release = await _ctx.api.gameRelease.getById(releaseId)
+  const game = await _ctx.api.game.getBy({ 'releases.id': releaseId })
+  const release = game?.[0]?.releases.find((r) => r.id === releaseId)
   if (!release) {
     throw new GraphQLError('No game release found')
   }
