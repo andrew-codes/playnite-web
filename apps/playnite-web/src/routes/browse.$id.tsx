@@ -7,6 +7,7 @@ function GameBrowseDetails() {
   const { loading, data, error } = useGameById({
     variables: { id: params.id },
   })
+  console.log(data?.game)
   if (loading || error || !data?.game) {
     return null
   }
