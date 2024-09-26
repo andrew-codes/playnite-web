@@ -43,5 +43,7 @@ export const stopGameRelease: NonNullable<
     }),
   )
 
+  _ctx.subscriptionPublisher.publish('gameActivationStateChanged', release)
+
   return release
 }

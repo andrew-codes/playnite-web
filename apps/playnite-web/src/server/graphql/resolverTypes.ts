@@ -1,3 +1,7 @@
+type ActivationState = 'Started' | 'Stopped' | 'Restarted'
+type GameReleaseActivationSubscriptionPayload = GameReleaseEntity & {
+  restarted?: boolean
+}
 type PlatformEntity = {
   specificationId: string
   icon: string
@@ -89,15 +93,18 @@ type GameAssetEntity = {
 }
 
 export type {
+  ActivationState,
   CompletionStatusEntity,
   FeatureEntity,
   GameAssetEntity,
   GameAssetEntityType,
   GameAssetType,
   GameEntity,
+  GameReleaseActivationSubscriptionPayload,
   GameReleaseEntity,
   PlatformEntity,
   PlaylistEntity,
   SourceEntity,
-  TagEntity,
+  TagEntity
 }
+

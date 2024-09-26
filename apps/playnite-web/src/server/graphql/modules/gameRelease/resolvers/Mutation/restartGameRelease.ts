@@ -5,6 +5,10 @@ import type { MutationResolvers } from './../../../../../../../.generated/types.
 export const restartGameRelease: NonNullable<
   MutationResolvers['restartGameRelease']
 > = async (_parent, _arg, _ctx) => {
+  if (!_ctx.jwt?.user.isAuthenticated) {
+    throw new GraphQLError('Unauthorized')
+  }
+
   const releaseId = fromString(_arg.releaseId).id
 
   const release = await _ctx.api.gameRelease.getById(releaseId)
@@ -31,6 +35,11 @@ export const restartGameRelease: NonNullable<
       },
     }),
   )
+
+  _ctx.subscriptionPublisher.publish('gameActivationStateChanged', {
+    active: true,
+    restarted: true,
+  })
 
   return release
 }

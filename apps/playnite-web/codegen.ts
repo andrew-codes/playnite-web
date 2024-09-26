@@ -15,6 +15,8 @@ const config: CodegenConfig = {
           Feature: '../src/server/graphql/resolverTypes#FeatureEntity',
           Game: '../src/server/graphql/resolverTypes#GameEntity',
           GameRelease: '../src/server/graphql/resolverTypes#GameReleaseEntity',
+          GameReleaseActivationSubscriptionPayload:
+            '../src/server/graphql/resolverTypes#GameReleaseActivationSubscriptionPayload',
           Platform: '../src/server/graphql/resolverTypes#PlatformEntity',
           GameAsset: '../src/server/graphql/resolverTypes#GameAssetEntity',
           Playlist: '../src/server/graphql/resolverTypes#PlaylistEntity',
