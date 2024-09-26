@@ -16,6 +16,7 @@ const AllPlaylists = gql`
         }
         releases {
           id
+          active
           name
           platform {
             id
@@ -34,7 +35,8 @@ const AllPlaylists = gql`
   }
 `
 
-const usePlaylists = () =>
-  useQuery<{ playlists: Array<Playlist> }>(AllPlaylists)
+const usePlaylists = () => {
+  return useQuery<{ playlists: Array<Playlist> }>(AllPlaylists)
+}
 
 export { AllPlaylists, usePlaylists }

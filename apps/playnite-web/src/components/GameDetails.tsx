@@ -12,13 +12,12 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import _ from 'lodash'
 import { FC, useMemo, useRef, useState } from 'react'
-import { Game, Platform } from '../../.generated/types.generated'
+import { Game, GameRelease } from '../../.generated/types.generated'
 import { useMe } from '../queryHooks'
-import { useActivate } from '../queryHooks/activate'
-
-const { merge } = _
+import { useRestartRelease } from '../queryHooks/restartRelease'
+import { useStartRelease } from '../queryHooks/startRelease'
+import { useStopRelease } from '../queryHooks/stopRelease'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -31,6 +30,8 @@ const Details = styled('div')(({ theme }) => ({
 }))
 const Actions = styled('div')(({ theme }) => ({
   height: theme.spacing(4.5),
+  display: 'flex',
+  justifyContent: 'space-between',
 }))
 
 const Description = styled('div')(({ theme }) => ({
@@ -47,8 +48,10 @@ const Description = styled('div')(({ theme }) => ({
   },
 }))
 
-const sortGameActionPlatforms = (platforms: Platform[]): Platform[] => {
-  const sortedPlatforms = platforms.slice()
+const sortReleasesByPreferredPlatform = (
+  releases: Array<GameRelease>,
+): Array<GameRelease> => {
+  const sortedReleases = releases.slice()
   const platformDisplays = {
     pc: { matcher: /PC/ },
     osx: { matcher: /Macintosh/ },
@@ -71,9 +74,9 @@ const sortGameActionPlatforms = (platforms: Platform[]): Platform[] => {
     platformDisplays.ps1,
   ]
 
-  sortedPlatforms.sort((a, b) => {
-    const aSort = sortOrder.findIndex((p) => p.matcher.test(a.name))
-    const bSort = sortOrder.findIndex((p) => p.matcher.test(b.name))
+  sortedReleases.sort((a, b) => {
+    const aSort = sortOrder.findIndex((p) => p.matcher.test(a.platform.name))
+    const bSort = sortOrder.findIndex((p) => p.matcher.test(b.platform.name))
     if (aSort > bSort) {
       return 1
     }
@@ -83,32 +86,21 @@ const sortGameActionPlatforms = (platforms: Platform[]): Platform[] => {
     return 0
   })
 
-  return sortedPlatforms
+  return sortedReleases
 }
 
 const GameDetails: FC<{ game: Game }> = ({ game }) => {
   const { data } = useMe()
 
-  const platforms = useMemo(
-    () =>
-      sortGameActionPlatforms(
-        game.releases.map((release) =>
-          merge({}, release.platform, { sourceName: release.source.name }),
-        ),
-      ) as Array<Platform & { sourceName: string }>,
+  const releases = useMemo(
+    () => sortReleasesByPreferredPlatform(game.releases),
     [game.releases],
   )
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [activate] = useActivate()
 
-  const handlePlay = (selectedIndex) => (evt) => {
-    activate({
-      variables: {
-        gameId: game.id,
-        platformId: platforms[selectedIndex].id,
-      },
-    })
-  }
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [startRelease] = useStartRelease()
+  const [stopRelease] = useStopRelease()
+  const [restartRelease] = useRestartRelease()
 
   const [open, setOpen] = useState(false)
   const handleMenuItemClick = (
@@ -145,9 +137,18 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
               color="primary"
               aria-label="Platforms in which to play the game"
             >
-              <Button onClick={handlePlay(selectedIndex)}>
-                {platforms[selectedIndex].name} via{' '}
-                {platforms[selectedIndex].sourceName}
+              <Button
+                sx={{ minWidth: '296px !important' }}
+                onClick={(evt) => {
+                  startRelease({
+                    variables: {
+                      releaseId: releases[selectedIndex].id,
+                    },
+                  })
+                }}
+              >
+                {releases[selectedIndex].platform.name} via{' '}
+                {releases[selectedIndex].source.name}
               </Button>
               <Button
                 size="small"
@@ -181,23 +182,47 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                   <Paper>
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList id="split-button-menu" autoFocusItem>
-                        {platforms.map((option, index) => (
-                          <MenuItem
-                            key={option.id}
-                            selected={index === selectedIndex}
-                            onClick={(event) =>
-                              handleMenuItemClick(event, index)
-                            }
-                          >
-                            {option.name} via {option.sourceName}
-                          </MenuItem>
-                        ))}
+                        {releases
+                          .filter((r) => !r.active)
+                          .map((option, index) => (
+                            <MenuItem
+                              key={option.id}
+                              selected={index === selectedIndex}
+                              onClick={(event) =>
+                                handleMenuItemClick(event, index)
+                              }
+                            >
+                              {option.platform.name} via {option.source.name}
+                            </MenuItem>
+                          ))}
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>
                 </Grow>
               )}
             </Popper>
+            {releases.some((r) => r.active) && (
+              <>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={(evt) =>
+                    restartRelease({
+                      variables: { releaseId: releases[selectedIndex].id },
+                    })
+                  }
+                >{`Restart game`}</Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={(evt) =>
+                    stopRelease({
+                      variables: { releaseId: releases[selectedIndex].id },
+                    })
+                  }
+                >{`Stop game`}</Button>
+              </>
+            )}
           </>
         )}
       </Actions>
