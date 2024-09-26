@@ -18,6 +18,7 @@ const config: CodegenConfig = {
           Platform: '../src/server/graphql/resolverTypes#PlatformEntity',
           GameAsset: '../src/server/graphql/resolverTypes#GameAssetEntity',
           Playlist: '../src/server/graphql/resolverTypes#PlaylistEntity',
+          Source: '../src/server/graphql/resolverTypes#SourceEntity',
         },
         contextType: '../src/server/graphql/context#PlayniteContext',
       },

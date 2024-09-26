@@ -25,6 +25,9 @@ const AllPlaylists = gql`
               id
             }
           }
+          source {
+            name
+          }
         }
       }
     }
