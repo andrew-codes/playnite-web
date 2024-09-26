@@ -1,5 +1,3 @@
-import { gql } from '@apollo/client/core'
-import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import { ArrowDropDown } from '@mui/icons-material'
 import {
   Button,
@@ -14,9 +12,13 @@ import {
   Typography,
   styled,
 } from '@mui/material'
+import _ from 'lodash'
 import { FC, useMemo, useRef, useState } from 'react'
 import { Game, Platform } from '../../.generated/types.generated'
 import { useMe } from '../queryHooks'
+import { useActivate } from '../queryHooks/activate'
+
+const { merge } = _
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -44,14 +46,6 @@ const Description = styled('div')(({ theme }) => ({
     maxWidth: '100%',
   },
 }))
-
-const Activate_Mutation = gql`
-  mutation Activate($gameId: String!, $platformId: String!) {
-    activateGameRelease(gameId: $gameId, platformId: $platformId) {
-      id
-    }
-  }
-`
 
 const sortGameActionPlatforms = (platforms: Platform[]): Platform[] => {
   const sortedPlatforms = platforms.slice()
@@ -97,11 +91,15 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
 
   const platforms = useMemo(
     () =>
-      sortGameActionPlatforms(game.releases.map((release) => release.platform)),
+      sortGameActionPlatforms(
+        game.releases.map((release) =>
+          merge({}, release.platform, { sourceName: release.source.name }),
+        ),
+      ) as Array<Platform & { sourceName: string }>,
     [game.releases],
   )
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [activate] = useMutation(Activate_Mutation)
+  const [activate] = useActivate()
 
   const handlePlay = (selectedIndex) => (evt) => {
     activate({
@@ -148,10 +146,8 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
               aria-label="Platforms in which to play the game"
             >
               <Button onClick={handlePlay(selectedIndex)}>
-                {platforms[selectedIndex].name}
-                {!platforms[selectedIndex].isConsole && (
-                  <> via {platforms[selectedIndex].source}</>
-                )}
+                {platforms[selectedIndex].name} via{' '}
+                {platforms[selectedIndex].sourceName}
               </Button>
               <Button
                 size="small"
@@ -193,8 +189,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                               handleMenuItemClick(event, index)
                             }
                           >
-                            {option.name}
-                            {!option.isConsole && <> via {option.source}</>}
+                            {option.name} via {option.sourceName}
                           </MenuItem>
                         ))}
                       </MenuList>

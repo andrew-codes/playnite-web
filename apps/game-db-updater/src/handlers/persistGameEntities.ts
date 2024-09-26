@@ -1,6 +1,5 @@
 import createDebugger from 'debug'
 import _ from 'lodash'
-import { v6 as guid } from 'uuid'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 import { getDbClient } from '../dbClient'
 
@@ -39,79 +38,24 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
     const collectionName = entityType[0].toLowerCase() + entityType.slice(1)
 
     const client = await getDbClient()
-    await client
-      .db('games')
-      .collection(collectionName)
-      .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
-
-    if (collectionName === 'game') {
-      let consolidatedGame = await client
-        .db('games')
-        .collection('consolidated-games')
-        .findOne({ name: entity.name })
-
-      if (!consolidatedGame) {
-        const id = guid()
-        await client.db('games').collection('consolidated-games').insertOne({
-          id,
-          name: entity.name,
-          releases: [],
-          description: entity.description,
-          playlists: [],
-        })
-      }
-
-      consolidatedGame = await client
-        .db('games')
-        .collection<{
-          releases: string[]
-          playlists: string[]
-        }>('consolidated-games')
-        .findOne({ name: entity.name })
-
-      if (!consolidatedGame) {
-        console.error(
-          `Could not find consolidated game for game ${entity.name}`,
-          JSON.stringify(entity, null, 2),
-        )
-        return
-      }
-
+    if (entityType === 'playlist') {
       await client
         .db('games')
-        .collection<{ name: string; releases: Array<string> }>(
-          'consolidated-games',
-        )
+        .collection<{ games: [] }>(collectionName)
         .updateOne(
-          { _id: consolidatedGame._id },
-          {
-            $set: {
-              releases: uniq(
-                [entityId].concat(consolidatedGame.releases ?? []),
-              ),
-            },
-          },
+          { id: entityId },
+          { $pullAll: { games: [] } },
+          { upsert: true },
         )
-
-      const playlists =
-        entity?.tags
-          ?.filter((tag) => isPlaylistTag.test(tag.name))
-          ?.map((tag) => tag.id) ?? []
       await client
         .db('games')
-        .collection<{ name: string; playlists: Array<string> }>(
-          'consolidated-games',
-        )
-        .updateOne(
-          { _id: consolidatedGame._id },
-          {
-            $set: {
-              playlists: uniq(
-                playlists.concat(consolidatedGame.playlists ?? []),
-              ),
-            },
-          },
-        )
+        .collection(collectionName)
+        .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
+    } else {
+      await client
+        .db('games')
+        .collection(collectionName)
+        .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
     }
   } catch (e) {
     console.error(e)

@@ -12,7 +12,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public string getFilePath()
     {
-      var game = item as Game;
+      var game = item as Release;
 
       return game?.CoverImage;
     }

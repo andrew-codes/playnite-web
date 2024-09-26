@@ -3,6 +3,5 @@ type Platform {
   name: String!
   releases: [GameRelease]!
   icon: GameAsset
-  source: String!
   isConsole: Boolean!
 }

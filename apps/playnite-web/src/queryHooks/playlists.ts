@@ -21,10 +21,12 @@ const AllPlaylists = gql`
             id
             isConsole
             name
-            source
             icon {
               id
             }
+          }
+          source {
+            name
           }
         }
       }

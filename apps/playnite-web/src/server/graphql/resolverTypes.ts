@@ -27,18 +27,11 @@ type SourceEntity = {
   name: string
 }
 
-type PlatformSourceEntity = {
-  id: string
-  name: string
-  source: string
-}
-
 type GameEntity = {
   id: string
   name: string
   description: string
-  releases: string[]
-  playlists: string[]
+  releases: GameReleaseEntity[]
 }
 
 type GameReleaseEntity = {
@@ -47,18 +40,14 @@ type GameReleaseEntity = {
   backgroundImage: string
   communityScore: number | null
   completionStatus: { id: string; name: string }
-  completionStatusId: string
   cover: string
   coverImage: string
   criticScore: number | null
   description: string
   developers: { id: string; name: string }[]
-  developersIds: string[]
   features: { id: string; name: string }[]
-  featureIds: string[] | null
   gameId: string
   genres: { id: string; name: string }[]
-  genresIds: string[]
   hidden: boolean
   id: string
   isCustomGame: boolean
@@ -69,22 +58,22 @@ type GameReleaseEntity = {
   isUninstalling: boolean
   links: { name: string; url: string }[]
   name: string
-  platformSource: PlatformSourceEntity
-  platforms: Array<PlatformEntity>
-  platformsIds: string[]
+  platform: PlatformEntity
   publishers: { id: string; name: string }[]
-  publishersIds: string[]
   recentActivity: string
   releaseDate: { month: number; day: number; year: number }
   releaseYear: number
   series: { id: string; name: string }[]
-  seriesIds: string[]
   sortingName?: string
   sortName: string
   source: SourceEntity
-  sourceId: string | null
   tags: Array<TagEntity> | null
-  tagsIds: string[]
+}
+
+type PlaylistEntity = {
+  id: string
+  name: string
+  games: Array<GameEntity>
 }
 
 type GameAssetType = 'background' | 'cover' | 'icon'
@@ -107,7 +96,8 @@ export type {
   GameEntity,
   GameReleaseEntity,
   PlatformEntity,
-  PlatformSourceEntity,
+  PlaylistEntity,
   SourceEntity,
-  TagEntity,
+  TagEntity
 }
+
