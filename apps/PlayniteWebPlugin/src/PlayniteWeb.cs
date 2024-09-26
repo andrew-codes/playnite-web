@@ -306,11 +306,11 @@ namespace PlayniteWeb
       var updatedGames = updatedGamesData.Select(g => games.First(game => game.Name == g.Name));
       Task.WaitAll(updatedGames.SelectMany(item => gamePublisher.Publish(item)).ToArray());
 
-      var affectedPlaylists = updatedGamesData
-        .SelectMany(g => g.Tags)
-        .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
-        .Select(tag => new Playlist(tag.Name.Substring(0, 9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))));
-      Task.WaitAll(affectedPlaylists.SelectMany(item => playlistPublisher.Publish(item)).ToArray());
+      var playlistPublications = PlayniteApi.Database.Tags
+       .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
+       .Select(tag => new Playlist(tag.Name.Substring(9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
+       .SelectMany(playlist => playlistPublisher.Publish(playlist));
+      Task.WaitAll(playlistPublications.ToArray());
     }
 
     private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
