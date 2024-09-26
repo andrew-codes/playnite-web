@@ -16,8 +16,8 @@ const Activate_Mutation = gql`
   }
 `
 
-const useStartRelease = () =>
-  useMutation<{ startGameRelease: GameRelease }>(Activate_Mutation, {
+const useStartRelease = () => {
+  return useMutation<{ startGameRelease: GameRelease }>(Activate_Mutation, {
     update: (cache, mutationResult) => {
       let data: any = cache.readQuery<{
         game: { releases: Array<GameRelease> }
@@ -66,5 +66,5 @@ const useStartRelease = () =>
       }
     },
   })
-
+}
 export { Activate_Mutation, useStartRelease }

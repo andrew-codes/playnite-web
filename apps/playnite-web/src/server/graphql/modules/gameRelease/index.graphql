@@ -31,7 +31,6 @@ enum ActivationState {
 }
 type GameReleaseActivationSubscriptionPayload {
   id: String!
-  gameId: String!
   state: ActivationState!
 }
 

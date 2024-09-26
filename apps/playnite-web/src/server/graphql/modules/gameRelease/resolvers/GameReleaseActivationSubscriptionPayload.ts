@@ -4,9 +4,6 @@ export const GameReleaseActivationSubscriptionPayload: GameReleaseActivationSubs
     id: async (_parent, _arg, _ctx) => {
       return _parent.id
     },
-    gameId: async (_parent, _arg, _ctx) => {
-      return _parent.gameId
-    },
     state: async (_parent, _arg, _ctx) => {
       return _parent.restarted
         ? 'Restarted'

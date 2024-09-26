@@ -64,7 +64,10 @@ export const startGameRelease: NonNullable<
     }),
   )
 
-  _ctx.subscriptionPublisher.publish('gameActivationStateChanged', release)
+  await _ctx.subscriptionPublisher.publish('gameActivationStateChanged', {
+    id: releaseId,
+    active: true,
+  })
 
   return release
 }

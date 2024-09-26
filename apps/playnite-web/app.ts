@@ -7,6 +7,9 @@ import helmet from 'helmet'
 import { AsyncMqttClient } from 'mqtt-client'
 import { WebSocketServer } from 'ws'
 import createYoga from './src/server/graphql'
+import { Domain } from './src/server/graphql/Domain'
+import schema from './src/server/graphql/schema'
+import { subscriptionPublisher } from './src/server/graphql/subscriptionPublisher'
 
 const debug = createDebugger('playnite-web/app/server')
 
@@ -66,6 +69,7 @@ async function run(mqttClient: AsyncMqttClient) {
     }),
   )
   app.use(express.static('./public/assets', { maxAge: '1y' }))
+
   app.use('/api', yoga)
 
   const build = viteDevServer
@@ -87,39 +91,15 @@ async function run(mqttClient: AsyncMqttClient) {
     const wsServer = new WebSocketServer({ server, path: '/api' })
     useServer(
       {
-        execute: (args: any) => args.rootValue.execute(args),
-        subscribe: (args: any) => args.rootValue.subscribe(args),
-        onSubscribe: async (ctx, msg) => {
-          const {
-            schema,
-            execute,
-            subscribe,
-            contextFactory,
-            parse,
-            validate,
-          } = yoga.getEnveloped({
-            ...ctx,
-            req: ctx.extra.request,
-            socket: ctx.extra.socket,
-            params: msg.payload,
-          })
-
-          const args = {
-            schema,
-            operationName: msg.payload.operationName,
-            document: parse(msg.payload.query),
-            variableValues: msg.payload.variables,
-            contextValue: await contextFactory(),
-            rootValue: {
-              execute,
-              subscribe,
-            },
-          }
-
-          const errors = validate(args.schema, args.document)
-          if (errors.length) return errors
-          return args
-        },
+        schema,
+        context: (req) => ({
+          ...req,
+          signingKey,
+          domain,
+          api: new Domain(),
+          mqttClient,
+          subscriptionPublisher,
+        }),
       },
       wsServer,
     )
