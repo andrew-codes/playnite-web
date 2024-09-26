@@ -41,7 +41,7 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
     if (entityType === 'playlist') {
       await client
         .db('games')
-        .collection(collectionName)
+        .collection<{ games: [] }>(collectionName)
         .updateOne(
           { id: entityId },
           { $pullAll: { games: [] } },
