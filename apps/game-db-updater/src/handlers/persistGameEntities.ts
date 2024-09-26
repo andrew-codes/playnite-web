@@ -38,10 +38,25 @@ const handler: IHandlePublishedTopics = async (topic, payload) => {
     const collectionName = entityType[0].toLowerCase() + entityType.slice(1)
 
     const client = await getDbClient()
-    await client
-      .db('games')
-      .collection(collectionName)
-      .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
+    if (entityType === 'playlist') {
+      await client
+        .db('games')
+        .collection(collectionName)
+        .updateOne(
+          { id: entityId },
+          { $pullAll: { games: [] } },
+          { upsert: true },
+        )
+      await client
+        .db('games')
+        .collection(collectionName)
+        .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
+    } else {
+      await client
+        .db('games')
+        .collection(collectionName)
+        .updateOne({ id: entityId }, { $set: entity }, { upsert: true })
+    }
   } catch (e) {
     console.error(e)
   }
