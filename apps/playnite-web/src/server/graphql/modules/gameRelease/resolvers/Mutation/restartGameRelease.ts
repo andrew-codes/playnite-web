@@ -1,17 +1,10 @@
 import { GraphQLError } from 'graphql'
-import _ from 'lodash'
-import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
 import { fromString } from '../../../../../oid'
+import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
-const { merge } = _
-
-export const activateGameRelease: NonNullable<
-  MutationResolvers['activateGameRelease']
+export const restartGameRelease: NonNullable<
+  MutationResolvers['restartGameRelease']
 > = async (_parent, _arg, _ctx) => {
-  if (!_ctx.jwt?.user.isAuthenticated) {
-    throw new GraphQLError('Unauthorized')
-  }
-
   const releaseId = fromString(_arg.releaseId).id
 
   const release = await _ctx.api.gameRelease.getById(releaseId)
@@ -19,15 +12,12 @@ export const activateGameRelease: NonNullable<
     throw new GraphQLError('No game release found')
   }
 
-  let install =
-    !release.isRunning &&
-    !release.isInstalled &&
-    !release.isInstalling &&
-    !release.isUninstalling &&
-    !release.isLaunching
+  if (!release.active) {
+    throw new GraphQLError('Release is not currently active.')
+  }
 
   await _ctx.mqttClient.publish(
-    `playnite/request/game/activate`,
+    `playnite/request/game/restart`,
     JSON.stringify({
       game: {
         id: release.id,
@@ -38,7 +28,6 @@ export const activateGameRelease: NonNullable<
           name: release.platform.name,
         },
         source: release.source,
-        install,
       },
     }),
   )

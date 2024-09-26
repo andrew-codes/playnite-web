@@ -52,4 +52,7 @@ export const GameRelease: GameReleaseResolvers = {
   source: async (_parent, _arg, _ctx) => {
     return _parent.source
   },
+  active: async (_parent, _arg, _ctx) => {
+    return _parent.active ?? false
+  },
 }
