@@ -9,6 +9,9 @@ export type PubSubChannels = {
       processId: string
     },
   ]
+  gameActivationStateChanged: [
+    { active: boolean | null | undefined; restarted?: boolean },
+  ]
 }
 
 const subscriptionPublisher = createPubSub<PubSubChannels>()
