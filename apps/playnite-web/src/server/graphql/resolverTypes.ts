@@ -35,6 +35,7 @@ type GameEntity = {
 }
 
 type GameReleaseEntity = {
+  active: boolean | null | undefined
   added: string
   ageRating: string
   backgroundImage: string
@@ -98,6 +99,5 @@ export type {
   PlatformEntity,
   PlaylistEntity,
   SourceEntity,
-  TagEntity
+  TagEntity,
 }
-

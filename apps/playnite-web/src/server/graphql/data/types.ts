@@ -31,6 +31,7 @@ type SourceDbEntity = {
 
 type GameReleaseDbEntity = WithId<Document> & {
   added: string
+  active: boolean | null | undefined
   ageRating: string
   backgroundImage: string
   communityScore: number | null

@@ -30,4 +30,12 @@ extend type Subscription {
 
 extend type Mutation {
   activateGameRelease(releaseId: String!): GameRelease!
+    @deprecated(reason: "Use startGameRelease instead")
+  startGameRelease(releaseId: String!): GameRelease!
+  stopGameRelease(releaseId: String!): GameRelease!
+  restartGameRelease(releaseId: String!): GameRelease!
+}
+
+extend type Query {
+  nowPlaying: GameRelease
 }

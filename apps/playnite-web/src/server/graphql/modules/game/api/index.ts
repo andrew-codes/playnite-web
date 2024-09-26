@@ -1,9 +1,11 @@
 import DataLoader from 'dataloader'
 import _ from 'lodash'
+import { Filter } from 'mongodb'
 import { GameDbEntity } from '../../../data/types'
 import { autoBind, type DomainApi } from '../../../Domain'
+import { GameReleaseEntity } from '../../../resolverTypes'
 
-const { keyBy } = _
+const { keyBy, merge } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, GameDbEntity>(async (ids) => {
@@ -35,6 +37,22 @@ function create(this: DomainApi) {
         .collection<GameDbEntity>('game')
         .find()
         .toArray()
+    },
+    async updateGameReleases(
+      this: DomainApi,
+      query: Filter<GameDbEntity>,
+      data: Partial<GameReleaseEntity>,
+    ) {
+      const $set = Object.entries(data).reduce(
+        (acc, [key, value]) =>
+          merge({}, acc, {
+            [`releases.$.${key}`]: value,
+          }),
+        {},
+      )
+      return await (await this.db())
+        .collection<GameDbEntity>('game')
+        .updateMany(query, { $set })
     },
   })
 }

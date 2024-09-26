@@ -1,12 +1,12 @@
 import { GraphQLError } from 'graphql'
 import _ from 'lodash'
-import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
 import { fromString } from '../../../../../oid'
+import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 const { merge } = _
 
-export const activateGameRelease: NonNullable<
-  MutationResolvers['activateGameRelease']
+export const startGameRelease: NonNullable<
+  MutationResolvers['startGameRelease']
 > = async (_parent, _arg, _ctx) => {
   if (!_ctx.jwt?.user.isAuthenticated) {
     throw new GraphQLError('Unauthorized')
@@ -14,7 +14,28 @@ export const activateGameRelease: NonNullable<
 
   const releaseId = fromString(_arg.releaseId).id
 
-  const release = await _ctx.api.gameRelease.getById(releaseId)
+  await _ctx.api.game.updateGameReleases(
+    { 'releases.active': true },
+    { active: false },
+  )
+  await _ctx.api.playlist.updateGameReleases(
+    { 'games.releases.active': true },
+    { active: false },
+    { arrayFilters: [{ 'release.active': true }] },
+  )
+
+  await _ctx.api.game.updateGameReleases(
+    { 'releases.id': releaseId },
+    { active: true },
+  )
+  await _ctx.api.playlist.updateGameReleases(
+    { 'games.releases.id': releaseId },
+    { active: true },
+    { arrayFilters: [{ 'release.id': releaseId }] },
+  )
+
+  const game = await _ctx.api.game.getBy({ 'releases.id': releaseId })
+  const release = game?.[0]?.releases.find((r) => r.id === releaseId)
   if (!release) {
     throw new GraphQLError('No game release found')
   }
@@ -27,7 +48,7 @@ export const activateGameRelease: NonNullable<
     !release.isLaunching
 
   await _ctx.mqttClient.publish(
-    `playnite/request/game/activate`,
+    `playnite/request/game/start`,
     JSON.stringify({
       game: {
         id: release.id,
