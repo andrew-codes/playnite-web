@@ -27,12 +27,6 @@ type SourceEntity = {
   name: string
 }
 
-type PlatformSourceEntity = {
-  id: string
-  name: string
-  source: string
-}
-
 type GameEntity = {
   id: string
   name: string
@@ -102,8 +96,8 @@ export type {
   GameEntity,
   GameReleaseEntity,
   PlatformEntity,
-  PlatformSourceEntity,
   PlaylistEntity,
   SourceEntity,
-  TagEntity,
+  TagEntity
 }
+

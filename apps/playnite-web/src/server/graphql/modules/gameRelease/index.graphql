@@ -13,6 +13,8 @@ type GameRelease {
   completionStatus: CompletionStatus!
   cover: GameAsset
   features: [Feature]!
+  source: Source!
+  active: Boolean!
 }
 
 type GameReleaseSubscriptionPayload {
