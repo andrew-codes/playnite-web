@@ -24,11 +24,18 @@ const createConnectedMqttClient = async (
   debug(
     `Existing MQTT client not found; creating one with the following options: host=${host}, port=${port}, username=${username}`,
   )
-  const mqttClient = await connectAsync(`tcp://${host}`, {
-    password,
-    port,
-    username,
-  })
+  let mqttClient
+  if (username && password) {
+    mqttClient = await connectAsync(`tcp://${host}`, {
+      password,
+      port,
+      username,
+    })
+  } else {
+    mqttClient = await connectAsync(`tcp://${host}`, {
+      port,
+    })
+  }
   debug('MQTT client connected')
 
   return mqttClient
