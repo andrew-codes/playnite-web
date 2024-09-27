@@ -4,7 +4,7 @@ import { autoBind, type DomainApi } from '../../../Domain'
 import { FeatureDbEntity } from '../../../data/types'
 import { FeatureEntity } from '../../../resolverTypes'
 
-const { keyBy, omit } = _
+const { keyBy } = _
 
 function create(this: DomainApi) {
   const loader = new DataLoader<string, FeatureEntity>(async (ids) => {
@@ -18,21 +18,15 @@ function create(this: DomainApi) {
       'id',
     )
 
-    return ids.map((id) =>
-      results[id] ? omit(results[id], '_id') : null,
-    ) as Array<FeatureEntity>
+    return ids.map((id) => results[id] ?? null) as Array<FeatureEntity>
   })
 
   return autoBind(this, {
     async getById(this: DomainApi, id: string) {
-      if (id === '00000000-0000-0000-0000-000000000000') {
-        return {
-          id: '00000000-0000-0000-0000-000000000000',
-          name: 'Unknown',
-        }
-      }
-
       return loader.load(id)
+    },
+    async getAll(this: DomainApi) {
+      return (await this.db()).collection('gamefeature').find().toArray()
     },
   })
 }

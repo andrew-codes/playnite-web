@@ -2,7 +2,7 @@ import _ from 'lodash'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
 import { GameEntity } from '../../../../resolverTypes'
 
-const { get, merge } = _
+const { get, flatMap } = _
 const exactMatch = /(".*")|('.*')/
 
 export const games: NonNullable<QueryResolvers['games']> = async (
@@ -44,10 +44,24 @@ export const games: NonNullable<QueryResolvers['games']> = async (
                   return false
                 }
 
+                const filterKeys = filterItem.field.split('.')
                 return game.releases.some((release) => {
-                  const gameValue = get(release, filterItem.field)
+                  let gameValue = get(release, filterItem.field)
                   if (gameValue === undefined) {
-                    return false
+                    gameValue = get(release, filterKeys[0])
+                    for (let filterKey of filterKeys.slice(1)) {
+                      if (gameValue === undefined) {
+                        break
+                      }
+                      if (Array.isArray(gameValue)) {
+                        gameValue = flatMap(gameValue, (v) => get(v, filterKey))
+                      } else {
+                        gameValue = get(gameValue, filterKey)
+                      }
+                    }
+                    if (!gameValue) {
+                      return false
+                    }
                   }
 
                   let transformValue = (v) => v
@@ -57,6 +71,12 @@ export const games: NonNullable<QueryResolvers['games']> = async (
                     transformValue = (v) => Boolean(v)
                   } else if (gameValue instanceof Date) {
                     transformValue = (v) => new Date(v)
+                  }
+
+                  if (Array.isArray(gameValue)) {
+                    return filterItem?.values.some((value) =>
+                      gameValue.some((v) => v === transformValue(value)),
+                    )
                   }
 
                   return filterItem?.values.some(
