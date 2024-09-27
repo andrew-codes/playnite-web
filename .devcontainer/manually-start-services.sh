@@ -26,4 +26,5 @@ fi
 
 docker run --name mqtt -d \
   -p 1883:1883 \
+  -v $PWD/.data/mqtt/config:/mosquitto/config \
   eclipse-mosquitto:latest

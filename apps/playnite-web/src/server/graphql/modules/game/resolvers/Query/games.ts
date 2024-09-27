@@ -2,7 +2,7 @@ import _ from 'lodash'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
 import { GameEntity } from '../../../../resolverTypes'
 
-const { merge } = _
+const { get, merge } = _
 const exactMatch = /(".*")|('.*')/
 
 export const games: NonNullable<QueryResolvers['games']> = async (
@@ -45,7 +45,7 @@ export const games: NonNullable<QueryResolvers['games']> = async (
                 }
 
                 return game.releases.some((release) => {
-                  const gameValue = release[filterItem.field]
+                  const gameValue = get(release, filterItem.field)
                   if (gameValue === undefined) {
                     return false
                   }
