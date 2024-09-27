@@ -40,5 +40,15 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
     field: 'platform.id',
   })
 
+  const features = await _ctx.api.feature.getAll()
+  filterItems.push({
+    name: 'Feature',
+    allowedValues: features.map((feature) => ({
+      value: feature.id,
+      display: feature.name,
+    })),
+    field: 'features.id',
+  })
+
   return filterItems
 }
