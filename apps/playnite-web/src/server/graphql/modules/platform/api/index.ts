@@ -19,9 +19,7 @@ function create(this: DomainApi) {
       'id',
     )
 
-    return ids.map((id) =>
-      results[id] ? results[id] : null,
-    ) as Array<PlatformEntity>
+    return ids.map((id) => results[id] ?? null) as Array<PlatformEntity>
   })
 
   return autoBind(this, {
