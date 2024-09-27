@@ -18,9 +18,7 @@ function create(this: DomainApi) {
       'id',
     )
 
-    return ids.map((id) =>
-      results[id] ? omit(results[id], '_id') : null,
-    ) as Array<CompletionStatusEntity>
+    return ids.map((id) => results[id] ?? null) as Array<CompletionStatusEntity>
   })
 
   return autoBind(this, {
@@ -40,9 +38,7 @@ function create(this: DomainApi) {
         .find(query)
         .toArray()
 
-      return items.map((item) =>
-        omit(item, ['_id']),
-      ) as Array<CompletionStatusEntity>
+      return items as Array<CompletionStatusEntity>
     },
   })
 }
