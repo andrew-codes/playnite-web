@@ -4,7 +4,7 @@ import type {
   QueryResolvers,
 } from './../../../../../../../.generated/types.generated'
 
-const { uniq } = _
+const { sortBy, uniq } = _
 
 export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
   _parent,
@@ -50,5 +50,15 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
     field: 'features.id',
   })
 
-  return filterItems
+  const completionStates = await _ctx.api.completionStatus.getBy({})
+  filterItems.push({
+    name: 'Completion Status',
+    allowedValues: completionStates.map((item) => ({
+      value: item.id,
+      display: item.name,
+    })),
+    field: 'completionStatus.id',
+  })
+
+  return sortBy(filterItems, 'name')
 }
