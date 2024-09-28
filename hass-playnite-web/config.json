@@ -1,7 +1,7 @@
 {
   "name": "Playnite Web App",
   "url": "https://github.com/andrew-codes/playnite-web",
-  "version": "4.0.2",
+  "version": "8.2.1",
   "slug": "playnite-web-app",
   "description": "An add-on to provide web interface and API for Playnite.",
   "arch": [
@@ -45,7 +45,7 @@
   "ingress_port": "3000",
   "ingress_entry": "/",
   "ingress_stream": false,
-  "image": "ghcr.io/andrew-codes/playnite-web-app-hass-addon",
+  "image": "ghcr.io/andrew-codes/playnite-web-app:8.2.1",
   "map": [
     "config:rw"
   ],
