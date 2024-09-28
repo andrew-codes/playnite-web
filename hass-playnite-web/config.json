@@ -45,7 +45,7 @@
   "ingress_port": "3000",
   "ingress_entry": "/",
   "ingress_stream": false,
-  "image": "ghcr.io/andrew-codes/playnite-web-app:8.2.1",
+  "image": "ghcr.io/andrew-codes/playnite-web-app",
   "map": [
     "config:rw"
   ],
