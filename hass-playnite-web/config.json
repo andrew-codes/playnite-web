@@ -42,7 +42,7 @@
     "MQTT_PASSWORD": "str?"
   },
   "ingress": true,
-  "ingress_port": "[PORT]",
+  "ingress_port": "3000",
   "ingress_entry": "/",
   "ingress_stream": false,
   "image": "ghcr.io/andrew-codes/playnite-web-app-hass-addon",
