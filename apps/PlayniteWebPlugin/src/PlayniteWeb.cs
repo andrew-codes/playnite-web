@@ -301,17 +301,30 @@ namespace PlayniteWeb
 
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Playnite.SDK.Models.Game> e)
     {
-      var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name).Select(groupedByName => new Models.Game(groupedByName)).Where(g => !g.Id.Equals(Guid.Empty));
-      var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
-      var updatedGames = updatedGamesData.Select(g => games.First(game => game.Name == g.Name));
-      Task.WaitAll(updatedGames.SelectMany(item => gamePublisher.Publish(item)).ToArray());
-
-      var playlistPublications = PlayniteApi.Database.Tags
-       .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
-       .Select(tag => new Playlist(tag.Name.Substring(9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
-       .SelectMany(playlist => playlistPublisher.Publish(playlist));
-      Task.WaitAll(playlistPublications.ToArray());
+        var games = PlayniteApi.Database.Games.ToList()
+            .GroupBy(game => game.Name)
+            .Select(groupedByName => new Models.Game(groupedByName))
+            .Where(g => !g.Id.Equals(Guid.Empty));
+        var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
+        var updatedGames = updatedGamesData
+            .Select(g => {
+                var matchingGame = games.FirstOrDefault(game => game.Name == g.Name);
+                if (matchingGame == null)
+                {
+                    // Log the missing game for troubleshooting
+                    Console.WriteLine($"Game not found: {g.Name}");
+                }
+                return matchingGame;
+            })
+            .Where(game => game != null);
+        Task.WaitAll(updatedGames.SelectMany(item => gamePublisher.Publish(item)).ToArray());
+        var playlistPublications = PlayniteApi.Database.Tags
+            .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
+            .Select(tag => new Playlist(tag.Name.Substring(9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
+            .SelectMany(playlist => playlistPublisher.Publish(playlist));
+        Task.WaitAll(playlistPublications.ToArray());
     }
+
 
     private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
     {
