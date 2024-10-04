@@ -257,25 +257,53 @@ namespace PlayniteWeb
 
     private void Subscriber_OnUninstallGameRequest(object sender, Guid e)
     {
-      var game = PlayniteApi.Database.Games.First(g => g.Id == e);
-      if (game.IsInstalled)
+      try
       {
-        PlayniteApi.UninstallGame(e);
-        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-        Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+        var game = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == e);
+        if (game == null)
+        {
+          Logger.Debug($"Game with ID {e} not found for uninstall.");
+          return;
+        }
+
+        if (game.IsInstalled)
+        {
+          PlayniteApi.UninstallGame(e);
+          var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
+          Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+        }
+      }
+      catch (Exception ex)
+      {
+        Logger.Error(ex, $"Error occurred in Subscriber_OnUninstallGameRequest for Game ID {e}.");
       }
     }
 
+
     private void Subscriber_OnInstallGameRequest(object sender, Guid e)
     {
-      var game = PlayniteApi.Database.Games.First(g => g.Id == e);
-      if (!game.IsInstalled)
+      try
       {
-        PlayniteApi.InstallGame(e);
-        var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-        Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+        var game = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == e);
+        if (game == null)
+        {
+          Logger.Debug($"Game with ID {e} not found for installation.");
+          return;
+        }
+
+        if (!game.IsInstalled)
+        {
+          PlayniteApi.InstallGame(e);
+          var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
+          Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+        }
+      }
+      catch (Exception ex)
+      {
+        Logger.Error(ex, $"Error occurred in Subscriber_OnInstallGameRequest for Game ID {e}.");
       }
     }
+
 
     private void HandleVerifySettings(object sender, PlayniteWebSettings e)
     {
@@ -301,31 +329,38 @@ namespace PlayniteWeb
 
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Playnite.SDK.Models.Game> e)
     {
-        var games = PlayniteApi.Database.Games.ToList()
-            .GroupBy(game => game.Name)
+      try
+      {
+        var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name)
             .Select(groupedByName => new Models.Game(groupedByName))
             .Where(g => !g.Id.Equals(Guid.Empty));
+
         var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
         var updatedGames = updatedGamesData
-            .Select(g => {
-                var matchingGame = games.FirstOrDefault(game => game.Name == g.Name);
-                if (matchingGame == null)
-                {
-                    // Log the missing game for troubleshooting
-                    Console.WriteLine($"Game not found: {g.Name}");
-                }
-                return matchingGame;
-            })
-            .Where(game => game != null);
+            .Select(g => games.FirstOrDefault(game => game.Name == g.Name))
+            .Where(g => g != null);
+
+        if (!updatedGames.Any())
+        {
+          Logger.Debug("No matching games found for update.");
+        }
+
         Task.WaitAll(updatedGames.SelectMany(item => gamePublisher.Publish(item)).ToArray());
+
         var playlistPublications = PlayniteApi.Database.Tags
             .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
-            .Select(tag => new Playlist(tag.Name.Substring(9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
+            .Select(tag => new Playlist(tag.Name.Substring(9),
+                games.Where(game => game.Releases.Any(release =>
+                    release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
             .SelectMany(playlist => playlistPublisher.Publish(playlist));
+
         Task.WaitAll(playlistPublications.ToArray());
+      }
+      catch (Exception ex)
+      {
+        Logger.Error(ex, "Error occurred in HandleGameUpdated method.");
+      }
     }
-
-
     private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
     {
       var updatedPlatforms = e.UpdatedItems.Select(g => g.NewData);
