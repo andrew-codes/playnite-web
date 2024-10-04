@@ -47,6 +47,7 @@ namespace PlayniteWeb
     private readonly IEnumerable<MainMenuItem> mainMenuItems;
     private PlayniteWebSettingsViewModel settings { get; set; }
     private readonly IManageTopics topicManager;
+    private readonly ILogger logger = LogManager.GetLogger();
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
@@ -262,7 +263,7 @@ namespace PlayniteWeb
         var game = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == e);
         if (game == null)
         {
-          Logger.Debug($"Game with ID {e} not found for uninstall.");
+          logger.Debug($"Game with ID {e} not found for uninstall.");
           return;
         }
 
@@ -275,7 +276,7 @@ namespace PlayniteWeb
       }
       catch (Exception ex)
       {
-        Logger.Error(ex, $"Error occurred in Subscriber_OnUninstallGameRequest for Game ID {e}.");
+        logger.Error(ex, $"Error occurred in Subscriber_OnUninstallGameRequest for Game ID {e}.");
       }
     }
 
@@ -287,7 +288,7 @@ namespace PlayniteWeb
         var game = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == e);
         if (game == null)
         {
-          Logger.Debug($"Game with ID {e} not found for installation.");
+          logger.Debug($"Game with ID {e} not found for installation.");
           return;
         }
 
@@ -300,7 +301,7 @@ namespace PlayniteWeb
       }
       catch (Exception ex)
       {
-        Logger.Error(ex, $"Error occurred in Subscriber_OnInstallGameRequest for Game ID {e}.");
+        logger.Error(ex, $"Error occurred in Subscriber_OnInstallGameRequest for Game ID {e}.");
       }
     }
 
@@ -342,7 +343,7 @@ namespace PlayniteWeb
 
         if (!updatedGames.Any())
         {
-          Logger.Debug("No matching games found for update.");
+          logger.Debug("No matching games found for update.");
         }
 
         Task.WaitAll(updatedGames.SelectMany(item => gamePublisher.Publish(item)).ToArray());
@@ -358,7 +359,7 @@ namespace PlayniteWeb
       }
       catch (Exception ex)
       {
-        Logger.Error(ex, "Error occurred in HandleGameUpdated method.");
+        logger.Error(ex, "Error occurred in HandleGameUpdated method.");
       }
     }
     private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
