@@ -287,7 +287,8 @@ namespace PlayniteWeb
         var game = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == e);
         if (game == null)
         {
-          Logger.Debug($"Game with ID {e} not found for installation.");
+          logger.Debug($"Game with ID {e} not found for installation.");
+
           return;
         }
 
