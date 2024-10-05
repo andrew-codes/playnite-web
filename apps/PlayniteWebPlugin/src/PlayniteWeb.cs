@@ -300,7 +300,8 @@ namespace PlayniteWeb
       }
       catch (Exception ex)
       {
-        Logger.Error(ex, $"Error occurred in Subscriber_OnInstallGameRequest for Game ID {e}.");
+        logger.Error(ex, $"Error occurred in Subscriber_OnInstallGameRequest for Game ID {e}.");
+
       }
     }
 
