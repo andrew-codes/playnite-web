@@ -358,7 +358,8 @@ namespace PlayniteWeb
       }
       catch (Exception ex)
       {
-        Logger.Error(ex, "Error occurred in HandleGameUpdated method.");
+        logger.Error(ex, "Error occurred in HandleGameUpdated method.");
+
       }
     }
     private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
