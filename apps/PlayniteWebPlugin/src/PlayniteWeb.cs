@@ -47,6 +47,8 @@ namespace PlayniteWeb
     private readonly IEnumerable<MainMenuItem> mainMenuItems;
     private PlayniteWebSettingsViewModel settings { get; set; }
     private readonly IManageTopics topicManager;
+    private ILogger logger = LogManager.GetLogger();
+
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
