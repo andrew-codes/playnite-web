@@ -342,7 +342,8 @@ namespace PlayniteWeb
 
         if (!updatedGames.Any())
         {
-          Logger.Debug("No matching games found for update.");
+          logger.Debug("No matching games found for update.");
+
         }
 
         Task.WaitAll(updatedGames.SelectMany(item => gamePublisher.Publish(item)).ToArray());
