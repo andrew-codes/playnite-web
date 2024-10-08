@@ -13,6 +13,7 @@ public class Release : IIdentifiable
     this.platform = platform;
   }
 
+  public int? ProcessId { get; set; }
   public Guid Id => game.Id;
   public string Name => game.Name;
   public string Description => game.Description;

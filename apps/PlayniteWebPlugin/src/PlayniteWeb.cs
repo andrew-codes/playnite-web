@@ -48,7 +48,7 @@ namespace PlayniteWeb
     private PlayniteWebSettingsViewModel settings { get; set; }
     private readonly IManageTopics topicManager;
     private ILogger logger = LogManager.GetLogger();
-
+    private Regex pcExpression = new Regex("Windows.*");
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
@@ -58,7 +58,8 @@ namespace PlayniteWeb
       settings = new PlayniteWebSettingsViewModel(this);
       topicManager = new TopicManager.TopicManager(settings.Settings);
       publisher = new MqttPublisher(client, topicManager);
-      subscriber = new PlayniteWebSubscriber(client, topicManager);
+      var deserializer = new ObjectDeserializer();
+      subscriber = new PlayniteWebSubscriber(client, topicManager, deserializer);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
@@ -191,42 +192,61 @@ namespace PlayniteWeb
 
     public override void OnGameInstalled(OnGameInstalledEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
+      var game = GameFromRelease(args.Game);
+      var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)publisher, topicManager, serializer);
+      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+    }
+
+    private Models.Game GameFromRelease(Playnite.SDK.Models.Game game)
+    {
+      var games = PlayniteApi.Database.Games.Where(g => g.Name == game.Name).ToList();
+      return new Models.Game(games);
+    }
+
+    private Models.Game GameFromRelease(Release game)
+    {
+      var games = PlayniteApi.Database.Games.Where(g => g.Name == game.Name).ToList();
+      return new Models.Game(games);
     }
 
     public override void OnGameStarted(OnGameStartedEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer, args.StartedProcessId);
-      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
+      var game = GameFromRelease(args.Game);
+      var release = game.Releases.FirstOrDefault(r => r.Id == args.Game.Id);
+      release.ProcessId = args.StartedProcessId;
+      var gameStatePublisher = new PublishGameState(GameState.started, (IMqttClient)publisher, topicManager, serializer);
+      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
     }
 
     public override void OnGameStarting(OnGameStartingEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
+      var game = GameFromRelease(args.Game);
+      var gameStatePublisher = new PublishGameState(GameState.starting, (IMqttClient)publisher, topicManager, serializer);
+      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
     }
 
     public override void OnGameStopped(OnGameStoppedEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
+      var game = GameFromRelease(args.Game);
+      var gameStatePublisher = new PublishGameState(GameState.stopped, (IMqttClient)publisher, topicManager, serializer);
+      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
     }
 
     public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
     {
-      var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(args.Game).ToArray());
+      var game = GameFromRelease(args.Game);
+      var gameStatePublisher = new PublishGameState(GameState.uninstalled, (IMqttClient)publisher, topicManager, serializer);
+      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
     }
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
       settings.OnVerifySettings -= HandleVerifySettings;
 
-      subscriber.OnLibraryRequest -= Publisher_LibraryRefreshRequest;
-      subscriber.OnStartGameRequest -= Subscriber_OnStartGameRequest;
-      subscriber.OnInstallGameRequest -= Subscriber_OnInstallGameRequest;
-      subscriber.OnUninstallGameRequest -= Subscriber_OnUninstallGameRequest;
+      subscriber.OnUpdateLibrary -= Publisher_LibraryRefreshRequest;
+      subscriber.OnStartRelease -= Subscriber_OnStartRelease;
+      subscriber.OnInstallRelease -= Subscriber_OnInstallRelease;
+      subscriber.OnUninstallRelease -= Subscriber_OnUninstallRelease;
 
       gameUpdates.Dispose();
       platformUpdates.Dispose();
@@ -245,10 +265,10 @@ namespace PlayniteWeb
       }
       catch (Exception ex) { }
 
-      subscriber.OnLibraryRequest += Publisher_LibraryRefreshRequest;
-      subscriber.OnStartGameRequest += Subscriber_OnStartGameRequest;
-      subscriber.OnInstallGameRequest += Subscriber_OnInstallGameRequest;
-      subscriber.OnUninstallGameRequest += Subscriber_OnUninstallGameRequest;
+      subscriber.OnUpdateLibrary += Publisher_LibraryRefreshRequest;
+      subscriber.OnStartRelease += Subscriber_OnStartRelease;
+      subscriber.OnInstallRelease += Subscriber_OnInstallRelease;
+      subscriber.OnUninstallRelease += Subscriber_OnUninstallRelease;
 
 
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
@@ -257,24 +277,16 @@ namespace PlayniteWeb
       collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
     }
 
-    private void Subscriber_OnUninstallGameRequest(object sender, Guid e)
+    private void Subscriber_OnUninstallRelease(object sender, Release e)
     {
       try
       {
-        var game = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == e);
-        if (game == null)
+        if (!e.IsInstalled)
         {
-          logger.Debug($"Game with ID {e} not found for uninstall.");
-
           return;
         }
 
-        if (game.IsInstalled)
-        {
-          PlayniteApi.UninstallGame(e);
-          var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-          Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
-        }
+        PlayniteApi.UninstallGame(e.Id);
       }
       catch (Exception ex)
       {
@@ -284,24 +296,16 @@ namespace PlayniteWeb
     }
 
 
-    private void Subscriber_OnInstallGameRequest(object sender, Guid e)
+    private void Subscriber_OnInstallRelease(object sender, Release e)
     {
       try
       {
-        var game = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == e);
-        if (game == null)
+        if (e.IsInstalled)
         {
-          logger.Debug($"Game with ID {e} not found for installation.");
-
           return;
         }
 
-        if (!game.IsInstalled)
-        {
-          PlayniteApi.InstallGame(e);
-          var gameStatePublisher = new PublishGameState((IMqttClient)publisher, topicManager, serializer);
-          Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
-        }
+        PlayniteApi.InstallGame(e.Id);
       }
       catch (Exception ex)
       {
@@ -322,15 +326,42 @@ namespace PlayniteWeb
       publisher.StartConnection(options);
     }
 
-    private void Subscriber_OnStartGameRequest(object sender, Guid gameId)
+    private void Subscriber_OnStartRelease(object sender, Release release)
     {
-      PlayniteApi.StartGame(gameId);
+      if (isPcPlatform(release.Platform))
+      {
+        if (!release.IsInstalled)
+        {
+          PlayniteApi.InstallGame(release.Id);
+          return;
+        }
+
+        PlayniteApi.StartGame(release.Id);
+      }
+      else
+      {
+        var playniteGame = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == release.Id);
+        if (playniteGame == null)
+        {
+         logger.Error($"Expected release with ID {release.Id} to be found in Playnite database, but was not.");
+          return;
+        }
+        playniteGame.IsLaunching = true;
+        var game = GameFromRelease(playniteGame);
+        // Note we cannot know if the game has started or not. Instead, we publish a starting state and let external systems handle the rest.
+        var gameStatePublisher = new PublishGameState(GameState.starting, (IMqttClient)publisher, topicManager, serializer);
+        Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+      }
+    }
+
+    private bool isPcPlatform(Platform platform)
+    {
+      return pcExpression.IsMatch(platform.Name);
     }
 
     private void Publisher_LibraryRefreshRequest(object sender, Task e)
     {
-      Task.WaitAll(SyncLibrary().ToArray());
-      e.Start();
+      Task.WhenAll(SyncLibrary().ToArray()).ContinueWith((t) => e.Start());
     }
 
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Playnite.SDK.Models.Game> e)
