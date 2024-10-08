@@ -25,11 +25,12 @@ const Filters: FC<{
       const formData = new FormData(evt.currentTarget)
       const name = ((formData.get('nameFilter') as string) ?? '').trim()
       const filters = Array.from(formData.keys())
-        .filter((key) => key !== 'nameFilter')
+        .filter((key) => key !== 'nameFilter' && !key.includes('RelatedType'))
         .map((key) => {
           return {
             field: key,
             value: formData.getAll(key) as string[],
+            relatedType: formData.get(`${key}RelatedType`) as string,
           }
         })
 

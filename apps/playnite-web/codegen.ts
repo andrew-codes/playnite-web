@@ -11,16 +11,17 @@ const config: CodegenConfig = {
       typesPluginsConfig: {
         mappers: {
           CompletionStatus:
-            '../src/server/graphql/resolverTypes#CompletionStatusEntity',
-          Feature: '../src/server/graphql/resolverTypes#FeatureEntity',
-          Game: '../src/server/graphql/resolverTypes#GameEntity',
-          GameRelease: '../src/server/graphql/resolverTypes#GameReleaseEntity',
-          GameReleaseActivationSubscriptionPayload:
-            '../src/server/graphql/resolverTypes#GameReleaseActivationSubscriptionPayload',
-          Platform: '../src/server/graphql/resolverTypes#PlatformEntity',
-          GameAsset: '../src/server/graphql/resolverTypes#GameAssetEntity',
-          Playlist: '../src/server/graphql/resolverTypes#PlaylistEntity',
-          Source: '../src/server/graphql/resolverTypes#SourceEntity',
+            '../src/server/graphql/resolverTypes#GraphCompletionStatus',
+          Feature: '../src/server/graphql/resolverTypes#GraphFeature',
+          Game: '../src/server/graphql/resolverTypes#GraphGame',
+          GameRelease: '../src/server/graphql/resolverTypes#GraphRelease',
+          GameReleaseSubscriptionPayload:
+            '../src/server/graphql/resolverTypes#GameReleaseStateSubscriptionPayload',
+          Platform: '../src/server/graphql/resolverTypes#GraphPlatform',
+          GameAsset: '../src/server/graphql/resolverTypes#GraphGameAsset',
+          Playlist: '../src/server/graphql/resolverTypes#GraphPlaylist',
+          Source: '../src/server/graphql/resolverTypes#GraphSource',
+          User: '../src/server/graphql/resolverTypes#GraphUser',
         },
         contextType: '../src/server/graphql/context#PlayniteContext',
       },

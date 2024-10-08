@@ -13,12 +13,12 @@ namespace PlayniteWeb.Models
   {
     public Guid Id { get; private set; }
     public string Name { get; private set; }
-    public IEnumerable<Game> Games { get; set; }
+    public IEnumerable<Guid> GameIds { get; private set; }
 
     public Playlist(string name, IEnumerable<Game> games)
     {
       Name = name;
-      Games = games;
+      GameIds = games.Select(item => item.Id);
 
       using (var md5 = MD5.Create())
       {

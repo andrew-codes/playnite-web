@@ -16,7 +16,7 @@ const AllPlaylists = gql`
         }
         releases {
           id
-          active
+          runState
           name
           platform {
             id

@@ -1,4 +1,5 @@
 using Playnite.SDK.Models;
+using PlayniteWeb.Models;
 
 namespace PlayniteWeb.Services.Publishers.Mqtt
 {

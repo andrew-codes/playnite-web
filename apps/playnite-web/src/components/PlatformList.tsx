@@ -23,8 +23,9 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
   return (
     <li>
       <PlatformImage
+        data-test="PlatformListItem"
         alt={platform.name}
-        src={`/platforms/${platform.icon?.id}`}
+        src={`/asset-by-id/${platform.icon?.id}`}
       />
     </li>
   )
@@ -67,7 +68,7 @@ const PlatformList: FC<{ platforms: Array<Platform> }> = ({ platforms }) => {
   }, [platforms])
 
   return (
-    <List>
+    <List data-test="PlatformList">
       {condensedPlatforms.map((platform, index) => (
         <PlatformListItem platform={platform} key={index} />
       ))}

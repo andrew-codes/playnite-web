@@ -1,51 +1,48 @@
 import { GraphQLError } from 'graphql'
-import _ from 'lodash'
+import { Platform, Release } from '../../../../../data/types.entities'
 import { fromString } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
-
-const { merge } = _
 
 export const startGameRelease: NonNullable<
   MutationResolvers['startGameRelease']
 > = async (_parent, _arg, _ctx) => {
-  if (!_ctx.jwt?.user.isAuthenticated) {
-    throw new GraphQLError('Unauthorized')
-  }
+  _ctx.identityService.authorize(_ctx.jwt)
 
   const releaseId = fromString(_arg.releaseId).id
-
-  await _ctx.api.game.updateGameReleases(
-    { 'releases.active': true },
-    { active: false },
-  )
-  await _ctx.api.playlist.updateGameReleases(
-    { 'games.releases.active': true },
-    { active: false },
-    { arrayFilters: [{ 'release.active': true }] },
-  )
-
-  await _ctx.api.game.updateGameReleases(
-    { 'releases.id': releaseId },
-    { active: true },
-  )
-  await _ctx.api.playlist.updateGameReleases(
-    { 'games.releases.id': releaseId },
-    { active: true },
-    { arrayFilters: [{ 'release.id': releaseId }] },
+  await _ctx.updateQueryApi.executeUpdate<Release>(
+    {
+      entityType: 'Release',
+      type: 'ExactMatch',
+      field: 'id',
+      value: releaseId,
+    },
+    { runState: { id: 'launching' } },
   )
 
-  const game = await _ctx.api.game.getBy({ 'releases.id': releaseId })
-  const release = game?.[0]?.releases.find((r) => r.id === releaseId)
+  const [release] = (await _ctx.queryApi.execute<Release>({
+    entityType: 'Release',
+    type: 'ExactMatch',
+    field: 'id',
+    value: releaseId,
+  })) as Array<Release>
+
   if (!release) {
     throw new GraphQLError('No game release found')
   }
 
-  let install =
-    !release.isRunning &&
-    !release.isInstalled &&
-    !release.isInstalling &&
-    !release.isUninstalling &&
-    !release.isLaunching
+  await _ctx.subscriptionPublisher.publish('releaseRunStateChanged', {
+    gameId: release.gameId,
+    id: release.id,
+    runState: 'launching',
+    processId: null,
+  })
+
+  const [platform] = (await _ctx.queryApi.execute<Platform>({
+    entityType: 'Platform',
+    type: 'ExactMatch',
+    field: 'id',
+    value: release.platformId,
+  })) as Array<Platform>
 
   await _ctx.mqttClient.publish(
     `playnite/request/game/start`,
@@ -55,19 +52,12 @@ export const startGameRelease: NonNullable<
         gameId: release.gameId,
         name: release.name,
         platform: {
-          id: release.platform.id,
-          name: release.platform.name,
+          id: platform.id,
+          name: platform.name,
         },
-        source: release.source,
-        install,
       },
     }),
   )
-
-  await _ctx.subscriptionPublisher.publish('gameActivationStateChanged', {
-    id: releaseId,
-    active: true,
-  })
 
   return release
 }
