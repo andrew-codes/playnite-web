@@ -8,12 +8,13 @@ type Game {
 
 input FilterItemInput {
   field: String!
+  relatedType: RelatedType
   values: [String!]!
 }
 
 input Filter {
   name: String
-  filterItems: [FilterItemInput]!
+  filterItems: [FilterItemInput!]
 }
 
 extend type Query {

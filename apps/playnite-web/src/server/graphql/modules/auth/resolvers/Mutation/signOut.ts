@@ -1,15 +1,17 @@
-import _ from 'lodash'
+import { GraphQLError } from 'graphql'
 import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
-import { nullUser } from '../../../user/api/NullUser'
 
-const { omit } = _
 export const signOut: NonNullable<MutationResolvers['signOut']> = async (
   _parent,
   _arg,
   _ctx,
 ) => {
   const claim = _ctx.jwt
+  if (!claim) {
+    throw new GraphQLError('Not authenticated')
+  }
+
   _ctx.request.cookieStore?.delete('authorization')
 
-  return claim?.user ?? nullUser
+  return claim.user
 }

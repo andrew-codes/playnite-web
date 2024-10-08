@@ -1,110 +1,52 @@
-type ActivationState = 'Started' | 'Stopped' | 'Restarted'
-type GameReleaseActivationSubscriptionPayload = GameReleaseEntity & {
-  restarted?: boolean
-}
-type PlatformEntity = {
-  specificationId: string
-  icon: string
-  cover: string
-  name: string
-  background: string
-  id: string
-}
+import {
+  CompletionStatus,
+  Game,
+  GameAsset,
+  GameFeature,
+  GameSource,
+  Platform,
+  Playlist,
+  Release,
+  RunState,
+  Tag,
+  User,
+} from '../data/types.entities'
 
-type FeatureEntity = {
-  name: string
+type GameReleaseStateSubscriptionPayload = {
   id: string
-}
-
-type CompletionStatusEntity = {
-  name: string
-  id: string
-}
-
-type TagEntity = {
-  id: string
-  name: string
-}
-
-type SourceEntity = {
-  id: string
-  name: string
-}
-
-type GameEntity = {
-  id: string
-  name: string
-  description: string
-  releases: GameReleaseEntity[]
-}
-
-type GameReleaseEntity = {
-  active: boolean | null | undefined
-  added: string
-  ageRating: string
-  backgroundImage: string
-  communityScore: number | null
-  completionStatus: { id: string; name: string }
-  cover: string
-  coverImage: string
-  criticScore: number | null
-  description: string
-  developers: { id: string; name: string }[]
-  features: { id: string; name: string }[]
   gameId: string
-  genres: { id: string; name: string }[]
-  hidden: boolean
-  id: string
-  isCustomGame: boolean
-  isInstalled: boolean
-  isInstalling: boolean
-  isLaunching: boolean
-  isRunning: boolean
-  isUninstalling: boolean
-  links: { name: string; url: string }[]
-  name: string
-  platform: PlatformEntity
-  publishers: { id: string; name: string }[]
-  recentActivity: string
-  releaseDate: { month: number; day: number; year: number }
-  releaseYear: number
-  series: { id: string; name: string }[]
-  sortingName?: string
-  sortName: string
-  source: SourceEntity
-  tags: Array<TagEntity> | null
+  runState: RunState
+  processId: number | null
 }
+type GraphPlatform = Platform
+type GraphFeature = GameFeature
 
-type PlaylistEntity = {
-  id: string
-  name: string
-  games: Array<GameEntity>
-}
+type GraphCompletionStatus = CompletionStatus
 
-type GameAssetType = 'background' | 'cover' | 'icon'
+type GraphTag = Tag
 
-type GameAssetEntityType = 'games' | 'platforms'
+type GraphSource = GameSource
 
-type GameAssetEntity = {
-  id: string
-  relatedId: string
-  relatedType: GameAssetEntityType
-  typeKey: GameAssetType
-}
+type GraphGame = Game
+
+type GraphRelease = Release
+
+type GraphPlaylist = Playlist
+
+type GraphGameAsset = GameAsset
+
+type GraphUser = Omit<User, 'password'>
 
 export type {
-  ActivationState,
-  CompletionStatusEntity,
-  FeatureEntity,
-  GameAssetEntity,
-  GameAssetEntityType,
-  GameAssetType,
-  GameEntity,
-  GameReleaseActivationSubscriptionPayload,
-  GameReleaseEntity,
-  PlatformEntity,
-  PlaylistEntity,
-  SourceEntity,
-  TagEntity
+  GameReleaseStateSubscriptionPayload,
+  GraphCompletionStatus,
+  GraphFeature,
+  GraphGame,
+  GraphGameAsset,
+  GraphPlatform,
+  GraphPlaylist,
+  GraphRelease,
+  GraphSource,
+  GraphTag,
+  GraphUser,
 }
-

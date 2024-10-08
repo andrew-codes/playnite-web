@@ -1,5 +1,3 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { Clear } from '@mui/icons-material'
 import {
   Box,
@@ -28,12 +26,13 @@ import {
   useReducer,
   useState,
 } from 'react'
+import { useFilterItems } from '../../queryHooks/getFilterItems'
 import AutoComplete from '../AutoComplete'
 import SquareIconButton from '../IconButton'
 import Select from '../Select'
 import ListAutoCompleteOptions from './ListAutoCompleteOptions'
 
-const { keyBy, merge } = _
+const { keyBy, merge, uniqBy } = _
 
 type GraphQuery = {
   filterItems: Array<{
@@ -42,19 +41,6 @@ type GraphQuery = {
     allowedValues: Array<{ display: string; value: string }>
   }>
 }
-
-const filterItemsQuery = gql`
-  query getFilterItems {
-    filterItems {
-      name
-      field
-      allowedValues {
-        display
-        value
-      }
-    }
-  }
-`
 
 const Form = styled('form')(({ theme }) => ({
   display: 'flex',
@@ -79,6 +65,7 @@ const CloseIconButton = styled(SquareIconButton)(({ theme }) => ({
 type FilterItemValue = {
   field: string
   value: Array<string>
+  relatedType: string
 }
 
 const filterFormInitialState: {
@@ -94,7 +81,10 @@ type FilterFormAction =
   | { type: 'selectedFilterBy'; payload: string | null }
   | {
       type: 'setFilterValue'
-      payload: Array<{ display: string; value: string }>
+      payload: {
+        relatedType: string
+        values: Array<{ display: string; value: string }>
+      }
     }
   | { type: 'setNameFilterValue'; payload: string }
   | { type: 'removeFilter'; payload: string }
@@ -117,7 +107,8 @@ const filterFormReducer = (
       const newFilterValueState = merge({}, state)
       newFilterValueState.filterItems[state.filterBy] = {
         field: state.filterBy,
-        value: action.payload.map((value) => value.value),
+        value: action.payload.values.map((value) => value.value),
+        relatedType: action.payload.relatedType,
       }
 
       return newFilterValueState
@@ -133,7 +124,7 @@ const filterFormReducer = (
           const value = filterItem.value.filter(
             (value) => value !== action.payload,
           )
-          return [field, { field, value }]
+          return [field, { field, value, relatedType: filterItem.relatedType }]
         }),
       )
       return newState
@@ -157,6 +148,7 @@ const FilterForm: FC<{
   filterItems?: Array<{
     field: string
     value: Array<string>
+    relatedType: string
   }>
 }> = ({ filterItems, nameFilter, onCancel, onSubmit }) => {
   const [state, dispatch] = useReducer(filterFormReducer, {
@@ -191,12 +183,6 @@ const FilterForm: FC<{
     dispatch({ type: 'setNameFilterValue', payload: '' })
   }, [])
 
-  const handleFilterChange = useCallback((values) => {
-    dispatch({
-      type: 'setFilterValue',
-      payload: values,
-    })
-  }, [])
   const handleRemoveFilter = (value: string) => {
     dispatch({ type: 'removeFilter', payload: value })
   }
@@ -218,10 +204,25 @@ const FilterForm: FC<{
     [onCancel],
   )
 
-  const { data, loading, error } = useQuery<GraphQuery>(filterItemsQuery)
+  const { data, loading, error } = useFilterItems()
   if (error) {
     console.error(error)
   }
+  const handleFilterChange = useCallback(
+    (values) => {
+      dispatch({
+        type: 'setFilterValue',
+        payload: {
+          relatedType:
+            data?.filterItems.find((fi) => fi.field === state.filterBy)
+              ?.relatedType ?? '',
+          values,
+        },
+      })
+    },
+    [data?.filterItems, state.filterBy],
+  )
+
   const possibleFilterItems = data?.filterItems ?? []
   const allPossibleFilterValues = useMemo(() => {
     return (
@@ -236,6 +237,7 @@ const FilterForm: FC<{
         filterItem.value.map((value) => ({
           field: filterItem.field,
           value,
+          relatedType: filterItem.relatedType,
         })),
       )
       .map((filterItemValue) =>
@@ -249,6 +251,16 @@ const FilterForm: FC<{
         }),
       )
   }, [state.filterItems, possibleFilterItems])
+
+  const allFilterItemRelatedTypes = useMemo(() => {
+    return uniqBy(
+      allFilterItemValues.map((filterItem) => ({
+        field: filterItem.field,
+        relatedType: filterItem.relatedType,
+      })),
+      'field',
+    )
+  }, [allFilterItemValues])
 
   const currentFilterItemValues = useMemo(() => {
     return allFilterItemValues.filter(
@@ -356,6 +368,15 @@ const FilterForm: FC<{
                   value={filterItem.value}
                 />
               </Fragment>
+            )
+          })}
+          {allFilterItemRelatedTypes.map((filterItem) => {
+            return (
+              <input
+                type="hidden"
+                name={`${filterItem.field}RelatedType`}
+                value={filterItem.relatedType}
+              />
             )
           })}
         </Box>

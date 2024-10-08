@@ -3,6 +3,12 @@ using MQTTnet.Client;
 using PlayniteWeb.TopicManager;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
+using PlayniteWeb.Services.Subscribers.Models;
+using Playnite.SDK;
+using System.Text.RegularExpressions;
+using Playnite.SDK.Models;
+using PlayniteWeb.Models;
 
 namespace PlayniteWeb.Services.Subscribers.Mqtt
 {
@@ -10,47 +16,71 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
   {
     private readonly IManageTopics topicBuilder;
     private readonly IMqttClient mqtt;
+    private readonly IDeserializeObjects deserializer;
+    private IPlayniteAPI _api;
 
-    public PlayniteWebSubscriber(IMqttClient mqtt, IManageTopics topicBuilder)
+    public PlayniteWebSubscriber(IMqttClient mqtt, IManageTopics topicBuilder, IDeserializeObjects deserializer, IPlayniteAPI api)
     {
       this.topicBuilder = topicBuilder;
       this.mqtt = mqtt;
       mqtt.ApplicationMessageReceivedAsync += MesssageReceived;
       mqtt.ConnectedAsync += Client_ConnectedAsync;
+      this.deserializer = deserializer;
+      _api = api;
     }
 
     private Task Client_ConnectedAsync(MqttClientConnectedEventArgs args)
     {
-      return mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic("#")).Build());
+      var subscribeTopics = typeof(SubscribeTopics).GetFields(System.Reflection.BindingFlags.Public).Select(field => field.GetValue(null)).ToList();
+
+      return Task.WhenAll(subscribeTopics.Select(topic => mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic(topic.ToString())).Build())));
     }
 
-    public event EventHandler<Task> OnLibraryRequest;
-    public event EventHandler<Guid> OnStartGameRequest;
-    public event EventHandler<Guid> OnInstallGameRequest;
-    public event EventHandler<Guid> OnUninstallGameRequest;
+    public event EventHandler<Task> OnUpdateLibrary;
+    public event EventHandler<Release> OnStartRelease;
+    public event EventHandler<Release> OnInstallRelease;
+    public event EventHandler<Release> OnUninstallRelease;
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
       var task = Task.CompletedTask;
-      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish) && OnLibraryRequest != null)
+      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish) && OnUpdateLibrary != null)
       {
-        OnLibraryRequest.Invoke(this, task);
+        OnUpdateLibrary.Invoke(this, task);
+        return Task.WhenAll(task);
       }
-      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestStartGame) && OnStartGameRequest != null)
+
+      EventHandler<Release> eventHandler = null;
+      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestStartRelease) && OnStartRelease != null)
       {
-        var gameId = Guid.Parse(args.ApplicationMessage.ConvertPayloadToString());
-        OnStartGameRequest.Invoke(this, gameId);
+        eventHandler = OnStartRelease;
       }
-      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestInstallGame) && OnInstallGameRequest != null)
+      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestInstallRelease) && OnInstallRelease != null)
       {
-        var gameId = Guid.Parse(args.ApplicationMessage.ConvertPayloadToString());
-        OnInstallGameRequest.Invoke(this, gameId);
+        eventHandler = OnInstallRelease;
       }
-      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestUninstallGame) && OnUninstallGameRequest != null)
+      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestUninstallRelease) && OnUninstallRelease != null)
       {
-        var gameId = Guid.Parse(args.ApplicationMessage.ConvertPayloadToString());
-        OnUninstallGameRequest.Invoke(this, gameId);
+        eventHandler = OnUninstallRelease;
       }
+
+      if (eventHandler == null)
+      {
+        return Task.WhenAll(task);
+      }
+
+      var payloadData = deserializer.Deserialize<StartReleasePayload>(args.ApplicationMessage.ConvertPayloadToString());
+      var platformId = Guid.Parse(payloadData.PlatformId);
+      var platform = _api.Database.Platforms.FirstOrDefault(p => p.Id.Equals(platformId));
+      var releaseId = Guid.Parse(payloadData.ReleaseId);
+      var release = _api.Database.Games.FirstOrDefault(g => g.Id.Equals(releaseId));
+      if (release == null)
+      {
+          LogManager.GetLogger().Debug($"Game with ID {releaseId} not found for installation.");
+        return Task.WhenAll(task);
+      }
+
+      eventHandler.Invoke(this, new Release(release, platform));
 
       return Task.WhenAll(task);
     }

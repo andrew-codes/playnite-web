@@ -50,6 +50,7 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
 
   return (
     <Navigation
+      data-test="MainNavigation"
       sx={{
         style: {
           marginTop: '28px',

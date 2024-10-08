@@ -7,6 +7,7 @@ type GameRelease {
   gameId: String!
   hidden: Boolean!
   releaseDate: Date
+  releaseYear: Int
   recentActivity: DateTime
   runState: String!
   platform: Platform!
@@ -14,34 +15,21 @@ type GameRelease {
   cover: GameAsset
   features: [Feature]!
   source: Source!
-  active: Boolean!
+  processId: Int
 }
 
-type GameReleaseSubscriptionPayload {
+type GameReleaseStateSubscriptionPayload {
   id: String!
   gameId: String!
   runState: String!
-  processId: String!
-}
-
-enum ActivationState {
-  Started
-  Stopped
-  Restarted
-}
-type GameReleaseActivationSubscriptionPayload {
-  id: String!
-  state: ActivationState!
+  processId: String
 }
 
 extend type Subscription {
-  releaseRunStateChanged: GameReleaseSubscriptionPayload
-  releaseActivationStateChanged: GameReleaseActivationSubscriptionPayload
+  releaseRunStateChanged: GameReleaseStateSubscriptionPayload
 }
 
 extend type Mutation {
-  activateGameRelease(releaseId: String!): GameRelease!
-    @deprecated(reason: "Use startGameRelease instead")
   startGameRelease(releaseId: String!): GameRelease!
   stopGameRelease(releaseId: String!): GameRelease!
   restartGameRelease(releaseId: String!): GameRelease!
