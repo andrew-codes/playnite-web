@@ -10,14 +10,13 @@ export const stopGameRelease: NonNullable<
   }
 
   const releaseId = fromString(_arg.releaseId).id
-
   await _ctx.api.game.updateGameReleases(
     { 'releases.id': releaseId },
-    { active: false },
+    { runState: 'stopping' },
   )
   await _ctx.api.playlist.updateGameReleases(
     { 'games.releases.id': releaseId },
-    { active: false },
+    { runState: 'stopping' },
     { arrayFilters: [{ 'release.id': releaseId }] },
   )
 
@@ -42,7 +41,7 @@ export const stopGameRelease: NonNullable<
     }),
   )
 
-  _ctx.subscriptionPublisher.publish('gameActivationStateChanged', release)
+  _ctx.subscriptionPublisher.publish('releaseRunStateChanged', release)
 
   return release
 }

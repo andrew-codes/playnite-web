@@ -31,9 +31,7 @@ const useStartRelease = () => {
                   merge({}, game, {
                     releases: game.releases.map((release) =>
                       merge({}, release, {
-                        active:
-                          release.id ===
-                          mutationResult.data?.startGameRelease.id,
+                        runState: 'launching',
                       }),
                     ),
                   }),

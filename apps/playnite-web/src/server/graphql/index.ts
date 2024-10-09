@@ -19,34 +19,35 @@ const graphql = (
   mqttClient: AsyncMqttClient,
 ) => {
   const domainApi = new Domain()
+  // TODO: move subscription publishes to after db has been updated.
   mqttClient.on('message', async (topic, message) => {
     try {
       debug(`Received message on topic: ${topic}`)
-      if (gameRunStateTopicMatcher.test(topic)) {
-        const payload = JSON.parse(message.toString())
-        if (!payload.id || !payload.state) {
-          debug(
-            `Invalid payload received, no gameId or state: ${message.toString()}`,
-          )
+      // if (gameRunStateTopicMatcher.test(topic)) {
+      //   const payload = JSON.parse(message.toString())
+      //   if (!payload.id || !payload.state) {
+      //     debug(
+      //       `Invalid payload received, no gameId or state: ${message.toString()}`,
+      //     )
 
-          return
-        }
+      //     return
+      //   }
 
-        const gameRelease = await domainApi.gameRelease.getById(payload.id)
+      //   const gameRelease = await domainApi.gameRelease.getById(payload.id)
 
-        if (!gameRelease) {
-          debug(`Game release not found for gameId: ${payload.gameId}`)
+      //   if (!gameRelease) {
+      //     debug(`Game release not found for gameId: ${payload.gameId}`)
 
-          return
-        }
+      //     return
+      //   }
 
-        subscriptionPublisher.publish('gameRunStateChanged', {
-          id: gameRelease.id,
-          gameId: gameRelease.gameId,
-          runState: payload.state,
-          processId: payload.processId,
-        })
-      }
+      //   subscriptionPublisher.publish('releaseRunStateChanged', {
+      //     id: gameRelease.id,
+      //     gameId: gameRelease.gameId,
+      //     runState: payload.state,
+      //     processId: payload.processId,
+      //   })
+      // }
     } catch (error) {
       debug(`Error processing message for topic: ${topic}`)
       console.error(error)

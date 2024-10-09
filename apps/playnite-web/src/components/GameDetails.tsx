@@ -183,7 +183,11 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                     <ClickAwayListener onClickAway={handleClose}>
                       <MenuList id="split-button-menu" autoFocusItem>
                         {releases
-                          .filter((r) => !r.active)
+                          .filter(
+                            (r) =>
+                              r.runState !== 'running' &&
+                              r.runState !== 'launching',
+                          )
                           .map((option, index) => (
                             <MenuItem
                               key={option.id}
@@ -201,7 +205,9 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                 </Grow>
               )}
             </Popper>
-            {releases.some((r) => r.active) && (
+            {releases.some(
+              (r) => r.runState === 'running' || r.runState === 'launching',
+            ) && (
               <>
                 <Button
                   variant="contained"

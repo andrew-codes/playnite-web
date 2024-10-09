@@ -33,7 +33,7 @@ const useStopRelease = () => {
                     merge({}, game, {
                       releases: game.releases.map((release) =>
                         merge({}, release, {
-                          active: false,
+                          runState: 'stopping',
                         }),
                       ),
                     }),

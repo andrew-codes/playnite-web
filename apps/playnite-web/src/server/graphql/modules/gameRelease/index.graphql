@@ -21,22 +21,11 @@ type GameReleaseSubscriptionPayload {
   id: String!
   gameId: String!
   runState: String!
-  processId: String!
-}
-
-enum ActivationState {
-  Started
-  Stopped
-  Restarted
-}
-type GameReleaseActivationSubscriptionPayload {
-  id: String!
-  state: ActivationState!
+  processId: String
 }
 
 extend type Subscription {
   releaseRunStateChanged: GameReleaseSubscriptionPayload
-  releaseActivationStateChanged: GameReleaseActivationSubscriptionPayload
 }
 
 extend type Mutation {

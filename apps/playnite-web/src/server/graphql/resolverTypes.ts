@@ -1,7 +1,4 @@
-type ActivationState = 'Started' | 'Stopped' | 'Restarted'
-type GameReleaseActivationSubscriptionPayload = GameReleaseEntity & {
-  restarted?: boolean
-}
+type GameReleaseSubscriptionPayload = GameReleaseEntity
 type PlatformEntity = {
   specificationId: string
   icon: string
@@ -38,6 +35,17 @@ type GameEntity = {
   releases: GameReleaseEntity[]
 }
 
+const runStates = [
+  'installed',
+  'installing',
+  'launching',
+  'running',
+  'uninstalling',
+  'uninstalled',
+  'stopping',
+] as const
+type RunState = (typeof runStates)[number]
+
 type GameReleaseEntity = {
   active: boolean | null | undefined
   added: string
@@ -56,14 +64,12 @@ type GameReleaseEntity = {
   hidden: boolean
   id: string
   isCustomGame: boolean
+  runState: RunState
   isInstalled: boolean
-  isInstalling: boolean
-  isLaunching: boolean
-  isRunning: boolean
-  isUninstalling: boolean
   links: { name: string; url: string }[]
   name: string
   platform: PlatformEntity
+  processId: string | null
   publishers: { id: string; name: string }[]
   recentActivity: string
   releaseDate: { month: number; day: number; year: number }
@@ -92,19 +98,19 @@ type GameAssetEntity = {
   typeKey: GameAssetType
 }
 
+export { runStates }
 export type {
-  ActivationState,
   CompletionStatusEntity,
   FeatureEntity,
   GameAssetEntity,
   GameAssetEntityType,
   GameAssetType,
   GameEntity,
-  GameReleaseActivationSubscriptionPayload,
   GameReleaseEntity,
+  GameReleaseSubscriptionPayload,
   PlatformEntity,
   PlaylistEntity,
+  RunState,
   SourceEntity,
-  TagEntity
+  TagEntity,
 }
-
