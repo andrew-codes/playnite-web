@@ -22,7 +22,7 @@ async function run() {
   const mqttClient = await createConnectedMqttClient()
 
   debug('Starting Playnite Web app...')
-  app(mqttClient)
+  const { subscriptionPublisher } = await app(mqttClient)
 
   try {
     debug('Starting Playnite Web game-db-updater...')
@@ -34,6 +34,7 @@ async function run() {
         ),
       },
       mqttClient,
+      subscriptionPublisher,
     )
   } catch (error) {
     console.info(

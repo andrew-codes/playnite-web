@@ -104,6 +104,10 @@ async function run(mqttClient: AsyncMqttClient) {
       wsServer,
     )
   })
+
+  return {
+    subscriptionPublisher,
+  }
 }
 
 export default run
