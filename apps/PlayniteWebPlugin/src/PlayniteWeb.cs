@@ -214,21 +214,21 @@ namespace PlayniteWeb
       var game = GameFromRelease(args.Game);
       var release = game.Releases.FirstOrDefault(r => r.Id == args.Game.Id);
       release.ProcessId = args.StartedProcessId;
-      var gameStatePublisher = new PublishGameState(GameState.started, (IMqttClient)publisher, topicManager, serializer);
+      var gameStatePublisher = new PublishGameState(GameState.running, (IMqttClient)publisher, topicManager, serializer);
       Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
     }
 
     public override void OnGameStarting(OnGameStartingEventArgs args)
     {
       var game = GameFromRelease(args.Game);
-      var gameStatePublisher = new PublishGameState(GameState.starting, (IMqttClient)publisher, topicManager, serializer);
+      var gameStatePublisher = new PublishGameState(GameState.launching, (IMqttClient)publisher, topicManager, serializer);
       Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
     }
 
     public override void OnGameStopped(OnGameStoppedEventArgs args)
     {
       var game = GameFromRelease(args.Game);
-      var gameStatePublisher = new PublishGameState(GameState.stopped, (IMqttClient)publisher, topicManager, serializer);
+      var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)publisher, topicManager, serializer);
       Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
     }
 
@@ -328,16 +328,19 @@ namespace PlayniteWeb
 
     private void Subscriber_OnStartRelease(object sender, Release release)
     {
-      if (isPcPlatform(release.Platform))
+      if (!isPcPlatform(release.Platform))
       {
-        if (!release.IsInstalled)
-        {
-          PlayniteApi.InstallGame(release.Id);
-          return;
-        }
+        return;
 
-        PlayniteApi.StartGame(release.Id);
       }
+
+      if (!release.IsInstalled)
+      {
+        PlayniteApi.InstallGame(release.Id);
+        return;
+      }
+
+      PlayniteApi.StartGame(release.Id);
     }
 
     private bool isPcPlatform(Platform platform)
