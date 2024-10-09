@@ -187,7 +187,8 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                             (r) =>
                               r.runState !== 'launching' &&
                               r.runState !== 'running' &&
-                              r.runState !== 'restarting',
+                              r.runState !== 'restarting' &&
+                              r.runState !== 'installing',
                           )
                           .map((option, index) => (
                             <MenuItem
