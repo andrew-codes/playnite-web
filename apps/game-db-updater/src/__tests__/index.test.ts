@@ -1,6 +1,7 @@
 import { expect, jest, test } from '@jest/globals'
+import { PubSub } from 'graphql-yoga'
 import { AsyncMqttClient } from 'mqtt-client'
-import run, { Options } from '..'
+import run, { Options, PubSubChannels } from '..'
 
 jest.mock('../handlers')
 
@@ -9,6 +10,7 @@ describe('game-db-updater run()', () => {
     on: jest.fn(),
     subscribe: jest.fn(),
   } as unknown as jest.Mocked<AsyncMqttClient>
+  const publish = jest.fn()
 
   let options: Options
   beforeEach(() => {
@@ -18,7 +20,9 @@ describe('game-db-updater run()', () => {
   })
 
   test('Subscribes to "playnite/#" topics.', async () => {
-    await run(options, mqttClient)
+    await run(options, mqttClient, {
+      publish,
+    } as unknown as PubSub<PubSubChannels>)
 
     expect(mqttClient.subscribe).toHaveBeenCalledWith('playnite/#')
   })

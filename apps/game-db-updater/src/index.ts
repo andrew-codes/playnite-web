@@ -1,7 +1,7 @@
 import createDebugger from 'debug'
 import fs from 'fs/promises'
-import _ from 'lodash'
 import type { PubSub } from 'graphql-yoga'
+import _ from 'lodash'
 import { AsyncMqttClient } from 'mqtt-client'
 import handlers from './handlers'
 
@@ -53,4 +53,4 @@ const run = async (
 }
 
 export default run
-export type { HandlerOptions, Options }
+export type { HandlerOptions, Options, PubSubChannels }
