@@ -11,6 +11,16 @@ export const restartGameRelease: NonNullable<
 
   const releaseId = fromString(_arg.releaseId).id
 
+  await _ctx.api.game.updateGameReleases(
+    { 'releases.id': releaseId },
+    { runState: 'restarting' },
+  )
+  await _ctx.api.playlist.updateGameReleases(
+    { 'games.releases.id': releaseId },
+    { runState: 'restarting' },
+    { arrayFilters: [{ 'release.id': releaseId }] },
+  )
+
   const game = await _ctx.api.game.getBy({ 'releases.id': releaseId })
   const release = game?.[0]?.releases.find((r) => r.id === releaseId)
   if (!release) {
@@ -20,6 +30,8 @@ export const restartGameRelease: NonNullable<
   if (!release.active) {
     throw new GraphQLError('Release is not currently active.')
   }
+
+  _ctx.subscriptionPublisher.publish('releaseRunStateChanged', release)
 
   await _ctx.mqttClient.publish(
     `playnite/request/game/restart`,
@@ -36,12 +48,6 @@ export const restartGameRelease: NonNullable<
       },
     }),
   )
-
-  _ctx.subscriptionPublisher.publish('gameActivationStateChanged', {
-    id: releaseId,
-    active: true,
-    restarted: true,
-  })
 
   return release
 }

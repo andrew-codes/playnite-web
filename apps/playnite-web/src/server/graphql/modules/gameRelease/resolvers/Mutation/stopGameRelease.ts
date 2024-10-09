@@ -25,6 +25,9 @@ export const stopGameRelease: NonNullable<
   if (!release) {
     throw new GraphQLError('No game release found')
   }
+
+  _ctx.subscriptionPublisher.publish('releaseRunStateChanged', release)
+
   await _ctx.mqttClient.publish(
     `playnite/request/game/stop`,
     JSON.stringify({
@@ -40,8 +43,6 @@ export const stopGameRelease: NonNullable<
       },
     }),
   )
-
-  _ctx.subscriptionPublisher.publish('releaseRunStateChanged', release)
 
   return release
 }

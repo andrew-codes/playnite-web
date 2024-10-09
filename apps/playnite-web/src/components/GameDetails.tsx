@@ -185,8 +185,9 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                         {releases
                           .filter(
                             (r) =>
+                              r.runState !== 'launching' &&
                               r.runState !== 'running' &&
-                              r.runState !== 'launching',
+                              r.runState !== 'restarting',
                           )
                           .map((option, index) => (
                             <MenuItem
@@ -206,7 +207,10 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
               )}
             </Popper>
             {releases.some(
-              (r) => r.runState === 'running' || r.runState === 'launching',
+              (r) =>
+                r.runState === 'running' ||
+                r.runState === 'launching' ||
+                r.runState === 'restarting',
             ) && (
               <>
                 <Button

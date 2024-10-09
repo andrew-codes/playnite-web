@@ -1,9 +1,6 @@
 import { GraphQLError } from 'graphql'
-import _ from 'lodash'
 import { fromString } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
-
-const { merge } = _
 
 export const startGameRelease: NonNullable<
   MutationResolvers['startGameRelease']

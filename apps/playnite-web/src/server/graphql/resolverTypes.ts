@@ -43,6 +43,7 @@ const runStates = [
   'uninstalling',
   'uninstalled',
   'stopping',
+  'restarting',
 ] as const
 type RunState = (typeof runStates)[number]
 
