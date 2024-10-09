@@ -281,7 +281,7 @@ namespace PlayniteWeb
     {
       try
       {
-        if (!e.IsInstalled)
+        if (!isPcPlatform(e.Platform) || !e.IsInstalled)
         {
           return;
         }
@@ -300,7 +300,7 @@ namespace PlayniteWeb
     {
       try
       {
-        if (e.IsInstalled)
+        if (!isPcPlatform(e.Platform) || e.IsInstalled)
         {
           return;
         }
@@ -337,20 +337,6 @@ namespace PlayniteWeb
         }
 
         PlayniteApi.StartGame(release.Id);
-      }
-      else
-      {
-        var playniteGame = PlayniteApi.Database.Games.FirstOrDefault(g => g.Id == release.Id);
-        if (playniteGame == null)
-        {
-         logger.Error($"Expected release with ID {release.Id} to be found in Playnite database, but was not.");
-          return;
-        }
-        playniteGame.IsLaunching = true;
-        var game = GameFromRelease(playniteGame);
-        // Note we cannot know if the game has started or not. Instead, we publish a starting state and let external systems handle the rest.
-        var gameStatePublisher = new PublishGameState(GameState.starting, (IMqttClient)publisher, topicManager, serializer);
-        Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
       }
     }
 
