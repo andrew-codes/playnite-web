@@ -5,11 +5,13 @@ import express from 'express'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import helmet from 'helmet'
 import { AsyncMqttClient } from 'mqtt-client'
+import path from 'path'
 import { WebSocketServer } from 'ws'
 import createYoga from './src/server/graphql'
 import { Domain } from './src/server/graphql/Domain'
 import schema from './src/server/graphql/schema'
 import { subscriptionPublisher } from './src/server/graphql/subscriptionPublisher'
+import mqttUpdater from './src/server/mqttUpdater'
 
 const debug = createDebugger('playnite-web/app/server')
 
@@ -17,6 +19,17 @@ async function run(mqttClient: AsyncMqttClient) {
   const { PORT, HOST } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
   const domain = HOST ?? 'localhost'
+
+  debug('Starting Playnite Web game-db-updater...')
+  await mqttUpdater({
+    assetSaveDirectoryPath: path.join(
+      process.cwd(),
+      'public/assets/asset-by-id',
+    ),
+    mqtt: mqttClient,
+    pubsub: subscriptionPublisher,
+    domain: new Domain(),
+  })
 
   let app = express()
 
@@ -104,10 +117,6 @@ async function run(mqttClient: AsyncMqttClient) {
       wsServer,
     )
   })
-
-  return {
-    subscriptionPublisher,
-  }
 }
 
 export default run

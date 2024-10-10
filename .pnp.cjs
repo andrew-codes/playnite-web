@@ -23,10 +23,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/PlayniteWebPlugin"\
     },\
     {\
-      "name": "playnite-web-game-db-updater",\
-      "reference": "workspace:apps/game-db-updater"\
-    },\
-    {\
       "name": "playnite-web-app",\
       "reference": "workspace:apps/playnite-web"\
     },\
@@ -51,7 +47,6 @@ const RAW_RUNTIME_STATE =
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
     ["playnite-web-app-hass-addon", ["workspace:hass-playnite-web"]],\
-    ["playnite-web-game-db-updater", ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#workspace:apps/game-db-updater", "workspace:apps/game-db-updater"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]],\
     ["versioning", ["workspace:libs/versioning"]]\
   ],\
@@ -5976,15 +5971,6 @@ const RAW_RUNTIME_STATE =
           ["tslib", "npm:2.6.3"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:5.0.2", {\
-        "packageLocation": "./.yarn/cache/@envelop-core-npm-5.0.2-55cda175a9-ef671cf79b.zip/node_modules/@envelop/core/",\
-        "packageDependencies": [\
-          ["@envelop/core", "npm:5.0.2"],\
-          ["@envelop/types", "npm:5.0.0"],\
-          ["tslib", "npm:2.6.3"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["@envelop/types", [\
@@ -7318,13 +7304,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["npm:1.3.1", {\
-        "packageLocation": "./.yarn/cache/@graphql-tools-executor-npm-1.3.1-50ca2f15fe-91a0e43be2.zip/node_modules/@graphql-tools/executor/",\
-        "packageDependencies": [\
-          ["@graphql-tools/executor", "npm:1.3.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["virtual:0da57fd0da64a5a3d357d8655133c95864a850288568e65545676d523771446bebfd8a1aa1b8250938ea300faa42dc1e45b2ef533ecf7d45a35134494865798f#npm:1.2.7", {\
         "packageLocation": "./.yarn/__virtual__/@graphql-tools-executor-virtual-a535efb62b/0/cache/@graphql-tools-executor-npm-1.2.7-7051f9fedf-b339f7a506.zip/node_modules/@graphql-tools/executor/",\
         "packageDependencies": [\
@@ -7334,24 +7313,6 @@ const RAW_RUNTIME_STATE =
           ["@repeaterjs/repeater", "npm:3.0.6"],\
           ["@types/graphql", null],\
           ["graphql", "npm:16.9.0"],\
-          ["tslib", "npm:2.6.2"],\
-          ["value-or-promise", "npm:1.0.12"]\
-        ],\
-        "packagePeers": [\
-          "@types/graphql",\
-          "graphql"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:1.3.1", {\
-        "packageLocation": "./.yarn/__virtual__/@graphql-tools-executor-virtual-4aa659fc79/0/cache/@graphql-tools-executor-npm-1.3.1-50ca2f15fe-91a0e43be2.zip/node_modules/@graphql-tools/executor/",\
-        "packageDependencies": [\
-          ["@graphql-tools/executor", "virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:1.3.1"],\
-          ["@graphql-tools/utils", "virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:10.5.4"],\
-          ["@graphql-typed-document-node/core", "virtual:4aa659fc7960a27d610bb7e1ea653d605d826dfff4bca74089a4794150becb9fa281d27f52c2ccb56b7d0e7f777d0b0f7636833b64d7a24bda60ccde76b35324#npm:3.2.0"],\
-          ["@repeaterjs/repeater", "npm:3.0.6"],\
-          ["@types/graphql", null],\
-          ["graphql", null],\
           ["tslib", "npm:2.6.2"],\
           ["value-or-promise", "npm:1.0.12"]\
         ],\
@@ -7662,21 +7623,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:1f15b6c6e618f8be3c46439a4a64ccae96186478ab1e48a4c1aa7bdfa3af32a1b3f4a34b59ec502d8debfd87424bd816b595ab866a7c6debbbcacc6d41b6ae88#npm:9.0.4", {\
-        "packageLocation": "./.yarn/__virtual__/@graphql-tools-merge-virtual-da616859cd/0/cache/@graphql-tools-merge-npm-9.0.4-169df8c300-baf8558955.zip/node_modules/@graphql-tools/merge/",\
-        "packageDependencies": [\
-          ["@graphql-tools/merge", "virtual:1f15b6c6e618f8be3c46439a4a64ccae96186478ab1e48a4c1aa7bdfa3af32a1b3f4a34b59ec502d8debfd87424bd816b595ab866a7c6debbbcacc6d41b6ae88#npm:9.0.4"],\
-          ["@graphql-tools/utils", "virtual:1f15b6c6e618f8be3c46439a4a64ccae96186478ab1e48a4c1aa7bdfa3af32a1b3f4a34b59ec502d8debfd87424bd816b595ab866a7c6debbbcacc6d41b6ae88#npm:10.2.2"],\
-          ["@types/graphql", null],\
-          ["graphql", null],\
-          ["tslib", "npm:2.6.2"]\
-        ],\
-        "packagePeers": [\
-          "@types/graphql",\
-          "graphql"\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["virtual:87d563f503fe5143705afc79b188c1b85e83c31ff982f6e2c3263b8ad65d93fc0be494b9dfcb703dc0904e36d0bf8203b7e120c03f8004874b04dee003e5ca6c#npm:9.0.4", {\
         "packageLocation": "./.yarn/__virtual__/@graphql-tools-merge-virtual-c6090d5e77/0/cache/@graphql-tools-merge-npm-9.0.4-169df8c300-baf8558955.zip/node_modules/@graphql-tools/merge/",\
         "packageDependencies": [\
@@ -7781,7 +7727,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@graphql-tools/relay-operation-optimizer", "virtual:579051df3e37e5e983a352f2a0f8fda2d7ae5b4ccd3e4200331bf32c47e19339d96d3c38028a0f487d5d2e4027b641f9987d739c6a8d9448e1b09b8dda658ee4#npm:7.0.1"],\
           ["@ardatan/relay-compiler", "virtual:2b2c99335882ce008df230d25bfd5e7b0c387c0ce8cb701704465f09bcad8865083d214e9a4e5074ac2acbdb38ef879de53df88fe044650de277565faf373691#npm:12.0.0"],\
-          ["@graphql-tools/utils", "virtual:1f15b6c6e618f8be3c46439a4a64ccae96186478ab1e48a4c1aa7bdfa3af32a1b3f4a34b59ec502d8debfd87424bd816b595ab866a7c6debbbcacc6d41b6ae88#npm:10.2.2"],\
+          ["@graphql-tools/utils", "virtual:2b2c99335882ce008df230d25bfd5e7b0c387c0ce8cb701704465f09bcad8865083d214e9a4e5074ac2acbdb38ef879de53df88fe044650de277565faf373691#npm:10.2.2"],\
           ["@types/graphql", null],\
           ["graphql", null],\
           ["tslib", "npm:2.6.2"]\
@@ -7825,23 +7771,6 @@ const RAW_RUNTIME_STATE =
           ["@graphql-tools/utils", "virtual:c6090d5e772efaa73da660fe0183e3e8ca4e6565ebfae1a11b495f1454e47af4bc487e8ddb71f9e4117eba065dcd310fcc75421023b98db4af17be3f86e52fad#npm:10.2.2"],\
           ["@types/graphql", null],\
           ["graphql", "npm:16.9.0"],\
-          ["tslib", "npm:2.6.2"],\
-          ["value-or-promise", "npm:1.0.12"]\
-        ],\
-        "packagePeers": [\
-          "@types/graphql",\
-          "graphql"\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:10.0.4", {\
-        "packageLocation": "./.yarn/__virtual__/@graphql-tools-schema-virtual-1f15b6c6e6/0/cache/@graphql-tools-schema-npm-10.0.4-80b808c995-991c54513d.zip/node_modules/@graphql-tools/schema/",\
-        "packageDependencies": [\
-          ["@graphql-tools/schema", "virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:10.0.4"],\
-          ["@graphql-tools/merge", "virtual:1f15b6c6e618f8be3c46439a4a64ccae96186478ab1e48a4c1aa7bdfa3af32a1b3f4a34b59ec502d8debfd87424bd816b595ab866a7c6debbbcacc6d41b6ae88#npm:9.0.4"],\
-          ["@graphql-tools/utils", "virtual:1f15b6c6e618f8be3c46439a4a64ccae96186478ab1e48a4c1aa7bdfa3af32a1b3f4a34b59ec502d8debfd87424bd816b595ab866a7c6debbbcacc6d41b6ae88#npm:10.2.2"],\
-          ["@types/graphql", null],\
-          ["graphql", null],\
           ["tslib", "npm:2.6.2"],\
           ["value-or-promise", "npm:1.0.12"]\
         ],\
@@ -7902,18 +7831,11 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["npm:10.5.4", {\
-        "packageLocation": "./.yarn/cache/@graphql-tools-utils-npm-10.5.4-34df6bb3a5-006d499d87.zip/node_modules/@graphql-tools/utils/",\
+      ["virtual:2b2c99335882ce008df230d25bfd5e7b0c387c0ce8cb701704465f09bcad8865083d214e9a4e5074ac2acbdb38ef879de53df88fe044650de277565faf373691#npm:10.2.2", {\
+        "packageLocation": "./.yarn/__virtual__/@graphql-tools-utils-virtual-5fc5eadb8c/0/cache/@graphql-tools-utils-npm-10.2.2-df253ea243-64cf157181.zip/node_modules/@graphql-tools/utils/",\
         "packageDependencies": [\
-          ["@graphql-tools/utils", "npm:10.5.4"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:1f15b6c6e618f8be3c46439a4a64ccae96186478ab1e48a4c1aa7bdfa3af32a1b3f4a34b59ec502d8debfd87424bd816b595ab866a7c6debbbcacc6d41b6ae88#npm:10.2.2", {\
-        "packageLocation": "./.yarn/__virtual__/@graphql-tools-utils-virtual-91f43cf666/0/cache/@graphql-tools-utils-npm-10.2.2-df253ea243-64cf157181.zip/node_modules/@graphql-tools/utils/",\
-        "packageDependencies": [\
-          ["@graphql-tools/utils", "virtual:1f15b6c6e618f8be3c46439a4a64ccae96186478ab1e48a4c1aa7bdfa3af32a1b3f4a34b59ec502d8debfd87424bd816b595ab866a7c6debbbcacc6d41b6ae88#npm:10.2.2"],\
-          ["@graphql-typed-document-node/core", "virtual:4aa659fc7960a27d610bb7e1ea653d605d826dfff4bca74089a4794150becb9fa281d27f52c2ccb56b7d0e7f777d0b0f7636833b64d7a24bda60ccde76b35324#npm:3.2.0"],\
+          ["@graphql-tools/utils", "virtual:2b2c99335882ce008df230d25bfd5e7b0c387c0ce8cb701704465f09bcad8865083d214e9a4e5074ac2acbdb38ef879de53df88fe044650de277565faf373691#npm:10.2.2"],\
+          ["@graphql-typed-document-node/core", "virtual:5fc5eadb8c3ec963ececd129fb5319e4bf78b798980b863df78ecba7501ad72ef2a29db75d8cc90009fb8a4416cc7dcc98144a2ce46a03d5fa953992a6594664#npm:3.2.0"],\
           ["@types/graphql", null],\
           ["cross-inspect", "npm:1.0.0"],\
           ["dset", "npm:3.1.3"],\
@@ -7930,7 +7852,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/@graphql-tools-utils-virtual-ae6e8ec101/0/cache/@graphql-tools-utils-npm-10.2.3-5da3580f24-97cfe0fedd.zip/node_modules/@graphql-tools/utils/",\
         "packageDependencies": [\
           ["@graphql-tools/utils", "virtual:496287c226d0fbdea6c2345564c8fd7b9af216193aecb02a1b607eb3c56edc02ee118324b7a2452a532e99c4d4242248afb579f12a5587499832cd71f69ad854#npm:10.2.3"],\
-          ["@graphql-typed-document-node/core", "virtual:4aa659fc7960a27d610bb7e1ea653d605d826dfff4bca74089a4794150becb9fa281d27f52c2ccb56b7d0e7f777d0b0f7636833b64d7a24bda60ccde76b35324#npm:3.2.0"],\
+          ["@graphql-typed-document-node/core", "virtual:5fc5eadb8c3ec963ececd129fb5319e4bf78b798980b863df78ecba7501ad72ef2a29db75d8cc90009fb8a4416cc7dcc98144a2ce46a03d5fa953992a6594664#npm:3.2.0"],\
           ["@types/graphql", null],\
           ["cross-inspect", "npm:1.0.0"],\
           ["dset", "npm:3.1.3"],\
@@ -7976,23 +7898,6 @@ const RAW_RUNTIME_STATE =
           "graphql"\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:10.5.4", {\
-        "packageLocation": "./.yarn/__virtual__/@graphql-tools-utils-virtual-2a84413c90/0/cache/@graphql-tools-utils-npm-10.5.4-34df6bb3a5-006d499d87.zip/node_modules/@graphql-tools/utils/",\
-        "packageDependencies": [\
-          ["@graphql-tools/utils", "virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:10.5.4"],\
-          ["@graphql-typed-document-node/core", "virtual:4aa659fc7960a27d610bb7e1ea653d605d826dfff4bca74089a4794150becb9fa281d27f52c2ccb56b7d0e7f777d0b0f7636833b64d7a24bda60ccde76b35324#npm:3.2.0"],\
-          ["@types/graphql", null],\
-          ["cross-inspect", "npm:1.0.1"],\
-          ["dset", "npm:3.1.3"],\
-          ["graphql", null],\
-          ["tslib", "npm:2.6.2"]\
-        ],\
-        "packagePeers": [\
-          "@types/graphql",\
-          "graphql"\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["@graphql-tools/wrap", [\
@@ -8030,10 +7935,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:4aa659fc7960a27d610bb7e1ea653d605d826dfff4bca74089a4794150becb9fa281d27f52c2ccb56b7d0e7f777d0b0f7636833b64d7a24bda60ccde76b35324#npm:3.2.0", {\
-        "packageLocation": "./.yarn/__virtual__/@graphql-typed-document-node-core-virtual-d73d163f9b/0/cache/@graphql-typed-document-node-core-npm-3.2.0-505adb1e90-94e9d75c1f.zip/node_modules/@graphql-typed-document-node/core/",\
+      ["virtual:5fc5eadb8c3ec963ececd129fb5319e4bf78b798980b863df78ecba7501ad72ef2a29db75d8cc90009fb8a4416cc7dcc98144a2ce46a03d5fa953992a6594664#npm:3.2.0", {\
+        "packageLocation": "./.yarn/__virtual__/@graphql-typed-document-node-core-virtual-9ac66981be/0/cache/@graphql-typed-document-node-core-npm-3.2.0-505adb1e90-94e9d75c1f.zip/node_modules/@graphql-typed-document-node/core/",\
         "packageDependencies": [\
-          ["@graphql-typed-document-node/core", "virtual:4aa659fc7960a27d610bb7e1ea653d605d826dfff4bca74089a4794150becb9fa281d27f52c2ccb56b7d0e7f777d0b0f7636833b64d7a24bda60ccde76b35324#npm:3.2.0"],\
+          ["@graphql-typed-document-node/core", "virtual:5fc5eadb8c3ec963ececd129fb5319e4bf78b798980b863df78ecba7501ad72ef2a29db75d8cc90009fb8a4416cc7dcc98144a2ce46a03d5fa953992a6594664#npm:3.2.0"],\
           ["@types/graphql", null],\
           ["graphql", null]\
         ],\
@@ -12184,15 +12089,6 @@ const RAW_RUNTIME_STATE =
           ["urlpattern-polyfill", "npm:10.0.0"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:0.9.21", {\
-        "packageLocation": "./.yarn/cache/@whatwg-node-fetch-npm-0.9.21-7fd6217e81-c0727e3267.zip/node_modules/@whatwg-node/fetch/",\
-        "packageDependencies": [\
-          ["@whatwg-node/fetch", "npm:0.9.21"],\
-          ["@whatwg-node/node-fetch", "npm:0.5.26"],\
-          ["urlpattern-polyfill", "npm:10.0.0"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["@whatwg-node/node-fetch", [\
@@ -12219,17 +12115,6 @@ const RAW_RUNTIME_STATE =
           ["tslib", "npm:2.6.3"]\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["npm:0.5.26", {\
-        "packageLocation": "./.yarn/cache/@whatwg-node-node-fetch-npm-0.5.26-0ba23037e3-32e7b230e7.zip/node_modules/@whatwg-node/node-fetch/",\
-        "packageDependencies": [\
-          ["@whatwg-node/node-fetch", "npm:0.5.26"],\
-          ["@kamilkisiela/fast-url-parser", "npm:1.1.4"],\
-          ["busboy", "npm:1.6.0"],\
-          ["fast-querystring", "npm:1.1.2"],\
-          ["tslib", "npm:2.6.3"]\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["@whatwg-node/server", [\
@@ -12238,15 +12123,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@whatwg-node/server", "npm:0.9.36"],\
           ["@whatwg-node/fetch", "npm:0.9.18"],\
-          ["tslib", "npm:2.6.3"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:0.9.49", {\
-        "packageLocation": "./.yarn/cache/@whatwg-node-server-npm-0.9.49-0729bfb9bb-e8d99eceeb.zip/node_modules/@whatwg-node/server/",\
-        "packageDependencies": [\
-          ["@whatwg-node/server", "npm:0.9.49"],\
-          ["@whatwg-node/fetch", "npm:0.9.21"],\
           ["tslib", "npm:2.6.3"]\
         ],\
         "linkType": "HARD"\
@@ -15148,14 +15024,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/cross-inspect-npm-1.0.0-75dbd2a0f5-53530865c3.zip/node_modules/cross-inspect/",\
         "packageDependencies": [\
           ["cross-inspect", "npm:1.0.0"],\
-          ["tslib", "npm:2.6.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:1.0.1", {\
-        "packageLocation": "./.yarn/cache/cross-inspect-npm-1.0.1-58060c7e11-2493ee47a8.zip/node_modules/cross-inspect/",\
-        "packageDependencies": [\
-          ["cross-inspect", "npm:1.0.1"],\
           ["tslib", "npm:2.6.2"]\
         ],\
         "linkType": "HARD"\
@@ -18471,37 +18339,6 @@ const RAW_RUNTIME_STATE =
           ["graphql-yoga", "npm:5.6.1"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["npm:5.7.0", {\
-        "packageLocation": "./.yarn/cache/graphql-yoga-npm-5.7.0-69d1df7fd4-dc7524bd07.zip/node_modules/graphql-yoga/",\
-        "packageDependencies": [\
-          ["graphql-yoga", "npm:5.7.0"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:5.7.0", {\
-        "packageLocation": "./.yarn/__virtual__/graphql-yoga-virtual-d8c45a45d8/0/cache/graphql-yoga-npm-5.7.0-69d1df7fd4-dc7524bd07.zip/node_modules/graphql-yoga/",\
-        "packageDependencies": [\
-          ["graphql-yoga", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:5.7.0"],\
-          ["@envelop/core", "npm:5.0.2"],\
-          ["@graphql-tools/executor", "virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:1.3.1"],\
-          ["@graphql-tools/schema", "virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:10.0.4"],\
-          ["@graphql-tools/utils", "virtual:d8c45a45d83b35f97b0fe9c57dcdf9dc2cad074f3b3021b943694107307852cafdb50b3629acc6056be467663779eb35f5b9d7e066e7af0e719f9a78fe24d3e9#npm:10.5.4"],\
-          ["@graphql-yoga/logger", "npm:2.0.0"],\
-          ["@graphql-yoga/subscription", "npm:5.0.1"],\
-          ["@types/graphql", null],\
-          ["@whatwg-node/fetch", "npm:0.9.21"],\
-          ["@whatwg-node/server", "npm:0.9.49"],\
-          ["dset", "npm:3.1.3"],\
-          ["graphql", null],\
-          ["lru-cache", "npm:10.3.0"],\
-          ["tslib", "npm:2.6.3"]\
-        ],\
-        "packagePeers": [\
-          "@types/graphql",\
-          "graphql"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.6.1", {\
         "packageLocation": "./.yarn/__virtual__/graphql-yoga-virtual-0da57fd0da/0/cache/graphql-yoga-npm-5.6.1-995a75e2fc-68119d4406.zip/node_modules/graphql-yoga/",\
@@ -23421,10 +23258,10 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.8.0", {\
-        "packageLocation": "./.yarn/__virtual__/mongodb-virtual-6b011e9931/0/cache/mongodb-npm-6.8.0-f82782f3b7-5ea1b78d3d.zip/node_modules/mongodb/",\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.8.0", {\
+        "packageLocation": "./.yarn/__virtual__/mongodb-virtual-7d51a76366/0/cache/mongodb-npm-6.8.0-f82782f3b7-5ea1b78d3d.zip/node_modules/mongodb/",\
         "packageDependencies": [\
-          ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.8.0"],\
+          ["mongodb", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.8.0"],\
           ["@aws-sdk/credential-providers", null],\
           ["@mongodb-js/saslprep", "npm:1.1.7"],\
           ["@mongodb-js/zstd", null],\
@@ -25466,13 +25303,12 @@ const RAW_RUNTIME_STATE =
           ["jsonwebtoken", "npm:9.0.2"],\
           ["lightningcss", "npm:1.25.1"],\
           ["lodash", "npm:4.17.21"],\
-          ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.8.0"],\
+          ["mongodb", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.8.0"],\
           ["mqtt-client", "workspace:libs/mqtt-client"],\
           ["nodemon", "npm:3.1.4"],\
           ["npm-run-all", "npm:4.1.5"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.5.1"],\
           ["nyc", "npm:17.0.0"],\
-          ["playnite-web-game-db-updater", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#workspace:apps/game-db-updater"],\
           ["prettier", "npm:3.3.3"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:18.3.1"],\
@@ -25486,6 +25322,7 @@ const RAW_RUNTIME_STATE =
           ["remix-routes", "npm:1.7.6"],\
           ["remix-utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.6.0"],\
           ["rimraf", "npm:5.0.9"],\
+          ["sharp", "npm:0.33.4"],\
           ["shelljs", "npm:0.8.5"],\
           ["start-server-and-test", "npm:2.0.4"],\
           ["ts-jest", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:29.2.3"],\
@@ -25494,6 +25331,7 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>::version=5.5.3&hash=379a07"],\
           ["typescript-remix-routes-plugin", "npm:1.0.1"],\
           ["ua-parser-js", "npm:1.0.38"],\
+          ["uuid", "npm:10.0.0"],\
           ["versioning", "workspace:libs/versioning"],\
           ["vite", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.3.4"],\
           ["vite-plugin-pwa", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.20.0"],\
@@ -25518,82 +25356,6 @@ const RAW_RUNTIME_STATE =
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.5.1"],\
           ["playnite-web-app", "workspace:apps/playnite-web"],\
           ["shelljs", "npm:0.8.5"],\
-          ["versioning", "workspace:libs/versioning"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["playnite-web-game-db-updater", [\
-      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#workspace:apps/game-db-updater", {\
-        "packageLocation": "./.yarn/__virtual__/playnite-web-game-db-updater-virtual-bd0fe0f3fe/1/apps/game-db-updater/",\
-        "packageDependencies": [\
-          ["playnite-web-game-db-updater", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#workspace:apps/game-db-updater"],\
-          ["@jest/globals", "npm:29.7.0"],\
-          ["@types/graphql-yoga", null],\
-          ["@types/jest", "npm:29.5.12"],\
-          ["@types/mqtt-client", null],\
-          ["@types/node", "npm:20.14.11"],\
-          ["@types/shelljs", "npm:0.8.15"],\
-          ["cpy", "npm:11.0.1"],\
-          ["cpy-cli", "npm:5.0.0"],\
-          ["debug", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5"],\
-          ["dotenv", "npm:16.4.5"],\
-          ["esbuild", "npm:0.23.0"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
-          ["graphql-yoga", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.6.1"],\
-          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
-          ["jest-config", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
-          ["jest-when", "virtual:0325a7f29f92a6e1a250aeb4a0a7a5b35211c2ff841d6761136d36cf9d4d63b6947801b2d89f6f9bdb661a7d017f21dc39e03954d2aa8916ed1260e42cc74757#npm:3.6.0"],\
-          ["lodash", "npm:4.17.21"],\
-          ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.8.0"],\
-          ["mqtt-client", "workspace:libs/mqtt-client"],\
-          ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.5.1"],\
-          ["prettier", "npm:3.3.3"],\
-          ["rimraf", "npm:5.0.9"],\
-          ["sharp", "npm:0.33.4"],\
-          ["shelljs", "npm:0.8.5"],\
-          ["ts-jest", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.2.3"],\
-          ["typescript", "patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>::version=5.5.3&hash=379a07"],\
-          ["uuid", "npm:10.0.0"],\
-          ["versioning", "workspace:libs/versioning"]\
-        ],\
-        "packagePeers": [\
-          "@types/graphql-yoga",\
-          "@types/mqtt-client",\
-          "graphql-yoga",\
-          "mqtt-client"\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["workspace:apps/game-db-updater", {\
-        "packageLocation": "./apps/game-db-updater/",\
-        "packageDependencies": [\
-          ["playnite-web-game-db-updater", "workspace:apps/game-db-updater"],\
-          ["@jest/globals", "npm:29.7.0"],\
-          ["@types/jest", "npm:29.5.12"],\
-          ["@types/node", "npm:20.14.11"],\
-          ["@types/shelljs", "npm:0.8.15"],\
-          ["cpy", "npm:11.0.1"],\
-          ["cpy-cli", "npm:5.0.0"],\
-          ["debug", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:4.3.5"],\
-          ["dotenv", "npm:16.4.5"],\
-          ["esbuild", "npm:0.23.0"],\
-          ["esbuild-register", "virtual:5d7b2a872cecbebafbca6bbaf850fd7bcb7d818a4936d133bca8db46ace3e3fd1246a960fab96c5d11e4678fdba856866a0cd1a8a45dfb37666fdcc725bdc71a#npm:3.5.0"],\
-          ["graphql-yoga", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:5.7.0"],\
-          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
-          ["jest-config", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
-          ["jest-when", "virtual:0325a7f29f92a6e1a250aeb4a0a7a5b35211c2ff841d6761136d36cf9d4d63b6947801b2d89f6f9bdb661a7d017f21dc39e03954d2aa8916ed1260e42cc74757#npm:3.6.0"],\
-          ["lodash", "npm:4.17.21"],\
-          ["mongodb", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:6.8.0"],\
-          ["mqtt-client", "workspace:libs/mqtt-client"],\
-          ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.5.1"],\
-          ["prettier", "npm:3.3.3"],\
-          ["rimraf", "npm:5.0.9"],\
-          ["sharp", "npm:0.33.4"],\
-          ["shelljs", "npm:0.8.5"],\
-          ["ts-jest", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.2.3"],\
-          ["typescript", "patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>::version=5.5.3&hash=379a07"],\
-          ["uuid", "npm:10.0.0"],\
           ["versioning", "workspace:libs/versioning"]\
         ],\
         "linkType": "SOFT"\
@@ -29530,52 +29292,6 @@ const RAW_RUNTIME_STATE =
           ["ts-jest", "npm:29.2.3"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.2.3", {\
-        "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-ab3198f1fb/0/cache/ts-jest-npm-29.2.3-343723b2c8-3be57a9f0e.zip/node_modules/ts-jest/",\
-        "packageDependencies": [\
-          ["ts-jest", "virtual:234e954c74ed3dc3b7d1ad859781a7b54a0d1ce11d15942d87f1110dc8db3d697386283ea4dc6848c15c1a731f4fcfed9934f689c6dc2815f3342b137fe6f8d8#npm:29.2.3"],\
-          ["@babel/core", null],\
-          ["@jest/transform", null],\
-          ["@jest/types", null],\
-          ["@types/babel-jest", null],\
-          ["@types/babel__core", null],\
-          ["@types/esbuild", null],\
-          ["@types/jest", "npm:29.5.12"],\
-          ["@types/jest__transform", null],\
-          ["@types/jest__types", null],\
-          ["@types/typescript", null],\
-          ["babel-jest", null],\
-          ["bs-logger", "npm:0.2.6"],\
-          ["ejs", "npm:3.1.10"],\
-          ["esbuild", "npm:0.23.0"],\
-          ["fast-json-stable-stringify", "npm:2.1.0"],\
-          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
-          ["jest-util", "npm:29.7.0"],\
-          ["json5", "npm:2.2.3"],\
-          ["lodash.memoize", "npm:4.1.2"],\
-          ["make-error", "npm:1.3.6"],\
-          ["semver", "npm:7.5.4"],\
-          ["typescript", "patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>::version=5.5.3&hash=379a07"],\
-          ["yargs-parser", "npm:21.1.1"]\
-        ],\
-        "packagePeers": [\
-          "@babel/core",\
-          "@jest/transform",\
-          "@jest/types",\
-          "@types/babel-jest",\
-          "@types/babel__core",\
-          "@types/esbuild",\
-          "@types/jest",\
-          "@types/jest__transform",\
-          "@types/jest__types",\
-          "@types/typescript",\
-          "babel-jest",\
-          "esbuild",\
-          "jest",\
-          "typescript"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.2.3", {\
         "packageLocation": "./.yarn/__virtual__/ts-jest-virtual-f7385806bf/0/cache/ts-jest-npm-29.2.3-343723b2c8-3be57a9f0e.zip/node_modules/ts-jest/",\

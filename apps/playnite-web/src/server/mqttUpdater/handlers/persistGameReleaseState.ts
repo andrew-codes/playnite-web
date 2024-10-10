@@ -113,7 +113,7 @@ const create =
           },
         )
 
-      options.publisher.publish('releaseRunStateChanged', release)
+      options.pubsub.publish('releaseRunStateChanged', release)
     } catch (e) {
       console.error(e)
     }

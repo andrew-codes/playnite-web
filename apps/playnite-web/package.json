@@ -38,7 +38,6 @@
     "lodash": "^4.17.21",
     "mongodb": "6.8.0",
     "mqtt-client": "workspace:*",
-    "playnite-web-game-db-updater": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
@@ -50,7 +49,9 @@
     "remix-island": "^0.2.0",
     "remix-routes": "^1.7.6",
     "remix-utils": "^7.6.0",
+    "sharp": "0.33.4",
     "ua-parser-js": "^1.0.38",
+    "uuid": "^10.0.0",
     "ws": "^8.18.0",
     "zod": "^3.23.8"
   },

@@ -11,49 +11,11 @@ import { subscriptionPublisher } from './subscriptionPublisher'
 
 const debug = createDebugger('playnite-web/graph/mqtt-subscription-events')
 
-const gameRunStateTopicMatcher = /playnite\/\w+\/response\/game\/state/
-
 const graphql = (
   endpoint: string,
   signingKey: string,
   mqttClient: AsyncMqttClient,
 ) => {
-  const domainApi = new Domain()
-  // TODO: move subscription publishes to after db has been updated.
-  mqttClient.on('message', async (topic, message) => {
-    try {
-      debug(`Received message on topic: ${topic}`)
-      // if (gameRunStateTopicMatcher.test(topic)) {
-      //   const payload = JSON.parse(message.toString())
-      //   if (!payload.id || !payload.state) {
-      //     debug(
-      //       `Invalid payload received, no gameId or state: ${message.toString()}`,
-      //     )
-
-      //     return
-      //   }
-
-      //   const gameRelease = await domainApi.gameRelease.getById(payload.id)
-
-      //   if (!gameRelease) {
-      //     debug(`Game release not found for gameId: ${payload.gameId}`)
-
-      //     return
-      //   }
-
-      //   subscriptionPublisher.publish('releaseRunStateChanged', {
-      //     id: gameRelease.id,
-      //     gameId: gameRelease.gameId,
-      //     runState: payload.state,
-      //     processId: payload.processId,
-      //   })
-      // }
-    } catch (error) {
-      debug(`Error processing message for topic: ${topic}`)
-      console.error(error)
-    }
-  })
-
   const domain = process.env.HOST ?? 'localhost'
 
   return createYoga({
