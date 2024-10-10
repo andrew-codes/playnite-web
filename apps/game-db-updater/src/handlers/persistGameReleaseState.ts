@@ -1,10 +1,7 @@
 import createDebugger from 'debug'
-import _ from 'lodash'
 import { HandlerOptions } from '..'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 import { getDbClient } from '../dbClient'
-
-const { merge } = _
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameReleaseState',
@@ -17,7 +14,6 @@ const runStates = [
   'installing',
   'launching',
   'running',
-  'uninstalling',
   'uninstalled',
 ] as const
 
@@ -33,23 +29,70 @@ const create =
         `Received game release state for topic ${topic} with payload ${payload.toString()}`,
       )
 
-      const { game, state, releaseId } = JSON.parse(payload.toString())
+      const { state, release } = JSON.parse(payload.toString())
 
-      if (state.toLowerCase() === 'stopped') {
-        ;(game as any).releases = (game as any).releases.map((r: any) =>
-          merge({}, r, { processId: null }),
-        )
+      const newState = runStates.find((s) => s === state.toLowerCase())
+
+      if (!newState || !release.id) {
+        debug(`Invalid state, ${state}, or release id, ${release.id}; aborting`)
+        return
       }
-      const newState =
-        runStates.find((s) => s === state.toLowerCase()) ?? 'uninstalled'
 
       const client = await getDbClient()
+
+      if (newState == 'installing') {
+        const launchingGame = await client
+          .db('games')
+          .collection('game')
+          .findOne({
+            'release.id': release.id,
+            'release.runState': 'launching',
+          })
+        if (launchingGame) {
+          return
+        }
+      }
+
+      if (newState == 'installed') {
+        const installingGame = await client
+          .db('games')
+          .collection('game')
+          .findOne({
+            'release.id': release.id,
+            'release.runState': 'launching',
+          })
+        if (installingGame) {
+          await options.mqtt.publish(
+            `playnite/request/game/start`,
+            JSON.stringify({
+              game: {
+                id: release.id,
+                gameId: release.gameId,
+                name: release.name,
+                platform: {
+                  id: release.platform.id,
+                  name: release.platform.name,
+                },
+                source: release.source,
+              },
+            }),
+          )
+        }
+
+        return
+      }
+
       await client
         .db('games')
         .collection('game')
         .updateOne(
-          { id: game.id },
-          { $set: merge({}, game, { runState: newState }) },
+          { 'releases.id': release.id },
+          {
+            $set: {
+              'releases.$.runState': newState,
+              'releases.$.processId': release.processId ?? null,
+            },
+          },
           { upsert: true },
         )
 
@@ -57,19 +100,18 @@ const create =
         .db('games')
         .collection('playlist')
         .updateMany(
-          { 'games.id': game.id },
+          { 'games.releases.id': release.id },
           {
             $set: {
-              [`games.$`]: game,
+              [`games.$.releases.$[release].runState`]: newState,
+              [`games.$.releases.$[release].processId`]:
+                release.processId ?? null,
             },
           },
+          {
+            arrayFilters: [{ 'release.id': release.id }],
+          },
         )
-
-      const release = game.releases.find((r: any) => r.id === releaseId)
-      if (!release) {
-        debug('No release found for game in run state change.')
-        return
-      }
 
       options.publisher.publish('releaseRunStateChanged', release)
     } catch (e) {

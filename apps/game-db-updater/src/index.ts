@@ -23,6 +23,7 @@ type Options = {
 }
 type HandlerOptions = Options & {
   publisher: PubSub<PubSubChannels>
+  mqtt: AsyncMqttClient
 }
 
 const run = async (
@@ -41,7 +42,7 @@ const run = async (
     try {
       debug(`Processing topic ${topic}`)
       await Promise.all(
-        handlers(merge({}, options, { publisher })).map((handler) =>
+        handlers(merge({}, options, { publisher, mqttClient })).map((handler) =>
           handler(topic, payload),
         ),
       )
