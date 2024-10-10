@@ -1,7 +1,6 @@
 using MQTTnet.Client;
 using Playnite.SDK.Models;
 using PlayniteWeb.TopicManager;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -23,14 +22,14 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       this.serializer = serializer;
     }
 
-    public IEnumerable<Task> Publish(IIdentifiable game)
+    public IEnumerable<Task> Publish(IIdentifiable release)
     {
-      var g = (Models.Game)game;
+      var r = (Models.Release)release;
       if (state != null)
       {
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
-          Game = g,
+          Release = r,
           State = state.ToString()
         }));
         yield break;

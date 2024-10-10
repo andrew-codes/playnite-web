@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace PlayniteWeb.Models
 {
-  internal class Game : IIdentifiable
+  public class Game : IIdentifiable
   {
     private readonly IEnumerable<Release> releases;
     private readonly PlatformSorter platformSorter;

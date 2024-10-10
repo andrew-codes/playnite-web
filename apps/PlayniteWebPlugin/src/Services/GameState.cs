@@ -5,7 +5,6 @@ namespace PlayniteWeb.Services
     uninstalled,
     installing,
     installed,
-    uinstalling,
     running,
     launching,
   }

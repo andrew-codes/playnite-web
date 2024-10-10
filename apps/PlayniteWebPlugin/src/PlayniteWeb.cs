@@ -19,6 +19,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using System.Runtime.Remoting.Lifetime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -186,15 +187,10 @@ namespace PlayniteWeb
       return gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications).Concat(playlistPublications);
     }
 
-    public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
+    private Release ReleaseFromPlayniteGame(Playnite.SDK.Models.Game game)
     {
-    }
-
-    public override void OnGameInstalled(OnGameInstalledEventArgs args)
-    {
-      var game = GameFromRelease(args.Game);
-      var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+      var g = GameFromRelease(game);
+      return g.Releases.FirstOrDefault(r => r.Id == game.Id);
     }
 
     private Models.Game GameFromRelease(Playnite.SDK.Models.Game game)
@@ -209,6 +205,17 @@ namespace PlayniteWeb
       return new Models.Game(games);
     }
 
+    public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
+    {
+    }
+
+    public override void OnGameInstalled(OnGameInstalledEventArgs args)
+    {
+      var release = ReleaseFromPlayniteGame(args.Game);
+      var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)publisher, topicManager, serializer);
+      Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
+    }
+
     public override void OnGameStarted(OnGameStartedEventArgs args)
     {
       var game = GameFromRelease(args.Game);
@@ -220,23 +227,23 @@ namespace PlayniteWeb
 
     public override void OnGameStarting(OnGameStartingEventArgs args)
     {
-      var game = GameFromRelease(args.Game);
+      var release = ReleaseFromPlayniteGame(args.Game);
       var gameStatePublisher = new PublishGameState(GameState.launching, (IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+      Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
     }
 
     public override void OnGameStopped(OnGameStoppedEventArgs args)
     {
-      var game = GameFromRelease(args.Game);
+      var release = ReleaseFromPlayniteGame(args.Game);
       var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+      Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
     }
 
     public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
     {
-      var game = GameFromRelease(args.Game);
+      var release = ReleaseFromPlayniteGame(args.Game);
       var gameStatePublisher = new PublishGameState(GameState.uninstalled, (IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+      Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
     }
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
@@ -305,6 +312,8 @@ namespace PlayniteWeb
           return;
         }
 
+        var gameStatePublisher = new PublishGameState(GameState.installing, (IMqttClient)publisher, topicManager, serializer);
+        Task.WaitAll(gameStatePublisher.Publish(e).ToArray());
         PlayniteApi.InstallGame(e.Id);
       }
       catch (Exception ex)
@@ -312,18 +321,6 @@ namespace PlayniteWeb
         logger.Error(ex, $"Error occurred in Subscriber_OnInstallGameRequest for Game ID {e}.");
 
       }
-    }
-
-
-    private void HandleVerifySettings(object sender, PlayniteWebSettings e)
-    {
-      StartConnection(e);
-    }
-
-    private void StartConnection(PlayniteWebSettings settings)
-    {
-      var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, Id.ToByteArray());
-      publisher.StartConnection(options);
     }
 
     private void Subscriber_OnStartRelease(object sender, Release release)
@@ -336,7 +333,10 @@ namespace PlayniteWeb
 
       if (!release.IsInstalled)
       {
+        var gameStatePublisher = new PublishGameState(GameState.installing, (IMqttClient)publisher, topicManager, serializer);
+        Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
         PlayniteApi.InstallGame(release.Id);
+
         return;
       }
 
@@ -352,6 +352,18 @@ namespace PlayniteWeb
     {
       Task.WhenAll(SyncLibrary().ToArray()).ContinueWith((t) => e.Start());
     }
+
+    private void HandleVerifySettings(object sender, PlayniteWebSettings e)
+    {
+      StartConnection(e);
+    }
+
+    private void StartConnection(PlayniteWebSettings settings)
+    {
+      var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, Id.ToByteArray());
+      publisher.StartConnection(options);
+    }
+
 
     private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Playnite.SDK.Models.Game> e)
     {
