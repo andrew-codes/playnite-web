@@ -1,9 +1,6 @@
 import { GraphQLError } from 'graphql'
-import _ from 'lodash'
 import { fromString } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
-
-const { merge } = _
 
 export const startGameRelease: NonNullable<
   MutationResolvers['startGameRelease']
@@ -13,24 +10,13 @@ export const startGameRelease: NonNullable<
   }
 
   const releaseId = fromString(_arg.releaseId).id
-
-  await _ctx.api.game.updateGameReleases(
-    { 'releases.active': true },
-    { active: false },
-  )
-  await _ctx.api.playlist.updateGameReleases(
-    { 'games.releases.active': true },
-    { active: false },
-    { arrayFilters: [{ 'release.active': true }] },
-  )
-
   await _ctx.api.game.updateGameReleases(
     { 'releases.id': releaseId },
-    { active: true },
+    { runState: 'launching' },
   )
   await _ctx.api.playlist.updateGameReleases(
     { 'games.releases.id': releaseId },
-    { active: true },
+    { runState: 'launching' },
     { arrayFilters: [{ 'release.id': releaseId }] },
   )
 
@@ -40,12 +26,7 @@ export const startGameRelease: NonNullable<
     throw new GraphQLError('No game release found')
   }
 
-  let install =
-    !release.isRunning &&
-    !release.isInstalled &&
-    !release.isInstalling &&
-    !release.isUninstalling &&
-    !release.isLaunching
+  await _ctx.subscriptionPublisher.publish('releaseRunStateChanged', release)
 
   await _ctx.mqttClient.publish(
     `playnite/request/game/start`,
@@ -59,15 +40,9 @@ export const startGameRelease: NonNullable<
           name: release.platform.name,
         },
         source: release.source,
-        install,
       },
     }),
   )
-
-  await _ctx.subscriptionPublisher.publish('gameActivationStateChanged', {
-    id: releaseId,
-    active: true,
-  })
 
   return release
 }

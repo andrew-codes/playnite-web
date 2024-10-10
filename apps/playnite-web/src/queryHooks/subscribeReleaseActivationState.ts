@@ -3,9 +3,9 @@ import { useSubscription } from '@apollo/client/react/hooks/hooks.cjs'
 
 const Subscribe_Release_Activation_State = gql`
   subscription releaseActivationStateChanged {
-    releaseActivationStateChanged {
+    releaseRunStateChanged {
       id
-      state
+      runState
     }
   }
 `

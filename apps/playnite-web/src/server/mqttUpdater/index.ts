@@ -1,24 +1,27 @@
 import createDebugger from 'debug'
 import fs from 'fs/promises'
+import type { PubSub } from 'graphql-yoga'
 import { AsyncMqttClient } from 'mqtt-client'
+import { Domain } from '../graphql/Domain'
+import { PubSubChannels } from '../graphql/subscriptionPublisher'
 import handlers from './handlers'
 
-type Options = {
+type HandlerOptions = {
   assetSaveDirectoryPath: string
+  pubsub: PubSub<PubSubChannels>
+  mqtt: AsyncMqttClient
+  domain: Domain
 }
 
-const run = async (
-  options: Options,
-  mqttClient: AsyncMqttClient,
-): Promise<void> => {
+const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
   const debug = createDebugger('playnite-web/game-db-updater/index')
   debug('Starting game-db-updater')
 
-  mqttClient.subscribe('playnite/#')
+  options.mqtt.subscribe('playnite/#')
 
   await fs.mkdir(options.assetSaveDirectoryPath, { recursive: true })
 
-  mqttClient.on('message', async (topic, payload) => {
+  options.mqtt.on('message', async (topic, payload) => {
     try {
       debug(`Processing topic ${topic}`)
       await Promise.all(
@@ -31,5 +34,5 @@ const run = async (
   })
 }
 
-export default run
-export type { Options }
+export default mqttUpdater
+export type { HandlerOptions, PubSubChannels }

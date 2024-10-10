@@ -2,11 +2,13 @@ using Playnite.SDK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace PlayniteWeb.Models
 {
-  internal class Game : IIdentifiable
+  public class Game : IIdentifiable
   {
     private readonly IEnumerable<Release> releases;
     private readonly PlatformSorter platformSorter;
@@ -14,17 +16,10 @@ namespace PlayniteWeb.Models
     private readonly List<string> pcPlatformNames;
     private readonly List<string> xboxPlatformNames;
     private readonly List<string> nintendoPlatformNames;
+    private readonly Guid id;
 
-    public Guid Id => releases.Any() ? new Guid(releases.Select(release => release.Id.ToByteArray()).Aggregate((bytes1, bytes2) =>
-    {
-      byte[] combinedBytes = new byte[16];
+    public Guid Id => id;
 
-      for (int i = 0; i < 16; i++)
-      {
-        combinedBytes[i] = (byte)(bytes1[i] ^ bytes2[i]);
-      }
-      return combinedBytes;
-    })): Guid.Empty;
     public IEnumerable<Release> Releases => releases;
     public string Name => releases.First().Name;
     public string Description => releases.First().Description;
@@ -32,6 +27,7 @@ namespace PlayniteWeb.Models
 
     public Game(IEnumerable<Playnite.SDK.Models.Game> playniteGames)
     {
+
       platformSorter = new PlatformSorter();
       pcSourceNames = new List<string> { "Steam", "EA app", "Ubisoft Connect", "Epic", "GOG", "Origin", "UPlay", "Battle.net", "Amazon Games", "Fanatical", "GamersGate", "Humble", "itch.io", "Legacy Games", "Indiegala", "Rockstar Games" };
       pcPlatformNames = new List<string> { ".*PC.*", ".*Macintosh.*", ".*Linux.*" };
@@ -39,7 +35,13 @@ namespace PlayniteWeb.Models
       nintendoPlatformNames = new List<string> { ".*Nintendo.*", ".*Switch.*", ".*Wii.*", ".*Game ?Cube.*" };
 
       releases = playniteGames.GroupBy(game => game.Source).SelectMany(GetReleases).ToList();
-    }
+    
+      using (MD5 md5 = MD5.Create())
+      {
+        byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(Name));
+        id = new Guid(hash);
+      }
+  }
 
     private IEnumerable<Release> GetReleases(IGrouping<GameSource, Playnite.SDK.Models.Game> groupedBySource)
     {

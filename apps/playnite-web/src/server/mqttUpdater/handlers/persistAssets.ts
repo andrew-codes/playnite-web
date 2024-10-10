@@ -1,6 +1,6 @@
 import createDebugger from 'debug'
 import path from 'path'
-import type { Options } from '..'
+import { HandlerOptions } from '..'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 import { getDbClient } from '../dbClient'
 
@@ -12,7 +12,7 @@ const topicMatch =
   /^playnite\/.*\/entity\/(?<entityType>[a-z0-9\-]+)\/(?<entityId>[a-z0-9\-]+)\/asset\/(?<assetId>.*)\/type\/(?<assetTypeKey>.*)$/
 
 const create =
-  (options: Options): IHandlePublishedTopics =>
+  (options: HandlerOptions): IHandlePublishedTopics =>
   async (topic, payload) => {
     try {
       if (!topicMatch.test(topic)) {

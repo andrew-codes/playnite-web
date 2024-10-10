@@ -1,4 +1,5 @@
 import { Document, WithId } from 'mongodb'
+import { RunState } from '../resolverTypes'
 
 type PlatformDbEntity = {
   specificationId: string
@@ -48,13 +49,11 @@ type GameReleaseDbEntity = WithId<Document> & {
   id: string
   isCustomGame: boolean
   isInstalled: boolean
-  isInstalling: boolean
-  isLaunching: boolean
-  isRunning: boolean
-  isUninstalling: boolean
+  runState: RunState
   links: { name: string; url: string }[]
   name: string
   platform: PlatformDbEntity
+  processId: string | null
   publishers: { id: string; name: string }[]
   recentActivity: string
   releaseDate: {

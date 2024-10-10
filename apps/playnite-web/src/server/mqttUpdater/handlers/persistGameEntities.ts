@@ -1,15 +1,10 @@
 import createDebugger from 'debug'
-import _ from 'lodash'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 import { getDbClient } from '../dbClient'
-
-const { isEmpty, uniq } = _
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameEntities',
 )
-
-const isPlaylistTag = /playlist-/i
 
 const topicMatch =
   /^playnite\/.*\/entity\/(?<entityType>[a-z0-9\-]+)\/(?<entityId>[a-z0-9\-]+)$/

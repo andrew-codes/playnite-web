@@ -10,14 +10,13 @@ export const stopGameRelease: NonNullable<
   }
 
   const releaseId = fromString(_arg.releaseId).id
-
   await _ctx.api.game.updateGameReleases(
     { 'releases.id': releaseId },
-    { active: false },
+    { runState: 'stopping' },
   )
   await _ctx.api.playlist.updateGameReleases(
     { 'games.releases.id': releaseId },
-    { active: false },
+    { runState: 'stopping' },
     { arrayFilters: [{ 'release.id': releaseId }] },
   )
 
@@ -26,6 +25,9 @@ export const stopGameRelease: NonNullable<
   if (!release) {
     throw new GraphQLError('No game release found')
   }
+
+  _ctx.subscriptionPublisher.publish('releaseRunStateChanged', release)
+
   await _ctx.mqttClient.publish(
     `playnite/request/game/stop`,
     JSON.stringify({
@@ -41,8 +43,6 @@ export const stopGameRelease: NonNullable<
       },
     }),
   )
-
-  _ctx.subscriptionPublisher.publish('gameActivationStateChanged', release)
 
   return release
 }

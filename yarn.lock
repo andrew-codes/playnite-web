@@ -19374,7 +19374,6 @@ __metadata:
     npm-run-all: "npm:^4.1.5"
     nx: "npm:^19.5.1"
     nyc: "npm:^17.0.0"
-    playnite-web-game-db-updater: "workspace:*"
     prettier: "npm:^3.3.3"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
@@ -19388,6 +19387,7 @@ __metadata:
     remix-routes: "npm:^1.7.6"
     remix-utils: "npm:^7.6.0"
     rimraf: "npm:^5.0.9"
+    sharp: "npm:0.33.4"
     shelljs: "npm:^0.8.5"
     start-server-and-test: "npm:^2.0.4"
     ts-jest: "npm:^29.2.3"
@@ -19396,6 +19396,7 @@ __metadata:
     typescript: "npm:^5.5.3"
     typescript-remix-routes-plugin: "npm:^1.0.1"
     ua-parser-js: "npm:^1.0.38"
+    uuid: "npm:^10.0.0"
     versioning: "workspace:*"
     vite: "npm:^5.3.4"
     vite-plugin-pwa: "npm:^0.20.0"
@@ -19403,40 +19404,6 @@ __metadata:
     webpack-dev-server: "npm:^5.0.4"
     ws: "npm:^8.18.0"
     zod: "npm:^3.23.8"
-  languageName: unknown
-  linkType: soft
-
-"playnite-web-game-db-updater@workspace:*, playnite-web-game-db-updater@workspace:apps/game-db-updater":
-  version: 0.0.0-use.local
-  resolution: "playnite-web-game-db-updater@workspace:apps/game-db-updater"
-  dependencies:
-    "@jest/globals": "npm:^29.7.0"
-    "@types/jest": "npm:^29.5.12"
-    "@types/node": "npm:^20.14.11"
-    "@types/shelljs": "npm:^0.8.15"
-    cpy: "npm:^11.0.1"
-    cpy-cli: "npm:^5.0.0"
-    debug: "npm:^4.3.5"
-    dotenv: "npm:^16.4.5"
-    esbuild: "npm:^0.23.0"
-    esbuild-register: "npm:^3.5.0"
-    jest: "npm:^29.7.0"
-    jest-config: "npm:29.7.0"
-    jest-when: "npm:^3.6.0"
-    lodash: "npm:^4.17.21"
-    mongodb: "npm:6.8.0"
-    mqtt-client: "workspace:*"
-    nx: "npm:^19.5.1"
-    prettier: "npm:^3.3.3"
-    rimraf: "npm:^5.0.9"
-    sharp: "npm:0.33.4"
-    shelljs: "npm:^0.8.5"
-    ts-jest: "npm:^29.2.3"
-    typescript: "npm:^5.5.3"
-    uuid: "npm:^10.0.0"
-    versioning: "workspace:*"
-  peerDependencies:
-    mqtt-client: "workspace:*"
   languageName: unknown
   linkType: soft
 
