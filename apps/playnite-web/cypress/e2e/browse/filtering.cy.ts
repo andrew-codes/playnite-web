@@ -205,7 +205,7 @@ describe('Browse Library', () => {
     it(`Filter by feature
 - Games must match at least one features.`, () => {
       const filterBy = 'Feature'
-      const filterValues = ['VR', 'Single Player']
+      const filterValues = ['VR Gamepad', 'Single Player']
       const scoped = null
 
       cy.visit('/browse')
