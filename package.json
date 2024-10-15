@@ -60,6 +60,15 @@
   },
   "packageManager": "yarn@4.3.1",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "start": "nx run playnite-web-app:start",
+    "test/components": "nx run playnite-web-app:test/components",
+    "test/components/update": "nx run playnite-web-app:test/components/update",
+    "test/components/ci": "nx run playnite-web-app:test/components/ci",
+    "test/e2e": "nx run playnite-web-app:test/e2e",
+    "test/e2e/update": "nx run playnite-web-app:test/e2e/update",
+    "test/e2e/ci": "nx run playnite-web-app:test/e2e/ci",
+    "test/unit": "nx run-many --target=test/unit",
+    "test/unit/ci": "nx run-many --target=test/unit/ci"
   }
 }

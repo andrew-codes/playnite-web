@@ -68,6 +68,7 @@ function Browse() {
       }
       secondaryMenu={
         <IconButton
+          aria-label="Open filter drawer"
           onClick={() => {
             setFiltersInDrawer(true)
             setRightDrawerOpen(true)

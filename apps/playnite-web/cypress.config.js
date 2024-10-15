@@ -27,6 +27,7 @@ const config = {
           default:
             launchOptions.preferences.width = viewportWidth
             launchOptions.preferences.height = viewportHeight
+            launchOptions.args.push('--force-device-scale-factor=1')
         }
 
         return launchOptions
@@ -166,6 +167,7 @@ const config = {
           default:
             launchOptions.preferences.width = viewportWidth
             launchOptions.preferences.height = viewportHeight
+            launchOptions.args.push('--force-device-scale-factor=1')
         }
 
         return launchOptions

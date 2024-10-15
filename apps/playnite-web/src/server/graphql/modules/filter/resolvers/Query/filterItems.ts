@@ -1,4 +1,10 @@
 import _ from 'lodash'
+import {
+  CompletionStatus,
+  GameFeature,
+  Platform,
+  Release,
+} from '../../../../../data/types.entities'
 import type {
   FilterItem,
   QueryResolvers,
@@ -13,52 +19,78 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
 ) => {
   const filterItems: Array<FilterItem> = []
 
-  const releases = await _ctx.api.gameRelease.getAll()
+  const releases = await _ctx.queryApi.execute<Release>(
+    {
+      entityType: 'Release',
+      type: 'MatchAll',
+    },
+    [['releaseYear', 'desc']],
+  )
 
-  filterItems.push({
-    name: 'Release Year',
-    allowedValues: uniq(
-      releases
-        .filter((release) => release.releaseYear)
-        .map((release) => release.releaseYear.toString()),
-    )
-      .sort()
-      .map((releaseYear) => ({
-        value: releaseYear,
-        display: releaseYear,
+  if (releases) {
+    filterItems.push({
+      name: 'Release Year',
+      allowedValues: uniq(
+        releases
+          .filter((release) => release.releaseYear)
+          .map((release) => release.releaseYear?.toString()),
+      ).map((releaseYear) => ({
+        value: releaseYear as string,
+        display: releaseYear as string,
       })),
-    field: 'releaseYear',
+      field: 'releaseIds.releaseYear',
+      relatedType: 'Release',
+    })
+  }
+
+  const platforms = await _ctx.queryApi.execute<Platform>({
+    entityType: 'Platform',
+    type: 'MatchAll',
   })
 
-  const platforms = await _ctx.api.platform.getAll()
-  filterItems.push({
-    name: 'Platform',
-    allowedValues: platforms.map((platform) => ({
-      value: platform.id,
-      display: platform.name,
-    })),
-    field: 'platform.id',
-  })
+  if (platforms) {
+    filterItems.push({
+      name: 'Platform',
+      allowedValues: platforms.map((platform) => ({
+        value: platform.id,
+        display: platform.name,
+      })),
+      field: 'releaseIds.platformId',
+      relatedType: 'Release',
+    })
+  }
 
-  const features = await _ctx.api.feature.getAll()
-  filterItems.push({
-    name: 'Feature',
-    allowedValues: features.map((feature) => ({
-      value: feature.id,
-      display: feature.name,
-    })),
-    field: 'features.id',
+  const features = await _ctx.queryApi.execute<GameFeature>({
+    entityType: 'GameFeature',
+    type: 'MatchAll',
   })
+  if (features) {
+    filterItems.push({
+      name: 'Feature',
+      allowedValues: features.map((feature) => ({
+        value: feature.id,
+        display: feature.name,
+      })),
+      field: 'releaseIds.featureIds',
+      relatedType: 'Release',
+    })
+  }
 
-  const completionStates = await _ctx.api.completionStatus.getBy({})
-  filterItems.push({
-    name: 'Completion Status',
-    allowedValues: completionStates.map((item) => ({
-      value: item.id,
-      display: item.name,
-    })),
-    field: 'completionStatus.id',
+  const completionStates = await _ctx.queryApi.execute<CompletionStatus>({
+    entityType: 'CompletionStatus',
+    type: 'MatchAll',
   })
+  if (completionStates) {
+    filterItems.push({
+      name: 'Completion Status',
+      allowedValues: completionStates.map((item) => ({
+        value: item.id,
+        display: item.name,
+      })),
+      field: 'releaseIds.completionStatusId',
+      relatedType: 'Release',
+    })
+  }
 
   return sortBy(filterItems, 'name')
 }

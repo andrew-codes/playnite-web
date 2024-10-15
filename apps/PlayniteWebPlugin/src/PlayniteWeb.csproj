@@ -36,9 +36,8 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="MQTTnet, Version=4.3.6.1152, Culture=neutral, PublicKeyToken=fdb7629f2e364a63">
-      <HintPath>..\..\..\.nuget/MQTTnet.4.3.6.1152/lib/net461/MQTTnet.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MQTTnet, Version=4.3.7.1207, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\MQTTnet.4.3.7.1207\lib\net461\MQTTnet.dll</HintPath>
     </Reference>
     <Reference Include="Playnite.SDK, Version=6.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\PlayniteSDK.6.11.0\lib\net462\Playnite.SDK.dll</HintPath>
@@ -72,9 +71,8 @@
     <Reference Include="System.Text.Encodings.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\System.Text.Encodings.Web.8.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Json, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\..\..\.nuget/System.Text.Json.8.0.4/lib/net462/System.Text.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Text.Json, Version=8.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\System.Text.Json.8.0.5\lib\net462\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
@@ -98,6 +96,8 @@
     <Compile Include="Models\Release.cs" />
     <Compile Include="Services\AssetType.cs" />
     <Compile Include="Services\GameState.cs" />
+    <Compile Include="Services\IDeserializeObjects.cs" />
+    <Compile Include="Services\ObjectDeserializer.cs" />
     <Compile Include="Services\Publishers\GameStatePayload.cs" />
     <Compile Include="Services\Publishers\IApplyPublisherOptions.cs" />
     <Compile Include="Services\Publishers\IPublishToPlayniteWeb.cs" />
@@ -118,6 +118,7 @@
     <Compile Include="Services\Publishers\Mqtt\PublishGame.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishRelease.cs" />
     <Compile Include="Services\Subscribers\ISubscribeToPlayniteWeb.cs" />
+    <Compile Include="Services\Subscribers\Models\StartReleasePayload.cs" />
     <Compile Include="Services\Subscribers\Mqtt\PlayniteWebSubscriber.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="UI\IntToStringValueConverter.cs" />

@@ -3,10 +3,22 @@ type FilterItemValue {
   display: String!
 }
 
+enum RelatedType {
+  Release
+  Platform
+  Source
+  Genre
+  Publisher
+  Developer
+  Tag
+  Playlist
+}
+
 type FilterItem {
   name: String!
   field: String!
   allowedValues: [FilterItemValue!]!
+  relatedType: RelatedType
 }
 
 extend type Query {

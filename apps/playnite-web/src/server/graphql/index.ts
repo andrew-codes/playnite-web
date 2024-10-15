@@ -1,58 +1,21 @@
 import { useCSRFPrevention } from '@graphql-yoga/plugin-csrf-prevention'
 import { useJWT } from '@graphql-yoga/plugin-jwt'
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
-import createDebugger from 'debug'
 import { createYoga } from 'graphql-yoga'
 import { AsyncMqttClient } from 'mqtt-client'
+import { IdentityService } from '../auth'
+import { IQuery, IUpdateQuery } from '../data/types.api'
 import type { PlayniteContext } from './context'
-import { Domain } from './Domain'
 import schema from './schema'
 import { subscriptionPublisher } from './subscriptionPublisher'
-
-const debug = createDebugger('playnite-web/graph/mqtt-subscription-events')
-
-const gameRunStateTopicMatcher = /playnite\/\w+\/response\/game\/state/
 
 const graphql = (
   endpoint: string,
   signingKey: string,
   mqttClient: AsyncMqttClient,
+  queryApi: IQuery,
+  updateQueryApi: IUpdateQuery,
 ) => {
-  const domainApi = new Domain()
-  mqttClient.on('message', async (topic, message) => {
-    try {
-      debug(`Received message on topic: ${topic}`)
-      if (gameRunStateTopicMatcher.test(topic)) {
-        const payload = JSON.parse(message.toString())
-        if (!payload.id || !payload.state) {
-          debug(
-            `Invalid payload received, no gameId or state: ${message.toString()}`,
-          )
-
-          return
-        }
-
-        const gameRelease = await domainApi.gameRelease.getById(payload.id)
-
-        if (!gameRelease) {
-          debug(`Game release not found for gameId: ${payload.gameId}`)
-
-          return
-        }
-
-        subscriptionPublisher.publish('gameRunStateChanged', {
-          id: gameRelease.id,
-          gameId: gameRelease.gameId,
-          runState: payload.state,
-          processId: payload.processId,
-        })
-      }
-    } catch (error) {
-      debug(`Error processing message for topic: ${topic}`)
-      console.error(error)
-    }
-  })
-
   const domain = process.env.HOST ?? 'localhost'
 
   return createYoga({
@@ -97,11 +60,13 @@ const graphql = (
     ],
     context: (req): PlayniteContext => ({
       ...req,
-      signingKey,
       domain,
-      api: new Domain(),
+      identityService: new IdentityService(queryApi, signingKey, domain),
       mqttClient,
+      queryApi,
+      signingKey,
       subscriptionPublisher,
+      updateQueryApi,
     }),
   })
 }

@@ -5,11 +5,17 @@ import express from 'express'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import helmet from 'helmet'
 import { AsyncMqttClient } from 'mqtt-client'
+import path from 'path'
 import { WebSocketServer } from 'ws'
+import EntityConditionalDataApi from './src/server/data/entityConditional/DataApi'
+import InMemoryDataApi from './src/server/data/inMemory/DataApi'
+import { getDbClient } from './src/server/data/mongo/client'
+import MongoDataApi from './src/server/data/mongo/DataApi'
+import PriorityDataApi from './src/server/data/priority/DataApi'
 import createYoga from './src/server/graphql'
-import { Domain } from './src/server/graphql/Domain'
 import schema from './src/server/graphql/schema'
 import { subscriptionPublisher } from './src/server/graphql/subscriptionPublisher'
+import mqttUpdater from './src/server/mqttUpdater'
 
 const debug = createDebugger('playnite-web/app/server')
 
@@ -17,6 +23,47 @@ async function run(mqttClient: AsyncMqttClient) {
   const { PORT, HOST } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
   const domain = HOST ?? 'localhost'
+
+  debug('Starting Playnite Web game-db-updater...')
+
+  const db = (await getDbClient()).db('games')
+  const mongoApi = new MongoDataApi(db)
+  const inMemoryApi = new InMemoryDataApi()
+  const userInMemory = new EntityConditionalDataApi(
+    new Set(['User']),
+    inMemoryApi,
+    inMemoryApi,
+  )
+  const dataApi = new PriorityDataApi(
+    new Set([userInMemory, mongoApi]),
+    new Set([userInMemory, mongoApi]),
+    new Set([mongoApi]),
+  )
+
+  const { USERNAME, PASSWORD } = process.env
+  if (USERNAME && PASSWORD) {
+    await dataApi.executeUpdate(
+      { type: 'ExactMatch', entityType: 'User', field: 'id', value: '1' },
+      {
+        _type: 'User',
+        id: '1',
+        password: PASSWORD,
+        username: USERNAME,
+      },
+    )
+  }
+
+  await mqttUpdater({
+    assetSaveDirectoryPath: path.join(
+      process.cwd(),
+      'public/assets/asset-by-id',
+    ),
+    mqtt: mqttClient,
+    pubsub: subscriptionPublisher,
+    queryApi: dataApi,
+    updateQueryApi: dataApi,
+    deleteQueryApi: mongoApi,
+  })
 
   let app = express()
 
@@ -33,7 +80,7 @@ async function run(mqttClient: AsyncMqttClient) {
   )
 
   const signingKey = process.env.SECRET ?? 'secret'
-  const yoga = createYoga('/api', signingKey, mqttClient)
+  const yoga = createYoga('/api', signingKey, mqttClient, dataApi, dataApi)
 
   const cspOrigins = (process.env.CSP_ORIGINS ?? '')
     .split(',')
@@ -96,7 +143,8 @@ async function run(mqttClient: AsyncMqttClient) {
           ...req,
           signingKey,
           domain,
-          api: new Domain(),
+          queryApi: dataApi,
+          updateQueryApi: dataApi,
           mqttClient,
           subscriptionPublisher,
         }),

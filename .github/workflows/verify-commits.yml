@@ -63,6 +63,12 @@ jobs:
           YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all component tests
         run: yarn nx run-many --target=test/components/ci --parallel --verbose --projects=tag:linux
+      - name: Upload visual regression artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-component-comparisons
+          path: apps/playnite-web/visual-regression-tests/screenshots
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -73,7 +79,7 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: component-cypress-videos
+          name: component-cypress-screenshots
           path: apps/playnite-web/cypress/screenshots
       - uses: codecov/codecov-action@v4
         if: always()
@@ -82,49 +88,6 @@ jobs:
           flags: component-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
-  visual_component_tests_linux:
-    name: Verify PR - Component Visual Regression Tests (Linux)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Extract node version from package.json
-        uses: sergeysova/jq-action@v2
-        id: node_version
-        with:
-          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '${{ steps.node_version.outputs.value }}'
-      - name: Use Yarn
-        run: corepack enable
-      - name: Install deps
-        run: yarn
-        env:
-          YARN_ENABLE_HARDENED_MODE: '0'
-      - name: Run all visual regression tests
-        run: yarn nx run-many --target=test/components/visual/ci --verbose --exclude='*,!tag:linux'
-      - name: Upload visual regression artifacts
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: visual-regression-comparisons
-          path: apps/playnite-web/visual-regression-tests/screenshots
-      - name: Upload test video artifacts
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: visual-regression-cypress-videos
-          path: apps/playnite-web/cypress/videos
-      - name: Upload test screenshot artifacts
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: visual-regression-cypress-screenshots
-          path: apps/playnite-web/cypress/screenshots
 
   e2e_tests_linux:
     name: Verify PR - e2e Tests (Linux)

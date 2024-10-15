@@ -1,14 +1,17 @@
 import { YogaInitialContext } from 'graphql-yoga'
 import { AsyncMqttClient } from 'mqtt-client'
-import { Claim } from '../../../.generated/types.generated'
-import { DomainApi } from './Domain'
+import { IdentityService } from '../auth'
+import { IQuery, IUpdateQuery } from '../data/types.api'
+import { User } from '../data/types.entities'
 import { subscriptionPublisher } from './subscriptionPublisher'
 
 type PlayniteContext = {
+  identityService: IdentityService
   signingKey: string
   domain: string
-  jwt?: Claim
-  api: DomainApi
+  jwt?: User
+  queryApi: IQuery
+  updateQueryApi: IUpdateQuery
   mqttClient: AsyncMqttClient
   subscriptionPublisher: typeof subscriptionPublisher
 } & YogaInitialContext
