@@ -1,16 +1,13 @@
 import { createPubSub } from 'graphql-yoga'
 
 export type PubSubChannels = {
-  gameRunStateChanged: [
+  releaseRunStateChanged: [
     {
       id: string
       gameId: string
       runState: string
-      processId: string
+      processId: string | null
     },
-  ]
-  gameActivationStateChanged: [
-    { id: string; active: boolean | null | undefined; restarted?: boolean },
   ]
 }
 

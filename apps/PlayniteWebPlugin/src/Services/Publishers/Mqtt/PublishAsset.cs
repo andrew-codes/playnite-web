@@ -55,7 +55,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         var result = new byte[fileStream.Length];
         fileStream.Read(result, 0, result.Length);
 
-        string topic = $"{rootTopic}/asset/{toAssetId(filePath)}/type/{Enum.GetName(typeof(AssetType), typeKey)}";
+        string topic = $"{rootTopic}/GameAsset/{toAssetId(filePath)}/type/{Enum.GetName(typeof(AssetType), typeKey)}";
         yield return client.PublishBinaryAsync(
             topic,
             result,

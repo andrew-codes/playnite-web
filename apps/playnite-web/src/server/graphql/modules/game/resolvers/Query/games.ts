@@ -1,102 +1,132 @@
 import _ from 'lodash'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
-import { GameEntity } from '../../../../resolverTypes'
+import {
+  FilterItem,
+  MatchAllFilterItem,
+  RelationFilterItem,
+} from '../../../../../data/types.api'
+import { Game, RelationshipTypes } from '../../../../../data/types.entities'
 
-const { get, flatMap } = _
-const exactMatch = /(".*")|('.*')/
+const { merge } = _
+const exactMatch = /(^".*"$)|(^'.*'$)/
 
 export const games: NonNullable<QueryResolvers['games']> = async (
   _parent,
   _arg,
   _ctx,
 ) => {
-  const matchedGames = (
-    await Promise.all(
-      (await _ctx.api.game.getAll()).reduce(
-        (games, game) => {
-          if (!_arg.filter) {
-            return games.concat(Promise.resolve(game))
-          }
+  let filter:
+    | FilterItem<'Game', (typeof RelationshipTypes)['Game'][number]>
+    | MatchAllFilterItem<'Game'> = {
+    type: 'MatchAll',
+    entityType: 'Game',
+  }
 
-          const filters: Array<boolean> = []
-          if (_arg.filter.name) {
-            if (exactMatch.test(_arg.filter.name)) {
-              filters.push(game.name === _arg.filter.name.slice(1, -1))
-            } else {
-              filters.push(
-                game.name
-                  .toLowerCase()
-                  .includes(_arg.filter.name.toLowerCase()),
-              )
-            }
-          }
+  if (
+    !_arg.filter ||
+    (_arg.filter.name !== '' && _arg.filter.filterItems?.length === 0)
+  ) {
+    filter = {
+      type: 'MatchAll',
+      entityType: 'Game',
+    }
+  }
+  if (_arg.filter) {
+    const andFilterItems: Array<any> = []
 
-          if (_arg.filter.filterItems.length === 0) {
-            if (filters.every((filter) => filter)) {
-              return games.concat(Promise.resolve(game))
-            }
-          }
+    if (_arg.filter.name && _arg.filter.name !== '') {
+      if (exactMatch.test(_arg.filter.name)) {
+        andFilterItems.push({
+          type: 'ExactMatch',
+          entityType: 'Game',
+          field: 'name',
+          value: _arg.filter.name.slice(1, -1),
+        })
+      } else {
+        andFilterItems.push({
+          type: 'LikeMatch',
+          entityType: 'Game',
+          field: 'name',
+          value: `.*${_arg.filter.name}.*`,
+        })
+      }
+    }
 
-          return games.concat(
-            Promise.all(
-              _arg.filter.filterItems.map(async (filterItem) => {
-                if (!filterItem?.field) {
-                  return false
+    _arg.filter.filterItems?.forEach((filterItem) => {
+      if (filterItem.relatedType) {
+        const relatedTypes = filterItem.relatedType.split('.')
+        const fields = filterItem.field.split('.')
+        if (fields.length === relatedTypes.length + 1) {
+          const relatedFilter = relatedTypes
+            .reduce((acc, relatedType, index, list) => {
+              let filter = {}
+              if (index === 0) {
+                filter = {
+                  type: 'RelationMatch',
+                  entityType: 'Game',
+                  relationType: relatedType,
+                  field: fields[index],
                 }
-
-                const filterKeys = filterItem.field.split('.')
-                return game.releases.some((release) => {
-                  let gameValue = get(release, filterItem.field)
-                  if (gameValue === undefined) {
-                    gameValue = get(release, filterKeys[0])
-                    for (let filterKey of filterKeys.slice(1)) {
-                      if (gameValue === undefined) {
-                        break
-                      }
-                      if (Array.isArray(gameValue)) {
-                        gameValue = flatMap(gameValue, (v) => get(v, filterKey))
-                      } else {
-                        gameValue = get(gameValue, filterKey)
+                acc.push(filter)
+              }
+              if (index === list.length - 1) {
+                filter = {
+                  type: 'OrMatch',
+                  entityType: relatedType,
+                  filterItems: filterItem.values.map((v) => {
+                    const value = parseInt(v, 10)
+                    if (isNaN(value)) {
+                      return {
+                        type: 'ExactMatch',
+                        entityType: relatedType,
+                        field: fields[index + 1],
+                        value: v,
                       }
                     }
-                    if (!gameValue) {
-                      return false
+                    return {
+                      type: 'ExactMatch',
+                      entityType: relatedType,
+                      field: fields[index + 1],
+                      value,
                     }
-                  }
-
-                  let transformValue = (v) => v
-                  if (typeof gameValue === 'number') {
-                    transformValue = (v) => Number(v)
-                  } else if (typeof gameValue === 'boolean') {
-                    transformValue = (v) => Boolean(v)
-                  } else if (gameValue instanceof Date) {
-                    transformValue = (v) => new Date(v)
-                  }
-
-                  if (Array.isArray(gameValue)) {
-                    return filterItem?.values.some((value) =>
-                      gameValue.some((v) => v === transformValue(value)),
-                    )
-                  }
-
-                  return filterItem?.values.some(
-                    (value) => gameValue === transformValue(value),
-                  )
-                })
-              }),
-            ).then((filterItemResults) => {
-              if (filters.concat(filterItemResults).every((filter) => filter)) {
-                return game
+                  }),
+                }
+                acc.push(filter)
+              } else {
+                filter = {
+                  type: 'RelationMatch',
+                  entityType: list[index - 1],
+                  relationType: relatedType,
+                  field: fields[index + 1],
+                }
               }
 
-              return null
-            }),
-          )
-        },
-        [] as Array<Promise<GameEntity | null>>,
-      ),
-    )
-  ).filter((game) => game !== null)
+              acc.push(filter)
 
-  return matchedGames.sort((a, b) => a.name.localeCompare(b.name))
+              return acc
+            }, [] as Array<any>)
+            .reduce((acc, filter, index) => {
+              if (index === 0) {
+                return filter
+              }
+              return merge({}, acc, { filterItem: filter })
+            }, {}) as RelationFilterItem<
+            'Game',
+            (typeof RelationshipTypes)['Game'][number],
+            keyof Game
+          >
+          andFilterItems.push(relatedFilter)
+        }
+      }
+    })
+    filter = {
+      type: 'AndMatch',
+      entityType: 'Game',
+      filterItems: andFilterItems,
+    }
+  }
+
+  const results = await _ctx.queryApi.execute<Game>(filter, [['name', 'asc']])
+
+  return results ?? []
 }

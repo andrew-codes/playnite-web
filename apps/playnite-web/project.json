@@ -50,35 +50,21 @@
     "test/components": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cypress open --component",
+        "command": "yarn cypress open --component --browser electron",
         "cwd": "{projectRoot}"
       }
     },
     "test/components/ci": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env CI=true yarn cypress run --component",
+        "command": "yarn cross-env CI=true yarn cypress run --component --browser electron",
         "cwd": "{projectRoot}"
       }
     },
-    "test/components/visual": {
+    "test/components/update": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env VISUAL=true yarn cypress open --component --browser electron",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "test/components/visual/update": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "(yarn cross-env CI=true VISUAL=true yarn cypress run --component --browser electron || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "test/components/visual/ci": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn cross-env CI=true VISUAL=true yarn cypress run --component --browser electron",
+        "command": "(yarn cross-env CI=true yarn cypress run --component --browser electron || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
         "cwd": "{projectRoot}"
       }
     },
@@ -91,21 +77,21 @@
     "test/e2e": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e yarn cypress open --e2e'",
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e yarn cypress open --e2e --browser electron'",
         "cwd": "{projectRoot}"
       }
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "((yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
+        "command": "((yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
         "cwd": "{projectRoot}"
       }
     },
     "test/e2e/ci": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn node --require esbuild-register scripts/utils/startE2e.ts' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e'",
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn node --require esbuild-register scripts/utils/startE2e.ts' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron'",
         "cwd": "{projectRoot}"
       }
     },

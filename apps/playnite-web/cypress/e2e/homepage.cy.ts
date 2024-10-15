@@ -20,7 +20,7 @@ describe('Homepage', () => {
     cy.get('[data-test="playlist"] ul').compareSnapshot({
       name: 'homepage-playing-playlist',
       cypressScreenshotOptions: {
-        blackout: ['img'],
+        blackout: ['img', 'figcaption'],
       },
     })
 

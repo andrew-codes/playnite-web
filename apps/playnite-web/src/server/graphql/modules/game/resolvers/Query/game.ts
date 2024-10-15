@@ -1,13 +1,18 @@
-import _ from 'lodash'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
+import { Game } from '../../../../../data/types.entities'
 import { fromString } from '../../../../../oid'
-
-const { merge } = _
 
 export const game: NonNullable<QueryResolvers['game']> = async (
   _parent,
   _arg,
   _ctx,
 ) => {
-  return _ctx.api.game.getById(fromString(_arg.id).id)
+  const result = await _ctx.queryApi.execute<Game>({
+    entityType: 'Game',
+    type: 'ExactMatch',
+    field: 'id',
+    value: fromString(_arg.id).id,
+  })
+
+  return result?.[0] ?? null
 }

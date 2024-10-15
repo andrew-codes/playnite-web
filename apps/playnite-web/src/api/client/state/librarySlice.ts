@@ -5,7 +5,10 @@ const { keyBy } = _
 
 const initialState: {
   activeNameFilters: string | null
-  activeFilterItems: Record<string, { field: string; value: Array<string> }>
+  activeFilterItems: Record<
+    string,
+    { field: string; value: Array<string>; relatedType: string }
+  >
 } = {
   activeNameFilters: null,
   activeFilterItems: {},
@@ -24,6 +27,7 @@ const slice = createSlice({
       filterItems: Object.values(state.activeFilterItems).map((item) => ({
         field: item.field,
         values: item.value,
+        relatedType: item.relatedType,
       })),
     }),
   },

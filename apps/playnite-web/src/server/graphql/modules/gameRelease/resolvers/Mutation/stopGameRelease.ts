@@ -1,31 +1,49 @@
 import { GraphQLError } from 'graphql'
+import { Platform, Release } from '../../../../../data/types.entities'
 import { fromString } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const stopGameRelease: NonNullable<
   MutationResolvers['stopGameRelease']
 > = async (_parent, _arg, _ctx) => {
-  if (!_ctx.jwt?.user.isAuthenticated) {
-    throw new GraphQLError('Unauthorized')
-  }
+  _ctx.identityService.authorize(_ctx.jwt)
 
   const releaseId = fromString(_arg.releaseId).id
-
-  await _ctx.api.game.updateGameReleases(
-    { 'releases.id': releaseId },
-    { active: false },
+  await _ctx.updateQueryApi.executeUpdate<Release>(
+    {
+      entityType: 'Release',
+      type: 'ExactMatch',
+      field: 'id',
+      value: releaseId,
+    },
+    { runState: { id: 'stopping' } },
   )
-  await _ctx.api.playlist.updateGameReleases(
-    { 'games.releases.id': releaseId },
-    { active: false },
-    { arrayFilters: [{ 'release.id': releaseId }] },
-  )
 
-  const game = await _ctx.api.game.getBy({ 'releases.id': releaseId })
-  const release = game?.[0]?.releases.find((r) => r.id === releaseId)
+  const [release] = (await _ctx.queryApi.execute<Release>({
+    entityType: 'Release',
+    type: 'ExactMatch',
+    field: 'id',
+    value: releaseId,
+  })) as Array<Release>
+
   if (!release) {
     throw new GraphQLError('No game release found')
   }
+
+  await _ctx.subscriptionPublisher.publish('releaseRunStateChanged', {
+    gameId: release.gameId,
+    id: release.id,
+    runState: 'stopping',
+    processId: null,
+  })
+
+  const [platform] = (await _ctx.queryApi.execute<Platform>({
+    entityType: 'Platform',
+    type: 'ExactMatch',
+    field: 'id',
+    value: release.platformId,
+  })) as Array<Platform>
+
   await _ctx.mqttClient.publish(
     `playnite/request/game/stop`,
     JSON.stringify({
@@ -34,15 +52,12 @@ export const stopGameRelease: NonNullable<
         gameId: release.gameId,
         name: release.name,
         platform: {
-          id: release.platform.id,
-          name: release.platform.name,
+          id: platform.id,
+          name: platform.name,
         },
-        source: release.source,
       },
     }),
   )
-
-  _ctx.subscriptionPublisher.publish('gameActivationStateChanged', release)
 
   return release
 }
