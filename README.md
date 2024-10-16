@@ -14,7 +14,7 @@ Playnite Web offers:
 - remote control of staring and stopping games with home automation; locked behind a username/password login screen
 - a graph API to help you build your own, unique experiences
 
-![Browse screenshot](docs/assets/images/browse-screenshot.png)
+![Browse screenshot](_docs/assets/images/browse-screenshot.png)
 
 ## Getting Started
 
