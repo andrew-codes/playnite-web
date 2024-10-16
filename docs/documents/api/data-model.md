@@ -16,4 +16,4 @@ All game items in Playnite are considered `Playnite.Game` entities. However, peo
 
 ## Entities
 
-See [entities](./data-entities.md) for more details on each entity in Playnite.
+See [entities](../../types.entities/README.md) for more details on each entity in Playnite.
