@@ -26,4 +26,4 @@ Completion statuses are used to describe a player's progress in a game.
 
 ## Defined in
 
-[types.entities.ts:181](https://github.com/andrew-codes/playnite-web/blob/10f04efaaa77507fb9be966d9e61606b320b15ff/apps/playnite-web/src/server/data/types.entities.ts#L181)
+[types.entities.ts:184](https://github.com/andrew-codes/playnite-web/blob/b12c00aa5efc9dc023a4ce8e8c83b2976a33cb84/apps/playnite-web/src/server/data/types.entities.ts#L184)

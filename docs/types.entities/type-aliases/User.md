@@ -34,4 +34,4 @@ Users are used to authenticate and authorize access to the application.
 
 ## Defined in
 
-[types.entities.ts:337](https://github.com/andrew-codes/playnite-web/blob/10f04efaaa77507fb9be966d9e61606b320b15ff/apps/playnite-web/src/server/data/types.entities.ts#L337)
+[types.entities.ts:340](https://github.com/andrew-codes/playnite-web/blob/b12c00aa5efc9dc023a4ce8e8c83b2976a33cb84/apps/playnite-web/src/server/data/types.entities.ts#L340)
