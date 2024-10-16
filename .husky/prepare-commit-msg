@@ -1,1 +1,10 @@
-# exec </dev/tty && yarn dlx git-cz --hook || true
+GIT_DIRECTORY=$(git rev-parse --git-dir)
+if [ -d "$GIT_DIRECTORY"/rebase-merge ]; then
+  exit 0
+fi
+
+if [ -d "$GIT_DIRECTORY"/rebase-apply ]; then
+  exit 0
+fi
+
+exec </dev/tty && yarn dlx git-cz --hook || true

@@ -29,6 +29,7 @@ Playnite-web offers:
         - [Data Volumes](#data-volumes)
         - [Environment Variables](#environment-variables)
     - [Post Deployment Steps](#post-deployment-steps)
+  - [Custom Experiences](#custom-experiences)
   - [Contributing](#contributing)
 
 ## Getting Started
@@ -111,6 +112,13 @@ Ensure you mount a volume to persist game assets, such as cover-art, backgrounds
 1. Open Playnite and select and "Sync Library" from Playnite Web's menu setting. This is generally only required once. Future game updates in Playnite will automatically sync to Playnite-Web.
    > ![Sync Library menu setting](docs/assets/images/sync-library-menu-setting.png)
 1. Navigate to the web app; `http://$PLAYNITE_WEB_APP_IP:$PORT`
+
+## Custom Experiences
+
+You are empowered to create your own custom experiences based on Playnite Web. One such example is a [Home Assistant integration](https://github.com/cvele/playnite_web_mqtt) built by [cvele](https://github.com/cvele). There are two ways you can integrate with Playnite Web; through MQTT messages and the graph API. See the relevant documentation for each:
+
+- [MQTT messages](./docs/custom-experiences/mqtt.md)
+- Graph API
 
 ## Contributing
 
