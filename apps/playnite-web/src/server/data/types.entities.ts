@@ -1,7 +1,10 @@
 /**
- * Foundation of all data entities.
+ * Foundation of all data entities; all data entities have an ID.
  */
 type Identifiable = {
+  /**
+   * @type Guid string
+   */
   id: string
 }
 
