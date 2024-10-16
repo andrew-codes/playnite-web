@@ -31,7 +31,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         {
           Release = r,
           State = state.ToString()
-        }));
+        }), MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
         yield break;
       }
     }
