@@ -8,7 +8,7 @@
 
 > **Identifiable**: `object`
 
-Foundation of all data entities.
+Foundation of all data entities; all data entities have an ID.
 
 ## Type declaration
 
@@ -18,4 +18,4 @@ Foundation of all data entities.
 
 ## Defined in
 
-[types.entities.ts:4](https://github.com/andrew-codes/playnite-web/blob/10f04efaaa77507fb9be966d9e61606b320b15ff/apps/playnite-web/src/server/data/types.entities.ts#L4)
+[types.entities.ts:4](https://github.com/andrew-codes/playnite-web/blob/b12c00aa5efc9dc023a4ce8e8c83b2976a33cb84/apps/playnite-web/src/server/data/types.entities.ts#L4)
