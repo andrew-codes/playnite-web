@@ -28,12 +28,11 @@ Install the following software on your local development machine:
 2. Bash (this guide assumes a bash shell)
 3. [vscode](https://code.visualstudio.com/Download)
 4. [Docker](https://www.docker.com/products/docker-desktop/) (for Mongodb and MQTT dependencies)
-5. [Node.js@>=20.9.0](https://nodejs.org/en/download/package-manager) (recommend using `nvm` to manage Node.js installations)
+5. [Node.js@>=22.5.0](https://nodejs.org/en/download/package-manager) (recommend using `nvm` to manage Node.js installations)
    - [nvm for OSX](https://github.com/nvm-sh/nvm)
    - [nvm for Windows](https://github.com/coreybutler/nvm-windows)
 6. [yarn@^4.0.0](https://yarnpkg.com/getting-started)
    - With Node.js installed, run `corepack enable && corepack prepare --activate yarn@^4.0.0 && yarn set version berry`
-7. Run `yarn nx run devenv:prepare` to ensure consistent developer experience with GraphQL, formatting, etc.
 
 ### Directly: Preparing Codebase
 
@@ -41,24 +40,23 @@ Install the following software on your local development machine:
 2. Clone your forked repo to your local development machine.
 3. Open the repo in vscode.
 4. Run `yarn`
-5. Run `yarn nx run playnite-web-app:start` and navigate to [https://localhost:3000](https://localhost:3000)
+5. Run `yarn nx run devenv:prepare`. This is only required for the first time working with the codebase.
+6. Run `yarn run start` and navigate to [https://localhost:3000](https://localhost:3000)
    - Note that MQTT and Mongo will be started via docker automatically.
    - Mongo will restore a default database if no database already exists (if there are no files in `.data/mongodb`).
    - Note MQTT currently starts with no username/password configured.
-6. \[Optional\]: override environment variables when running locally via `cp apps/playnite-web/local.env apps/playnite-web/overrides.env`
+7. \[Optional\]: override environment variables when running locally via `cp apps/playnite-web/local.env apps/playnite-web/overrides.env`
    - **REMEMBER: do not commit `overrides.env` or sensitive information in `local.env`.**
 
 ## Running Locally
 
-| Application      | Command                                                      | Notes                                                                                                                                                                                                      |
-| :--------------- | :----------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Playnite-Web App | `yarn nx run playnite-web-app:start`                         | Run Playnite-Web application locally. Navigate to [https://localhost:3000](https://localhost:3000) in a browser. Environment variables are pulled from `./apps/playnite-web/local.env`.                    |
-| Playnite-Web App | `yarn nx run playnite-web-app:test/components`               | Run component tests for development.                                                                                                                                                                       |
-| Playnite-Web App | `yarn nx run playnite-web-app:test/components/visual`        | Run visual regression component tests for development.                                                                                                                                                     |
-| Playnite-Web App | `yarn nx run playnite-web-app:test/components/visual/update` | Run visual regression tests with intention to update a baseline screenshot.                                                                                                                                |
-| Playnite-Web App | `yarn nx run playnite-web-app:test/e2e`                      | Run end-to-end (e2e) tests for development (including visual regression capabilities). A consistent database restored along with consistent game assets. This ensures a reliable data set to test against. |
-| Playnite-Web App | `yarn nx run playnite-web-app:test/e2e/update`               | Run end-to-end (e2e) tests with intention to update a baseline screenshot.                                                                                                                                 |
-| Playnite-Web App | `yarn nx run playnite-web-app:test/**/ci`                    | Suffix any test target with `/ci` to run the tests in CI mode; the same as what is run in CI.                                                                                                              |
+| Application      | Command                           | Notes                                                                                                                                                                                                      |
+| :--------------- | :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Playnite-Web App | `yarn run start`                  | Run Playnite-Web application locally. Navigate to [https://localhost:3000](https://localhost:3000) in a browser. Environment variables are pulled from `./apps/playnite-web/local.env`.                    |
+| Playnite-Web App | `yarn run test/components`        | Run component tests for development.                                                                                                                                                                       |
+| Playnite-Web App | `yarn run test/components/update` | Run component tests with intention to update a baseline screenshot.                                                                                                                                        |
+| Playnite-Web App | `yarn yarn run test/e2e`          | Run end-to-end (e2e) tests for development (including visual regression capabilities). A consistent database restored along with consistent game assets. This ensures a reliable data set to test against. |
+| Playnite-Web App | `yarn yarn run test/e2e/update`   | Run end-to-end (e2e) tests with intention to update a baseline screenshot.                                                                                                                                 |
 
 ## Setup: Devcontainer (milage may vary)
 
