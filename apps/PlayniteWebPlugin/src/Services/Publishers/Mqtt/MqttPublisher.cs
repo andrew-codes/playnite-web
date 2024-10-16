@@ -13,6 +13,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
   {
     private readonly IManageTopics topicBuilder;
     private IMqttClient client;
+    public Func<Task> DisconnectingAsync;
 
     public bool IsConnected => client.IsConnected;
 
@@ -74,8 +75,6 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       {
         return;
       }
-
-      this.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.Connection()), "online", MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default).Wait(cancellationToken: default);
     }
 
     public Task StartDisconnect()
@@ -85,8 +84,14 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         return Task.CompletedTask;
       }
 
-      return this.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.Connection()), "offline", retain: false, cancellationToken: default)
-        .ContinueWith(async r => await client.DisconnectAsync());
+      if (DisconnectingAsync != null)
+      {
+        return DisconnectingAsync().ContinueWith((t) => client.DisconnectAsync());
+      }
+      else
+      {
+        return client.DisconnectAsync();
+      }
     }
 
     public Task<MqttClientConnectResult> ConnectAsync(MqttClientOptions options, CancellationToken cancellationToken = default)
