@@ -1,5 +1,7 @@
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Internal;
+using MQTTnet.Protocol;
 using Playnite.SDK;
 using Playnite.SDK.Events;
 using Playnite.SDK.Models;
@@ -19,7 +21,6 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
-using System.Runtime.Remoting.Lifetime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -28,7 +29,7 @@ namespace PlayniteWeb
 {
   public class PlayniteWeb : GenericPlugin
   {
-    private readonly IConnectPublisher<IMqttClient> publisher;
+    private readonly MqttPublisher publisher;
     private readonly ISubscribeToPlayniteWeb subscriber;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
     private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
@@ -48,17 +49,24 @@ namespace PlayniteWeb
     private readonly IEnumerable<MainMenuItem> mainMenuItems;
     private PlayniteWebSettingsViewModel settings { get; set; }
     private readonly IManageTopics topicManager;
-    private ILogger logger = LogManager.GetLogger();
-    private Regex pcExpression = new Regex("Windows.*");
+    private readonly ILogger logger = LogManager.GetLogger();
+    private readonly Regex pcExpression = new Regex("Windows.*");
+    private readonly string _version;
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
     public PlayniteWeb(IPlayniteAPI api) : base(api)
     {
+      var extensionInfoYaml = System.IO.File.ReadAllText("extension.yaml");
+      var extension = new YamlDotNet.Serialization.Deserializer().Deserialize<Dictionary<string, string>>(extensionInfoYaml);
+      _version = extension["Version"];
+
       IMqttClient client = new MqttFactory().CreateMqttClient();
       settings = new PlayniteWebSettingsViewModel(this);
       topicManager = new TopicManager.TopicManager(settings.Settings);
+
       publisher = new MqttPublisher(client, topicManager);
+
       var deserializer = new ObjectDeserializer();
       subscriber = new PlayniteWebSubscriber(client, topicManager, deserializer, api);
       Properties = new GenericPluginProperties
@@ -66,12 +74,12 @@ namespace PlayniteWeb
         HasSettings = true
       };
       serializer = new ObjectSerializer();
-      releasePublisher = new PublishRelease((IMqttClient)publisher, topicManager, serializer, api.Database);
-      gamePublisher = new PublishGame((IMqttClient)publisher, topicManager, serializer, api.Database, releasePublisher);
-      playlistPublisher = new PublishPlaylist((IMqttClient)publisher, topicManager, serializer, api.Database);
-      platformPublisher = new PublishPlatform((IMqttClient)publisher, topicManager, serializer, api.Database);
-      gameEntityPublisher = new PublishGameEntity((IMqttClient)publisher, topicManager, serializer, api.Database);
-      gameEntityRemovalPublisher = new PublishGameEntityRemoval((IMqttClient)publisher, topicManager, serializer, api.Database);
+      releasePublisher = new PublishRelease(publisher, topicManager, serializer, api.Database);
+      gamePublisher = new PublishGame(publisher, topicManager, serializer, api.Database, releasePublisher);
+      playlistPublisher = new PublishPlaylist(publisher, topicManager, serializer, api.Database);
+      platformPublisher = new PublishPlatform(publisher, topicManager, serializer, api.Database);
+      gameEntityPublisher = new PublishGameEntity(publisher, topicManager, serializer, api.Database);
+      gameEntityRemovalPublisher = new PublishGameEntityRemoval(publisher, topicManager, serializer, api.Database);
 
       gameUpdates = new Subject<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>>();
       gameUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
@@ -250,6 +258,12 @@ namespace PlayniteWeb
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
+      publisher.StartDisconnect().ContinueWith(t =>
+      {
+        publisher.ConnectedAsync -= HandlePublisherConnected;
+        publisher.DisconnectingAsync -= HandlePublisherDisconnecting;
+      });
+
       settings.OnVerifySettings -= HandleVerifySettings;
 
       subscriber.OnUpdateLibrary -= Publisher_LibraryRefreshRequest;
@@ -262,11 +276,17 @@ namespace PlayniteWeb
       otherEntityUpdates.Dispose();
       collectionUpdates.Dispose();
 
-      publisher.StartDisconnect().Wait();
+    }
+
+    private async Task HandlePublisherConnected(MqttClientConnectedEventArgs args)
+    {
+      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.online)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
     }
 
     public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
     {
+      publisher.ConnectedAsync += HandlePublisherConnected;
+      publisher.DisconnectingAsync += HandlePublisherDisconnecting;
       settings.OnVerifySettings += HandleVerifySettings;
       try
       {
@@ -284,6 +304,11 @@ namespace PlayniteWeb
       platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
       otherEntityUpdates.Subscribe(e => HandleOtherGameEntitiesUpdated(this, e));
       collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
+    }
+
+    private async Task HandlePublisherDisconnecting()
+    {
+      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.offline)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
     }
 
     private void Subscriber_OnUninstallRelease(object sender, Release e)
