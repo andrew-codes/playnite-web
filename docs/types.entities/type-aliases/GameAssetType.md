@@ -22,4 +22,4 @@ Game asset types represent the types of game assets that can be associated with 
 
 ## Defined in
 
-[types.entities.ts:314](https://github.com/andrew-codes/playnite-web/blob/7c6173fb10a422dfd51679fe232c8ad5b6334b6e/apps/playnite-web/src/server/data/types.entities.ts#L314)
+[types.entities.ts:314](https://github.com/andrew-codes/playnite-web/blob/db12885cca3694adf6b8d4da5975cfb94539be46/apps/playnite-web/src/server/data/types.entities.ts#L314)
