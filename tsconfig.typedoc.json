@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "plugins": [
+      {
+        "name": "typescript-remix-routes-plugin",
+        "tag": "route",
+      }
+    ]
+  },
+  "include": [
+    "apps/playnite-web/src/server/data/types.entities.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".yarn"
+  ]
+}
