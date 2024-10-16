@@ -4,7 +4,7 @@ Playnite Web interacts with Playnite via MQTT messages. As such, any other appli
 
 ## Notes
 
-1. There are some differences between Playnite and Playnite Web's data modeling. Please see [Playnite Web's data model](./data-model.md) for more details.
+1. There are some differences between Playnite and Playnite Web's data modeling. Please see [Playnite Web's data model](./../../types.entities/README.md) for more details.
 2. Message payloads are utf8 strings of JSON.
 3. JSON payloads properties are camel cased; e.g. `id`, `platformId`, etc.
 
