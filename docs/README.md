@@ -15,3 +15,7 @@
 - [design/README](documents/design/README.md)
 - [guides/setup](documents/guides/setup.md)
 - [SECURITY](documents/SECURITY.md)
+
+## Modules
+
+- [types.entities](types.entities/README.md)
