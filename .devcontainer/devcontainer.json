@@ -9,7 +9,7 @@
       "version": "7.0.403"
     },
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "20.9.0",
+      "version": "22.5.0",
       "nodeGypDependencies": true
     },
     "ghcr.io/devcontainers/features/powershell:1": {},
@@ -18,9 +18,6 @@
     }
   },
   "customizations": {
-    "devpod": {
-      "prebuildRepository": "ghcr.io/andrew-codes/playnite-web"
-    },
     "vscode": {
       "settings": {
         "terminal.integrated.profiles.linux": {
@@ -32,27 +29,38 @@
         "workbench.colorTheme": "Dracula Pro"
       },
       "extensions": [
+        "apollographql.vscode-apollo",
         "arcanis.vscode-zipfs",
         "bierner.github-markdown-preview",
         "bierner.markdown-yaml-preamble",
         "capaj.vscode-exports-autocomplete",
         "cmstead.js-codeformer",
         "cmstead.jsrefactor",
+        "codecov.codecov",
+        "DavidAnson.vscode-markdownlint",
         "dbaeumer.vscode-eslint",
         "dracula-theme-pro.theme-dracula-pro",
         "drKnoxy.eslint-disable-snippets",
         "eamodio.gitlens",
         "EditorConfig.EditorConfig",
         "esbenp.prettier-vscode",
+        "GitHub.codespaces",
         "GitHub.copilot-chat",
         "GitHub.copilot",
         "github.vscode-github-actions",
         "GitHub.vscode-pull-request-github",
+        "GraphQL.vscode-graphql-syntax",
         "GraphQL.vscode-graphql",
+        "hbenl.vscode-test-explorer-liveshare",
+        "hbenl.vscode-test-explorer",
         "johnuphoff.vscode-styled-sort",
         "kisstkondoros.vscode-codemetrics",
         "mikestead.dotenv",
+        "ms-azuretools.vscode-docker",
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp",
         "ms-vscode.powershell",
+        "ms-vsliveshare.vsliveshare",
         "Orta.vscode-jest",
         "paulmolluzzo.convert-css-in-js",
         "pflannery.vscode-versionlens",
@@ -60,7 +68,10 @@
         "redhat.vscode-yaml",
         "rpdswtk.vsmqtt",
         "sburg.vscode-javascript-booster",
+        "steoates.autoimport",
         "streetsidesoftware.code-spell-checker",
+        "styled-components.vscode-styled-components",
+        "Terrastruct.d2",
         "yzhang.markdown-all-in-one"
       ]
     }
