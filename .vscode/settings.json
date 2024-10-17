@@ -39,5 +39,6 @@
   "jest.runMode": {
     "type": "on-demand",
     "deferred": true
-  }
+  },
+  "dotnet.preferCSharpExtension": true
 }
