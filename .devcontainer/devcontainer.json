@@ -82,5 +82,9 @@
     "1883:1883",
     "3000:3000",
     "3001:3001"
-  ]
+  ],
+  "containerEnv": {
+    "XDG_RUNTIME_DIR": "/root",
+    "RUNLEVEL": "3"
+  }
 }
