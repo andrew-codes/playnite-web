@@ -28,7 +28,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "command": "yarn cross-env NODE_ENV=development yarn node --experimental-json-modules scripts/utils/startDevServer.js"
+        "command": "yarn cross-env NODE_ENV=development DEBUG='playnite*' yarn node --experimental-json-modules scripts/utils/startDevServer.js"
       }
     },
     "test/unit": {

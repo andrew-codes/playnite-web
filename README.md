@@ -18,6 +18,6 @@ Playnite Web offers:
 
 ## Getting Started
 
-1. [Install and run Playnite Web](./docs/guides/setup.md)
+1. [Install and run Playnite Web](./docs/documents/guides/setup.md)
 2. [Playnite Web API and other documentation](./docs/README.md)
-3. [Contributions](./docs/documents/CONTRIBUTING.md)
+3. [Contributions](./docs/documents/CONTRIBUTING.md) and [local development environment](./docs/documents/contributing/development-environment)
