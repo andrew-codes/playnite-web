@@ -60,4 +60,4 @@ Platforms are used to categorize games by the system they are played on. Note a 
 
 ## Defined in
 
-[types.entities.ts:116](https://github.com/andrew-codes/playnite-web/blob/f4b196c836ff1f14161b4d04346bf7c194eb1fa5/apps/playnite-web/src/server/data/types.entities.ts#L116)
+[types.entities.ts:116](https://github.com/andrew-codes/playnite-web/blob/8e4fb0564dac8f04f0ec7b3de8bb1500c246dd52/apps/playnite-web/src/server/data/types.entities.ts#L116)
