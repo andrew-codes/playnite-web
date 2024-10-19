@@ -84,7 +84,12 @@
     "3001:3001"
   ],
   "containerEnv": {
-    "XDG_RUNTIME_DIR": "/root",
-    "RUNLEVEL": "3"
-  }
+    "XAUTHORITY": "/tmp/.Xauthority"
+  },
+  "runArgs": [
+    "--net=host"
+  ],
+  "mounts": [
+    "source=${localEnv:HOME}/.Xauthority,target=/workspaces/.Xauthority,type=bind"
+  ]
 }
