@@ -7,7 +7,6 @@ RUN apt-get install -y \
 mosquitto \
 mosquitto-clients
 
-# MongoDB
 RUN apt-get install -y \
 apt-transport-https \
 ca-certificates \
