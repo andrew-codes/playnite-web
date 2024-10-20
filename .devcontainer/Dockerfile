@@ -7,7 +7,6 @@ RUN apt-get install -y \
 mosquitto \
 mosquitto-clients
 
-# MongoDB
 RUN apt-get install -y \
 apt-transport-https \
 ca-certificates \
@@ -44,3 +43,4 @@ RUN (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y
 && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
 && sudo apt update \
 && sudo apt install gh -y
+RUN curl -fsSL https://d2lang.com/install.sh | sh -s --

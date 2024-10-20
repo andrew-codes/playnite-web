@@ -7,3 +7,5 @@ echo -e "{
 /usr/local/share/docker-init.sh
 
 corepack enable
+corepack use yarn@^4.5.1
+yarn dlx cypress install

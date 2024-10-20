@@ -84,6 +84,9 @@
     "3001:3001"
   ],
   "containerEnv": {
-    "DISPLAY": "localhost:0"
-  }
+    "XAUTHORITY": "/tmp/.Xauthority"
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.Xauthority,target=/workspaces/.Xauthority,type=bind"
+  ]
 }
