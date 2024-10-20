@@ -7,24 +7,23 @@
 # Development Environment
 
 - [Development Environment](#development-environment)
-  - [Overview](#overview)
+  - [Setup](#setup)
   - [Running Playnite Web](#running-playnite-web)
   - [Playnite Web Plugin Development](#playnite-web-plugin-development)
 
-## Overview
+## Setup
 
-There are a few options for running Playnite Web for local development. Choose and follow one of the paths below. Then proceed to the next section.
+There are a few options for running Playnite Web for local development. Choose a path and follow its corresponding guide. Then, return to continue the next section.
 
-1. (preferred) [Local environment](local-environment.md), directly on your development machine (requires installing required tooling such as Node.js, yarn, etc.).
-2. Via a [GitHub codespace or Docker dev container](codespaces.md) (the plugin cannot be run this way).
-
-> Note the second and third options maybe encounter issues or additional configuration when running component and E2E tests.
+1. [Local environment](local-environment.md): use your local machine as the development environment. This requires installing more software than the number 2, but may have a smoother experience.
+2. [GitHub code spaces](codespaces.md).
+3. [dev container](dev-container.md).
 
 ## Running Playnite Web
 
 | Application      | Command                           | Notes                                                                                                                                                                                                      |
 | :--------------- | :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Playnite Web App | `yarn run start`                  | Run Playnite Web application locally. Navigate to [https://localhost:3000](https://localhost:3000) in a browser. Environment variables are pulled from `./apps/playnite-web/local.env`.                    |
+| Playnite Web App | `yarn run start`                  | Run Playnite Web application locally. Navigate to [http://localhost:3000](http://localhost:3000) in a browser. Environment variables are pulled from `./apps/playnite-web/local.env`.                      |
 | Playnite Web App | `yarn run test/components`        | Run component tests for development.                                                                                                                                                                       |
 | Playnite Web App | `yarn run test/components/update` | Run component tests with intention to update a baseline screenshot.                                                                                                                                        |
 | Playnite Web App | `yarn yarn run test/e2e`          | Run end-to-end (e2e) tests for development (including visual regression capabilities). A consistent database restored along with consistent game assets. This ensures a reliable data set to test against. |

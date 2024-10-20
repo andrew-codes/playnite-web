@@ -12,4 +12,4 @@ Possible run state values.
 
 ## Defined in
 
-[types.entities.ts:231](https://github.com/andrew-codes/playnite-web/blob/9fd639c627491fedc011adc14939951a048f7049/apps/playnite-web/src/server/data/types.entities.ts#L231)
+[types.entities.ts:231](https://github.com/andrew-codes/playnite-web/blob/62650104502962ee3f84085d0697cd28bab46d1c/apps/playnite-web/src/server/data/types.entities.ts#L231)
