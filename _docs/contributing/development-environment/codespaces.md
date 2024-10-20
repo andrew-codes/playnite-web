@@ -11,9 +11,20 @@ Install the following software on your local machine:
 3. xauth
 4. gh CLI
 
-## Setup X11
+## Setup X11 Forwarding
+
+Enable X11 forwarding for your SSH configuration. Edit `~/.ssh/config` file:
+
+```ssh_config
+Host *
+  ForwardX11 yes
+```
 
 Once an XServer is installed, such as XQuartz, ensure it is configured to Authenticate and Allow connections from network clients. This can be done via the settings of XQuartz.
+
+Also ensure XQuartz starts at login. You may need to sign out and sign back into your user.
+
+> Note, this may need to performed beyond the just the first time.
 
 Next, allow connections from your host machine's IP address:
 
@@ -38,7 +49,7 @@ Finally, generate an `.Xauthority` file via `xauth` command. This file will be l
 5. Run `yarn run start`
 6. In vscode, forward port 3000. This can be found in same pane as the terminal.
 7. Open [http://localhost:3000](http://localhost:3000).
-8. Continue to see [commands](./index.md#running-playnite-web) for running tests.
+8. Continue to see [commands](./index.md#running-playnite-web) for additional commands.
 
 ## Running Component/E2E Tests
 
