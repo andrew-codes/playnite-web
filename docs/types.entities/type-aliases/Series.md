@@ -32,4 +32,4 @@ The "Assassin's Creed" series would include all games in the "Assassin's Creed" 
 
 ## Defined in
 
-[types.entities.ts:151](https://github.com/andrew-codes/playnite-web/blob/8e4fb0564dac8f04f0ec7b3de8bb1500c246dd52/apps/playnite-web/src/server/data/types.entities.ts#L151)
+[types.entities.ts:151](https://github.com/andrew-codes/playnite-web/blob/9fd639c627491fedc011adc14939951a048f7049/apps/playnite-web/src/server/data/types.entities.ts#L151)

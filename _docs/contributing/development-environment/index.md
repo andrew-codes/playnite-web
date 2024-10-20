@@ -10,8 +10,7 @@
 There are a few options for running Playnite Web for local development. Choose and follow one of the paths below. Then proceed to the next section.
 
 1. (preferred) [Local environment](./local-environment.md), directly on your development machine (requires installing required tooling such as Node.js, yarn, etc.).
-2. Via a GitHub codespace (the plugin cannot be run this way).
-3. Via Docker and the included dev container (the plugin cannot be run this way).
+2. Via a [GitHub codespace or Docker dev container](./codespaces.md) (the plugin cannot be run this way).
 
 > Note the second and third options maybe encounter issues or additional configuration when running component and E2E tests.
 

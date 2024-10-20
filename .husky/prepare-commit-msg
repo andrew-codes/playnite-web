@@ -7,4 +7,6 @@ if [ -d "$GIT_DIRECTORY"/rebase-apply ]; then
   exit 0
 fi
 
-exec </dev/tty && yarn dlx git-cz --hook || true
+if [ -d /dev/tty ]; then
+  exec </dev/tty && yarn dlx git-cz --hook || true
+fi
