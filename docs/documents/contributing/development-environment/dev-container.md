@@ -2,7 +2,7 @@
 
 ***
 
-[playnite-web-app](../../../README.md) / contributing/development-environment/codespaces
+[playnite-web-app](../../../README.md) / contributing/development-environment/dev-container
 
 # Developer Environment: Code Space/DevContainer
 
@@ -11,10 +11,12 @@
 Install the following software on your local machine:
 
 1. [vscode](https://code.visualstudio.com/Download)
-2. XServer (for running Cypress tests).
+2. Dev containers vscode extension, `code --install-extension ms-vscode-remote.remote-containers`
+3. XServer (for running Cypress tests).
    - For OSX, recommend: [XQuartz](https://www.bing.com/ck/a?!&&p=c21da4f99329c03fJmltdHM9MTcxODg0MTYwMCZpZ3VpZD0zOTJjZTBlOC1iMzRjLTY3Y2MtMDU4NC1mM2NkYjI2MDY2NjUmaW5zaWQ9NTIyNw&ptn=3&ver=2&hsh=3&fclid=392ce0e8-b34c-67cc-0584-f3cdb2606665&psq=xquartz+&u=a1aHR0cHM6Ly93d3cueHF1YXJ0ei5vcmcv&ntb=1)
    - For Windows, still need a recommendation.
-3. [gh CLI](https://github.com/cli/cli)
+4. Docker
+5. [gh CLI](https://github.com/cli/cli)
 
 ## Setup X11 Forwarding
 
@@ -50,15 +52,15 @@ xhost + $IP
 ## Preparing Codebase
 
 1. [Fork the playnite-web repo](https://github.com/andrew-codes/playnite-web/fork)
-2. Start a code space and open in vscode.
-3. Run `yarn`
-4. Run `yarn run start`
-5. In vscode, forward port 3000. This can be found in same pane as the terminal.
-6. Open [http://localhost:3000](http://localhost:3000).
-7. Continue to see [commands](./index.md#running-playnite-web) for additional commands.
+2. Open the repo in vscode.
+3. Ensure docker is running.
+4. Open the command palette, type/search for comand `Dev Containers: Rebuild and Reopen container`. Allow the container to be built and started.
+5. Once the dev container is running and connected to vscode, run `yarn` in its terminal.
+6. Run `yarn run start`
+7. In vscode, forward port 3000. This is likely done automatically or can be done with the `Forward Port` from the command palette.
+8. Open [http://localhost:3000](http://localhost:3000).
+9. Continue to see [commands](./index.md#running-playnite-web) for additional commands.
 
 ## Running Component/E2E Tests
 
-1. Open terminal on local machine.
-2. Connect to code space via gh CLI and forward x11 via `gh cs ssh -- -XY` and then choose your code space.
-3. You can now run `yarn run test/components` and `yarn run test/e2e` in this terminal.
+You can run Cypress component and E2E tests from the terminal in the dev container.
