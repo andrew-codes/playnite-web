@@ -86,9 +86,6 @@
   "containerEnv": {
     "XAUTHORITY": "/tmp/.Xauthority"
   },
-  "runArgs": [
-    "--net=host"
-  ],
   "mounts": [
     "source=${localEnv:HOME}/.Xauthority,target=/workspaces/.Xauthority,type=bind"
   ]
