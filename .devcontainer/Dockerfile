@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/devcontainers/base:bullseye
 USER root
 
 # MQTT server and client
-RUN apt-get update
+RUN apt-get update -y
 RUN apt-get install -y \
 mosquitto \
 mosquitto-clients
@@ -18,9 +18,6 @@ iputils-ping \
 net-tools \
 software-properties-common
 
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-RUN echo "deb https://download.mono-project.com/repo/debian stable-buster main" > /etc/apt/sources.list.d/mono-official-stable.list
-RUN apt-get update -y
 RUN apt-get install -y \
 libasound2 \
 libgbm-dev \
@@ -31,7 +28,6 @@ libnotify-dev \
 libnss3 \
 libxss1 \
 libxtst6 \
-mono-complete \
 xauth \
 x11-apps \
 x11-common \
