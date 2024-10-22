@@ -9,8 +9,11 @@ echo -e "{
 corepack enable
 corepack use yarn@^4.5.1
 
+yarn
 yarn dlx cypress verify
 if [ $? -ne 0 ]; then
   echo "Cypress installation failed"
   yarn dlx cypress@13.15.0 install
 fi
+
+yarn nx run devenv:prepare
