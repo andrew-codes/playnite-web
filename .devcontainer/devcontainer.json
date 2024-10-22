@@ -5,14 +5,10 @@
   },
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers/features/dotnet:2": {
-      "version": "7.0.403"
-    },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "22.5.0",
       "nodeGypDependencies": true
     },
-    "ghcr.io/devcontainers/features/powershell:1": {},
     "ghcr.io/devcontainers/features/sshd:1": {
       "version": "latest"
     }
