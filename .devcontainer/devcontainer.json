@@ -13,7 +13,8 @@
       "version": "latest"
     },
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/ksh5022/devcontainer-features/d2:1": {}
+    "ghcr.io/ksh5022/devcontainer-features/d2:1": {},
+    "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {}
   },
   "customizations": {
     "vscode": {

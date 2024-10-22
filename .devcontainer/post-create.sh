@@ -9,11 +9,13 @@ echo -e "{
 corepack enable
 corepack use yarn@^4.5.1
 
-yarn
-yarn dlx cypress verify
-if [ $? -ne 0 ]; then
-  echo "Cypress installation failed"
-  yarn dlx cypress@13.15.0 install
-fi
+echo 'Ensuring Cypress executable is installed'
+{ yarn dlx cypress verify; } || { yarn dlx cypress@13.15.0 install; }
 
-yarn nx run devenv:prepare
+echo 'Ensure correct vscode extensions are installed.'
+cat .devcontainer/devcontainer.json |
+  jq -c '.customizations.vscode.extensions[]' |
+  xargs -L 1 code-server --install-extension
+cat .devcontainer/devcontainer.json |
+  jq -c '.customizations.vscode.extensions[]' |
+  xargs -L 1 code --install-extension
