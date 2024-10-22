@@ -12,7 +12,7 @@ Install the following software on your local development machine:
    - [nvm for OSX](https://github.com/nvm-sh/nvm)
    - [nvm for Windows](https://github.com/coreybutler/nvm-windows)
 6. [yarn@^4.0.0](https://yarnpkg.com/getting-started)
-   - With Node.js installed, run `corepack enable && corepack prepare --activate yarn@^4.0.0 && yarn set version berry`
+   - With Node.js installed, run `corepack enable && corepack prepare --activate yarn@^4.5.1 && yarn set version 4.5.1`
 
 ## Preparing Codebase
 
