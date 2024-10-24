@@ -10,9 +10,9 @@ mkdir -p .data/mongodb-e2e
 
 docker run --name playnite-web-db-e2e -d \
   --network host \
-  -v $PWD/.data/games:/data/backup/games \
   -e MONGO_INITDB_ROOT_USERNAME=$DB_USERNAME \
   -e MONGO_INITDB_ROOT_PASSWORD=$DB_PASSWORD \
+  -v $PWD/.data/games:/data/backup/games \
   mongo:7.0.3-jammy
 
 docker exec -t playnite-web-db-e2e mongorestore --nsInclude games.* /data/backup
