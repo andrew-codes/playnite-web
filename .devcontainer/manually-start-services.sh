@@ -14,12 +14,12 @@ docker run --name playnite-web-db -d \
 
 docker exec -t playnite-web-db mongorestore --nsInclude games.* /data/backup
 
-if [ $(ls apps/playnite-web/public/assets/asset-by-id | wc -l) -eq 0 ]; then
-  echo "Copying development environment game assets"
-  cp -r .data/asset-by-id apps/playnite-web/public/assets
-fi
+rm -rf apps/playnite-web/public/assets-by-id
+cp -r .data/asset-by-id apps/playnite-web/public/assets
 
 docker run --name mqtt -d \
   -p 1883:1883 \
   -v $PWD/.data/mqtt/config:/mosquitto/config \
   eclipse-mosquitto:latest
+
+echo 'Dependent services started.'
