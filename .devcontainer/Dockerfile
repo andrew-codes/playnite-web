@@ -32,3 +32,6 @@ RUN apt-get install -y \
   x11-apps \
   x11-common \
   xvfb
+
+RUN apt-get install -y \
+  fuse-overlayfs
