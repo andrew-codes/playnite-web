@@ -19,3 +19,5 @@ cat .devcontainer/devcontainer.json |
 cat .devcontainer/devcontainer.json |
   jq -c '.customizations.vscode.extensions[]' |
   xargs -L 1 code --install-extension
+
+git config --global --add safe.directory /workspaces/playnite-web
