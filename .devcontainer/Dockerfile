@@ -4,7 +4,6 @@ USER root
 # MQTT server and client
 RUN apt-get update -y
 RUN apt-get install -y \
-  mosquitto \
   mosquitto-clients
 
 RUN apt-get install -y \
