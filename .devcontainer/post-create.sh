@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+/usr/local/share/docker-init.sh
+
 corepack enable
 corepack use yarn
 yarn set version 4.5.1
