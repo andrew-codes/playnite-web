@@ -22,4 +22,4 @@ Run states are used to describe the current state of a game's process.
 
 ## Defined in
 
-[types.entities.ts:247](https://github.com/andrew-codes/playnite-web/blob/3df563c965de4d225f67da0c68a1ed509cac24b9/apps/playnite-web/src/server/data/types.entities.ts#L247)
+[types.entities.ts:247](https://github.com/andrew-codes/playnite-web/blob/96565f65837f080d29153f7b950f29aaa7f41967/apps/playnite-web/src/server/data/types.entities.ts#L247)
