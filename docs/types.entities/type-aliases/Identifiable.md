@@ -18,4 +18,4 @@ Foundation of all data entities; all data entities have an ID.
 
 ## Defined in
 
-[types.entities.ts:4](https://github.com/andrew-codes/playnite-web/blob/3df563c965de4d225f67da0c68a1ed509cac24b9/apps/playnite-web/src/server/data/types.entities.ts#L4)
+[types.entities.ts:4](https://github.com/andrew-codes/playnite-web/blob/8dfad5f992b92758b413d98f9ebdcf822f89c299/apps/playnite-web/src/server/data/types.entities.ts#L4)

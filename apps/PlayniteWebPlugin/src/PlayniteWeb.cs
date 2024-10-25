@@ -3,6 +3,7 @@ using MQTTnet.Client;
 using MQTTnet.Internal;
 using MQTTnet.Protocol;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using Playnite.SDK.Events;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -58,7 +59,7 @@ namespace PlayniteWeb
     public PlayniteWeb(IPlayniteAPI api) : base(api)
     {
       var extensionInfoYaml = System.IO.File.ReadAllText("extension.yaml");
-      var extension = new YamlDotNet.Serialization.Deserializer().Deserialize<Dictionary<string, string>>(extensionInfoYaml);
+      var extension = Serialization.FromYaml<Dictionary<string, string>>(extensionInfoYaml);
       _version = extension["Version"];
 
       IMqttClient client = new MqttFactory().CreateMqttClient();
