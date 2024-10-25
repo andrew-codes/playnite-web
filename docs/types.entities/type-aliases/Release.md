@@ -152,4 +152,4 @@ A release is a specific version of a game that is available on a platform and so
 
 ## Defined in
 
-[types.entities.ts:255](https://github.com/andrew-codes/playnite-web/blob/3df563c965de4d225f67da0c68a1ed509cac24b9/apps/playnite-web/src/server/data/types.entities.ts#L255)
+[types.entities.ts:255](https://github.com/andrew-codes/playnite-web/blob/8dfad5f992b92758b413d98f9ebdcf822f89c299/apps/playnite-web/src/server/data/types.entities.ts#L255)
