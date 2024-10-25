@@ -89,6 +89,7 @@ type Payload = {
 | `playnite/{deviceId}/game/start`     | Triggers Playnite to start the release.                                              |
 | `playnite/{deviceId}/game/install`   | Triggers Playnite to install a release; only valid if release is on the PC platform. |
 | `playnite/{deviceId}/game/uninstall` | Triggers Playnite to uninstall a release; only if installed.                         |
+| `playnite/{deviceId}/game/stop`      | Triggers Playnite to stop a release, if running.                                     |
 
 ### `playnite/{deviceId}/library`
 
@@ -124,10 +125,6 @@ type Payload = {
 }
 ```
 
-```ts
-type Payload = {}
-```
-
 ### `playnite/{deviceId}/game/uninstall`
 
 Triggers Playnite to uninstall a release; only if installed.
@@ -143,6 +140,17 @@ type Payload = {
 }
 ```
 
+### `playnite/{deviceId}/game/stop`
+
+Triggers Playnite to stop a game process; if one is running.
+
 ```ts
-type Payload = {}
+type Payload = {
+  game: {
+    id: string // Release.id
+    platform: {
+      id: string // Platform.id
+    }
+  }
+}
 ```
