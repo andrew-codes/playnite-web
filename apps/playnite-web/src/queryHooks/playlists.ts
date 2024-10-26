@@ -1,6 +1,8 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
+import { useEffect } from 'react'
 import { Playlist } from '../../.generated/types.generated'
+import { useSubscribeReleaseActivationState } from './subscribeReleaseActivationState'
 
 const AllPlaylists = gql`
   query Playlist {
@@ -36,7 +38,17 @@ const AllPlaylists = gql`
 `
 
 const usePlaylists = () => {
-  return useQuery<{ playlists: Array<Playlist> }>(AllPlaylists)
+  const q = useQuery<{ playlists: Array<Playlist> }>(AllPlaylists)
+  const sub = useSubscribeReleaseActivationState()
+
+  useEffect(() => {
+    q.refetch()
+  }, [
+    sub.data?.releaseActivationStateChanged?.id,
+    sub.data?.releaseActivationStateChanged?.state,
+  ])
+
+  return q
 }
 
 export { AllPlaylists, usePlaylists }
