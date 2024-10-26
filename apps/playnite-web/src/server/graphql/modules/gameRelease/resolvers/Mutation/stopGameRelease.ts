@@ -51,6 +51,7 @@ export const stopGameRelease: NonNullable<
         id: release.id,
         gameId: release.gameId,
         name: release.name,
+        processId: release.processId,
         platform: {
           id: platform.id,
           name: platform.name,
