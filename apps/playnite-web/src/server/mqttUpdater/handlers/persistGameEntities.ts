@@ -4,7 +4,7 @@ import { HandlerOptions } from '..'
 import { Entity, EntityType, TypeFromString } from '../../data/types.entities'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 
-const { merge } = _
+const { merge, omit } = _
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameEntities',
@@ -48,7 +48,7 @@ const handler =
           field: 'id',
           value: entityId,
         },
-        merge({}, entity, { _type: entityType }),
+        omit(merge({}, entity, { _type: entityType }), 'processId'),
       )
     } catch (e) {
       console.error(e)

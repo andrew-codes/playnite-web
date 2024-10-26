@@ -9,7 +9,7 @@ namespace PlayniteWeb.Services
 
     public T Deserialize<T>(string data)
     {
-      var options = new JsonSerializerOptions(JsonSerializerDefaults.General)
+      var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
       {
         Converters = { new TypeConverter() }
       };

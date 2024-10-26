@@ -17,6 +17,7 @@ using PlayniteWeb.TopicManager;
 using PlayniteWeb.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -229,11 +230,10 @@ namespace PlayniteWeb
 
     public override void OnGameStarted(OnGameStartedEventArgs args)
     {
-      var game = GameFromRelease(args.Game);
-      var release = game.Releases.FirstOrDefault(r => r.Id == args.Game.Id);
+      var release = ReleaseFromPlayniteGame(args.Game);
       release.ProcessId = args.StartedProcessId;
       var gameStatePublisher = new PublishGameState(GameState.running, (IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+      Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
     }
 
     public override void OnGameStarting(OnGameStartingEventArgs args)
@@ -271,12 +271,39 @@ namespace PlayniteWeb
       subscriber.OnStartRelease -= Subscriber_OnStartRelease;
       subscriber.OnInstallRelease -= Subscriber_OnInstallRelease;
       subscriber.OnUninstallRelease -= Subscriber_OnUninstallRelease;
+      subscriber.OnStopRelease -= Subscriber_OnStopRelease;
 
       gameUpdates.Dispose();
       platformUpdates.Dispose();
       otherEntityUpdates.Dispose();
       collectionUpdates.Dispose();
 
+    }
+
+    private void Subscriber_OnStopRelease(object sender, Release e)
+    {
+      if (!isPcPlatform(e.Platform))
+      {
+        return;
+      }
+
+      try
+      {
+        var gameProcess = Process.GetProcessById(e.ProcessId.Value);
+        gameProcess.Kill();
+      }
+      catch (Exception ex)
+      {
+        var process = Process.GetProcessesByName(e.Name).FirstOrDefault();
+        if (process == null)
+        {
+          process = Process.GetProcesses().Where(p =>p.MainWindowTitle.Contains(e.Name)).FirstOrDefault();
+
+          if (process == null) { return; }
+        }
+
+        process.Kill();
+      }
     }
 
     private async Task HandlePublisherConnected(MqttClientConnectedEventArgs args)
@@ -299,7 +326,7 @@ namespace PlayniteWeb
       subscriber.OnStartRelease += Subscriber_OnStartRelease;
       subscriber.OnInstallRelease += Subscriber_OnInstallRelease;
       subscriber.OnUninstallRelease += Subscriber_OnUninstallRelease;
-
+      subscriber.OnStopRelease += Subscriber_OnStopRelease;
 
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
       platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));

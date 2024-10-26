@@ -36,4 +36,4 @@ Playlists are used to group games together for easy access. A playlist consists 
 
 ## Defined in
 
-[types.entities.ts:299](https://github.com/andrew-codes/playnite-web/blob/8dfad5f992b92758b413d98f9ebdcf822f89c299/apps/playnite-web/src/server/data/types.entities.ts#L299)
+[types.entities.ts:299](https://github.com/andrew-codes/playnite-web/blob/b159d1f96feee4620c5fbc9157a5493b48d2f672/apps/playnite-web/src/server/data/types.entities.ts#L299)
