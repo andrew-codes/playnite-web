@@ -83,7 +83,7 @@ const create =
         },
         {
           runState: { id: newState },
-          processId: release.processId ?? null,
+          processId: release.processId,
         },
       )
 
