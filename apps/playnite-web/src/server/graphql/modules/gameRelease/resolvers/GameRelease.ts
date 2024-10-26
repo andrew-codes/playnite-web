@@ -45,9 +45,7 @@ export const GameRelease: GameReleaseResolvers = {
     return _parent.recentActivity ? new Date(_parent.recentActivity) : null
   },
   runState: async (_parent, _arg, _ctx) => {
-    return (_parent.runState ?? _parent.isInstalled)
-      ? 'installed'
-      : 'uninstalled'
+    return _parent.runState?.id ?? 'installed'
   },
   features: async (_parent, _arg, _ctx) => {
     const results = await Promise.all(
