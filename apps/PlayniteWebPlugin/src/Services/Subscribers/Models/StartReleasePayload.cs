@@ -10,6 +10,7 @@ namespace PlayniteWeb.Services.Subscribers.Models
   public class StartReleasePayloadGame
   {
     public string Id { get; set; }
+    public int? ProcessId { get; set; }
     public StartReleasePayloadPlatform Platform { get; set; }
   }
 
