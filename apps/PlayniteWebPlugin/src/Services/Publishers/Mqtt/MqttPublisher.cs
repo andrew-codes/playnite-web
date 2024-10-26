@@ -70,11 +70,11 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public void StartConnection(IApplyPublisherOptions<IMqttClient> options)
     {
-      client = options.ApplyOptions(client);
-      if (!IsConnected)
+      if (IsConnected)
       {
         return;
       }
+      client = options.ApplyOptions(client);
     }
 
     public Task StartDisconnect()

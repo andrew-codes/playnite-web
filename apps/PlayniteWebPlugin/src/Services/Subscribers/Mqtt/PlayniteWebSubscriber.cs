@@ -31,15 +31,17 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
 
     private Task Client_ConnectedAsync(MqttClientConnectedEventArgs args)
     {
-      var subscribeTopics = typeof(SubscribeTopics).GetFields(System.Reflection.BindingFlags.Public).Select(field => field.GetValue(null)).ToList();
+      var subscribeTopics = typeof(SubscribeTopics).GetFields().Select(field => field.GetValue(null)).ToList();
 
-      return Task.WhenAll(subscribeTopics.Select(topic => mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic(topic.ToString())).Build())));
+      Task.WaitAll(subscribeTopics.Select(topic => mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic(topic.ToString())).Build())).ToArray());
+      return Task.CompletedTask;
     }
 
     public event EventHandler<Task> OnUpdateLibrary;
     public event EventHandler<Release> OnStartRelease;
     public event EventHandler<Release> OnInstallRelease;
     public event EventHandler<Release> OnUninstallRelease;
+    public event EventHandler<Release> OnStopRelease;
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
@@ -63,6 +65,10 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       {
         eventHandler = OnUninstallRelease;
       }
+      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestStopRelease) && OnStopRelease != null)
+      {
+        eventHandler = OnStopRelease;
+      }
 
       if (eventHandler == null)
       {
@@ -70,9 +76,9 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       }
 
       var payloadData = deserializer.Deserialize<StartReleasePayload>(args.ApplicationMessage.ConvertPayloadToString());
-      var platformId = Guid.Parse(payloadData.PlatformId);
+      var platformId = Guid.Parse(payloadData.Game.Platform.Id);
       var platform = _api.Database.Platforms.FirstOrDefault(p => p.Id.Equals(platformId));
-      var releaseId = Guid.Parse(payloadData.ReleaseId);
+      var releaseId = Guid.Parse(payloadData.Game.Id);
       var release = _api.Database.Games.FirstOrDefault(g => g.Id.Equals(releaseId));
       if (release == null)
       {
@@ -80,7 +86,9 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
         return Task.WhenAll(task);
       }
 
-      eventHandler.Invoke(this, new Release(release, platform));
+      var targetRelease = new Release(release, platform);
+      targetRelease.ProcessId = payloadData.Game.ProcessId;
+      eventHandler.Invoke(this, targetRelease);
 
       return Task.WhenAll(task);
     }

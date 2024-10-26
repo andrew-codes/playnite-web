@@ -10,5 +10,6 @@ namespace PlayniteWeb.Services.Subscribers
     event EventHandler<Release> OnStartRelease;
     event EventHandler<Release> OnInstallRelease;
     event EventHandler<Release> OnUninstallRelease;
+    event EventHandler<Release> OnStopRelease;
   }
 }
