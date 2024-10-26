@@ -74,58 +74,6 @@ const create =
         }
       }
 
-      if (newState == 'installed') {
-        const installingGame = await options.queryApi.execute({
-          entityType: 'Game',
-          type: 'AndMatch',
-          filterItems: [
-            {
-              type: 'RelationMatch',
-              field: 'releaseIds',
-              entityType: 'Game',
-              relationType: 'Release',
-              filterItem: {
-                entityType: 'Release',
-                type: 'ExactMatch',
-                field: 'id',
-                value: release.id,
-              },
-            },
-            {
-              type: 'RelationMatch',
-              field: 'releaseIds',
-              entityType: 'Game',
-              relationType: 'Release',
-              filterItem: {
-                entityType: 'Release',
-                type: 'ExactMatch',
-                field: 'runState',
-                value: { id: 'launching' },
-              },
-            },
-          ],
-        })
-        if (installingGame) {
-          await options.mqtt.publish(
-            `playnite/request/game/start`,
-            JSON.stringify({
-              game: {
-                id: release.id,
-                gameId: release.gameId,
-                name: release.name,
-                platform: {
-                  id: release.platform.id,
-                  name: release.platform.name,
-                },
-                source: release.source,
-              },
-            }),
-          )
-        }
-
-        return
-      }
-
       await options.updateQueryApi.executeUpdate(
         {
           entityType: 'Release',
