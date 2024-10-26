@@ -34,7 +34,7 @@ export const stopGameRelease: NonNullable<
     gameId: release.gameId,
     id: release.id,
     runState: 'stopping',
-    processId: null,
+    processId: release.processId,
   })
 
   const [platform] = (await _ctx.queryApi.execute<Platform>({
