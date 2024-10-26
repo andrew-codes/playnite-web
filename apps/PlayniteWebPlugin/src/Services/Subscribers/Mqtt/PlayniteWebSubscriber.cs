@@ -31,9 +31,10 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
 
     private Task Client_ConnectedAsync(MqttClientConnectedEventArgs args)
     {
-      var subscribeTopics = typeof(SubscribeTopics).GetFields(System.Reflection.BindingFlags.Public).Select(field => field.GetValue(null)).ToList();
+      var subscribeTopics = typeof(SubscribeTopics).GetFields().Select(field => field.GetValue(null)).ToList();
 
-      return Task.WhenAll(subscribeTopics.Select(topic => mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic(topic.ToString())).Build())));
+      Task.WaitAll(subscribeTopics.Select(topic => mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic(topic.ToString())).Build())).ToArray());
+      return Task.CompletedTask;
     }
 
     public event EventHandler<Task> OnUpdateLibrary;
@@ -70,9 +71,9 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       }
 
       var payloadData = deserializer.Deserialize<StartReleasePayload>(args.ApplicationMessage.ConvertPayloadToString());
-      var platformId = Guid.Parse(payloadData.PlatformId);
+      var platformId = Guid.Parse(payloadData.Game.Platform.Id);
       var platform = _api.Database.Platforms.FirstOrDefault(p => p.Id.Equals(platformId));
-      var releaseId = Guid.Parse(payloadData.ReleaseId);
+      var releaseId = Guid.Parse(payloadData.Game.Id);
       var release = _api.Database.Games.FirstOrDefault(g => g.Id.Equals(releaseId));
       if (release == null)
       {
