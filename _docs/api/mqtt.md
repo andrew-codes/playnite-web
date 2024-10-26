@@ -77,19 +77,19 @@ type Payload = {
 
 ## Subscribed Messages by Playnite Web
 
-| Topic                                | Description/Purpose                                                                  |
-| :----------------------------------- | :----------------------------------------------------------------------------------- |
-| `playnite/{deviceId}/library`        | Triggers a Playnite Web sync.                                                        |
-| `playnite/{deviceId}/game/start`     | Triggers Playnite to start the release.                                              |
-| `playnite/{deviceId}/game/install`   | Triggers Playnite to install a release; only valid if release is on the PC platform. |
-| `playnite/{deviceId}/game/uninstall` | Triggers Playnite to uninstall a release; only if installed.                         |
-| `playnite/{deviceId}/game/stop`      | Triggers Playnite to stop a release, if running.                                     |
+| Topic                             | Description/Purpose                                                                  |
+| :-------------------------------- | :----------------------------------------------------------------------------------- |
+| `playnite/request/library`        | Triggers a Playnite Web sync.                                                        |
+| `playnite/request/game/start`     | Triggers Playnite to start the release.                                              |
+| `playnite/request/game/install`   | Triggers Playnite to install a release; only valid if release is on the PC platform. |
+| `playnite/request/game/uninstall` | Triggers Playnite to uninstall a release; only if installed.                         |
+| `playnite/request/game/stop`      | Triggers Playnite to stop a release, if running.                                     |
 
-### `playnite/{deviceId}/library`
+### `playnite/request/library`
 
 Triggers a Playnite Web sync. There is no payload.
 
-### `playnite/{deviceId}/game/start`
+### `playnite/request/game/start`
 
 Triggers Playnite to start the release.
 
@@ -104,7 +104,7 @@ type Payload = {
 }
 ```
 
-### `playnite/{deviceId}/game/install`
+### `playnite/request/game/install`
 
 Triggers Playnite to install a release; only valid if release is on the PC platform.
 
@@ -119,7 +119,7 @@ type Payload = {
 }
 ```
 
-### `playnite/{deviceId}/game/uninstall`
+### `playnite/request/game/uninstall`
 
 Triggers Playnite to uninstall a release; only if installed.
 
@@ -134,7 +134,7 @@ type Payload = {
 }
 ```
 
-### `playnite/{deviceId}/game/stop`
+### `playnite/request/game/stop`
 
 Triggers Playnite to stop a game process; if one is running.
 
@@ -142,6 +142,7 @@ Triggers Playnite to stop a game process; if one is running.
 type Payload = {
   game: {
     id: string // Release.id
+    processId: int // Process ID provided in MQTT game state message.
     platform: {
       id: string // Platform.id
     }
