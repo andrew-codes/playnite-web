@@ -4,7 +4,11 @@ import { useCookies } from '@whatwg-node/server-plugin-cookies'
 import { createYoga } from 'graphql-yoga'
 import { AsyncMqttClient } from 'mqtt-client'
 import { IdentityService } from '../auth'
-import { IQuery, IUpdateQuery } from '../data/types.api'
+import EntityConditionalDataApi from '../data/entityConditional/DataApi'
+import InMemoryDataApi from '../data/inMemory/DataApi'
+import { getDbClient } from '../data/mongo/client'
+import MongoDataApi from '../data/mongo/DataApi'
+import PriorityDataApi from '../data/priority/DataApi'
 import type { PlayniteContext } from './context'
 import schema from './schema'
 import { subscriptionPublisher } from './subscriptionPublisher'
@@ -13,8 +17,6 @@ const graphql = (
   endpoint: string,
   signingKey: string,
   mqttClient: AsyncMqttClient,
-  queryApi: IQuery,
-  updateQueryApi: IUpdateQuery,
 ) => {
   const domain = process.env.HOST ?? 'localhost'
 
@@ -58,16 +60,31 @@ const graphql = (
         },
       }),
     ],
-    context: (req): PlayniteContext => ({
-      ...req,
-      domain,
-      identityService: new IdentityService(queryApi, signingKey, domain),
-      mqttClient,
-      queryApi,
-      signingKey,
-      subscriptionPublisher,
-      updateQueryApi,
-    }),
+    context: async (req): Promise<PlayniteContext> => {
+      const db = (await getDbClient()).db('games')
+      const mongoApi = new MongoDataApi(db)
+      const inMemoryApi = new InMemoryDataApi()
+      const userInMemory = new EntityConditionalDataApi(
+        new Set(['User']),
+        inMemoryApi,
+        inMemoryApi,
+      )
+      const dataApi = new PriorityDataApi(
+        new Set([userInMemory, mongoApi]),
+        new Set([userInMemory, mongoApi]),
+        new Set([mongoApi]),
+      )
+      return {
+        ...req,
+        domain,
+        identityService: new IdentityService(dataApi, signingKey, domain),
+        mqttClient,
+        queryApi: dataApi,
+        signingKey,
+        subscriptionPublisher,
+        updateQueryApi: dataApi,
+      }
+    },
   })
 }
 
