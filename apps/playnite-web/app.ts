@@ -80,7 +80,7 @@ async function run(mqttClient: AsyncMqttClient) {
   )
 
   const signingKey = process.env.SECRET ?? 'secret'
-  const yoga = createYoga('/api', signingKey, mqttClient, dataApi, dataApi)
+  const yoga = createYoga('/api', signingKey, mqttClient)
 
   const cspOrigins = (process.env.CSP_ORIGINS ?? '')
     .split(',')
