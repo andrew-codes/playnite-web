@@ -1,6 +1,6 @@
 [**playnite-web-app**](../../../README.md) • **Docs**
 
----
+***
 
 [playnite-web-app](../../../README.md) / contributing/development-environment/local-environment
 
