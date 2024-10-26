@@ -229,11 +229,10 @@ namespace PlayniteWeb
 
     public override void OnGameStarted(OnGameStartedEventArgs args)
     {
-      var game = GameFromRelease(args.Game);
-      var release = game.Releases.FirstOrDefault(r => r.Id == args.Game.Id);
+      var release = ReleaseFromPlayniteGame(args.Game);
       release.ProcessId = args.StartedProcessId;
       var gameStatePublisher = new PublishGameState(GameState.running, (IMqttClient)publisher, topicManager, serializer);
-      Task.WaitAll(gameStatePublisher.Publish(game).ToArray());
+      Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
     }
 
     public override void OnGameStarting(OnGameStartingEventArgs args)
