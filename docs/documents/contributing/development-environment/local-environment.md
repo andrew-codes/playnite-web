@@ -1,6 +1,6 @@
 [**playnite-web-app**](../../../README.md) • **Docs**
 
-***
+---
 
 [playnite-web-app](../../../README.md) / contributing/development-environment/local-environment
 
@@ -14,7 +14,7 @@ Install the following software on your local development machine:
 2. Bash (this guide assumes a bash shell)
 3. [vscode](https://code.visualstudio.com/Download)
 4. [Docker](https://www.docker.com/products/docker-desktop/) (for Mongodb and MQTT dependencies)
-5. [Node.js@>=22.5.0](https://nodejs.org/en/download/package-manager) (recommend using `nvm` to manage Node.js installations)
+5. [Node.js@>=22.10.0](https://nodejs.org/en/download/package-manager) (recommend using `nvm` to manage Node.js installations)
    - [nvm for OSX](https://github.com/nvm-sh/nvm)
    - [nvm for Windows](https://github.com/coreybutler/nvm-windows)
 6. [yarn@^4.0.0](https://yarnpkg.com/getting-started)
