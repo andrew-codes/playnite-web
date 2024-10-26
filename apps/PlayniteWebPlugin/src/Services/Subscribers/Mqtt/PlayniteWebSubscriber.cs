@@ -41,6 +41,7 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
     public event EventHandler<Release> OnStartRelease;
     public event EventHandler<Release> OnInstallRelease;
     public event EventHandler<Release> OnUninstallRelease;
+    public event EventHandler<Release> OnStopRelease;
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
@@ -64,6 +65,10 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       {
         eventHandler = OnUninstallRelease;
       }
+      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestStopRelease) && OnStopRelease != null)
+      {
+        eventHandler = OnStopRelease;
+      }
 
       if (eventHandler == null)
       {
@@ -81,7 +86,9 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
         return Task.WhenAll(task);
       }
 
-      eventHandler.Invoke(this, new Release(release, platform));
+      var targetRelease = new Release(release, platform);
+      targetRelease.ProcessId = payloadData.Game.ProcessId;
+      eventHandler.Invoke(this, targetRelease);
 
       return Task.WhenAll(task);
     }
