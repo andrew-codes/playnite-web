@@ -11,5 +11,6 @@
   ],
   "exclude": [],
   "readme": "none",
-  "out": "./docs"
+  "out": "./docs",
+  "gitRevision": "main"
 }
