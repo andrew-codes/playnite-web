@@ -23,7 +23,7 @@ module.exports = {
     'issues',
     'lerna',
   ],
-  scopes: ['api', 'ui', 'extension', 'updater', 'misc'],
+  scopes: ['api', 'ui', 'ext', 'updater', 'misc'],
   types: {
     chore: {
       description: 'Build process or auxiliary tool changes',
