@@ -35,7 +35,7 @@ jobs:
       - name: Generate Docs
         run: yarn run docs/generate
       - name: Ignore mode changes
-        run: git config --global core.fileMode false
+        run: find docs -type d -exec chmod a+rwx {} \; find docs -type f -exec chmod a+rw {} \;
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "[skip ci] docs: automated update to docs\n\nskip-checks: true"
