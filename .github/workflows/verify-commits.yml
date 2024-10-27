@@ -11,6 +11,34 @@ permissions:
   contents: read
 
 jobs:
+  generate_docs:
+    name: Generate Docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.DOCUMENTATION_GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }}
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '${{ steps.node_version.outputs.value }}'
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install deps
+        run: yarn
+      - name: Generate Docs
+        run: yarn run docs/generate
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "[skip ci] docs: automated update to docs\n\nskip-checks: true"
+          file_pattern: 'docs/**'
+
   unit_tests_linux:
     name: Verify Tests (Linux)
     runs-on: ubuntu-latest
