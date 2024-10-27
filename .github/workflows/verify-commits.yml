@@ -35,12 +35,14 @@ jobs:
       - name: Generate Docs
         run: yarn run docs/generate
       - name: Reset file mode changes
-        run: find docs -type d -exec chmod a+rwx {} \;
-      - run: find docs -type f -exec chmod a+rw {} \;
+        run: find docs -type d -exec chmod 755 {} \;
+      - run: find docs -type f -exec chmod 755 {} \;
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "[skip ci] docs: automated update to docs\n\nskip-checks: true"
           file_pattern: 'docs/**'
+          skip_dirty_check: false
+          add_options: --chmod=-x
 
   unit_tests_linux:
     name: Verify Tests (Linux)
