@@ -18,6 +18,7 @@ using PlayniteWeb.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -59,7 +60,7 @@ namespace PlayniteWeb
 
     public PlayniteWeb(IPlayniteAPI api) : base(api)
     {
-      var extensionInfoYaml = System.IO.File.ReadAllText("extension.yaml");
+      var extensionInfoYaml = System.IO.File.ReadAllText(Path.Combine(api.Paths.ExtensionsDataPath, "extension.yaml"));
       var extension = Serialization.FromYaml<Dictionary<string, string>>(extensionInfoYaml);
       _version = extension["Version"];
 
