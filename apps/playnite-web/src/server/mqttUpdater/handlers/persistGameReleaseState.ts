@@ -89,10 +89,12 @@ const create =
         },
       )
 
-      options.pubsub.publish(
-        'releaseRunStateChanged',
-        merge({}, release, { runState: { id: newState } }),
-      )
+      options.pubsub.publish('releaseRunStateChanged', {
+        id: release.id,
+        gameId: release.gameId,
+        processId: release.processId ??  null,
+        runState: newState,
+      })
     } catch (e) {
       console.error(e)
     }
