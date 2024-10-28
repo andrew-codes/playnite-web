@@ -40,8 +40,8 @@ const useGameById = (opts: QueryHookOptions) => {
   useEffect(() => {
     q.refetch()
   }, [
-    sub.data?.releaseActivationStateChanged?.id,
-    sub.data?.releaseActivationStateChanged?.state,
+    sub.data?.releaseRunStateChanged?.id,
+    sub.data?.releaseRunStateChanged?.state,
   ])
 
   return q
