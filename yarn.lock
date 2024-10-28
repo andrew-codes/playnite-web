@@ -7700,6 +7700,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@whatwg-node/fetch@npm:^0.9.22":
+  version: 0.9.22
+  resolution: "@whatwg-node/fetch@npm:0.9.22"
+  dependencies:
+    "@whatwg-node/node-fetch": "npm:^0.5.27"
+    urlpattern-polyfill: "npm:^10.0.0"
+  checksum: 10c0/67a8668b2dd491b24a20a03ba23b6463481e209b16e2ffc9444ed9f52fb82de744a6076278499cea60737985204fca44f68dccea7e2af1a5fb68c2721e3bb1a6
+  languageName: node
+  linkType: hard
+
 "@whatwg-node/node-fetch@npm:^0.3.6":
   version: 0.3.6
   resolution: "@whatwg-node/node-fetch@npm:0.3.6"
@@ -7710,6 +7720,18 @@ __metadata:
     fast-url-parser: "npm:^1.1.3"
     tslib: "npm:^2.3.1"
   checksum: 10c0/49e4fd5e682d1fa1229b2c13c06074c6a633eddbe61be162fd213ddb85d6d27d51554b3cced5f6b7f3be1722a64cca7f5ffe0722d08b3285fe2f289d8d5a045d
+  languageName: node
+  linkType: hard
+
+"@whatwg-node/node-fetch@npm:^0.5.27":
+  version: 0.5.27
+  resolution: "@whatwg-node/node-fetch@npm:0.5.27"
+  dependencies:
+    "@kamilkisiela/fast-url-parser": "npm:^1.1.4"
+    busboy: "npm:^1.6.0"
+    fast-querystring: "npm:^1.1.1"
+    tslib: "npm:^2.6.3"
+  checksum: 10c0/1cd036e1ef36bfc71436a3e7438b180b94c33d7958c02e33540c35d37db19fb598f2ab09f0aef538a3bbc771c32d34c5728a596ffabf8be7961435a80fcb8f62
   languageName: node
   linkType: hard
 
@@ -7745,6 +7767,16 @@ __metadata:
     "@whatwg-node/fetch": "npm:^0.9.17"
     tslib: "npm:^2.3.1"
   checksum: 10c0/62d50ac4a1f41fddee4ff370f9b565a9a384c897c079595faba7ee1a62d8b30f4b6497c37b0d1d07d806cad38117fef8b77bf144ecd1d0cb6578ded47328ee49
+  languageName: node
+  linkType: hard
+
+"@whatwg-node/server@npm:^0.9.50":
+  version: 0.9.50
+  resolution: "@whatwg-node/server@npm:0.9.50"
+  dependencies:
+    "@whatwg-node/fetch": "npm:^0.9.22"
+    tslib: "npm:^2.6.3"
+  checksum: 10c0/0e88b6b553f3a322cf79fa749414163dab58dba1d5d071c4d4482d4dcc0025d3511a5a93c286505caed20e9f048b3ff0bb4040f676b63d83aa3dd69d608b5c84
   languageName: node
   linkType: hard
 
@@ -19572,7 +19604,7 @@ __metadata:
     "@types/shelljs": "npm:^0.8.15"
     "@types/styled-components": "npm:^5.1.34"
     "@vite-pwa/remix": "npm:^0.1.0"
-    "@whatwg-node/server": "npm:^0.9.36"
+    "@whatwg-node/server": "npm:^0.9.50"
     "@whatwg-node/server-plugin-cookies": "npm:^1.0.2"
     babel-loader: "npm:^9.1.3"
     babel-plugin-direct-import: "npm:^1.0.0"
