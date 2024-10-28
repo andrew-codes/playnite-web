@@ -273,12 +273,19 @@ namespace PlayniteWeb
       subscriber.OnInstallRelease -= Subscriber_OnInstallRelease;
       subscriber.OnUninstallRelease -= Subscriber_OnUninstallRelease;
       subscriber.OnStopRelease -= Subscriber_OnStopRelease;
+      subscriber.OnRestartRelease -= Subscriber_OnRestartRelease;
 
       gameUpdates.Dispose();
       platformUpdates.Dispose();
       otherEntityUpdates.Dispose();
       collectionUpdates.Dispose();
 
+    }
+
+    private void Subscriber_OnRestartRelease(object sender, Release e)
+    {
+      this.Subscriber_OnStopRelease(sender, e);
+      this.Subscriber_OnStartRelease(sender, e);
     }
 
     private void Subscriber_OnStopRelease(object sender, Release e)
@@ -328,6 +335,7 @@ namespace PlayniteWeb
       subscriber.OnInstallRelease += Subscriber_OnInstallRelease;
       subscriber.OnUninstallRelease += Subscriber_OnUninstallRelease;
       subscriber.OnStopRelease += Subscriber_OnStopRelease;
+      subscriber.OnRestartRelease += Subscriber_OnRestartRelease;
 
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
       platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));

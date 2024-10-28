@@ -42,6 +42,7 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
     public event EventHandler<Release> OnInstallRelease;
     public event EventHandler<Release> OnUninstallRelease;
     public event EventHandler<Release> OnStopRelease;
+    public event EventHandler<Release> OnRestartRelease;
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
@@ -68,6 +69,10 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestStopRelease) && OnStopRelease != null)
       {
         eventHandler = OnStopRelease;
+      }
+      else if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestRestartRelease) && OnRestartRelease != null)
+      {
+        eventHandler = OnRestartRelease;
       }
 
       if (eventHandler == null)
