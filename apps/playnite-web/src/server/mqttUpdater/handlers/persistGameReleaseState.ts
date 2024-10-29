@@ -1,10 +1,12 @@
 import createDebugger from 'debug'
+import _ from 'lodash'
 import { HandlerOptions } from '..'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameReleaseState',
 )
+const { merge } = _
 
 const topicMatch = /^playnite\/.*\/response\/game\/state$/
 
@@ -87,7 +89,12 @@ const create =
         },
       )
 
-      options.pubsub.publish('releaseRunStateChanged', release)
+      options.pubsub.publish('releaseRunStateChanged', {
+        id: release.id,
+        gameId: release.gameId,
+        processId: release.processId ??  null,
+        runState: newState,
+      })
     } catch (e) {
       console.error(e)
     }

@@ -1,4 +1,3 @@
-import { GraphQLError } from 'graphql'
 import { Platform, Release } from '../../../../../data/types.entities'
 import { fromString } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
@@ -16,10 +15,6 @@ export const restartGameRelease: NonNullable<
     field: 'id',
     value: releaseId,
   })) as Array<Release>
-
-  if (release.runState.id === 'running') {
-    throw new GraphQLError('Game is already running')
-  }
 
   await _ctx.updateQueryApi.executeUpdate<Release>(
     {
@@ -52,6 +47,7 @@ export const restartGameRelease: NonNullable<
         id: release.id,
         gameId: release.gameId,
         name: release.name,
+        processId: release.processId,
         platform: {
           id: platform.id,
           name: platform.name,

@@ -6,6 +6,13 @@ using System.Linq;
 
 namespace PlayniteWeb.Models
 {
+  public enum RunState
+  {
+    Running,
+    Installed,
+    Uninstalled
+  }
+
   public class Release : IIdentifiable
   {
     private readonly Playnite.SDK.Models.Game game;
@@ -23,6 +30,25 @@ namespace PlayniteWeb.Models
       this.platform = platform;
     }
 
+    [DontSerialize]
+    public RunState RunState
+    {
+      get
+      {
+        if (game.IsRunning)
+        {
+          return RunState.Running;
+        }
+        else if (game.IsInstalled)
+        {
+          return RunState.Installed;
+        }
+        else
+        {
+          return RunState.Uninstalled;
+        }
+      }
+    }
     public int? ProcessId { get; set; }
     public Guid Id => game.Id;
     public string Name => game.Name;
