@@ -55,6 +55,8 @@ namespace PlayniteWeb
     private readonly ILogger logger = LogManager.GetLogger();
     private readonly Regex pcExpression = new Regex("Windows.*");
     private readonly string _version;
+    private bool IsReconnectInProgress = false;
+    private bool IsShutDownInProgress = false;
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
@@ -260,6 +262,7 @@ namespace PlayniteWeb
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
+      IsShutDownInProgress = true;
       publisher.StartDisconnect().ContinueWith(t =>
       {
         publisher.ConnectedAsync -= HandlePublisherConnected;
@@ -351,6 +354,10 @@ namespace PlayniteWeb
     private async Task HandlePublisherDisconnecting()
     {
       await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.offline)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+      if (!IsShutDownInProgress)
+      {
+        await AttemptReconnect();
+      }
     }
 
     private void Subscriber_OnUninstallRelease(object sender, Release e)
@@ -520,6 +527,44 @@ namespace PlayniteWeb
     public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
     {
       return mainMenuItems.AsEnumerable();
+    }
+
+    private async Task AttemptReconnect()
+    {
+      int retryCount = 0;
+      const int maxDelayInMinutes = 60;
+
+      if (IsReconnectInProgress)
+      {
+        return;
+      }
+
+      IsReconnectInProgress = true;
+
+      while (!publisher.IsConnected)
+      {
+        try
+        {
+          retryCount++;
+          int delayInSeconds = (int)Math.Min(Math.Pow(2, retryCount), maxDelayInMinutes * 60);
+
+          logger.Info($"Attempting to reconnect... (Attempt {retryCount}, waiting {delayInSeconds} seconds)");
+          await Task.Delay(TimeSpan.FromSeconds(delayInSeconds));
+
+          StartConnection(settings.Settings);
+
+          if (publisher.IsConnected)
+          {
+           logger.Info("Reconnected to MQTT server.");
+          }
+        }
+        catch (Exception ex)
+        {
+          logger.Error(ex, "Reconnection attempt failed.");
+        }
+      }
+
+      IsReconnectInProgress = false;
     }
   }
 }
