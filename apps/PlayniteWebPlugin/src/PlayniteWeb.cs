@@ -273,6 +273,7 @@ namespace PlayniteWeb
       subscriber.OnInstallRelease -= Subscriber_OnInstallRelease;
       subscriber.OnUninstallRelease -= Subscriber_OnUninstallRelease;
       subscriber.OnStopRelease -= Subscriber_OnStopRelease;
+      subscriber.OnRestartRelease -= Subscriber_OnRestartRelease;
 
       gameUpdates.Dispose();
       platformUpdates.Dispose();
@@ -281,9 +282,20 @@ namespace PlayniteWeb
 
     }
 
+    private void Subscriber_OnRestartRelease(object sender, Release e)
+    {
+      this.Subscriber_OnStopRelease(sender, e);
+      Task.Delay(3000).ContinueWith(t => this.Subscriber_OnStartRelease(sender, e));
+    }
+
     private void Subscriber_OnStopRelease(object sender, Release e)
     {
       if (!isPcPlatform(e.Platform))
+      {
+        return;
+      }
+
+      if (e.RunState != RunState.Running)
       {
         return;
       }
@@ -328,6 +340,7 @@ namespace PlayniteWeb
       subscriber.OnInstallRelease += Subscriber_OnInstallRelease;
       subscriber.OnUninstallRelease += Subscriber_OnUninstallRelease;
       subscriber.OnStopRelease += Subscriber_OnStopRelease;
+      subscriber.OnRestartRelease += Subscriber_OnRestartRelease;
 
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
       platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
@@ -384,7 +397,11 @@ namespace PlayniteWeb
       if (!isPcPlatform(release.Platform))
       {
         return;
+      }
 
+      if (release.RunState == RunState.Running)
+      {
+        return;
       }
 
       if (!release.IsInstalled)
