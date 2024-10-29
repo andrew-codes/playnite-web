@@ -285,12 +285,17 @@ namespace PlayniteWeb
     private void Subscriber_OnRestartRelease(object sender, Release e)
     {
       this.Subscriber_OnStopRelease(sender, e);
-      this.Subscriber_OnStartRelease(sender, e);
+      Task.Delay(3000).ContinueWith(t => this.Subscriber_OnStartRelease(sender, e));
     }
 
     private void Subscriber_OnStopRelease(object sender, Release e)
     {
       if (!isPcPlatform(e.Platform))
+      {
+        return;
+      }
+
+      if (e.RunState != RunState.Running)
       {
         return;
       }
@@ -392,7 +397,11 @@ namespace PlayniteWeb
       if (!isPcPlatform(release.Platform))
       {
         return;
+      }
 
+      if (release.RunState == RunState.Running)
+      {
+        return;
       }
 
       if (!release.IsInstalled)
