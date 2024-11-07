@@ -32,7 +32,7 @@ namespace PlayniteWeb.Models
     {
 
       platformSorter = new PlatformSorter();
-      pcSourceNames = new List<string> { "Steam", "EA app", "Ubisoft Connect", "Epic", "GOG", "Origin", "UPlay", "Battle.net", "Amazon Games", "Fanatical", "GamersGate", "Humble", "itch.io", "Legacy Games", "Indiegala", "Rockstar Games" };
+      pcSourceNames = new List<string> { "Steam", "EA app", "Ubisoft Connect", "Epic", "GOG", "Origin", "UPlay", "Battle.net", "Amazon Games", "Fanatical", "GamersGate", "Humble", "itch.io", "Legacy Games", "Indiegala", "Rockstar Games", "Riot Games" };
       pcPlatformNames = new List<string> { ".*PC.*", ".*Macintosh.*", ".*Linux.*" };
       xboxPlatformNames = new List<string> { ".*Xbox.*" };
       nintendoPlatformNames = new List<string> { ".*Nintendo.*", ".*Switch.*", ".*Wii.*", ".*Game ?Cube.*" };
