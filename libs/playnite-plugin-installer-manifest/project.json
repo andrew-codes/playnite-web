@@ -1,0 +1,8 @@
+{
+  "name": "playnite-plugin-installer-manifest",
+  "sourceRoot": "libs/playnite-plugin-installer-manifest/src",
+  "projectType": "library",
+  "targets": {},
+  "tags": ["linux"],
+  "implicitDependencies": []
+}
