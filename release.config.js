@@ -1,7 +1,7 @@
 const exclude = process.env.EXCLUDE ? `--exclude='${process.env.EXCLUDE}'` : ''
 
 const config = {
-  dryRun: false,
+  dryRun: true,
   branches: ['main', 'next'],
   plugins: [
     [
@@ -38,6 +38,24 @@ const config = {
     [
       '@semantic-release/release-notes-generator',
       {
+        presetConfig: {
+          types: [
+            { type: 'feat', section: 'Features', hidden: false },
+            { type: 'fix', section: 'Bug Fixes', hidden: false },
+            { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
+            { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
+          ],
+        },
+        parserOpts: {
+          noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING'],
+        },
+      },
+    ],
+    [
+      '@andrew-codes/playnite-plugin-installer-manifest',
+      {
+        manifestFilePath: 'apps/PlayniteWebPlugin/src/manifest.yaml',
+        extensionFilePath: 'apps/PlayniteWebPlugin/src/extension.yaml',
         presetConfig: {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
