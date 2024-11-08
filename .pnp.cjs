@@ -35,6 +35,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:libs/mqtt-client"\
     },\
     {\
+      "name": "@andrew-codes/playnite-plugin-installer-manifest",\
+      "reference": "workspace:libs/playnite-plugin-installer-manifest"\
+    },\
+    {\
       "name": "versioning",\
       "reference": "workspace:libs/versioning"\
     }\
@@ -42,6 +46,7 @@ const RAW_RUNTIME_STATE =
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "fallbackExclusionList": [\
+    ["@andrew-codes/playnite-plugin-installer-manifest", ["workspace:libs/playnite-plugin-installer-manifest"]],\
     ["devenv", ["workspace:.devcontainer"]],\
     ["mqtt-client", ["workspace:libs/mqtt-client"]],\
     ["playnite-web", ["workspace:."]],\
@@ -57,6 +62,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@andrew-codes/playnite-plugin-installer-manifest", "workspace:libs/playnite-plugin-installer-manifest"],\
           ["@semantic-release/changelog", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:6.0.3"],\
           ["@semantic-release/commit-analyzer", "virtual:9869a19b9cac301da62b60e4309d3a1bba47ad8222f27bd70feaff25a104c869d506dded55468019f6fee38fd7baa67c620ade0e78cbd82fc702ae439516efaa#npm:13.0.0"],\
           ["@semantic-release/exec", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:6.0.3"],\
@@ -94,6 +100,25 @@ const RAW_RUNTIME_STATE =
           ["@jridgewell/trace-mapping", "npm:0.3.20"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@andrew-codes/playnite-plugin-installer-manifest", [\
+      ["workspace:libs/playnite-plugin-installer-manifest", {\
+        "packageLocation": "./libs/playnite-plugin-installer-manifest/",\
+        "packageDependencies": [\
+          ["@andrew-codes/playnite-plugin-installer-manifest", "workspace:libs/playnite-plugin-installer-manifest"],\
+          ["conventional-changelog-angular", "npm:8.0.0"],\
+          ["conventional-commits-filter", "npm:5.0.0"],\
+          ["conventional-commits-parser", "npm:6.0.0"],\
+          ["debug", "virtual:43023b9ec09e5c4c8f29bfa796eae859f4587491c8bfa2bfccfb217268d123d82ce16714db3cc6f19109853cfc0d4cfa87b07988e86203e31b8f20d2130c6775#npm:4.3.7"],\
+          ["get-stream", "npm:7.0.1"],\
+          ["import-from-esm", "npm:1.3.4"],\
+          ["into-stream", "npm:7.0.0"],\
+          ["lodash-es", "npm:4.17.21"],\
+          ["read-package-up", "npm:11.0.0"],\
+          ["yaml", "npm:2.6.0"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["@apideck/better-ajv-errors", [\
@@ -15487,6 +15512,13 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
+      ["npm:4.3.7", {\
+        "packageLocation": "./.yarn/cache/debug-npm-4.3.7-385645adf9-1471db19c3.zip/node_modules/debug/",\
+        "packageDependencies": [\
+          ["debug", "npm:4.3.7"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
       ["virtual:33f4db03df5cb0a9b65cd83d4a160375f85a7e77735be4fe22ba0f32d7046e6ea2dc2852727ba6ed8ca64f8738f7114c71efc960773f2df5deb72715fe30d8b5#npm:4.3.5", {\
         "packageLocation": "./.yarn/__virtual__/debug-virtual-d237ae8253/0/cache/debug-npm-4.3.5-b5001f59b7-082c375a2b.zip/node_modules/debug/",\
         "packageDependencies": [\
@@ -15505,6 +15537,20 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/__virtual__/debug-virtual-507f12afb6/0/cache/debug-npm-3.2.7-754e818c7a-37d96ae42c.zip/node_modules/debug/",\
         "packageDependencies": [\
           ["debug", "virtual:396a3691f7b25accf085fe2fff1f56eb7540eff3f2e928a7572ca1de9b831ff8f22136404f236aaed35d90369918dfc34392844d0f822a310563f34746dfb015#npm:3.2.7"],\
+          ["@types/supports-color", null],\
+          ["ms", "npm:2.1.3"],\
+          ["supports-color", null]\
+        ],\
+        "packagePeers": [\
+          "@types/supports-color",\
+          "supports-color"\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["virtual:43023b9ec09e5c4c8f29bfa796eae859f4587491c8bfa2bfccfb217268d123d82ce16714db3cc6f19109853cfc0d4cfa87b07988e86203e31b8f20d2130c6775#npm:4.3.7", {\
+        "packageLocation": "./.yarn/__virtual__/debug-virtual-242beddceb/0/cache/debug-npm-4.3.7-385645adf9-1471db19c3.zip/node_modules/debug/",\
+        "packageDependencies": [\
+          ["debug", "virtual:43023b9ec09e5c4c8f29bfa796eae859f4587491c8bfa2bfccfb217268d123d82ce16714db3cc6f19109853cfc0d4cfa87b07988e86203e31b8f20d2130c6775#npm:4.3.7"],\
           ["@types/supports-color", null],\
           ["ms", "npm:2.1.3"],\
           ["supports-color", null]\
@@ -25451,6 +25497,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["playnite-web", "workspace:."],\
+          ["@andrew-codes/playnite-plugin-installer-manifest", "workspace:libs/playnite-plugin-installer-manifest"],\
           ["@semantic-release/changelog", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:6.0.3"],\
           ["@semantic-release/commit-analyzer", "virtual:9869a19b9cac301da62b60e4309d3a1bba47ad8222f27bd70feaff25a104c869d506dded55468019f6fee38fd7baa67c620ade0e78cbd82fc702ae439516efaa#npm:13.0.0"],\
           ["@semantic-release/exec", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:6.0.3"],\
@@ -25634,7 +25681,7 @@ const RAW_RUNTIME_STATE =
           ["shelljs", "npm:0.8.5"],\
           ["typescript", "patch:typescript@npm%3A5.5.3#optional!builtin<compat/typescript>::version=5.5.3&hash=379a07"],\
           ["versioning", "workspace:libs/versioning"],\
-          ["yaml", "npm:2.4.5"]\
+          ["yaml", "npm:2.6.0"]\
         ],\
         "linkType": "SOFT"\
       }]\

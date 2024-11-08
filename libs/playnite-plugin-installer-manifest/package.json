@@ -1,0 +1,20 @@
+{
+  "name": "@andrew-codes/playnite-plugin-installer-manifest",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Semantic-release plugin to generate an installer manifest for Playnite plugins.",
+  "exports": "./src/index.js",
+  "type": "module",
+  "dependencies": {
+    "conventional-changelog-angular": "^8.0.0",
+    "conventional-commits-filter": "^5.0.0",
+    "conventional-commits-parser": "^6.0.0",
+    "debug": "^4.3.7",
+    "get-stream": "^7.0.0",
+    "import-from-esm": "^1.0.3",
+    "into-stream": "^7.0.0",
+    "lodash-es": "^4.17.21",
+    "read-package-up": "^11.0.0",
+    "yaml": "^2.6.0"
+  }
+}
