@@ -2,24 +2,7 @@
   "name": "playnite-plugin-installer-manifest",
   "sourceRoot": "libs/playnite-plugin-installer-manifest/src",
   "projectType": "library",
-  "targets": {
-    "test/unit": {
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.test-runs/unit"],
-      "options": {
-        "command": "yarn jest --config jest.config.js",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "test/unit/ci": {
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.test-runs/unit"],
-      "options": {
-        "command": "yarn jest --config jest.config.js",
-        "cwd": "{projectRoot}"
-      }
-    }
-  },
+  "targets": {},
   "tags": ["linux"],
   "implicitDependencies": []
 }
