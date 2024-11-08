@@ -1,7 +1,7 @@
 const exclude = process.env.EXCLUDE ? `--exclude='${process.env.EXCLUDE}'` : ''
 
 const config = {
-  dryRun: true,
+  dryRun: false,
   branches: ['main', 'next'],
   plugins: [
     [
