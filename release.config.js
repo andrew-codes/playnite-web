@@ -84,6 +84,7 @@ const config = {
             path: '_packaged/**/*.*',
             label: 'Playnite Web Plugin',
           },
+          { path: '/**/manifest.yaml' },
         ],
       },
     ],
