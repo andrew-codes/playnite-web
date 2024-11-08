@@ -116,6 +116,9 @@ const verifyRelease = async (pluginConfig, context) => {
   }
   await pipeline(parsedCommits, async function* (changelog) {
     for await (const chunk of changelog) {
+      if (!chunk.type) {
+        continue
+      }
       nextPackage.Changelog.push(chunk.header)
     }
   })
