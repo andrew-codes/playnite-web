@@ -88,9 +88,14 @@ const config = {
       },
     ],
     [
-      '@semantic-release-extras/verified-git-commit',
+      '@semantic-release/git',
       {
-        assets: ['apps/PlayniteWebPlugin/src/manifest.yaml'],
+        assets: [
+          'apps/PlayniteWebPlugin/src/manifest.yaml',
+          'apps/PlayniteWebPlugin/src/extension.yaml',
+        ],
+        message:
+          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],
   ],
