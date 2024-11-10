@@ -84,8 +84,18 @@ const config = {
             path: '_packaged/**/*.*',
             label: 'Playnite Web Plugin',
           },
-          { path: '**/manifest.yaml' },
         ],
+      },
+    ],
+    [
+      '@semantic-release/git',
+      {
+        assets: [
+          'apps/PlayniteWebPlugin/src/manifest.yaml',
+          'apps/PlayniteWebPlugin/src/extension.yaml',
+        ],
+        message:
+          'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],
   ],
