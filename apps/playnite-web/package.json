@@ -70,7 +70,7 @@
     "@jest/globals": "^29.7.0",
     "@jspm/core": "^2.0.1",
     "@nx/devkit": "^19.5.1",
-    "@remix-run/dev": "^2.10.3",
+    "@remix-run/dev": "^2.14.0",
     "@types/crypto-js": "^4.2.2",
     "@types/cypress": "^1.1.3",
     "@types/express": "^4.17.21",
