@@ -110,7 +110,7 @@ const verifyRelease = async (pluginConfig, context) => {
     PackageUrl: `${repositoryUrl}/releases/download/v${nextRelease.version}/${
       extension.Id
     }_${nextRelease.version.replace(/\./g, '_')}.pext`,
-    ReleaseDate: new Date().toDateString(),
+    ReleaseDate: new Date().toISOString().split('T')[0],
     RequiredApiVersion: '5.6.0',
     Changelog: [],
   }
