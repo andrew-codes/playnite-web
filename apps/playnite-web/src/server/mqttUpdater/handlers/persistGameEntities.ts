@@ -48,7 +48,7 @@ const handler =
           field: 'id',
           value: entityId,
         },
-        omit(merge({}, entity, { _type: entityType }), 'processId'),
+        omit(merge({}, entity, { _type: entityType }), 'processId', 'runState'),
       )
     } catch (e) {
       console.error(e)
