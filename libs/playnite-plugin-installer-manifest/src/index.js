@@ -100,7 +100,8 @@ const verifyRelease = async (pluginConfig, context) => {
   debug('issue: %o', changelogContext.issue)
   debug('commit: %o', changelogContext.commit)
 
-  const { manifestFilePath, extensionFilePath } = pluginConfig
+  const { manifestFilePath, extensionFilePath, requiredApiVersion } =
+    pluginConfig
 
   const extension = parse(
     fs.readFileSync(join(context.cwd, extensionFilePath), 'utf8'),
@@ -111,7 +112,7 @@ const verifyRelease = async (pluginConfig, context) => {
       extension.Id
     }_${nextRelease.version.replace(/\./g, '_')}.pext`,
     ReleaseDate: new Date().toISOString().split('T')[0],
-    RequiredApiVersion: '5.6.0',
+    RequiredApiVersion: requiredApiVersion,
     Changelog: [],
   }
   await pipeline(parsedCommits, async function* (changelog) {
