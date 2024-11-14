@@ -56,6 +56,7 @@ const config = {
       {
         manifestFilePath: 'apps/PlayniteWebPlugin/src/manifest.yaml',
         extensionFilePath: 'apps/PlayniteWebPlugin/src/extension.yaml',
+        requiredApiVersion: '6.11.0',
         presetConfig: {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
