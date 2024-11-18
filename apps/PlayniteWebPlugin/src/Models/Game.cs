@@ -13,7 +13,6 @@ namespace PlayniteWeb.Models
   {
     private readonly IEnumerable<Release> releases;
     private readonly PlatformSorter platformSorter;
-    private readonly List<string> pcSourceNames;
     private readonly List<string> pcPlatformNames;
     private readonly List<string> xboxPlatformNames;
     private readonly List<string> nintendoPlatformNames;
@@ -32,7 +31,6 @@ namespace PlayniteWeb.Models
     {
 
       platformSorter = new PlatformSorter();
-      pcSourceNames = new List<string> { "Steam", "EA app", "Ubisoft Connect", "Epic", "GOG", "Origin", "UPlay", "Battle.net", "Amazon Games", "Fanatical", "GamersGate", "Humble", "itch.io", "Legacy Games", "Indiegala", "Rockstar Games", "Riot Games", "RomM" };
       pcPlatformNames = new List<string> { ".*PC.*", ".*Macintosh.*", ".*Linux.*" };
       xboxPlatformNames = new List<string> { ".*Xbox.*" };
       nintendoPlatformNames = new List<string> { ".*Nintendo.*", ".*Switch.*", ".*Wii.*", ".*Game ?Cube.*" };
@@ -76,12 +74,6 @@ namespace PlayniteWeb.Models
       }
 
 
-      if (pcSourceNames.Any(platformName => platformName.ToLower() == source.Name.ToLower()))
-      {
-        return pcPlatformNames.Any(platformName => Regex.IsMatch(platform.Name, platformName, RegexOptions.IgnoreCase));
-      }
-
-
       if (Regex.IsMatch(source.Name, "xbox", RegexOptions.IgnoreCase))
       {
         return xboxPlatformNames.Any(platformName => Regex.IsMatch(platform.Name, platformName, RegexOptions.IgnoreCase));
@@ -93,7 +85,7 @@ namespace PlayniteWeb.Models
         return nintendoPlatformNames.Any(platformName => Regex.IsMatch(platform.Name, platformName, RegexOptions.IgnoreCase));
       }
 
-      return false;
+      return pcPlatformNames.Any(platformName => Regex.IsMatch(platform.Name, platformName, RegexOptions.IgnoreCase)); ;
     }
   }
 
