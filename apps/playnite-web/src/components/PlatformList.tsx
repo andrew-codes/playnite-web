@@ -20,12 +20,35 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
     )
   }
 
+  let src = `/asset-by-id/${platform.icon?.id}`
+  if (!platform.icon?.id) {
+    if (/(windows)/i.test(platform.name)) {
+      src = `platforms/pc-windows.webp`
+    } else if (/(mac)/i.test(platform.name)) {
+      src = `platforms/macintosh.webp`
+    } else if (/(linux)/i.test(platform.name)) {
+      src = `platforms/pc-linux.webp`
+    } else if (/(playstation)/i.test(platform.name)) {
+      if (/5/i.test(platform.name)) {
+        src = `platforms/playstation-5.webp`
+      } else if (/4/i.test(platform.name)) {
+        src = `platforms/playstation-4.webp`
+      } else if (/3/i.test(platform.name)) {
+        src = `platforms/playstation-3.webp`
+      } else if (/2/i.test(platform.name)) {
+        src = `platforms/playstation-2.webp`
+      } else {
+        src = `platforms/playstation.webp`
+      }
+    }
+  }
+
   return (
     <li>
       <PlatformImage
         data-test="PlatformListItem"
         alt={platform.name}
-        src={`/asset-by-id/${platform.icon?.id}`}
+        src={src}
       />
     </li>
   )
