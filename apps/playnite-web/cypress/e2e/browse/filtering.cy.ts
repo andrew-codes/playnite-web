@@ -1,7 +1,7 @@
 describe('Browse Library', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api').as('api')
-    cy.intercept('GET', '/asset-by-id/*').as('images')
+    cy.intercept('GET', /(asset-by-id)|(platforms)\/.*/).as('images')
   })
 
   describe('Filtering', () => {
@@ -38,8 +38,6 @@ describe('Browse Library', () => {
 
     it('Filter by exact match name', () => {
       cy.visit('/browse')
-      cy.wait('@api')
-      cy.wait('@images')
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root').click({
         force: true,
       })
@@ -56,8 +54,6 @@ describe('Browse Library', () => {
 
     it('Filter by exact match name containing exact match characters', () => {
       cy.visit('/browse')
-      cy.wait('@api')
-      cy.wait('@images')
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root').click({
         force: true,
       })
@@ -75,8 +71,6 @@ describe('Browse Library', () => {
     it(`Filter by platform
 - Games must match at least one release year.`, () => {
       cy.visit('/browse')
-      cy.wait('@api')
-      cy.wait('@images')
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
@@ -146,8 +140,6 @@ describe('Browse Library', () => {
       const scoped = 'Final Fantasy'
 
       cy.visit('/browse')
-      cy.wait('@api')
-      cy.wait('@images')
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
@@ -209,8 +201,6 @@ describe('Browse Library', () => {
       const scoped = null
 
       cy.visit('/browse')
-      cy.wait('@api')
-      cy.wait('@images')
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
@@ -272,8 +262,6 @@ describe('Browse Library', () => {
       const scoped = 'Bat'
 
       cy.visit('/browse')
-      cy.wait('@api')
-      cy.wait('@images')
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
@@ -335,8 +323,6 @@ describe('Browse Library', () => {
       const scoped = 'Bat'
 
       cy.visit('/browse')
-      cy.wait('@api')
-      cy.wait('@images')
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
