@@ -5,15 +5,26 @@ Packages:
     ReleaseDate: 2024-11-10
     RequiredApiVersion: 6.11.0
     Changelog:
-      - 'chore: commit ext & manifest on release'
-      - 'fix: no dry run'
-      - 'fix: update manifest in repo'
-      - 'chore: automate manifest creation (#616)'
-      - 'chore: automate manifest creation'
+      - "chore: commit ext & manifest on release"
+      - "fix: no dry run"
+      - "fix: update manifest in repo"
+      - "chore: automate manifest creation (#616)"
+      - "chore: automate manifest creation"
   - Version: 9.4.2
     PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v9.4.2/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_9_4_2.pext
     ReleaseDate: 2024-11-13
     RequiredApiVersion: 6.11.0
     Changelog:
-      - 'fix: run state is reported correctly to UI (#622)'
-      - 'fix: do not override run state with incorrect data'
+      - "fix: run state is reported correctly to UI (#622)"
+      - "fix: do not override run state with incorrect data"
+  - Version: 9.4.3
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v9.4.3/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_9_4_3.pext
+    ReleaseDate: 2024-11-18
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "fix: default to common platform icons (#635)"
+      - "fix: default to common platform icons"
+      - "fix: unknown sources are PC platform (#634)"
+      - "fix: unknown sources are PC platform"
+      - "fix: incorrect required Playnite API version (#624)"
+      - "fix: incorrect required Playnite API version"
