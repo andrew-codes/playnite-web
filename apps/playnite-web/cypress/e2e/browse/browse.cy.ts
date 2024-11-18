@@ -1,7 +1,7 @@
 describe('Browse library', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api').as('api')
-    cy.intercept('GET', '/asset-by-id/*').as('images')
+    cy.intercept('GET', /(asset-by-id)|(platforms)\/.*/).as('images')
   })
   it('Library is browse-able', () => {
     cy.visit('/')
