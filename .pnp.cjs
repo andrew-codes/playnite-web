@@ -12386,6 +12386,15 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@whatwg-node/fetch", [\
+      ["npm:0.10.1", {\
+        "packageLocation": "./.yarn/cache/@whatwg-node-fetch-npm-0.10.1-8adf06e4e9-8db24a9801.zip/node_modules/@whatwg-node/fetch/",\
+        "packageDependencies": [\
+          ["@whatwg-node/fetch", "npm:0.10.1"],\
+          ["@whatwg-node/node-fetch", "npm:0.7.3"],\
+          ["urlpattern-polyfill", "npm:10.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:0.8.8", {\
         "packageLocation": "./.yarn/cache/@whatwg-node-fetch-npm-0.8.8-7bf71af020-37d882bf85.zip/node_modules/@whatwg-node/fetch/",\
         "packageDependencies": [\
@@ -12432,6 +12441,17 @@ const RAW_RUNTIME_STATE =
           ["tslib", "npm:2.6.3"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:0.7.3", {\
+        "packageLocation": "./.yarn/cache/@whatwg-node-node-fetch-npm-0.7.3-af217d9a83-ab28315e5f.zip/node_modules/@whatwg-node/node-fetch/",\
+        "packageDependencies": [\
+          ["@whatwg-node/node-fetch", "npm:0.7.3"],\
+          ["@kamilkisiela/fast-url-parser", "npm:1.1.4"],\
+          ["busboy", "npm:1.6.0"],\
+          ["fast-querystring", "npm:1.1.2"],\
+          ["tslib", "npm:2.6.3"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["@whatwg-node/server", [\
@@ -12440,6 +12460,15 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@whatwg-node/server", "npm:0.9.36"],\
           ["@whatwg-node/fetch", "npm:0.9.18"],\
+          ["tslib", "npm:2.6.3"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:0.9.56", {\
+        "packageLocation": "./.yarn/cache/@whatwg-node-server-npm-0.9.56-71116abd37-3de6bea3ef.zip/node_modules/@whatwg-node/server/",\
+        "packageDependencies": [\
+          ["@whatwg-node/server", "npm:0.9.56"],\
+          ["@whatwg-node/fetch", "npm:0.10.1"],\
           ["tslib", "npm:2.6.3"]\
         ],\
         "linkType": "HARD"\
@@ -12459,7 +12488,7 @@ const RAW_RUNTIME_STATE =
           ["@whatwg-node/server-plugin-cookies", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.0.2"],\
           ["@types/whatwg-node__server", null],\
           ["@whatwg-node/cookie-store", "npm:0.2.2"],\
-          ["@whatwg-node/server", "npm:0.9.36"],\
+          ["@whatwg-node/server", "npm:0.9.56"],\
           ["tslib", "npm:2.6.3"]\
         ],\
         "packagePeers": [\
@@ -25875,7 +25904,7 @@ const RAW_RUNTIME_STATE =
           ["@types/shelljs", "npm:0.8.15"],\
           ["@types/styled-components", "npm:5.1.34"],\
           ["@vite-pwa/remix", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.1.0"],\
-          ["@whatwg-node/server", "npm:0.9.36"],\
+          ["@whatwg-node/server", "npm:0.9.56"],\
           ["@whatwg-node/server-plugin-cookies", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.0.2"],\
           ["babel-loader", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:9.1.3"],\
           ["babel-plugin-direct-import", "npm:1.0.0"],\
