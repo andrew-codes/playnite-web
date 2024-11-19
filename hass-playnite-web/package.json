@@ -5,12 +5,12 @@
     "playnite-web-app": "workspace:*"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.7",
+    "@types/lodash": "^4.17.13",
     "@types/shelljs": "^0.8.15",
-    "esbuild": "^0.23.0",
-    "esbuild-register": "^3.5.0",
+    "esbuild": "^0.24.0",
+    "esbuild-register": "^3.6.0",
     "lodash": "^4.17.21",
-    "nx": "^19.5.1",
+    "nx": "^19.8.11",
     "shelljs": "^0.8.5",
     "versioning": "workspace:*"
   }
