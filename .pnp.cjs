@@ -18581,6 +18581,19 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
+      ["npm:11.0.0", {\
+        "packageLocation": "./.yarn/cache/glob-npm-11.0.0-3be4126bf5-419866015d.zip/node_modules/glob/",\
+        "packageDependencies": [\
+          ["glob", "npm:11.0.0"],\
+          ["foreground-child", "npm:3.1.1"],\
+          ["jackspeak", "npm:4.0.2"],\
+          ["minimatch", "npm:10.0.1"],\
+          ["minipass", "npm:7.1.2"],\
+          ["package-json-from-dist", "npm:1.0.0"],\
+          ["path-scurry", "npm:2.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:7.2.3", {\
         "packageLocation": "./.yarn/cache/glob-npm-7.2.3-2d866d17a5-65676153e2.zip/node_modules/glob/",\
         "packageDependencies": [\
@@ -20702,10 +20715,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["isbot", [\
-      ["npm:4.4.0", {\
-        "packageLocation": "./.yarn/cache/isbot-npm-4.4.0-9da33b558e-8cccbd8151.zip/node_modules/isbot/",\
+      ["npm:5.1.17", {\
+        "packageLocation": "./.yarn/cache/isbot-npm-5.1.17-227b1aab91-b4adee17c5.zip/node_modules/isbot/",\
         "packageDependencies": [\
-          ["isbot", "npm:4.4.0"]\
+          ["isbot", "npm:5.1.17"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -20914,6 +20927,14 @@ const RAW_RUNTIME_STATE =
           ["jackspeak", "npm:3.4.0"],\
           ["@isaacs/cliui", "npm:8.0.2"],\
           ["@pkgjs/parseargs", "npm:0.11.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:4.0.2", {\
+        "packageLocation": "./.yarn/cache/jackspeak-npm-4.0.2-95b4b8a1aa-b26039d11c.zip/node_modules/jackspeak/",\
+        "packageDependencies": [\
+          ["jackspeak", "npm:4.0.2"],\
+          ["@isaacs/cliui", "npm:8.0.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -22684,6 +22705,13 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
+      ["npm:11.0.2", {\
+        "packageLocation": "./.yarn/cache/lru-cache-npm-11.0.2-72e1eedbe6-c993b8e06e.zip/node_modules/lru-cache/",\
+        "packageDependencies": [\
+          ["lru-cache", "npm:11.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:5.1.1", {\
         "packageLocation": "./.yarn/cache/lru-cache-npm-5.1.1-f475882a51-89b2ef2ef4.zip/node_modules/lru-cache/",\
         "packageDependencies": [\
@@ -23784,6 +23812,14 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["minimatch", [\
+      ["npm:10.0.1", {\
+        "packageLocation": "./.yarn/cache/minimatch-npm-10.0.1-eabcc0d3a0-e6c29a81fe.zip/node_modules/minimatch/",\
+        "packageDependencies": [\
+          ["minimatch", "npm:10.0.1"],\
+          ["brace-expansion", "npm:2.0.1"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:3.1.2", {\
         "packageLocation": "./.yarn/cache/minimatch-npm-3.1.2-9405269906-0262810a8f.zip/node_modules/minimatch/",\
         "packageDependencies": [\
@@ -25729,6 +25765,15 @@ const RAW_RUNTIME_STATE =
           ["minipass", "npm:7.0.4"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:2.0.0", {\
+        "packageLocation": "./.yarn/cache/path-scurry-npm-2.0.0-5a556e8161-3da4adedaa.zip/node_modules/path-scurry/",\
+        "packageDependencies": [\
+          ["path-scurry", "npm:2.0.0"],\
+          ["lru-cache", "npm:11.0.2"],\
+          ["minipass", "npm:7.1.2"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["path-to-regexp", [\
@@ -26066,7 +26111,7 @@ const RAW_RUNTIME_STATE =
           ["html-webpack-plugin", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.6.3"],\
           ["intl-parse-accept-language", "npm:1.0.0"],\
           ["is-ip", "npm:5.0.1"],\
-          ["isbot", "npm:4.4.0"],\
+          ["isbot", "npm:5.1.17"],\
           ["istanbul-lib-coverage", "npm:3.2.2"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
           ["jest-config", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
@@ -26091,7 +26136,7 @@ const RAW_RUNTIME_STATE =
           ["remix-island", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.2.0"],\
           ["remix-routes", "npm:1.7.7"],\
           ["remix-utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.7.0"],\
-          ["rimraf", "npm:5.0.10"],\
+          ["rimraf", "npm:6.0.1"],\
           ["sharp", "npm:0.33.5"],\
           ["shelljs", "npm:0.8.5"],\
           ["start-server-and-test", "npm:2.0.8"],\
@@ -26143,7 +26188,7 @@ const RAW_RUNTIME_STATE =
           ["esbuild-register", "virtual:eae7de3598ede18d09f0297c5a36c1a813a4feeec67090651b67d0a4c216cdfcd273c227b9364605d8c48be7fec873fca19a372b02997575ed6971300ecf233b#npm:3.6.0"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.8.11"],\
           ["prettier", "npm:3.3.3"],\
-          ["rimraf", "npm:5.0.10"],\
+          ["rimraf", "npm:6.0.1"],\
           ["shelljs", "npm:0.8.5"],\
           ["typescript", "patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40"],\
           ["versioning", "workspace:libs/versioning"],\
@@ -27978,11 +28023,12 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:5.0.10", {\
-        "packageLocation": "./.yarn/cache/rimraf-npm-5.0.10-d0c6647697-7da4fd0e15.zip/node_modules/rimraf/",\
+      ["npm:6.0.1", {\
+        "packageLocation": "./.yarn/cache/rimraf-npm-6.0.1-2d0b0aeb1b-b30b6b0727.zip/node_modules/rimraf/",\
         "packageDependencies": [\
-          ["rimraf", "npm:5.0.10"],\
-          ["glob", "npm:10.3.10"]\
+          ["rimraf", "npm:6.0.1"],\
+          ["glob", "npm:11.0.0"],\
+          ["package-json-from-dist", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
