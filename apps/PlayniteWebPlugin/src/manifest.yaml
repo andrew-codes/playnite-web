@@ -28,3 +28,17 @@ Packages:
       - "fix: unknown sources are PC platform"
       - "fix: incorrect required Playnite API version (#624)"
       - "fix: incorrect required Playnite API version"
+  - Version: 9.4.4
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v9.4.4/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_9_4_4.pext
+    ReleaseDate: 2024-11-19
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "chore(deps): security updates (#638)"
+      - "chore(deps): major version bumps"
+      - "chore(deps): security updates"
+      - "chore(deps): bump axios"
+      - "chore(deps): update npm deps"
+      - "chore(deps-dev): bump @remix-run/dev from 2.10.3 to 2.14.0 (#619)"
+      - "fix: hass addon version is updated for every release (#636)"
+      - "fix: hass addon version is updated for every release"
+      - "chore(deps-dev): bump @remix-run/dev from 2.10.3 to 2.14.0"
