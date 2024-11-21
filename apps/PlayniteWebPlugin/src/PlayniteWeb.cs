@@ -205,7 +205,13 @@ namespace PlayniteWeb
     private Release ReleaseFromPlayniteGame(Playnite.SDK.Models.Game game)
     {
       var g = GameFromRelease(game);
-      return g.Releases.FirstOrDefault(r => r.Id == game.Id);
+      var release = g.Releases.FirstOrDefault(r => r.Id == game.Id);
+      if (release == null)
+      {
+        logger.Debug($"Release not found for Game {game.Name} with ID {game.Id}.");
+      }
+
+      return release;
     }
 
     private Models.Game GameFromRelease(Playnite.SDK.Models.Game game)
@@ -295,11 +301,13 @@ namespace PlayniteWeb
     {
       if (!isPcPlatform(e.Platform))
       {
+        logger.Debug($"Platform {e.Platform.Name} is not a PC platform.");
         return;
       }
 
       if (e.RunState != RunState.Running)
       {
+        logger.Debug($"Game {e.Name} is not running.");
         return;
       }
 
@@ -310,10 +318,11 @@ namespace PlayniteWeb
       }
       catch (Exception ex)
       {
+        logger.Debug($"No process found for Game {e.Name} with ID {e.ProcessId}. Shutting down game by matching its process name instead.");
         var process = Process.GetProcessesByName(e.Name).FirstOrDefault();
         if (process == null)
         {
-          process = Process.GetProcesses().Where(p =>p.MainWindowTitle.Contains(e.Name)).FirstOrDefault();
+          process = Process.GetProcesses().Where(p => p.MainWindowTitle.Contains(e.Name)).FirstOrDefault();
 
           if (process == null) { return; }
         }
@@ -366,6 +375,7 @@ namespace PlayniteWeb
       {
         if (!isPcPlatform(e.Platform) || !e.IsInstalled)
         {
+          logger.Debug($"Platform {e.Platform.Name} is not a PC platform or game is not installed.");
           return;
         }
 
@@ -385,6 +395,7 @@ namespace PlayniteWeb
       {
         if (!isPcPlatform(e.Platform) || e.IsInstalled)
         {
+          logger.Debug($"Platform {e.Platform.Name} is not a PC platform or game is already installed.");
           return;
         }
 
@@ -403,16 +414,19 @@ namespace PlayniteWeb
     {
       if (!isPcPlatform(release.Platform))
       {
+        logger.Debug($"Platform {release.Platform.Name} is not a PC platform.");
         return;
       }
 
       if (release.RunState == RunState.Running)
       {
+        logger.Debug($"Game {release.Name} is already running.");
         return;
       }
 
       if (!release.IsInstalled)
       {
+        logger.Debug($"Game {release.Name} is not installed. Installing instead of starting.");
         var gameStatePublisher = new PublishGameState(GameState.installing, (IMqttClient)publisher, topicManager, serializer);
         Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
         PlayniteApi.InstallGame(release.Id);
@@ -555,7 +569,7 @@ namespace PlayniteWeb
 
           if (publisher.IsConnected)
           {
-           logger.Info("Reconnected to MQTT server.");
+            logger.Info("Reconnected to MQTT server.");
           }
         }
         catch (Exception ex)
