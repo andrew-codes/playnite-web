@@ -138,6 +138,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
               aria-label="Platforms in which to play the game"
             >
               <Button
+                data-release-id={releases[selectedIndex].id}
                 sx={{ minWidth: '296px !important' }}
                 onClick={(evt) => {
                   startRelease({

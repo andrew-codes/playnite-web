@@ -3,6 +3,7 @@ const fs = require('fs')
 const webpackPreprocessor = require('@cypress/webpack-preprocessor')
 const { merge } = require('lodash')
 const codeCoverage = require('@cypress/code-coverage/task')
+const { connectAsync } = require('async-mqtt')
 
 const config = {
   chromeWebSecurity: false,
@@ -48,11 +49,28 @@ const config = {
         }
       })
 
+      on('task', {
+        mqttPublish({ topic, payload }) {
+          const host = 'localhost'
+          const port = 1883
+          const username = 'local'
+          const password = 'dev'
+          return connectAsync(`tcp://${host}`, {
+            password,
+            port,
+            username,
+          }).then((client) => {
+            client.publish(topic, payload)
+            return null
+          })
+        },
+      })
+
       const webpackConfig = merge({}, webpackPreprocessor.defaultOptions, {
         module: {
           rules: [
             {
-              test: /\.?tsx?$/,
+              test: /\.tsx?$/,
               loader: 'babel-loader',
               options: {
                 presets: [
@@ -113,7 +131,7 @@ const config = {
           module: {
             rules: [
               {
-                test: /\.?tsx?$/,
+                test: /\.tsx?$/,
                 loader: 'babel-loader',
                 options: {
                   presets: [

@@ -26073,6 +26073,7 @@ const RAW_RUNTIME_STATE =
           ["@vite-pwa/remix", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:0.1.3"],\
           ["@whatwg-node/server", "npm:0.9.56"],\
           ["@whatwg-node/server-plugin-cookies", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:1.0.3"],\
+          ["async-mqtt", "npm:2.6.3"],\
           ["babel-loader", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:9.2.1"],\
           ["babel-plugin-direct-import", "npm:1.0.0"],\
           ["babel-plugin-istanbul", "npm:6.1.1"],\

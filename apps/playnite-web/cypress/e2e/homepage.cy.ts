@@ -36,7 +36,7 @@ describe('Homepage', () => {
     cy.visit('/')
 
     cy.contains('h4', 'On Deck').parents('[data-test="playlist"]')
-    cy.get('[data-test="GameFigure"] span').eq(0).click({ force: true })
+    cy.get('[data-test="GameFigure"] button span').eq(0).click({ force: true })
     cy.get('[data-test="GameDetails"] h4').should(
       'have.text',
       'Star Wars Outlaws',
