@@ -30,6 +30,11 @@ const create =
 
       const { state, release } = JSON.parse(payload.toString())
 
+      if (release === null) {
+        debug('Release is null; aborting')
+        return
+      }
+
       const newState = runStates.find((s) => s === state.toLowerCase())
 
       if (!newState || !release.id) {
