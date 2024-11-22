@@ -127,7 +127,9 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
 
   return (
     <Details data-test="GameDetails">
-      <Typography variant="h4">{game.name}</Typography>
+      <Typography variant="h4" data-test="Name">
+        {game.name}
+      </Typography>
 
       <Actions ref={platformsAnchorEl}>
         {data?.me.isAuthenticated && (
@@ -239,7 +241,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
         )}
       </Actions>
       <Divider />
-      <Description>
+      <Description data-test="Description">
         <div dangerouslySetInnerHTML={{ __html: game.description }}></div>
       </Description>
     </Details>

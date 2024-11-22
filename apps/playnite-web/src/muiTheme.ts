@@ -12,6 +12,17 @@ declare module '@mui/material/styles' {
   }
 }
 
+const breakpoints = {
+  values: {
+    xxl: 1696,
+    xl: 1366,
+    lg: 1024,
+    md: 768,
+    sm: 430,
+    xs: 390,
+  },
+}
+
 const ssrMatchMedia =
   (deviceType: 'mobile' | 'tablet' | 'desktop' | 'unknown') => (query) => ({
     matches: mediaQuery.match(query, {
@@ -47,16 +58,7 @@ const theme = (
           secondary: 'rgba(211, 221, 217)',
         },
       },
-      breakpoints: {
-        values: {
-          xxl: 1696,
-          xl: 1366,
-          lg: 1024,
-          md: 768,
-          sm: 430,
-          xs: 390,
-        },
-      },
+      breakpoints,
       components: {
         MuiAppBar: {
           styleOverrides: {

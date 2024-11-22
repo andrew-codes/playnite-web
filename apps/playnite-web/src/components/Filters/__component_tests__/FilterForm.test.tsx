@@ -1,88 +1,22 @@
-import { TestWrapper, useBreakpoint } from '../../../../testUtils/component'
+import breakpoints from '../../../../cypress/fixtures/devices.json'
+import { TestWrapper } from '../../../../testUtils/component'
 import FilterForm from '../FilterForm'
 
-describe('FilterForm', () => {
-  describe('xxl', () => {
-    beforeEach(() => {
-      useBreakpoint('xxl')
-    })
-    it('Renders', () => {
-      cy.mount(
-        <TestWrapper>
-          <FilterForm />
-        </TestWrapper>,
-      )
-      cy.compareSnapshot('xxl')
-    })
+Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
+  beforeEach(() => {
+    cy.viewport(x as number, y as number)
   })
 
-  describe('xl', () => {
-    beforeEach(() => {
-      useBreakpoint('xl')
-    })
-    it('Renders', () => {
-      cy.mount(
-        <TestWrapper>
-          <FilterForm />
-        </TestWrapper>,
-      )
-      cy.compareSnapshot('xl')
-    })
-  })
-
-  describe('lg', () => {
-    beforeEach(() => {
-      useBreakpoint('lg')
-    })
-    it('Renders', () => {
-      cy.mount(
-        <TestWrapper>
-          <FilterForm />
-        </TestWrapper>,
-      )
-      cy.compareSnapshot('lg')
-    })
-  })
-
-  describe('md', () => {
-    beforeEach(() => {
-      useBreakpoint('md')
-    })
-    it('Renders', () => {
-      cy.mount(
-        <TestWrapper>
-          <FilterForm />
-        </TestWrapper>,
-      )
-      cy.compareSnapshot('md')
-    })
-  })
-
-  describe('sm', () => {
-    beforeEach(() => {
-      useBreakpoint('sm')
-    })
-    it('Renders', () => {
-      cy.mount(
-        <TestWrapper>
-          <FilterForm />
-        </TestWrapper>,
-      )
-      cy.compareSnapshot('sm')
-    })
-  })
-
-  describe('xs', () => {
-    beforeEach(() => {
-      useBreakpoint('xs')
-    })
-    it('Renders', () => {
-      cy.mount(
-        <TestWrapper>
-          <FilterForm />
-        </TestWrapper>,
-      )
-      cy.compareSnapshot('xs')
+  describe('FilterForm', () => {
+    describe(`Screen size: ${breakpointName}.`, () => {
+      it('Renders', () => {
+        cy.mount(
+          <TestWrapper>
+            <FilterForm />
+          </TestWrapper>,
+        )
+        cy.compareSnapshot(breakpointName as string)
+      })
     })
   })
 })
