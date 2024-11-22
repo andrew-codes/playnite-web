@@ -15,11 +15,21 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
               cy.intercept('GET', /(asset-by-id)|(platforms)\/.*/).as('images')
             })
 
+            beforeEach(() => {
+              cy.task('mqttPublish', {
+                topic: 'playnite/deviceId/response/game/state',
+                payload: JSON.stringify({
+                  state: 'installed',
+                  release: { id: 'd7fc1ab8-a697-4cd1-a249-1b4bba129278' },
+                }),
+              })
+            })
+
             it(`Play visible.
 - Require user to be logged in.`, () => {
               cy.signIn()
               cy.visit('/')
-              cy.get('[data-test="GameFigure"] button span')
+              cy.get('[data-test="GameFigure"] button span', { timeout: 10000 })
                 .first()
                 .click({ force: true })
 
@@ -36,13 +46,10 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
                 })
             })
 
-            it.only(`Restart/stop visible.
+            it(`Restart/stop visible.
 - Require user to be logged in.`, () => {
               cy.signIn()
               cy.visit('/')
-              cy.get('[data-test="GameFigure"] button span')
-                .first()
-                .click({ force: true })
               cy.task('mqttPublish', {
                 topic: 'playnite/deviceId/response/game/state',
                 payload: JSON.stringify({
@@ -50,6 +57,10 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
                   release: { id: 'd7fc1ab8-a697-4cd1-a249-1b4bba129278' },
                 }),
               })
+
+              cy.get('[data-test="GameFigure"] button span', { timeout: 10000 })
+                .first()
+                .click({ force: true })
 
               cy.get('[data-test="GameDetails"]')
                 .parent()

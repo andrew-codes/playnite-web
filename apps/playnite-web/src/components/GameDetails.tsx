@@ -28,10 +28,28 @@ const Details = styled('div')(({ theme }) => ({
     },
   },
 }))
-const Actions = styled('div')(({ theme }) => ({
+const Actions = styled('ol')(({ theme }) => ({
   height: theme.spacing(4.5),
   display: 'flex',
   justifyContent: 'space-between',
+  listStyle: 'none',
+  padding: 0,
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+    height: 'auto',
+    '& > *': {
+      marginBottom: theme.spacing(1),
+    },
+  },
+}))
+const Action = styled('li')(({ theme }) => ({
+  display: 'flex',
+  'button:first-of-type': {
+    flex: 1,
+  },
+  '> *': {
+    flex: 1,
+  },
 }))
 
 const Description = styled('div')(({ theme }) => ({
@@ -134,82 +152,84 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
       <Actions ref={platformsAnchorEl}>
         {data?.me.isAuthenticated && (
           <>
-            <ButtonGroup
-              variant="contained"
-              color="primary"
-              aria-label="Platforms in which to play the game"
-            >
-              <Button
-                data-release-id={releases[selectedIndex].id}
-                sx={{ minWidth: '296px !important' }}
-                onClick={(evt) => {
-                  startRelease({
-                    variables: {
-                      releaseId: releases[selectedIndex].id,
-                    },
-                  })
-                }}
+            <Action>
+              <ButtonGroup
+                variant="contained"
+                color="primary"
+                aria-label="Platforms in which to play the game"
               >
-                {releases[selectedIndex].platform.name} via{' '}
-                {releases[selectedIndex].source.name}
-              </Button>
-              <Button
-                size="small"
-                aria-controls={open ? 'split-button-menu' : undefined}
-                aria-expanded={open ? 'true' : undefined}
-                aria-label="Select Platform"
-                aria-haspopup="menu"
-                onClick={handleToggle}
-              >
-                <ArrowDropDown />
-              </Button>
-            </ButtonGroup>
-            <Popper
-              sx={{
-                zIndex: 1,
-              }}
-              open={open}
-              anchorEl={platformsAnchorEl.current}
-              role={undefined}
-              transition
-              disablePortal
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin:
-                      placement === 'bottom' ? 'center top' : 'center bottom',
+                <Button
+                  data-release-id={releases[selectedIndex].id}
+                  sx={{ minWidth: '296px !important' }}
+                  onClick={(evt) => {
+                    startRelease({
+                      variables: {
+                        releaseId: releases[selectedIndex].id,
+                      },
+                    })
                   }}
                 >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleClose}>
-                      <MenuList id="split-button-menu" autoFocusItem>
-                        {releases
-                          .filter(
-                            (r) =>
-                              r.runState !== 'launching' &&
-                              r.runState !== 'running' &&
-                              r.runState !== 'restarting' &&
-                              r.runState !== 'installing',
-                          )
-                          .map((option, index) => (
-                            <MenuItem
-                              key={option.id}
-                              selected={index === selectedIndex}
-                              onClick={(event) =>
-                                handleMenuItemClick(event, index)
-                              }
-                            >
-                              {option.platform.name} via {option.source.name}
-                            </MenuItem>
-                          ))}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
+                  {releases[selectedIndex].platform.name} via{' '}
+                  {releases[selectedIndex].source.name}
+                </Button>
+                <Button
+                  size="small"
+                  aria-controls={open ? 'split-button-menu' : undefined}
+                  aria-expanded={open ? 'true' : undefined}
+                  aria-label="Select Platform"
+                  aria-haspopup="menu"
+                  onClick={handleToggle}
+                >
+                  <ArrowDropDown />
+                </Button>
+              </ButtonGroup>
+              <Popper
+                sx={{
+                  zIndex: 1,
+                }}
+                open={open}
+                anchorEl={platformsAnchorEl.current}
+                role={undefined}
+                transition
+                disablePortal
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === 'bottom' ? 'center top' : 'center bottom',
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList id="split-button-menu" autoFocusItem>
+                          {releases
+                            .filter(
+                              (r) =>
+                                r.runState !== 'launching' &&
+                                r.runState !== 'running' &&
+                                r.runState !== 'restarting' &&
+                                r.runState !== 'installing',
+                            )
+                            .map((option, index) => (
+                              <MenuItem
+                                key={option.id}
+                                selected={index === selectedIndex}
+                                onClick={(event) =>
+                                  handleMenuItemClick(event, index)
+                                }
+                              >
+                                {option.platform.name} via {option.source.name}
+                              </MenuItem>
+                            ))}
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            </Action>
             {releases.some(
               (r) =>
                 r.runState === 'running' ||
@@ -217,24 +237,28 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                 r.runState === 'restarting',
             ) && (
               <>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={(evt) =>
-                    restartRelease({
-                      variables: { releaseId: releases[selectedIndex].id },
-                    })
-                  }
-                >{`Restart game`}</Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={(evt) =>
-                    stopRelease({
-                      variables: { releaseId: releases[selectedIndex].id },
-                    })
-                  }
-                >{`Stop game`}</Button>
+                <Action>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={(evt) =>
+                      restartRelease({
+                        variables: { releaseId: releases[selectedIndex].id },
+                      })
+                    }
+                  >{`Restart game`}</Button>
+                </Action>
+                <Action>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={(evt) =>
+                      stopRelease({
+                        variables: { releaseId: releases[selectedIndex].id },
+                      })
+                    }
+                  >{`Stop game`}</Button>
+                </Action>
               </>
             )}
           </>
