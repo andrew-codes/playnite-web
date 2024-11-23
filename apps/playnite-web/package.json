@@ -4,6 +4,7 @@
   "sideEffects": false,
   "dependencies": {
     "@apollo/client": "^3.11.10",
+    "@bahmutov/cypress-code-coverage": "^2.7.1",
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -34,6 +35,7 @@
     "intl-parse-accept-language": "^1.0.0",
     "is-ip": "^5.0.1",
     "isbot": "^5.1.17",
+    "istanbul-lib-instrument": "^6.0.3",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mongodb": "6.10.0",

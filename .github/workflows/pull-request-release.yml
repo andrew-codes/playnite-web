@@ -142,6 +142,13 @@ jobs:
         with:
           name: e2e-cypress-screenshots
           path: apps/playnite-web/cypress/screenshots
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: '**/.test-runs/**/lcov.info'
+          flags: e2e-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   package_linux:
     name: Package non-Windows projects

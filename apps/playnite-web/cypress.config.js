@@ -13,6 +13,9 @@ const config = {
     baseUrl: 'http://localhost:3000',
     video: process.env.CI === 'true',
     videoCompression: 32,
+    coverage: {
+      instrument: '**/*.js',
+    },
     setupNodeEvents: (on, config) => {
       const { viewportWidth, viewportHeight } = config
       on('before:browser:launch', (browser, launchOptions) => {
@@ -108,6 +111,7 @@ const config = {
       })
 
       on('file:preprocessor', webpackPreprocessor(webpackConfig))
+      require('@bahmutov/cypress-code-coverage/plugin')(on, config)
 
       return require('cypress-image-diff-js/plugin')(on, config)
     },

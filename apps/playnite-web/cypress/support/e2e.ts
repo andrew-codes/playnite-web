@@ -18,8 +18,3 @@ Cypress.Commands.add('signIn', () => {
     'Bearer%20eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfdHlwZSI6IlVzZXIiLCJpZCI6IjEiLCJwYXNzd29yZCI6ImRldiIsInVzZXJuYW1lIjoibG9jYWwiLCJpc0F1dGhlbnRpY2F0ZWQiOnRydWUsImlhdCI6MTczMjExNTk2OSwiaXNzIjoibG9jYWxob3N0In0.ttll_8wupIPdsLsoe_ezbR8Zv7XOgCsVtiqzrS8CrjU',
   )
 })
-
-// Cypress.Commands.add('mqttPublish', async (topic, message) => {
-//   const mqtt = await createConnectedMqttClient()
-//   await mqtt.publish(topic, message)
-// })
