@@ -82,12 +82,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "test/e2e/ci/prepare": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "bash -c '.devcontainer/manually-start-services-for-e2e.sh'"
-      }
-    },
     "test/e2e/ci": {
       "executor": "nx:run-commands",
       "options": {
