@@ -1,34 +1,29 @@
 import breakpoints from '../../fixtures/devices.json'
 
-Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
-  describe('Browse library', () => {
-    beforeEach(() => {
-      cy.intercept('POST', '/api').as('api')
-      cy.intercept('GET', /(asset-by-id)|(platforms)\/.*/).as('images')
-    })
+describe('Browse.', () => {
+  beforeEach(() => {
+    cy.intercept('POST', '/api').as('api')
+    cy.intercept('GET', /(asset-by-id)|(platforms)\/.*/).as('images')
+  })
 
-    it('Library is browse-able', () => {
-      cy.visit('/')
-      cy.get('[data-test="MainNavigation"]')
-        .contains('span', 'My Games')
-        .parents('.MuiButtonBase-root')
-        .find('.MuiTouchRipple-root')
-        .click({ force: true })
-      cy.wait('@api')
-      cy.wait('@images')
+  it('Library is browse-able.', () => {
+    cy.visit('/browse')
+    cy.wait('@api')
+    cy.wait('@images')
 
-      cy.contains('h2', 'My Games')
-      cy.contains('439 games in library')
-      cy.get('[data-test="GameFigure"]').should('have.length', 20)
-    })
+    cy.contains('h2', 'My Games')
+    cy.contains('439 games in library')
+    cy.get('[data-test="GameFigure"]').should('have.length', 20)
+  })
 
+  Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
     describe(`Screen size: ${breakpointName}.`, () => {
       beforeEach(() => {
         cy.viewport(x, y)
       })
 
       it('Library is browse-able', () => {
-        cy.visit('/')
+        cy.visit('/browse')
         cy.get('[data-test="MainNavigation"]')
           .contains('span', 'My Games')
           .parents('.MuiButtonBase-root')
@@ -53,6 +48,9 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
           .as('scrollArea')
           .compareSnapshot({
             name: `library-games_${breakpointName}`,
+            cypressScreenshotOptions: {
+              blackout: ['img', '[data-test="GameFigure"] figcaption'],
+            },
             retryOptions: { limit: 1 },
           })
 

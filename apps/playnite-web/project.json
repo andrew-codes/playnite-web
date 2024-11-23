@@ -78,7 +78,7 @@
     "test/e2e/update": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "((yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
+        "command": "((yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e yarn cypress run --e2e --browser electron') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
         "cwd": "{projectRoot}"
       }
     },
