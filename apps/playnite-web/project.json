@@ -57,7 +57,7 @@
     "test/components/ci": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env CI=true yarn cypress run --component --browser electron",
+        "command": "yarn cross-env TEST=component CI=true yarn cypress run --component --browser electron",
         "cwd": "{projectRoot}"
       }
     },
@@ -95,6 +95,13 @@
         "cwd": "{projectRoot}"
       }
     },
+    "test/e2e/ci/local": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn dlx nyc --silent yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron'",
+        "cwd": "{projectRoot}"
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/build", "{projectRoot}/server.production.js"],
@@ -109,6 +116,16 @@
       "options": {
         "commands": [
           "yarn node --require esbuild-register --experimental-json-modules scripts/package.ts"
+        ],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "package/files": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/_packaged"],
+      "options": {
+        "commands": [
+          "yarn node --require esbuild-register --experimental-json-modules scripts/packageFiles.ts"
         ],
         "cwd": "{projectRoot}"
       }

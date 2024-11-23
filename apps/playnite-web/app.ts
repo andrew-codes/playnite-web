@@ -132,6 +132,13 @@ async function run(mqttClient: AsyncMqttClient) {
 
   app.use(compression())
 
+  if (global.__coverage__) {
+    const codeCoverageMiddleware = await import(
+      '@bahmutov/cypress-code-coverage/middleware/express'
+    )
+    codeCoverageMiddleware.default(app)
+  }
+
   const server = app.listen(port, () => {
     debug(`App listening on http://${domain}:${port}`)
 

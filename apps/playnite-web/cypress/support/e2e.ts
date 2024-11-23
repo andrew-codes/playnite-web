@@ -1,3 +1,4 @@
+import '@bahmutov/cypress-code-coverage/support'
 import compareSnapshotCommand from 'cypress-image-diff-js/command'
 import 'cypress-plugin-tab'
 

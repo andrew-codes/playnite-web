@@ -5942,6 +5942,7 @@ const RAW_RUNTIME_STATE =
           ["execa", "npm:4.1.0"],\
           ["globby", "npm:11.1.0"],\
           ["istanbul-lib-coverage", "npm:3.0.0"],\
+          ["istanbul-lib-instrument", "npm:6.0.3"],\
           ["js-yaml", "npm:3.14.1"],\
           ["nyc", "npm:17.1.0"],\
           ["rimraf", "npm:6.0.1"],\

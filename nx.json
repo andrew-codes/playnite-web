@@ -16,6 +16,10 @@
       "dependsOn": ["clean", "build", "^package"],
       "cache": false
     },
+    "package/files": {
+      "dependsOn": ["clean", "build", "^package/files"],
+      "cache": false
+    },
     "publish": {
       "dependsOn": ["package"],
       "cache": false
@@ -58,6 +62,10 @@
     },
     "test/e2e/ci": {
       "dependsOn": ["prepare", "test/e2e/ci/prepare"],
+      "cache": false
+    },
+    "test/e2e/ci/local": {
+      "dependsOn": ["prepare", "test/e2e/ci/prepare", "package/files"],
       "cache": false
     },
     "test/e2e/update": {

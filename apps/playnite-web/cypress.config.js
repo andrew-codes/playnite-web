@@ -1,7 +1,5 @@
 const { defineConfig } = require('cypress')
 const fs = require('fs')
-const webpackPreprocessor = require('@cypress/webpack-preprocessor')
-const { merge } = require('lodash')
 const codeCoverage = require('@cypress/code-coverage/task')
 const { connectAsync } = require('async-mqtt')
 
@@ -10,11 +8,14 @@ const config = {
   viewportWidth: 1920,
   viewportHeight: 1080,
   e2e: {
+    coverage: true,
     baseUrl: 'http://localhost:3000',
     video: process.env.CI === 'true',
     videoCompression: 32,
-    coverage: {
-      instrument: '**/*.js',
+    env: {
+      coverage: {
+        instrument: '**/*.js',
+      },
     },
     setupNodeEvents: (on, config) => {
       const { viewportWidth, viewportHeight } = config
@@ -69,48 +70,6 @@ const config = {
         },
       })
 
-      const webpackConfig = merge({}, webpackPreprocessor.defaultOptions, {
-        module: {
-          rules: [
-            {
-              test: /\.tsx?$/,
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  '@babel/preset-env',
-                  ['@babel/preset-react', { typescript: true }],
-                  [
-                    '@babel/preset-typescript',
-                    {
-                      isTSX: true,
-                      allExtensions: true,
-                    },
-                  ],
-                ],
-              },
-            },
-            {
-              test: /\.tsx?/,
-              loader: 'ts-loader',
-              options: {
-                transpileOnly: true,
-                compilerOptions: {
-                  jsx: 'react-jsx',
-                },
-              },
-            },
-          ],
-        },
-        resolve: {
-          extensions: ['.ts', '.tsx', '.js', '.json'],
-          alias: {
-            'cypress-image-diff-js': require.resolve('cypress-image-diff-js'),
-            'cypress-plugin-tab': require.resolve('cypress-plugin-tab'),
-          },
-        },
-      })
-
-      on('file:preprocessor', webpackPreprocessor(webpackConfig))
       require('@bahmutov/cypress-code-coverage/plugin')(on, config)
 
       return require('cypress-image-diff-js/plugin')(on, config)
