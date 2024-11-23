@@ -19,7 +19,7 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
           cy.wait('@images')
           cy.get('img').then((els) => els.css({ visibility: 'hidden' }))
 
-          cy.compareSnapshot('filter-panel-hidden')
+          cy.compareSnapshot(`filter-panel-hidden_${breakpointName}`)
 
           cy.get(
             '[aria-label="Open filter drawer"] .MuiTouchRipple-root',
@@ -27,7 +27,7 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
             force: true,
           })
           cy.get('img').then((els) => els.css({ visibility: 'hidden' }))
-          cy.compareSnapshot('filter-panel-open')
+          cy.compareSnapshot(`filter-panel-open_${breakpointName}`)
         })
 
         it('Filter by like name', () => {
@@ -105,7 +105,7 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
             .click()
 
           cy.get('@lookup').type('PlayStation')
-          cy.compareSnapshot('platform-filter')
+          cy.compareSnapshot(`platform-filter_${breakpointName}`)
           cy.contains('PlayStation 3').click()
 
           cy.get('@lookup').type('PlayStation')
@@ -144,7 +144,7 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
           cy.get('.MuiChip-root')
             .parent()
             .compareSnapshot({
-              name: 'filter-by-platform',
+              name: `filter-by-platform_${breakpointName}`,
               cypressScreenshotOptions: {
                 blackout: ['span'],
               },
@@ -207,7 +207,7 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
           cy.get('.MuiChip-root')
             .parent()
             .compareSnapshot({
-              name: `filter-by-${filterBy}`,
+              name: `filter-by-${filterBy}_${breakpointName}`,
               cypressScreenshotOptions: { blackout: ['span'] },
             })
         })
@@ -268,7 +268,7 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
           cy.get('.MuiChip-root')
             .parent()
             .compareSnapshot({
-              name: `filter-by-${filterBy}`,
+              name: `filter-by-${filterBy}_${breakpointName}`,
               cypressScreenshotOptions: { blackout: ['span'] },
             })
         })
@@ -329,7 +329,7 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
           cy.get('.MuiChip-root')
             .parent()
             .compareSnapshot({
-              name: `filter-by-${filterBy}`,
+              name: `filter-by-${filterBy}_${breakpointName}`,
               cypressScreenshotOptions: { blackout: ['span'] },
             })
         })
@@ -387,7 +387,7 @@ Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
           cy.get('.MuiChip-root')
             .parent()
             .compareSnapshot({
-              name: `filter-by-${filterBy}`,
+              name: `filter-by-${filterBy}_${breakpointName}`,
               cypressScreenshotOptions: { blackout: ['span'] },
             })
         })
