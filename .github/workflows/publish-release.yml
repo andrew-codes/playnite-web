@@ -158,7 +158,7 @@ jobs:
       - uses: codecov/codecov-action@v4
         if: always()
         with:
-          files: '**/.test-runs/**/lcov.info'
+          files: '**/.nyc_report/**/lcov.info'
           flags: e2e-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

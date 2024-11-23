@@ -18,7 +18,6 @@ _packaged
 *.env
 !local.env
 !e2e.env
-.test-runs
 
 apps/playnite-web/.cache
 apps/playnite-web/build
@@ -44,3 +43,4 @@ apps/playnite-web/**/*.generated.*
 **/visual-regression-tests/**/diff/
 **/visual-regression-tests/report
 .nyc_output
+.nyc_report

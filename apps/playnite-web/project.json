@@ -5,13 +5,25 @@
   "targets": {
     "clean": {
       "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/.dist",
+        "{projectRoot}/_packaged",
+        "{projectRoot}/.test-runs",
+        "{projectRoot}/build",
+        "{projectRoot}/.nyc_output"
+      ],
       "options": {
-        "command": "yarn rimraf server.production.js .dist _packaged .test-runs build",
+        "command": "yarn rimraf server.production.js .dist _packaged .test-runs build .nyc_output",
         "cwd": "{projectRoot}"
       }
     },
     "prepare": {
       "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/codegen.ts",
+        "{projectRoot}/src/server/graphql/resolverTypes.ts",
+        "{projectRoot}/src/server/graphql/modules/**/*.graphql"
+      ],
       "outputs": ["{projectRoot}/.generated"],
       "options": {
         "command": "yarn graphql-codegen --config codegen.ts",
@@ -88,17 +100,45 @@
         "command": "bash -c '.devcontainer/manually-start-services-for-e2e.sh'"
       }
     },
+    "test/e2e/ci/instrument": {
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/_packaged/server.production.js",
+        "{projectRoot}/_packaged/build",
+        "{projectRoot}/_packaged/public"
+      ],
+      "outputs": ["{projectRoot}/_packaged/server.instrumented.js"],
+      "options": {
+        "command": "yarn cross-env NODE_OPTIONS=--max-old-space-size=10240 yarn nyc instrument _packaged/server.production.js > _packaged/server.instrumented.js",
+        "cwd": "{projectRoot}"
+      }
+    },
     "test/e2e/ci": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn node --require esbuild-register scripts/utils/startE2e.ts' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron'",
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env NODE_OPTIONS=--max-old-space-size=20480 DEBUG='playnite*' yarn nyc --reporter lcov --require ../../.pnp.cjs node _packaged/server.instrumented.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron'",
         "cwd": "{projectRoot}"
+      }
+    },
+    "test/e2e/ci/local/prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash -c '.devcontainer/manually-start-services.sh'"
       }
     },
     "test/e2e/ci/local": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.nyc_output", "{projectRoot}/.nyc_report"],
+      "inputs": [
+        "{projectRoot}/_packaged/build",
+        "{projectRoot}/_packaged/public",
+        "{projectRoot}/_packaged/server.instrumented.js",
+        "{projectRoot}/cypress.config.js",
+        "{projectRoot}/cypress-image-diff.config.js",
+        "{projectRoot}/.nycrc"
+      ],
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn dlx nyc --silent yarn node _packaged/server.production.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron'",
+        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env NODE_OPTIONS=--max-old-space-size=20480 DEBUG='playnite*' yarn nyc --reporter lcov --require ../../.pnp.cjs node _packaged/server.instrumented.js' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser electron'",
         "cwd": "{projectRoot}"
       }
     },
@@ -112,7 +152,13 @@
     },
     "package": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/_packaged"],
+      "options": {
+        "commands": ["echo 'Packaging application into container image.'"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "package/container": {
+      "executor": "nx:run-commands",
       "options": {
         "commands": [
           "yarn node --require esbuild-register --experimental-json-modules scripts/package.ts"
@@ -121,6 +167,7 @@
       }
     },
     "package/files": {
+      "inputs": ["{projectRoot}/.dist", "{projectRoot}/server.production.js"],
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/_packaged"],
       "options": {

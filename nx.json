@@ -1,10 +1,24 @@
 {
+  "namedInputs": {
+    "src": ["{projectRoot}/src/**"],
+    "generated": ["{projectRoot}/.generated"]
+  },
   "targetDefaults": {
+    "clean": {
+      "dependsOn": [],
+      "cache": true
+    },
     "build": {
-      "dependsOn": ["clean", "prepare", "^build", "build/restore"],
+      "inputs": ["src", "generated"],
+      "dependsOn": ["prepare", "^build", "build/restore"],
+      "cache": true
+    },
+    "build/restore": {
+      "dependsOn": [],
       "cache": true
     },
     "prepare": {
+      "outputs": ["{projectRoot}/.generated"],
       "dependsOn": ["^prepare"],
       "cache": true
     },
@@ -13,11 +27,15 @@
       "cache": false
     },
     "package": {
-      "dependsOn": ["clean", "build", "^package"],
+      "dependsOn": ["package/files", "package/container"],
       "cache": false
     },
     "package/files": {
       "dependsOn": ["clean", "build", "^package/files"],
+      "cache": true
+    },
+    "package/container": {
+      "dependsOn": ["package/files"],
       "cache": false
     },
     "publish": {
@@ -29,7 +47,7 @@
       "cache": false
     },
     "test/unit/ci": {
-      "dependsOn": ["prepare", "test/unit/restore", "test/unit/build"],
+      "dependsOn": ["clean", "prepare", "test/unit/restore", "test/unit/build"],
       "cache": false
     },
     "test/unit/restore": {
@@ -41,7 +59,7 @@
       "cache": false
     },
     "test/components/ci": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["prepare", "clean"],
       "cache": false
     },
     "test/components/visual": {
@@ -53,20 +71,36 @@
       "cache": false
     },
     "test/components/visual/ci": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["prepare", "clean"],
       "cache": false
     },
     "test/e2e": {
-      "dependsOn": ["prepare", "test/e2e/prepare"],
+      "dependsOn": ["prepare", "package/files"],
       "cache": false
     },
+    "test/e2e/ci/instrument": {
+      "dependsOn": ["prepare", "package/files"],
+      "cache": true
+    },
     "test/e2e/ci": {
-      "dependsOn": ["prepare", "test/e2e/ci/prepare"],
+      "dependsOn": [
+        "prepare",
+        "test/e2e/ci/prepare",
+        "clean",
+        "package/files",
+        "test/e2e/ci/instrument"
+      ],
       "cache": false
     },
     "test/e2e/ci/local": {
-      "dependsOn": ["prepare", "test/e2e/ci/prepare", "package/files"],
-      "cache": false
+      "dependsOn": [
+        "prepare",
+        "test/e2e/ci/local/prepare",
+        "package/files",
+        "test/e2e/ci/instrument",
+        "clean"
+      ],
+      "cache": true
     },
     "test/e2e/update": {
       "dependsOn": ["prepare", "test/e2e/prepare"],

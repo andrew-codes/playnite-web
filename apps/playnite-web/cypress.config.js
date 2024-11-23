@@ -14,7 +14,11 @@ const config = {
     videoCompression: 32,
     env: {
       coverage: {
+        exclude: true,
         instrument: '**/*.js',
+      },
+      codeCoverage: {
+        url: 'http://localhost:3000/__coverage__',
       },
     },
     setupNodeEvents: (on, config) => {
