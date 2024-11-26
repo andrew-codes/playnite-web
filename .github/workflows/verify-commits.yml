@@ -102,6 +102,18 @@ jobs:
         with:
           name: component-visual-regression
           path: apps/playnite-web/visual-regression-tests
+      - name: Upload test video artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-cypress-videos
+          path: apps/playnite-web/cypress/videos
+      - name: Upload test screenshot artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-cypress-screenshots
+          path: apps/playnite-web/cypress/screenshots
       - uses: codecov/codecov-action@v4
         if: always()
         with:
@@ -146,6 +158,18 @@ jobs:
         with:
           name: e2e-visual-regression
           path: apps/playnite-web/visual-regression-tests
+      - name: Upload test video artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-cypress-videos
+          path: apps/playnite-web/cypress/videos
+      - name: Upload test screenshot artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-cypress-screenshots
+          path: apps/playnite-web/cypress/screenshots
       - uses: codecov/codecov-action@v4
         if: always()
         with:
