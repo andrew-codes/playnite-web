@@ -11,8 +11,7 @@ const config = {
   e2e: {
     env: {
       coverage: {
-        reportAfterEachSpec: 'text',
-        exclude: ['**/__tests__', '**/__component_tests'],
+        exclude: ['**/__tests__/**', '**/__component_tests__/**'],
         url: 'http://localhost:3000/__coverage__',
       },
     },
