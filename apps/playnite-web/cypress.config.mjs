@@ -10,14 +10,20 @@ const config = {
   viewportHeight: 1080,
   e2e: {
     env: {
-      coverage: {
-        exclude: ['**/__tests__/**', '**/__component_tests__/**'],
+      codeCoverage: {
+        exclude: [
+          '**/testUtils/**',
+          '**/cypress/**',
+          '**/__tests__/**',
+          '**/__component_tests__/**',
+        ],
         url: 'http://localhost:3000/__coverage__',
+        expectBackendCoverageOnly: true,
       },
     },
     coverage: true,
     baseUrl: 'http://localhost:3000',
-    video: process.env.LOCAL !== 'true',
+    video: process.env.CMD === 'run',
     videoCompression: 32,
     setupNodeEvents: (on, config) => {
       const { viewportWidth, viewportHeight } = config
@@ -29,7 +35,7 @@ const config = {
               `--window-size=${viewportWidth},${viewportHeight}`,
             )
             launchOptions.args.push(
-              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? process.env.SCALE && '1' : '1'}`,
+              `--force-device-scale-factor=${process.env.CMD !== 'run' ? process.env.SCALE && '1' : '1'}`,
             )
             break
           case 'electron':
@@ -37,7 +43,7 @@ const config = {
             launchOptions.preferences.width = viewportWidth
             launchOptions.preferences.height = viewportHeight
             launchOptions.args.push(
-              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? process.env.SCALE && '1' : '1'}`,
+              `--force-device-scale-factor=${process.env.CMD !== 'run' ? process.env.SCALE && '1' : '1'}`,
             )
         }
 
@@ -45,7 +51,7 @@ const config = {
       })
 
       on('after:spec', (spec, results) => {
-        if (process.env.LOCAL === 'true') {
+        if (process.env.CMD !== 'run') {
           return
         }
         if (results && results.video) {
@@ -85,7 +91,12 @@ const config = {
   },
   component: {
     codeCoverage: {
-      exclude: ['**/testUtils/**', '**/cypress/**'],
+      exclude: [
+        '**/testUtils/**',
+        '**/cypress/**',
+        '**/__tests__/**',
+        '**/__component_tests__/**',
+      ],
     },
     specPattern: '**/__component_tests__/**/*.test.tsx',
     excludeSpecPattern: [],
@@ -136,7 +147,7 @@ const config = {
         return config
       },
     },
-    video: process.env.LOCAL !== 'true',
+    video: process.env.CMD === 'run',
     videoCompression: 32,
     setupNodeEvents: (on, config) => {
       const { viewportWidth, viewportHeight } = config
@@ -148,7 +159,7 @@ const config = {
               `--window-size=${viewportWidth},${viewportHeight}`,
             )
             launchOptions.args.push(
-              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? process.env.SCALE && '1' : '1'}`,
+              `--force-device-scale-factor=${process.env.CMD !== 'run' ? process.env.SCALE && '1' : '1'}`,
             )
             break
           case 'electron':
@@ -156,7 +167,7 @@ const config = {
             launchOptions.preferences.width = viewportWidth
             launchOptions.preferences.height = viewportHeight
             launchOptions.args.push(
-              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? process.env.SCALE && '1' : '1'}`,
+              `--force-device-scale-factor=${process.env.CMD !== 'run' ? process.env.SCALE && '1' : '1'}`,
             )
         }
 
@@ -164,7 +175,7 @@ const config = {
       })
 
       on('after:spec', (spec, results) => {
-        if (process.env.LOCAL === 'true') {
+        if (process.env.CMD !== 'run') {
           return
         }
         if (results && results.video) {

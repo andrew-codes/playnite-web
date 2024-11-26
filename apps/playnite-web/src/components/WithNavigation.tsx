@@ -17,7 +17,7 @@ import {
   styled,
 } from '@mui/material'
 import { useLocation } from '@remix-run/react'
-import _ from 'lodash'
+import { debounce, stubTrue } from 'lodash-es'
 import {
   ChangeEvent,
   FC,
@@ -30,8 +30,6 @@ import {
 } from 'react'
 import { $path } from 'remix-routes'
 import { useMe, useSignOut } from '../queryHooks'
-
-const { debounce, merge, stubTrue } = _
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

@@ -1,6 +1,6 @@
 import createDebugger from 'debug'
 import { HandlerOptions } from '..'
-import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
+import type { IHandlePublishedTopics } from '../IHandlePublishedTopics.js'
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameReleaseState',

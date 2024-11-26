@@ -1,9 +1,9 @@
 import { expect, jest, test } from '@jest/globals'
+import type { AsyncMqttClient } from 'async-mqtt'
 import { PubSub } from 'graphql-yoga'
 import { Db } from 'mongodb'
-import { AsyncMqttClient } from 'mqtt-client'
 import mqttUpdater, { HandlerOptions, PubSubChannels } from '..'
-import MongoDataApi from '../../data/mongo/DataApi'
+import MongoDataApi from '../../data/mongo/DataApi.js'
 
 jest.mock('../handlers/index')
 jest.mock('../../data/mongo/DataApi', () => ({

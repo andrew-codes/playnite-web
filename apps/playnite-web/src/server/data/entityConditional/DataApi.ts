@@ -5,13 +5,13 @@ import {
   IUpdateQuery,
   Sort,
   UpdateFilterItem,
-} from '../types.api'
+} from '../types.api.js'
 import {
   Entity,
   EntityType,
   RelationshipTypes,
   StringFromType,
-} from '../types.entities'
+} from '../types.entities.js'
 
 class EntityConditionalDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
   constructor(
@@ -51,7 +51,7 @@ class EntityConditionalDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
       return null
     }
 
-    return  await this._query?.execute(filterItem, sort)??null
+    return (await this._query?.execute(filterItem, sort)) ?? null
   }
 }
 

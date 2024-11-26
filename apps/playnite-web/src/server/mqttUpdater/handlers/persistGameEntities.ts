@@ -1,10 +1,12 @@
 import createDebugger from 'debug'
-import _ from 'lodash'
+import { merge, omit } from 'lodash-es'
 import { HandlerOptions } from '..'
-import { Entity, EntityType, TypeFromString } from '../../data/types.entities'
-import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
-
-const { merge, omit } = _
+import {
+  Entity,
+  EntityType,
+  TypeFromString,
+} from '../../data/types.entities.js'
+import type { IHandlePublishedTopics } from '../IHandlePublishedTopics.js'
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameEntities',

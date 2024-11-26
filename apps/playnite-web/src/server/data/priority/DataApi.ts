@@ -5,8 +5,8 @@ import {
   IUpdateQuery,
   Sort,
   UpdateFilterItem,
-} from '../types.api'
-import { Entity, RelationshipTypes, StringFromType } from '../types.entities'
+} from '../types.api.js'
+import { Entity, RelationshipTypes, StringFromType } from '../types.entities.js'
 
 class PriorityDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
   constructor(

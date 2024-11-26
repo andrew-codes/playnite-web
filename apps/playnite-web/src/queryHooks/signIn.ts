@@ -1,10 +1,8 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
-import _ from 'lodash'
+import { omit } from 'lodash-es'
 import { Claim } from '../../.generated/types.generated'
 import { Me } from './me'
-
-const { omit } = _
 
 const signIn = gql`
   mutation signIn($input: SignInInput) {

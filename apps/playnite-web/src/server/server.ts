@@ -1,15 +1,15 @@
 import createDebugger from 'debug'
 import dotenv from 'dotenv'
-import { createConnectedMqttClient } from 'mqtt-client'
 import path from 'path'
-import app from './app'
+import app from './app.js'
+import { createConnectedMqttClient } from './mqtt.js'
 
 dotenv.config({
-  path: path.join(process.cwd(), 'local.env'),
+  path: path.join(process.cwd(), '..', '..', 'local.env'),
   override: true,
 })
 dotenv.config({
-  path: path.join(process.cwd(), 'overrides.env'),
+  path: path.join(process.cwd(), '..', '..', 'overrides.env'),
   override: true,
 })
 

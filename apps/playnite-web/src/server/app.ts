@@ -1,21 +1,21 @@
 import { createRequestHandler } from '@remix-run/express'
+import type { AsyncMqttClient } from 'async-mqtt'
 import compression from 'compression'
 import createDebugger from 'debug'
 import express from 'express'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import helmet from 'helmet'
-import { AsyncMqttClient } from 'mqtt-client'
 import path from 'path'
 import { WebSocketServer } from 'ws'
-import EntityConditionalDataApi from './src/server/data/entityConditional/DataApi'
-import InMemoryDataApi from './src/server/data/inMemory/DataApi'
-import { getDbClient } from './src/server/data/mongo/client'
-import MongoDataApi from './src/server/data/mongo/DataApi'
-import PriorityDataApi from './src/server/data/priority/DataApi'
-import createYoga from './src/server/graphql/index'
-import schema from './src/server/graphql/schema'
-import { subscriptionPublisher } from './src/server/graphql/subscriptionPublisher'
-import mqttUpdater from './src/server/mqttUpdater/index'
+import EntityConditionalDataApi from './data/entityConditional/DataApi.js'
+import InMemoryDataApi from './data/inMemory/DataApi.js'
+import { getDbClient } from './data/mongo/client.js'
+import MongoDataApi from './data/mongo/DataApi.js'
+import PriorityDataApi from './data/priority/DataApi.js'
+import createYoga from './graphql/index.js'
+import schema from './graphql/schema.js'
+import { subscriptionPublisher } from './graphql/subscriptionPublisher.js'
+import mqttUpdater from './mqttUpdater/index.js'
 
 const debug = createDebugger('playnite-web/app/server')
 
@@ -56,7 +56,7 @@ async function run(mqttClient: AsyncMqttClient) {
   await mqttUpdater({
     assetSaveDirectoryPath: path.join(
       process.cwd(),
-      'public/assets/asset-by-id',
+      '../public/assets/asset-by-id',
     ),
     mqtt: mqttClient,
     pubsub: subscriptionPublisher,
@@ -76,7 +76,7 @@ async function run(mqttClient: AsyncMqttClient) {
           }),
         )
   app.use(
-    viteDevServer ? viteDevServer.middlewares : express.static('build/client'),
+    viteDevServer ? viteDevServer.middlewares : express.static('../client'),
   )
 
   const signingKey = process.env.SECRET ?? 'secret'
@@ -115,20 +115,19 @@ async function run(mqttClient: AsyncMqttClient) {
       },
     }),
   )
-  app.use(express.static('./public/assets', { maxAge: '1y' }))
+  app.use(express.static('../public/assets', { maxAge: '1y' }))
 
   app.use('/api', yoga)
 
   if (global.__coverage__) {
-    const codeCoverageMiddleware = await import(
-      '@bahmutov/cypress-code-coverage/middleware/express'
-    )
-    codeCoverageMiddleware.default(app)
+    app.get('/__coverage__', (req, resp) => {
+      resp.json(global.__coverage__)
+    })
   }
 
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
-    : await import('./build/server/index')
+    : await import('./index.js')
 
   const remixHandler = createRequestHandler({ build })
   app.all('*', (req, resp, next) => {

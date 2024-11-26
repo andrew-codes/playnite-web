@@ -16,7 +16,7 @@ import {
   TextField,
   styled,
 } from '@mui/material'
-import _ from 'lodash'
+import { keyBy, merge, uniqBy } from 'lodash-es'
 import {
   FC,
   Fragment,
@@ -31,8 +31,6 @@ import AutoComplete from '../AutoComplete'
 import SquareIconButton from '../IconButton'
 import Select from '../Select'
 import ListAutoCompleteOptions from './ListAutoCompleteOptions'
-
-const { keyBy, merge, uniqBy } = _
 
 type GraphQuery = {
   filterItems: Array<{

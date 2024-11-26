@@ -1,9 +1,7 @@
 import jwt from 'jsonwebtoken'
-import _ from 'lodash'
-import { IQuery } from '../data/types.api'
-import { User } from '../data/types.entities'
-
-const { isEmpty } = _
+import { isEmpty } from 'lodash-es'
+import { IQuery } from '../data/types.api.js'
+import { User } from '../data/types.entities.js'
 
 type Claim = {
   user: Omit<User, 'password'> & { isAuthenticated: boolean }
