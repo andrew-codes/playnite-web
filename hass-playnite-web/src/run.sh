@@ -31,4 +31,4 @@ echo "MQTT_USERNAME: $MQTT_USERNAME"
 
 echo "Starting Playnite Web App application..."
 
-node server.production.js
+node server.production.cjs

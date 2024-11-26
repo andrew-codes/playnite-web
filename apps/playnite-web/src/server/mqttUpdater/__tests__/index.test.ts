@@ -5,7 +5,7 @@ import { AsyncMqttClient } from 'mqtt-client'
 import mqttUpdater, { HandlerOptions, PubSubChannels } from '..'
 import MongoDataApi from '../../data/mongo/DataApi'
 
-jest.mock('../handlers')
+jest.mock('../handlers/index')
 jest.mock('../../data/mongo/DataApi', () => ({
   __esModule: true,
   default: jest.fn().mockImplementation(() => ({

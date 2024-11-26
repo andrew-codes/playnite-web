@@ -1,8 +1,10 @@
-const nodemon = require('nodemon')
-const path = require('path')
-const sh = require('shelljs')
-const { createProjectGraphAsync } = require('@nx/devkit')
-const pkg = require('../../package.json')
+import { createProjectGraphAsync } from '@nx/devkit'
+import nodemon from 'nodemon'
+import path from 'path'
+import sh from 'shelljs'
+import pkg from '../../package.json' with { type: 'json' }
+
+const __dirname = import.meta.dirname
 
 createProjectGraphAsync().then((graph) => {
   const workspaceDeps = graph.dependencies['playnite-web-app']
@@ -14,8 +16,8 @@ createProjectGraphAsync().then((graph) => {
     script: path.join(__dirname, '..', '..', 'server.ts'),
     ext: 'ts tsx js jsx json graphql env',
     execMap: {
-      js: 'yarn node',
-      ts: 'yarn node --require esbuild-register',
+      js: 'yarn tsx',
+      ts: 'yarn tsx',
     },
     watch: [
       path.join(__dirname, '..', '..', 'src', 'server', '*.*'),

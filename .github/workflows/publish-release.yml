@@ -26,7 +26,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit/ci --parallel --verbose --projects=tag:linux
+        run: yarn nx run-many --target=test/unit --configuration=ci --parallel --verbose --projects=tag:linux
       - uses: codecov/codecov-action@v4
         if: always()
         with:
@@ -58,13 +58,13 @@ jobs:
         env:
           YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all component tests
-        run: yarn nx run-many --target=test/components/ci --parallel --verbose --projects=tag:linux
+        run: yarn nx run-many --target=test/components --configuration=ci --parallel --verbose --projects=tag:linux
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: visual-regression-comparisons
-          path: apps/playnite-web/visual-regression-tests/screenshots
+          name: component-visual-regression
+          path: apps/playnite-web/visual-regression-tests
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -80,7 +80,7 @@ jobs:
       - uses: codecov/codecov-action@v4
         if: always()
         with:
-          files: '**/.test-runs/component/lcov.info'
+          files: '**/.test-runs/**/lcov.info'
           flags: component-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -125,14 +125,8 @@ jobs:
         run: yarn nx run-many --target=version --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
-      - name: Package projects
-        run: yarn nx run-many --target=package --parallel --verbose --exclude '*,!tag:linux'
-        env:
-          NODE_ENV: production
-          DEBUG: 'playnite-web/*'
-          PLATFORM: linux/amd64,linux/arm64
       - name: Run all e2e tests
-        run: yarn nx run-many --target=test/e2e/ci --verbose --projects=tag:linux
+        run: yarn nx run-many --target=test/e2e --configuration=ci --verbose --projects=tag:linux
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
@@ -141,8 +135,8 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: visual-regression-e2e-comparisons
-          path: apps/playnite-web/visual-regression-tests/screenshots
+          name: e2e-visual-regression
+          path: apps/playnite-web/visual-regression-tests
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -155,6 +149,13 @@ jobs:
         with:
           name: e2e-cypress-screenshots
           path: apps/playnite-web/cypress/screenshots
+      - uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          files: '**/.test-runs/**/lcov.info'
+          flags: e2e-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   unit_tests_windows:
     name: Verify PR - Tests (Windows)
@@ -183,7 +184,7 @@ jobs:
         env:
           YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --projects=tag:windows
+        run: yarn nx run-many --target=test/unit --configuration=ci --parallel --verbose --projects=tag:windows
 
   package_windows:
     name: Package Windows projects
@@ -229,7 +230,7 @@ jobs:
           NODE_ENV: production
           VERSION: '${{ steps.nextVersion.outputs.value }}'
       - name: Package projects
-        run: yarn nx run-many --target=package --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=package --configuration=production --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
           VERSION: '${{ steps.nextVersion.outputs.value }}'
