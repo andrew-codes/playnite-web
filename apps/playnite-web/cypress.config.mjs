@@ -13,6 +13,7 @@ const config = {
       coverage: {
         reportAfterEachSpec: 'text',
         exclude: true,
+        url: 'http://localhost:3000/__coverage__',
       },
     },
     coverage: true,
