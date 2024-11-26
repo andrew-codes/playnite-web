@@ -119,25 +119,33 @@ async function run(mqttClient: AsyncMqttClient) {
 
   app.use('/api', yoga)
 
-  const build = viteDevServer
-    ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
-    : await import('./build/server/index')
-
-  const remixHandler = createRequestHandler({ build })
-  app.all('*', (req, resp, next) => {
-    if (!req.path.startsWith('/api')) {
-      remixHandler(req, resp, next)
-    }
-  })
-
-  app.use(compression())
-
   if (global.__coverage__) {
     const codeCoverageMiddleware = await import(
       '@bahmutov/cypress-code-coverage/middleware/express'
     )
     codeCoverageMiddleware.default(app)
   }
+
+  const build = viteDevServer
+    ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
+    : await import('./build/server/index')
+
+  const remixHandler = createRequestHandler({ build })
+  app.all('*', (req, resp, next) => {
+    if (req.path.startsWith('/__coverage__')) {
+      next()
+      return
+    }
+
+    if (req.path.startsWith('/api')) {
+      next()
+      return
+    }
+
+    remixHandler(req, resp, next)
+  })
+
+  app.use(compression())
 
   const server = app.listen(port, () => {
     debug(`App listening on http://${domain}:${port}`)

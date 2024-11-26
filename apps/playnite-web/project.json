@@ -230,7 +230,9 @@
         "src",
         "generated",
         "{projectRoot}/scripts/utils/buildServer.js",
-        "{projectRoot}/vite.config.js"
+        "{projectRoot}/vite.config.js",
+        "{projectRoot}/server.ts",
+        "{projectRoot}/app.ts"
       ],
       "outputs": ["{projectRoot}/build", "{projectRoot}/server.production.cjs"],
       "options": {
