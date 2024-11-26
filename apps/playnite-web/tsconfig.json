@@ -1,6 +1,9 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
     "noEmit": false,
@@ -26,7 +29,8 @@
     "../../graphql.config.ts",
     ".generated/resolvers.generated.ts",
     ".generated/typeDefs.generated.ts",
-    ".generated/types.generated.ts"
+    ".generated/types.generated.ts",
+    "cypress.config.mjs",
   ],
   "exclude": [
     "node_modules"

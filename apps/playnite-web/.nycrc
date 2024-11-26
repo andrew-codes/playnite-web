@@ -1,6 +1,12 @@
 {
-  "report-dir": ".test-runs/component",
+  "report-dir": ".test-runs/cypress",
   "all": true,
-  "include": ["src/**/*.tsx"],
-  "exclude": ["cypress", "testUtils"]
+  "include": ["src/**", "app.ts", "server.ts"],
+  "exclude": [
+    "cypress",
+    "**/testUtils",
+    "**/__tests__",
+    "**/__component_tests__",
+    "../../.yarn/**"
+  ]
 }

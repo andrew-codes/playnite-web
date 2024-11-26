@@ -5,130 +5,306 @@
   "targets": {
     "clean": {
       "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/.dist",
+        "{projectRoot}/_packaged",
+        "{projectRoot}/.test-runs",
+        "{projectRoot}/build",
+        "{projectRoot}/.nyc_output",
+        "{projectRoot}/visual-regression-tests/component-report",
+        "{projectRoot}/visual-regression-tests/e2e-report"
+      ],
       "options": {
-        "command": "yarn rimraf server.production.js .dist _packaged .test-runs build",
+        "command": "yarn rimraf server.production.cjs .dist _packaged .test-runs build .nyc_output visual-regression-tests/*report",
         "cwd": "{projectRoot}"
       }
     },
     "prepare": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.generated"],
+      "inputs": [
+        "{projectRoot}/codegen.ts",
+        "{projectRoot}/src/server/graphql/resolverTypes.ts",
+        "{projectRoot}/src/server/graphql/modules/**/*.graphql"
+      ],
       "options": {
         "command": "yarn graphql-codegen --config codegen.ts",
         "cwd": "{projectRoot}"
       }
     },
-    "start/prepare": {
+    "start/services": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "bash -c '.devcontainer/manually-start-services.sh'"
+        "command": "bash -c 'scripts/manually-start-services.sh'",
+        "cwd": "{projectRoot}"
+      },
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "env": {
+            "LOCAL": "true"
+          }
+        },
+        "ci": {}
       }
     },
     "start": {
       "executor": "nx:run-commands",
       "options": {
         "cwd": "{projectRoot}",
-        "command": "yarn cross-env NODE_ENV=development DEBUG='playnite*' yarn node --experimental-json-modules scripts/utils/startDevServer.js"
+        "parallel": false,
+        "commands": [],
+        "env": {
+          "NODE_ENV": "development",
+          "DEBUG": "playnite*"
+        }
+      },
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "commands": [
+            "yarn nx run playnite-web-app:start/services:dev",
+            "yarn tsx scripts/utils/startDevServer.js"
+          ]
+        }
       }
     },
     "test/unit": {
       "executor": "nx:run-commands",
+      "inputs": ["src", "generated", "{projectRoot}/jest.config.js"],
       "outputs": ["{projectRoot}/.test-runs/unit"],
       "options": {
         "command": "yarn jest --config jest.config.js",
         "cwd": "{projectRoot}"
-      }
-    },
-    "test/unit/ci": {
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.test-runs/unit"],
-      "options": {
-        "command": "yarn jest --config jest.config.js",
-        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "ci": {}
       }
     },
     "test/components": {
       "executor": "nx:run-commands",
+      "inputs": [
+        "src",
+        "generated",
+        "{projectRoot}/cypress.config.js",
+        "{projectRoot}/cypress-image-diff.config.js",
+        "{projectRoot}/.nycrc",
+        "{projectRoot}/cypress/support/component*",
+        "{projectRoot}/cypress/fixtures/**",
+        "{projectRoot}/cypress/tsconfig.json"
+      ],
+      "outputs": [
+        "{projectRoot}/.test-runs/cypress",
+        "{projectRoot}/visual-regression-tests/component-report",
+        "{projectRoot}/visual-regression-tests/component-screenshots/comparison",
+        "{projectRoot}/visual-regression-tests/component-screenshots/diff"
+      ],
       "options": {
         "command": "yarn cypress open --component --browser electron",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "test/components/ci": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn cross-env CI=true yarn cypress run --component --browser electron",
-        "cwd": "{projectRoot}"
+        "cwd": "{projectRoot}",
+        "env": {
+          "TEST": "component"
+        }
+      },
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "env": {
+            "TEST": "component",
+            "LOCAL": "true"
+          }
+        },
+        "ci": {
+          "command": "yarn cypress run --component --browser electron",
+          "env": {
+            "CI": "true",
+            "TEST": "component"
+          }
+        },
+        "ci/local": {
+          "command": "yarn cypress run --component --browser electron",
+          "env": {
+            "CI": "true",
+            "TEST": "component",
+            "LOCAL": "true"
+          }
+        }
       }
     },
     "test/components/update": {
+      "inputs": [
+        "src",
+        "generated",
+        "{projectRoot}/cypress.config.js",
+        "{projectRoot}/cypress-image-diff.config.js",
+        "{projectRoot}/.nycrc",
+        "{projectRoot}/cypress/support/component*",
+        "{projectRoot}/cypress/fixtures/**",
+        "{projectRoot}/cypress/tsconfig.json"
+      ],
       "executor": "nx:run-commands",
+      "dependsOn": ["test/components:ci/local"],
       "options": {
-        "command": "(yarn cross-env CI=true yarn cypress run --component --browser electron || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
+        "parallel": false,
+        "command": "yarn tsx scripts/component-for-update.ts",
         "cwd": "{projectRoot}"
       }
     },
     "test/e2e": {
       "executor": "nx:run-commands",
+      "inputs": [
+        "src",
+        "generated",
+        "{projectRoot}/cypress.config.js",
+        "{projectRoot}/cypress-image-diff.config.js",
+        "{projectRoot}/.nycrc",
+        "{projectRoot}/cypress/e2e/**",
+        "{projectRoot}/cypress/support/e2e.ts",
+        "{projectRoot}/cypress/fixtures/**",
+        "{projectRoot}/cypress/tsconfig.json"
+      ],
+      "outputs": [
+        "{projectRoot}/.test-runs/cypress",
+        "{projectRoot}/visual-regression-tests/e2e-report",
+        "{projectRoot}/visual-regression-tests/e2e-screenshots/comparison",
+        "{projectRoot}/visual-regression-tests/e2e-screenshots/diff"
+      ],
       "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e yarn cypress open --e2e --browser electron'",
-        "cwd": "{projectRoot}"
+        "parallel": false,
+        "commands": [],
+        "cwd": "{projectRoot}",
+        "env": {
+          "DEBUG": "playnite*",
+          "START_SERVER_AND_TEST_INSECURE": "1",
+          "NODE_ENV": "development",
+          "INSTRUMENT": "true"
+        }
+      },
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "commands": [
+            "yarn start-server-and-test 'cross-env NODE_ENV=production INSTRUMENT=true DEBUG=\"playnite*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true LOCAL=true yarn cypress open --e2e --browser electron'"
+          ]
+        },
+        "ci": {
+          "commands": [
+            "yarn nx run playnite-web-app:start/services:ci",
+            "yarn nx run playnite-web-app:package/instrumented",
+            "yarn start-server-and-test 'yarn cross-env NODE_ENV=production yarn node _packaged/server.production.cjs' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron'"
+          ]
+        },
+        "ci/local": {
+          "commands": [
+            "yarn nx run playnite-web-app:start/services:ci",
+            "yarn nx run playnite-web-app:package/instrumented",
+            "yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite*\" NODE_ENV=production yarn node _packaged/server.production.cjs' http://localhost:3000 'yarn cross-env TEST=e2e CI=true LOCAL=true yarn cypress open --e2e --browser electron'"
+          ]
+        }
       }
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
+      "inputs": [
+        "src",
+        "generated",
+        "{projectRoot}/cypress.config.js",
+        "{projectRoot}/cypress-image-diff.config.js",
+        "{projectRoot}/.nycrc",
+        "{projectRoot}/cypress/e2e/**",
+        "{projectRoot}/cypress/support/e2e.ts",
+        "{projectRoot}/cypress/fixtures/**",
+        "{projectRoot}/cypress/tsconfig.json"
+      ],
       "options": {
-        "command": "((yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn cross-env DEBUG=\"playnite-web/*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron') || true) && yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/report --autoOpen",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "test/e2e/ci/prepare": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "bash -c '.devcontainer/manually-start-services-for-e2e.sh'"
-      }
-    },
-    "test/e2e/ci": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn cross-env START_SERVER_AND_TEST_INSECURE=1 yarn start-server-and-test 'yarn node --require esbuild-register scripts/utils/startE2e.ts' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress run --e2e --browser electron'",
-        "cwd": "{projectRoot}"
+        "parallel": false,
+        "command": "yarn tsx scripts/e2e-for-update.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "INSTRUMENT": "true"
+        }
       }
     },
     "build": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/build", "{projectRoot}/server.production.js"],
+      "inputs": [
+        "src",
+        "generated",
+        "{projectRoot}/scripts/utils/buildServer.js",
+        "{projectRoot}/vite.config.js",
+        "{projectRoot}/server.ts",
+        "{projectRoot}/app.ts"
+      ],
+      "outputs": ["{projectRoot}/build", "{projectRoot}/server.production.cjs"],
       "options": {
-        "command": "yarn remix vite:build && yarn cross-env NODE_ENV=production yarn node scripts/utils/buildServer.js",
-        "cwd": "{projectRoot}"
+        "parallel": false,
+        "commands": [],
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production"
+        }
+      },
+      "defaultConfiguration": "production",
+      "configurations": {
+        "production": {
+          "commands": [
+            "yarn remix vite:build",
+            "yarn node scripts/utils/buildServer.js"
+          ],
+          "env": {
+            "NODE_ENV": "production"
+          }
+        },
+        "instrument": {
+          "commands": [
+            "yarn remix vite:build",
+            "yarn node scripts/utils/buildServer.js"
+          ],
+          "env": {
+            "NODE_ENV": "production",
+            "INSTRUMENT": "true"
+          }
+        }
       }
     },
     "package": {
-      "executor": "nx:run-commands",
+      "inputs": ["src", "generated"],
       "outputs": ["{projectRoot}/_packaged"],
+      "executor": "nx:run-commands",
       "options": {
+        "parallel": false,
+        "commands": [],
+        "cwd": "{projectRoot}"
+      },
+      "defaultConfiguration": "production",
+      "configurations": {
+        "files": {
+          "commands": ["yarn tsx scripts/packageFiles.ts"]
+        },
+        "production": {
+          "commands": [
+            "yarn nx run playnite-web-app:package:files",
+            "yarn tsx scripts/package.ts"
+          ]
+        },
+        "prune": {
+          "commands": ["yarn tsx scripts/packagePrune.ts"]
+        }
+      }
+    },
+    "package/instrumented": {
+      "inputs": ["src", "generated"],
+      "outputs": ["{projectRoot}/_packaged"],
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
         "commands": [
-          "yarn node --require esbuild-register --experimental-json-modules scripts/package.ts"
+          "yarn nx run playnite-web-app:build:instrument",
+          "yarn tsx scripts/packageFiles.ts"
         ],
         "cwd": "{projectRoot}"
       }
     },
-    "package/prune": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "yarn node --require esbuild-register --experimental-json-modules scripts/packagePrune.ts"
-        ],
-        "cwd": "{projectRoot}"
-      }
-    },
-    "publish": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["echo 'Publishing'"],
-        "cwd": "{projectRoot}"
-      }
-    }
+    "publish": {}
   },
   "tags": ["linux"],
   "implicitDependencies": []

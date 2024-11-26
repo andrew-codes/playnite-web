@@ -1,6 +1,6 @@
 import { YogaInitialContext } from 'graphql-yoga'
 import { AsyncMqttClient } from 'mqtt-client'
-import { IdentityService } from '../auth'
+import { IdentityService } from '../auth/index'
 import { IQuery, IUpdateQuery } from '../data/types.api'
 import { User } from '../data/types.entities'
 import { subscriptionPublisher } from './subscriptionPublisher'

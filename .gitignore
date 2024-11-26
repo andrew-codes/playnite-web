@@ -18,16 +18,15 @@ _packaged
 *.env
 !local.env
 !e2e.env
-.test-runs
 
 apps/playnite-web/.cache
 apps/playnite-web/build
 apps/playnite-web/public/build
 apps/playnite-web/public/entry.worker.js
-apps/playnite-web/server.production.js*
-apps/playnite-web/server.development.js*
-apps/playnite-web/vite.config.ts*
-!apps/playnite-web/vite.config.ts
+apps/playnite-web/server.production.*js*
+apps/playnite-web/server.development.*js*
+apps/playnite-web/vite.config.js*
+!apps/playnite-web/vite.config.js
 
 apps/playnite-web/public/assets/asset-by-id/*
 
@@ -42,5 +41,5 @@ apps/playnite-web/**/*.generated.*
 **/cypress/screenshots/
 **/visual-regression-tests/**/comparison/
 **/visual-regression-tests/**/diff/
-**/visual-regression-tests/report
+**/visual-regression-tests/*report/
 .nyc_output
