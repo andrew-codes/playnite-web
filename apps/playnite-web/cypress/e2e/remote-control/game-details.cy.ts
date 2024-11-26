@@ -42,7 +42,7 @@ describe('Remote control.', () => {
                 cy.get('[data-test="GameDetails"]')
                   .parent()
                   .compareSnapshot({
-                    name: `play-button-visible_${breakpointName}`,
+                    name: `${locationName}_play-button-visible_${breakpointName}`,
                     cypressScreenshotOptions: {
                       blackout: [
                         '[data-test="GameDetails"] [data-test="Name"]',
@@ -73,7 +73,7 @@ describe('Remote control.', () => {
                 cy.get('[data-test="GameDetails"]')
                   .parent()
                   .compareSnapshot({
-                    name: `restart-stop-buttons-visible_${breakpointName}`,
+                    name: `${locationName}_restart-stop-buttons-visible_${breakpointName}`,
                     cypressScreenshotOptions: {
                       blackout: [
                         '[data-test="GameDetails"] [data-test="Name"]',

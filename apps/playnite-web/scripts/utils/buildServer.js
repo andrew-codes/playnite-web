@@ -1,34 +1,27 @@
 import { build } from 'esbuild'
-import istanbul from 'esbuild-plugin-istanbul'
+import { esbuildPluginIstanbul } from 'esbuild-plugin-istanbul'
 
 const plugins = []
 if (process.env.INSTRUMENT) {
   plugins.push(
-    istanbul.esbuildPluginIstanbul({
-      filter: /src\/.*ts$/,
+    esbuildPluginIstanbul({
+      filter: /src\/server\/.*ts/,
       loader: 'ts',
       name: 'istanbul-loader-ts',
     }),
   )
   plugins.push(
-    istanbul.esbuildPluginIstanbul({
-      filter: /src\/.*tsx$/,
-      loader: 'tsx',
-      name: 'istanbul-loader-tsx',
+    esbuildPluginIstanbul({
+      filter: /server\.ts/,
+      loader: 'ts',
+      name: 'istanbul-loader-server-ts',
     }),
   )
   plugins.push(
-    istanbul.esbuildPluginIstanbul({
-      filter: /server.ts$/,
+    esbuildPluginIstanbul({
+      filter: /app\.ts/,
       loader: 'ts',
-      name: 'istanbul-loader-ts',
-    }),
-  )
-  plugins.push(
-    istanbul.esbuildPluginIstanbul({
-      filter: /app.ts$/,
-      loader: 'ts',
-      name: 'istanbul-loader-ts',
+      name: 'istanbul-loader-app-ts',
     }),
   )
 }
@@ -40,7 +33,8 @@ build({
   external: ['lightningcss', 'esbuild', 'sharp', 'mongodb'],
   outfile: `server.${process.env.NODE_ENV ?? 'development'}.cjs`,
   platform: 'node',
-  sourcemap: process.env.NODE_ENV !== 'production',
+  sourcemap:
+    process.env.NODE_ENV !== 'production' || process.env.INSTRUMENT === 'true',
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
   },
