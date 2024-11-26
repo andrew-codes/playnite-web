@@ -3,8 +3,6 @@ import { getDockerTags } from 'versioning'
 import pkg from '../package.json'
 
 async function run() {
-  sh.cp('-R', '.dist/', '_packaged/')
-
   const { REGISTRY, OWNER, GITHUB_REF, PLATFORM } = process.env
 
   if (!REGISTRY || !OWNER || !GITHUB_REF) {

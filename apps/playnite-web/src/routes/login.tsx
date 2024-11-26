@@ -40,7 +40,15 @@ const LoginForm = () => {
   return (
     <form method="POST" onSubmit={handleSubmit}>
       <Container fixed>
-        <TallStack spacing={2} justifyContent="center">
+        <TallStack
+          spacing={2}
+          justifyContent="center"
+          sx={(theme) => ({
+            [theme.breakpoints.between('lg', 'xl')]: {
+              margin: '0 24px 0 96px',
+            },
+          })}
+        >
           <TextField
             name="username"
             label="Username"

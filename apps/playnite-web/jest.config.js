@@ -1,4 +1,4 @@
-const { defaults } = require('jest-config')
+import { defaults } from 'jest-config'
 
 const defaultConfig = {
   testEnvironment: 'node',
@@ -20,4 +20,4 @@ const defaultConfig = {
   ],
 }
 
-module.exports = defaultConfig
+export default defaultConfig

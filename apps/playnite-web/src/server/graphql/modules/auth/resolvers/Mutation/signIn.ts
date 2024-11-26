@@ -1,9 +1,6 @@
 import { GraphQLError } from 'graphql'
-import _ from 'lodash'
 import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
-import { UsernamePasswordCredential } from '../../../../../auth'
-
-const { merge } = _
+import { UsernamePasswordCredential } from '../../../../../auth/index'
 
 export const signIn: NonNullable<MutationResolvers['signIn']> = async (
   _parent,

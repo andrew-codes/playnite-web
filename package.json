@@ -53,7 +53,6 @@
     "braces@~3.0.2": "^3.0.3",
     "cross-spawn": "^7.0.5",
     "cross-spawn@^6.0.5": "^6.0.6",
-    "cypress": "^13.15.0",
     "dset": "^3.1.4",
     "express": "^4.21.1",
     "graphql": "16.9.0",
@@ -70,15 +69,6 @@
   "packageManager": "yarn@4.5.1",
   "scripts": {
     "docs/generate": "typedoc --tsconfig tsconfig.typedoc.json",
-    "prepare": "husky",
-    "start": "nx run playnite-web-app:start",
-    "test/components": "nx run playnite-web-app:test/components",
-    "test/components/update": "nx run playnite-web-app:test/components/update",
-    "test/components/ci": "nx run playnite-web-app:test/components/ci",
-    "test/e2e": "nx run playnite-web-app:test/e2e",
-    "test/e2e/update": "nx run playnite-web-app:test/e2e/update",
-    "test/e2e/ci": "nx run playnite-web-app:test/e2e/ci",
-    "test/unit": "nx run-many --target=test/unit",
-    "test/unit/ci": "nx run-many --target=test/unit/ci"
+    "prepare": "husky"
   }
 }
