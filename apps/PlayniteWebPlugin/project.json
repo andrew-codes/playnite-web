@@ -16,6 +16,9 @@
       "options": {
         "command": "yarn node --require esbuild-register ./scripts/build.ts",
         "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "production": {}
       }
     },
     "build/restore": {
@@ -30,6 +33,9 @@
       "options": {
         "command": "bash -c './scripts/package.sh'",
         "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "production": {}
       }
     },
     "publish": {

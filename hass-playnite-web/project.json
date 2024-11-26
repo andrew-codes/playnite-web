@@ -4,6 +4,7 @@
   "projectType": "application",
   "targets": {
     "package": {
+      "inputs": ["src"],
       "executor": "nx:run-commands",
       "options": {
         "commands": ["yarn node --require=esbuild-register scripts/package.ts"],

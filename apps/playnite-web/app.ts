@@ -12,10 +12,10 @@ import InMemoryDataApi from './src/server/data/inMemory/DataApi'
 import { getDbClient } from './src/server/data/mongo/client'
 import MongoDataApi from './src/server/data/mongo/DataApi'
 import PriorityDataApi from './src/server/data/priority/DataApi'
-import createYoga from './src/server/graphql'
+import createYoga from './src/server/graphql/index'
 import schema from './src/server/graphql/schema'
 import { subscriptionPublisher } from './src/server/graphql/subscriptionPublisher'
-import mqttUpdater from './src/server/mqttUpdater'
+import mqttUpdater from './src/server/mqttUpdater/index'
 
 const debug = createDebugger('playnite-web/app/server')
 
@@ -131,6 +131,13 @@ async function run(mqttClient: AsyncMqttClient) {
   })
 
   app.use(compression())
+
+  if (global.__coverage__) {
+    const codeCoverageMiddleware = await import(
+      '@bahmutov/cypress-code-coverage/middleware/express'
+    )
+    codeCoverageMiddleware.default(app)
+  }
 
   const server = app.listen(port, () => {
     debug(`App listening on http://${domain}:${port}`)

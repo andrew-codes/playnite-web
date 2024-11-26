@@ -50,7 +50,7 @@ xhost + $IP
 3. Ensure docker is running.
 4. Open the command palette, type/search for comand `Dev Containers: Rebuild and Reopen container`. Allow the container to be built and started.
 5. Once the dev container is running and connected to vscode, run `yarn` in its terminal.
-6. Run `yarn run start`
+6. Run `yarn nx run playnite-web-app:start`
 7. In vscode, forward port 3000. This is likely done automatically or can be done with the `Forward Port` from the command palette.
 8. Open [http://localhost:3000](http://localhost:3000).
 9. Continue to see [commands](./index.md#running-playnite-web) for additional commands.

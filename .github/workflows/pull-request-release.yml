@@ -33,7 +33,7 @@ jobs:
       - name: Install deps
         run: yarn
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit/ci --parallel --verbose --exclude='*,!tag:linux'
+        run: yarn nx run-many --target=test/unit --configuration=ci --parallel --verbose --exclude='*,!tag:linux'
       - uses: codecov/codecov-action@v4
         if: always()
         with:
@@ -65,29 +65,17 @@ jobs:
         env:
           YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all component tests
-        run: yarn nx run-many --target=test/components/ci --verbose --exclude='*,!tag:linux'
+        run: yarn nx run-many --target=test/components --configuration=ci --verbose --exclude='*,!tag:linux'
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: visual-regression-component-comparisons
-          path: apps/playnite-web/visual-regression-tests/screenshots
-      - name: Upload test video artifacts
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: component-cypress-videos
-          path: apps/playnite-web/cypress/videos
-      - name: Upload test screenshot artifacts
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: component-cypress-screenshots
-          path: apps/playnite-web/cypress/screenshots
+          name: component-visual-regression
+          path: apps/playnite-web/visual-regression-tests
       - uses: codecov/codecov-action@v4
         if: always()
         with:
-          files: '**/.test-runs/component/lcov.info'
+          files: '**/.test-runs/**/lcov.info'
           flags: component-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -95,8 +83,6 @@ jobs:
   e2e_tests_linux:
     name: Verify PR - e2e Tests (Linux)
     runs-on: ubuntu-latest
-    needs:
-      - package_linux
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
@@ -120,7 +106,7 @@ jobs:
         env:
           YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all e2e tests
-        run: yarn run test/e2e/ci
+        run: yarn nx run-many --target=test/e2e --configuration=ci --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
@@ -128,20 +114,15 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: visual-regression-e2e-comparisons
-          path: apps/playnite-web/visual-regression-tests/screenshots
-      - name: Upload test video artifacts
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
+          name: e2e-visual-regression
+          path: apps/playnite-web/visual-regression-tests
+      - uses: codecov/codecov-action@v4
+        if: always()
         with:
-          name: e2e-cypress-videos
-          path: apps/playnite-web/cypress/videos
-      - name: Upload test screenshot artifacts
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: e2e-cypress-screenshots
-          path: apps/playnite-web/cypress/screenshots
+          files: '**/.test-runs/**/lcov.info'
+          flags: e2e-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   package_linux:
     name: Package non-Windows projects
@@ -186,7 +167,7 @@ jobs:
         env:
           NODE_ENV: production
       - name: Package projects
-        run: yarn nx run-many --target=package --verbose --exclude='*,!tag:linux'
+        run: yarn nx run-many --target=package --configuration=production --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'
@@ -221,7 +202,7 @@ jobs:
         env:
           YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all unit tests
-        run: yarn nx run-many --target=test/unit --parallel --verbose --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=test/unit --configuration=ci --parallel --verbose --exclude='*,!tag:windows'
 
   package_windows:
     name: Package Windows projects
@@ -263,7 +244,7 @@ jobs:
         env:
           NODE_ENV: production
       - name: Package projects
-        run: yarn nx run-many --target=package --parallel --verbose --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=package --configuration=production --parallel --verbose --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
       - name: Upload artifacts

@@ -10,7 +10,7 @@ import MongoDataApi from '../data/mongo/DataApi'
 import PriorityDataApi from '../data/priority/DataApi'
 import { IDeleteQuery, IQuery, IUpdateQuery } from '../data/types.api'
 import { PubSubChannels } from '../graphql/subscriptionPublisher'
-import handlers from './handlers'
+import handlers from './handlers/index'
 
 const { merge } = _
 

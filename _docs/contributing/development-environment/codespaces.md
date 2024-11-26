@@ -46,7 +46,7 @@ xhost + $IP
 1. [Fork the playnite-web repo](https://github.com/andrew-codes/playnite-web/fork)
 2. Start a code space and open in vscode.
 3. Run `yarn`
-4. Run `yarn run start`
+4. Run `yarn nx run playnite-web-app:start`
 5. In vscode, forward port 3000. This can be found in same pane as the terminal.
 6. Open [http://localhost:3000](http://localhost:3000).
 7. Continue to see [commands](./index.md#running-playnite-web) for additional commands.
@@ -55,4 +55,4 @@ xhost + $IP
 
 1. Open terminal on local machine.
 2. Connect to code space via gh CLI and forward x11 via `gh cs ssh -- -XY` and then choose your code space.
-3. You can now run `yarn run test/components` and `yarn run test/e2e` in this terminal.
+3. You can now run `yarn nx run playnite-web-app:test/components` and `yarn nx run playnite-web-app:test/e2e` in this terminal.
