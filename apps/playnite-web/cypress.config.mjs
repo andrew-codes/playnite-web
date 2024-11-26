@@ -29,7 +29,7 @@ const config = {
               `--window-size=${viewportWidth},${viewportHeight}`,
             )
             launchOptions.args.push(
-              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? '2' : '1'}`,
+              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? process.env.SCALE && '1' : '1'}`,
             )
             break
           case 'electron':
@@ -37,7 +37,7 @@ const config = {
             launchOptions.preferences.width = viewportWidth
             launchOptions.preferences.height = viewportHeight
             launchOptions.args.push(
-              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? '2' : '1'}`,
+              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? process.env.SCALE && '1' : '1'}`,
             )
         }
 
@@ -148,7 +148,7 @@ const config = {
               `--window-size=${viewportWidth},${viewportHeight}`,
             )
             launchOptions.args.push(
-              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? '2' : '1'}`,
+              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? process.env.SCALE && '1' : '1'}`,
             )
             break
           case 'electron':
@@ -156,7 +156,7 @@ const config = {
             launchOptions.preferences.width = viewportWidth
             launchOptions.preferences.height = viewportHeight
             launchOptions.args.push(
-              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? '2' : '1'}`,
+              `--force-device-scale-factor=${process.env.LOCAL === 'true' ? process.env.SCALE && '1' : '1'}`,
             )
         }
 

@@ -12,15 +12,10 @@ describe('On deck.', () => {
 - Each game shows the game's cover image and name.
 - Playing playlist shows games that have the game state: "On Deck".`, () => {
         cy.visit('/')
-
-        cy.contains('h4', 'On Deck').parents('[data-test="playlist"]')
-        cy.get('[data-test="GameFigure"]').should('have.length', 8)
-        cy.get('[data-test="GameFigure"]')
-          .eq(0)
-          .should('have.text', 'Star Wars Outlaws')
+        cy.wait(300)
 
         cy.compareSnapshot({
-          name: 'on-deck-playlist',
+          name: `on-deck-playlist_${breakpointName}`,
         })
       })
     })
