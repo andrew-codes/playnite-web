@@ -1,13 +1,12 @@
-import _ from 'lodash'
-import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
+import { merge } from 'lodash-es'
+import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
 import {
   FilterItem,
   MatchAllFilterItem,
   RelationFilterItem,
-} from '../../../../../data/types.api'
-import { Game, RelationshipTypes } from '../../../../../data/types.entities'
+} from '../../../../../data/types.api.js'
+import { Game, RelationshipTypes } from '../../../../../data/types.entities.js'
 
-const { merge } = _
 const exactMatch = /(^".*"$)|(^'.*'$)/
 
 export const games: NonNullable<QueryResolvers['games']> = async (

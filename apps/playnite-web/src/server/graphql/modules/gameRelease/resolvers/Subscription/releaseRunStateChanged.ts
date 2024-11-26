@@ -1,4 +1,4 @@
-import type { SubscriptionResolvers } from './../../../../../../../.generated/types.generated'
+import type { SubscriptionResolvers } from './../../../../../../../.generated/types.generated.js'
 export const releaseRunStateChanged: NonNullable<
   SubscriptionResolvers['releaseRunStateChanged']
 > = {

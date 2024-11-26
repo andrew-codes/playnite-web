@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import _ from 'lodash'
-
-const { keyBy } = _
+import { keyBy } from 'lodash-es'
 
 const initialState: {
   activeNameFilters: string | null

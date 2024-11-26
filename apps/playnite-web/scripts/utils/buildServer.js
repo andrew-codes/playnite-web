@@ -2,36 +2,39 @@ import { build } from 'esbuild'
 import { esbuildPluginIstanbul } from 'esbuild-plugin-istanbul'
 
 const plugins = []
-if (process.env.INSTRUMENT) {
+if (process.env.INSTRUMENT === 'true') {
   plugins.push(
     esbuildPluginIstanbul({
-      filter: /src\/server\/.*ts/,
+      filter: /.*/,
       loader: 'ts',
       name: 'istanbul-loader-ts',
-    }),
-  )
-  plugins.push(
-    esbuildPluginIstanbul({
-      filter: /server\.ts/,
-      loader: 'ts',
-      name: 'istanbul-loader-server-ts',
-    }),
-  )
-  plugins.push(
-    esbuildPluginIstanbul({
-      filter: /app\.ts/,
-      loader: 'ts',
-      name: 'istanbul-loader-app-ts',
     }),
   )
 }
 
 build({
-  entryPoints: ['server.ts'],
-  bundle: true,
-  minify: true,
-  external: ['lightningcss', 'esbuild', 'sharp', 'mongodb'],
-  outfile: `server.${process.env.NODE_ENV ?? 'development'}.cjs`,
+  format: 'esm',
+  entryPoints: ['src/server/**/*.ts'],
+  tsconfig: 'tsconfig.server.json',
+  bundle: false,
+  minify: false,
+  outdir: '.build-server/src',
+  platform: 'node',
+  sourcemap:
+    process.env.NODE_ENV !== 'production' || process.env.INSTRUMENT === 'true',
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  },
+  plugins,
+})
+
+build({
+  format: 'esm',
+  entryPoints: ['.generated/*.ts'],
+  tsconfig: 'tsconfig.server.json',
+  bundle: false,
+  minify: false,
+  outdir: '.build-server/.generated',
   platform: 'node',
   sourcemap:
     process.env.NODE_ENV !== 'production' || process.env.INSTRUMENT === 'true',

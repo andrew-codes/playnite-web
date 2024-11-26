@@ -1,5 +1,5 @@
-import { Release } from '../../../../../data/types.entities'
-import type { QueryResolvers } from './../../../../../../../.generated/types.generated'
+import { Release } from '../../../../../data/types.entities.js'
+import type { QueryResolvers } from './../../../../../../../.generated/types.generated.js'
 export const nowPlaying: NonNullable<QueryResolvers['nowPlaying']> = async (
   _parent,
   _arg,

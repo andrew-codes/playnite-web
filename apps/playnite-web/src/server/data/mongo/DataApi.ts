@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader'
-import _ from 'lodash'
+import _ from 'lodash-es'
 import { Db, Document, Filter, Sort as MongoSort } from 'mongodb'
 import {
   FilterItem,
@@ -9,9 +9,9 @@ import {
   MatchAllFilterItem,
   Sort,
   UpdateFilterItem,
-} from '../types.api'
-import { Entity, RelationshipTypes, StringFromType } from '../types.entities'
-import { entityCollectionLookup } from './entity'
+} from '../types.api.js'
+import { Entity, RelationshipTypes, StringFromType } from '../types.entities.js'
+import { entityCollectionLookup } from './entity.js'
 
 const { isEmpty, keyBy, merge } = _
 

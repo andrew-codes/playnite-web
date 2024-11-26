@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { merge, orderBy } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
 import {
   FilterItem,
@@ -7,7 +7,7 @@ import {
   MatchAllFilterItem,
   Sort,
   UpdateFilterItem,
-} from '../types.api'
+} from '../types.api.js'
 import {
   entities,
   Entity,
@@ -15,9 +15,7 @@ import {
   RelationshipTypes,
   StringFromType,
   TypeFromString,
-} from '../types.entities'
-
-const { merge, orderBy } = _
+} from '../types.entities.js'
 
 const store: Map<EntityType, Map<string, Entity>> = new Map(
   entities.map((type) => [

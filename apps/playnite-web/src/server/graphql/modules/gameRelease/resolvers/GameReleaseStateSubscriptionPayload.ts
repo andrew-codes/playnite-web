@@ -1,4 +1,4 @@
-import type { GameReleaseStateSubscriptionPayloadResolvers } from './../../../../../../.generated/types.generated'
+import type { GameReleaseStateSubscriptionPayloadResolvers } from './../../../../../../.generated/types.generated.js'
 export const GameReleaseStateSubscriptionPayload: GameReleaseStateSubscriptionPayloadResolvers =
   {
     runState: async (parent, _args, _ctx) => {

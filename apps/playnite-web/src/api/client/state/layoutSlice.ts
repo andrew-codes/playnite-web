@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import _ from 'lodash'
-
-const { merge } = _
+import {merge} from 'lodash-es'
 
 const initialState: {
   deviceType: 'desktop' | 'mobile' | 'tablet' | 'unknown' | null

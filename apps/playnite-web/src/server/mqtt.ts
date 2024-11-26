@@ -1,4 +1,5 @@
-import { connectAsync, type AsyncMqttClient } from 'async-mqtt'
+import type { AsyncMqttClient } from 'async-mqtt'
+import mqtt from 'async-mqtt'
 import createDebugger from 'debug'
 
 type MqttConnectionOptions = {
@@ -26,13 +27,13 @@ const createConnectedMqttClient = async (
   )
   let mqttClient
   if (username && password) {
-    mqttClient = await connectAsync(`tcp://${host}`, {
+    mqttClient = await mqtt.connectAsync(`tcp://${host}`, {
       password,
       port,
       username,
     })
   } else {
-    mqttClient = await connectAsync(`tcp://${host}`, {
+    mqttClient = await mqtt.connectAsync(`tcp://${host}`, {
       port,
     })
   }
@@ -42,4 +43,3 @@ const createConnectedMqttClient = async (
 }
 
 export { createConnectedMqttClient }
-export type { AsyncMqttClient }

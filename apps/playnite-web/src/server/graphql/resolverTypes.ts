@@ -10,7 +10,7 @@ import {
   RunState,
   Tag,
   User,
-} from '../data/types.entities'
+} from '../data/types.entities.js'
 
 type GameReleaseStateSubscriptionPayload = {
   id: string

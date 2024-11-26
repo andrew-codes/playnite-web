@@ -1,4 +1,4 @@
-import { EntityType } from '../types.entities'
+import { EntityType } from '../types.entities.js'
 
 const entityCollectionLookup: Map<EntityType, string> = new Map([
   ['Platform', 'platform'],
