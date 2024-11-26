@@ -12,7 +12,7 @@ const config = {
     env: {
       coverage: {
         reportAfterEachSpec: 'text',
-        exclude: true,
+        exclude: ['**/__tests__', '**/__component_tests'],
         url: 'http://localhost:3000/__coverage__',
       },
     },
