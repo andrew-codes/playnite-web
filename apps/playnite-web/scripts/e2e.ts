@@ -32,7 +32,7 @@ sh.exec('cp e2e.env _packaged/local.env')
 sh.exec(`cp -R ../../.data/asset-by-id ./_packaged/src/public/assets`)
 
 console.log('Starting server')
-runCp = sh.exec(`yarn node server.js`, {
+runCp = sh.exec(`yarn nyc node server.js`, {
   cwd: '_packaged/src/server',
   shell: '/bin/bash',
   env: {
@@ -72,7 +72,7 @@ waitOn({ resources: ['http://localhost:3000'], timeout: 30000 }, (err) => {
   const [, , specFilter] = process.argv
   console.log('Running Cypress tests')
   testCp = sh.exec(
-    `yarn cypress ${process.env.CMD ?? 'run'} --e2e --browser electron ${specFilter && `--spec cypress/e2e/**/${specFilter}`}`,
+    `yarn cypress ${process.env.CMD ?? 'run'} --e2e --browser electron ${specFilter && `--spec cypress/e2e/**/${specFilter}*`}`,
     {
       env: {
         ...process.env,

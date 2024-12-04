@@ -5,7 +5,7 @@ import app from './app.js'
 import { createConnectedMqttClient } from './mqtt.js'
 
 const __dirname = import.meta.dirname
-console.log(path.join(__dirname, '..', '..', 'local.env'))
+
 dotenv.config({
   path: path.join(__dirname, '..', '..', 'local.env'),
   override: true,
