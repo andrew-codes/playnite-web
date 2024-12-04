@@ -75,4 +75,4 @@ class UsernamePasswordCredential {
   ) {}
 }
 
-export { IdentityService, UsernamePasswordCredential }
+export { IdentityService, UsernamePasswordCredential, type Claim }

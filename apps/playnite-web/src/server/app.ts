@@ -86,39 +86,43 @@ async function run(mqttClient: AsyncMqttClient) {
   const signingKey = process.env.SECRET ?? 'secret'
   const yoga = createYoga('/api', signingKey, mqttClient)
 
-  const cspOrigins = (process.env.CSP_ORIGINS ?? '')
-    .split(',')
-    .map((origin) => origin.trim())
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          'default-src': ["'self'"],
-          'connect-src': [
-            "'self'",
-            `ws://${domain}:*`,
-            `wss://${domain}:*`,
-            `http://${domain}:*`,
-            `https://${domain}:*`,
-          ],
-          'style-src': [
-            "'self'",
-            "'unsafe-inline'",
-            'unpkg.com',
-            '*.googleapis.com',
-            '*.gstatic.com',
-          ].concat(cspOrigins),
-          'script-src': ["'self'", "'unsafe-inline'", 'unpkg.com'].concat(
-            cspOrigins,
-          ),
-          'img-src': ["'self'", 'raw.githubusercontent.com'].concat(cspOrigins),
-          'font-src': ["'self'", '*.googleapis.com', '*.gstatic.com'].concat(
-            cspOrigins,
-          ),
+  if (process.env.TEST !== 'e2e') {
+    const cspOrigins = (process.env.CSP_ORIGINS ?? '')
+      .split(',')
+      .map((origin) => origin.trim())
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            'default-src': ["'self'"],
+            'connect-src': [
+              "'self'",
+              `ws://${domain}:*`,
+              `wss://${domain}:*`,
+              `http://${domain}:*`,
+              `https://${domain}:*`,
+            ],
+            'style-src': [
+              "'self'",
+              "'unsafe-inline'",
+              'unpkg.com',
+              '*.googleapis.com',
+              '*.gstatic.com',
+            ].concat(cspOrigins),
+            'script-src': ["'self'", "'unsafe-inline'", 'unpkg.com'].concat(
+              cspOrigins,
+            ),
+            'img-src': ["'self'", 'raw.githubusercontent.com'].concat(
+              cspOrigins,
+            ),
+            'font-src': ["'self'", '*.googleapis.com', '*.gstatic.com'].concat(
+              cspOrigins,
+            ),
+          },
         },
-      },
-    }),
-  )
+      }),
+    )
+  }
   app.use(
     express.static(path.join(__dirname, '..', 'public', 'assets'), {
       maxAge: '1y',
