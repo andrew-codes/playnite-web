@@ -25511,6 +25511,7 @@ __metadata:
     debug: "npm:^4.3.7"
     lodash: "npm:^4.17.21"
     nx: "npm:^19.8.11"
+    rimraf: "npm:^6.0.1"
     semver: "npm:^7.6.3"
     shelljs: "npm:^0.8.5"
   languageName: unknown

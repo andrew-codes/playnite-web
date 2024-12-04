@@ -18,7 +18,6 @@ const config = {
           '**/__component_tests__/**',
         ],
         url: 'http://localhost:3000/__coverage__',
-        expectBackendCoverageOnly: true,
       },
     },
     coverage: true,
@@ -98,6 +97,7 @@ const config = {
         '**/__component_tests__/**',
       ],
     },
+    coverage: true,
     specPattern: '**/__component_tests__/**/*.test.tsx',
     excludeSpecPattern: [],
     devServer: {

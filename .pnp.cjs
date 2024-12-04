@@ -31606,6 +31606,7 @@ const RAW_RUNTIME_STATE =
           ["debug", "virtual:43023b9ec09e5c4c8f29bfa796eae859f4587491c8bfa2bfccfb217268d123d82ce16714db3cc6f19109853cfc0d4cfa87b07988e86203e31b8f20d2130c6775#npm:4.3.7"],\
           ["lodash", "npm:4.17.21"],\
           ["nx", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:19.8.11"],\
+          ["rimraf", "npm:6.0.1"],\
           ["semver", "npm:7.6.3"],\
           ["shelljs", "npm:0.8.5"]\
         ],\
