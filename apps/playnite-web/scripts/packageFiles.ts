@@ -1,7 +1,4 @@
 import packageFiles from './utils/packageFiles'
 
-async function run() {
-  packageFiles()
-}
-
-run()
+packageFiles()
+console.log('Packaged files completed successfully')

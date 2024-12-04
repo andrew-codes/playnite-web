@@ -1,54 +1,75 @@
 import { ChildProcess } from 'child_process'
-import createDebugger from 'debug'
 import sh from 'shelljs'
+import waitOn from 'wait-on'
 
-const testDebug = createDebugger('nx/test')
-const runDebug = createDebugger('nx/run')
+const __dirname = import.meta.dirname
 
-async function run() {
-  let testCp: ChildProcess | null = null
-  let runCp: ChildProcess | null = null
-  process.on('exit', () => {
-    runCp?.kill('SIGINT')
-    testCp?.kill('SIGINT')
-  })
-  process.on('SIGTERM', () => {
-    runCp?.kill('SIGINT')
-    testCp?.kill('SIGINT')
-  })
-  process.on('SIGINT', () => {
-    runCp?.kill('SIGINT')
-    testCp?.kill('SIGINT')
-    process.exit()
-  })
+console.log(__dirname)
 
-  sh.exec('rm _packaged/package.json')
-  sh.exec('cp e2e.env _packaged/local.env')
-  sh.exec(`cp -r ../../.data/asset-by-id ./_packaged/src/public/assets`)
+let testCp: ChildProcess | null = null
+let runCp: ChildProcess | null = null
+process.on('exit', () => {
+  console.log('Exiting')
+  runCp?.kill('SIGINT')
+  testCp?.kill('SIGINT')
+})
+process.on('SIGTERM', () => {
+  console.log('SIGTERM')
+  runCp?.kill('SIGINT')
+  testCp?.kill('SIGINT')
+  process.exit()
+})
+process.on('SIGINT', () => {
+  console.log('SIGINT')
+  runCp?.kill('SIGINT')
+  testCp?.kill('SIGINT')
+  process.exit()
+})
 
-  runCp = sh.exec(`yarn node server.js`, {
-    cwd: '_packaged/src/server',
-    env: {
-      ...process.env,
-      DEBUG: 'playnite*',
-      NODE_ENV: 'production',
-    },
-    async: true,
-  })
-  runCp.stdout?.on('data', (data) => {
-    runDebug(data)
-  })
-  runCp.stderr?.on('data', (data) => {
-    runDebug(data)
-  })
-  runCp.on('close', (code) => {
-    if (code !== 0) {
-      runDebug(`Server exited with code ${code}`)
-    }
-  })
+console.log('Removing package.json')
+sh.exec('rm _packaged/package.json')
+sh.exec('cp e2e.env _packaged/local.env')
+sh.exec(`cp -R ../../.data/asset-by-id ./_packaged/src/public/assets`)
 
-  sh.exec(`yarn wait-on http://localhost:3000`)
+console.log('Starting server')
+runCp = sh.exec(`yarn node server.js`, {
+  cwd: '_packaged/src/server',
+  env: {
+    ...process.env,
+    DEBUG: 'playnite*',
+    NODE_ENV: 'production',
+  },
+  async: true,
+})
+runCp.stdout?.on('data', (data) => {
+  console.log(data)
+})
+runCp.stderr?.on('data', (data) => {
+  console.error(data)
+})
+runCp.on('close', (code) => {
+  console.log('Server closing.')
+  if (code !== 0) {
+    console.log(`Server exited with code ${code}`)
+    process.exit(code)
+  }
+})
+runCp.on('error', (err) => {
+  console.error(err)
+  if (err) {
+    console.error(err)
+  }
+})
+
+console.log('Waiting for server to start')
+waitOn({ resources: ['http://localhost:3000'], timeout: 30000 }, (err) => {
+  if (err) {
+    console.error(err)
+    process.exit(1)
+  }
+
   const [, , specFilter] = process.argv
+  console.log('Running Cypress tests')
   testCp = sh.exec(
     `yarn cypress ${process.env.CMD ?? 'run'} --e2e --browser electron ${specFilter && `--spec cypress/e2e/**/${specFilter}`}`,
     {
@@ -57,20 +78,19 @@ async function run() {
     },
   )
   testCp.stdout?.on('data', (data) => {
-    testDebug(data)
+    console.log(data)
   })
   testCp.stderr?.on('data', (data) => {
-    testDebug(data)
+    console.error(data)
   })
   testCp.on('close', (code) => {
+    console.log('Cypress tests closing.')
     if (process.env.UPDATE === 'true') {
+      console.log('Updating visual regression tests')
       sh.exec(
         `yarn cypress-image-diff-html-report start --reportJsonDir visual-regression-tests/e2e-report --autoOpen`,
       )
     }
-
     process.exit(code)
   })
-}
-
-run()
+})
