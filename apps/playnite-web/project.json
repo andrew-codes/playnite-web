@@ -188,7 +188,6 @@
           "env": {
             "CMD": "run",
             "CI": "true",
-            "DEBUG": "playnite*",
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "development",
