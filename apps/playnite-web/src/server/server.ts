@@ -4,12 +4,14 @@ import path from 'path'
 import app from './app.js'
 import { createConnectedMqttClient } from './mqtt.js'
 
+const __dirname = import.meta.dirname
+console.log(path.join(__dirname, '..', '..', 'local.env'))
 dotenv.config({
-  path: path.join(process.cwd(), '..', '..', 'local.env'),
+  path: path.join(__dirname, '..', '..', 'local.env'),
   override: true,
 })
 dotenv.config({
-  path: path.join(process.cwd(), '..', '..', 'overrides.env'),
+  path: path.join(__dirname, '..', '..', 'overrides.env'),
   override: true,
 })
 

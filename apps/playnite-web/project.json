@@ -156,7 +156,7 @@
       "dependsOn": ["clean/test"],
       "options": {
         "parallel": false,
-        "command": "yarn start-server-and-test 'cross-env NODE_ENV=production DEBUG=\"playnite*\" yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser electron'",
+        "command": "yarn start-server-and-test 'cross-env NODE_ENV=production DEBUG=\"playnite*\" TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser electron'",
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
