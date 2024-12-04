@@ -12,7 +12,7 @@ const run = () => {
   console.log('Copying Remix built files to _packaged')
   sh.mkdir('-p', '_packaged/src')
   sh.exec('cp -R build/server _packaged/src')
-  sh.exec('cp -R build/client, _packaged/src')
+  sh.exec('cp -R build/client _packaged/src')
 
   console.log('Copying Server built files to _packaged')
   sh.exec(`cp -R .build-server/src/* _packaged/src/server`)
