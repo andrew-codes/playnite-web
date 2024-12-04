@@ -171,12 +171,20 @@
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
-        "command": ""
+        "command": "yarn tsx scripts/e2e.ts",
+        "env": {
+          "CMD": "run",
+          "CI": "true",
+          "DEBUG": "playnite*",
+          "TEST": "e2e",
+          "START_SERVER_AND_TEST_INSECURE": "1",
+          "NODE_ENV": "development",
+          "INSTRUMENT": "true"
+        }
       },
       "defaultConfiguration": "ci/local",
       "configurations": {
         "ci": {
-          "command": "yarn tsx scripts/e2e.ts",
           "env": {
             "CMD": "run",
             "CI": "true",
@@ -188,7 +196,6 @@
           }
         },
         "ci/local": {
-          "command": "yarn tsx scripts/e2e.ts",
           "env": {
             "CI": "true",
             "CMD": "open",
@@ -232,7 +239,7 @@
       "dependsOn": ["build/client/instrument", "build/server/instrument"],
       "options": {
         "cwd": "{projectRoot}",
-        "commands": []
+        "commands": ["bash -c \"echo 'Instrumented build'\""]
       }
     },
     "build/client": {
@@ -362,7 +369,7 @@
       "dependsOn": ["clean/package", "build/instrument"],
       "options": {
         "parallel": false,
-        "commands": ["yarn tsx scripts/packageFiles.ts"],
+        "command": "yarn tsx scripts/packageFiles.ts",
         "cwd": "{projectRoot}"
       }
     },

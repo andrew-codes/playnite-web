@@ -19,6 +19,8 @@ import mqttUpdater from './mqttUpdater/index.js'
 
 const debug = createDebugger('playnite-web/app/server')
 
+const __dirname = import.meta.dirname
+
 async function run(mqttClient: AsyncMqttClient) {
   const { PORT, HOST } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
@@ -76,7 +78,9 @@ async function run(mqttClient: AsyncMqttClient) {
           }),
         )
   app.use(
-    viteDevServer ? viteDevServer.middlewares : express.static('../client'),
+    viteDevServer
+      ? viteDevServer.middlewares
+      : express.static(path.join(__dirname, '..', 'client')),
   )
 
   const signingKey = process.env.SECRET ?? 'secret'
@@ -115,7 +119,11 @@ async function run(mqttClient: AsyncMqttClient) {
       },
     }),
   )
-  app.use(express.static('../public/assets', { maxAge: '1y' }))
+  app.use(
+    express.static(path.join(__dirname, '..', 'public', 'assets'), {
+      maxAge: '1y',
+    }),
+  )
 
   app.use('/api', yoga)
 
@@ -127,7 +135,7 @@ async function run(mqttClient: AsyncMqttClient) {
 
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
-    : await import('./index.js')
+    : await import(path.join(__dirname, 'index.js'))
 
   const remixHandler = createRequestHandler({ build })
   app.all('*', (req, resp, next) => {
