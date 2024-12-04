@@ -13,5 +13,5 @@ export const signOut: NonNullable<MutationResolvers['signOut']> = async (
 
   _ctx.request.cookieStore?.delete('authorization')
 
-  return claim.user
+  return claim
 }

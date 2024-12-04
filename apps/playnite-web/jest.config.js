@@ -3,9 +3,14 @@ import { defaults } from 'jest-config'
 const defaultConfig = {
   testEnvironment: 'node',
   transform: {
-    '^.+\\.(j|t)s$': ['ts-jest', {}],
+    '^.+\\.(j|t)s$': ['ts-jest', { useEsm: true }],
   },
-  testMatch: ['**/__tests__/**/*.(test).((j|t)s)'],
+  moduleNameMapper: {
+    '^lodash-es$': 'lodash',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  testMatch: ['<rootDir>/src/**/__tests__/**/*.(test).((j|t)s)'],
   resetMocks: true,
   modulePathIgnorePatterns: ['<rootDir>/\\.dist/'],
   passWithNoTests: false,
@@ -17,6 +22,8 @@ const defaultConfig = {
     '/__tests__/',
     '/__mocks__/',
     '/__component_tests__/',
+    'src/server/server.ts',
+    'src/server/app.ts',
   ],
 }
 
