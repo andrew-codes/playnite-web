@@ -26282,6 +26282,7 @@ const RAW_RUNTIME_STATE =
           ["jest-config", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.7.0"],\
           ["jsonwebtoken", "npm:9.0.2"],\
           ["lightningcss", "npm:1.28.1"],\
+          ["lodash", "npm:4.17.21"],\
           ["lodash-es", "npm:4.17.21"],\
           ["mongodb", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.10.0"],\
           ["nodemon", "npm:3.1.7"],\
