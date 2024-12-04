@@ -24,9 +24,12 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Xml.Linq;
 
 namespace PlayniteWeb
 {
@@ -54,14 +57,22 @@ namespace PlayniteWeb
     private readonly IManageTopics topicManager;
     private readonly ILogger logger = LogManager.GetLogger();
     private readonly Regex pcExpression = new Regex("Windows.*");
+    private readonly IEnumerable<Platform> pcPlatforms;
     private readonly string _version;
     private bool IsReconnectInProgress = false;
     private bool IsShutDownInProgress = false;
+    private readonly GameSource emulatorSource = new GameSource("Emulator");
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
     public PlayniteWeb(IPlayniteAPI api) : base(api)
     {
+      pcPlatforms = PlayniteApi.Database.Platforms.Where(p => pcExpression.IsMatch(p.Name));
+      using (MD5 md5 = MD5.Create())
+      {
+        byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(emulatorSource.Name));
+        emulatorSource.Id = new Guid(hash);
+      }
       var extensionInfoYaml = System.IO.File.ReadAllText(Path.Combine(api.Paths.ExtensionsDataPath, "..", "Extensions", $"PlayniteWeb_{this.Id}", "extension.yaml"));
       var extension = Serialization.FromYaml<Dictionary<string, string>>(extensionInfoYaml);
       _version = extension["Version"];
@@ -179,7 +190,7 @@ namespace PlayniteWeb
 
     private IEnumerable<Task> SyncLibrary()
     {
-      var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name).Select(groupedByName => new Models.Game(groupedByName)).Where(g => !g.Id.Equals(Guid.Empty));
+      var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name).Select(groupedByName => new Models.Game(groupedByName, pcPlatforms, emulatorSource)).Where(g => !g.Id.Equals(Guid.Empty));
 
       var gamePublications = games.SelectMany(game => gamePublisher.Publish(game));
       var platformPublications = PlayniteApi.Database.Platforms.SelectMany(platform => platformPublisher.Publish(platform));
@@ -191,13 +202,16 @@ namespace PlayniteWeb
         .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
         .Where(propertyInfo => !ignored.Any(ignore => ignore == propertyInfo.Name));
       var gameEntities = gameEntityProperties
-        .SelectMany(propertyInfo => (IEnumerable<DatabaseObject>)propertyInfo.GetValue(PlayniteApi.Database));
+        .SelectMany(propertyInfo => (IEnumerable<DatabaseObject>)propertyInfo.GetValue(PlayniteApi.Database))
+        .Concat(new[] { emulatorSource });
       var otherGameEntityPublications = gameEntities.SelectMany(entity => gameEntityPublisher.Publish(entity));
 
       var playlistPublications = PlayniteApi.Database.Tags
         .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
         .Select(tag => new Playlist(tag.Name.Substring(9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
         .SelectMany(playlist => playlistPublisher.Publish(playlist));
+
+
 
       return gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications).Concat(playlistPublications);
     }
@@ -217,13 +231,13 @@ namespace PlayniteWeb
     private Models.Game GameFromRelease(Playnite.SDK.Models.Game game)
     {
       var games = PlayniteApi.Database.Games.Where(g => g.Name == game.Name).ToList();
-      return new Models.Game(games);
+      return new Models.Game(games, pcPlatforms, emulatorSource);
     }
 
     private Models.Game GameFromRelease(Release game)
     {
       var games = PlayniteApi.Database.Games.Where(g => g.Name == game.Name).ToList();
-      return new Models.Game(games);
+      return new Models.Game(games, pcPlatforms, emulatorSource);
     }
 
     public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
@@ -299,7 +313,7 @@ namespace PlayniteWeb
 
     private void Subscriber_OnStopRelease(object sender, Release e)
     {
-      if (!isPcPlatform(e.Platform))
+      if (!canRunPlaynite(e.Platform))
       {
         logger.Debug($"Platform {e.Platform.Name} is not a PC platform.");
         return;
@@ -373,7 +387,7 @@ namespace PlayniteWeb
     {
       try
       {
-        if (!isPcPlatform(e.Platform) || !e.IsInstalled)
+        if (!canRunPlaynite(e.Platform) || !e.IsInstalled)
         {
           logger.Debug($"Platform {e.Platform.Name} is not a PC platform or game is not installed.");
           return;
@@ -393,7 +407,7 @@ namespace PlayniteWeb
     {
       try
       {
-        if (!isPcPlatform(e.Platform) || e.IsInstalled)
+        if (!canRunPlaynite(e.Platform) || e.IsInstalled)
         {
           logger.Debug($"Platform {e.Platform.Name} is not a PC platform or game is already installed.");
           return;
@@ -412,7 +426,7 @@ namespace PlayniteWeb
 
     private void Subscriber_OnStartRelease(object sender, Release release)
     {
-      if (!isPcPlatform(release.Platform))
+      if (!canRunPlaynite(release.Platform))
       {
         logger.Debug($"Platform {release.Platform.Name} is not a PC platform.");
         return;
@@ -437,7 +451,7 @@ namespace PlayniteWeb
       PlayniteApi.StartGame(release.Id);
     }
 
-    private bool isPcPlatform(Platform platform)
+    private bool canRunPlaynite(Platform platform)
     {
       return pcExpression.IsMatch(platform.Name);
     }
@@ -464,7 +478,7 @@ namespace PlayniteWeb
       try
       {
         var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name)
-            .Select(groupedByName => new Models.Game(groupedByName))
+            .Select(groupedByName => new Models.Game(groupedByName, pcPlatforms, emulatorSource))
             .Where(g => !g.Id.Equals(Guid.Empty));
 
         var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
