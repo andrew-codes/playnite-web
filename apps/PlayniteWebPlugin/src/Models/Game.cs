@@ -17,6 +17,8 @@ namespace PlayniteWeb.Models
     private readonly List<string> xboxPlatformNames;
     private readonly List<string> nintendoPlatformNames;
     private readonly Guid id;
+    private readonly IEnumerable<Platform> defaultPlatforms;
+    private readonly GameSource defaultSource;
 
     [DontSerialize]
     public IEnumerable<Release> Releases => releases;
@@ -27,9 +29,10 @@ namespace PlayniteWeb.Models
     public string Description => releases.FirstOrDefault()?.Description ?? String.Empty;
     public string Cover => releases.FirstOrDefault()?.CoverImage ?? String.Empty;
 
-    public Game(IEnumerable<Playnite.SDK.Models.Game> playniteGames)
+    public Game(IEnumerable<Playnite.SDK.Models.Game> playniteGames, IEnumerable<Platform> defaultPlatforms, GameSource defaultSource)
     {
-
+      this.defaultPlatforms = defaultPlatforms;
+      this.defaultSource = defaultSource;
       platformSorter = new PlatformSorter();
       pcPlatformNames = new List<string> { ".*PC.*", ".*Macintosh.*", ".*Linux.*" };
       xboxPlatformNames = new List<string> { ".*Xbox.*" };
@@ -46,8 +49,22 @@ namespace PlayniteWeb.Models
 
     private IEnumerable<Release> GetReleases(IGrouping<GameSource, Playnite.SDK.Models.Game> groupedBySource)
     {
-      IList<Platform> publishedPlatforms = new List<Platform>();
 
+      if (groupedBySource.Key == null)
+      {
+        foreach (var platform in defaultPlatforms)
+        {
+          var game = groupedBySource.FirstOrDefault(g => g.Roms.Any(r => r.Path.EndsWith("m3u")));
+          if (game == null)
+          {
+            game = groupedBySource.First();
+          }
+          yield return new Release(game, platform, defaultSource);
+        }
+        yield break;
+      }
+
+      IList<Platform> publishedPlatforms = new List<Platform>();
       for (int i = 0; i < groupedBySource.Count(); i++)
       {
         Platform platform = null;
@@ -55,7 +72,8 @@ namespace PlayniteWeb.Models
         {
           platform = groupedBySource.ElementAt(i).Platforms.Where(p => IsMatchingPlatform(groupedBySource.Key, p)).Where(p => !publishedPlatforms.Any(pp => p.Id == pp.Id)).OrderBy(p => p, platformSorter).First();
         }
-        catch { }
+        catch {
+        }
         if (platform == null)
         {
           continue;
@@ -85,7 +103,7 @@ namespace PlayniteWeb.Models
         return nintendoPlatformNames.Any(platformName => Regex.IsMatch(platform.Name, platformName, RegexOptions.IgnoreCase));
       }
 
-      return pcPlatformNames.Any(platformName => Regex.IsMatch(platform.Name, platformName, RegexOptions.IgnoreCase)); ;
+      return pcPlatformNames.Any(platformName => Regex.IsMatch(platform.Name, platformName, RegexOptions.IgnoreCase));
     }
   }
 
