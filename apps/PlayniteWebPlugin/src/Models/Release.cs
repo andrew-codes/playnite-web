@@ -17,6 +17,7 @@ namespace PlayniteWeb.Models
   {
     private readonly Playnite.SDK.Models.Game game;
     private readonly Platform platform;
+    private readonly GameSource source;
 
     [DontSerialize]
     public Platform Platform => platform;
@@ -28,6 +29,13 @@ namespace PlayniteWeb.Models
     {
       this.game = game;
       this.platform = platform;
+    }
+
+    public Release(Playnite.SDK.Models.Game game, Platform platform, GameSource source)
+    {
+      this.game = game;
+      this.platform = platform;
+      this.source = source;
     }
 
     [DontSerialize]
@@ -76,7 +84,18 @@ namespace PlayniteWeb.Models
     public IEnumerable<Guid> SeriesIds => game.Series?.Select(item => item.Id) ?? new List<Guid>();
     public IEnumerable<Guid> AgeRatingIds => game.AgeRatings?.Select(item => item.Id) ?? new List<Guid>();
     public IEnumerable<Guid> RegionIds => game.Regions?.Select(item => item.Id) ?? new List<Guid>();
-    public Guid SourceId => game.Source.Id;
+    public Guid SourceId
+    {
+      get
+      {
+        if (game.Source != null)
+        {
+          return game.Source.Id;
+        }
+
+        return source.Id;
+      }
+    }
     public IEnumerable<Guid> TagIds => game.Tags?.Select(item => item.Id) ?? new List<Guid>();
     public IEnumerable<Guid> FeatureIds => game.Features?.Select(item => item.Id) ?? new List<Guid>();
     public IEnumerable<Link> Links => game.Links;
