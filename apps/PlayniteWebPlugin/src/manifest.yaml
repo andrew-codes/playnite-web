@@ -50,3 +50,12 @@ Packages:
       - "chore(plugin): better logging (#639)"
       - "fix: check for release prior to using it"
       - "chore: add better logging to plugin"
+  - Version: 9.5.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v9.5.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_9_5_0.pext
+    ReleaseDate: 2024-12-05
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "feat: Roms are supported as PC platform games (#654)"
+      - "feat: ROms are supported as PC platform games"
+      - "chore: back-end e2e coverage results"
+      - "fix: game action button layout on mobile"
