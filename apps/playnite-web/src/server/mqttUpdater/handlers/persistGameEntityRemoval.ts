@@ -1,7 +1,7 @@
 import createDebugger from 'debug'
 import { HandlerOptions } from '..'
-import { EntityType } from '../../data/types.entities'
-import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
+import { EntityType } from '../../data/types.entities.js'
+import type { IHandlePublishedTopics } from '../IHandlePublishedTopics.js'
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameEntities',

@@ -148,7 +148,7 @@ jobs:
         env:
           YARN_ENABLE_HARDENED_MODE: '0'
       - name: Run all e2e tests
-        run: yarn nx run-many --target=test/e2e --configuration-ci --verbose --projects=tag:linux
+        run: yarn nx run playnite-web-app:test/e2e:ci --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           DEBUG: 'playnite-web/*'

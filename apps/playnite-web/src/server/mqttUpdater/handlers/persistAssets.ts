@@ -1,8 +1,8 @@
 import createDebugger from 'debug'
 import path from 'path'
 import { HandlerOptions } from '..'
-import { GameAsset } from '../../data/types.entities'
-import type { IHandlePublishedTopics } from '../IHandlePublishedTopics'
+import { GameAsset } from '../../data/types.entities.js'
+import type { IHandlePublishedTopics } from '../IHandlePublishedTopics.js'
 
 const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistAssets',

@@ -1,6 +1,6 @@
 import { Release } from 'apps/playnite-web/src/server/data/types.entities'
-import type { CompletionStatusResolvers } from '../../../../../../.generated/types.generated'
-import { create } from '../../../../oid'
+import type { CompletionStatusResolvers } from '../../../../../../.generated/types.generated.js'
+import { create } from '../../../../oid.js'
 
 export const CompletionStatus: CompletionStatusResolvers = {
   id: async (_parent, _arg, _ctx) => {

@@ -1,6 +1,6 @@
-import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
-import { Game } from '../../../../../data/types.entities'
-import { fromString } from '../../../../../oid'
+import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
+import { Game } from '../../../../../data/types.entities.js'
+import { fromString } from '../../../../../oid.js'
 
 export const game: NonNullable<QueryResolvers['game']> = async (
   _parent,

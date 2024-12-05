@@ -1,7 +1,6 @@
-import { GraphQLError } from 'graphql'
-import { Platform, Release } from '../../../../../data/types.entities'
-import { fromString } from '../../../../../oid'
-import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
+import { Platform, Release } from '../../../../../data/types.entities.js'
+import { fromString } from '../../../../../oid.js'
+import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
 
 export const startGameRelease: NonNullable<
   MutationResolvers['startGameRelease']
@@ -27,7 +26,8 @@ export const startGameRelease: NonNullable<
   })) as Array<Release>
 
   if (!release) {
-    throw new GraphQLError('No game release found')
+    const gqlImport = await import('graphql')
+    throw new gqlImport.GraphQLError('No game release found')
   }
 
   await _ctx.subscriptionPublisher.publish('releaseRunStateChanged', {

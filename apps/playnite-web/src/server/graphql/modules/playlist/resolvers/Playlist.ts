@@ -1,9 +1,7 @@
-import _ from 'lodash'
-import type { PlaylistResolvers } from '../../../../../../.generated/types.generated'
-import { Game } from '../../../../data/types.entities'
-import { create } from '../../../../oid'
-
-const { startCase, lowerCase } = _
+import { lowerCase, startCase } from 'lodash-es'
+import type { PlaylistResolvers } from '../../../../../../.generated/types.generated.js'
+import { Game } from '../../../../data/types.entities.js'
+import { create } from '../../../../oid.js'
 
 export const Playlist: PlaylistResolvers = {
   id: async (_parent, _arg, _ctx) => {

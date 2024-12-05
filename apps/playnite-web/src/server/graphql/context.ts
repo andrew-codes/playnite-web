@@ -1,9 +1,9 @@
+import type { AsyncMqttClient } from 'async-mqtt'
 import { YogaInitialContext } from 'graphql-yoga'
-import { AsyncMqttClient } from 'mqtt-client'
-import { IdentityService } from '../auth/index'
-import { IQuery, IUpdateQuery } from '../data/types.api'
-import { User } from '../data/types.entities'
-import { subscriptionPublisher } from './subscriptionPublisher'
+import { IdentityService } from '../auth/index.js'
+import { IQuery, IUpdateQuery } from '../data/types.api.js'
+import { User } from '../data/types.entities.js'
+import { subscriptionPublisher } from './subscriptionPublisher.js'
 
 type PlayniteContext = {
   identityService: IdentityService

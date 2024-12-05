@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import _ from 'lodash'
-
-const { merge, memoize } = _
+import { merge, memoize }from 'lodash-es'
 
 const initialState: {
   device: {

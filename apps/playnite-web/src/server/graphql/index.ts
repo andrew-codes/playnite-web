@@ -1,17 +1,17 @@
 import { useCSRFPrevention } from '@graphql-yoga/plugin-csrf-prevention'
 import { useJWT } from '@graphql-yoga/plugin-jwt'
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
-import { createYoga } from 'graphql-yoga'
-import { AsyncMqttClient } from 'mqtt-client'
-import { IdentityService } from '../auth/index'
-import EntityConditionalDataApi from '../data/entityConditional/DataApi'
-import InMemoryDataApi from '../data/inMemory/DataApi'
-import { getDbClient } from '../data/mongo/client'
-import MongoDataApi from '../data/mongo/DataApi'
-import PriorityDataApi from '../data/priority/DataApi'
-import type { PlayniteContext } from './context'
-import schema from './schema'
-import { subscriptionPublisher } from './subscriptionPublisher'
+import type { AsyncMqttClient } from 'async-mqtt'
+import { createYoga, YogaServerOptions } from 'graphql-yoga'
+import { IdentityService } from '../auth/index.js'
+import EntityConditionalDataApi from '../data/entityConditional/DataApi.js'
+import InMemoryDataApi from '../data/inMemory/DataApi.js'
+import { getDbClient } from '../data/mongo/client.js'
+import MongoDataApi from '../data/mongo/DataApi.js'
+import PriorityDataApi from '../data/priority/DataApi.js'
+import type { PlayniteContext } from './context.js'
+import schema from './schema.js'
+import { subscriptionPublisher } from './subscriptionPublisher.js'
 
 const graphql = (
   endpoint: string,
@@ -20,20 +20,13 @@ const graphql = (
 ) => {
   const domain = process.env.HOST ?? 'localhost'
 
-  return createYoga({
+  const config: YogaServerOptions<any, PlayniteContext> = {
     schema,
     graphqlEndpoint: endpoint,
     graphiql: {
       subscriptionsProtocol: 'WS',
     },
-    cors: {
-      origin: [domain].concat(process.env.ADDITIONAL_ORIGINS?.split(',') ?? []),
-      credentials: true,
-      allowedHeaders: ['X-Custom-Header'],
-      methods: ['GET', 'POST'],
-    },
     plugins: [
-      useCSRFPrevention({ requestHeaders: ['x-graphql-yoga-csrf'] }),
       useCookies(),
       useJWT({
         issuer: domain,
@@ -85,7 +78,21 @@ const graphql = (
         updateQueryApi: dataApi,
       }
     },
-  })
+  }
+
+  if (process.env.TEST !== 'e2e') {
+    config.plugins?.push(
+      useCSRFPrevention({ requestHeaders: ['x-graphql-yoga-csrf'] }),
+    )
+    config.cors = {
+      origin: [domain].concat(process.env.ADDITIONAL_ORIGINS?.split(',') ?? []),
+      credentials: true,
+      allowedHeaders: ['X-Custom-Header'],
+      methods: ['GET', 'POST'],
+    }
+  }
+
+  return createYoga(config)
 }
 
 export default graphql

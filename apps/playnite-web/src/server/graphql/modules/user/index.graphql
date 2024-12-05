@@ -2,6 +2,7 @@ type User {
   id: String!
   username: String!
   isAuthenticated: Boolean!
+  credential: String
 }
 
 extend type Query {

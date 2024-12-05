@@ -5,9 +5,11 @@ RUN apk add \
   bash
 
 WORKDIR /opt/playnite-web-app
-RUN npm install sharp@0.33.4 mongodb@6.8.0
 
 COPY _packaged/ .
-RUN chmod +x server.production.cjs
 
-ENTRYPOINT ["node", "server.production.cjs"]
+RUN npm install --force --omit=dev
+
+WORKDIR /opt/playnite-web-app/src/server
+
+ENTRYPOINT ["node", "server.js"]

@@ -1,6 +1,6 @@
-import { Platform, Release } from '../../../../../data/types.entities'
-import { fromString } from '../../../../../oid'
-import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
+import { Platform, Release } from '../../../../../data/types.entities.js'
+import { fromString } from '../../../../../oid.js'
+import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
 
 export const restartGameRelease: NonNullable<
   MutationResolvers['restartGameRelease']

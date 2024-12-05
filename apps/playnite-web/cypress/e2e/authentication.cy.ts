@@ -35,6 +35,7 @@ describe('Authentication', () => {
       .parents('.MuiButtonBase-root')
       .find('.MuiTouchRipple-root')
       .click({ force: true })
+    cy.wait('@api')
 
     cy.get('[data-test="MainNavigation"]').contains('span', 'Login')
   })

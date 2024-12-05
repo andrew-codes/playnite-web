@@ -1,5 +1,5 @@
 import { Release } from 'apps/playnite-web/src/server/data/types.entities'
-import type { GameAssetResolvers } from '../../../../../../.generated/types.generated'
+import type { GameAssetResolvers } from '../../../../../../.generated/types.generated.js'
 export const GameAsset: GameAssetResolvers = {
   id: (_parent) => _parent.id,
   type: (_parent) => _parent.relatedType,
