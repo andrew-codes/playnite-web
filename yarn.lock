@@ -3403,9 +3403,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cypress/code-coverage@npm:^3.13.7":
-  version: 3.13.7
-  resolution: "@cypress/code-coverage@npm:3.13.7"
+"@cypress/code-coverage@npm:^3.13.8":
+  version: 3.13.8
+  resolution: "@cypress/code-coverage@npm:3.13.8"
   dependencies:
     "@cypress/webpack-preprocessor": "npm:^6.0.0"
     chalk: "npm:4.1.2"
@@ -3422,7 +3422,7 @@ __metadata:
     babel-loader: ^8.3 || ^9
     cypress: "*"
     webpack: ^4 || ^5
-  checksum: 10c0/a69fd76a3686763ac26f5991168f06f942780fd9edd16ab53c3e22c276b79321079a5a43efcb26b574f9e2029e9eb40f44432c4b7402b60a7d81e12b7c7bde44
+  checksum: 10c0/d3b4cb1648a63e8bf43933724f0cade6d33fd5a44686c8cbd391b95ca024a8e9286da49bc867aa926ebb531e847ca127fe4d2f80a2b4847b650117e11d3f97b7
   languageName: node
   linkType: hard
 
@@ -20908,7 +20908,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.26.0"
     "@babel/preset-react": "npm:^7.25.9"
     "@babel/preset-typescript": "npm:^7.26.0"
-    "@cypress/code-coverage": "npm:^3.13.7"
+    "@cypress/code-coverage": "npm:^3.13.8"
     "@cypress/webpack-preprocessor": "npm:^6.0.2"
     "@eddeee888/gcg-typescript-resolver-files": "npm:^0.11.0"
     "@emotion/cache": "npm:^11.13.1"

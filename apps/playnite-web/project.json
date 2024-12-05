@@ -284,14 +284,14 @@
       "inputs": [
         "{projectRoot}/src/server/**",
         "generated",
-        "{projectRoot}/scripts/utils/buildServer.js",
+        "{projectRoot}/scripts/utils/buildServer.ts",
         "{projectRoot}/tsconfig.server.json"
       ],
       "outputs": ["{projectRoot}/.build-server"],
       "dependsOn": ["prepare", "clean/server"],
       "options": {
         "parallel": false,
-        "commands": ["yarn tsx scripts/utils/buildServer.js"],
+        "commands": ["yarn tsx scripts/utils/buildServer.ts"],
         "cwd": "{projectRoot}",
         "env": {
           "NODE_ENV": "production"
@@ -304,14 +304,14 @@
       "inputs": [
         "{projectRoot}/src/server/**",
         "generated",
-        "{projectRoot}/scripts/utils/buildServer.js",
+        "{projectRoot}/scripts/utils/buildServer.ts",
         "{projectRoot}/tsconfig.server.json"
       ],
       "outputs": ["{projectRoot}/.build-server"],
       "dependsOn": ["prepare", "clean/server"],
       "options": {
         "parallel": false,
-        "commands": ["yarn tsx scripts/utils/buildServer.js"],
+        "commands": ["yarn tsx scripts/utils/buildServer.ts"],
         "cwd": "{projectRoot}",
         "env": {
           "NODE_ENV": "production",
