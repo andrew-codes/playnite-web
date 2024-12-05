@@ -1,12 +1,12 @@
-import type { GameReleaseResolvers } from '../../../../../../.generated/types.generated'
+import type { GameReleaseResolvers } from '../../../../../../.generated/types.generated.js'
 import {
   CompletionStatus,
   GameAsset,
   GameFeature,
   GameSource,
   Platform,
-} from '../../../../data/types.entities'
-import { create } from '../../../../oid'
+} from '../../../../data/types.entities.js'
+import { create } from '../../../../oid.js'
 
 export const GameRelease: GameReleaseResolvers = {
   id: async (_parent, _arg, _ctx) => {

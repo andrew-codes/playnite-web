@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "noEmit": false,
+    "moduleResolution": "nodenext",
+  },
+  "include": [
+    "src/server/**/*.ts",
+    ".generated/*.ts",
+  ],
+  "exclude": [
+    "**/__tests__/**",
+    "**/__component_tests__/**",
+    "node_modules"
+  ]
+}

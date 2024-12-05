@@ -5,7 +5,7 @@ import {
   RelationshipTypes,
   StringFromType,
   TypeFromString,
-} from './types.entities'
+} from './types.entities.js'
 
 type ExactMatchFilterItem<T extends EntityType, F, V> = T extends infer U
   ? F extends keyof TypeFromString<U>

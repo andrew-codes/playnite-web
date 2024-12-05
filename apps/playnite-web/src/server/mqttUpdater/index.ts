@@ -1,18 +1,16 @@
+import type { AsyncMqttClient } from 'async-mqtt'
 import createDebugger from 'debug'
 import fs from 'fs/promises'
 import type { PubSub } from 'graphql-yoga'
-import _ from 'lodash'
-import { AsyncMqttClient } from 'mqtt-client'
-import EntityConditionalDataApi from '../data/entityConditional/DataApi'
-import InMemoryDataApi from '../data/inMemory/DataApi'
-import { getDbClient } from '../data/mongo/client'
-import MongoDataApi from '../data/mongo/DataApi'
-import PriorityDataApi from '../data/priority/DataApi'
-import { IDeleteQuery, IQuery, IUpdateQuery } from '../data/types.api'
-import { PubSubChannels } from '../graphql/subscriptionPublisher'
-import handlers from './handlers/index'
-
-const { merge } = _
+import { merge } from 'lodash-es'
+import EntityConditionalDataApi from '../data/entityConditional/DataApi.js'
+import InMemoryDataApi from '../data/inMemory/DataApi.js'
+import { getDbClient } from '../data/mongo/client.js'
+import MongoDataApi from '../data/mongo/DataApi.js'
+import PriorityDataApi from '../data/priority/DataApi.js'
+import { IDeleteQuery, IQuery, IUpdateQuery } from '../data/types.api.js'
+import { PubSubChannels } from '../graphql/subscriptionPublisher.js'
+import handlers from './handlers/index.js'
 
 type HandlerOptions = {
   assetSaveDirectoryPath: string

@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": false,
+    "allowJs": true,
+    "module": "ESNext",
+    "moduleResolution": "nodenext",
+  },
+  "include": [
+    "src/**/*.ts",
+    "testUtils/**/*.ts",
+    "*.ts",
+    "../../graphql.config.ts",
+    ".generated/resolvers.generated.ts",
+    ".generated/typeDefs.generated.ts",
+    ".generated/types.generated.ts"
+  ],
+  "exclude": [
+    "node_modules",
+  ]
+}

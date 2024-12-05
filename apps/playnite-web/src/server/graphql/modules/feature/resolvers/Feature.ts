@@ -1,6 +1,6 @@
 import { Release } from 'apps/playnite-web/src/server/data/types.entities'
-import type { FeatureResolvers } from '../../../../../../.generated/types.generated'
-import { create } from '../../../../oid'
+import type { FeatureResolvers } from '../../../../../../.generated/types.generated.js'
+import { create } from '../../../../oid.js'
 
 export const Feature: FeatureResolvers = {
   id: async (_parent, _arg, _ctx) => {

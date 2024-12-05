@@ -16,7 +16,7 @@ const useSignOut = () =>
     update: (cache, mutationResult) => {
       cache.updateQuery({ query: Me }, (data) => ({
         ...data,
-        me: { ...mutationResult.data?.signOut },
+        me: {},
       }))
     },
   })

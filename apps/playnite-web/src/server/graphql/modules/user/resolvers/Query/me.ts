@@ -1,6 +1,6 @@
 import { User } from 'apps/playnite-web/src/server/data/types.entities'
-import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
-import { createNull } from '../../../../../oid'
+import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
+import { createNull } from '../../../../../oid.js'
 
 export const me: NonNullable<QueryResolvers['me']> = async (
   _parent,

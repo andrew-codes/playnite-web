@@ -1,4 +1,4 @@
-import * as styles from '@mui/material/styles'
+import * as styles from '@mui/material'
 import mediaQuery from 'css-mediaquery'
 
 declare module '@mui/material/styles' {

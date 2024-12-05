@@ -1,16 +1,14 @@
-import _ from 'lodash'
+import { sortBy, uniq } from 'lodash-es'
 import {
   CompletionStatus,
   GameFeature,
   Platform,
   Release,
-} from '../../../../../data/types.entities'
+} from '../../../../../data/types.entities.js'
 import type {
   FilterItem,
   QueryResolvers,
-} from './../../../../../../../.generated/types.generated'
-
-const { sortBy, uniq } = _
+} from './../../../../../../../.generated/types.generated.js'
 
 export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
   _parent,

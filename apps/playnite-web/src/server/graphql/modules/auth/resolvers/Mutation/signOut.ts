@@ -1,5 +1,4 @@
-import { GraphQLError } from 'graphql'
-import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
+import type { MutationResolvers } from '../../../../../../../.generated/types.generated.js'
 
 export const signOut: NonNullable<MutationResolvers['signOut']> = async (
   _parent,
@@ -8,10 +7,11 @@ export const signOut: NonNullable<MutationResolvers['signOut']> = async (
 ) => {
   const claim = _ctx.jwt
   if (!claim) {
-    throw new GraphQLError('Not authenticated')
+    const gqlImport = await import('graphql')
+    throw new gqlImport.GraphQLError('Not authenticated')
   }
 
   _ctx.request.cookieStore?.delete('authorization')
 
-  return claim.user
+  return claim
 }

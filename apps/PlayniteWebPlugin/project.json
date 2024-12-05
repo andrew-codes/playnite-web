@@ -29,6 +29,7 @@
       }
     },
     "package": {
+      "dependsOn": ["build"],
       "executor": "nx:run-commands",
       "options": {
         "command": "bash -c './scripts/package.sh'",

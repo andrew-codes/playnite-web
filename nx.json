@@ -4,14 +4,9 @@
     "generated": ["{projectRoot}/.generated"]
   },
   "targetDefaults": {
-    "clean": {
-      "inputs": ["src", "generated"],
-      "dependsOn": [],
-      "cache": true
-    },
     "build": {
       "inputs": ["src", "generated"],
-      "dependsOn": ["clean", "prepare", "^build", "build/restore"],
+      "dependsOn": ["prepare", "^build", "build/restore"],
       "cache": true
     },
     "build/restore": {
@@ -28,16 +23,10 @@
       "cache": false
     },
     "package": {
-      "dependsOn": ["build"],
       "cache": true
     },
     "publish": {
-      "dependsOn": [
-        {
-          "target": "package",
-          "configuration": "production"
-        }
-      ],
+      "dependsOn": ["package"],
       "cache": false
     },
     "test/unit": {
@@ -49,19 +38,19 @@
       "cache": true
     },
     "test/components": {
-      "dependsOn": ["clean", "prepare"],
+      "dependsOn": ["prepare"],
       "cache": false
     },
     "test/components/update": {
-      "dependsOn": ["clean"],
+      "dependsOn": [],
       "cache": false
     },
     "test/e2e": {
-      "dependsOn": ["clean"],
+      "dependsOn": [],
       "cache": false
     },
     "test/e2e/update": {
-      "dependsOn": ["prepare"],
+      "dependsOn": [],
       "cache": false
     }
   },
