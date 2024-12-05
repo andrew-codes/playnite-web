@@ -108,7 +108,7 @@ const RAW_RUNTIME_STATE =
           ["debug", "virtual:43023b9ec09e5c4c8f29bfa796eae859f4587491c8bfa2bfccfb217268d123d82ce16714db3cc6f19109853cfc0d4cfa87b07988e86203e31b8f20d2130c6775#npm:4.3.7"],\
           ["get-stream", "npm:7.0.1"],\
           ["import-from-esm", "npm:1.3.4"],\
-          ["into-stream", "npm:7.0.0"],\
+          ["into-stream", "npm:8.0.1"],\
           ["lodash-es", "npm:4.17.21"],\
           ["read-package-up", "npm:11.0.0"],\
           ["yaml", "npm:2.6.1"]\
@@ -20296,6 +20296,13 @@ const RAW_RUNTIME_STATE =
           ["into-stream", "npm:7.0.0"],\
           ["from2", "npm:2.3.0"],\
           ["p-is-promise", "npm:3.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:8.0.1", {\
+        "packageLocation": "./.yarn/cache/into-stream-npm-8.0.1-65c164c889-555b937218.zip/node_modules/into-stream/",\
+        "packageDependencies": [\
+          ["into-stream", "npm:8.0.1"]\
         ],\
         "linkType": "HARD"\
       }]\

@@ -25,7 +25,7 @@ __metadata:
     debug: "npm:^4.3.7"
     get-stream: "npm:^7.0.1"
     import-from-esm: "npm:^1.3.4"
-    into-stream: "npm:^7.0.0"
+    into-stream: "npm:^8.0.1"
     lodash-es: "npm:^4.17.21"
     read-package-up: "npm:^11.0.0"
     yaml: "npm:^2.6.1"
@@ -15488,6 +15488,13 @@ __metadata:
     from2: "npm:^2.3.0"
     p-is-promise: "npm:^3.0.0"
   checksum: 10c0/ac6975c0029bf969931781ab1534996b35068f5d51ccd55a00b601e2fc638cf040a42c9fb8e3c8f320509af9a56c9b11da8f1159f76db3ed8096779cce618c95
+  languageName: node
+  linkType: hard
+
+"into-stream@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "into-stream@npm:8.0.1"
+  checksum: 10c0/555b937218ed17605247c155c586568fc8f23e68209abefc0cc4776921f14daa75ee00b4922036a1f7dc98074d04b6908335e5c7b7a825d1f8ef8b8300024f4b
   languageName: node
   linkType: hard
 
