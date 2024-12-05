@@ -4,17 +4,14 @@
     "isolatedModules": false,
     "noEmit": false,
     "moduleResolution": "nodenext",
-    "types": [
-      "node",
-    ],
   },
   "include": [
     "src/server/**/*.ts",
-    "src/*.ts",
     ".generated/*.ts",
   ],
   "exclude": [
     "**/__tests__/**",
+    "**/__component_tests__/**",
     "node_modules"
   ]
 }

@@ -1,12 +1,35 @@
-import { build } from 'esbuild'
-import { esbuildPluginIstanbul } from 'esbuild-plugin-istanbul'
+import { build, transform, type Plugin } from 'esbuild'
+import {
+  esbuildPluginIstanbul,
+  type IstanbulPluginPreloader,
+} from 'esbuild-plugin-istanbul'
+import fs from 'fs/promises'
 
-const plugins = []
+const plugins: Array<Plugin> = []
 if (process.env.INSTRUMENT === 'true') {
+  const preloader: IstanbulPluginPreloader = async (args) => {
+    let contents = await fs.readFile(args.path, 'utf-8')
+    contents = (
+      await transform(contents, {
+        format: 'esm',
+        platform: 'node',
+        loader: 'ts',
+        define: {
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        },
+      })
+    ).code
+
+    return {
+      contents,
+    }
+  }
+
   plugins.push(
     esbuildPluginIstanbul({
-      filter: /.*/,
+      filter: /src\/server\/.*\.ts/,
       loader: 'ts',
+      preloader,
       name: 'istanbul-loader-ts',
     }),
   )
