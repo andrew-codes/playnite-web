@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
-import { omit } from 'lodash-es'
 import { Claim } from '../../.generated/types.generated'
 import { Me } from './me'
 
@@ -19,7 +18,7 @@ const useSignIn = () =>
     update: (cache, mutationResult) => {
       cache.updateQuery({ query: Me }, (data) => ({
         ...data,
-        me: { ...omit(mutationResult.data?.signIn.user, 'credential') },
+        me: mutationResult.data?.signIn.user,
       }))
     },
   })
