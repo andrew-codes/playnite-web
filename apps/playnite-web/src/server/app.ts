@@ -133,7 +133,7 @@ async function run(mqttClient: AsyncMqttClient) {
 
   if (global.__coverage__) {
     app.get('/__coverage__', (req, resp) => {
-      resp.json(global.__coverage__)
+      resp.json({ coverage: global.__coverage__ })
     })
   }
 
