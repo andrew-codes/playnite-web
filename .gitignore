@@ -23,10 +23,11 @@ _packaged
 
 apps/playnite-web/.cache
 apps/playnite-web/build
-apps/playnite-web/public/build
-apps/playnite-web/public/entry.worker.js
+apps/playnite-web/src/public/build
+apps/playnite-web/src/public/entry.worker.js
 apps/playnite-web/vite.config.js*
 !apps/playnite-web/vite.config.js
+apps/playnite-web/src/public/assets/asset-by-id/*
 
 apps/playnite-web/public/assets/asset-by-id/*
 

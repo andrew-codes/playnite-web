@@ -23,19 +23,32 @@ const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
 
   await fs.mkdir(options.assetSaveDirectoryPath, { recursive: true })
 
+  let messageCount = 0
   let messages: Array<{ topic: string; payload: Buffer }> = []
   options.mqtt.on('message', async (topic, payload) => {
     messages.push({ topic, payload })
+
+    if (topic === 'playnite/request/library') {
+      messageCount = 0
+      console.log('New Message Count:', messageCount)
+    }
   })
 
+  let unprocessedMessages: Array<{ topic: string; payload: Buffer }> = []
   setInterval(async () => {
-    const currentMessages = messages
-    messages = []
+    unprocessedMessages = unprocessedMessages.concat(messages)
 
-    await Promise.all(
-      handlers(options).map((handler) => handler(currentMessages)),
-    )
-  }, 1000)
+    console.log('New Message Count:', messages.length)
+    console.log('Unprocessed:', unprocessedMessages.length)
+
+    messages = []
+    messageCount += unprocessedMessages.length
+
+    for (const handler of handlers(options)) {
+      await handler(unprocessedMessages)
+    }
+    unprocessedMessages = []
+  }, 20000)
 }
 
 export default mqttUpdater
