@@ -14,6 +14,23 @@ class PriorityDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
     private _orderedUpdateQueryApis: Set<IUpdateQuery>,
     private _orderedDelete: Set<IDeleteQuery>,
   ) {}
+  async executeBulk<TEntity extends Entity>(
+    entityType: StringFromType<TEntity>,
+    entities: Array<{
+      filter: UpdateFilterItem<StringFromType<TEntity>>
+      entity: Partial<TEntity>
+    }>,
+  ): Promise<number | null> {
+    for (const api of this._orderedUpdateQueryApis) {
+      const result = await api.executeBulk(entityType, entities)
+
+      if (result !== null) {
+        return result
+      }
+    }
+
+    return null
+  }
   async executeDelete<TEntity extends Entity>(
     filter: UpdateFilterItem<StringFromType<TEntity>>,
   ): Promise<number | null> {
