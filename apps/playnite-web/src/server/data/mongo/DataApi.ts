@@ -35,6 +35,32 @@ class MongoDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
       )
     }
   }
+
+  async executeBulk<TEntity extends Entity>(
+    entityType: StringFromType<TEntity>,
+    entities: Array<{
+      filter: UpdateFilterItem<StringFromType<TEntity>>
+      entity: Partial<TEntity>
+    }>,
+  ): Promise<number | null> {
+    const collectionName = entityCollectionLookup.get(entityType)
+    if (!collectionName) {
+      return null
+    }
+
+    const bulk = this._db
+      .collection<TEntity>(collectionName)
+      .initializeOrderedBulkOp()
+    for (const { filter, entity } of entities) {
+      const dbFilter = this._parseUpdateQueryFilterItem(filter)
+      if (!dbFilter) {
+        return 0
+      }
+      bulk.find(dbFilter).upsert().updateOne({ $set: entity })
+    }
+
+    return (await bulk.execute()).upsertedCount
+  }
   async executeDelete<TEntity extends Entity>(
     filter: UpdateFilterItem<StringFromType<TEntity>>,
   ): Promise<number | null> {

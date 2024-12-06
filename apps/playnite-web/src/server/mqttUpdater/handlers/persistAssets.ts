@@ -13,62 +13,65 @@ const topicMatch =
 
 const create =
   (options: HandlerOptions): IHandlePublishedTopics =>
-  async (topic, payload) => {
-    try {
-      if (!topicMatch.test(topic)) {
-        return
-      }
-      debug(`Received game entity asset for topic ${topic}`)
+  async (messages) => {
+    const messagesToHandle = messages.filter(({ topic }) =>
+      topicMatch.test(topic),
+    )
+    for (const { topic, payload } of messagesToHandle) {
+      try {
+        debug(`Received game entity asset for topic ${topic}`)
 
-      const match = topicMatch.exec(topic)
-      if (!match?.groups) {
-        return
-      }
+        const match = topicMatch.exec(topic)
+        if (!match?.groups) {
+          return
+        }
 
-      const { assetId, assetTypeKey, entityType, entityId } = match.groups
-      const filename = `${path.basename(assetId, path.extname(assetId))}.webp`
-      const { default: sharp } = await import('sharp')
+        const { assetId, assetTypeKey, entityType, entityId } = match.groups
+        const filename = `${path.basename(assetId, path.extname(assetId))}.webp`
+        const { default: sharp } = await import('sharp')
 
-      const image = sharp(payload)
-      if (assetTypeKey === 'cover') {
-        const metadata = await image.metadata()
-        if (metadata.width && metadata.width > 256) {
+        const image = sharp(payload)
+        if (assetTypeKey === 'cover') {
+          const metadata = await image.metadata()
+          if (metadata.width && metadata.width > 256) {
+            await image
+              .resize(256, 256)
+              .webp()
+              .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
+          }
+        } else {
           await image
-            .resize(256, 256)
             .webp()
             .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
         }
-      } else {
-        await image
-          .webp()
-          .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
+
+        debug(
+          `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId}. Original filename: ${path.basename(assetId)}. New asset ID ${filename}`,
+        )
+        const relatedId = entityId
+        const assetDoc = {
+          _type: 'GameAsset',
+          id: filename,
+          relatedId,
+          relatedType: entityType,
+          typeKey: assetTypeKey,
+        } as unknown as GameAsset
+
+        await options.updateQueryApi.executeUpdate(
+          {
+            type: 'ExactMatch',
+            entityType: 'GameAsset',
+            field: 'id',
+            value: filename,
+          },
+          assetDoc,
+        )
+      } catch (error) {
+        debug(`Error processing topic ${topic}`)
+        console.error(error)
       }
-
-      debug(
-        `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId}. Original filename: ${path.basename(assetId)}. New asset ID ${filename}`,
-      )
-      const relatedId = entityId
-      const assetDoc = {
-        _type: 'GameAsset',
-        id: filename,
-        relatedId,
-        relatedType: entityType,
-        typeKey: assetTypeKey,
-      } as unknown as GameAsset
-
-      await options.updateQueryApi.executeUpdate(
-        {
-          type: 'ExactMatch',
-          entityType: 'GameAsset',
-          field: 'id',
-          value: filename,
-        },
-        assetDoc,
-      )
-    } catch (error) {
-      debug(`Error processing topic ${topic}`)
-      console.error(error)
     }
   }
 
 export default create
+export { topicMatch }
