@@ -38,7 +38,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       }
 
       var topic = topicBuilder.GetPublishTopic(PublishTopics.Game(game.Id));
-      yield return client.PublishStringAsync(topic, serializer.Serialize(game), MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default);
+      yield return client.PublishStringAsync(topic, serializer.Serialize(game), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
 
       var releasePublishes = ((Models.Game)game).Releases.SelectMany(release => publishRelease.Publish(release));
       foreach (var task in releasePublishes)
