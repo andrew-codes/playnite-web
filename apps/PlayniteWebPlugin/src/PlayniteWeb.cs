@@ -185,7 +185,9 @@ namespace PlayniteWeb
 
     private void SyncLibraryFromMenu(MainMenuItemActionArgs args)
     {
+      logger.Info("Syncing library with Playnite Web.");
       Task.WaitAll(SyncLibrary().ToArray());
+      logger.Info("Finished syncing library with Playnite Web.");
     }
 
     private IEnumerable<Task> SyncLibrary()
@@ -211,9 +213,10 @@ namespace PlayniteWeb
         .Select(tag => new Playlist(tag.Name.Substring(9), games.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
         .SelectMany(playlist => playlistPublisher.Publish(playlist));
 
+      var publishes = gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications).Concat(playlistPublications);
+      logger.Info($"Publshing a total of {publishes.Count()} messages.");
 
-
-      return gamePublications.Concat(platformPublications).Concat(otherGameEntityPublications).Concat(playlistPublications);
+      return publishes;
     }
 
     private Release ReleaseFromPlayniteGame(Playnite.SDK.Models.Game game)
