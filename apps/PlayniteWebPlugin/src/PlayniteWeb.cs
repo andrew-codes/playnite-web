@@ -1,6 +1,5 @@
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Internal;
 using MQTTnet.Protocol;
 using Playnite.SDK;
 using Playnite.SDK.Data;
@@ -29,7 +28,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Xml.Linq;
 
 namespace PlayniteWeb
 {
@@ -198,7 +196,7 @@ namespace PlayniteWeb
       var platformPublications = PlayniteApi.Database.Platforms.SelectMany(platform => platformPublisher.Publish(platform));
 
       IEnumerable<string> ignored = new List<string> {
-        "Games", "Platforms", "ImportExclusions", "FilterPresets", "IsOpen"
+        "Games", "Platforms", "ImportExclusions", "FilterPresets", "IsOpen", "GameScanners", "Regions", "AgeRatings", "Categories", "Companies", "Emulators"
       };
       var gameEntityProperties = typeof(IGameDatabase)
         .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
@@ -461,7 +459,10 @@ namespace PlayniteWeb
 
     private void Publisher_LibraryRefreshRequest(object sender, Task e)
     {
+      logger.Info("Syncing library with Playnite Web.");
       Task.WhenAll(SyncLibrary().ToArray()).ContinueWith((t) => e.Start());
+      logger.Info("Finished syncing library with Playnite Web.");
+
     }
 
     private void HandleVerifySettings(object sender, PlayniteWebSettings e)
