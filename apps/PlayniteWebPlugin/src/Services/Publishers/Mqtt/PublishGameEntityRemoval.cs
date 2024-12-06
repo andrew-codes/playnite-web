@@ -26,7 +26,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     public IEnumerable<Task> Publish(IIdentifiable item)
     {
       var topic = topicBuilder.GetPublishTopic(PublishTopics.GameEntityRemoval(item.GetType().Name, item.Id));
-      yield return client.PublishStringAsync(topic, string.Empty, MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default);
+      yield return client.PublishStringAsync(topic, string.Empty, MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
     }
   }
 }
