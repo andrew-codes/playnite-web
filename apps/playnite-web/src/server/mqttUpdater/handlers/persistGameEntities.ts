@@ -28,6 +28,7 @@ const handler =
           const entityId = matches?.groups?.entityId
 
           if (!entityType || !entityId || !payload) {
+            console.error('Invalid topic or payload', entityType, entityId)
             return acc
           }
 
@@ -56,20 +57,19 @@ const handler =
         >,
       )
 
-    await Promise.all(
-      Object.entries(bulkUpdatesByEntityType).map(
-        async ([entityType, entities]) => {
-          try {
-            const et = entityType as EntityType
-            return options.updateQueryApi.executeBulk<
-              TypeFromString<typeof et>
-            >(et, entities)
-          } catch (error) {
-            console.error(error)
-          }
-        },
-      ),
-    )
+    for (const [entityType, entities] of Object.entries(
+      bulkUpdatesByEntityType,
+    )) {
+      try {
+        const et = entityType as EntityType
+        await options.updateQueryApi.executeBulk<TypeFromString<typeof et>>(
+          et,
+          entities,
+        )
+      } catch (error) {
+        console.error(error)
+      }
+    }
   }
 
 export default handler

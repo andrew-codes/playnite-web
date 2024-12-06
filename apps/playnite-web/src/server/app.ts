@@ -57,8 +57,11 @@ async function run(mqttClient: AsyncMqttClient) {
 
   await mqttUpdater({
     assetSaveDirectoryPath: path.join(
-      process.cwd(),
-      '../public/assets/asset-by-id',
+      __dirname,
+      '..',
+      'public',
+      'assets',
+      'asset-by-id',
     ),
     mqtt: mqttClient,
     pubsub: subscriptionPublisher,

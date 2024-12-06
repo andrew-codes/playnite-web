@@ -1,7 +1,15 @@
 import createDebugger from 'debug'
+import { isEmpty } from 'lodash-es'
 import path from 'path'
 import { HandlerOptions } from '..'
-import { GameAsset } from '../../data/types.entities.js'
+import { UpdateFilterItem } from '../../data/types.api'
+import {
+  Entity,
+  GameAsset,
+  GameAssetRelatedType,
+  GameAssetType,
+  StringFromType,
+} from '../../data/types.entities.js'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics.js'
 
 const debug = createDebugger(
@@ -23,7 +31,7 @@ const create =
 
         const match = topicMatch.exec(topic)
         if (!match?.groups) {
-          return
+          break
         }
 
         const { assetId, assetTypeKey, entityType, entityId } = match.groups
@@ -44,33 +52,49 @@ const create =
             .webp()
             .toFile(path.join(options.assetSaveDirectoryPath, `${filename}`))
         }
-
-        debug(
-          `Persisting game entity asset, ${assetTypeKey}, ${entityType} with id ${entityId}. Original filename: ${path.basename(assetId)}. New asset ID ${filename}`,
-        )
-        const relatedId = entityId
-        const assetDoc = {
-          _type: 'GameAsset',
-          id: filename,
-          relatedId,
-          relatedType: entityType,
-          typeKey: assetTypeKey,
-        } as unknown as GameAsset
-
-        await options.updateQueryApi.executeUpdate(
-          {
-            type: 'ExactMatch',
-            entityType: 'GameAsset',
-            field: 'id',
-            value: filename,
-          },
-          assetDoc,
-        )
       } catch (error) {
         debug(`Error processing topic ${topic}`)
         console.error(error)
       }
     }
+
+    const entities = messagesToHandle
+      .map(({ topic }) => {
+        const match = topicMatch.exec(topic)
+        if (!match?.groups) {
+          console.error('Invalid topic:', topic)
+          return null
+        }
+        const { assetId, assetTypeKey, entityType, entityId } = match.groups
+        const filename = `${path.basename(assetId, path.extname(assetId))}.webp`
+
+        return {
+          filter: {
+            type: 'ExactMatch',
+            entityType: 'GameAsset' as StringFromType<Entity>,
+            field: 'id',
+            value: filename,
+          } as UpdateFilterItem<StringFromType<Entity>>,
+          entity: {
+            _type: 'GameAsset',
+            id: filename,
+            relatedId: entityId,
+            relatedType: entityType as unknown as GameAssetRelatedType,
+            typeKey: assetTypeKey as unknown as GameAssetType,
+          } as GameAsset,
+        }
+      })
+      .filter((e) => e !== null)
+
+    if (isEmpty(entities)) {
+      console.error(
+        'No entities to update for topic:',
+        messagesToHandle.join(', '),
+      )
+      return
+    }
+
+    await options.updateQueryApi.executeBulk('GameAsset', entities)
   }
 
 export default create
