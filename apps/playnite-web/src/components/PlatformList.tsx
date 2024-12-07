@@ -30,15 +30,15 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
       src = `platforms/pc-linux.webp`
     } else if (/(playstation)/i.test(platform.name)) {
       if (/5/i.test(platform.name)) {
-        src = `platforms/playstation-5.webp`
+        src = `platforms/sony-playstation-5.webp`
       } else if (/4/i.test(platform.name)) {
-        src = `platforms/playstation-4.webp`
+        src = `platforms/sony-playstation-4.webp`
       } else if (/3/i.test(platform.name)) {
-        src = `platforms/playstation-3.webp`
+        src = `platforms/sony-playstation-3.webp`
       } else if (/2/i.test(platform.name)) {
-        src = `platforms/playstation-2.webp`
+        src = `platforms/sony-playstation-2.webp`
       } else {
-        src = `platforms/playstation.webp`
+        src = `platforms/sony-playstation.webp`
       }
     }
   }
