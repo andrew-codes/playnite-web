@@ -15,6 +15,8 @@ type HandlerOptions = {
   deleteQueryApi: IDeleteQuery
 }
 
+const batchTopic = /^playnite\/[^/]+\/batch$/
+
 const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
   const debug = createDebugger('playnite-web/game-db-updater/index')
   debug('Starting game-db-updater')
@@ -23,32 +25,19 @@ const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
 
   await fs.mkdir(options.assetSaveDirectoryPath, { recursive: true })
 
-  let messageCount = 0
-  let messages: Array<{ topic: string; payload: Buffer }> = []
   options.mqtt.on('message', async (topic, payload) => {
-    messages.push({ topic, payload })
-
-    if (topic === 'playnite/request/library') {
-      messageCount = 0
-      console.log('New Message Count:', messageCount)
+    let messages: Array<{ topic: string; payload: Buffer }> = []
+    if (batchTopic.test(topic)) {
+      messages = JSON.parse(payload.toString()).messages
+      console.log('Batched messages received', messages.length)
+    } else {
+      messages.push({ topic, payload })
     }
-  })
-
-  let unprocessedMessages: Array<{ topic: string; payload: Buffer }> = []
-  setInterval(async () => {
-    unprocessedMessages = unprocessedMessages.concat(messages)
-
-    console.log('New Message Count:', messages.length)
-    console.log('Unprocessed:', unprocessedMessages.length)
-
-    messages = []
-    messageCount += unprocessedMessages.length
 
     for (const handler of handlers(options)) {
-      await handler(unprocessedMessages)
+      await handler(messages)
     }
-    unprocessedMessages = []
-  }, 20000)
+  })
 }
 
 export default mqttUpdater

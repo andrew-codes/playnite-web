@@ -25,6 +25,10 @@ const create =
     const messagesToHandle = messages.filter(({ topic }) =>
       topicMatch.test(topic),
     )
+    if (isEmpty(messagesToHandle)) {
+      return
+    }
+
     for (const { topic, payload } of messagesToHandle) {
       try {
         debug(`Received game entity asset for topic ${topic}`)
@@ -85,14 +89,6 @@ const create =
         }
       })
       .filter((e) => e !== null)
-
-    if (isEmpty(entities)) {
-      console.error(
-        'No entities to update for topic:',
-        messagesToHandle.join(', '),
-      )
-      return
-    }
 
     await options.updateQueryApi.executeBulk('GameAsset', entities)
   }
