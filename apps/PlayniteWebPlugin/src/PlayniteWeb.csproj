@@ -93,8 +93,10 @@
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\BatchMessage.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\Release.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Services\AssetType.cs" />
     <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\IDeserializeObjects.cs" />
