@@ -4,6 +4,7 @@ using MQTTnet.Diagnostics;
 using MQTTnet.Protocol;
 using PlayniteWeb.TopicManager;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     private readonly IManageTopics topicBuilder;
     private IMqttClient client;
     public Func<Task> DisconnectingAsync;
+    public IList<string> PublishedTopics { get; } = new List<string>();
 
     public bool IsConnected => client.IsConnected;
 
@@ -111,6 +113,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public Task<MqttClientPublishResult> PublishAsync(MqttApplicationMessage applicationMessage, CancellationToken cancellationToken = default)
     {
+      PublishedTopics.Add(applicationMessage.Topic);
       return client.PublishAsync(applicationMessage, cancellationToken);
     }
 
