@@ -26,7 +26,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     public IEnumerable<Task> Publish(IIdentifiable game)
     {
       var topic = topicBuilder.GetPublishTopic(PublishTopics.Release(game.Id));
-      yield return client.PublishStringAsync(topic, serializer.Serialize(game), MqttQualityOfServiceLevel.AtLeastOnce, retain: false, cancellationToken: default);
+      yield return client.PublishStringAsync(topic, serializer.Serialize(game), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
 
       var coverImageFilePath = new GameCoverFilePath(game).getFilePath();
       var coverPublisher = new PublishAsset(client, gameDatabase, coverImageFilePath, topic, AssetType.cover);

@@ -20,6 +20,18 @@ class EntityConditionalDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
     private _update?: IUpdateQuery,
     private _del?: IDeleteQuery,
   ) {}
+  async executeBulk<TEntity extends Entity>(
+    entityType: StringFromType<TEntity>,
+    entities: Array<{
+      filter: UpdateFilterItem<StringFromType<TEntity>>
+      entity: Partial<TEntity>
+    }>,
+  ): Promise<number | null> {
+    if (!this._supportedEntities.has(entityType)) {
+      return null
+    }
+    return (await this._update?.executeBulk(entityType, entities)) ?? null
+  }
   async executeDelete<TEntity extends Entity>(
     filter: UpdateFilterItem<StringFromType<TEntity>>,
   ): Promise<number | null> {

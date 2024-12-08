@@ -4,6 +4,7 @@ import {
   type IstanbulPluginPreloader,
 } from 'esbuild-plugin-istanbul'
 import fs from 'fs/promises'
+import { glob } from 'glob'
 
 const plugins: Array<Plugin> = []
 if (process.env.INSTRUMENT === 'true') {
@@ -35,9 +36,13 @@ if (process.env.INSTRUMENT === 'true') {
   )
 }
 
+const entryPoints = glob.sync('src/server/**/*.ts', {
+  ignore: ['**/*__tests__/**', '**/__component_tests__/**'],
+})
+
 build({
   format: 'esm',
-  entryPoints: ['src/server/**/*.ts'],
+  entryPoints: entryPoints,
   tsconfig: 'tsconfig.server.json',
   bundle: false,
   minify: false,

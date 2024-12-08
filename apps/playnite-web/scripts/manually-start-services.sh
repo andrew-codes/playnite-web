@@ -19,8 +19,8 @@ docker run --name playnite-web-db -d \
 
 docker exec -t playnite-web-db mongorestore --nsInclude games.* /data/backup
 
-rm -rf ./public/assets-by-id
-cp -r $REPO_ROOT/.data/asset-by-id ./public/assets
+rm -rf ./src/public/assets/assets-by-id
+cp -r $REPO_ROOT/.data/asset-by-id ./src/public/assets
 
 docker run --name mqtt -d \
   -p 1883:1883 \

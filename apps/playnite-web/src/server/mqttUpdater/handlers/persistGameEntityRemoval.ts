@@ -12,34 +12,36 @@ const topicMatch =
 
 const handler =
   (options: HandlerOptions): IHandlePublishedTopics =>
-  async (topic, payload) => {
-    try {
-      if (!topicMatch.test(topic)) {
-        return
-      }
+  async (messages) => {
+    for (const { topic, payload } of messages) {
+      try {
+        if (!topicMatch.test(topic)) {
+          return
+        }
 
-      debug(`Received game entity removal for topic ${topic}`)
+        debug(`Received game entity removal for topic ${topic}`)
 
-      const match = topicMatch.exec(topic)
-      if (!match?.groups) {
-        return
-      }
+        const match = topicMatch.exec(topic)
+        if (!match?.groups) {
+          return
+        }
 
-      const { entityType, entityId } = match.groups as {
-        entityType: EntityType
-        entityId: string
+        const { entityType, entityId } = match.groups as {
+          entityType: EntityType
+          entityId: string
+        }
+        debug(
+          `Persisting game entity ${entityType} removal with id ${entityId} for topic ${topic}`,
+        )
+        await options.deleteQueryApi.executeDelete({
+          entityType,
+          field: 'id',
+          type: 'ExactMatch',
+          value: entityId,
+        })
+      } catch (e) {
+        console.error(e)
       }
-      debug(
-        `Persisting game entity ${entityType} removal with id ${entityId} for topic ${topic}`,
-      )
-      await options.deleteQueryApi.executeDelete({
-        entityType,
-        field: 'id',
-        type: 'ExactMatch',
-        value: entityId,
-      })
-    } catch (e) {
-      console.error(e)
     }
   }
 
