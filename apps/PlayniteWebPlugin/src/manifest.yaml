@@ -59,3 +59,10 @@ Packages:
       - "feat: ROms are supported as PC platform games"
       - "chore: back-end e2e coverage results"
       - "fix: game action button layout on mobile"
+  - Version: 10.0.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v10.0.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_10_0_0.pext
+    ReleaseDate: 2024-12-08
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "ci: fix pruning of PR packages"
+      - "fix: dropped data when syncing library (#658)"
