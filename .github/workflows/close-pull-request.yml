@@ -40,7 +40,7 @@ jobs:
         env:
           YARN_ENABLE_HARDENED_MODE: '0'
       - name: Prune PR images
-        run: yarn nx run-many --target=package --configuration=prune --verbose
+        run: yarn nx run-many --target=package/prune --verbose
         env:
           DEBUG: 'playnite-web/*'
           GITHUB_TOKEN: ${{ secrets.PKG_DELETE_TOKEN }}
