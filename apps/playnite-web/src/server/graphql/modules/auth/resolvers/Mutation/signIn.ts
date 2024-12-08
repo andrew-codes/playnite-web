@@ -15,14 +15,14 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
       new UsernamePasswordCredential(_arg.input.username, _arg.input.password),
     )
 
+    const expires = new Date()
+    expires.setFullYear(expires.getFullYear() + 1)
     _ctx.request.cookieStore?.set({
       name: 'authorization',
       sameSite: 'strict',
       secure: true,
       domain: _ctx.domain,
-      expires: _arg.input.rememberMe
-        ? null
-        : new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
+      expires: _arg.input.rememberMe ? null : expires,
       value: `Bearer ${claim.credential}`,
       httpOnly: true,
     })
