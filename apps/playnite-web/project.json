@@ -326,8 +326,7 @@
         "{projectRoot}/.build-server/**",
         "{projectRoot}/scripts/packageFiles.ts",
         "{projectRoot}/scripts/utils/packageFiles.ts",
-        "{projectRoot}/scripts/package.ts",
-        "{projectRoot}/scripts/packagePrune.ts"
+        "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
@@ -347,10 +346,16 @@
             "yarn nx run playnite-web-app:package:files",
             "yarn tsx scripts/package.ts"
           ]
-        },
-        "prune": {
-          "commands": ["yarn tsx scripts/packagePrune.ts"]
         }
+      }
+    },
+    "package/prune": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/package", "build"],
+      "options": {
+        "parallel": false,
+        "commands": ["yarn tsx scripts/packagePrune.ts"],
+        "cwd": "{projectRoot}"
       }
     },
     "package/files/e2e": {
@@ -360,8 +365,7 @@
         "{projectRoot}/.build-server/**",
         "{projectRoot}/scripts/packageFiles.ts",
         "{projectRoot}/scripts/utils/packageFiles.ts",
-        "{projectRoot}/scripts/package.ts",
-        "{projectRoot}/scripts/packagePrune.ts"
+        "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
