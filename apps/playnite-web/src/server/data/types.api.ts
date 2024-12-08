@@ -197,6 +197,13 @@ interface IUpdateQuery {
     filter: UpdateFilterItem<StringFromType<TEntity>>,
     entity: Partial<TEntity>,
   ): Promise<number | null>
+  executeBulk<TEntity extends Entity>(
+    entityType: StringFromType<TEntity>,
+    entities: Array<{
+      filter: UpdateFilterItem<StringFromType<TEntity>>
+      entity: Partial<TEntity>
+    }>,
+  ): Promise<number | null>
 }
 
 interface IDeleteQuery {

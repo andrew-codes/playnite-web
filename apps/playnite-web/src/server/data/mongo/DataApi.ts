@@ -13,7 +13,7 @@ import {
 import { Entity, RelationshipTypes, StringFromType } from '../types.entities.js'
 import { entityCollectionLookup } from './entity.js'
 
-const { isEmpty, keyBy, merge } = _
+const { keyBy, merge } = _
 
 class MongoDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
   private _loaders: Record<string, DataLoader<string, Entity>> = {}
@@ -34,6 +34,34 @@ class MongoDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
         },
       )
     }
+  }
+
+  async executeBulk<TEntity extends Entity>(
+    entityType: StringFromType<TEntity>,
+    entities: Array<{
+      filter: UpdateFilterItem<StringFromType<TEntity>>
+      entity: Partial<TEntity>
+    }>,
+  ): Promise<number | null> {
+    const collectionName = entityCollectionLookup.get(entityType)
+    if (!collectionName) {
+      console.error('Invalid entity type', entityType)
+      return null
+    }
+
+    const bulk = this._db
+      .collection<TEntity>(collectionName)
+      .initializeOrderedBulkOp()
+    for (const { filter, entity } of entities) {
+      const dbFilter = this._parseUpdateQueryFilterItem(filter)
+      if (!dbFilter) {
+        console.error('Invalid filter', filter)
+        return 0
+      }
+      bulk.find(dbFilter).upsert().updateOne({ $set: entity })
+    }
+
+    return (await bulk.execute()).insertedCount
   }
   async executeDelete<TEntity extends Entity>(
     filter: UpdateFilterItem<StringFromType<TEntity>>,

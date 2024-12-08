@@ -1,9 +1,10 @@
 import createDebugger from 'debug'
-import { merge, omit } from 'lodash-es'
 import { HandlerOptions } from '..'
+import { UpdateFilterItem } from '../../data/types.api'
 import {
   Entity,
   EntityType,
+  StringFromType,
   TypeFromString,
 } from '../../data/types.entities.js'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics.js'
@@ -17,43 +18,57 @@ const topicMatch =
 
 const handler =
   (options: HandlerOptions): IHandlePublishedTopics =>
-  async (topic, payload) => {
-    try {
-      if (!topicMatch.test(topic)) {
-        return
-      }
+  async (messages) => {
+    const bulkUpdatesByEntityType = messages
+      .filter(({ topic }) => topicMatch.test(topic))
+      .reduce(
+        (acc, { topic, payload }) => {
+          const matches = topicMatch.exec(topic)
+          const entityType = matches?.groups?.entityType as EntityType
+          const entityId = matches?.groups?.entityId
 
-      debug(
-        `Received game entity for topic ${topic} with payload ${payload.toString()}`,
-      )
+          if (!entityType || !entityId || !payload) {
+            console.error('Invalid topic or payload', entityType, entityId)
+            return acc
+          }
 
-      const match = topicMatch.exec(topic)
-      if (!match?.groups) {
-        return
-      }
+          if (!acc[entityType]) {
+            acc[entityType] = []
+          }
 
-      const { entityType, entityId } = match.groups as {
-        entityType: EntityType
-        entityId: string
-      }
-      debug(
-        `Persisting game entity ${entityType} with id ${entityId} for topic ${topic}`,
-      )
-      const entity = JSON.parse(payload.toString()) as Entity
+          acc[entityType].push({
+            filter: {
+              entityType,
+              type: 'ExactMatch',
+              field: 'id',
+              value: entityId,
+            },
+            entity: JSON.parse(payload.toString()) as Entity,
+          })
 
-      await options.updateQueryApi.executeUpdate<
-        TypeFromString<typeof entityType>
-      >(
-        {
-          entityType,
-          type: 'ExactMatch',
-          field: 'id',
-          value: entityId,
+          return acc
         },
-        omit(merge({}, entity, { _type: entityType }), 'processId', 'runState'),
+        {} as Record<
+          EntityType,
+          Array<{
+            filter: UpdateFilterItem<StringFromType<Entity>>
+            entity: Entity
+          }>
+        >,
       )
-    } catch (e) {
-      console.error(e)
+
+    for (const [entityType, entities] of Object.entries(
+      bulkUpdatesByEntityType,
+    )) {
+      try {
+        const et = entityType as EntityType
+        await options.updateQueryApi.executeBulk<TypeFromString<typeof et>>(
+          et,
+          entities,
+        )
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 

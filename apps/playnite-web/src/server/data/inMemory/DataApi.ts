@@ -26,6 +26,23 @@ const store: Map<EntityType, Map<string, Entity>> = new Map(
 
 class InMemoryDataApi implements IQuery, IUpdateQuery {
   constructor() {}
+  executeBulk<TEntity extends Entity>(
+    entityType: StringFromType<TEntity>,
+    entities: Array<{
+      filter: UpdateFilterItem<StringFromType<TEntity>>
+      entity: Partial<TEntity>
+    }>,
+  ): Promise<number | null> {
+    return Promise.all(
+      entities.map((entity) => {
+        return this.executeUpdate(entity.filter, entity.entity)
+      }),
+    ).then((results) =>
+      results.reduce((acc, val) => {
+        return (acc ?? 0) + (val ?? 0)
+      }, 0),
+    )
+  }
   async executeUpdate<TEntity extends Entity>(
     filterItem: UpdateFilterItem<StringFromType<TEntity>>,
     entity: Partial<TEntity>,
