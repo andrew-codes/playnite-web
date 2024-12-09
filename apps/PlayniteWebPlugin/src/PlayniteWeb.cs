@@ -197,7 +197,14 @@ namespace PlayniteWeb
 
       var batchMessage = new BatchMessage();
 
-      var games = PlayniteApi.Database.Games.GroupBy(game => game.Name).Select(groupedByName => new Models.Game(groupedByName, pcPlatforms, emulatorSource)).Where(g => !g.Id.Equals(Guid.Empty)).ToList();
+      var groupedGames = PlayniteApi.Database.Games.GroupBy(game => game.Name);
+      var invalidGames = groupedGames.Where(groupedByName => groupedByName.Key == null).ToList();
+      if (invalidGames.Any())
+      {
+        logger.Warn($"Found {invalidGames.Count} games with no name. These games will not be published.");
+      }
+
+      var games = groupedGames.Where(groupedByName => groupedByName.Key != null).Select(groupedByName => new Models.Game(groupedByName, pcPlatforms, emulatorSource)).Where(g => !g.Id.Equals(Guid.Empty)).ToList();
       games.ForEach(game =>
       {
         batchMessage.Messages.Add(new Message() { Topic = topicManager.GetPublishTopic(PublishTopics.Game(game.Id)), Payload = serializer.Serialize(game) });
