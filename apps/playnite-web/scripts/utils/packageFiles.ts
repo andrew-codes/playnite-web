@@ -50,7 +50,7 @@ const run = () => {
 
   sh.mkdir('-p', '_packaged/src/public/assets')
   console.log('Copying non-asset-by-id assets')
-  sh.exec('cp -r src/public/assets/ _packaged/src/public/assets')
+  sh.exec('cp -r src/public/assets/* _packaged/src/public/assets')
 
   console.log('Removing asset-by-id assets')
   rimraf.sync('_packaged/src/public/assets/asset-by-id/*.*')
