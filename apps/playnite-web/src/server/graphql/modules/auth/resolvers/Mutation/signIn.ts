@@ -22,7 +22,7 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
       sameSite: 'strict',
       secure: true,
       domain: _ctx.domain,
-      expires: _arg.input.rememberMe ? null : expires,
+      expires: _arg.input.rememberMe ? expires : null,
       value: `Bearer ${claim.credential}`,
       httpOnly: true,
     })
