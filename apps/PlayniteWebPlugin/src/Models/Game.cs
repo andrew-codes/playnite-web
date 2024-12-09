@@ -1,7 +1,9 @@
+using Playnite.SDK;
 using Playnite.SDK.Data;
 using Playnite.SDK.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,6 +21,7 @@ namespace PlayniteWeb.Models
     private readonly Guid id;
     private readonly IEnumerable<Platform> defaultPlatforms;
     private readonly GameSource defaultSource;
+    private readonly ILogger logger = LogManager.GetLogger();
 
     [DontSerialize]
     public IEnumerable<Release> Releases => releases;
@@ -54,10 +57,19 @@ namespace PlayniteWeb.Models
       {
         foreach (var platform in defaultPlatforms)
         {
-          var game = groupedBySource.FirstOrDefault(g => g.Roms.Any(r => r.Path.EndsWith("m3u")));
+          Playnite.SDK.Models.Game game = null;
+          try
+          {
+            game = groupedBySource.FirstOrDefault(g => g.Roms.Any(r => r.Path.EndsWith("m3u"))) ?? groupedBySource.First();
+          }
+          catch(Exception error)
+          {
+            logger.Error(error, $"Failed to get game from source for game named ${this.Name}");
+          }
+
           if (game == null)
           {
-            game = groupedBySource.First();
+            yield break;
           }
           yield return new Release(game, platform, defaultSource);
         }
