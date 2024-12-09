@@ -3,7 +3,6 @@ using Playnite.SDK.Data;
 using Playnite.SDK.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -22,6 +21,7 @@ namespace PlayniteWeb.Models
     private readonly IEnumerable<Platform> defaultPlatforms;
     private readonly GameSource defaultSource;
     private readonly ILogger logger = LogManager.GetLogger();
+    private readonly IEnumerable<Playnite.SDK.Models.Game> playniteGames;
 
     [DontSerialize]
     public IEnumerable<Release> Releases => releases;
@@ -41,7 +41,15 @@ namespace PlayniteWeb.Models
       xboxPlatformNames = new List<string> { ".*Xbox.*" };
       nintendoPlatformNames = new List<string> { ".*Nintendo.*", ".*Switch.*", ".*Wii.*", ".*Game ?Cube.*" };
 
-      releases = playniteGames.GroupBy(game => game.Source).SelectMany(GetReleases).ToList();
+
+      var gameBySource = playniteGames.GroupBy(game => game.Source);
+      if (gameBySource.Any(grouped => grouped.Key == null))
+      {
+        logger.Warn($"Game {playniteGames.First().Name} has no source. These will be published with the source Emulator.");
+      }
+
+      releases = gameBySource
+        .SelectMany(GetReleases).ToList();
 
       using (MD5 md5 = MD5.Create())
       {
@@ -62,10 +70,8 @@ namespace PlayniteWeb.Models
           {
             game = groupedBySource.FirstOrDefault(g => g.Roms.Any(r => r.Path.EndsWith("m3u"))) ?? groupedBySource.First();
           }
-          catch(Exception error)
-          {
-            logger.Error(error, $"Failed to get game from source for game named ${this.Name}");
-          }
+          catch
+          { }
 
           if (game == null)
           {
@@ -84,7 +90,8 @@ namespace PlayniteWeb.Models
         {
           platform = groupedBySource.ElementAt(i).Platforms.Where(p => IsMatchingPlatform(groupedBySource.Key, p)).Where(p => !publishedPlatforms.Any(pp => p.Id == pp.Id)).OrderBy(p => p, platformSorter).First();
         }
-        catch {
+        catch
+        {
         }
         if (platform == null)
         {
