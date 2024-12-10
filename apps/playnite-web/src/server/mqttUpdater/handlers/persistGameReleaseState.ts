@@ -82,6 +82,10 @@ const create =
           }
         }
 
+        if (newState === 'installed' || newState === 'uninstalled') {
+          return
+        }
+
         await options.updateQueryApi.executeUpdate(
           {
             entityType: 'Release',
