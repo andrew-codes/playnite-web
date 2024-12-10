@@ -23,7 +23,12 @@ if (process.env.INSTRUMENT === 'true') {
   config.plugins.push(
     istanbul({
       cypress: true,
-      exclude: ['**/__tests__', '**/__component_tests__', '**/.yarn'],
+      exclude: [
+        '**/__tests__/**',
+        '**/__component_tests__/**',
+        '**/.yarn/**',
+        '**/.test-runs/**',
+      ],
       extension: ['.ts', '.tsx'],
       forceBuildInstrument: true,
       include: 'src/**/*',

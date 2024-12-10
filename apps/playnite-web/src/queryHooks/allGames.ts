@@ -30,7 +30,10 @@ const All_Games_Query = gql`
   }
 `
 
-const useAllGames = (opts: QueryHookOptions) =>
-  useQuery<{ games: Array<Game> }>(All_Games_Query, opts)
+const useAllGames = (opts: QueryHookOptions) => {
+  const q = useQuery<{ games: Array<Game> }>(All_Games_Query, opts)
+
+  return q
+}
 
 export { All_Games_Query, useAllGames }

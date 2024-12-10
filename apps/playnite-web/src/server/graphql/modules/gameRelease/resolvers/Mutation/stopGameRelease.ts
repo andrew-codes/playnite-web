@@ -73,5 +73,12 @@ export const stopGameRelease: NonNullable<
     },
   )
 
+  _ctx.subscriptionPublisher.publish('releaseRunStateChanged', {
+    id: release.id,
+    gameId: release.gameId,
+    processId: null,
+    runState: 'installed',
+  })
+
   return release
 }

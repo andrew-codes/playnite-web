@@ -1,13 +1,16 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import { GameRelease } from 'apps/playnite-web/.generated/types.generated'
-import { All_Games_Query } from './allGames'
+import { Game_By_Id_Query } from './gameById'
 import { AllPlaylists } from './playlists'
 
 const Stop_Game_Release_Mutation = gql`
   mutation stopGameRelease($releaseId: String!) {
     stopGameRelease(releaseId: $releaseId) {
       id
+      game {
+        id
+      }
     }
   }
 `
@@ -35,6 +38,7 @@ const useStopRelease = () => {
                           runState: 'installed',
                         }
                       }
+
                       return release
                     }),
                   }
@@ -43,23 +47,28 @@ const useStopRelease = () => {
             }),
           }
         })
-        cache.updateQuery({ query: All_Games_Query }, (data) => ({
-          ...data,
-          games: data?.games.map((game) => {
-            return {
-              ...game,
-              releases: game.releases.map((release) => {
+        cache.updateQuery(
+          {
+            query: Game_By_Id_Query,
+            variables: { id: mutationResult.data?.stopGameRelease.game.id },
+          },
+          (data) => ({
+            ...data,
+            game: {
+              ...data?.game,
+              releases: data?.game.releases.map((release) => {
                 if (release.id === mutationResult.data?.stopGameRelease.id) {
                   return {
                     ...release,
                     runState: 'installed',
                   }
                 }
+
                 return release
               }),
-            }
+            },
           }),
-        }))
+        )
       },
     },
   )

@@ -87,4 +87,20 @@ export const GameRelease: GameReleaseResolvers = {
 
     return results?.[0]
   },
+  game: async (_parent, _arg, _ctx) => {
+    const results = (await _ctx.queryApi.execute({
+      entityType: 'Game',
+      type: 'RelationMatch',
+      field: 'releaseIds',
+      relationType: 'Release',
+      filterItem: {
+        entityType: 'Release',
+        type: 'ExactMatch',
+        field: 'id',
+        value: _parent.id,
+      },
+    })) as Array<any>
+
+    return results?.[0]
+  },
 }

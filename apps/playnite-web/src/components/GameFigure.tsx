@@ -33,7 +33,12 @@ const GameFigure: FC<
   const [imageHasError, setImageHasError] = useState(false)
 
   return (
-    <Figure data-test="GameFigure" style={style} width={width}>
+    <Figure
+      data-test="GameFigure"
+      data-test-game-id={game.id}
+      style={style}
+      width={width}
+    >
       <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
         <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
           {!imageHasError && game.cover?.id ? (

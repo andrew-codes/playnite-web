@@ -290,7 +290,10 @@ describe('Filtering.', () => {
             name: `filter-panel-open_${breakpointName}`,
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
-                Cypress.$('[data-test="GameFigure').css('color', 'transparent')
+                Cypress.$('[data-test="GameFigure"]').css(
+                  'color',
+                  'transparent',
+                )
               },
             },
           })
@@ -322,7 +325,10 @@ describe('Filtering.', () => {
             name: `platform-filter_lookup_${breakpointName}`,
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
-                Cypress.$('[data-test="GameFigure').css('color', 'transparent')
+                Cypress.$('[data-test="GameFigure"]').css(
+                  'color',
+                  'transparent',
+                )
               },
             },
           })
@@ -364,7 +370,10 @@ describe('Filtering.', () => {
             name: `filter-by-platform-selection_${breakpointName}`,
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
-                Cypress.$('[data-test="GameFigure').css('color', 'transparent')
+                Cypress.$('[data-test="GameFigure"]').css(
+                  'color',
+                  'transparent',
+                )
               },
             },
           })
