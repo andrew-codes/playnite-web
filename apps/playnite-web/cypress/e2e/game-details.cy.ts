@@ -32,7 +32,7 @@ describe('Game details.', () => {
               name: `game-details-${locationName}-${breakpointName}`,
               cypressScreenshotOptions: {
                 onBeforeScreenshot($el) {
-                  Cypress.$('[data-test="GameFigure').css(
+                  Cypress.$('[data-test="GameFigure"]').css(
                     'color',
                     'transparent',
                   )
