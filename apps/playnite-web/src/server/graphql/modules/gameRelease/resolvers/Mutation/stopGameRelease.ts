@@ -60,5 +60,18 @@ export const stopGameRelease: NonNullable<
     }),
   )
 
+  await _ctx.updateQueryApi.executeUpdate(
+    {
+      entityType: 'Release',
+      type: 'ExactMatch',
+      field: 'id',
+      value: release.id,
+    },
+    {
+      runState: { id: 'installed' },
+      processId: null,
+    },
+  )
+
   return release
 }

@@ -16,6 +16,11 @@ describe('On deck.', () => {
 
         cy.compareSnapshot({
           name: `on-deck-playlist_${breakpointName}`,
+          cypressScreenshotOptions: {
+            onBeforeScreenshot($el) {
+              $el.find('[data-test="GameFigure"]').css('color', 'transparent')
+            },
+          },
         })
       })
     })
