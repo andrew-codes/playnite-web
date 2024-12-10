@@ -14,25 +14,27 @@ import 'cypress-plugin-tab'
 compareSnapshotCommand()
 
 Cypress.Commands.add('signIn', () => {
-  cy.request({
-    method: 'POST',
-    url: 'http://localhost:3000/api',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      operationName: 'signIn',
-      variables: {
-        input: { username: 'local', password: 'dev', rememberMe: false },
+  return cy
+    .request({
+      method: 'POST',
+      url: 'http://localhost:3000/api',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
-      query:
-        'mutation signIn($input: SignInInput) { signIn(input: $input) { credential }}',
-    }),
-  }).then((response) => {
-    cy.setCookie(
-      'authorization',
-      `Bearer ${response.body.data.signIn.credential}`,
-    )
-  })
+      body: JSON.stringify({
+        operationName: 'signIn',
+        variables: {
+          input: { username: 'local', password: 'dev', rememberMe: false },
+        },
+        query:
+          'mutation signIn($input: SignInInput) { signIn(input: $input) { credential }}',
+      }),
+    })
+    .then((response) => {
+      cy.setCookie(
+        'authorization',
+        `Bearer ${response.body.data.signIn.credential}`,
+      )
+    })
 })

@@ -30,7 +30,7 @@ describe('Remote control.', () => {
               })
 
               it(`Play visible.
-- Require user to be logged in.`, () => {
+  - Require user to be logged in.`, () => {
                 cy.signIn()
                 cy.visit(locationPath)
                 cy.get('[data-test="GameFigure"] button span', {
@@ -44,16 +44,121 @@ describe('Remote control.', () => {
                   .compareSnapshot({
                     name: `${locationName}_play-button-visible_${breakpointName}`,
                     cypressScreenshotOptions: {
-                      blackout: [
-                        '[data-test="GameDetails"] [data-test="Name"]',
-                        '[data-test="GameDetails"] [data-test="Description"] > *',
-                      ],
+                      onBeforeScreenshot($el) {
+                        Cypress.$('[data-test="GameFigure').css(
+                          'color',
+                          'transparent',
+                        )
+                        $el
+                          .find('[data-test="Name"]')
+                          .css('color', 'transparent')
+                        $el
+                          .find('[data-test="Description"]')
+                          .css('color', 'transparent')
+                        $el.find('img').css('visibility', 'hidden')
+                      },
                     },
                   })
               })
 
               it(`Restart/stop visible.
-- Require user to be logged in.`, () => {
+  - Require user to be logged in.
+  - Persists across page refreshes and navigation.
+  - Manually stopping a game does not impact visibility.`, () => {
+                cy.signIn()
+                cy.visit(locationPath)
+                cy.task('mqttPublish', {
+                  topic: 'playnite/deviceId/response/game/state',
+                  payload: JSON.stringify({
+                    state: 'running',
+                    release: { id: 'd7fc1ab8-a697-4cd1-a249-1b4bba129278' },
+                  }),
+                })
+
+                cy.get('[data-test="GameFigure"] button span', {
+                  timeout: 10000,
+                })
+                  .first()
+                  .click({ force: true })
+                cy.get('[data-test="GameDetails"]')
+                  .parent()
+                  .compareSnapshot({
+                    name: `${locationName}_restart-stop-buttons-visible_${breakpointName}`,
+                    cypressScreenshotOptions: {
+                      onBeforeScreenshot($el) {
+                        Cypress.$('[data-test="GameFigure').css(
+                          'color',
+                          'transparent',
+                        )
+                        $el
+                          .find('[data-test="Name"]')
+                          .css('color', 'transparent')
+                        $el
+                          .find('[data-test="Description"]')
+                          .css('color', 'transparent')
+                        $el.find('img').css('visibility', 'hidden')
+                      },
+                    },
+                  })
+
+                cy.reload()
+                cy.get('[data-test="GameFigure"] button span', {
+                  timeout: 10000,
+                })
+                  .first()
+                  .click({ force: true })
+                cy.get('[data-test="GameDetails"]')
+                  .parent()
+                  .compareSnapshot({
+                    name: `${locationName}_restart-stop-buttons-visible-persist-page-refreshes_${breakpointName}`,
+                    cypressScreenshotOptions: {
+                      onBeforeScreenshot($el) {
+                        Cypress.$('[data-test="GameFigure').css(
+                          'color',
+                          'transparent',
+                        )
+                        $el
+                          .find('[data-test="Name"]')
+                          .css('color', 'transparent')
+                        $el
+                          .find('[data-test="Description"]')
+                          .css('color', 'transparent')
+                        $el.find('img').css('visibility', 'hidden')
+                      },
+                    },
+                  })
+
+                cy.task('mqttPublish', {
+                  topic: 'playnite/deviceId/response/game/state',
+                  payload: JSON.stringify({
+                    state: 'installed',
+                    release: { id: 'd7fc1ab8-a697-4cd1-a249-1b4bba129278' },
+                  }),
+                })
+                cy.get('[data-test="GameDetails"]')
+                  .parent()
+                  .compareSnapshot({
+                    name: `${locationName}_restart-stop-buttons-visible-when-manually-stopping-game_${breakpointName}`,
+                    cypressScreenshotOptions: {
+                      onBeforeScreenshot($el) {
+                        Cypress.$('[data-test="GameFigure').css(
+                          'color',
+                          'transparent',
+                        )
+                        $el
+                          .find('[data-test="Name"]')
+                          .css('color', 'transparent')
+                        $el
+                          .find('[data-test="Description"]')
+                          .css('color', 'transparent')
+                        $el.find('img').css('visibility', 'hidden')
+                      },
+                    },
+                  })
+              })
+
+              it(`Restart/stop stopping game.
+  - Once a game is stopped via Playnite Web.`, () => {
                 cy.signIn()
                 cy.visit(locationPath)
                 cy.task('mqttPublish', {
@@ -70,15 +175,25 @@ describe('Remote control.', () => {
                   .first()
                   .click({ force: true })
 
+                cy.contains('[data-test="GameDetails"] button', 'Stop').click()
                 cy.get('[data-test="GameDetails"]')
                   .parent()
                   .compareSnapshot({
-                    name: `${locationName}_restart-stop-buttons-visible_${breakpointName}`,
+                    name: `${locationName}_restart-stop-stopping-game_${breakpointName}`,
                     cypressScreenshotOptions: {
-                      blackout: [
-                        '[data-test="GameDetails"] [data-test="Name"]',
-                        '[data-test="GameDetails"] [data-test="Description"] > *',
-                      ],
+                      onBeforeScreenshot($el) {
+                        Cypress.$('[data-test="GameFigure').css(
+                          'color',
+                          'transparent',
+                        )
+                        $el
+                          .find('[data-test="Name"]')
+                          .css('color', 'transparent')
+                        $el
+                          .find('[data-test="Description"]')
+                          .css('color', 'transparent')
+                        $el.find('img').css('visibility', 'hidden')
+                      },
                     },
                   })
               })
