@@ -72,3 +72,12 @@ Packages:
     RequiredApiVersion: 6.11.0
     Changelog:
       - "fix: remember me expires in 1 year (#661)"
+  - Version: 10.0.2
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v10.0.2/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_10_0_2.pext
+    ReleaseDate: 2024-12-10
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "fix: remember me auth sessions expires in 1 year (#666)"
+      - "test: ensure default platform icons work as expected (#664)"
+      - "fix: signout works as expected (#665)"
+      - "fix: library sync errors for games w/o a source (#663)"
