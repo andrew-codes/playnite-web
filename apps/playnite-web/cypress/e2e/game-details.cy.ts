@@ -31,10 +31,17 @@ describe('Game details.', () => {
             cy.compareSnapshot({
               name: `game-details-${locationName}-${breakpointName}`,
               cypressScreenshotOptions: {
-                blackout: [
-                  '[data-test="GameDetails"] [data-test="Name"]',
-                  '[data-test="GameDetails"] [data-test="Description"] > *',
-                ],
+                onBeforeScreenshot($el) {
+                  Cypress.$('[data-test="GameFigure"]').css(
+                    'color',
+                    'transparent',
+                  )
+                  $el.find('[data-test="Name"]').css('color', 'transparent')
+                  $el
+                    .find('[data-test="Description"]')
+                    .css('color', 'transparent')
+                  $el.find('img').css('visibility', 'hidden')
+                },
               },
             })
 

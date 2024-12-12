@@ -3,6 +3,7 @@ import mqtt from 'async-mqtt'
 import { defineConfig } from 'cypress'
 import imageDiff from 'cypress-image-diff-js/plugin'
 import fs from 'fs'
+import { MongoClient } from 'mongodb'
 
 const config = {
   chromeWebSecurity: false,
@@ -16,6 +17,7 @@ const config = {
           '**/cypress/**',
           '**/__tests__/**',
           '**/__component_tests__/**',
+          '**/public/assets/**',
         ],
         url: 'http://localhost:3000/__coverage__',
       },
@@ -80,6 +82,29 @@ const config = {
               client.publish(topic, payload)
               return null
             })
+        },
+      })
+
+      const url = `mongodb://${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? '27017'}`
+      const username = process.env.DB_USERNAME ?? 'local'
+      const password = process.env.DB_PASSWORD ?? 'dev'
+      const client = new MongoClient(url, {
+        auth: {
+          username,
+          password,
+        },
+        enableUtf8Validation: false,
+      })
+      on('task', {
+        async updateDatabase({ collection, filter, update }) {
+          try {
+            await client.connect()
+            const db = client.db('games')
+            const dbCollection = db.collection(collection)
+            return dbCollection.updateMany(filter, update)
+          } catch {
+            await client.close()
+          }
         },
       })
 

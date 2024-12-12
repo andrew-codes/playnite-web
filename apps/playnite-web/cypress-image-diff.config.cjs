@@ -1,6 +1,7 @@
 const config = {
   FAILURE_THRESHOLD: process.env.TEST === 'e2e' ? 0.12 : 0.09,
-  FAIL_ON_MISSING_BASELINE: process.env.CI === 'true',
+  FAIL_ON_MISSING_BASELINE:
+    process.env.CI === 'true' && process.env.UPDATE !== 'true',
   ROOT_DIR: 'visual-regression-tests',
   REPORT_DIR: process.env.TEST ? `${process.env.TEST}-report` : 'report',
   JSON_REPORT: {

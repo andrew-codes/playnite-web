@@ -4,6 +4,7 @@ type GameRelease {
   description: String
   communityScore: Int
   criticScore: Int
+  game: Game!
   gameId: String!
   hidden: Boolean!
   releaseDate: Date
