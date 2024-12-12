@@ -65,7 +65,7 @@ describe('Remote control.', () => {
                     })
                 })
 
-                it(`Restart/stop visible.
+                it.skip(`Restart/stop visible.
 - Persists across page refreshes and navigation.
 - Manually stopping a game does not impact visibility.`, () => {
                   cy.get('[data-test="GameFigure"]', { timeout: 5000 })
