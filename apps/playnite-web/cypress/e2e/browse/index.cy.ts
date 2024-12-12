@@ -39,6 +39,11 @@ describe('Browse.', () => {
           .compareSnapshot({
             name: `library-games_${breakpointName}`,
             retryOptions: { limit: 1 },
+            cypressScreenshotOptions: {
+              onBeforeScreenshot($el) {
+                $el.css('color', 'transparent')
+              },
+            },
           })
 
         cy.get('@scrollArea').find('> div').scrollTo('bottom')

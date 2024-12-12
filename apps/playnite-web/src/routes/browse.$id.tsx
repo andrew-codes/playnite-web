@@ -10,6 +10,7 @@ function GameBrowseDetails() {
   if (loading || error || !data?.game) {
     return null
   }
+
   return <GameDetails game={data.game} />
 }
 

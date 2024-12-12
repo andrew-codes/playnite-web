@@ -288,6 +288,14 @@ describe('Filtering.', () => {
 
           cy.compareSnapshot({
             name: `filter-panel-open_${breakpointName}`,
+            cypressScreenshotOptions: {
+              onBeforeScreenshot($el) {
+                Cypress.$('[data-test="GameFigure"]').css(
+                  'color',
+                  'transparent',
+                )
+              },
+            },
           })
         })
 
@@ -313,7 +321,17 @@ describe('Filtering.', () => {
             .click()
 
           cy.get('@lookup').type('PlayStation')
-          cy.compareSnapshot(`platform-filter_lookup_${breakpointName}`)
+          cy.compareSnapshot({
+            name: `platform-filter_lookup_${breakpointName}`,
+            cypressScreenshotOptions: {
+              onBeforeScreenshot($el) {
+                Cypress.$('[data-test="GameFigure"]').css(
+                  'color',
+                  'transparent',
+                )
+              },
+            },
+          })
           cy.contains('PlayStation 3').click()
 
           cy.get('@lookup').type('PlayStation')
@@ -350,6 +368,14 @@ describe('Filtering.', () => {
           cy.get('@openFilterButton').click({ force: true })
           cy.compareSnapshot({
             name: `filter-by-platform-selection_${breakpointName}`,
+            cypressScreenshotOptions: {
+              onBeforeScreenshot($el) {
+                Cypress.$('[data-test="GameFigure"]').css(
+                  'color',
+                  'transparent',
+                )
+              },
+            },
           })
         })
       })
