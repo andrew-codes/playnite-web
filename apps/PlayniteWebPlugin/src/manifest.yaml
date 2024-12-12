@@ -81,3 +81,10 @@ Packages:
       - "test: ensure default platform icons work as expected (#664)"
       - "fix: signout works as expected (#665)"
       - "fix: library sync errors for games w/o a source (#663)"
+  - Version: 10.1.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v10.1.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_10_1_0.pext
+    ReleaseDate: 2024-12-12
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "feat: game action buttons do not disappear when game manually stops
+        (#670)"
