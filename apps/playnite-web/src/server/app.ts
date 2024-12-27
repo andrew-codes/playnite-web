@@ -121,6 +121,7 @@ async function run(mqttClient: AsyncMqttClient) {
             'font-src': ["'self'", '*.googleapis.com', '*.gstatic.com'].concat(
               cspOrigins,
             ),
+            'frame-ancestor': ["'self'"].concat(cspOrigins),
           },
         },
       }),
