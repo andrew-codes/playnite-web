@@ -26408,7 +26408,7 @@ const RAW_RUNTIME_STATE =
           ["typescript", "patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40"],\
           ["typescript-remix-routes-plugin", "npm:1.0.1"],\
           ["ua-parser-js", "npm:1.0.39"],\
-          ["uuid", "npm:10.0.0"],\
+          ["uuid", "npm:11.0.4"],\
           ["versioning", "workspace:libs/versioning"],\
           ["vite", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.4.11"],\
           ["vite-plugin-istanbul", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:6.0.2"],\
@@ -31476,10 +31476,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["uuid", [\
-      ["npm:10.0.0", {\
-        "packageLocation": "./.yarn/cache/uuid-npm-10.0.0-4872b46ff8-eab18c27fe.zip/node_modules/uuid/",\
+      ["npm:11.0.4", {\
+        "packageLocation": "./.yarn/cache/uuid-npm-11.0.4-3ab06412cb-3c13591c4d.zip/node_modules/uuid/",\
         "packageDependencies": [\
-          ["uuid", "npm:10.0.0"]\
+          ["uuid", "npm:11.0.4"]\
         ],\
         "linkType": "HARD"\
       }],\
