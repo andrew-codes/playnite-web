@@ -8594,17 +8594,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@graphql-yoga/plugin-csrf-prevention", [\
-      ["npm:3.10.2", {\
-        "packageLocation": "./.yarn/cache/@graphql-yoga-plugin-csrf-prevention-npm-3.10.2-770eec61b9-d442942fd7.zip/node_modules/@graphql-yoga/plugin-csrf-prevention/",\
+      ["npm:3.10.10", {\
+        "packageLocation": "./.yarn/cache/@graphql-yoga-plugin-csrf-prevention-npm-3.10.10-ee7f03fc03-572250776f.zip/node_modules/@graphql-yoga/plugin-csrf-prevention/",\
         "packageDependencies": [\
-          ["@graphql-yoga/plugin-csrf-prevention", "npm:3.10.2"]\
+          ["@graphql-yoga/plugin-csrf-prevention", "npm:3.10.10"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.10.2", {\
-        "packageLocation": "./.yarn/__virtual__/@graphql-yoga-plugin-csrf-prevention-virtual-d814022644/0/cache/@graphql-yoga-plugin-csrf-prevention-npm-3.10.2-770eec61b9-d442942fd7.zip/node_modules/@graphql-yoga/plugin-csrf-prevention/",\
+      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.10.10", {\
+        "packageLocation": "./.yarn/__virtual__/@graphql-yoga-plugin-csrf-prevention-virtual-90e0c8eae2/0/cache/@graphql-yoga-plugin-csrf-prevention-npm-3.10.10-ee7f03fc03-572250776f.zip/node_modules/@graphql-yoga/plugin-csrf-prevention/",\
         "packageDependencies": [\
-          ["@graphql-yoga/plugin-csrf-prevention", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.10.2"],\
+          ["@graphql-yoga/plugin-csrf-prevention", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.10.10"],\
           ["@types/graphql-yoga", null],\
           ["graphql-yoga", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:5.10.2"]\
         ],\
@@ -26316,7 +26316,7 @@ const RAW_RUNTIME_STATE =
           ["@graphql-codegen/graphql-modules-preset", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:4.0.11"],\
           ["@graphql-codegen/typescript", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:4.1.1"],\
           ["@graphql-codegen/typescript-resolvers", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:4.4.0"],\
-          ["@graphql-yoga/plugin-csrf-prevention", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.10.2"],\
+          ["@graphql-yoga/plugin-csrf-prevention", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:3.10.10"],\
           ["@graphql-yoga/plugin-jwt", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.6.0"],\
           ["@jest/globals", "npm:29.7.0"],\
           ["@jspm/core", "npm:2.1.0"],\
