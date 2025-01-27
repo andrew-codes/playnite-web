@@ -88,3 +88,9 @@ Packages:
     Changelog:
       - "feat: game action buttons do not disappear when game manually stops
         (#670)"
+  - Version: 10.2.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v10.2.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_10_2_0.pext
+    ReleaseDate: 2025-01-27
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "feat: enable embedding into HA"
