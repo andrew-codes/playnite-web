@@ -580,11 +580,18 @@ namespace PlayniteWeb
 
     private void HandleCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
     {
+      var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name)
+            .Select(groupedByName => new Models.Game(groupedByName, pcPlatforms, emulatorSource))
+            .Where(g => g != null)
+            .Where(g => !g.Id.Equals(Guid.Empty))
+            .ToList();
+
       Task.WaitAll(e.AddedItems.SelectMany(item =>
       {
         if (item.GetType() == typeof(Playnite.SDK.Models.Game))
         {
-          return gameEntityPublisher.Publish(item);
+          var updatedGame = games.FirstOrDefault(game => game.Name == ((Playnite.SDK.Models.Game)item).Name);
+          return gamePublisher.Publish(updatedGame);
         }
         if (item.GetType() == typeof(Platform))
         {
