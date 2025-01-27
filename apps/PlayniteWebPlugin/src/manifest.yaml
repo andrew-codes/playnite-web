@@ -94,3 +94,10 @@ Packages:
     RequiredApiVersion: 6.11.0
     Changelog:
       - "feat: enable embedding into HA"
+  - Version: 10.2.1
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v10.2.1/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_10_2_1.pext
+    ReleaseDate: 2025-01-27
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "fix: adding a release in Playnite does not corrupt database (#703)"
+      - "fix: adding a release in Playnite does not corrupt database"
