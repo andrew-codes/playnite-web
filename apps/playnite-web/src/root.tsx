@@ -11,7 +11,7 @@ import {
   useOutlet,
 } from '@remix-run/react'
 import { AnimatePresence } from 'framer-motion'
-import { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 import { useStore } from 'react-redux'
 import { createHead } from 'remix-island'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
