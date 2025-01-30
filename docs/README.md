@@ -16,6 +16,7 @@
 - [contributing/development-environment/local-environment](documents/contributing/development-environment/local-environment.md)
 - [contributing/rfc](documents/contributing/rfc.md)
 - [design/README](documents/design/README.md)
+- [guides/docker-compose](documents/guides/docker-compose.md)
 - [guides/setup](documents/guides/setup.md)
 - [SECURITY](documents/SECURITY.md)
 
