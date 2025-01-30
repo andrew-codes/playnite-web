@@ -89,22 +89,23 @@ async function run(mqttClient: AsyncMqttClient) {
   const signingKey = process.env.SECRET ?? 'secret'
   const yoga = createYoga('/api', signingKey, mqttClient)
 
-  if (process.env.TEST !== 'e2e') {
+  if (process.env.TEST !== 'e2e' && process.env.DISABLE_CSP !== 'true') {
     const cspOrigins = (process.env.CSP_ORIGINS ?? '')
       .split(',')
       .map((origin) => origin.trim())
+      .filter((origin) => origin !== '')
     app.use(
       helmet({
         contentSecurityPolicy: {
           directives: {
-            'default-src': ["'self'"],
+            'default-src': ["'self'", `${domain}:*`],
             'connect-src': [
               "'self'",
               `ws://${domain}:*`,
               `wss://${domain}:*`,
               `http://${domain}:*`,
               `https://${domain}:*`,
-            ],
+            ].concat(cspOrigins),
             'style-src': [
               "'self'",
               "'unsafe-inline'",
@@ -112,15 +113,26 @@ async function run(mqttClient: AsyncMqttClient) {
               '*.googleapis.com',
               '*.gstatic.com',
             ].concat(cspOrigins),
-            'script-src': ["'self'", "'unsafe-inline'", 'unpkg.com'].concat(
-              cspOrigins,
-            ),
-            'img-src': ["'self'", 'raw.githubusercontent.com'].concat(
-              cspOrigins,
-            ),
-            'font-src': ["'self'", '*.googleapis.com', '*.gstatic.com'].concat(
-              cspOrigins,
-            ),
+            'script-src': [
+              "'self'",
+              `${domain}:${port}`,
+              `${domain}:*`,
+              "'unsafe-inline'",
+              'unpkg.com',
+            ].concat(cspOrigins),
+            'img-src': [
+              "'self'",
+              `${domain}:*`,
+              `${domain}:${port}`,
+              'raw.githubusercontent.com',
+            ].concat(cspOrigins),
+            'font-src': [
+              "'self'",
+              `${domain}:*`,
+              `${domain}:${port}`,
+              '*.googleapis.com',
+              '*.gstatic.com',
+            ].concat(cspOrigins),
             'frame-ancestors': ["'self'"].concat(cspOrigins),
           },
         },
