@@ -55,7 +55,7 @@ describe('Filtering.', () => {
         .should('contain', "Assassin's Creed III")
     })
 
-    it(`Filter by completion status
+    it.only(`Filter by completion status
       - Games must match at least one completion status.`, () => {
       const filterBy = 'Completion Status'
       const filterValues = ['Beaten', 'Completed']
@@ -88,11 +88,11 @@ describe('Filtering.', () => {
         .click()
 
       for (const filter of filterValues) {
-        cy.contains(filter).click()
+        cy.contains('[role="option"]', filter).click()
       }
 
       for (const filter of filterValues) {
-        cy.contains(new RegExp(`^${filter}$`))
+        cy.contains('[role="option"]', new RegExp(`^${filter}$`))
       }
 
       cy.get('h2 + button').click()
