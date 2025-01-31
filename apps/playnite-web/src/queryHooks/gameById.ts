@@ -14,6 +14,9 @@ const Game_By_Id_Query = gql`
       }
       releases {
         id
+        completionStatus {
+          name
+        }
         runState
         platform {
           id

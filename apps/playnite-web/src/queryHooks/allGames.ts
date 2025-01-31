@@ -14,6 +14,9 @@ const All_Games_Query = gql`
       description
       releases {
         id
+        completionStatus {
+          name
+        }
         platform {
           id
           isConsole
