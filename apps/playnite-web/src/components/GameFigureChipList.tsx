@@ -1,10 +1,13 @@
-import { Chip, styled } from '@mui/material'
+import { Chip, styled, useTheme } from '@mui/material'
+import { uniq } from 'lodash-es'
 import { FC, useMemo } from 'react'
 import { Platform } from '../../.generated/types.generated'
+import { Theme } from '../muiTheme'
 
 const PlatformImage = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius / 2,
 }))
+
 const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
   platform,
 }) => {
@@ -54,6 +57,33 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
   )
 }
 
+const GameFigureChipRoot = styled('div')(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius / 2,
+  fontSize: '0.85rem',
+  display: 'inline-flex',
+  height: '24px',
+  alignItems: 'center',
+  background: theme.palette.primary.main,
+  padding: `0 ${theme.spacing(0.5)}`,
+  '> *': {
+    margin: `0 0 0 ${theme.spacing(0.5)}`,
+  },
+}))
+
+const GameFigureChip: FC<{ children: string }> = ({ children }) => {
+  const theme = useTheme<Theme>()
+  const Icon = theme.completionStatus[children].Icon ?? (() => null)
+
+  return (
+    <GameFigureChipRoot
+      style={{ ...(theme.palette.completionStatus[children] ?? {}) }}
+    >
+      {children}
+      <Icon fontSize="small" />
+    </GameFigureChipRoot>
+  )
+}
+
 const List = styled('ol')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-end',
@@ -83,10 +113,16 @@ const List = styled('ol')(({ theme }) => ({
   },
 }))
 
-const PlatformList: FC<{ platforms: Array<Platform> }> = ({ platforms }) => {
+const GameFigureChipList: FC<{
+  platforms: Array<Platform>
+  completionStatus: string
+}> = ({ platforms, completionStatus }) => {
+  const maxPlatforms = 2
   const condensedPlatforms = useMemo(() => {
-    return (platforms.slice(0, 3) as (Platform | Array<Platform>)[])
-      .concat([platforms.slice(3)])
+    return (
+      uniq(platforms).slice(0, maxPlatforms) as (Platform | Array<Platform>)[]
+    )
+      .concat([platforms.slice(maxPlatforms)])
       .filter((platform) => platform)
   }, [platforms])
 
@@ -95,8 +131,11 @@ const PlatformList: FC<{ platforms: Array<Platform> }> = ({ platforms }) => {
       {condensedPlatforms.map((platform, index) => (
         <PlatformListItem platform={platform} key={index} />
       ))}
+      <li>
+        <GameFigureChip>{completionStatus}</GameFigureChip>
+      </li>
     </List>
   )
 }
 
-export default PlatformList
+export default GameFigureChipList

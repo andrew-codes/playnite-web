@@ -1,7 +1,7 @@
 import { Box, Button, Stack, styled } from '@mui/material'
 import { FC, PropsWithChildren, useState } from 'react'
 import { Game } from '../../.generated/types.generated'
-import PlatformList from './PlatformList'
+import GameFigureChipList from './GameFigureChipList'
 
 const Figure = styled('figure', {
   shouldForwardProp: (prop) => prop !== 'width',
@@ -65,9 +65,12 @@ const GameFigure: FC<
             position: 'absolute',
             bottom: '12px',
             right: theme.spacing(),
+            display: 'flex',
+            flexDirection: 'row',
           })}
         >
-          <PlatformList
+          <GameFigureChipList
+            completionStatus={game.completionStatus?.name}
             platforms={game.releases.map((release) => release.platform)}
           />
         </Box>

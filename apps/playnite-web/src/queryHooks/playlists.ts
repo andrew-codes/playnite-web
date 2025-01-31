@@ -11,6 +11,9 @@ const AllPlaylists = gql`
         id
         name
         description
+        completionStatus {
+          name
+        }
         cover {
           id
         }

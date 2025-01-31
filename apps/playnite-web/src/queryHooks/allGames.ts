@@ -11,6 +11,9 @@ const All_Games_Query = gql`
         id
       }
       name
+      completionStatus {
+        name
+      }
       description
       releases {
         id
