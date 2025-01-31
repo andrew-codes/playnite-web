@@ -99,7 +99,7 @@ export const Game: GameResolvers = {
             return -1
           }
           return 0
-        })?.[0] ?? { id: createNull('CompletionStatus'), name: 'Unknown' }
+        })?.[0] ?? { id: createNull('CompletionStatus'), name: 'Backlog' }
     )
   },
 }

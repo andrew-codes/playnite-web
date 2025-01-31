@@ -16,11 +16,11 @@ const completionStatusNames = [
   'Completed',
   'Beaten',
   'Playing',
-  'Played',
-  'On Hold',
-  'Plan to Play',
-  'Abandoned',
-  'Not Played',
+  'Paused',
+  'Paused',
+  'Backlog',
+  'Quit',
+  'Backlog',
 ]
 
 export const CompletionStatus: CompletionStatusResolvers = {
@@ -42,7 +42,7 @@ export const CompletionStatus: CompletionStatusResolvers = {
       (nameExpression) => nameExpression.test(_parent.name),
     )
 
-    return completionStatusNames[completionStatusNameIndex] ?? 'Unknown'
+    return completionStatusNames[completionStatusNameIndex] ?? 'Backlog'
   },
 }
 
