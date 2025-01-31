@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash-es'
 import type { GameResolvers } from '../../../../../../.generated/types.generated.js'
 import { GameAsset, Release } from '../../../../data/types.entities.js'
 import { create } from '../../../../oid.js'
@@ -25,8 +26,9 @@ export const Game: GameResolvers = {
     )
 
     return results
-      .filter((result) => result !== null)
-      .map((result) => result[0])
+      .filter((result) => !isEmpty(result))
+      .map((result) => result?.[0])
+      .filter((result): result is Release => result !== null)
   },
   cover: async (_parent, _arg, _ctx) => {
     if (!_parent.cover) {
