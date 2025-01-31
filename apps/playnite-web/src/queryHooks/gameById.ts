@@ -12,11 +12,11 @@ const Game_By_Id_Query = gql`
       cover {
         id
       }
+      completionStatus {
+        name
+      }
       releases {
         id
-        completionStatus {
-          name
-        }
         runState
         platform {
           id

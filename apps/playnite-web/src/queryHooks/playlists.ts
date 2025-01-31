@@ -11,14 +11,14 @@ const AllPlaylists = gql`
         id
         name
         description
+        completionStatus {
+          name
+        }
         cover {
           id
         }
         releases {
           id
-          completionStatus {
-            name
-          }
           runState
           name
           platform {
