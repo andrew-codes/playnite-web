@@ -108,3 +108,11 @@ Packages:
     Changelog:
       - "feat: enable local LAN hosting by allowing the disabling of CSP"
       - "docs: docker compose example"
+  - Version: 10.3.1
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v10.3.1/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_10_3_1.pext
+    ReleaseDate: 2025-01-31
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "fix: ignore games of only releases that do not exist in db (#708)"
+      - "fix: temporary fix"
+      - "docs: correct game asset volume path"
