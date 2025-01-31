@@ -2,6 +2,7 @@ type Game {
   id: String!
   name: String!
   description: String
+  completionStatus: CompletionStatus!
   cover: GameAsset
   releases: [GameRelease!]!
 }
