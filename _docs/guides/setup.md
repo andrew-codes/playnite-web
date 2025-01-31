@@ -69,7 +69,7 @@ Use the docker [packaged image](https://github.com/andrew-codes/playnite-web/pkg
 
 #### App Data Volumes
 
-Ensure you mount a volume to persist game assets, such as cover-art, backgrounds, and icons. The mount location within the running container should be `/opt/playnite-web-app/public/assets/asset-by-id`.
+Ensure you mount a volume to persist game assets, such as cover-art, backgrounds, and icons. The mount location within the running container should be `/opt/playnite-web-app/src/public/assets/asset-by-id`.
 
 #### Environment Variables
 
