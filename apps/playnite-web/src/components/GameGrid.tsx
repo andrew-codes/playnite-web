@@ -102,24 +102,6 @@ const GameGrid: FC<{
           >
             {game.name}
           </Typography>
-          <Typography
-            variant="body2"
-            component="div"
-            sx={{
-              textWrap: 'balance',
-              lineHeight: '1',
-              textOverflow: 'ellipsis',
-              overflowY: 'hidden',
-              maxHeight: '2rem',
-              lineClamp: '1',
-              fontSize: '13px',
-              display: '-webkit-box',
-              WebkitLineClamp: '1',
-              WebkitBoxOrient: 'vertical ',
-            }}
-          >
-            {/* {game.completionStatus.toString()} */}
-          </Typography>
         </GameFigure>
       </div>
     )
