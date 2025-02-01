@@ -1,7 +1,6 @@
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Diagnostics;
-using MQTTnet.Protocol;
 using PlayniteWeb.TopicManager;
 using System;
 using System.Collections.Generic;
