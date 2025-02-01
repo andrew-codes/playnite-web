@@ -21,6 +21,7 @@ const entities = [
   'Series',
   'Genre',
   'User',
+  'Connection',
 ] as const
 type EntityType = (typeof entities)[number]
 
@@ -37,6 +38,7 @@ const RelationshipTypes: Record<EntityType, Array<EntityType>> = {
   Series: [],
   User: [],
   Genre: [],
+  Connection: [],
 } as const
 
 type StringFromType<T> = T extends Platform
@@ -106,6 +108,12 @@ type Entity =
   | GameAsset
   | Genre
   | User
+  | Connection
+
+type Connection = Identifiable & {
+  _type: 'Connection'
+  state: boolean
+}
 
 /**
  * Platform data entity.
@@ -344,7 +352,7 @@ type User = Identifiable & {
   isAuthenticated: boolean
 }
 
-export { RelationshipTypes, entities, runStates }
+export { entities, RelationshipTypes, runStates }
 export type {
   CompletionStatus,
   Entity,
