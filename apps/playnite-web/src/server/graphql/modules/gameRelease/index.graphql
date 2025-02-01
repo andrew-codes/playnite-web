@@ -26,6 +26,17 @@ type GameReleaseStateSubscriptionPayload {
   processId: String
 }
 
+input UpdateGameReleaseInput {
+  description: String
+  communityScore: Int
+  criticScore: Int
+  hidden: Boolean
+  releaseDate: Date
+  platformId: String
+  completionStatusId: String
+  featureIds: [String]
+}
+
 extend type Subscription {
   releaseRunStateChanged: GameReleaseStateSubscriptionPayload
 }
@@ -34,6 +45,10 @@ extend type Mutation {
   startGameRelease(releaseId: String!): GameRelease!
   stopGameRelease(releaseId: String!): GameRelease!
   restartGameRelease(releaseId: String!): GameRelease!
+  updateGameRelease(
+    releaseId: String!
+    input: UpdateGameReleaseInput!
+  ): Boolean!
 }
 
 extend type Query {
