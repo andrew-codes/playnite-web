@@ -9,6 +9,7 @@ using Playnite.SDK;
 using System.Text.RegularExpressions;
 using Playnite.SDK.Models;
 using PlayniteWeb.Models;
+using System.Reflection;
 
 namespace PlayniteWeb.Services.Subscribers.Mqtt
 {
@@ -43,6 +44,7 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
     public event EventHandler<Release> OnUninstallRelease;
     public event EventHandler<Release> OnStopRelease;
     public event EventHandler<Release> OnRestartRelease;
+    public event EventHandler<UpdateEntity> OnUpdateEntity;
 
     private Task MesssageReceived(MqttApplicationMessageReceivedEventArgs args)
     {
@@ -50,6 +52,22 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestLibraryPublish) && OnUpdateLibrary != null)
       {
         OnUpdateLibrary.Invoke(this, task);
+        return Task.WhenAll(task);
+      }
+
+      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestUpdateEntity) && OnUpdateEntity != null)
+      {
+        var updateEntity = deserializer.Deserialize<UpdateEntity>(args.ApplicationMessage.ConvertPayloadToString());
+        var gameEntityProperties = typeof(IGameDatabase)
+        .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
+        .ToList();
+
+        if (!gameEntityProperties.Any(info => info.Name == updateEntity.EntityTypeName))
+        {
+          return Task.WhenAll(task);
+        }
+
+        OnUpdateEntity.Invoke(this, updateEntity);
         return Task.WhenAll(task);
       }
 
@@ -74,6 +92,7 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       {
         eventHandler = OnRestartRelease;
       }
+     
 
       if (eventHandler == null)
       {
@@ -87,7 +106,7 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       var release = _api.Database.Games.FirstOrDefault(g => g.Id.Equals(releaseId));
       if (release == null)
       {
-          LogManager.GetLogger().Debug($"Game with ID {releaseId} not found for installation.");
+        LogManager.GetLogger().Debug($"Game with ID {releaseId} not found for installation.");
         return Task.WhenAll(task);
       }
 

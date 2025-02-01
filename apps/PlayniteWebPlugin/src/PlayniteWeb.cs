@@ -343,6 +343,7 @@ namespace PlayniteWeb
       subscriber.OnUninstallRelease -= Subscriber_OnUninstallRelease;
       subscriber.OnStopRelease -= Subscriber_OnStopRelease;
       subscriber.OnRestartRelease -= Subscriber_OnRestartRelease;
+      subscriber.OnUpdateEntity -= Subscriber_OnUpdateEntity;
 
       gameUpdates.Dispose();
       platformUpdates.Dispose();
@@ -393,7 +394,7 @@ namespace PlayniteWeb
 
     private async Task HandlePublisherConnected(MqttClientConnectedEventArgs args)
     {
-      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.online)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.online, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
     }
 
     public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
@@ -413,11 +414,92 @@ namespace PlayniteWeb
       subscriber.OnUninstallRelease += Subscriber_OnUninstallRelease;
       subscriber.OnStopRelease += Subscriber_OnStopRelease;
       subscriber.OnRestartRelease += Subscriber_OnRestartRelease;
+      subscriber.OnUpdateEntity += Subscriber_OnUpdateEntity;
 
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
       platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
       otherEntityUpdates.Subscribe(e => HandleOtherGameEntitiesUpdated(this, e));
       collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
+    }
+
+    private void Subscriber_OnUpdateEntity(object sender, UpdateEntity e)
+    {
+      try
+      {
+        var collection = typeof(IGameDatabase).GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty).First(info => info.Name == e.EntityTypeName).GetValue(PlayniteApi.Database);
+        var id = Guid.Parse(e.EntityId);
+        var entity = ((IItemCollection<Playnite.SDK.Models.Game>)collection).Get(Guid.Parse(e.EntityId));
+
+        var fields = e.Fields;
+        foreach (var field in fields)
+        {
+          try
+          {
+            if (field.Key == "Id" || field.Key == "Name")
+            {
+              logger.Warn($"Field {field.Key} is not updatable.");
+              continue;
+            }
+
+            var property = entity.GetType().GetProperty(field.Key);
+            if (field.Value == null)
+            {
+              logger.Debug($"Property {field.Key} not found on entity {e.EntityTypeName} with ID {e.EntityId}.");
+              continue;
+            }
+            if (property.PropertyType == typeof(Guid) || property.PropertyType == typeof(Nullable<Guid>))
+            {
+              property.SetValue(entity, Guid.Parse(field.Value.ToString()));
+            }
+            else if (property.PropertyType == typeof(string))
+            {
+              property.SetValue(entity, field.Value.ToString());
+            }
+            else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(Nullable<int>))
+            {
+              property.SetValue(entity, int.Parse(field.Value.ToString()));
+            }
+            else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(Nullable<bool>))
+            {
+              property.SetValue(entity, bool.Parse(field.Value.ToString()));
+            }
+            else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(Nullable<DateTime>))
+            {
+              property.SetValue(entity, DateTime.Parse(field.Value.ToString()));
+            }
+            else if (property.PropertyType == typeof(List<Guid>))
+            {
+              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).Select(Guid.Parse).ToList());
+            }
+            else if (property.PropertyType == typeof(List<string>))
+            {
+              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).ToList());
+            }
+            else if (property.PropertyType == typeof(List<int>))
+            {
+              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).Select(int.Parse).ToList());
+            }
+            else if (property.PropertyType == typeof(List<bool>))
+            {
+              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).Select(bool.Parse).ToList());
+            }
+            else if (property.PropertyType == typeof(List<DateTime>))
+            {
+              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).Select(DateTime.Parse).ToList());
+            }
+          }
+          catch (Exception ex)
+          {
+            logger.Error(ex, $"Error occurred in Subscriber_OnUpdateEntity for Entity ID {e.EntityId}. Could not process property {field.Key}");
+          }
+        }
+        ((IItemCollection<Playnite.SDK.Models.Game>)collection).Update(entity);
+      }
+      catch (Exception ex)
+      {
+        logger.Error(ex, $"Error occurred in Subscriber_OnUpdateEntity for Entity ID {e.EntityId}.");
+      }
+
     }
 
     private async Task HandlePublisherDisconnecting()
