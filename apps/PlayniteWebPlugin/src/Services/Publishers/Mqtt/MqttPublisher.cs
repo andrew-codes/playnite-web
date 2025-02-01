@@ -14,6 +14,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
   {
     private readonly IManageTopics topicBuilder;
     private IMqttClient client;
+    private readonly string clientId;
     public Func<Task> DisconnectingAsync;
     public IList<string> PublishedTopics { get; } = new List<string>();
 
@@ -21,9 +22,10 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public MqttClientOptions Options => client.Options;
 
-    public MqttPublisher(IMqttClient client, IManageTopics topicBuilder)
+    public MqttPublisher(IMqttClient client, IManageTopics topicBuilder, string clientId)
     {
       this.client = client;
+      this.clientId = clientId;
 
       this.topicBuilder = topicBuilder;
       this.client.ApplicationMessageReceivedAsync += Client_ApplicationMessageReceivedAsync;

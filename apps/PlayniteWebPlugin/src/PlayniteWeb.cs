@@ -80,10 +80,10 @@ namespace PlayniteWeb
       settings = new PlayniteWebSettingsViewModel(this);
       topicManager = new TopicManager.TopicManager(settings.Settings);
 
-      publisher = new MqttPublisher(mqtt, topicManager);
+      publisher = new MqttPublisher(mqtt, topicManager, settings.Settings.ClientId);
 
       var deserializer = new ObjectDeserializer();
-      subscriber = new PlayniteWebSubscriber(mqtt, topicManager, deserializer, api);
+      subscriber = new PlayniteWebSubscriber(publisher, topicManager, deserializer, api);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
@@ -286,12 +286,6 @@ namespace PlayniteWeb
       return new Models.Game(games, pcPlatforms, emulatorSource);
     }
 
-    private Models.Game GameFromRelease(Release game)
-    {
-      var games = PlayniteApi.Database.Games.Where(g => g.Name == game.Name).ToList();
-      return new Models.Game(games, pcPlatforms, emulatorSource);
-    }
-
     public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
     {
     }
@@ -428,7 +422,7 @@ namespace PlayniteWeb
 
     private async Task HandlePublisherDisconnecting()
     {
-      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.offline)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.offline, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
       if (!IsShutDownInProgress)
       {
         await AttemptReconnect();
