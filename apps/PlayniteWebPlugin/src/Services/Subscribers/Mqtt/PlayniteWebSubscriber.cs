@@ -58,16 +58,8 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestUpdateEntity) && OnUpdateEntity != null)
       {
         var updateEntity = deserializer.Deserialize<UpdateEntity>(args.ApplicationMessage.ConvertPayloadToString());
-        var gameEntityProperties = typeof(IGameDatabase)
-        .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty)
-        .ToList();
-
-        if (!gameEntityProperties.Any(info => info.Name == updateEntity.EntityTypeName))
-        {
-          return Task.WhenAll(task);
-        }
-
         OnUpdateEntity.Invoke(this, updateEntity);
+
         return Task.WhenAll(task);
       }
 

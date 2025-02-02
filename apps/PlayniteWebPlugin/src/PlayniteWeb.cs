@@ -435,42 +435,42 @@ namespace PlayniteWeb
         if (e.EntityTypeName == "Game") {
           var collection = PlayniteApi.Database.Games;
           var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update<Playnite.SDK.Models.Game>(entity, e.Fields);
+          entity = entityUpdater.Update(entity, e.Fields);
           collection.Update(entity);
         }
         else if (e.EntityTypeName == "Platform")
         {
           var collection = PlayniteApi.Database.Platforms;
           var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update<Platform>(entity, e.Fields);
+          entity = entityUpdater.Update(entity, e.Fields);
           collection.Update(entity);
         }
         else if (e.EntityTypeName == "Genre")
         {
           var collection = PlayniteApi.Database.Genres;
           var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update<Genre>(entity, e.Fields);
+          entity = entityUpdater.Update(entity, e.Fields);
           collection.Update(entity);
         }
         else if (e.EntityTypeName == "Tag")
         {
           var collection = PlayniteApi.Database.Tags;
           var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update<Tag>(entity, e.Fields);
+          entity = entityUpdater.Update(entity, e.Fields);
           collection.Update(entity);
         }
-        else if (e.EntityTypeName == "GameFeature")
+        else if (e.EntityTypeName == "Feature")
         {
           var collection = PlayniteApi.Database.Features;
           var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update<GameFeature>(entity, e.Fields);
+          entity = entityUpdater.Update(entity, e.Fields);
           collection.Update(entity);
         }
         else if (e.EntityTypeName == "Series")
         {
           var collection = PlayniteApi.Database.Series;
           var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update<Series>(entity, e.Fields);
+          entity = entityUpdater.Update(entity, e.Fields);
           collection.Update(entity);
         }
       }
