@@ -4,7 +4,7 @@ import { first, upperCase } from 'lodash-es'
 import { v4 } from 'uuid'
 import { IDeleteQuery, IQuery, IUpdateQuery } from './data/types.api'
 import { Connection, UpdateRequest } from './data/types.entities'
-import { tryParseOid } from './oid'
+import { tryParseOid } from './oid.js'
 
 const debug = createDebugger('playnite-web/graphql/update')
 
