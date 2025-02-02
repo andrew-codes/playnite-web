@@ -1,5 +1,6 @@
 using Playnite.SDK;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -19,7 +20,7 @@ namespace PlayniteWeb.Services
         }
     }
 
-    public class ObjectSerializer : ISerializeObjects
+  public class ObjectSerializer : ISerializeObjects
     {
         public string Serialize(object data)
         {

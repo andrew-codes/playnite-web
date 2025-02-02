@@ -78,7 +78,7 @@ namespace PlayniteWeb
       var extension = Serialization.FromYaml<Dictionary<string, string>>(extensionInfoYaml);
       _version = extension["Version"];
 
-      entityUpdater = new EntityUpdater();
+      entityUpdater = new EntityUpdater(api);
 
       mqtt = new MqttFactory().CreateMqttClient();
       settings = new PlayniteWebSettingsViewModel(this);
