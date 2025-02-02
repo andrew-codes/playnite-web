@@ -25,6 +25,7 @@ cp -r $REPO_ROOT/.data/asset-by-id ./src/public/assets
 docker run --name mqtt -d \
   -p 1883:1883 \
   -v $REPO_ROOT/.data/mqtt/config:/mosquitto/config \
+  -v $REPO_ROOT/.data/mqtt/data:/mosquitto/data \
   eclipse-mosquitto:latest
 
 echo 'Dependent services started.'
