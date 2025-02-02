@@ -4,6 +4,7 @@ import { IdentityService } from '../auth/index.js'
 import { IQuery, IUpdateQuery } from '../data/types.api.js'
 import { User } from '../data/types.entities.js'
 import { subscriptionPublisher } from './subscriptionPublisher.js'
+import type { UpdateEntity } from './updater.js'
 
 type PlayniteContext = {
   identityService: IdentityService
@@ -14,6 +15,7 @@ type PlayniteContext = {
   updateQueryApi: IUpdateQuery
   mqttClient: AsyncMqttClient
   subscriptionPublisher: typeof subscriptionPublisher
+  update: UpdateEntity
 } & YogaInitialContext
 
 export type { PlayniteContext }

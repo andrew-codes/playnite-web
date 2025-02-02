@@ -12,6 +12,7 @@ import PriorityDataApi from '../data/priority/DataApi.js'
 import type { PlayniteContext } from './context.js'
 import schema from './schema.js'
 import { subscriptionPublisher } from './subscriptionPublisher.js'
+import { updater } from './updater.js'
 
 const graphql = (
   endpoint: string,
@@ -76,6 +77,7 @@ const graphql = (
         signingKey,
         subscriptionPublisher,
         updateQueryApi: dataApi,
+        update: updater(mqttClient),
       }
     },
   }
