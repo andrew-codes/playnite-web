@@ -19,47 +19,56 @@ const topicMatch =
 const handler =
   (options: HandlerOptions): IHandlePublishedTopics =>
   async (messages) => {
-    const bulkUpdatesByEntityType = messages
+    const updates = messages
       .filter(({ topic }) => topicMatch.test(topic))
-      .reduce(
-        (acc, { topic, payload }) => {
-          const matches = topicMatch.exec(topic)
-          const entityType = matches?.groups?.entityType as EntityType
-          const entityId = matches?.groups?.entityId
+      .map(({ topic, payload }) => {
+        const matches = topicMatch.exec(topic)
+        const entityType = matches?.groups?.entityType as EntityType
+        const entityId = matches?.groups?.entityId
 
-          if (!entityType || !entityId || !payload) {
-            console.error('Invalid topic or payload', entityType, entityId)
-            return acc
-          }
+        if (!entityType || !entityId || !payload) {
+          console.error(
+            'Missing entityType, entityId or payload',
+            entityType,
+            entityId,
+            JSON.stringify(payload, null, 2),
+          )
+          return null
+        }
 
-          if (!acc[entityType]) {
-            acc[entityType] = []
-          }
+        return { entityType, entityId, payload }
+      })
+      .filter((item) => item !== null)
 
-          acc[entityType].push({
-            filter: {
-              entityType,
-              type: 'ExactMatch',
-              field: 'id',
-              value: entityId,
-            },
-            entity: JSON.parse(payload.toString()) as Entity,
-          })
+    const bulkUpdatesByEntityType = updates.reduce(
+      (acc, { entityId, entityType, payload }) => {
+        if (!acc[entityType]) {
+          acc[entityType] = []
+        }
 
-          return acc
-        },
-        {} as Record<
-          EntityType,
-          Array<{
-            filter: UpdateFilterItem<StringFromType<Entity>>
-            entity: Entity
-          }>
-        >,
-      )
+        acc[entityType].push({
+          filter: {
+            entityType,
+            type: 'ExactMatch',
+            field: 'id',
+            value: entityId,
+          },
+          entity: JSON.parse(payload.toString()) as Entity,
+        })
 
-    for (const [entityType, entities] of Object.entries(
-      bulkUpdatesByEntityType,
-    )) {
+        return acc
+      },
+      {} as Record<
+        EntityType,
+        Array<{
+          filter: UpdateFilterItem<StringFromType<Entity>>
+          entity: Entity
+        }>
+      >,
+    )
+
+    const bulkEntries = Object.entries(bulkUpdatesByEntityType)
+    for (const [entityType, entities] of bulkEntries) {
       try {
         const et = entityType as EntityType
         await options.updateQueryApi.executeBulk<TypeFromString<typeof et>>(
@@ -70,6 +79,14 @@ const handler =
         console.error(error)
       }
     }
+
+    await options.pubsub.publish(
+      'playniteEntitiesUpdated',
+      updates.map((update) => ({
+        type: update.entityType,
+        id: update.entityId,
+      })),
+    )
   }
 
 export default handler
