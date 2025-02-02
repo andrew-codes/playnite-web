@@ -6,7 +6,7 @@ import {
   GameSource,
   Platform,
 } from '../../../../data/types.entities.js'
-import { create } from '../../../../oid.js'
+import { create, createNull } from '../../../../oid.js'
 
 export const GameRelease: GameReleaseResolvers = {
   id: async (_parent, _arg, _ctx) => {
@@ -23,6 +23,14 @@ export const GameRelease: GameReleaseResolvers = {
     return results[0]
   },
   completionStatus: async (_parent, _arg, _ctx) => {
+    if (_parent.completionStatusId === null) {
+      return {
+        _type: 'CompletionStatus',
+        id: createNull('CompletionStatus').toString(),
+        name: 'Not Played',
+      }
+    }
+
     const results = (await _ctx.queryApi.execute<CompletionStatus>({
       entityType: 'CompletionStatus',
       type: 'ExactMatch',
