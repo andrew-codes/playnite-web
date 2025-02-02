@@ -1,6 +1,7 @@
 .DS_Store
 .data/mongodb
 .data/mongodb-e2e
+.data/mqtt/data
 node_modules
 
 .nx

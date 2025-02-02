@@ -2,7 +2,12 @@ import createDebugger from 'debug'
 import { isEmpty } from 'lodash-es'
 import { HandlerOptions } from '..'
 import { UpdateFilterItem } from '../../data/types.api'
-import { Entity, StringFromType } from '../../data/types.entities.js'
+import {
+  Entity,
+  StringFromType,
+  UpdateRequest,
+} from '../../data/types.entities.js'
+import { updater } from '../../updater'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics.js'
 
 const debug = createDebugger(
@@ -32,6 +37,12 @@ const create =
         }
 
         const { clientId, state } = JSON.parse(payload.toString())
+        debug('Dropping old connection states')
+        await options.deleteQueryApi.executeDelete({
+          type: 'MatchAll',
+          entityType: 'Connection',
+        })
+
         debug(
           `Update connection with client ID ${clientId} as ${state === 'online' ? 'online' : 'offline'}`,
         )
@@ -48,6 +59,27 @@ const create =
             state: state === 'online',
           },
         )
+
+        const updateRequests = await options.queryApi.execute<UpdateRequest>(
+          {
+            type: 'MatchAll',
+            entityType: 'UpdateRequest',
+          },
+          [['timestamp', 'asc']],
+        )
+        if (!updateRequests || isEmpty(updateRequests)) {
+          return
+        }
+
+        debug(`Processing ${updateRequests.length} update requests...`)
+        for (const updateRequest of updateRequests) {
+          await updater(
+            options.mqtt,
+            options.queryApi,
+            options.updateQueryApi,
+            options.deleteQueryApi,
+          )(updateRequest)
+        }
       } catch (error) {
         debug(`Error processing topic ${topic}`)
         console.error(error)

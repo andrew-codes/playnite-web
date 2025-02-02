@@ -139,6 +139,10 @@ class MongoDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
       } as Filter<TEntity>
     }
 
+    if (filterItem.type === 'MatchAll') {
+      return {}
+    }
+
     return null
   }
 

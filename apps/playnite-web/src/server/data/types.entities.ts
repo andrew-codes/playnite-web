@@ -22,6 +22,7 @@ const entities = [
   'Genre',
   'User',
   'Connection',
+  'UpdateRequest',
 ] as const
 type EntityType = (typeof entities)[number]
 
@@ -39,6 +40,7 @@ const RelationshipTypes: Record<EntityType, Array<EntityType>> = {
   User: [],
   Genre: [],
   Connection: [],
+  UpdateRequest: [],
 } as const
 
 type StringFromType<T> = T extends Platform
@@ -65,7 +67,11 @@ type StringFromType<T> = T extends Platform
                       ? 'Genre'
                       : T extends User
                         ? 'User'
-                        : never
+                        : T extends Connection
+                          ? 'Connection'
+                          : T extends UpdateRequest
+                            ? 'UpdateRequest'
+                            : never
 type TypeFromString<T> = T extends 'Platform'
   ? Platform
   : T extends 'Game'
@@ -90,7 +96,11 @@ type TypeFromString<T> = T extends 'Platform'
                       ? Genre
                       : T extends 'User'
                         ? User
-                        : never
+                        : T extends 'Connection'
+                          ? Connection
+                          : T extends 'UpdateRequest'
+                            ? UpdateRequest
+                            : never
 
 /**
  * Supported entities.
@@ -109,6 +119,15 @@ type Entity =
   | Genre
   | User
   | Connection
+  | UpdateRequest
+
+type UpdateRequest = Identifiable & {
+  _type: 'UpdateRequest'
+  entityType: string
+  entityId: string
+  fields: Record<string, any>
+  timestamp: number
+}
 
 type Connection = Identifiable & {
   _type: 'Connection'
@@ -355,6 +374,7 @@ type User = Identifiable & {
 export { entities, RelationshipTypes, runStates }
 export type {
   CompletionStatus,
+  Connection,
   Entity,
   EntityType,
   Game,
@@ -373,5 +393,6 @@ export type {
   StringFromType,
   Tag,
   TypeFromString,
+  UpdateRequest,
   User,
 }
