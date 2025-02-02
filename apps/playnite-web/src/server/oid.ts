@@ -56,5 +56,33 @@ function createNull(assetType: DomainType): IIdentify {
   return fromString(`${assetType}:NULL`)
 }
 
-export { create, createNull, domainTypes, fromString }
+function tryParseOid(value: any): IIdentify | null {
+  if (typeof value !== 'string') {
+    return null
+  }
+  const parts = value.split(':')
+  if (parts.length < 2) {
+    return null
+  }
+
+  if (!domainTypes.includes(parts[0] as DomainType)) {
+    return null
+  }
+
+  if (parts[0] === 'NULL') {
+    return createNull(parts[1] as DomainType)
+  }
+
+  if (
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
+      parts[1],
+    )
+  ) {
+    return create(parts[0] as DomainType, parts[1])
+  }
+
+  return null
+}
+
+export { create, createNull, domainTypes, fromString, tryParseOid }
 export type { DomainType, IIdentify }
