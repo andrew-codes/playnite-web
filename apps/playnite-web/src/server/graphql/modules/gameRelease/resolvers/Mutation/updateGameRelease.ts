@@ -1,5 +1,5 @@
 import createDebugger from 'debug'
-import { fromString } from '../../../../../oid'
+import { fromString } from '../../../../../oid.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 const debug = createDebugger(

@@ -7,7 +7,7 @@ import {
   StringFromType,
   UpdateRequest,
 } from '../../data/types.entities.js'
-import { updater } from '../../updater'
+import { updater } from '../../updater.js'
 import type { IHandlePublishedTopics } from '../IHandlePublishedTopics.js'
 
 const debug = createDebugger(
