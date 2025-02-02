@@ -398,7 +398,7 @@ namespace PlayniteWeb
 
     private async Task HandlePublisherConnected(MqttClientConnectedEventArgs args)
     {
-      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.online, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.online, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
     }
 
     public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
@@ -483,7 +483,7 @@ namespace PlayniteWeb
 
     private async Task HandlePublisherDisconnecting()
     {
-      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.offline, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+      await publisher.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.offline, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
       if (!IsShutDownInProgress)
       {
         await AttemptReconnect();
