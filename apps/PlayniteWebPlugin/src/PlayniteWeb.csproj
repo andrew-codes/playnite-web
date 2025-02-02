@@ -125,6 +125,7 @@
     <Compile Include="Services\Subscribers\ISubscribeToPlayniteWeb.cs" />
     <Compile Include="Services\Subscribers\Models\StartReleasePayload.cs" />
     <Compile Include="Services\Subscribers\Mqtt\PlayniteWebSubscriber.cs" />
+    <Compile Include="Services\Updaters\EntityUpdater.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="UI\IntToStringValueConverter.cs" />
     <Compile Include="Services\Publishers\IConnectPublisher.cs" />
