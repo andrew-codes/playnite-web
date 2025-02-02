@@ -15,7 +15,7 @@ namespace PlayniteWeb.Services.Updaters
       logger = LogManager.GetLogger();
     }
 
-    public TEntityType Update<TEntityType>(TEntityType entity, IDictionary<string, object> values)
+    public TEntityType Update<TEntityType>(TEntityType entity, IDictionary<string, object> values) where TEntityType : DatabaseObject, IIdentifiable
     {
       foreach (var field in values)
       {
@@ -80,6 +80,8 @@ namespace PlayniteWeb.Services.Updaters
           {
             property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).Select(DateTime.Parse).ToList());
           }
+
+          entity.OnPropertyChanged(field.Key);
         }
         catch (Exception ex)
         {
