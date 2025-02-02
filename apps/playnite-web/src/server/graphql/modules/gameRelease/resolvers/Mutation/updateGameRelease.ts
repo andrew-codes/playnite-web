@@ -1,4 +1,10 @@
+import createDebugger from 'debug'
+import { fromString } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
+
+const debug = createDebugger(
+  'playnite-web/graphql/gameRelease/mutation/updateGameRelease',
+)
 
 export const updateGameRelease: NonNullable<
   MutationResolvers['updateGameRelease']
@@ -6,9 +12,15 @@ export const updateGameRelease: NonNullable<
   try {
     _ctx.identityService.authorize(_ctx.jwt)
 
+    const oid = fromString(_arg.releaseId)
+    if (oid.type !== 'GameRelease') {
+      debug(`Invalid entity Oid. Expected GameRelease, got ${oid.type}`)
+      return false
+    }
+
     _ctx.update({
       entityType: 'Game',
-      entityId: _arg.releaseId,
+      entityId: oid.id,
       fields: _arg.input,
     })
   } catch (e) {

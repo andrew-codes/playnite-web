@@ -3,7 +3,8 @@ import createDebugger from 'debug'
 import { first, upperCase } from 'lodash-es'
 import { v4 } from 'uuid'
 import { IDeleteQuery, IQuery, IUpdateQuery } from './data/types.api'
-import { Connection, Release, UpdateRequest } from './data/types.entities'
+import { Connection, UpdateRequest } from './data/types.entities'
+import { tryParseOid } from './oid'
 
 const debug = createDebugger('playnite-web/graphql/update')
 
@@ -38,21 +39,20 @@ const updater =
       const value: any = entry[1]
 
       if (Array.isArray(value.added) && Array.isArray(value.removed)) {
-        const entity = await query.execute<Release>({
-          type: 'ExactMatch',
-          entityType: 'Release',
-          field: 'id',
-          value: entityId,
-        })
-        const existingValues = first(entity)?.[key] as string[]
-        const newValues = existingValues
-          .concat(value.added)
-          .filter((item) => value.removed.includes(item))
-        payloadData.fields[`${upperCase(key.at(0) ?? '')}${key.slice(1)}`] =
-          newValues
+        const removed = value.removed
+          .map((item) => tryParseOid(item)?.id)
+          .filter((item) => !!item)
+
+        const added = value.added
+          .map((item) => tryParseOid(item)?.id)
+          .filter((item) => !!item)
+        payloadData.fields[`${upperCase(key.at(0) ?? '')}${key.slice(1)}`] = {
+          added,
+          removed,
+        }
       } else {
         payloadData.fields[`${upperCase(key.at(0) ?? '')}${key.slice(1)}`] =
-          value
+          tryParseOid(value)?.id ?? value
       }
     }
 
