@@ -1,1 +1,1 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"f73c11204492479e8374fb8c078cebad","collectionName":"gameasset","type":"collection"}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"e6fec18da3a54709ae13d0e041f94b3b","collectionName":"gameasset","type":"collection"}
