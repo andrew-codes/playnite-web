@@ -66,40 +66,40 @@ export const Game: GameResolvers = {
       .filter((result) => result !== null)
       .map((result) => result[0])
 
-    const completionStatusIds = releases.map(
-      (release) => release.completionStatusId,
-    )
+    const completionStatusIds = releases
+      .map((release) => release.completionStatusId)
+      .filter((id) => id !== null) as string[]
 
-    return (
-      (
-        await Promise.all(
-          completionStatusIds.map((id) =>
-            _ctx.queryApi.execute<CompletionStatus>({
-              entityType: 'CompletionStatus',
-              type: 'ExactMatch',
-              field: 'id',
-              value: id,
-            }),
-          ),
-        )
+    const results = (
+      await Promise.all(
+        completionStatusIds.map((id) =>
+          _ctx.queryApi.execute<CompletionStatus>({
+            entityType: 'CompletionStatus',
+            type: 'ExactMatch',
+            field: 'id',
+            value: id,
+          }),
+        ),
       )
-        .filter((result) => result !== null)
-        .map((result) => result[0])
-        .sort((a, b) => {
-          const aSort = completionStatusSortOrder.findIndex((p) =>
-            p.test(a.name),
-          )
-          const bSort = completionStatusSortOrder.findIndex((p) =>
-            p.test(b.name),
-          )
-          if (aSort > bSort) {
-            return 1
-          }
-          if (aSort < bSort) {
-            return -1
-          }
-          return 0
-        })?.[0] ?? { id: createNull('CompletionStatus'), name: 'Backlog' }
     )
+      .filter((result) => result !== null)
+      .map((result) => result[0])
+      .sort((a, b) => {
+        const aSort = completionStatusSortOrder.findIndex((p) => p.test(a.name))
+        const bSort = completionStatusSortOrder.findIndex((p) => p.test(b.name))
+        if (aSort > bSort) {
+          return 1
+        }
+        if (aSort < bSort) {
+          return -1
+        }
+        return 0
+      })?.[0] ?? {
+      _type: 'CompletionStatus',
+      id: createNull('CompletionStatus').toString(),
+      name: 'Backlog',
+    }
+
+    return results
   },
 }
