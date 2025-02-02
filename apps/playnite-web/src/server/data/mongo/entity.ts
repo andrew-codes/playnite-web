@@ -14,6 +14,7 @@ const entityCollectionLookup: Map<EntityType, string> = new Map([
   ['Genre', 'genre'],
   ['User', 'user'],
   ['Connection', 'connection'],
+  ['UpdateRequest', 'updateRequest'],
 ])
 
 export { entityCollectionLookup }

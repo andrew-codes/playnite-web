@@ -3,8 +3,8 @@ import { YogaInitialContext } from 'graphql-yoga'
 import { IdentityService } from '../auth/index.js'
 import { IQuery, IUpdateQuery } from '../data/types.api.js'
 import { User } from '../data/types.entities.js'
+import type { UpdateEntity } from '../updater.js'
 import { subscriptionPublisher } from './subscriptionPublisher.js'
-import type { UpdateEntity } from './updater.js'
 
 type PlayniteContext = {
   identityService: IdentityService

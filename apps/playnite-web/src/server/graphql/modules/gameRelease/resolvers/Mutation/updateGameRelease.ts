@@ -6,7 +6,11 @@ export const updateGameRelease: NonNullable<
   try {
     _ctx.identityService.authorize(_ctx.jwt)
 
-    _ctx.update('Game', _arg.releaseId, _arg.input)
+    _ctx.update({
+      entityType: 'Game',
+      entityId: _arg.releaseId,
+      fields: _arg.input,
+    })
   } catch (e) {
     console.error(e)
     return false
