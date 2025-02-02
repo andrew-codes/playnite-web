@@ -23,11 +23,14 @@ export const GameRelease: GameReleaseResolvers = {
     return results[0]
   },
   completionStatus: async (_parent, _arg, _ctx) => {
-    if (_parent.completionStatusId === null) {
+    if (
+      _parent.completionStatusId === null ||
+      _parent.completionStatusId === '00000000-0000-0000-0000-000000000000'
+    ) {
       return {
         _type: 'CompletionStatus',
         id: createNull('CompletionStatus').toString(),
-        name: 'Not Played',
+        name: 'Backlog',
       }
     }
 
