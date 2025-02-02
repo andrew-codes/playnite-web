@@ -9,6 +9,12 @@ export type PubSubChannels = {
       processId: string | null
     },
   ]
+  playniteEntitiesUpdated: [
+    Array<{
+      type: string
+      id: string
+    }>,
+  ]
 }
 
 const subscriptionPublisher = createPubSub<PubSubChannels>()
