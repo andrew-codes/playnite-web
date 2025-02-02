@@ -68,7 +68,8 @@ export const Game: GameResolvers = {
 
     const completionStatusIds = releases
       .map((release) => release.completionStatusId)
-      .filter((id) => id !== null) as string[]
+      .filter((id) => id !== null)
+      .filter((id) => id !== '00000000-0000-0000-0000-000000000000') as string[]
 
     const results = (
       await Promise.all(
