@@ -26,6 +26,11 @@ type GameReleaseStateSubscriptionPayload {
   processId: String
 }
 
+input RelationUpdate {
+  added: [String]!
+  removed: [String]!
+}
+
 input UpdateGameReleaseInput {
   description: String
   communityScore: Int
@@ -34,7 +39,7 @@ input UpdateGameReleaseInput {
   releaseDate: Date
   platformId: String
   completionStatusId: String
-  featureIds: [String]
+  featureIds: RelationUpdate
 }
 
 extend type Subscription {
