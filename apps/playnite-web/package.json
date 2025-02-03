@@ -11,7 +11,7 @@
     "@graphql-yoga/plugin-csrf-prevention": "^3.10.2",
     "@graphql-yoga/plugin-jwt": "^2.6.0",
     "@mui/icons-material": "^5.16.7",
-    "@mui/material": "^5.16.7",
+    "@mui/material": "^6.4.2",
     "@mui/utils": "^5.16.6",
     "@reduxjs/toolkit": "^2.3.0",
     "@remix-run/express": "^2.14.0",
