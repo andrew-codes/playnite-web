@@ -47,28 +47,53 @@ namespace PlayniteWeb.Services.Updaters
 
           if (property.PropertyType == typeof(Guid) || property.PropertyType == typeof(Nullable<Guid>))
           {
-            property.SetValue(entity, Guid.Parse(field.Value.ToString()));
-            entity.OnPropertyChanged(field.Key);
+            var value = Guid.Parse(field.Value.ToString());
+            var propertyValue = (Guid)property.GetValue(entity);
+            if (propertyValue == null || propertyValue.Equals(value))
+            {
+              continue;
+            }
+            property.SetValue(entity, value);
           }
           else if (property.PropertyType == typeof(string))
           {
-            property.SetValue(entity, field.Value.ToString());
-            entity.OnPropertyChanged(field.Key);
+            var value = field.Value.ToString();
+              var propertyValue = property.GetValue(entity) as string;
+            if (propertyValue == null || propertyValue.Equals(value))
+            {
+              continue;
+            }
+            property.SetValue(entity, value);
           }
           else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(Nullable<int>))
           {
-            property.SetValue(entity, int.Parse(field.Value.ToString()));
-            entity.OnPropertyChanged(field.Key);
+            var value = int.Parse(field.Value.ToString());
+            var propertyValue = (int?)property.GetValue(entity);
+            if (propertyValue == null || propertyValue.Equals(value))
+            {
+              continue;
+            }
+            property.SetValue(entity, value);
           }
           else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(Nullable<bool>))
           {
-            property.SetValue(entity, bool.Parse(field.Value.ToString()));
-            entity.OnPropertyChanged(field.Key);
+            var value = bool.Parse(field.Value.ToString());
+            var propertyValue = (bool?)property.GetValue(entity);
+            if (propertyValue == null || propertyValue.Equals(value))
+            {
+              continue;
+            }
+            property.SetValue(entity, value);
           }
           else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(Nullable<DateTime>))
           {
-            property.SetValue(entity, DateTime.Parse(field.Value.ToString()));
-            entity.OnPropertyChanged(field.Key);
+            var value = DateTime.Parse(field.Value.ToString());
+            var propertyValue = (DateTime?)property.GetValue(entity);
+            if (propertyValue == null || propertyValue.Equals(value))
+            {
+              continue;
+            }
+            property.SetValue(entity, value);
           }
           else
           {
@@ -87,11 +112,7 @@ namespace PlayniteWeb.Services.Updaters
                   {
                     game.FeatureIds.Add(guid);
                     game.Features.Add(relatedEntities.FirstOrDefault(f => f.Id.Equals(guid)));
-
                   }
-
-                  entity.OnPropertyChanged(field.Key);
-                  entity.OnPropertyChanged("Features");
                 }
               }
             }

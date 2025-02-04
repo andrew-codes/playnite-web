@@ -2,57 +2,98 @@ using Playnite.SDK;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
+using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace PlayniteWeb.Services
 {
-
-  public class ListJsonConverter<T> : JsonConverter<List<T>>
+  public class PascalCaseJsonConverter : JsonConverter<ExpandoObject>
   {
-    public override List<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ExpandoObject Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-      if (reader.TokenType != JsonTokenType.StartArray)
+      using (JsonDocument doc = JsonDocument.ParseValue(ref reader))
       {
-        throw new JsonException();
-      }
-
-      var list = new List<T>();
-
-      while (reader.Read())
-      {
-        if (reader.TokenType == JsonTokenType.EndArray)
+        var jsonObject = doc.RootElement;
+        if (jsonObject.ValueKind == JsonValueKind.Object)
         {
-          return list;
+          var result = new ExpandoObject() as IDictionary<string, object>;
+          foreach (var prop in jsonObject.EnumerateObject())
+          {
+            var name = ConvertToPascalCase(prop.Name);
+            using (JsonDocument valueDoc = JsonDocument.Parse(prop.Value.GetRawText()))
+            {
+              dynamic value = null;
+              if (valueDoc.RootElement.ValueKind == JsonValueKind.Object)
+              {
+                value = JsonSerializer.Deserialize<ExpandoObject>(prop.Value.GetRawText(), options);
+              }
+              else if (valueDoc.RootElement.ValueKind == JsonValueKind.Array)
+              {
+                var list = new List<dynamic>();
+                foreach (var valueItem in valueDoc.RootElement.EnumerateArray())
+                {
+                  list.Add(JsonSerializer.Deserialize<ExpandoObject>(valueItem.GetRawText(), options));
+
+                }
+                value = list;
+              }
+              else if (valueDoc.RootElement.ValueKind == JsonValueKind.String)
+              {
+                value = valueDoc.RootElement.GetString();
+              }
+              else if (valueDoc.RootElement.ValueKind == JsonValueKind.Number)
+              {
+                value = valueDoc.RootElement.GetInt32();
+              }
+              else if (valueDoc.RootElement.ValueKind == JsonValueKind.True || valueDoc.RootElement.ValueKind == JsonValueKind.False)
+              {
+                value = valueDoc.RootElement.GetBoolean();
+              }
+              else
+              {
+                value = valueDoc.RootElement.GetRawText();
+              }
+
+              result[name] = value;
+            }
+          }
+          return result as ExpandoObject;
         }
 
-        var item = JsonSerializer.Deserialize<T>(ref reader, options);
-        list.Add(item);
+        return null;
       }
-
-      throw new JsonException();
     }
 
-    public override void Write(Utf8JsonWriter writer, List<T> value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, ExpandoObject value, JsonSerializerOptions options)
     {
       JsonSerializer.Serialize(writer, value, options);
+    }
+
+    private string ConvertToPascalCase(string name)
+    {
+      if (string.IsNullOrEmpty(name))
+        return name;
+
+      return char.ToUpper(name[0], CultureInfo.InvariantCulture) + name.Substring(1);
     }
   }
 
   public class ObjectDeserializer : IDeserializeObjects
   {
 
-    public T Deserialize<T>(string data)
+    public ExpandoObject Deserialize(string data)
     {
-      var options = new JsonSerializerOptions(JsonSerializerDefaults.General)
-      {
-        Converters = { new TypeConverter(), new ListJsonConverter<string>() }
-      };
-
       try
       {
-        // Use the custom options with the TypeConverter
-        return JsonSerializer.Deserialize<T>(data, options);
+        var options = new JsonSerializerOptions
+        {
+          PropertyNameCaseInsensitive = true, // Allows case-insensitive matches
+          Converters = { new PascalCaseJsonConverter() } // Apply custom converter
+        };
+        return JsonSerializer.Deserialize<ExpandoObject>(data, options);
       }
       catch (NotSupportedException nse)
       {

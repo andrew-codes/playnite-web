@@ -1,4 +1,5 @@
 using MQTTnet.Client;
+using Playnite.SDK;
 using Playnite.SDK.Models;
 using PlayniteWeb.TopicManager;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     private readonly IManageTopics topicBuilder;
     private readonly ISerializeObjects serializer;
     private readonly GameState? state;
+    private readonly ILogger logger;
 
     public PublishGameState(GameState state, IMqttClient client, IManageTopics topicBuilder, ISerializeObjects serializer)
     {
@@ -20,6 +22,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       this.topicBuilder = topicBuilder;
       this.serializer = serializer;
       this.serializer = serializer;
+      this.logger = LogManager.GetLogger();
     }
 
     public IEnumerable<Task> Publish(IIdentifiable release)
@@ -28,6 +31,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       {
         if (state == null)
         {
+          logger.Warn($"GameState is null for release {r.Id} {r.ProcessId}; Skipping.");
           yield break;
         }
 

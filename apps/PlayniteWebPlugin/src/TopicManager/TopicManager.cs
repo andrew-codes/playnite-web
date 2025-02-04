@@ -16,12 +16,11 @@ namespace PlayniteWeb.TopicManager
       if (string.IsNullOrEmpty(settings.DeviceId))
       {
         throw new NotSupportedException("Device ID is required to be set in the Plugin Settings pane.");
-
       }
       return $"playnite/{settings.DeviceId}/{subTopic}";
     }
 
-    public string GetSubscribeTopic(string subTopic)
+    public string GetRequestActionTopic(string subTopic)
     {
       return $"playnite/request/{subTopic}";
     }
