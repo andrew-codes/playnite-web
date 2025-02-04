@@ -78,6 +78,7 @@ namespace PlayniteWeb.Models
     public int? CommunityScore => game.CommunityScore;
     public DateTime? LastActivity => game.LastActivity;
     public ulong Playtime => game.Playtime;
+    public string GameId => game.GameId;
     public DateTime? Added => game.Added;
     public DateTime? Modified => game.Modified;
     public ulong PlayCount => game.PlayCount;

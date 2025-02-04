@@ -8,6 +8,5 @@ namespace PlayniteWeb.TopicManager
     public const string RequestUninstallRelease = "game/uninstall";
     public const string RequestStopRelease = "game/stop";
     public const string RequestRestartRelease = "game/restart";
-    public const string RequestUpdateEntity = "update";
   }
 }

@@ -2,6 +2,7 @@ using MQTTnet.Client;
 using MQTTnet.Protocol;
 using Playnite.SDK;
 using Playnite.SDK.Models;
+using PlayniteWeb.Models;
 using PlayniteWeb.TopicManager;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,8 +26,11 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public IEnumerable<Task> Publish(IIdentifiable item)
     {
-      var topic = topicBuilder.GetPublishTopic(PublishTopics.Playlist(item.Id));
-      yield return client.PublishStringAsync(topic, serializer.Serialize(item), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+      if (item is Playlist p)
+      {
+        var topic = topicBuilder.GetPublishTopic(PublishTopics.Playlist(p.Id));
+        yield return client.PublishStringAsync(topic, serializer.Serialize(new EntityUpdatePayload<Playlist>(EntityUpdateAction.Update) { Entity = p }), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
+      }
     }
   }
 }

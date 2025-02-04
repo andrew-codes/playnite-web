@@ -2,14 +2,7 @@ import type { AsyncMqttClient } from 'async-mqtt'
 import createDebugger from 'debug'
 import fs from 'fs/promises'
 import type { PubSub } from 'graphql-yoga'
-import {
-  IDeleteQuery,
-  IQuery,
-  IUpdateQuery,
-  StringFromType,
-  UpdateFilterItem,
-} from '../data/types.api.js'
-import { Entity } from '../data/types.entities.js'
+import { IDeleteQuery, IQuery, IUpdateQuery } from '../data/types.api.js'
 import { PubSubChannels } from '../graphql/subscriptionPublisher.js'
 import handlers from './handlers/index.js'
 
@@ -26,7 +19,6 @@ type HandlerOptions = {
 
 const batchTopic = /^playnite\/[^/]+\/batch$/
 const librarySync = /^playnite\/[^/]+\/library\/sync\/(.*)$/
-const extractClientId = /^playnite\/([^/]+)\/.*/
 
 const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
   debug('Starting game-db-updater')
@@ -39,24 +31,6 @@ const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
   options.mqtt.on('message', async (topic, payload) => {
     try {
       debug(`Received message for topic ${topic}`)
-
-      const clientIdMatch = extractClientId.exec(topic)
-      if (clientIdMatch) {
-        debug('Update connection as online')
-        const clientId = clientIdMatch[1]
-        await options.updateQueryApi.executeUpdate(
-          {
-            type: 'ExactMatch',
-            entityType: 'Connection' as StringFromType<Entity>,
-            field: 'id',
-            value: clientId,
-          } as UpdateFilterItem<StringFromType<Entity>>,
-          {
-            id: clientId,
-            state: true,
-          },
-        )
-      }
 
       const librarySyncMessageMatches = librarySync.exec(topic)
       if (librarySyncMessageMatches?.[1] === 'start') {

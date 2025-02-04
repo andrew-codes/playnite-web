@@ -10,6 +10,9 @@ using System.Text.RegularExpressions;
 using Playnite.SDK.Models;
 using PlayniteWeb.Models;
 using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
+using System.Dynamic;
 
 namespace PlayniteWeb.Services.Subscribers.Mqtt
 {
@@ -19,8 +22,11 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
     private readonly IMqttClient mqtt;
     private readonly IDeserializeObjects deserializer;
     private IPlayniteAPI _api;
+    private readonly string deviceId;
+    private Regex updateTopicExpression;
+    private ILogger logger;
 
-    public PlayniteWebSubscriber(IMqttClient mqtt, IManageTopics topicBuilder, IDeserializeObjects deserializer, IPlayniteAPI api)
+    public PlayniteWebSubscriber(IMqttClient mqtt, IManageTopics topicBuilder, IDeserializeObjects deserializer, IPlayniteAPI api, string deviceId)
     {
       this.topicBuilder = topicBuilder;
       this.mqtt = mqtt;
@@ -28,6 +34,9 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       mqtt.ConnectedAsync += Client_ConnectedAsync;
       this.deserializer = deserializer;
       _api = api;
+      this.deviceId = deviceId;
+      updateTopicExpression = new Regex("playnite/update/(\\w+)/(\\w+)/(\\w+)");
+      logger  = LogManager.GetLogger();
     }
 
     private Task Client_ConnectedAsync(MqttClientConnectedEventArgs args)
@@ -35,6 +44,8 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       var subscribeTopics = typeof(SubscribeTopics).GetFields().Select(field => field.GetValue(null)).ToList();
 
       Task.WaitAll(subscribeTopics.Select(topic => mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topicBuilder.GetSubscribeTopic(topic.ToString())).Build())).ToArray());
+      mqtt.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("playnite/update/+/+/+").Build()).Wait();
+
       return Task.CompletedTask;
     }
 
@@ -55,9 +66,38 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
         return Task.WhenAll(task);
       }
 
-      if (args.ApplicationMessage.Topic == topicBuilder.GetSubscribeTopic(SubscribeTopics.RequestUpdateEntity) && OnUpdateEntity != null)
+      var isUpdateTopic = updateTopicExpression.IsMatch(args.ApplicationMessage.Topic);
+      if (isUpdateTopic && OnUpdateEntity != null)
       {
-        var updateEntity = deserializer.Deserialize<UpdateEntity>(args.ApplicationMessage.ConvertPayloadToString());
+        var match = updateTopicExpression.Match(args.ApplicationMessage.Topic);
+        var entityType = match.Groups[1].Value;
+        var entityId = Guid.Parse(match.Groups[2].Value);
+        var deviceId = match.Groups[0].Value;
+
+        if (deviceId == this.deviceId)
+        {
+          logger.Debug("Ignoring update from self.");
+          return task;
+        }
+
+        dynamic payload = deserializer.Deserialize<ExpandoObject>(args.ApplicationMessage.ConvertPayloadToString());
+        if (payload == null)
+        {
+          logger.Debug("Payload is null.");
+          return task;
+        }
+        if (payload.Entity == null)
+        {
+          logger.Debug("Entity is null.");
+          return task;
+        }
+        if (payload.Action == null)
+        {
+          logger.Debug("Action is null.");
+          return task;
+        }
+
+        var updateEntity = new UpdateEntity() { Entity = payload.Entity, EntityType = entityType, EntityId = entityId, UpdateAction = payload.Action };
         OnUpdateEntity.Invoke(this, updateEntity);
 
         return Task.WhenAll(task);
@@ -84,7 +124,7 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       {
         eventHandler = OnRestartRelease;
       }
-     
+
 
       if (eventHandler == null)
       {
