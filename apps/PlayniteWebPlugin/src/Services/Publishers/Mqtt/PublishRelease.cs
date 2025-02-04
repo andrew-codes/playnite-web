@@ -26,7 +26,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public IEnumerable<Task> Publish(IIdentifiable release)
     {
-      if (release is Models.Release r)
+      if (release is Release r)
       {
 
         var topic = topicBuilder.GetPublishTopic(PublishTopics.Release(r.Id));

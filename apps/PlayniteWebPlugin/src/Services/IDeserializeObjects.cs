@@ -1,7 +1,9 @@
+using System.Dynamic;
+
 namespace PlayniteWeb.Services
 {
   public interface IDeserializeObjects
   {
-    T Deserialize<T>(string data);
+    ExpandoObject Deserialize(string data);
   }
 }

@@ -17,6 +17,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     private readonly string filePath;
     private readonly string rootTopic;
     private readonly AssetType typeKey;
+    private readonly ILogger logger = LogManager.GetLogger();
 
     public PublishAsset(IMqttClient client, IGameDatabaseAPI gameDatabase, string filePath, string rootTopic, AssetType typeKey)
     {
@@ -34,19 +35,16 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public IEnumerable<Task> Publish(IIdentifiable asset)
     {
-      if (!client.IsConnected)
-      {
-        yield break;
-      }
-
       if (string.IsNullOrEmpty(filePath))
       {
+        logger.Warn($"Asset file path is null or empty; Skipping.");
         yield break;
       }
 
       var fullPath = gameDatabase.GetFullFilePath(filePath);
       if (!File.Exists(fullPath))
       {
+        logger.Warn($"Asset file {fullPath} does not exist; Skipping.");
         yield break;
       }
 

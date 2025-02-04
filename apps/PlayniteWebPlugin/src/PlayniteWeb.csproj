@@ -94,7 +94,6 @@
     <Compile Include="Models\Connection.cs" />
     <Compile Include="Models\EntityField.cs" />
     <Compile Include="Models\Game.cs" />
-    <Compile Include="Models\BatchMessage.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\Release.cs" />
     <Compile Include="Models\Message.cs" />
@@ -114,7 +113,7 @@
     <Compile Include="Services\Publishers\Mqtt\FilePathExtractors\GameCoverFilePath.cs" />
     <Compile Include="Services\Publishers\Mqtt\IApplyMqttCredentials.cs" />
     <Compile Include="Services\Publishers\Mqtt\IGetFilePath.cs" />
-    <Compile Include="Services\Publishers\Mqtt\MqttPublisher.cs" />
+    <Compile Include="Services\Publishers\Mqtt\MqttClient.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishAsset.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishPlaylist.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGameState.cs" />
