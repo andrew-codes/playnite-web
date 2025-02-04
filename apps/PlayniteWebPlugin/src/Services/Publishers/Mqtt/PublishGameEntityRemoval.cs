@@ -2,6 +2,7 @@ using MQTTnet.Client;
 using MQTTnet.Protocol;
 using Playnite.SDK;
 using Playnite.SDK.Models;
+using PlayniteWeb.Models;
 using PlayniteWeb.TopicManager;
 using System;
 using System.Collections.Generic;
@@ -29,32 +30,27 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public IEnumerable<Task> Publish(IIdentifiable item)
     {
-      if (item.GetType().Name == "Game")
+      if (item is Playnite.SDK.Models.Game g)
       {
-        var removeReleaseTopic = topicBuilder.GetPublishTopic(PublishTopics.GameEntityRemoval("Release", item.Id));
-        yield return client.PublishStringAsync(removeReleaseTopic, string.Empty, MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
-
         var isGameRemoved = gameDatabase.Games
-            .Where(g => !g.Id.Equals(Guid.Empty))
-            .All(g => !g.Name.Equals(((Game)item).Name));
+            .Where(dbg => !dbg.Id.Equals(Guid.Empty))
+            .All(dbg => !dbg.Name.Equals(g.Name));
 
         if (isGameRemoved)
         {
           using (MD5 md5 = MD5.Create())
           {
-            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(((Game)item).Name));
+            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(g.Name));
             var id = new Guid(hash);
 
-            var removeGameTopic = topicBuilder.GetPublishTopic(PublishTopics.GameEntityRemoval("Game", id));
-            yield return client.PublishStringAsync(removeGameTopic, string.Empty, MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+            var gameTopic = topicBuilder.GetPublishTopic(PublishTopics.Game(id));
+            yield return client.PublishStringAsync(gameTopic, serializer.Serialize(new EntityUpdatePayload<Models.Game>(EntityUpdateAction.Delete) { Entity = new Models.Game(id) }), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
           }
         }
 
-      }
-      else
-      {
-        var topic = topicBuilder.GetPublishTopic(PublishTopics.GameEntityRemoval(item.GetType().Name, item.Id));
-        yield return client.PublishStringAsync(topic, string.Empty, MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+        var releaseTopic = topicBuilder.GetPublishTopic(PublishTopics.Release(g.Id));
+        yield return client.PublishStringAsync(releaseTopic, serializer.Serialize(new EntityUpdatePayload<Release>(EntityUpdateAction.Delete) { Entity = new Release(g, null) }), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
+
       }
     }
   }

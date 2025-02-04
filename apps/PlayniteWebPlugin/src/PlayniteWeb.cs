@@ -87,7 +87,7 @@ namespace PlayniteWeb
       publisher = new MqttPublisher(mqtt, topicManager, settings.Settings.ClientId);
 
       var deserializer = new ObjectDeserializer();
-      subscriber = new PlayniteWebSubscriber(publisher, topicManager, deserializer, api);
+      subscriber = new PlayniteWebSubscriber(publisher, topicManager, deserializer, api, settings.Settings.DeviceId);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
@@ -430,49 +430,47 @@ namespace PlayniteWeb
     {
       try
       {
-        var id = Guid.Parse(e.EntityId);
-
-        if (e.EntityTypeName == "Game") {
+        if (e.EntityType == "Game") {
           var collection = PlayniteApi.Database.Games;
-          var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update(entity, e.Fields);
+          var entity = collection.Get(e.EntityId);
+          entity = entityUpdater.Update(entity, e.Entity);
           collection.Update(entity);
         }
-        else if (e.EntityTypeName == "Platform")
-        {
-          var collection = PlayniteApi.Database.Platforms;
-          var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update(entity, e.Fields);
-          collection.Update(entity);
-        }
-        else if (e.EntityTypeName == "Genre")
-        {
-          var collection = PlayniteApi.Database.Genres;
-          var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update(entity, e.Fields);
-          collection.Update(entity);
-        }
-        else if (e.EntityTypeName == "Tag")
-        {
-          var collection = PlayniteApi.Database.Tags;
-          var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update(entity, e.Fields);
-          collection.Update(entity);
-        }
-        else if (e.EntityTypeName == "Feature")
-        {
-          var collection = PlayniteApi.Database.Features;
-          var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update(entity, e.Fields);
-          collection.Update(entity);
-        }
-        else if (e.EntityTypeName == "Series")
-        {
-          var collection = PlayniteApi.Database.Series;
-          var entity = collection.Get(Guid.Parse(e.EntityId));
-          entity = entityUpdater.Update(entity, e.Fields);
-          collection.Update(entity);
-        }
+        //else if (e.EntityType == "Platform")
+        //{
+        //  var collection = PlayniteApi.Database.Platforms;
+        //  var entity = collection.Get(Guid.Parse(e.EntityId));
+        //  entity = entityUpdater.Update(entity, e.Fields);
+        //  collection.Update(entity);
+        //}
+        //else if (e.EntityType == "Genre")
+        //{
+        //  var collection = PlayniteApi.Database.Genres;
+        //  var entity = collection.Get(Guid.Parse(e.EntityId));
+        //  entity = entityUpdater.Update(entity, e.Fields);
+        //  collection.Update(entity);
+        //}
+        //else if (e.EntityType == "Tag")
+        //{
+        //  var collection = PlayniteApi.Database.Tags;
+        //  var entity = collection.Get(Guid.Parse(e.EntityId));
+        //  entity = entityUpdater.Update(entity, e.Fields);
+        //  collection.Update(entity);
+        //}
+        //else if (e.EntityType == "Feature")
+        //{
+        //  var collection = PlayniteApi.Database.Features;
+        //  var entity = collection.Get(Guid.Parse(e.EntityId));
+        //  entity = entityUpdater.Update(entity, e.Fields);
+        //  collection.Update(entity);
+        //}
+        //else if (e.EntityType == "Series")
+        //{
+        //  var collection = PlayniteApi.Database.Series;
+        //  var entity = collection.Get(Guid.Parse(e.EntityId));
+        //  entity = entityUpdater.Update(entity, e.Fields);
+        //  collection.Update(entity);
+        //}
       }
       catch (Exception ex)
       {

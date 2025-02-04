@@ -9,9 +9,11 @@ namespace PlayniteWeb.Models
 {
   internal class UpdateEntity
   {
-    public string EntityTypeName { get; set; }
-    public string EntityId { get; set; }
+    public string EntityType { get; set; }
+    public Guid EntityId { get; set; }
 
-    public IDictionary<string, object> Fields { get; set; }
+    public string UpdateAction { get; set; }
+
+    public IDictionary<string, object> Entity { get; set; }
   }
 }

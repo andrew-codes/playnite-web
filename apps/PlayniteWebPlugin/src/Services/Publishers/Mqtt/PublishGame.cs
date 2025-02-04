@@ -31,19 +31,21 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public IEnumerable<Task> Publish(IIdentifiable game)
     {
-
-      if (!((Models.Game)game).Releases.Any())
+      if (game is Models.Game g)
       {
-        yield break;
-      }
+        if (!g.Releases.Any())
+        {
+          yield break;
+        }
 
-      var topic = topicBuilder.GetPublishTopic(PublishTopics.Game(game.Id));
-      yield return client.PublishStringAsync(topic, serializer.Serialize(game), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
+        var releasePublishes = ((Models.Game)game).Releases.SelectMany(release => publishRelease.Publish(release));
+        foreach (var task in releasePublishes)
+        {
+          yield return task;
+        }
 
-      var releasePublishes = ((Models.Game)game).Releases.SelectMany(release => publishRelease.Publish(release));
-      foreach (var task in releasePublishes)
-      {
-        yield return task;
+        var topic = topicBuilder.GetPublishTopic(PublishTopics.Game(g.Id));
+        yield return client.PublishStringAsync(topic, serializer.Serialize(new EntityUpdatePayload<Models.Game>(EntityUpdateAction.Update) { Entity = g}), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
       }
     }
   }

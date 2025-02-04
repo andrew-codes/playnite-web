@@ -19,9 +19,10 @@ namespace PlayniteWeb.Services.Updaters
       this.api = api;
     }
 
-    public TEntityType Update<TEntityType>(TEntityType entity, IDictionary<string, object> values) where TEntityType : DatabaseObject, IIdentifiable
+    public TEntityType Update<TEntityType>(TEntityType entity, dynamic values) where TEntityType : DatabaseObject, IIdentifiable
     {
-      foreach (var field in values)
+      var fields = values as IDictionary<string, object>;
+      foreach (var field in fields)
       {
         try
         {
@@ -34,13 +35,13 @@ namespace PlayniteWeb.Services.Updaters
           var property = entity.GetType().GetProperty(field.Key);
           if (property == null)
           {
-            logger.Debug($"Property {field.Key} not found on entity {typeof(TEntityType).Name} with ID {((IIdentifiable)entity).Id}.");
+            logger.Debug($"Property {field.Key} not found on entity {typeof(TEntityType).Name} with ID {entity.Id}.");
             continue;
           }
 
           if (field.Value == null)
           {
-            logger.Debug($"Property {field.Key} not found on entity {typeof(TEntityType).Name} with ID {((IIdentifiable)entity).Id}.");
+            logger.Debug($"Property {field.Key} not found on entity {typeof(TEntityType).Name} with ID {entity.Id}.");
             continue;
           }
 
@@ -71,30 +72,22 @@ namespace PlayniteWeb.Services.Updaters
           }
           else
           {
-            var updateValues = ((JsonElement)field.Value).Deserialize<IDictionary<string, IEnumerable<string>>>();
-            var addedValues = updateValues["added"].Distinct();
-            var removedValues = updateValues["removed"].Distinct();
-
-
             if (property.PropertyType == typeof(List<Guid>))
             {
-              var addedIds = addedValues.Select(v => Guid.Parse(v)).ToList();
-              var removedIds = removedValues.Select(v => Guid.Parse(v)).ToList();
-
-              if (entity.GetType() == typeof(Game))
+              if (entity is Game game)
               {
-                var game = entity as Game;
-                if (field.Key == "FeatureIds")
+                if (field.Key == "FeatureIds" && field.Value is IEnumerable<string> ids)
                 {
-                  foreach (var guid in addedIds)
+                  var relatedIds = ids.Select(Guid.Parse).ToList();
+                  var relatedEntities = api.Database.Features.Where(f => relatedIds.Contains(f.Id)).ToList();
+                  game.FeatureIds.Clear();
+                  game.Features.Clear();
+
+                  foreach (var guid in relatedIds)
                   {
                     game.FeatureIds.Add(guid);
-                    game.Features.Add(api.Database.Features.FirstOrDefault(f => f.Id.Equals(guid)));
-                  }
-                  foreach (var guid in removedIds)
-                  {
-                    game.FeatureIds.Remove(guid);
-                    game.Features.Remove(api.Database.Features.FirstOrDefault(f => f.Id.Equals(guid)));
+                    game.Features.Add(relatedEntities.FirstOrDefault(f => f.Id.Equals(guid)));
+
                   }
 
                   entity.OnPropertyChanged(field.Key);
@@ -102,24 +95,7 @@ namespace PlayniteWeb.Services.Updaters
                 }
               }
             }
-            else if (property.PropertyType == typeof(List<string>))
-            {
-              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).ToList());
-            }
-            else if (property.PropertyType == typeof(List<int>))
-            {
-              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).Select(int.Parse).ToList());
-            }
-            else if (property.PropertyType == typeof(List<bool>))
-            {
-              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).Select(bool.Parse).ToList());
-            }
-            else if (property.PropertyType == typeof(List<DateTime>))
-            {
-              property.SetValue(entity, ((IEnumerable<object>)field.Value).Select(v => v.ToString()).Select(DateTime.Parse).ToList());
-            }
           }
-
         }
         catch (Exception ex)
         {

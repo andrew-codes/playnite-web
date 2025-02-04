@@ -1,4 +1,5 @@
 import createDebugger from 'debug'
+import { groupBy } from 'lodash-es'
 import { HandlerOptions } from '..'
 import { UpdateFilterItem } from '../../data/types.api'
 import {
@@ -14,34 +15,65 @@ const debug = createDebugger(
 )
 
 const topicMatch =
-  /^playnite\/.*\/entity\/(?<entityType>[A-Za-z\-]+)\/(?<entityId>[a-z0-9\-]+)$/
+  /^playnite\/update\/(?<deviceId>[A-Za-z\-]+)\/entity\/(?<entityType>[A-Za-z\-]+)\/(?<entityId>[a-z0-9\-]+)$/
 
 const handler =
   (options: HandlerOptions): IHandlePublishedTopics =>
   async (messages) => {
-    const updates = messages
+    const connections = await options.queryApi.execute({
+      type: 'MatchAll',
+      entityType: 'Connection',
+    })
+
+    const parsedMessages = messages
       .filter(({ topic }) => topicMatch.test(topic))
       .map(({ topic, payload }) => {
         const matches = topicMatch.exec(topic)
-        const entityType = matches?.groups?.entityType as EntityType
-        const entityId = matches?.groups?.entityId
+        if (!matches?.groups) {
+          return
+        }
 
-        if (!entityType || !entityId || !payload) {
+        const { deviceId, entityType, entityId } = matches.groups
+
+        if (!entityType || !entityId || !deviceId || !payload) {
           console.error(
-            'Missing entityType, entityId or payload',
+            'Missing entityType, entityId, deviceId, or payload',
             entityType,
             entityId,
             JSON.stringify(payload, null, 2),
           )
-          return null
+          return
         }
 
-        return { entityType, entityId, payload }
-      })
-      .filter((item) => item !== null)
+        if (!connections?.some((c) => c.id === deviceId)) {
+          debug('Message from unknown device', deviceId)
+          return
+        }
 
+        const { action, entity } = JSON.parse(payload.toString())
+        if (!action || !entity) {
+          debug('Missing action or entity', action, entity)
+        }
+
+        return {
+          entityType: entityType as EntityType,
+          entityId,
+          action,
+          entity: entity as Entity,
+        }
+      })
+      .filter((item) => !!item)
+
+    const parsedMessageByAction = groupBy<{
+      action: any
+      entityId: string
+      entityType: EntityType
+      entity: Entity
+    }>(parsedMessages, 'action')
+
+    const updates = parsedMessageByAction.update || []
     const bulkUpdatesByEntityType = updates.reduce(
-      (acc, { entityId, entityType, payload }) => {
+      (acc, { entityId, entityType, entity }) => {
         if (!acc[entityType]) {
           acc[entityType] = []
         }
@@ -53,7 +85,7 @@ const handler =
             field: 'id',
             value: entityId,
           },
-          entity: JSON.parse(payload.toString()) as Entity,
+          entity: entity as Entity,
         })
 
         return acc
@@ -67,14 +99,28 @@ const handler =
       >,
     )
 
-    const bulkEntries = Object.entries(bulkUpdatesByEntityType)
-    for (const [entityType, entities] of bulkEntries) {
+    const bulkUpdates = Object.entries(bulkUpdatesByEntityType)
+    for (const [entityType, entities] of bulkUpdates) {
       try {
         const et = entityType as EntityType
         await options.updateQueryApi.executeBulk<TypeFromString<typeof et>>(
           et,
           entities,
         )
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    const deletions = parsedMessageByAction.delete || []
+    for (const { entityId, entityType } of deletions) {
+      try {
+        await options.deleteQueryApi.executeDelete({
+          entityType,
+          field: 'id',
+          type: 'ExactMatch',
+          value: entityId,
+        })
       } catch (error) {
         console.error(error)
       }

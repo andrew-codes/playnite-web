@@ -24,14 +24,19 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     public IEnumerable<Task> Publish(IIdentifiable release)
     {
-      var r = (Models.Release)release;
-      if (state != null)
+      if (release is Models.Release r)
       {
+        if (state == null)
+        {
+          yield break;
+        }
+
         yield return client.PublishStringAsync(topicBuilder.GetPublishTopic(PublishTopics.GameState()), serializer.Serialize(new GameStatePayload()
         {
-          Release = r,
+          GameId = r.GameId,
+          ProcessId = r.ProcessId,
           State = state.ToString()
-        }), MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
+        }), MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
         yield break;
       }
     }

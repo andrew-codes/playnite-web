@@ -77,7 +77,7 @@ const graphql = (
         signingKey,
         subscriptionPublisher,
         updateQueryApi: dataApi,
-        update: updater(mqttClient, dataApi, dataApi, dataApi),
+        update: updater(mqttClient, dataApi),
       }
     },
   }

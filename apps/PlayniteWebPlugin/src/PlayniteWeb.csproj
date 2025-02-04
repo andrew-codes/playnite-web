@@ -103,6 +103,7 @@
     <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\IDeserializeObjects.cs" />
     <Compile Include="Services\ObjectDeserializer.cs" />
+    <Compile Include="Services\Publishers\EntityUpdatePayload.cs" />
     <Compile Include="Services\Publishers\GameStatePayload.cs" />
     <Compile Include="Services\Publishers\IApplyPublisherOptions.cs" />
     <Compile Include="Services\Publishers\IPublishToPlayniteWeb.cs" />

@@ -1,6 +1,7 @@
 using Playnite.SDK;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -43,7 +44,7 @@ namespace PlayniteWeb.Services
 
     public T Deserialize<T>(string data)
     {
-      var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+      var options = new JsonSerializerOptions(JsonSerializerDefaults.General)
       {
         Converters = { new TypeConverter(), new ListJsonConverter<string>() }
       };
