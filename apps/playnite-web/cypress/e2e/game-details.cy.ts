@@ -15,13 +15,13 @@ describe('Game details.', () => {
         describe(`Screen size: ${breakpointName}.`, () => {
           beforeEach(() => {
             cy.viewport(x, y)
+            cy.visit(locationPath)
+            cy.wait('@api')
           })
 
           it(`Displays game details
 - Opens right navigation drawer when a game is clicked
 - Game details display the game name and description`, () => {
-            cy.visit(locationPath)
-
             cy.get('[data-test="GameFigure"] button span')
               .first()
               .click({ force: true })
