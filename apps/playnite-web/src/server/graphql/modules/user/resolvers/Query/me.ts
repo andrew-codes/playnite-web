@@ -1,4 +1,4 @@
-import { User } from 'apps/playnite-web/src/server/data/types.entities'
+import { User } from 'apps/playnite-web/src/server/data/types.entities.js'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
 import { createNull } from '../../../../../oid.js'
 

@@ -5,9 +5,9 @@ namespace PlayniteWeb
 {
   public class PlayniteWebSettings : ObservableObject
   {
-    private string clientId = "Playnite";
+    private string clientId = Guid.NewGuid().ToString();
 
-    private string deviceId = "playnite";
+    private string deviceId = Guid.NewGuid().ToString();
 
     private string deviceName;
 

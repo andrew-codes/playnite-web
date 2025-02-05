@@ -6,7 +6,8 @@ const debug = createDebugger(
   'playnite-web/game-db-updater/handler/persistGameReleaseState',
 )
 
-const topicMatch = /^playnite\/.*\/response\/game\/state$/
+const topicMatch =
+  /^playnite\/.*\/entity\/Release\/(?<entityId>[a-z0-9\-]+)\/state$/
 
 const runStates = [
   'installed',
@@ -21,27 +22,29 @@ const create =
   async (messages) => {
     for (const { topic, payload } of messages) {
       try {
-        if (!topicMatch.test(topic)) {
+        const match = topicMatch.exec(topic)
+        if (!match) {
+          return
+        }
+
+        const { entityId } = match.groups as { entityId: string }
+        if (!entityId) {
+          console.error('Invalid entityId for Release state topic:', entityId)
+          return
+        }
+        const { state, processId, gameId } = JSON.parse(payload.toString())
+        if (!state) {
+          console.error('Invalid state for Release state topic:', state)
           return
         }
 
         debug(
-          `Received game release state for topic ${topic} with payload ${payload.toString()}`,
+          `Received game release state for topic ${entityId} with state value of ${state}`,
         )
-
-        const { state, release } = JSON.parse(payload.toString())
-
-        if (release === null) {
-          debug('Release is null; aborting')
-          return
-        }
-
         const newState = runStates.find((s) => s === state.toLowerCase())
 
-        if (!newState || !release.id) {
-          debug(
-            `Invalid state, ${state}, or release id, ${release.id}; aborting`,
-          )
+        if (!newState) {
+          debug(`Invalid state, ${state}; aborting`)
           return
         }
 
@@ -59,7 +62,7 @@ const create =
                   entityType: 'Release',
                   type: 'ExactMatch',
                   field: 'id',
-                  value: release.id,
+                  value: entityId,
                 },
               },
               {
@@ -91,18 +94,18 @@ const create =
             entityType: 'Release',
             type: 'ExactMatch',
             field: 'id',
-            value: release.id,
+            value: entityId,
           },
           {
             runState: { id: newState },
-            processId: release.processId,
+            processId: processId,
           },
         )
 
         options.pubsub.publish('releaseRunStateChanged', {
-          id: release.id,
-          gameId: release.gameId,
-          processId: release.processId ?? null,
+          id: entityId,
+          gameId: gameId,
+          processId: processId ?? null,
           runState: newState,
         })
       } catch (e) {

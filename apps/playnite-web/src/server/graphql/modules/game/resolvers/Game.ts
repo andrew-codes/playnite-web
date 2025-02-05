@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash-es'
+import { first, isEmpty } from 'lodash-es'
 import type { GameResolvers } from '../../../../../../.generated/types.generated.js'
 import {
   CompletionStatus,
@@ -16,7 +16,25 @@ export const Game: GameResolvers = {
     return _parent.name
   },
   description: async (_parent, _arg, _ctx) => {
-    return _parent.description
+    const results = await Promise.all(
+      _parent.releaseIds.map((releaseId) =>
+        _ctx.queryApi.execute<Release>({
+          entityType: 'Release',
+          type: 'ExactMatch',
+          field: 'id',
+          value: releaseId,
+        }),
+      ),
+    )
+
+    return (
+      first(
+        results
+          .filter((result) => !isEmpty(result))
+          .map((result) => result?.[0])
+          .filter((result): result is Release => result !== null),
+      )?.description ?? ''
+    )
   },
   releases: async (_parent, _arg, _ctx) => {
     const results = await Promise.all(
@@ -66,40 +84,41 @@ export const Game: GameResolvers = {
       .filter((result) => result !== null)
       .map((result) => result[0])
 
-    const completionStatusIds = releases.map(
-      (release) => release.completionStatusId,
-    )
+    const completionStatusIds = releases
+      .map((release) => release.completionStatusId)
+      .filter((id) => id !== null)
+      .filter((id) => id !== '00000000-0000-0000-0000-000000000000') as string[]
 
-    return (
-      (
-        await Promise.all(
-          completionStatusIds.map((id) =>
-            _ctx.queryApi.execute<CompletionStatus>({
-              entityType: 'CompletionStatus',
-              type: 'ExactMatch',
-              field: 'id',
-              value: id,
-            }),
-          ),
-        )
+    const results = (
+      await Promise.all(
+        completionStatusIds.map((id) =>
+          _ctx.queryApi.execute<CompletionStatus>({
+            entityType: 'CompletionStatus',
+            type: 'ExactMatch',
+            field: 'id',
+            value: id,
+          }),
+        ),
       )
-        .filter((result) => result !== null)
-        .map((result) => result[0])
-        .sort((a, b) => {
-          const aSort = completionStatusSortOrder.findIndex((p) =>
-            p.test(a.name),
-          )
-          const bSort = completionStatusSortOrder.findIndex((p) =>
-            p.test(b.name),
-          )
-          if (aSort > bSort) {
-            return 1
-          }
-          if (aSort < bSort) {
-            return -1
-          }
-          return 0
-        })?.[0] ?? { id: createNull('CompletionStatus'), name: 'Backlog' }
     )
+      .filter((result) => result !== null)
+      .map((result) => result[0])
+      .sort((a, b) => {
+        const aSort = completionStatusSortOrder.findIndex((p) => p.test(a.name))
+        const bSort = completionStatusSortOrder.findIndex((p) => p.test(b.name))
+        if (aSort > bSort) {
+          return 1
+        }
+        if (aSort < bSort) {
+          return -1
+        }
+        return 0
+      })?.[0] ?? {
+      _type: 'CompletionStatus',
+      id: createNull('CompletionStatus').toString(),
+      name: 'Backlog',
+    }
+
+    return results
   },
 }

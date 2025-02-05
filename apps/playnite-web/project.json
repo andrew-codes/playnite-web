@@ -43,6 +43,13 @@
         "cwd": "{projectRoot}"
       }
     },
+    "dump-database": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash -c 'scripts/dump-database.sh'",
+        "cwd": "{projectRoot}"
+      }
+    },
     "start/services": {
       "executor": "nx:run-commands",
       "options": {

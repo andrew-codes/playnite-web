@@ -34,6 +34,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     {
       var mqttOptionsBuilder = new MqttClientOptionsBuilder()
         .WithClientId(clientId)
+        .WithWillQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce)
         .WithTcpServer(host, port);
 
       IApplyMqttCredentials creds = new NoCredentials();
@@ -48,7 +49,8 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
       {
         client.ConnectAsync(mqttOptionsBuilder.Build(), cancelToken).Wait(cancelToken);
       }
-      catch(Exception e) {
+      catch (Exception e)
+      {
         logger.Error(e.Message);
       }
 
