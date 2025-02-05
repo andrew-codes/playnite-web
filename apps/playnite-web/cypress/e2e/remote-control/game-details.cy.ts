@@ -11,10 +11,6 @@ describe('Remote control.', () => {
 
   Cypress._.each(locations, ([locationName, locationPath]) => {
     describe(`${locationName}`, () => {
-      beforeEach(() => {
-        cy.visit(locationPath)
-      })
-
       describe('Signed In.', () => {
         beforeEach(() => {
           cy.signIn()
@@ -34,6 +30,8 @@ describe('Remote control.', () => {
               describe(`Screen size: ${breakpointName}.`, () => {
                 beforeEach(() => {
                   cy.viewport(x, y)
+                  cy.visit(locationPath)
+                  cy.wait('@api')
                 })
 
                 it(`Play visible.`, () => {
@@ -41,7 +39,6 @@ describe('Remote control.', () => {
                     .first()
                     .find('button span', { timeout: 5000 })
                     .click({ force: true })
-                  cy.wait('@api', { timeout: 5000 })
 
                   cy.get('[data-test="GameDetails"]')
                     .parent()
@@ -72,7 +69,6 @@ describe('Remote control.', () => {
                     .first()
                     .find('button span', { timeout: 5000 })
                     .click({ force: true })
-                  cy.wait('@api', { timeout: 5000 })
 
                   cy.get('[data-test="GameDetails"]').as('gameDetails')
                   cy.get('@gameDetails').contains('button', 'via').click()
@@ -169,7 +165,6 @@ describe('Remote control.', () => {
                     .first()
                     .find('button span', { timeout: 5000 })
                     .click({ force: true })
-                  cy.wait('@api', { timeout: 5000 })
 
                   cy.get('[data-test="GameDetails"]').as('gameDetails')
                   cy.get('@gameDetails').contains('button', 'via').click()
