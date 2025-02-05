@@ -36,6 +36,7 @@ Persistent message published entity for each entity of type, `DataEntityType`.
 ```ts
 type Payload =
 action: "update" | "delete"
+from: "playnite-web" | "{deviceId}"
 entity:
   | Game
   | Release
