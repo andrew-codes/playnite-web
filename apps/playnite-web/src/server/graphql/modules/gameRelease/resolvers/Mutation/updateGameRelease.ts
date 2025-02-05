@@ -19,7 +19,7 @@ export const updateGameRelease: NonNullable<
     }
 
     _ctx.update({
-      entityType: 'Game',
+      entityType: 'Release',
       entityId: oid.id,
       fields: _arg.input,
     })

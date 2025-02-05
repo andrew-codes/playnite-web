@@ -16,8 +16,9 @@ docker run --name playnite-web-db -d \
   -e MONGO_INITDB_ROOT_PASSWORD=$DB_PASSWORD \
   -v $REPO_ROOT/.data/games:/data/backup/games \
   mongo:7.0.3-jammy
-
 docker exec -t playnite-web-db mongorestore --nsInclude games.* /data/backup
+
+rm $REPO_ROOT/.data/mqtt/data/*
 
 rm -rf ./src/public/assets/assets-by-id
 cp -r $REPO_ROOT/.data/asset-by-id ./src/public/assets

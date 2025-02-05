@@ -17,7 +17,6 @@ type HandlerOptions = {
   deleteQueryApi: IDeleteQuery
 }
 
-const batchTopic = /^playnite\/[^/]+\/batch$/
 const librarySync = /^playnite\/[^/]+\/library\/sync\/(.*)$/
 
 const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
@@ -45,14 +44,9 @@ const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
       }
 
       let messages: Array<{ topic: string; payload: Buffer }> = []
-      if (batchTopic.test(topic)) {
-        messages = JSON.parse(payload.toString()).messages
-        syncMessageCount += messages.length
-        debug('Batched messages received', messages.length)
-      } else {
-        syncMessageCount += 1
-        messages.push({ topic, payload })
-      }
+
+      syncMessageCount += 1
+      messages.push({ topic, payload })
 
       for (const handler of handlers(options)) {
         try {

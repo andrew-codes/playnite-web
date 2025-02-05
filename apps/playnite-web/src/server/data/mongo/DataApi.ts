@@ -178,6 +178,7 @@ class MongoDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
         )
         results = results.sort(mongoSort as MongoSort)
       }
+
       return (await results.toArray()) as Array<TEntity>
     }
 
