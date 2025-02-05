@@ -1,7 +1,7 @@
 import '@cypress/code-coverage/support'
 import compareSnapshotCommand from 'cypress-image-diff-js/command'
 import 'cypress-plugin-tab'
-import { mount } from 'cypress/react18'
+import { mount } from 'cypress/react'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
