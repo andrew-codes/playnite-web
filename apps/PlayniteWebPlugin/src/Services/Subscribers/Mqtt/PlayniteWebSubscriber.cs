@@ -69,27 +69,26 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
         var entityType = match.Groups[2].Value;
         var entityId = Guid.Parse(match.Groups[3].Value);
         var deviceId = match.Groups[1].Value;
-
-        //if (deviceId == this.deviceId)
-        //{
-        //  logger.Debug("Ignoring update from self.");
-        //  //return task;
-        //}
-
         dynamic payload = deserializer.Deserialize(args.ApplicationMessage.ConvertPayloadToString());
         if (payload == null)
         {
-          logger.Debug("Payload is null.");
+          logger.Debug($"Payload is null. Skipping processing update topic; {args.ApplicationMessage.Topic}.");
           return task;
         }
+        if (payload.From == deviceId)
+        {
+          logger.Debug($"Update message from device self. Skipping processing update topic; {args.ApplicationMessage.Topic}.");
+          return task;
+        }
+
         if (payload.Entity == null)
         {
-          logger.Debug("Entity is null.");
+          logger.Debug("Entity is null. Skipping processing update topic; {args.ApplicationMessage.Topic}.");
           return task;
         }
         if (payload.Action == null)
         {
-          logger.Debug("Action is null.");
+          logger.Debug("Action is null. Skipping processing update topic; {args.ApplicationMessage.Topic}.");
           return task;
         }
 

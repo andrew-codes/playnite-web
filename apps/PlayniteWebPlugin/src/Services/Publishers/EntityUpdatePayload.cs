@@ -1,4 +1,5 @@
 using Playnite.SDK.Models;
+using System;
 
 namespace PlayniteWeb.Services.Publishers
 {
@@ -9,9 +10,10 @@ namespace PlayniteWeb.Services.Publishers
   }
   internal class EntityUpdatePayload<T> where T: IIdentifiable
   {
-    public EntityUpdatePayload(EntityUpdateAction action)
+    public EntityUpdatePayload(EntityUpdateAction action, string selfDeviceId)
     {
       Action = action.ToString().ToLower();
+      From = selfDeviceId;
     }
 
     public string Action { get; private set; }
@@ -19,5 +21,6 @@ namespace PlayniteWeb.Services.Publishers
     {
       get; set;
     }
+    public string From { get; private set; }
   }
 }

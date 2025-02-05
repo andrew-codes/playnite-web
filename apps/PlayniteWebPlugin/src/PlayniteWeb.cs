@@ -90,12 +90,12 @@ namespace PlayniteWeb
       {
         HasSettings = true
       };
-      releasePublisher = new PublishRelease(mqtt, topicManager, serializer, api.Database);
-      gamePublisher = new PublishGame(mqtt, topicManager, serializer, releasePublisher);
-      playlistPublisher = new PublishPlaylist(mqtt, topicManager, serializer, api.Database);
-      platformPublisher = new PublishPlatform(mqtt, topicManager, serializer, api.Database);
-      gameEntityPublisher = new PublishGameEntity(mqtt, topicManager, serializer);
-      gameEntityRemovalPublisher = new PublishGameEntityRemoval(mqtt, topicManager, serializer, api.Database);
+      releasePublisher = new PublishRelease(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
+      gamePublisher = new PublishGame(mqtt, topicManager, serializer, releasePublisher, settings.Settings.DeviceId);
+      playlistPublisher = new PublishPlaylist(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
+      platformPublisher = new PublishPlatform(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
+      gameEntityPublisher = new PublishGameEntity(mqtt, topicManager, serializer, settings.Settings.DeviceId);
+      gameEntityRemovalPublisher = new PublishGameEntityRemoval(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
 
       gameUpdates = new Subject<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>>();
       gameUpdates.Throttle(TimeSpan.FromSeconds(settings.Settings.PublishingThrottle));
