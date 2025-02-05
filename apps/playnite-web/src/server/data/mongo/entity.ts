@@ -13,6 +13,8 @@ const entityCollectionLookup: Map<EntityType, string> = new Map([
   ['GameAsset', 'gameasset'],
   ['Genre', 'genre'],
   ['User', 'user'],
+  ['Connection', 'connection'],
+  ['UpdateRequest', 'updateRequest'],
 ])
 
 export { entityCollectionLookup }

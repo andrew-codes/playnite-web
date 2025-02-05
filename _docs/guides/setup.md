@@ -35,6 +35,7 @@ Recommended to use docker image [`eclipse-mosquitto`](https://hub.docker.com/_/e
 - Port
 - Username (only if configured to disable anonymous access)
 - Password (only if configured to disable anonymous access)
+- Persistence must be enabled. See an example [configuration file](./mosquitto.conf) as a reference.
 
 ### Database
 

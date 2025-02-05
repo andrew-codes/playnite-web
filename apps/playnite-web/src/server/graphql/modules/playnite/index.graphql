@@ -1,0 +1,8 @@
+type EntityUpdate {
+  id: String!
+  type: String!
+}
+
+extend type Subscription {
+  playniteEntitiesUpdated: [EntityUpdate]!
+}

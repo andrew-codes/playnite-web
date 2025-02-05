@@ -190,6 +190,7 @@ type UpdateFilterItem<T extends EntityType> = T extends infer U extends
           keyof TypeFromString<U>,
           TypeFromString<U>[keyof TypeFromString<U>]
         >
+      | MatchAllFilterItem<U>
   : never
 
 interface IUpdateQuery {

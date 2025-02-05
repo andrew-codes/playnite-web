@@ -1,4 +1,5 @@
 import createDebugger from 'debug'
+import { groupBy } from 'lodash-es'
 import { HandlerOptions } from '..'
 import { UpdateFilterItem } from '../../data/types.api'
 import {
@@ -14,52 +15,82 @@ const debug = createDebugger(
 )
 
 const topicMatch =
-  /^playnite\/.*\/entity\/(?<entityType>[A-Za-z\-]+)\/(?<entityId>[a-z0-9\-]+)$/
+  /^playnite\/(?<deviceId>[A-Za-z\-0-9]+)\/update\/(?<entityType>[A-Za-z\-]+)\/(?<entityId>[a-z0-9\-]+)$/
 
 const handler =
   (options: HandlerOptions): IHandlePublishedTopics =>
   async (messages) => {
-    const bulkUpdatesByEntityType = messages
+    const parsedMessages = messages
       .filter(({ topic }) => topicMatch.test(topic))
-      .reduce(
-        (acc, { topic, payload }) => {
-          const matches = topicMatch.exec(topic)
-          const entityType = matches?.groups?.entityType as EntityType
-          const entityId = matches?.groups?.entityId
+      .map(({ topic, payload }) => {
+        const matches = topicMatch.exec(topic)
+        if (!matches?.groups) {
+          return
+        }
 
-          if (!entityType || !entityId || !payload) {
-            console.error('Invalid topic or payload', entityType, entityId)
-            return acc
-          }
+        const { deviceId, entityType, entityId } = matches.groups
 
-          if (!acc[entityType]) {
-            acc[entityType] = []
-          }
+        if (!entityType || !entityId || !deviceId || !payload) {
+          console.error(
+            'Missing entityType, entityId, deviceId, or payload',
+            entityType,
+            entityId,
+            JSON.stringify(payload, null, 2),
+          )
+          return
+        }
 
-          acc[entityType].push({
-            filter: {
-              entityType,
-              type: 'ExactMatch',
-              field: 'id',
-              value: entityId,
-            },
-            entity: JSON.parse(payload.toString()) as Entity,
-          })
+        const { action, entity } = JSON.parse(payload.toString())
+        if (!action || !entity) {
+          debug('Missing action or entity', action, entity)
+        }
 
-          return acc
-        },
-        {} as Record<
-          EntityType,
-          Array<{
-            filter: UpdateFilterItem<StringFromType<Entity>>
-            entity: Entity
-          }>
-        >,
-      )
+        return {
+          entityType: entityType as EntityType,
+          entityId,
+          action,
+          entity: entity as Entity,
+        }
+      })
+      .filter((item) => !!item)
 
-    for (const [entityType, entities] of Object.entries(
-      bulkUpdatesByEntityType,
-    )) {
+    const parsedMessageByAction = groupBy<{
+      action: any
+      entityId: string
+      entityType: EntityType
+      entity: Entity
+    }>(parsedMessages, 'action')
+
+    const updates = parsedMessageByAction.update || []
+    const bulkUpdatesByEntityType = updates.reduce(
+      (acc, { entityId, entityType, entity }) => {
+        if (!acc[entityType]) {
+          acc[entityType] = []
+        }
+
+        acc[entityType].push({
+          filter: {
+            entityType,
+            type: 'ExactMatch',
+            field: 'id',
+            value: entityId,
+          },
+          entity: entity as Entity,
+        })
+
+        return acc
+      },
+      {} as Record<
+        EntityType,
+        Array<{
+          filter: UpdateFilterItem<StringFromType<Entity>>
+          entity: Entity
+        }>
+      >,
+    )
+
+    const bulkUpdates = Object.entries(bulkUpdatesByEntityType)
+    for (const [entityType, entities] of bulkUpdates) {
       try {
         const et = entityType as EntityType
         await options.updateQueryApi.executeBulk<TypeFromString<typeof et>>(
@@ -70,6 +101,28 @@ const handler =
         console.error(error)
       }
     }
+
+    const deletions = parsedMessageByAction.delete || []
+    for (const { entityId, entityType } of deletions) {
+      try {
+        await options.deleteQueryApi.executeDelete({
+          entityType,
+          field: 'id',
+          type: 'ExactMatch',
+          value: entityId,
+        })
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    await options.pubsub.publish(
+      'playniteEntitiesUpdated',
+      updates.map((update) => ({
+        type: update.entityType,
+        id: update.entityId,
+      })),
+    )
   }
 
 export default handler

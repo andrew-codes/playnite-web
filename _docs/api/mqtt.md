@@ -6,19 +6,21 @@ Playnite Web interacts with Playnite via MQTT messages. As such, any other appli
 
 1. There are some differences between Playnite and Playnite Web's data modeling. Please see [Playnite Web's data model](./../../types.entities/README.md) for more details.
 2. Message payloads are utf8 strings of JSON.
-3. JSON payloads properties are camel cased; e.g. `id`, `platformId`, etc.
+3. Message payloads' JSON properties are camel cased; e.g. `id`, `platformId`, etc.
 
 ## Value Replacement
 
-| Value Name | Description/Purpose                                                                           |
-| :--------- | :-------------------------------------------------------------------------------------------- |
-| `deviceId` | Setting in Playnite Web's extension's settings. Should uniquely identify a Playnite instance. |
+| Value Name       | Description/Purpose                                                                           |
+| :--------------- | :-------------------------------------------------------------------------------------------- |
+| `deviceId`       | Setting in Playnite Web's extension's settings. Should uniquely identify a Playnite instance. |
+| `DataEntityType` | A valid data entity type string. See [data entities](./data-entities.md) for more details.    |
+| `id`             | A Playnite unique identifier.                                                                 |
 
 ## Published Messages by Playnite Web
 
 ### `playnite/{deviceId}/connection`
 
-Published when Playnite Web connects or disconnects from the MQTT
+Persistent message published when Playnite Web connects or disconnects from the MQTT
 
 ```ts
 type Payload = {
@@ -27,12 +29,15 @@ type Payload = {
 }
 ```
 
-### `playnite/{deviceId}/{DataEntityType}/{id}`
+### `playnite/update/{deviceId}/{DataEntityType}/{id}`
 
-Published entity for each entity of type, `DataEntityType`. See [data entities](./data-entities.md) for more details.
+Persistent message published entity for each entity of type, `DataEntityType`.
 
 ```ts
 type Payload =
+action: "update" | "delete"
+from: "playnite-web" | "{deviceId}"
+entity:
   | Game
   | Release
   | Platform
@@ -44,27 +49,26 @@ type Payload =
   | Genre
 ```
 
-### `playnite/{deviceId}/response/game/state`
+### `playnite/{deviceId}/Release/{id}/state`
 
-Published when a release's run state has changed. Supports `installing`, `installed`, `launching`, `running`, `stopping`, `uninstalling`, `uninstalled`, `restarting`.
-
-> Note run states of `installing`, `stopping`, `uninstalling` and `restarting` are published exclusively by Playnite Web application and not the extension.
+Persistent message published when a release's run state has changed. Supports `installing`, `installed`, `launching`, `running`, `stopping`, `uninstalling`, `uninstalled`, `restarting`.
 
 ```ts
 type Payload = {
   state: RunState
-  release: Release
+  gameId: string
+  processId: number | null
 }
 ```
 
-### `playnite/{deviceId}/game/start`
+### `playnite/request/game/start`
 
-Published by the web app when starting a game via the graph API.
+Non-persistent message published by the web app when starting a release via the graph API.
 
 ```ts
 type Payload = {
-  game: {
-    id: string // Release.id
+  release: {
+    id: string
     gameId: string // Release.gameId; the game ID is the unique identifier assigned by the source in Playnite.
     name: string // Release.name
     platform: {
@@ -75,7 +79,43 @@ type Payload = {
 }
 ```
 
-## Subscribed Messages by Playnite Web
+### `playnite/request/game/restart`
+
+Non-persistent message published by the web app when restarting a release via the graph API.
+
+```ts
+type Payload = {
+  release: {
+    id: string
+    gameId: string // Release.gameId; the game ID is the unique identifier assigned by the source in Playnite.
+    name: string // Release.name
+    platform: {
+      id: string // Platform.id
+      name: string // Platform.name
+    }
+  }
+}
+```
+
+### `playnite/request/game/stop`
+
+Non-persistent message published by the web app when stopping a release via the graph API.
+
+```ts
+type Payload = {
+  release: {
+    id: string
+    gameId: string // Release.gameId; the game ID is the unique identifier assigned by the source in Playnite.
+    name: string // Release.name
+    platform: {
+      id: string // Platform.id
+      name: string // Platform.name
+    }
+  }
+}
+```
+
+## Subscribed Messages by Playnite
 
 | Topic                             | Description/Purpose                                                                  |
 | :-------------------------------- | :----------------------------------------------------------------------------------- |
@@ -95,7 +135,7 @@ Triggers Playnite to start the release.
 
 ```ts
 type Payload = {
-  game: {
+  release: {
     id: string // Release.id
     platform: {
       id: string // Platform.id
@@ -110,7 +150,7 @@ Triggers Playnite to install a release; only valid if release is on the PC platf
 
 ```ts
 type Payload = {
-  game: {
+  release: {
     id: string // Release.id
     platform: {
       id: string // Platform.id
@@ -125,7 +165,7 @@ Triggers Playnite to uninstall a release; only if installed.
 
 ```ts
 type Payload = {
-  game: {
+  release: {
     id: string // Release.id
     platform: {
       id: string // Platform.id
@@ -140,9 +180,9 @@ Triggers Playnite to stop a game process; if one is running.
 
 ```ts
 type Payload = {
-  game: {
+  release: {
     id: string // Release.id
-    processId: int // Process ID provided in MQTT game state message.
+    processId: int // Process ID provided in MQTT release state message.
     platform: {
       id: string // Platform.id
     }

@@ -13,40 +13,46 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     private readonly IMqttClient client;
     private readonly ISerializeObjects serializer;
     private readonly IGameDatabaseAPI gameDatabase;
+    private readonly string deviceId;
     private readonly IManageTopics topicBuilder;
 
-    public PublishPlatform(IMqttClient client, IManageTopics topicBuilder, ISerializeObjects serializer, IGameDatabaseAPI gameDatabase)
+    public PublishPlatform(IMqttClient client, IManageTopics topicBuilder, ISerializeObjects serializer, IGameDatabaseAPI gameDatabase, string deviceId)
     {
       this.client = client;
       this.serializer = serializer;
       this.gameDatabase = gameDatabase;
+      this.deviceId = deviceId;
       this.topicBuilder = topicBuilder;
     }
 
     public IEnumerable<Task> Publish(IIdentifiable platform)
     {
-      var topic = topicBuilder.GetPublishTopic(PublishTopics.Platform(platform.Id));
-      yield return client.PublishStringAsync(topic, serializer.Serialize(platform), MqttQualityOfServiceLevel.ExactlyOnce, retain: false, cancellationToken: default);
-
-      var coverImageFilePath = new PlatformCoverFilePath(platform).getFilePath();
-      var coverPublisher = new PublishAsset(client, gameDatabase, coverImageFilePath, topic, AssetType.cover);
-      foreach (var task in coverPublisher.Publish(platform))
+      if (platform is Platform p)
       {
-        yield return task;
-      }
+        var topic = topicBuilder.GetPublishTopic(PublishTopics.Platform(p.Id));
 
-      var backgroundImageFilePath = new PlatformBackgroundFilePath(platform).getFilePath();
-      var backgroundPublisher = new PublishAsset(client, gameDatabase, backgroundImageFilePath, topic, AssetType.background);
-      foreach (var task in backgroundPublisher.Publish(platform))
-      {
-        yield return task;
-      }
+        var coverImageFilePath = new PlatformCoverFilePath(p).getFilePath();
+        var coverPublisher = new PublishAsset(client, gameDatabase, coverImageFilePath, topic, AssetType.cover);
+        foreach (var task in coverPublisher.Publish(p))
+        {
+          yield return task;
+        }
 
-      var iconFilePath = new PlatformIconFilePath(platform).getFilePath();
-      var iconPublisher = new PublishAsset(client, gameDatabase, iconFilePath, topic, AssetType.icon);
-      foreach (var task in iconPublisher.Publish(platform))
-      {
-        yield return task;
+        var backgroundImageFilePath = new PlatformBackgroundFilePath(p).getFilePath();
+        var backgroundPublisher = new PublishAsset(client, gameDatabase, backgroundImageFilePath, topic, AssetType.background);
+        foreach (var task in backgroundPublisher.Publish(p))
+        {
+          yield return task;
+        }
+
+        var iconFilePath = new PlatformIconFilePath(p).getFilePath();
+        var iconPublisher = new PublishAsset(client, gameDatabase, iconFilePath, topic, AssetType.icon);
+        foreach (var task in iconPublisher.Publish(p))
+        {
+          yield return task;
+        }
+
+        yield return client.PublishStringAsync(topic, serializer.Serialize(new EntityUpdatePayload<Platform>(EntityUpdateAction.Update, deviceId) { Entity = p }), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
       }
     }
   }

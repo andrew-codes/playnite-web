@@ -31,7 +31,7 @@ import InMemoryDataApi from './server/data/inMemory/DataApi'
 import { getDbClient } from './server/data/mongo/client'
 import MongoDataApi from './server/data/mongo/DataApi'
 import PriorityDataApi from './server/data/priority/DataApi'
-import { User } from './server/data/types.entities'
+import { User } from './server/data/types.entities.js'
 import { PlayniteContext } from './server/graphql/context'
 import schema from './server/graphql/schema'
 import { createNull } from './server/oid'
@@ -107,7 +107,7 @@ async function handleBotRequest(
   const dataApi = new PriorityDataApi(
     new Set([userInMemory, mongoApi]),
     new Set([userInMemory, mongoApi]),
-    new Set([ mongoApi]),
+    new Set([mongoApi]),
   )
   const schemaLink = new SchemaLink({
     schema,

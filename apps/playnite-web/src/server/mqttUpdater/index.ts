@@ -17,7 +17,6 @@ type HandlerOptions = {
   deleteQueryApi: IDeleteQuery
 }
 
-const batchTopic = /^playnite\/[^/]+\/batch$/
 const librarySync = /^playnite\/[^/]+\/library\/sync\/(.*)$/
 
 const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
@@ -29,30 +28,37 @@ const mqttUpdater = async (options: HandlerOptions): Promise<void> => {
 
   let syncMessageCount = 0
   options.mqtt.on('message', async (topic, payload) => {
-    const librarySyncMessageMatches = librarySync.exec(topic)
-    if (librarySyncMessageMatches?.[1] === 'start') {
-      syncMessageCount = 0
-      return
-    }
-    if (librarySyncMessageMatches?.[1] === 'completed') {
-      debug(
-        `Library sync completed. Processed a total of ${syncMessageCount} database entities. This number should match the number of all documents, across all collections, in your games database.`,
-      )
-      return
-    }
+    try {
+      debug(`Received message for topic ${topic}`)
 
-    let messages: Array<{ topic: string; payload: Buffer }> = []
-    if (batchTopic.test(topic)) {
-      messages = JSON.parse(payload.toString()).messages
-      syncMessageCount += messages.length
-      debug('Batched messages received', messages.length)
-    } else {
+      const librarySyncMessageMatches = librarySync.exec(topic)
+      if (librarySyncMessageMatches?.[1] === 'start') {
+        syncMessageCount = 0
+        return
+      }
+      if (librarySyncMessageMatches?.[1] === 'completed') {
+        debug(
+          `Library sync completed. Processed a total of ${syncMessageCount} database entities. This number should match the number of all documents, across all collections, in your games database.`,
+        )
+        return
+      }
+
+      let messages: Array<{ topic: string; payload: Buffer }> = []
+
       syncMessageCount += 1
       messages.push({ topic, payload })
-    }
 
-    for (const handler of handlers(options)) {
-      await handler(messages)
+      for (const handler of handlers(options)) {
+        try {
+          await handler(messages)
+        } catch (error) {
+          debug(`Error processing topic ${topic} with handler.`)
+          console.error(error)
+        }
+      }
+    } catch (error) {
+      debug(`Error processing topic ${topic}`)
+      console.error(error)
     }
   })
 }

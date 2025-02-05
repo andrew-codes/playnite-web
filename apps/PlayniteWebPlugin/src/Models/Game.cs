@@ -58,6 +58,13 @@ namespace PlayniteWeb.Models
       }
     }
 
+    public Game(Guid id)
+    {
+      defaultPlatforms = Enumerable.Empty<Platform>();
+      defaultSource =null;
+      this.id = id;
+    }
+
     private IEnumerable<Release> GetReleases(IGrouping<GameSource, Playnite.SDK.Models.Game> groupedBySource)
     {
 

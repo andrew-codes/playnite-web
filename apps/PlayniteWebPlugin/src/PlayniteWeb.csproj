@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\andrew\AppData\Local\Temp\vsF246.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ANDREW~1\AppData\Local\Temp\vsD4DA.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\andrew\AppData\Local\Temp\vsF246.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\ANDREW~1\AppData\Local\Temp\vsD4DA.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -92,15 +92,17 @@
   <ItemGroup>
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Models\Connection.cs" />
+    <Compile Include="Models\EntityField.cs" />
     <Compile Include="Models\Game.cs" />
-    <Compile Include="Models\BatchMessage.cs" />
     <Compile Include="Models\Playlist.cs" />
     <Compile Include="Models\Release.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\UpdateEntity.cs" />
     <Compile Include="Services\AssetType.cs" />
     <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\IDeserializeObjects.cs" />
     <Compile Include="Services\ObjectDeserializer.cs" />
+    <Compile Include="Services\Publishers\EntityUpdatePayload.cs" />
     <Compile Include="Services\Publishers\GameStatePayload.cs" />
     <Compile Include="Services\Publishers\IApplyPublisherOptions.cs" />
     <Compile Include="Services\Publishers\IPublishToPlayniteWeb.cs" />
@@ -111,7 +113,7 @@
     <Compile Include="Services\Publishers\Mqtt\FilePathExtractors\GameCoverFilePath.cs" />
     <Compile Include="Services\Publishers\Mqtt\IApplyMqttCredentials.cs" />
     <Compile Include="Services\Publishers\Mqtt\IGetFilePath.cs" />
-    <Compile Include="Services\Publishers\Mqtt\MqttPublisher.cs" />
+    <Compile Include="Services\Publishers\Mqtt\MqttClient.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishAsset.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishPlaylist.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGameState.cs" />
@@ -123,6 +125,7 @@
     <Compile Include="Services\Subscribers\ISubscribeToPlayniteWeb.cs" />
     <Compile Include="Services\Subscribers\Models\StartReleasePayload.cs" />
     <Compile Include="Services\Subscribers\Mqtt\PlayniteWebSubscriber.cs" />
+    <Compile Include="Services\Updaters\EntityUpdater.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="UI\IntToStringValueConverter.cs" />
     <Compile Include="Services\Publishers\IConnectPublisher.cs" />

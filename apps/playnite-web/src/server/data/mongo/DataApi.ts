@@ -139,6 +139,10 @@ class MongoDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
       } as Filter<TEntity>
     }
 
+    if (filterItem.type === 'MatchAll') {
+      return {}
+    }
+
     return null
   }
 
@@ -174,6 +178,7 @@ class MongoDataApi implements IQuery, IUpdateQuery, IDeleteQuery {
         )
         results = results.sort(mongoSort as MongoSort)
       }
+
       return (await results.toArray()) as Array<TEntity>
     }
 

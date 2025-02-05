@@ -9,6 +9,7 @@ import InMemoryDataApi from '../data/inMemory/DataApi.js'
 import { getDbClient } from '../data/mongo/client.js'
 import MongoDataApi from '../data/mongo/DataApi.js'
 import PriorityDataApi from '../data/priority/DataApi.js'
+import { updater } from '../updater.js'
 import type { PlayniteContext } from './context.js'
 import schema from './schema.js'
 import { subscriptionPublisher } from './subscriptionPublisher.js'
@@ -76,6 +77,7 @@ const graphql = (
         signingKey,
         subscriptionPublisher,
         updateQueryApi: dataApi,
+        update: updater(mqttClient, dataApi),
       }
     },
   }
