@@ -1,10 +1,8 @@
 using Playnite.SDK;
 using Playnite.SDK.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 
 namespace PlayniteWeb.Services.Updaters
 {
@@ -58,7 +56,7 @@ namespace PlayniteWeb.Services.Updaters
           else if (property.PropertyType == typeof(string))
           {
             var value = field.Value.ToString();
-              var propertyValue = property.GetValue(entity) as string;
+            var propertyValue = property.GetValue(entity) as string;
             if (propertyValue == null || propertyValue.Equals(value))
             {
               continue;
