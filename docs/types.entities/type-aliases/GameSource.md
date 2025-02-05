@@ -26,4 +26,4 @@ Sources are used to describe where a game was obtained.
 
 ## Defined in
 
-[types.entities.ts:206](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L206)
+[types.entities.ts:233](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L233)

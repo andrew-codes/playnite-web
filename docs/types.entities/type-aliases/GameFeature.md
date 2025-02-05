@@ -26,4 +26,4 @@ Features are used to describe a game's characteristics.
 
 ## Defined in
 
-[types.entities.ts:162](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L162)
+[types.entities.ts:189](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L189)

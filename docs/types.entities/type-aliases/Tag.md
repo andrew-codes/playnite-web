@@ -26,4 +26,4 @@ Tags are used to categorize games by their characteristics.
 
 ## Defined in
 
-[types.entities.ts:195](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L195)
+[types.entities.ts:222](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L222)
