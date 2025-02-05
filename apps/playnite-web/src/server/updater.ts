@@ -80,6 +80,7 @@ const updater =
       const payloadData = {
         action: 'update',
         entity: updatedEntity,
+        from: 'playnite-web',
       }
       debug('Publishing entity update')
       debug(`Payload: ${JSON.stringify(payloadData)}`)
