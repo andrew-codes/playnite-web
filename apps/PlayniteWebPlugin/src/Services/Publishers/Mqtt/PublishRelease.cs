@@ -15,13 +15,15 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     private readonly ISerializeObjects serializer;
     private readonly IGameDatabaseAPI gameDatabase;
     private readonly IManageTopics topicBuilder;
+    private string deviceId;
 
-    public PublishRelease(IMqttClient client, IManageTopics topicBuilder, ISerializeObjects serializer, IGameDatabaseAPI gameDatabase)
+    public PublishRelease(IMqttClient client, IManageTopics topicBuilder, ISerializeObjects serializer, IGameDatabaseAPI gameDatabase, string deviceId)
     {
       this.client = client;
       this.serializer = serializer;
       this.gameDatabase = gameDatabase;
       this.topicBuilder = topicBuilder;
+      this.deviceId = deviceId;
     }
 
     public IEnumerable<Task> Publish(IIdentifiable release)
@@ -45,7 +47,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
           yield return task;
         }
 
-        yield return client.PublishStringAsync(topic, serializer.Serialize(new EntityUpdatePayload<Models.Release>(EntityUpdateAction.Update) { Entity = r }), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
+        yield return client.PublishStringAsync(topic, serializer.Serialize(new EntityUpdatePayload<Models.Release>(EntityUpdateAction.Update, deviceId) { Entity = r }), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
       }
     }
   }

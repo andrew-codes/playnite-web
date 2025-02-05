@@ -17,6 +17,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
     private readonly string filePath;
     private readonly string rootTopic;
     private readonly AssetType typeKey;
+    private readonly string deviceId;
     private readonly ILogger logger = LogManager.GetLogger();
 
     public PublishAsset(IMqttClient client, IGameDatabaseAPI gameDatabase, string filePath, string rootTopic, AssetType typeKey)

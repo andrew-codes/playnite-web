@@ -37,60 +37,35 @@ namespace PlayniteWeb.Services.Updaters
             continue;
           }
 
-          if (field.Value == null)
+          if (field.Value == null && property.PropertyType != typeof(Nullable))
           {
-            logger.Debug($"Property {field.Key} not found on entity {typeof(TEntityType).Name} with ID {entity.Id}.");
+            logger.Debug($"Cannot set non-nullable property, {property.Name}, to null value on {entity.GetType().Name} entity with ID {entity.Id}.");
             continue;
           }
 
           if (property.PropertyType == typeof(Guid) || property.PropertyType == typeof(Nullable<Guid>))
           {
             var value = Guid.Parse(field.Value.ToString());
-            var propertyValue = (Guid)property.GetValue(entity);
-            if (propertyValue == null || propertyValue.Equals(value))
-            {
-              continue;
-            }
             property.SetValue(entity, value);
           }
           else if (property.PropertyType == typeof(string))
           {
             var value = field.Value.ToString();
-            var propertyValue = property.GetValue(entity) as string;
-            if (propertyValue == null || propertyValue.Equals(value))
-            {
-              continue;
-            }
             property.SetValue(entity, value);
           }
           else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(Nullable<int>))
           {
             var value = int.Parse(field.Value.ToString());
-            var propertyValue = (int?)property.GetValue(entity);
-            if (propertyValue == null || propertyValue.Equals(value))
-            {
-              continue;
-            }
             property.SetValue(entity, value);
           }
           else if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(Nullable<bool>))
           {
             var value = bool.Parse(field.Value.ToString());
-            var propertyValue = (bool?)property.GetValue(entity);
-            if (propertyValue == null || propertyValue.Equals(value))
-            {
-              continue;
-            }
             property.SetValue(entity, value);
           }
           else if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(Nullable<DateTime>))
           {
             var value = DateTime.Parse(field.Value.ToString());
-            var propertyValue = (DateTime?)property.GetValue(entity);
-            if (propertyValue == null || propertyValue.Equals(value))
-            {
-              continue;
-            }
             property.SetValue(entity, value);
           }
           else
