@@ -17,7 +17,7 @@ const debug = createDebugger(
 )
 
 const topicMatch =
-  /^playnite\/.*\/entity\/(?<entityType>[A-Za-z\-]+)\/(?<entityId>[a-z0-9\-]+)\/GameAsset\/(?<assetId>.*)\/type\/(?<assetTypeKey>.*)$/
+  /^playnite\/.*\/update\/(?<entityType>[A-Za-z\-]+)\/(?<entityId>[a-z0-9\-]+)\/GameAsset\/(?<assetId>.*)\/type\/(?<assetTypeKey>.*)$/
 
 const create =
   (options: HandlerOptions): IHandlePublishedTopics =>

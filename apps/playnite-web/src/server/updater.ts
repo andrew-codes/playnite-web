@@ -36,7 +36,9 @@ const updater =
       }),
     )
     if (!existingData) {
-      debug(`Entity ${entityId} not found; cannot update.`)
+      debug(
+        `Entity of type ${et} with ID, ${entityId}, not found; cannot update.`,
+      )
       return
     }
 
@@ -83,7 +85,7 @@ const updater =
       debug(`Payload: ${JSON.stringify(payloadData)}`)
 
       await mqttClient.publish(
-        `playnite/playnite-web/${et}/${entityId}`,
+        `playnite/${connection.id}/update/${et}/${entityId}`,
         JSON.stringify(payloadData),
         { qos: 2, retain: true },
       )

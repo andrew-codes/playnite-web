@@ -15,16 +15,11 @@ const debug = createDebugger(
 )
 
 const topicMatch =
-  /^playnite\/update\/(?<deviceId>[A-Za-z\-]+)\/entity\/(?<entityType>[A-Za-z\-]+)\/(?<entityId>[a-z0-9\-]+)$/
+  /^playnite\/(?<deviceId>[A-Za-z\-0-9]+)\/update\/(?<entityType>[A-Za-z\-]+)\/(?<entityId>[a-z0-9\-]+)$/
 
 const handler =
   (options: HandlerOptions): IHandlePublishedTopics =>
   async (messages) => {
-    const connections = await options.queryApi.execute({
-      type: 'MatchAll',
-      entityType: 'Connection',
-    })
-
     const parsedMessages = messages
       .filter(({ topic }) => topicMatch.test(topic))
       .map(({ topic, payload }) => {
@@ -42,11 +37,6 @@ const handler =
             entityId,
             JSON.stringify(payload, null, 2),
           )
-          return
-        }
-
-        if (!connections?.some((c) => c.id === deviceId)) {
-          debug('Message from unknown device', deviceId)
           return
         }
 

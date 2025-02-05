@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash-es'
+import { first, isEmpty } from 'lodash-es'
 import type { GameResolvers } from '../../../../../../.generated/types.generated.js'
 import {
   CompletionStatus,
@@ -16,7 +16,25 @@ export const Game: GameResolvers = {
     return _parent.name
   },
   description: async (_parent, _arg, _ctx) => {
-    return _parent.description
+    const results = await Promise.all(
+      _parent.releaseIds.map((releaseId) =>
+        _ctx.queryApi.execute<Release>({
+          entityType: 'Release',
+          type: 'ExactMatch',
+          field: 'id',
+          value: releaseId,
+        }),
+      ),
+    )
+
+    return (
+      first(
+        results
+          .filter((result) => !isEmpty(result))
+          .map((result) => result?.[0])
+          .filter((result): result is Release => result !== null),
+      )?.description ?? ''
+    )
   },
   releases: async (_parent, _arg, _ctx) => {
     const results = await Promise.all(
