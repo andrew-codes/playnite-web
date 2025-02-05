@@ -34,4 +34,4 @@ Game assets are used to associate images with entities.
 
 ## Defined in
 
-[types.entities.ts:327](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L327)
+[types.entities.ts:354](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L354)
