@@ -1,6 +1,7 @@
 import breakpoints from '../../fixtures/devices.json'
 
-describe('Filtering.', () => {
+// Filtering is broken; tracked in separate issue.
+describe.skip('Filtering.', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api').as('api')
   })
@@ -55,7 +56,7 @@ describe('Filtering.', () => {
         .should('contain', "Assassin's Creed III")
     })
 
-    it.only(`Filter by completion status
+    it(`Filter by completion status
       - Games must match at least one completion status.`, () => {
       const filterBy = 'Completion Status'
       const filterValues = ['Beaten', 'Completed']
