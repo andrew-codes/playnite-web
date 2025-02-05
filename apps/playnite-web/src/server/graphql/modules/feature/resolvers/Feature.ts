@@ -1,4 +1,4 @@
-import { Release } from 'apps/playnite-web/src/server/data/types.entities'
+import { Release } from 'apps/playnite-web/src/server/data/types.entities.js'
 import type { FeatureResolvers } from '../../../../../../.generated/types.generated.js'
 import { create } from '../../../../oid.js'
 

@@ -10,7 +10,7 @@ describe('Browse.', () => {
     cy.wait('@api')
 
     cy.contains('h2', 'My Games')
-    cy.contains('433 games in library')
+    cy.contains('454 games in library')
     cy.get('[data-test="GameFigure"]').should('have.length', 20)
   })
 
@@ -30,7 +30,7 @@ describe('Browse.', () => {
         cy.wait('@api')
 
         cy.contains('h2', 'My Games')
-        cy.contains('433 games in library')
+        cy.contains('454 games in library')
         cy.get('[data-test="GameFigure"]').as('games')
         cy.get('@games')
           .parents('.MuiBox-root')

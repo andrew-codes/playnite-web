@@ -2,7 +2,7 @@ import { AsyncMqttClient } from 'async-mqtt'
 import createDebugger from 'debug'
 import { first } from 'lodash-es'
 import { IQuery } from './data/types.api'
-import { Connection, entities } from './data/types.entities'
+import { Connection, entities } from './data/types.entities.js'
 import { tryParseOid } from './oid.js'
 
 const debug = createDebugger('playnite-web/graphql/update')
