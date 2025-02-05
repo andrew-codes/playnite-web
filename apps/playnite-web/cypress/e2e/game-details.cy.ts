@@ -25,8 +25,6 @@ describe('Game details.', () => {
             cy.get('[data-test="GameFigure"] button span')
               .first()
               .click({ force: true })
-            cy.wait('@api')
-            cy.wait(400)
 
             cy.compareSnapshot({
               name: `game-details-${locationName}-${breakpointName}`,
