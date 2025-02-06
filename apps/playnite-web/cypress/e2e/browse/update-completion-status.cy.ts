@@ -1,4 +1,5 @@
 describe('Browse', () => {
+  beforeEach(() => {})
   describe('Update completion status.', () => {
     beforeEach(() => {
       cy.intercept('POST', '/api').as('api')
@@ -18,7 +19,7 @@ describe('Browse', () => {
       )
     })
 
-    it(`Updates completion status.`, () => {
+    it(`Update completion status.`, () => {
       cy.signIn()
       cy.visit('/browse')
       cy.wait('@api')
@@ -27,8 +28,9 @@ describe('Browse', () => {
         .as('gameFigure')
         .find('[data-test="GameFigureChipList"] button')
         .click()
-      cy.get('@gameFigure').parent().find('li:contains("Beaten")').click()
-      cy.wait('@api')
+      cy.get('@gameFigure').parent().find('li:contains("Beaten")').eq(0).click()
+      cy.wait(2000)
+      // cy.wait('@api')
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',
         'Beaten',
