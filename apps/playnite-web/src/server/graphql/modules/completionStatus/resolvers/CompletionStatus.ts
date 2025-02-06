@@ -3,14 +3,14 @@ import type { CompletionStatusResolvers } from '../../../../../../.generated/typ
 import { create } from '../../../../oid.js'
 
 const completionStatusSortOrder = [
-  /Completed/i,
-  /Beaten/i,
-  /Playing/i,
-  /Played/i,
-  /On Hold/i,
-  /Plan to Play/i,
-  /Abandoned/i,
-  /Not Played/i,
+  /^Completed$/i,
+  /^Beaten$/i,
+  /^Playing$/i,
+  /^Played$/i,
+  /^On Hold$/i,
+  /^Plan to Play$/i,
+  /^Abandoned$/i,
+  /^Not Played$/i,
 ]
 const completionStatusNames = [
   'Completed',

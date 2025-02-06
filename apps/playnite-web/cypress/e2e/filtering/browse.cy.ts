@@ -345,7 +345,7 @@ describe.skip('Filtering.', () => {
           cy.contains('button', 'Filter').click()
           cy.wait('@api')
 
-          cy.get('[data-test="PlatformList"]').then((els) => {
+          cy.get('[data-test="GameFigureChipList"]').then((els) => {
             els.each((_, listEl) => {
               const platformImages = Array.from(
                 listEl.querySelectorAll('img').values(),
