@@ -1,8 +1,24 @@
-import { Chip, styled, useTheme } from '@mui/material'
+import {
+  Button,
+  ButtonGroup,
+  Chip,
+  ClickAwayListener,
+  Grow,
+  MenuItem,
+  MenuList,
+  Paper,
+  Popper,
+  styled,
+  useTheme,
+} from '@mui/material'
 import { uniq } from 'lodash-es'
-import { FC, useMemo } from 'react'
+import { FC, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { Platform } from '../../.generated/types.generated'
 import { Theme } from '../muiTheme'
+import { useMe } from '../queryHooks'
+import { allCompletionStatuses } from '../queryHooks/completionStatuses'
+import { useUpdateRelease } from '../queryHooks/useUpdateRelease'
+import { GameFigureContext } from './GameFigure'
 
 const PlatformImage = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius / 2,
@@ -60,7 +76,7 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
 const GameFigureChipRoot = styled('div')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius / 2,
   fontSize: '0.85rem',
-  display: 'inline-flex',
+  display: 'flex',
   height: '24px',
   alignItems: 'center',
   background: theme.palette.primary.main,
@@ -74,7 +90,94 @@ const GameFigureChip: FC<{ children: string }> = ({ children }) => {
   const theme = useTheme<Theme>()
   const Icon = theme.completionStatus[children].Icon ?? (() => null)
 
-  return (
+  const me = useMe()
+  const completionStatuses = allCompletionStatuses()
+
+  const [open, setOpen] = useState(false)
+  const anchorRef = useRef<HTMLDivElement>(null)
+  const selectedIndex = useMemo(
+    () => completionStatuses.findIndex((status) => status.name === children),
+    [children, completionStatuses],
+  )
+  const handleOpen = useCallback(() => setOpen(true), [])
+  const handleClose = useCallback(() => setOpen(false), [])
+
+  const game = useContext(GameFigureContext)
+  const [updateRelease] = useUpdateRelease()
+  const handleMenuItemClick = (event, index) => {
+    setOpen(false)
+    const completionStatusId = completionStatuses[index].id
+    game?.releases.forEach((release) => {
+      updateRelease({
+        variables: {
+          releaseId: release.id,
+          input: {
+            completionStatusId,
+          },
+        },
+      })
+    })
+  }
+
+  return me.data?.me?.isAuthenticated ? (
+    <ButtonGroup
+      variant="contained"
+      ref={anchorRef}
+      aria-label="Completion Status Selector"
+      sx={{ display: 'flex' }}
+    >
+      <Button
+        size="small"
+        sx={{
+          padding: 0,
+          backgroundColor: 'transparent !important',
+          borderColor: 'transparent !important',
+        }}
+        onClick={handleOpen}
+      >
+        <GameFigureChipRoot
+          style={{ ...(theme.palette.completionStatus[children] ?? {}) }}
+        >
+          {children}
+          <Icon fontSize="small" />
+        </GameFigureChipRoot>
+      </Button>
+      <Popper
+        sx={{ zIndex: 1 }}
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === 'bottom' ? 'center top' : 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList id="split-button-menu" autoFocusItem>
+                  {completionStatuses.map((option, index) => (
+                    <MenuItem
+                      key={option.id}
+                      selected={index === selectedIndex}
+                      onClick={(event) => handleMenuItemClick(event, index)}
+                    >
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </ButtonGroup>
+  ) : (
     <GameFigureChipRoot
       style={{ ...(theme.palette.completionStatus[children] ?? {}) }}
     >
@@ -127,7 +230,7 @@ const GameFigureChipList: FC<{
   }, [platforms])
 
   return (
-    <List data-test="PlatformList">
+    <List data-test="GameFigureChipList">
       {condensedPlatforms.map((platform, index) => (
         <PlatformListItem platform={platform} key={index} />
       ))}
