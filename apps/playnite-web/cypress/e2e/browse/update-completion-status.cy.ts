@@ -15,6 +15,15 @@ describe('Browse', () => {
           $set: { completionStatusId: '9c5f2de1-6be5-4751-8dbe-a64ff2bafaa7' },
         },
       })
+      cy.task('updateDatabase', {
+        collection: 'release',
+        filter: {
+          name: 'killer7',
+        },
+        update: {
+          $set: { completionStatusId: '9c5f2de1-6be5-4751-8dbe-a64ff2bafaa7' },
+        },
+      })
     })
 
     it(`Requires being signed in.`, () => {
@@ -43,7 +52,33 @@ describe('Browse', () => {
       cy.get('@gameFigure')
         .contains('[data-test="GameFigureChipList"] button', 'Completed')
         .click()
-      cy.get('@gameFigure').contains('li', 'Beaten').eq(0).click()
+      cy.get('.MuiPopper-root').contains('li', 'Beaten').eq(0).click()
+      cy.wait('@api')
+      cy.get('@gameFigure').contains(
+        '[data-test="GameFigureChipList"]',
+        'Beaten',
+      )
+    })
+
+    it(`Update completion status after scrolling.`, () => {
+      cy.signIn()
+
+      cy.visit('/browse')
+      cy.wait('@api')
+      cy.get('[data-test="GameFigure"]').as('games')
+      cy.get('@games')
+        .parents('.MuiBox-root')
+        .eq(0)
+        .find('> div')
+        .scrollTo('bottom')
+      cy.get('[data-test="GameFigure"]')
+        .contains('killer7')
+        .parents('[data-test="GameFigure"]')
+        .as('gameFigure')
+      cy.get('@gameFigure')
+        .contains('[data-test="GameFigureChipList"] button', 'Completed')
+        .click()
+      cy.get('.MuiPopper-root').contains('li', 'Beaten').eq(0).click()
       cy.wait('@api')
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',

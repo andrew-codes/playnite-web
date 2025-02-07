@@ -3,6 +3,20 @@ type EntityUpdate {
   type: String!
 }
 
+enum PlayniteLibrarySyncState {
+  syncing
+  synced
+}
+
+type PlayniteInstance {
+  id: String!
+  librarySyncState: PlayniteLibrarySyncState!
+}
+
 extend type Subscription {
   playniteEntitiesUpdated: [EntityUpdate]!
+}
+
+extend type Query {
+  playniteInstances: [PlayniteInstance!]!
 }

@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useSubscription } from '@apollo/client/react/hooks/hooks.cjs'
+import { EntityType } from '../server/data/types.entities'
 
 const Subscribe_Playnite_Updates = gql`
   subscription releaseActivationStateChanged {
@@ -11,6 +12,6 @@ const Subscribe_Playnite_Updates = gql`
 `
 
 const subscribePlayniteUpdates = () =>
-  useSubscription(Subscribe_Playnite_Updates)
+  useSubscription<{ type: EntityType; id: string }>(Subscribe_Playnite_Updates)
 
 export { Subscribe_Playnite_Updates, subscribePlayniteUpdates }
