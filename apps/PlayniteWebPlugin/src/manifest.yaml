@@ -123,3 +123,22 @@ Packages:
     Changelog:
       - "feat: show completion status when browsing games (#710)"
       - "feat: show completion status when browsing games"
+  - Version: 11.0.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v11.0.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_11_0_0.pext
+    ReleaseDate: 2025-02-07
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "wip: tests"
+      - "chore: update tests"
+      - "chore: refactor connection, reconnecting, remove bulk publshing."
+      - "wip: update messages are persistent"
+      - "refactor: validate oids and provide add/removed items explicitly to
+        Playnite"
+      - "feat: persist connection mqtt messages"
+      - "chore: wip: enable adding/removing array data when updating"
+      - "refactor: updater in graph API"
+      - "chore: enable updating other Playnite entity types"
+      - "wip: graph API to update a GameRelease (game in Playnite)"
+      - "chore: store connection info for playnite instance"
+      - "chore: wip to update Playnite items from Playnite Web."
+      - "wip: publish connection state with client ID"
