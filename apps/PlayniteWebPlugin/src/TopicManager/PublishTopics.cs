@@ -13,7 +13,6 @@ namespace PlayniteWeb.TopicManager
     public static string Platform(Guid id) => GameEntity("Platform", id);
     public static string Playlist(Guid id) => GameEntity("Playlist", id);
     public static string GameEntity(string name, Guid id) => $"update/{name}/{id}";
-    public static string LibrarySyncStarted() => "library/sync/started";
-    public static string LibrarySyncCompleted() => "library/sync/completed";
+    public static string LibrarySync() => "library/sync";
   }
 }

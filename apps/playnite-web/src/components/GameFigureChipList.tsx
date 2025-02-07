@@ -149,7 +149,6 @@ const GameFigureChip: FC<{ children: string }> = ({ children }) => {
         anchorEl={anchorRef.current}
         role={undefined}
         transition
-        disablePortal
       >
         {({ TransitionProps, placement }) => (
           <Grow
