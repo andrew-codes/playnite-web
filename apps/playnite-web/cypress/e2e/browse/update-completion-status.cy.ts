@@ -60,7 +60,7 @@ describe('Browse', () => {
       )
     })
 
-    it.only(`Scrolling, update completion status.`, () => {
+    it(`Update completion status after scrolling.`, () => {
       cy.signIn()
 
       cy.visit('/browse')
