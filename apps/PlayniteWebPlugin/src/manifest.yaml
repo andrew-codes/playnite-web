@@ -142,3 +142,9 @@ Packages:
       - "chore: store connection info for playnite instance"
       - "chore: wip to update Playnite items from Playnite Web."
       - "wip: publish connection state with client ID"
+  - Version: 11.0.1
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v11.0.1/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_11_0_1.pext
+    ReleaseDate: 2025-02-07
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "fix: completion status selection when browsing/on Deck view (#723)"
