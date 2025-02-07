@@ -15,7 +15,7 @@ export const updateGameRelease: NonNullable<
     const oid = fromString(_arg.releaseId)
     if (oid.type !== 'GameRelease') {
       debug(`Invalid entity Oid. Expected GameRelease, got ${oid.type}`)
-      return false
+      return { success: false }
     }
 
     _ctx.update({
@@ -23,10 +23,10 @@ export const updateGameRelease: NonNullable<
       entityId: oid.id,
       fields: _arg.input,
     })
+
+    return { success: true }
   } catch (e) {
     console.error(e)
-    return false
+    return { success: false }
   }
-
-  return true
 }

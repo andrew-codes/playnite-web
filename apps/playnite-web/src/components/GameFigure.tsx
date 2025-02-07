@@ -1,7 +1,9 @@
 import { Box, Button, Stack, styled } from '@mui/material'
-import { FC, PropsWithChildren, useState } from 'react'
+import { createContext, FC, PropsWithChildren, useState } from 'react'
 import { Game } from '../../.generated/types.generated'
 import GameFigureChipList from './GameFigureChipList'
+
+const Context = createContext<Game | null>(null)
 
 const Figure = styled('figure', {
   shouldForwardProp: (prop) => prop !== 'width',
@@ -33,59 +35,62 @@ const GameFigure: FC<
   const [imageHasError, setImageHasError] = useState(false)
 
   return (
-    <Figure
-      data-test="GameFigure"
-      data-test-game-id={game.id}
-      style={style}
-      width={width}
-    >
-      <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
-        <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
-          {!imageHasError && game.cover?.id ? (
-            <Image
-              src={`/asset-by-id/${game.cover?.id}`}
-              alt={game.name}
-              width={width}
-              loading="eager"
-              onError={(e) => {
-                setImageHasError(true)
-              }}
-            />
-          ) : (
-            <Box
-              sx={{
-                height: `${width}`,
-                width: `${width}`,
-              }}
-            />
-          )}
-        </Button>
-        <Box
-          sx={(theme) => ({
-            position: 'absolute',
-            bottom: '12px',
-            right: theme.spacing(),
-            display: 'flex',
-            flexDirection: 'row',
-          })}
-        >
-          <GameFigureChipList
-            completionStatus={game.completionStatus?.name}
-            platforms={game.releases.map((release) => release.platform)}
-          />
-        </Box>
-      </Box>
-      <Stack
-        sx={(theme) => ({
-          height: `calc(${height} - ${width})`,
-          padding: theme.spacing(1),
-        })}
-        key={`${game.id}-details`}
+    <Context.Provider value={game}>
+      <Figure
+        data-test="GameFigure"
+        data-test-game-id={game.id}
+        style={style}
+        width={width}
       >
-        {children}
-      </Stack>
-    </Figure>
+        <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
+          <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
+            {!imageHasError && game.cover?.id ? (
+              <Image
+                src={`/asset-by-id/${game.cover?.id}`}
+                alt={game.name}
+                width={width}
+                loading="eager"
+                onError={(e) => {
+                  setImageHasError(true)
+                }}
+              />
+            ) : (
+              <Box
+                sx={{
+                  height: `${width}`,
+                  width: `${width}`,
+                }}
+              />
+            )}
+          </Button>
+          <Box
+            sx={(theme) => ({
+              position: 'absolute',
+              bottom: '12px',
+              right: theme.spacing(),
+              display: 'flex',
+              flexDirection: 'row',
+            })}
+          >
+            <GameFigureChipList
+              completionStatus={game.completionStatus?.name}
+              platforms={game.releases.map((release) => release.platform)}
+            />
+          </Box>
+        </Box>
+        <Stack
+          sx={(theme) => ({
+            height: `calc(${height} - ${width})`,
+            padding: theme.spacing(1),
+          })}
+          key={`${game.id}-details`}
+        >
+          {children}
+        </Stack>
+      </Figure>
+    </Context.Provider>
   )
 }
 
 export default GameFigure
+export { Context as GameFigureContext }

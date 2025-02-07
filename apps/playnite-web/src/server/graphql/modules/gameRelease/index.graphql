@@ -46,6 +46,10 @@ extend type Subscription {
   releaseRunStateChanged: GameReleaseStateSubscriptionPayload
 }
 
+type BooleanMutationResult {
+  success: Boolean!
+}
+
 extend type Mutation {
   startGameRelease(releaseId: String!): GameRelease!
   stopGameRelease(releaseId: String!): GameRelease!
@@ -53,7 +57,7 @@ extend type Mutation {
   updateGameRelease(
     releaseId: String!
     input: UpdateGameReleaseInput!
-  ): Boolean!
+  ): BooleanMutationResult!
 }
 
 extend type Query {
