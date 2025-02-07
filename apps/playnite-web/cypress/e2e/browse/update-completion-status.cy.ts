@@ -52,7 +52,7 @@ describe('Browse', () => {
       cy.get('@gameFigure')
         .contains('[data-test="GameFigureChipList"] button', 'Completed')
         .click()
-      cy.get('@gameFigure').contains('li', 'Beaten').eq(0).click()
+      cy.get('.MuiPopper-root').contains('li', 'Beaten').eq(0).click()
       cy.wait('@api')
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',
@@ -78,7 +78,7 @@ describe('Browse', () => {
       cy.get('@gameFigure')
         .contains('[data-test="GameFigureChipList"] button', 'Completed')
         .click()
-      cy.get('@gameFigure').contains('li', 'Beaten').eq(0).click()
+      cy.get('.MuiPopper-root').contains('li', 'Beaten').eq(0).click()
       cy.wait('@api')
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',
