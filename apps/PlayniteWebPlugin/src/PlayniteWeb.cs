@@ -194,7 +194,7 @@ namespace PlayniteWeb
 
     private IEnumerable<Task> SyncLibrary()
     {
-      mqtt.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.LibrarySyncStarted()), "syncing", MqttQualityOfServiceLevel.ExactlyOnce).Wait();
+      mqtt.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.LibrarySync()), "syncing", MqttQualityOfServiceLevel.ExactlyOnce).Wait();
 
       var invalidPlayniteGames = PlayniteApi.Database.Games.Where(pg => string.IsNullOrEmpty(pg.Name) || string.IsNullOrWhiteSpace(pg.Name)).ToList();
       foreach (var playniteGame in invalidPlayniteGames)
