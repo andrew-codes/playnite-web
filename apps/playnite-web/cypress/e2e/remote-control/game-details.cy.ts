@@ -37,7 +37,8 @@ describe('Remote control.', () => {
                 it(`Play visible.`, () => {
                   cy.get('[data-test="GameFigure"]', { timeout: 5000 })
                     .first()
-                    .find('button span', { timeout: 5000 })
+                    .find('button img', { timeout: 5000 })
+                    .parent()
                     .click({ force: true })
 
                   cy.get('[data-test="GameDetails"]')
@@ -98,7 +99,8 @@ describe('Remote control.', () => {
                     .first()
                     .as('game')
                   cy.get('@game')
-                    .find('button span', { timeout: 5000 })
+                    .find('button img', { timeout: 5000 })
+                    .parent()
                     .click({ force: true })
                   cy.wait('@api', { timeout: 5000 })
 
@@ -163,7 +165,8 @@ describe('Remote control.', () => {
 - Once a game is stopped via Playnite Web.`, () => {
                   cy.get('[data-test="GameFigure"]', { timeout: 5000 })
                     .first()
-                    .find('button span', { timeout: 5000 })
+                    .find('button img', { timeout: 5000 })
+                    .parent()
                     .click({ force: true })
 
                   cy.get('[data-test="GameDetails"]').as('gameDetails')

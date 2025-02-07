@@ -13,6 +13,10 @@ import 'cypress-plugin-tab'
 
 compareSnapshotCommand()
 
+beforeEach(() => {
+  cy.clearAllCookies()
+})
+
 Cypress.Commands.add('signIn', () => {
   return cy
     .request({
