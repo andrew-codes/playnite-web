@@ -194,7 +194,7 @@ namespace PlayniteWeb
 
     private IEnumerable<Task> SyncLibrary()
     {
-      mqtt.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.LibrarySyncStarted()), "", MqttQualityOfServiceLevel.ExactlyOnce).Wait();
+      mqtt.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.LibrarySyncStarted()), "syncing", MqttQualityOfServiceLevel.ExactlyOnce).Wait();
 
       var invalidPlayniteGames = PlayniteApi.Database.Games.Where(pg => string.IsNullOrEmpty(pg.Name) || string.IsNullOrWhiteSpace(pg.Name)).ToList();
       foreach (var playniteGame in invalidPlayniteGames)
@@ -305,7 +305,7 @@ namespace PlayniteWeb
         yield return task;
       }
 
-      mqtt.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.LibrarySyncCompleted()), "", MqttQualityOfServiceLevel.ExactlyOnce).Wait();
+      mqtt.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.LibrarySync()), "synced", MqttQualityOfServiceLevel.ExactlyOnce).Wait();
     }
 
     private Release ReleaseFromPlayniteGame(Playnite.SDK.Models.Game game)
