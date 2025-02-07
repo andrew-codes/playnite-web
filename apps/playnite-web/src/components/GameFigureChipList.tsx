@@ -17,7 +17,7 @@ import { Platform } from '../../.generated/types.generated'
 import { Theme } from '../muiTheme'
 import { useMe } from '../queryHooks'
 import { allCompletionStatuses } from '../queryHooks/completionStatuses'
-import { useUpdateRelease } from '../queryHooks/useUpdateRelease'
+import { useUpdateGame } from '../queryHooks/useUpdateGame'
 import { GameFigureContext } from './GameFigure'
 
 const PlatformImage = styled('img')(({ theme }) => ({
@@ -103,19 +103,20 @@ const GameFigureChip: FC<{ children: string }> = ({ children }) => {
   const handleClose = useCallback(() => setOpen(false), [])
 
   const game = useContext(GameFigureContext)
-  const [updateRelease] = useUpdateRelease()
+  const [updateGame] = useUpdateGame()
   const handleMenuItemClick = (event, index) => {
     setOpen(false)
+    if (!game?.id) {
+      return
+    }
     const completionStatusId = completionStatuses[index].id
-    game?.releases.forEach((release) => {
-      updateRelease({
-        variables: {
-          releaseId: release.id,
-          input: {
-            completionStatusId,
-          },
+    updateGame({
+      variables: {
+        id: game?.id,
+        input: {
+          completionStatusId,
         },
-      })
+      },
     })
   }
 
