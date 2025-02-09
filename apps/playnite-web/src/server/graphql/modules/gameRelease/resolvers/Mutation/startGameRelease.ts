@@ -60,7 +60,7 @@ export const startGameRelease: NonNullable<
   }
 
   await _ctx.mqttClient.publish(
-    `playnite/${connection.id}/release/start`,
+    `playnite/${connection.id}/request/release/start`,
     JSON.stringify({
       release: {
         id: release.id,
