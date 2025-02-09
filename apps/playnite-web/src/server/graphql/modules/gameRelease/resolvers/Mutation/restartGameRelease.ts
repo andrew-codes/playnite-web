@@ -1,4 +1,9 @@
-import { Platform, Release } from '../../../../../data/types.entities.js'
+import { first } from 'lodash-es'
+import {
+  Connection,
+  Platform,
+  Release,
+} from '../../../../../data/types.entities.js'
 import { fromString } from '../../../../../oid.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
 
@@ -40,10 +45,20 @@ export const restartGameRelease: NonNullable<
     value: release.platformId,
   })) as Array<Platform>
 
+  const connection = first(
+    await _ctx.queryApi.execute<Connection>({
+      type: 'MatchAll',
+      entityType: 'Connection',
+    }),
+  )
+  if (!connection) {
+    return release
+  }
+
   await _ctx.mqttClient.publish(
-    `playnite/request/release/restart`,
+    `playnite/${connection.id}/request/release/restart`,
     JSON.stringify({
-      game: {
+      release: {
         id: release.id,
         gameId: release.gameId,
         name: release.name,
