@@ -139,7 +139,14 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       }
 
       var targetRelease = new Release(release, platform);
-      targetRelease.ProcessId = payloadData.Release.ProcessId;
+      try
+      {
+        targetRelease.ProcessId = payloadData.Release.ProcessId;
+      }
+      catch (Exception ex)
+      {
+        LogManager.GetLogger().Error(ex, $"No process ID found for Release, {releaseId} on platform {platform.Name} on topic {args.ApplicationMessage.Topic}.");
+      }
       eventHandler.Invoke(this, targetRelease);
 
       return Task.WhenAll(task);
