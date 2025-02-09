@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { Game } from 'apps/playnite-web/.generated/types.generated'
 import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
-import { subscribePlayniteUpdates } from './subscribePlayniteUpdates'
+import { useSubscribePlayniteEntityUpdates } from './subscribePlayniteEntityUpdates'
 
 const All_Games_Query = gql`
   query allGames($filter: Filter) {
@@ -39,7 +39,7 @@ const All_Games_Query = gql`
 const useAllGames = (opts: QueryHookOptions) => {
   const q = useQuery<{ games: Array<Game> }>(All_Games_Query, opts)
 
-  const { data } = subscribePlayniteUpdates()
+  const { data } = useSubscribePlayniteEntityUpdates()
   useEffect(() => {
     if (!isEmpty(data?.playniteEntitiesUpdated)) {
       q.refetch()

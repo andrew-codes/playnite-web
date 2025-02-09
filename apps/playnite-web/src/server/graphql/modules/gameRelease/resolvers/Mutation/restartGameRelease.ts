@@ -28,8 +28,12 @@ export const restartGameRelease: NonNullable<
       field: 'id',
       value: releaseId,
     },
-    { runState: { id: 'restarting' } },
+    { playniteWebRunState: 'restarting' },
   )
+  _ctx.subscriptionPublisher.publish('playniteWebRunStateUpdated', {
+    id: releaseId,
+    runState: 'restarting',
+  })
 
   await _ctx.subscriptionPublisher.publish('releaseRunStateChanged', {
     gameId: release.gameId,

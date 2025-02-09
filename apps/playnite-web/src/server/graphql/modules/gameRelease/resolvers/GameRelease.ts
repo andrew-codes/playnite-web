@@ -114,4 +114,7 @@ export const GameRelease: GameReleaseResolvers = {
 
     return results?.[0]
   },
+  playniteWebRunState: async (_parent, _arg, _ctx) => {
+    return _parent.playniteWebRunState ?? null
+  },
 }

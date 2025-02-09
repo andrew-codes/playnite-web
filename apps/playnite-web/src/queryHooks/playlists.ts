@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
 import { Playlist } from '../../.generated/types.generated'
-import { subscribePlayniteUpdates } from './subscribePlayniteUpdates'
+import { useSubscribePlayniteEntityUpdates } from './subscribePlayniteEntityUpdates'
 
 const AllPlaylists = gql`
   query Playlist {
@@ -23,6 +23,7 @@ const AllPlaylists = gql`
         releases {
           id
           runState
+          playniteWebRunState
           name
           platform {
             id
@@ -44,7 +45,7 @@ const AllPlaylists = gql`
 const usePlaylists = () => {
   const q = useQuery<{ playlists: Array<Playlist> }>(AllPlaylists)
 
-  const { data } = subscribePlayniteUpdates()
+  const { data } = useSubscribePlayniteEntityUpdates()
   useEffect(() => {
     if (!isEmpty(data?.playniteEntitiesUpdated)) {
       q.refetch()

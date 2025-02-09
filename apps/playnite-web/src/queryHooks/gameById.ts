@@ -4,7 +4,8 @@ import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { Game } from 'apps/playnite-web/.generated/types.generated'
 import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
-import { subscribePlayniteUpdates } from './subscribePlayniteUpdates'
+import { useSubscribePlayniteEntityUpdates } from './subscribePlayniteEntityUpdates'
+import { useSubscribePlayniteWebRunStateUpdates } from './subscribePlayniteWebRunStateUpdates'
 
 const Game_By_Id_Query = gql`
   query game($id: String!) {
@@ -21,6 +22,7 @@ const Game_By_Id_Query = gql`
       releases {
         id
         runState
+        playniteWebRunState
         platform {
           id
           isConsole
@@ -40,12 +42,19 @@ const Game_By_Id_Query = gql`
 const useGameById = (opts: QueryHookOptions) => {
   const q = useQuery<{ game: Game }>(Game_By_Id_Query, opts)
 
-  const { data } = subscribePlayniteUpdates()
+  const entityUpdates = useSubscribePlayniteEntityUpdates()
   useEffect(() => {
-    if (!isEmpty(data?.playniteEntitiesUpdated)) {
+    if (!isEmpty(entityUpdates.data?.playniteEntitiesUpdated)) {
       q.refetch()
     }
-  }, [data?.playniteEntitiesUpdated])
+  }, [entityUpdates.data?.playniteEntitiesUpdated])
+
+  const playniteWebRunStateUpdates = useSubscribePlayniteWebRunStateUpdates()
+  useEffect(() => {
+    if (!isEmpty(playniteWebRunStateUpdates.data?.playniteWebRunStateUpdated)) {
+      q.refetch()
+    }
+  }, [playniteWebRunStateUpdates.data?.playniteWebRunStateUpdated])
 
   return q
 }

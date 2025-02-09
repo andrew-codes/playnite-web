@@ -1,29 +1,34 @@
 type GameRelease {
   id: String!
-  name: String!
-  description: String
   communityScore: Int
+  completionStatus: CompletionStatus!
+  cover: GameAsset
   criticScore: Int
+  description: String
+  features: [Feature]!
   game: Game!
   gameId: String!
   hidden: Boolean!
+  name: String!
+  platform: Platform!
+  playniteWebRunState: String
+  processId: Int
+  recentActivity: DateTime
   releaseDate: Date
   releaseYear: Int
-  recentActivity: DateTime
   runState: String!
-  platform: Platform!
-  completionStatus: CompletionStatus!
-  cover: GameAsset
-  features: [Feature]!
   source: Source!
-  processId: Int
 }
 
 type GameReleaseStateSubscriptionPayload {
   id: String!
   gameId: String!
-  runState: String!
   processId: String
+  runState: String!
+}
+type PlayniteWebRunStateSubscriptionPayload {
+  id: String!
+  runState: String!
 }
 
 input RelationUpdate {
@@ -32,18 +37,19 @@ input RelationUpdate {
 }
 
 input UpdateGameReleaseInput {
-  description: String
   communityScore: Int
-  criticScore: Int
-  hidden: Boolean
-  releaseDate: Date
-  platformId: String
   completionStatusId: String
+  criticScore: Int
+  description: String
   featureIds: RelationUpdate
+  hidden: Boolean
+  platformId: String
+  releaseDate: Date
 }
 
 extend type Subscription {
   releaseRunStateChanged: GameReleaseStateSubscriptionPayload
+  playniteWebRunStateUpdated: PlayniteWebRunStateSubscriptionPayload
 }
 
 type BooleanMutationResult {

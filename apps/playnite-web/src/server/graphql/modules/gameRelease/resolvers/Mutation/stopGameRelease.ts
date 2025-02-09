@@ -20,8 +20,12 @@ export const stopGameRelease: NonNullable<
       field: 'id',
       value: releaseId,
     },
-    { runState: { id: 'stopping' } },
+    { playniteWebRunState: 'stopping' },
   )
+  _ctx.subscriptionPublisher.publish('playniteWebRunStateUpdated', {
+    id: releaseId,
+    runState: 'stopping',
+  })
 
   const [release] = (await _ctx.queryApi.execute<Release>({
     entityType: 'Release',
@@ -83,10 +87,14 @@ export const stopGameRelease: NonNullable<
       value: release.id,
     },
     {
-      runState: { id: 'installed' },
+      playniteWebRunState: 'stopped',
       processId: null,
     },
   )
+  _ctx.subscriptionPublisher.publish('playniteWebRunStateUpdated', {
+    id: releaseId,
+    runState: 'stopped',
+  })
 
   _ctx.subscriptionPublisher.publish('releaseRunStateChanged', {
     id: release.id,
