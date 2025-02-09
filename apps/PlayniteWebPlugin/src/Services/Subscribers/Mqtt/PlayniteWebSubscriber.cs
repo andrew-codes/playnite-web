@@ -32,7 +32,8 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       _api = api;
       this.deviceId = deviceId;
       updateTopicExpression = new Regex("playnite/([a-zA-Z0-9-]+)/update/([a-zA-Z]+)/([a-zA-Z0-9-]+)");
-      logger  = LogManager.GetLogger();
+
+      logger = LogManager.GetLogger();
     }
 
     private Task Client_ConnectedAsync(MqttClientConnectedEventArgs args)
@@ -127,9 +128,9 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       }
 
       dynamic payloadData = deserializer.Deserialize(args.ApplicationMessage.ConvertPayloadToString());
-      var platformId = Guid.Parse(payloadData.Game.Platform.Id);
+      var platformId = Guid.Parse(payloadData.Release.Platform.Id);
       var platform = _api.Database.Platforms.FirstOrDefault(p => p.Id.Equals(platformId));
-      var releaseId = Guid.Parse(payloadData.Game.Id);
+      var releaseId = Guid.Parse(payloadData.Release.Id);
       var release = _api.Database.Games.FirstOrDefault(g => g.Id.Equals(releaseId));
       if (release == null)
       {
@@ -138,7 +139,7 @@ namespace PlayniteWeb.Services.Subscribers.Mqtt
       }
 
       var targetRelease = new Release(release, platform);
-      targetRelease.ProcessId = payloadData.Game.ProcessId;
+      targetRelease.ProcessId = payloadData.Release.ProcessId;
       eventHandler.Invoke(this, targetRelease);
 
       return Task.WhenAll(task);
