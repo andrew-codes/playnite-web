@@ -22,7 +22,7 @@ namespace PlayniteWeb.TopicManager
 
     public string GetRequestActionTopic(string subTopic)
     {
-      return $"playnite/request/{subTopic}";
+      return $"playnite/{settings.DeviceId}/request/{subTopic}";
     }
   }
 }
