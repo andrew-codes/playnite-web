@@ -148,3 +148,10 @@ Packages:
     RequiredApiVersion: 6.11.0
     Changelog:
       - "fix: completion status selection when browsing/on Deck view (#723)"
+  - Version: 11.0.2
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v11.0.2/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_11_0_2.pext
+    ReleaseDate: 2025-02-09
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "fix: Playnite Web actions (start, restart, stop) perform action in
+        Playnite (#725)"
