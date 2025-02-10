@@ -94,6 +94,10 @@ This is used to uniquely identify a release within the context of a single sourc
 
 > **platformId**: `string`
 
+### playniteWebRunState?
+
+> `optional` **playniteWebRunState**: `PlayniteWebRunState`
+
 ### processId
 
 > **processId**: `string` \| `null`
@@ -152,4 +156,4 @@ A release is a specific version of a game that is available on a platform and so
 
 ## Defined in
 
-[types.entities.ts:282](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L282)
+[types.entities.ts:293](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L293)
