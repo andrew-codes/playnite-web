@@ -9,6 +9,12 @@ export type PubSubChannels = {
       processId: string | null
     },
   ]
+  playniteWebRunStateUpdated: [
+    {
+      id: string
+      runState: string
+    },
+  ]
   playniteEntitiesUpdated: [
     Array<{
       type: string

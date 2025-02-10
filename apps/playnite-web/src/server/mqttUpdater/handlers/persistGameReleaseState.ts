@@ -9,14 +9,6 @@ const debug = createDebugger(
 const topicMatch =
   /^playnite\/.*\/entity\/Release\/(?<entityId>[a-z0-9\-]+)\/state$/
 
-const runStates = [
-  'installed',
-  'installing',
-  'launching',
-  'running',
-  'uninstalled',
-] as const
-
 const create =
   (options: HandlerOptions): IHandlePublishedTopics =>
   async (messages) => {
@@ -41,72 +33,28 @@ const create =
         debug(
           `Received game release state for topic ${entityId} with state value of ${state}`,
         )
-        const newState = runStates.find((s) => s === state.toLowerCase())
 
-        if (!newState) {
-          debug(`Invalid state, ${state}; aborting`)
-          return
-        }
-
-        if (newState == 'installing') {
-          const launchingGame = await options.queryApi.execute({
-            entityType: 'Game',
-            type: 'AndMatch',
-            filterItems: [
-              {
-                type: 'RelationMatch',
-                field: 'releaseIds',
-                entityType: 'Game',
-                relationType: 'Release',
-                filterItem: {
-                  entityType: 'Release',
-                  type: 'ExactMatch',
-                  field: 'id',
-                  value: entityId,
-                },
-              },
-              {
-                type: 'RelationMatch',
-                field: 'releaseIds',
-                entityType: 'Game',
-                relationType: 'Release',
-                filterItem: {
-                  entityType: 'Release',
-                  type: 'ExactMatch',
-                  field: 'runState',
-                  value: { id: 'launching' },
-                },
-              },
-            ],
+        if (state === 'running') {
+          await options.updateQueryApi.executeUpdate(
+            {
+              entityType: 'Release',
+              type: 'ExactMatch',
+              field: 'id',
+              value: entityId,
+            },
+            { playniteWebRunState: 'running' },
+          )
+          options.pubsub.publish('playniteWebRunStateUpdated', {
+            id: entityId,
+            runState: 'running',
           })
-
-          if (launchingGame) {
-            return
-          }
         }
-
-        if (newState === 'installed' || newState === 'uninstalled') {
-          return
-        }
-
-        await options.updateQueryApi.executeUpdate(
-          {
-            entityType: 'Release',
-            type: 'ExactMatch',
-            field: 'id',
-            value: entityId,
-          },
-          {
-            runState: { id: newState },
-            processId: processId,
-          },
-        )
 
         options.pubsub.publish('releaseRunStateChanged', {
           id: entityId,
           gameId: gameId,
           processId: processId ?? null,
-          runState: newState,
+          runState: state.toLowerCase(),
         })
       } catch (e) {
         console.error(e)
