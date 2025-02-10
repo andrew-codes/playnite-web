@@ -5332,12 +5332,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-yoga/plugin-csrf-prevention@npm:^3.10.2":
-  version: 3.10.2
-  resolution: "@graphql-yoga/plugin-csrf-prevention@npm:3.10.2"
+"@graphql-yoga/plugin-csrf-prevention@npm:^3.11.0":
+  version: 3.11.0
+  resolution: "@graphql-yoga/plugin-csrf-prevention@npm:3.11.0"
   peerDependencies:
-    graphql-yoga: ^5.10.2
-  checksum: 10c0/d442942fd7b71af4a46dbf67bf18f649fec14ee670904bf7fbf7f30cedb089ddc22bd3cc9e3023a7e7e9f79629c08be029b06dc1f691db925d1f3d00f2e99afc
+    graphql-yoga: ^5.11.0
+  checksum: 10c0/6da82ce6b4637be55932ebcf5a81d4b8c0923ae642648ee766bdf76c9eef511b2482cf49cad71a8397d4cc7aeeaef293a4fe90ec357c532fc34ab865d7538aca
   languageName: node
   linkType: hard
 
@@ -20930,7 +20930,7 @@ __metadata:
     "@graphql-codegen/graphql-modules-preset": "npm:^4.0.11"
     "@graphql-codegen/typescript": "npm:^4.1.1"
     "@graphql-codegen/typescript-resolvers": "npm:^4.4.0"
-    "@graphql-yoga/plugin-csrf-prevention": "npm:^3.10.2"
+    "@graphql-yoga/plugin-csrf-prevention": "npm:^3.11.0"
     "@graphql-yoga/plugin-jwt": "npm:^2.6.0"
     "@jest/globals": "npm:^29.7.0"
     "@jspm/core": "npm:^2.1.0"
