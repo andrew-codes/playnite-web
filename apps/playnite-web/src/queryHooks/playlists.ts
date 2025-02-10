@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
 import { Playlist } from '../../.generated/types.generated'
 import { useSubscribePlayniteEntityUpdates } from './subscribePlayniteEntityUpdates'
+import { useSubscribePlayniteWebRunStateUpdates } from './subscribePlayniteWebRunStateUpdates'
 
 const AllPlaylists = gql`
   query Playlist {
@@ -51,6 +52,13 @@ const usePlaylists = () => {
       q.refetch()
     }
   }, [data?.playniteEntitiesUpdated])
+
+  const playniteWebRunStateUpdates = useSubscribePlayniteWebRunStateUpdates()
+  useEffect(() => {
+    if (!isEmpty(playniteWebRunStateUpdates.data?.playniteWebRunStateUpdated)) {
+      q.refetch()
+    }
+  }, [playniteWebRunStateUpdates.data?.playniteWebRunStateUpdated])
 
   return q
 }
