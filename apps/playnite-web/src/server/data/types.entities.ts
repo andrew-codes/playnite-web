@@ -273,6 +273,17 @@ const runStates = [
  */
 type RunState = { id: (typeof runStates)[number] }
 
+const playniteWebRunStates = [
+  'installing',
+  'launching',
+  'restarting',
+  'running',
+  'stopped',
+  'stopping',
+] as const
+
+type PlayniteWebRunState = (typeof playniteWebRunStates)[number]
+
 /**
  * Release data entity.
  *
@@ -306,6 +317,7 @@ type Release = Identifiable & {
   links: Array<{ name: string; url: string }>
   name: string
   platformId: string
+  playniteWebRunState?: PlayniteWebRunState
   processId: string | null
   publisherIds: Array<string>
   recentActivity: string
@@ -371,7 +383,7 @@ type User = Identifiable & {
   isAuthenticated: boolean
 }
 
-export { entities, RelationshipTypes, runStates }
+export { entities, playniteWebRunStates, RelationshipTypes, runStates }
 export type {
   CompletionStatus,
   Connection,
@@ -387,6 +399,7 @@ export type {
   Identifiable,
   Platform,
   Playlist,
+  PlayniteWebRunState,
   Release,
   RunState,
   Series,

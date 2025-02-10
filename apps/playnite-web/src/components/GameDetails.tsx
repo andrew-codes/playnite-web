@@ -205,13 +205,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                       <ClickAwayListener onClickAway={handleClose}>
                         <MenuList id="split-button-menu" autoFocusItem>
                           {releases
-                            .filter(
-                              (r) =>
-                                r.runState !== 'launching' &&
-                                r.runState !== 'running' &&
-                                r.runState !== 'restarting' &&
-                                r.runState !== 'installing',
-                            )
+                            .filter((r) => r.playniteWebRunState === 'stopped')
                             .map((option, index) => (
                               <MenuItem
                                 key={option.id}
@@ -232,9 +226,9 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
             </Action>
             {releases.some(
               (r) =>
-                r.runState === 'running' ||
-                r.runState === 'launching' ||
-                r.runState === 'restarting',
+                r.playniteWebRunState === 'running' ||
+                r.playniteWebRunState === 'launching' ||
+                r.playniteWebRunState === 'restarting',
             ) && (
               <>
                 <Action>

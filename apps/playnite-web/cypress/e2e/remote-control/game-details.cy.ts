@@ -18,17 +18,15 @@ describe('Remote control.', () => {
 
         describe('Game details', () => {
           describe('Remote controls.', () => {
-            afterEach(() => {
-              cy.task('updateDatabase', {
-                collection: 'release',
-                filter: {},
-                update: { $set: { runState: 'installed' } },
-              })
-            })
-
             Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
               describe(`Screen size: ${breakpointName}.`, () => {
                 beforeEach(() => {
+                  cy.task('updateDatabase', {
+                    collection: 'release',
+                    filter: {},
+                    update: { $set: { playniteWebRunState: 'stopped' } },
+                  })
+
                   cy.viewport(x, y)
                   cy.visit(locationPath)
                   cy.wait('@api')

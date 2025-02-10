@@ -11,7 +11,9 @@ const Subscribe_Playnite_Updates = gql`
   }
 `
 
-const subscribePlayniteUpdates = () =>
-  useSubscription<{ type: EntityType; id: string }>(Subscribe_Playnite_Updates)
+const useSubscribePlayniteEntityUpdates = () =>
+  useSubscription<{
+    playniteEntitiesUpdated: Array<{ type: EntityType; id: string }>
+  }>(Subscribe_Playnite_Updates)
 
-export { Subscribe_Playnite_Updates, subscribePlayniteUpdates }
+export { Subscribe_Playnite_Updates, useSubscribePlayniteEntityUpdates }

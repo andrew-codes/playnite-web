@@ -20,8 +20,12 @@ export const startGameRelease: NonNullable<
       field: 'id',
       value: releaseId,
     },
-    { runState: { id: 'launching' } },
+    { playniteWebRunState: 'launching' },
   )
+  _ctx.subscriptionPublisher.publish('playniteWebRunStateUpdated', {
+    id: releaseId,
+    runState: 'launching',
+  })
 
   const [release] = (await _ctx.queryApi.execute<Release>({
     entityType: 'Release',
@@ -34,13 +38,6 @@ export const startGameRelease: NonNullable<
     const gqlImport = await import('graphql')
     throw new gqlImport.GraphQLError('No game release found')
   }
-
-  await _ctx.subscriptionPublisher.publish('releaseRunStateChanged', {
-    gameId: release.gameId,
-    id: release.id,
-    runState: 'launching',
-    processId: null,
-  })
 
   const [platform] = (await _ctx.queryApi.execute<Platform>({
     entityType: 'Platform',
