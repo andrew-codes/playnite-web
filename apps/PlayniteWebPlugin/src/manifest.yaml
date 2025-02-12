@@ -163,3 +163,9 @@ Packages:
       - "fix: enable showing stop action even if game crashes (#729)"
       - "fix: specific deserialization errors showing in Playnite logs (#728)"
       - "fix: inability to start games from PW (#727)"
+  - Version: 11.0.4
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v11.0.4/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_11_0_4.pext
+    ReleaseDate: 2025-02-12
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "chore(deps): updated as many as possible without breaking app (#726)"
