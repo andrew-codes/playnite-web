@@ -17,7 +17,7 @@ describe('Authentication', () => {
 - Authenticated user is redirected back to original page.
 - Authenticated users can immediately sign out.`, () => {
     cy.visit('/browse')
-    cy.wait('@api')
+
     cy.get('[data-test="MainNavigation"]')
       .contains('span', 'Login')
       .parents('.MuiButtonBase-root')
