@@ -16,7 +16,6 @@ describe('Game details.', () => {
           beforeEach(() => {
             cy.viewport(x, y)
             cy.visit(locationPath)
-            cy.wait('@api')
           })
 
           it(`Displays game details

@@ -28,7 +28,7 @@ describe('Browse', () => {
 
     it(`Requires being signed in.`, () => {
       cy.visit('/browse')
-      cy.wait('@api')
+
       cy.get('[data-test="GameFigure"]')
         .find('[data-test="GameFigureChipList"] button')
         .should('not.exist')
@@ -44,7 +44,7 @@ describe('Browse', () => {
       cy.signIn()
 
       cy.visit('/browse')
-      cy.wait('@api')
+
       cy.get('[data-test="GameFigure"]')
         .contains('3DMark')
         .parents('[data-test="GameFigure"]')
@@ -64,7 +64,7 @@ describe('Browse', () => {
       cy.signIn()
 
       cy.visit('/browse')
-      cy.wait('@api')
+
       cy.get('[data-test="GameFigure"]').as('games')
       cy.get('@games')
         .parents('.MuiBox-root')

@@ -9,7 +9,7 @@ describe.skip('Filtering.', () => {
   describe('Browse.', () => {
     it('Filter by like name', () => {
       cy.visit('/browse')
-      cy.wait('@api')
+
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root').click({
         force: true,
       })
@@ -63,7 +63,7 @@ describe.skip('Filtering.', () => {
       const scoped = 'Final Fantasy'
 
       cy.visit('/browse')
-      cy.wait('@api')
+
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
@@ -117,7 +117,7 @@ describe.skip('Filtering.', () => {
       const scoped = null
 
       cy.visit('/browse')
-      cy.wait('@api')
+
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
@@ -171,7 +171,7 @@ describe.skip('Filtering.', () => {
       const scoped = 'Bat'
 
       cy.visit('/browse')
-      cy.wait('@api')
+
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
@@ -225,7 +225,7 @@ describe.skip('Filtering.', () => {
       const scoped = 'Bat'
 
       cy.visit('/browse')
-      cy.wait('@api')
+
       cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
         .as('openFilterButton')
         .click({
@@ -277,7 +277,6 @@ describe.skip('Filtering.', () => {
 
         it('Filter panel is hidden by default', () => {
           cy.visit('/browse')
-          cy.wait('@api')
 
           cy.get('[data-test="FilterForm"]').should('not.exist')
 
@@ -303,7 +302,6 @@ describe.skip('Filtering.', () => {
         it(`Filter by platform
 - Games must match at least one platform.`, () => {
           cy.visit('/browse')
-          cy.wait('@api')
           cy.get('[aria-label="Open filter drawer"] .MuiTouchRipple-root')
             .as('openFilterButton')
             .click({

@@ -10,7 +10,7 @@ type PlayniteContext = {
   identityService: IdentityService
   signingKey: string
   domain: string
-  jwt?: User
+  jwt?: { payload: User }
   queryApi: IQuery
   updateQueryApi: IUpdateQuery
   mqttClient: AsyncMqttClient
