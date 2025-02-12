@@ -21,6 +21,7 @@ describe('Browse.', () => {
 
       it('Library is browse-able', () => {
         cy.visit('/browse')
+        cy.wait(300)
 
         cy.contains('h2', 'My Games')
         cy.contains('454 games in library')

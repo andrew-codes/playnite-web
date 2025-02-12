@@ -68,12 +68,6 @@ async function handleBotRequest(
   const domain = process.env.HOST ?? 'localhost'
   const port = process.env.PORT ?? '3000'
 
-  let user = {
-    _type: 'User',
-    id: createNull('User').toString(),
-    username: 'Unknown',
-    isAuthenticated: false,
-  } as User
   const wsLink = new GraphQLWsLink(
     createClient({
       url: `ws://${domain}:${port}/api`,
@@ -87,6 +81,31 @@ async function handleBotRequest(
       },
     }),
   )
+
+  let user = {
+    _type: 'User',
+    id: createNull('User').toString(),
+    username: 'Unknown',
+    isAuthenticated: false,
+  } as User
+  try {
+    const cookie = request.headers.get('Cookie')
+    const authCookie: string | null =
+      (
+        cookie
+          ?.split(';')
+          .map((c) => c.trim())
+          .find((c) => c.startsWith('authorization=')) ?? ''
+      ).split('=')[1] ?? null
+    if (authCookie) {
+      user = jwt.decode(authCookie, process.env.SECRET ?? 'secret', {
+        issuer: domain,
+        algorithm: 'HS256',
+      })
+    }
+  } catch (error) {
+    debug(error)
+  }
 
   const dataApi = await data()
 
@@ -174,15 +193,29 @@ async function handleBrowserRequest(
 ) {
   const clientSideCache = createEmotionCache()
   const store = configureStore({ reducer })
+  const domain = process.env.HOST ?? 'localhost'
+  const port = process.env.PORT ?? '3000'
+
+  const wsLink = new GraphQLWsLink(
+    createClient({
+      url: `ws://${domain}:${port}/api`,
+      connectionParams: {
+        'Access-Control-Allow-Origin': '*', // Required for CORS support to work
+        credentials: true,
+      },
+      on: {
+        connected: () => console.info('GraphQLWsLink connected'),
+        closed: () => console.info('GraphQLWsLink closed'),
+      },
+    }),
+  )
+
   let user: Partial<User> = {
     _type: 'User',
     id: createNull('User').toString(),
     username: 'Unknown',
     isAuthenticated: false,
   }
-  const domain = process.env.HOST ?? 'localhost'
-  const port = process.env.PORT ?? '3000'
-
   try {
     const cookie = request.headers.get('Cookie')
     const authCookie: string | null =
@@ -201,20 +234,6 @@ async function handleBrowserRequest(
   } catch (error) {
     debug(error)
   }
-
-  const wsLink = new GraphQLWsLink(
-    createClient({
-      url: `ws://${domain}:${port}/api`,
-      connectionParams: {
-        'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-        credentials: true,
-      },
-      on: {
-        connected: () => console.info('GraphQLWsLink connected'),
-        closed: () => console.info('GraphQLWsLink closed'),
-      },
-    }),
-  )
 
   const dataApi = await data()
 

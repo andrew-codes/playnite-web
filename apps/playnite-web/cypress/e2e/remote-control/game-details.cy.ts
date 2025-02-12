@@ -29,6 +29,7 @@ describe('Remote control.', () => {
 
                   cy.viewport(x, y)
                   cy.visit(locationPath)
+                  cy.wait(300)
                 })
 
                 it(`Play visible.`, () => {

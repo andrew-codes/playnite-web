@@ -36,9 +36,11 @@ Cypress.Commands.add('signIn', () => {
       }),
     })
     .then((response) => {
-      cy.setCookie(
-        'authorization',
-        `Bearer ${response.body.data.signIn.credential}`,
-      )
+      cy.setCookie('authorization', response.body.data.signIn.credential, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        domain: 'localhost',
+      })
     })
 })
