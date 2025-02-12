@@ -12,7 +12,7 @@ export const updateGame: NonNullable<MutationResolvers['updateGame']> = async (
   _ctx,
 ) => {
   try {
-    _ctx.identityService.authorize(_ctx.jwt)
+    _ctx.identityService.authorize(_ctx.jwt?.payload)
 
     const oid = fromString(_arg.id)
     if (oid.type !== 'Game') {

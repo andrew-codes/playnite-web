@@ -79,7 +79,10 @@
       "outputs": ["{projectRoot}/.test-runs/unit"],
       "options": {
         "command": "yarn jest --config jest.config.js",
-        "cwd": "{projectRoot}"
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_OPTIONS": "--no-experimental-require-module"
+        }
       },
       "configurations": {
         "ci": {}
@@ -106,16 +109,14 @@
       ],
       "options": {
         "command": "yarn cypress open --component --browser electron",
-        "cwd": "{projectRoot}",
-        "env": {
-          "TEST": "component"
-        }
+        "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "dev",
       "configurations": {
         "dev": {
           "env": {
             "TEST": "component",
+            "NODE_OPTIONS": "--no-experimental-require-module",
             "CMD": "run"
           }
         },
@@ -123,13 +124,15 @@
           "command": "yarn cypress run --component --browser electron",
           "env": {
             "CI": "true",
-            "TEST": "component"
+            "TEST": "component",
+            "NODE_OPTIONS": "--no-experimental-require-module"
           }
         },
         "ci/local": {
           "command": "yarn cypress run --component --browser electron",
           "env": {
             "CI": "true",
+            "NODE_OPTIONS": "--no-experimental-require-module",
             "TEST": "component",
             "CMD": "run"
           }
@@ -154,6 +157,7 @@
         "command": "yarn tsx scripts/component-for-update.ts",
         "cwd": "{projectRoot}",
         "env": {
+          "NODE_OPTIONS": "--no-experimental-require-module",
           "TEST": "component"
         }
       }
@@ -168,6 +172,7 @@
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
           "NODE_ENV": "development",
+          "NODE_OPTIONS": "--no-experimental-require-module",
           "INSTRUMENT": "true"
         }
       }
@@ -186,6 +191,7 @@
           "TEST": "e2e",
           "START_SERVER_AND_TEST_INSECURE": "1",
           "NODE_ENV": "development",
+          "NODE_OPTIONS": "--no-experimental-require-module",
           "INSTRUMENT": "true"
         }
       },
@@ -198,6 +204,7 @@
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "development",
+            "NODE_OPTIONS": "--no-experimental-require-module",
             "INSTRUMENT": "true"
           }
         },
@@ -209,6 +216,7 @@
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "development",
+            "NODE_OPTIONS": "--no-experimental-require-module",
             "INSTRUMENT": "true"
           }
         }
@@ -224,6 +232,7 @@
         "env": {
           "CMD": "run",
           "INSTRUMENT": "true",
+          "NODE_OPTIONS": "--no-experimental-require-module",
           "UPDATE": "true",
           "DEBUG": "playnite-web/nx/*"
         }

@@ -9,12 +9,12 @@
     "conventional-changelog-angular": "^8.0.0",
     "conventional-commits-filter": "^5.0.0",
     "conventional-commits-parser": "^6.0.0",
-    "debug": "^4.3.7",
-    "get-stream": "^7.0.1",
-    "import-from-esm": "^1.3.4",
-    "into-stream": "^7.0.0",
+    "debug": "^4.4.0",
+    "get-stream": "^9.0.1",
+    "import-from-esm": "^2.0.0",
+    "into-stream": "^8.0.1",
     "lodash-es": "^4.17.21",
     "read-package-up": "^11.0.0",
-    "yaml": "^2.6.1"
+    "yaml": "^2.7.0"
   }
 }

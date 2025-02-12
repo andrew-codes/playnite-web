@@ -3,15 +3,12 @@ import type { AsyncMqttClient } from 'async-mqtt'
 import compression from 'compression'
 import createDebugger from 'debug'
 import express from 'express'
-import { useServer } from 'graphql-ws/lib/use/ws'
+import { useServer } from 'graphql-ws/use/ws'
 import helmet from 'helmet'
 import path from 'path'
 import { WebSocketServer } from 'ws'
-import EntityConditionalDataApi from './data/entityConditional/DataApi.js'
-import InMemoryDataApi from './data/inMemory/DataApi.js'
-import { getDbClient } from './data/mongo/client.js'
-import MongoDataApi from './data/mongo/DataApi.js'
-import PriorityDataApi from './data/priority/DataApi.js'
+import { hashPassword } from './auth/hashPassword.js'
+import data from './data/data.js'
 import createYoga from './graphql/index.js'
 import schema from './graphql/schema.js'
 import { subscriptionPublisher } from './graphql/subscriptionPublisher.js'
@@ -28,29 +25,18 @@ async function run(mqttClient: AsyncMqttClient) {
 
   debug('Starting Playnite Web game-db-updater...')
 
-  const db = (await getDbClient()).db('games')
-  const mongoApi = new MongoDataApi(db)
-  const inMemoryApi = new InMemoryDataApi()
-  const userInMemory = new EntityConditionalDataApi(
-    new Set(['User']),
-    inMemoryApi,
-    inMemoryApi,
-  )
-  const dataApi = new PriorityDataApi(
-    new Set([userInMemory, mongoApi]),
-    new Set([userInMemory, mongoApi]),
-    new Set([mongoApi]),
-  )
+  const dataApi = await data()
 
-  const { USERNAME, PASSWORD } = process.env
-  if (USERNAME && PASSWORD) {
-    await dataApi.executeUpdate(
+  const { USERNAME, PASSWORD, SECRET } = process.env
+  if (USERNAME && PASSWORD && SECRET && SECRET !== '') {
+    await dataApi.delete.executeDelete({ type: 'MatchAll', entityType: 'User' })
+    await dataApi.update.executeUpdate(
       { type: 'ExactMatch', entityType: 'User', field: 'id', value: '1' },
       {
         _type: 'User',
         id: '1',
-        password: PASSWORD,
         username: USERNAME,
+        password: hashPassword(PASSWORD),
       },
     )
   }
@@ -65,9 +51,9 @@ async function run(mqttClient: AsyncMqttClient) {
     ),
     mqtt: mqttClient,
     pubsub: subscriptionPublisher,
-    queryApi: dataApi,
-    updateQueryApi: dataApi,
-    deleteQueryApi: mongoApi,
+    queryApi: dataApi.query,
+    updateQueryApi: dataApi.update,
+    deleteQueryApi: dataApi.delete,
   })
 
   let app = express()
@@ -185,8 +171,8 @@ async function run(mqttClient: AsyncMqttClient) {
           ...req,
           signingKey,
           domain,
-          queryApi: dataApi,
-          updateQueryApi: dataApi,
+          queryApi: dataApi.query,
+          updateQueryApi: dataApi.delete,
           mqttClient,
           subscriptionPublisher,
         }),

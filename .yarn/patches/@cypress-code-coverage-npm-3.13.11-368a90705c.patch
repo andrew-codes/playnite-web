@@ -1,0 +1,25 @@
+diff --git a/package.json b/package.json
+index ad41fc176358c3816eab2ccc4bf12dd490aebd86..61d826572806c29c08e7ac746ffbf9081733cfdf 100644
+--- a/package.json
++++ b/package.json
+@@ -3,6 +3,20 @@
+   "version": "3.13.11",
+   "description": "Saves the code coverage collected during Cypress tests",
+   "main": "index.js",
++  "exports": {
++    ".": {
++      "require": "./index.js",
++      "import": "./index.js"
++    }, 
++    "./task": {
++      "require": "./task.js",
++      "import": "./task.js"
++    },
++    "./support": {
++      "require": "./support.js",
++      "import": "./support.js"
++    }
++  },
+   "scripts": {
+     "start": "parcel serve cypress/index.html",
+     "coverage:verify": "npx nyc report --check-coverage true --lines 80",

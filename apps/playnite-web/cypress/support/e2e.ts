@@ -2,14 +2,14 @@ import '@cypress/code-coverage/support'
 import compareSnapshotCommand from 'cypress-image-diff-js/command'
 import 'cypress-plugin-tab'
 
-// declare global {
-//   // eslint-disable-next-line @typescript-eslint/no-namespace
-//   namespace Cypress {
-//     interface Chainable {
-//       signIn: () => void
-//     }
-//   }
-// }
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Cypress {
+    interface Chainable {
+      signIn: () => void
+    }
+  }
+}
 
 compareSnapshotCommand()
 

@@ -9,6 +9,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
+import { merge } from 'lodash-es'
 import { FC } from 'react'
 import { useMe, useSignOut } from '../../queryHooks'
 
@@ -30,23 +31,25 @@ const NavigationList = styled(List, {
 }))
 
 const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
-  const navigate = useNavigate()
-
+  const me = useMe()
+  const isAuthenticated = me.data?.me.isAuthenticated ?? false
   const [signOut] = useSignOut()
-
   const handleSignOut = () => {
     signOut()
+    me.updateQuery((result, opts) => {
+      return merge({}, result, {
+        isAuthenticated: false,
+      })
+    })
   }
 
+  const navigate = useNavigate()
   const handleNavigation = (href: string) => (evt: any) => {
     evt.preventDefault()
     navigate(href)
   }
 
   const theme = useTheme()
-
-  const { data } = useMe()
-  const isAuthenticated = data?.me.isAuthenticated ?? false
 
   return (
     <Navigation
@@ -109,30 +112,47 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding sx={{ display: 'block' }}>
-          <ListItemButton
-            onClick={
-              isAuthenticated ? handleSignOut : handleNavigation('/login')
-            }
-            sx={{
-              minHeight: theme.spacing(6),
-              justifyContent: open ? 'initial' : 'center',
-              px: 2.5,
-            }}
-          >
-            <ListItemIcon
+          {!isAuthenticated ? (
+            <ListItemButton
+              onClick={handleNavigation('/login')}
               sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
+                minHeight: theme.spacing(6),
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
               }}
             >
-              <AccountCircle />
-            </ListItemIcon>
-            <ListItemText
-              primary={isAuthenticated ? 'Logout' : 'Login'}
-              sx={{ opacity: open ? 1 : 0 }}
-            />
-          </ListItemButton>
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <AccountCircle />
+              </ListItemIcon>
+              <ListItemText primary="Login" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          ) : (
+            <ListItemButton
+              onClick={handleSignOut}
+              sx={{
+                minHeight: theme.spacing(6),
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <AccountCircle />
+              </ListItemIcon>
+              <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          )}
         </ListItem>
       </NavigationList>
     </Navigation>

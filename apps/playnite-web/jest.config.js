@@ -1,4 +1,4 @@
-import { defaults } from 'jest-config'
+import * as defaultJestConfig from 'jest-config'
 
 const defaultConfig = {
   testEnvironment: 'node',
@@ -16,7 +16,10 @@ const defaultConfig = {
   passWithNoTests: false,
   coverageDirectory: '<rootDir>/.test-runs/unit',
   collectCoverage: true,
-  moduleFileExtensions: [...defaults.moduleFileExtensions, 'ts'],
+  moduleFileExtensions: [
+    ...defaultJestConfig.defaults.moduleFileExtensions,
+    'ts',
+  ],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coveragePathIgnorePatterns: [
     '/__tests__/',

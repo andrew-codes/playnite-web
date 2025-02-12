@@ -15,7 +15,7 @@ describe('Authentication', () => {
   it(`Authentication flow
 - User can authenticate with a username and password.
 - Authenticated user is redirected back to original page.
-- Authenticated users can sign out.`, () => {
+- Authenticated users can immediately sign out.`, () => {
     cy.visit('/browse')
     cy.wait('@api')
     cy.get('[data-test="MainNavigation"]')

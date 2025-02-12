@@ -10,7 +10,7 @@ import type { MutationResolvers } from './../../../../../../../.generated/types.
 export const startGameRelease: NonNullable<
   MutationResolvers['startGameRelease']
 > = async (_parent, _arg, _ctx) => {
-  _ctx.identityService.authorize(_ctx.jwt)
+  _ctx.identityService.authorize(_ctx.jwt?.payload)
 
   const releaseId = fromString(_arg.releaseId).id
   await _ctx.updateQueryApi.executeUpdate<Release>(

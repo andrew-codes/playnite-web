@@ -3,12 +3,12 @@ import type { AsyncMqttClient } from 'async-mqtt'
 import { PubSub } from 'graphql-yoga'
 import { Db } from 'mongodb'
 import mqttUpdater, { HandlerOptions, PubSubChannels } from '..'
-import MongoDataApi from '../../data/mongo/DataApi.js'
+import MongoDataApi from '../../data/providers/mongo/DataApi.js'
 
 jest.unstable_mockModule('../handlers/index', () => ({
   default: jest.fn().mockReturnValue([]),
 }))
-jest.unstable_mockModule('../../data/mongo/DataApi', () => ({
+jest.unstable_mockModule('../../data/providers/mongo/DataApi', () => ({
   __esModule: true,
   default: jest.fn().mockImplementation(() => ({
     executeUpdate: jest.fn(),
