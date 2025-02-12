@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../README.md) • **Docs**
+[**playnite-web-app**](../../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: GameAsset
 
 > **GameAsset**: [`Identifiable`](Identifiable.md) & `object`
+
+Defined in: [types.entities.ts:366](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L366)
 
 Game asset data entity.
 
@@ -31,7 +33,3 @@ Game asset data entity.
 ## Remarks
 
 Game assets are used to associate images with entities.
-
-## Defined in
-
-[types.entities.ts:366](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L366)

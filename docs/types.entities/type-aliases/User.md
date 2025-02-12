@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../README.md) • **Docs**
+[**playnite-web-app**](../../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: User
 
 > **User**: [`Identifiable`](Identifiable.md) & `object`
+
+Defined in: [types.entities.ts:379](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L379)
 
 User data entity.
 
@@ -31,7 +33,3 @@ User data entity.
 ## Remarks
 
 Users are used to authenticate and authorize access to the application.
-
-## Defined in
-
-[types.entities.ts:379](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L379)

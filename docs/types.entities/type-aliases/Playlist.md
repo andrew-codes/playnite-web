@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../README.md) • **Docs**
+[**playnite-web-app**](../../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: Playlist
 
 > **Playlist**: [`Identifiable`](Identifiable.md) & `object`
+
+Defined in: [types.entities.ts:338](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L338)
 
 Playlist data entity.
 
@@ -33,7 +35,3 @@ This is the value of the playlist's name; removing the `playlist-` prefix.
 ## Remarks
 
 Playlists are used to group games together for easy access. A playlist consists of all games that have any of their releases tagged with value that follows the format `playlist-{playlist name}`.
-
-## Defined in
-
-[types.entities.ts:338](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L338)
