@@ -10,7 +10,6 @@ describe('On deck.', () => {
       beforeEach(() => {
         cy.viewport(x, y)
         cy.visit('/')
-        cy.wait('@api')
       })
 
       // Flaky test for unknown reasons; skipping for now

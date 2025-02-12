@@ -4,15 +4,15 @@
   "private": true,
   "main": "src/index.js",
   "dependencies": {
-    "debug": "^4.3.7",
+    "debug": "^4.4.0",
     "lodash": "^4.17.21",
-    "semver": "^7.6.3",
+    "semver": "^7.7.1",
     "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "@types/semver": "^7.5.8",
     "@types/shelljs": "^0.8.15",
-    "nx": "^19.8.11",
+    "nx": "^20.4.2",
     "rimraf": "^6.0.1"
   }
 }

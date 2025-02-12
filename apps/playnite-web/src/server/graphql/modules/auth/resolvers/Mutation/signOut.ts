@@ -5,7 +5,7 @@ export const signOut: NonNullable<MutationResolvers['signOut']> = async (
   _arg,
   _ctx,
 ) => {
-  const claim = _ctx.jwt
+  const claim = _ctx.jwt?.payload
   if (!claim) {
     const gqlImport = await import('graphql')
     throw new gqlImport.GraphQLError('Not authenticated')

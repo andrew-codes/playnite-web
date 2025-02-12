@@ -6,7 +6,6 @@ const AllPlayniteInstancesQuery = gql`
   query playniteInstances {
     playniteInstances {
       id
-      librarySyncState
     }
   }
 `

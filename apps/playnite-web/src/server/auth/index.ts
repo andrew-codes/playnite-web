@@ -1,5 +1,6 @@
+import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, omit } from 'lodash-es'
 import { IQuery } from '../data/types.api.js'
 import { User } from '../data/types.entities.js'
 
@@ -29,41 +30,37 @@ class IdentityService {
             field: 'username',
             value: credential.username,
           },
-          {
-            type: 'ExactMatch',
-            entityType: 'User',
-            field: 'password',
-            value: credential.password,
-          },
         ],
       })
 
       if (!matchedUsers || isEmpty(matchedUsers)) {
-        throw new Error(`Authentication failed for user ${credential.username}`)
+        throw new Error(
+          `Authentication failed for user ${credential.username}.`,
+        )
       }
 
       const [user] = matchedUsers
+      if (!bcrypt.compareSync(credential.password, user.password)) {
+        throw new Error(`Authentication failed.`)
+      }
+
       user.isAuthenticated = true
+      const scrubbedUser = omit(user, 'password')
 
       return {
-        user: {
-          _type: 'User',
-          id: user.id,
-          username: user.username,
-          isAuthenticated: true,
-        },
-        credential: jwt.sign(user, this._secret, {
+        user: scrubbedUser,
+        credential: jwt.sign(scrubbedUser, this._secret, {
           algorithm: 'HS256',
           issuer: this._issuer,
         }),
       } as Claim
     }
-    throw new Error('Authentication failed')
+    throw new Error('Authentication failed.')
   }
 
   async authorize(user?: User): Promise<void> {
     if (!user || !user.isAuthenticated) {
-      throw new Error(`Authentication failed for user ${user?.username}`)
+      throw new Error(`Authorization failed for user ${user?.username}`)
     }
   }
 }

@@ -1,10 +1,10 @@
 {
   "name": "devenv",
   "devDependencies": {
-    "@types/node": "^20.17.6",
+    "@types/node": "^22.13.1",
     "@types/shelljs": "^0.8.15",
-    "debug": "^4.3.7",
-    "esbuild": "^0.24.0",
+    "debug": "^4.4.0",
+    "esbuild": "^0.25.0",
     "esbuild-register": "^3.6.0",
     "shelljs": "^0.8.5"
   }

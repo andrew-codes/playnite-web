@@ -22,19 +22,14 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { Helmet } from 'react-helmet'
 import { Provider } from 'react-redux'
 import { renderHeadToString } from 'remix-island'
-import { Claim } from '../.generated/types.generated'
 import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
 import { Head } from './root'
-import EntityConditionalDataApi from './server/data/entityConditional/DataApi'
-import InMemoryDataApi from './server/data/inMemory/DataApi'
-import { getDbClient } from './server/data/mongo/client'
-import MongoDataApi from './server/data/mongo/DataApi'
-import PriorityDataApi from './server/data/priority/DataApi'
+import data from './server/data/data.js'
 import { User } from './server/data/types.entities.js'
-import { PlayniteContext } from './server/graphql/context'
-import schema from './server/graphql/schema'
-import { createNull } from './server/oid'
+import { PlayniteContext } from './server/graphql/context.js'
+import schema from './server/graphql/schema.js'
+import { createNull } from './server/oid.js'
 // import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
 
 const debug = createDebugger('playnite-web/entry.server.tsx')
@@ -73,15 +68,6 @@ async function handleBotRequest(
   const domain = process.env.HOST ?? 'localhost'
   const port = process.env.PORT ?? '3000'
 
-  let claim: Claim = {
-    user: {
-      _type: 'User',
-      id: createNull('User').toString(),
-      username: '',
-      isAuthenticated: false,
-    } as User,
-    credential: '',
-  }
   const wsLink = new GraphQLWsLink(
     createClient({
       url: `ws://${domain}:${port}/api`,
@@ -96,27 +82,41 @@ async function handleBotRequest(
     }),
   )
 
-  const db = (await getDbClient()).db('games')
-  const mongoApi = new MongoDataApi(db)
-  const inMemoryApi = new InMemoryDataApi()
-  const userInMemory = new EntityConditionalDataApi(
-    new Set(['User']),
-    inMemoryApi,
-    inMemoryApi,
-  )
-  const dataApi = new PriorityDataApi(
-    new Set([userInMemory, mongoApi]),
-    new Set([userInMemory, mongoApi]),
-    new Set([mongoApi]),
-  )
+  let user = {
+    _type: 'User',
+    id: createNull('User').toString(),
+    username: 'Unknown',
+    isAuthenticated: false,
+  } as User
+  try {
+    const cookie = request.headers.get('Cookie')
+    const authCookie: string | null =
+      (
+        cookie
+          ?.split(';')
+          .map((c) => c.trim())
+          .find((c) => c.startsWith('authorization=')) ?? ''
+      ).split('=')[1] ?? null
+    if (authCookie) {
+      user = jwt.decode(authCookie, process.env.SECRET ?? 'secret', {
+        issuer: domain,
+        algorithm: 'HS256',
+      })
+    }
+  } catch (error) {
+    debug(error)
+  }
+
+  const dataApi = await data()
+
   const schemaLink = new SchemaLink({
     schema,
     context: {
       signingKey: process.env.SECRET ?? 'secret',
       domain,
-      jwt: claim,
-      queryApi: dataApi,
-      updateQueryApi: dataApi,
+      jwt: { payload: user },
+      queryApi: dataApi.query,
+      updateQueryApi: dataApi.update,
     } as Partial<PlayniteContext>,
   })
 
@@ -193,40 +193,8 @@ async function handleBrowserRequest(
 ) {
   const clientSideCache = createEmotionCache()
   const store = configureStore({ reducer })
-  let claim: Claim = {
-    user: {
-      _type: 'User',
-      id: createNull('User').toString(),
-      username: '',
-      isAuthenticated: false,
-    } as User,
-    credential: '',
-  }
   const domain = process.env.HOST ?? 'localhost'
   const port = process.env.PORT ?? '3000'
-
-  try {
-    const cookieValues =
-      request.headers
-        .get('Cookie')
-        ?.split('\n')
-        .map((cookieString) => cookieString.split('=')) ?? []
-    const authCookie = cookieValues.find(([key]) => key === 'authorization')
-
-    if (authCookie) {
-      const value = decodeURIComponent(authCookie[1] ?? '')
-      const [type, token] = value.split(' ')
-      if (type !== 'Bearer') {
-        throw new Error('Invalid token')
-      }
-      claim = jwt.decode(token, process.env.SECRET ?? 'secret', {
-        issuer: domain,
-        algorithm: 'HS256',
-      })
-    }
-  } catch (error) {
-    debug(error)
-  }
 
   const wsLink = new GraphQLWsLink(
     createClient({
@@ -242,27 +210,41 @@ async function handleBrowserRequest(
     }),
   )
 
-  const db = (await getDbClient()).db('games')
-  const mongoApi = new MongoDataApi(db)
-  const inMemoryApi = new InMemoryDataApi()
-  const userInMemory = new EntityConditionalDataApi(
-    new Set(['User']),
-    inMemoryApi,
-    inMemoryApi,
-  )
-  const dataApi = new PriorityDataApi(
-    new Set([userInMemory, mongoApi]),
-    new Set([userInMemory, mongoApi]),
-    new Set([mongoApi]),
-  )
+  let user: Partial<User> = {
+    _type: 'User',
+    id: createNull('User').toString(),
+    username: 'Unknown',
+    isAuthenticated: false,
+  }
+  try {
+    const cookie = request.headers.get('Cookie')
+    const authCookie: string | null =
+      (
+        cookie
+          ?.split(';')
+          .map((c) => c.trim())
+          .find((c) => c.startsWith('authorization=')) ?? ''
+      ).split('=')[1] ?? null
+    if (authCookie) {
+      user = jwt.decode(authCookie, process.env.SECRET ?? 'secret', {
+        issuer: domain,
+        algorithm: 'HS256',
+      })
+    }
+  } catch (error) {
+    debug(error)
+  }
+
+  const dataApi = await data()
+
   const schemaLink = new SchemaLink({
     schema,
     context: {
       signingKey: process.env.SECRET ?? 'secret',
       domain: domain,
-      jwt: claim,
-      queryApi: dataApi,
-      updateQueryApi: dataApi,
+      jwt: { payload: user },
+      queryApi: dataApi.query,
+      updateQueryApi: dataApi.update,
     } as Partial<PlayniteContext>,
   })
 

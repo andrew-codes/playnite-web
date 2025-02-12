@@ -5,7 +5,6 @@ describe('Game details.', () => {
 
   it(`Main navigation.`, () => {
     cy.visit('/')
-    cy.wait('@api')
 
     cy.get('[data-test="MainNavigation"]')
       .as('mainNavigation')

@@ -8,11 +8,11 @@ export const me: NonNullable<QueryResolvers['me']> = async (
   _ctx,
 ) => {
   const user: User =
-    _ctx.jwt ??
+    _ctx.jwt?.payload ??
     ({
       _type: 'User',
       id: createNull('User').toString(),
-      username: '',
+      username: 'Unknown',
       isAuthenticated: false,
     } as User)
 
