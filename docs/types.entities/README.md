@@ -1,4 +1,4 @@
-[**playnite-web-app**](../README.md) • **Docs**
+[**playnite-web-app**](../README.md)
 
 ***
 
@@ -6,9 +6,7 @@
 
 # types.entities
 
-## Index
-
-### Type Aliases
+## Type Aliases
 
 - [CompletionStatus](type-aliases/CompletionStatus.md)
 - [Entity](type-aliases/Entity.md)
@@ -27,6 +25,6 @@
 - [Tag](type-aliases/Tag.md)
 - [User](type-aliases/User.md)
 
-### Variables
+## Variables
 
 - [runStates](variables/runStates.md)

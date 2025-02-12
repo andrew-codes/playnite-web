@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../../README.md) • **Docs**
+[**playnite-web-app**](../../../README.md)
 
 ***
 
@@ -59,7 +59,7 @@ xhost + $IP
 6. Run `yarn nx run playnite-web-app:start`
 7. In vscode, forward port 3000. This is likely done automatically or can be done with the `Forward Port` from the command palette.
 8. Open [http://localhost:3000](http://localhost:3000).
-9. Continue to see [commands](./index.md#running-playnite-web) for additional commands.
+9. Continue to see [commands](index.md) for additional commands.
 
 ## Running Component/E2E Tests
 

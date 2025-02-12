@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../README.md) • **Docs**
+[**playnite-web-app**](../../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: Release
 
 > **Release**: [`Identifiable`](Identifiable.md) & `object`
+
+Defined in: [types.entities.ts:293](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L293)
 
 Release data entity.
 
@@ -114,15 +116,15 @@ This is used to uniquely identify a release within the context of a single sourc
 
 > `optional` **releaseDate**: `object`
 
-### releaseDate.day
+#### releaseDate.day
 
 > **day**: `number`
 
-### releaseDate.month
+#### releaseDate.month
 
 > **month**: `number`
 
-### releaseDate.year
+#### releaseDate.year
 
 > **year**: `number`
 
@@ -153,7 +155,3 @@ This is used to uniquely identify a release within the context of a single sourc
 ## Remarks
 
 A release is a specific version of a game that is available on a platform and source. Each platform and source combination will have a single release.
-
-## Defined in
-
-[types.entities.ts:293](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L293)

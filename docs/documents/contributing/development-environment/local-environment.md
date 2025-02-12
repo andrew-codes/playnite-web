@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../../README.md) • **Docs**
+[**playnite-web-app**](../../../README.md)
 
 ***
 
@@ -33,4 +33,4 @@ Install the following software on your local development machine:
    - Note MQTT currently starts with no username/password configured.
 7. \[Optional\]: override environment variables when running locally via `cp apps/playnite-web/local.env apps/playnite-web/overrides.env`
    - **REMEMBER: do not commit `overrides.env` or sensitive information in `local.env`.**
-8. Continue to see [commands](./index.md#running-playnite-web) for running tests.
+8. Continue to see [commands](index.md) for running tests.

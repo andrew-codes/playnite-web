@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../README.md) • **Docs**
+[**playnite-web-app**](../../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: RunState
 
 > **RunState**: `object`
+
+Defined in: [types.entities.ts:274](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L274)
 
 Run state data entity.
 
@@ -19,7 +21,3 @@ Run state data entity.
 ## Remarks
 
 Run states are used to describe the current state of a game's process.
-
-## Defined in
-
-[types.entities.ts:274](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L274)

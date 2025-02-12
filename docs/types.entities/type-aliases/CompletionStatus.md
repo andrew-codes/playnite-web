@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../README.md) • **Docs**
+[**playnite-web-app**](../../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: CompletionStatus
 
 > **CompletionStatus**: [`Identifiable`](Identifiable.md) & `object`
+
+Defined in: [types.entities.ts:211](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L211)
 
 Completion status data entity.
 
@@ -23,7 +25,3 @@ Completion status data entity.
 ## Remarks
 
 Completion statuses are used to describe a player's progress in a game.
-
-## Defined in
-
-[types.entities.ts:211](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L211)

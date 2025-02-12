@@ -1,4 +1,4 @@
-[**playnite-web-app**](../../README.md) • **Docs**
+[**playnite-web-app**](../../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: Genre
 
 > **Genre**: [`Identifiable`](Identifiable.md) & `object`
+
+Defined in: [types.entities.ts:200](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L200)
 
 Genre data entity.
 
@@ -23,7 +25,3 @@ Genre data entity.
 ## Remarks
 
 Genres are used to categorize games by their game play characteristics.
-
-## Defined in
-
-[types.entities.ts:200](https://github.com/andrew-codes/playnite-web/blob/main/apps/playnite-web/src/server/data/types.entities.ts#L200)
