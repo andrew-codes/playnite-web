@@ -3223,7 +3223,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.23.9":
+"@babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.26.0":
   version: 7.26.7
   resolution: "@babel/runtime@npm:7.26.7"
   dependencies:
@@ -5576,7 +5576,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/types@npm:^7.2.15":
+"@mui/types@npm:^7.2.15, @mui/types@npm:^7.2.21":
   version: 7.2.22
   resolution: "@mui/types@npm:7.2.22"
   peerDependencies:
@@ -5588,7 +5588,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/utils@npm:^5.16.14, @mui/utils@npm:^5.16.6":
+"@mui/utils@npm:^5.16.14":
   version: 5.16.14
   resolution: "@mui/utils@npm:5.16.14"
   dependencies:
@@ -5605,6 +5605,26 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/5148dedb8597a76df193df4c3b4ff4bb3c19d99f3b69df8b9d6c9905c5cc5eb750a71429aea7e52a03ad8b858c7ec48d04e5670ecf4e39b8c3a6a84f1a83721a
+  languageName: node
+  linkType: hard
+
+"@mui/utils@npm:^6.4.3":
+  version: 6.4.3
+  resolution: "@mui/utils@npm:6.4.3"
+  dependencies:
+    "@babel/runtime": "npm:^7.26.0"
+    "@mui/types": "npm:^7.2.21"
+    "@types/prop-types": "npm:^15.7.14"
+    clsx: "npm:^2.1.1"
+    prop-types: "npm:^15.8.1"
+    react-is: "npm:^19.0.0"
+  peerDependencies:
+    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/bf199e61bd5d92469b954dd74471db3d27bd6fe43fd13a306056f6cdeb60f5bb1fe1e9ffc4a99e56785c8f56928951e098f340d79aeaf2b3a91041ae8154f934
   languageName: node
   linkType: hard
 
@@ -7663,7 +7683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prop-types@npm:^15.7.12":
+"@types/prop-types@npm:^15.7.12, @types/prop-types@npm:^15.7.14":
   version: 15.7.14
   resolution: "@types/prop-types@npm:15.7.14"
   checksum: 10c0/1ec775160bfab90b67a782d735952158c7e702ca4502968aa82565bd8e452c2de8601c8dfe349733073c31179116cf7340710160d3836aa8a1ef76d1532893b1
@@ -20821,7 +20841,7 @@ __metadata:
     "@jspm/core": "npm:^2.1.0"
     "@mui/icons-material": "npm:^5.16.7"
     "@mui/material": "npm:^5.16.7"
-    "@mui/utils": "npm:^5.16.6"
+    "@mui/utils": "npm:^6.4.3"
     "@nx/devkit": "npm:^20.4.2"
     "@reduxjs/toolkit": "npm:^2.5.1"
     "@remix-run/dev": "npm:^2.15.3"
