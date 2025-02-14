@@ -169,3 +169,9 @@ Packages:
     RequiredApiVersion: 6.11.0
     Changelog:
       - "chore(deps): updated as many as possible without breaking app (#726)"
+  - Version: 11.1.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v11.1.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_11_1_0.pext
+    ReleaseDate: 2025-02-14
+    RequiredApiVersion: 6.11.0
+    Changelog:
+      - "feat(deps): security updates (#733)"
