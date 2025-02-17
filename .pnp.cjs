@@ -104,7 +104,7 @@ const RAW_RUNTIME_STATE =
           ["@andrew-codes/playnite-plugin-installer-manifest", "workspace:libs/playnite-plugin-installer-manifest"],\
           ["conventional-changelog-angular", "npm:8.0.0"],\
           ["conventional-commits-filter", "npm:5.0.0"],\
-          ["conventional-commits-parser", "npm:6.0.0"],\
+          ["conventional-commits-parser", "npm:6.1.0"],\
           ["debug", "virtual:43023b9ec09e5c4c8f29bfa796eae859f4587491c8bfa2bfccfb217268d123d82ce16714db3cc6f19109853cfc0d4cfa87b07988e86203e31b8f20d2130c6775#npm:4.4.0"],\
           ["get-stream", "npm:9.0.1"],\
           ["import-from-esm", "npm:2.0.0"],\
@@ -15340,6 +15340,14 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/conventional-commits-parser-npm-6.0.0-43cd397b56-9482e08197.zip/node_modules/conventional-commits-parser/",\
         "packageDependencies": [\
           ["conventional-commits-parser", "npm:6.0.0"],\
+          ["meow", "npm:13.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:6.1.0", {\
+        "packageLocation": "./.yarn/cache/conventional-commits-parser-npm-6.1.0-13d8ab4557-df68b04a9b.zip/node_modules/conventional-commits-parser/",\
+        "packageDependencies": [\
+          ["conventional-commits-parser", "npm:6.1.0"],\
           ["meow", "npm:13.2.0"]\
         ],\
         "linkType": "HARD"\
