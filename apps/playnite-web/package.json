@@ -12,7 +12,7 @@
     "@graphql-yoga/plugin-jwt": "^3.5.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
-    "@mui/utils": "^5.16.6",
+    "@mui/utils": "^6.4.8",
     "@reduxjs/toolkit": "^2.5.1",
     "@remix-run/express": "^2.15.3",
     "@remix-run/node": "^2.15.3",
