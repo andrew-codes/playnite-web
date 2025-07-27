@@ -45,3 +45,6 @@ apps/playnite-web/**/*.generated.*
 **/visual-regression-tests/**/diff/
 **/visual-regression-tests/*report/
 .nyc_output
+
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
