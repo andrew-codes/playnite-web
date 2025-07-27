@@ -63,7 +63,6 @@
         "cwd": "{projectRoot}",
         "parallel": false,
         "commands": [
-          "yarn nx run playnite-web-app:start/services",
           "yarn tsx scripts/utils/startDevServer.js"
         ],
         "env": {
@@ -395,5 +394,5 @@
     "publish": {}
   },
   "tags": ["linux"],
-  "implicitDependencies": []
+  "implicitDependencies": ["upgrade-database"]
 }

@@ -19,7 +19,7 @@
       "cache": true
     },
     "start": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["prepare", "^start"],
       "cache": false
     },
     "package": {
