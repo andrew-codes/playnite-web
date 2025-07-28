@@ -31,6 +31,27 @@
         "cwd": "{projectRoot}"
       }
     },
+    "db/deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn pnpify prisma migrate deploy --schema=src/server/data/providers/postgres/schema.prisma",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "db/migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn pnpify prisma migrate dev --schema=src/server/data/providers/postgres/schema.prisma",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "db/push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn pnpify prisma db push --schema=src/server/data/providers/postgres/schema.prisma",
+        "cwd": "{projectRoot}"
+      }
+    },
     "prepare": {
       "executor": "nx:run-commands",
       "inputs": [
@@ -39,21 +60,8 @@
         "{projectRoot}/src/server/graphql/modules/**/*.graphql"
       ],
       "options": {
-        "command": "yarn graphql-codegen --config codegen.ts",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "dump-database": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "bash -c 'scripts/dump-database.sh'",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "start/services": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "bash -c 'scripts/manually-start-services.sh'",
+        "parallel": false,
+        "commands": ["bash -c 'scripts/manually-start-services.sh'"],
         "cwd": "{projectRoot}"
       }
     },
@@ -62,9 +70,7 @@
       "options": {
         "cwd": "{projectRoot}",
         "parallel": false,
-        "commands": [
-          "yarn tsx scripts/utils/startDevServer.js"
-        ],
+        "commands": ["yarn tsx scripts/utils/startDevServer.js"],
         "env": {
           "NODE_ENV": "development",
           "DEBUG": "playnite*"
@@ -394,5 +400,5 @@
     "publish": {}
   },
   "tags": ["linux"],
-  "implicitDependencies": ["upgrade-database"]
+  "implicitDependencies": []
 }

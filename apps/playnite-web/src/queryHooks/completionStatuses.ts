@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
-import { FilterItem } from 'apps/playnite-web/.generated/types.generated'
+import { FilterItem } from '../../.generated/types.generated'
 import { GetFilterItemsQuery } from './getFilterItems'
 
 const allCompletionStatuses = () => {

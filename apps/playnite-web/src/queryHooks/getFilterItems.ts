@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
-import { FilterItem } from 'apps/playnite-web/.generated/types.generated'
+import { FilterItem } from '../../.generated/types.generated'
 
 const GetFilterItemsQuery = gql`
   query getFilterItems {

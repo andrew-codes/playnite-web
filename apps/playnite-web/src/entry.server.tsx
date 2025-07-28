@@ -25,7 +25,6 @@ import { renderHeadToString } from 'remix-island'
 import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
 import { Head } from './root'
-import data from './server/data/data.js'
 import { User } from './server/data/types.entities.js'
 import { PlayniteContext } from './server/graphql/context.js'
 import schema from './server/graphql/schema.js'
@@ -107,16 +106,12 @@ async function handleBotRequest(
     debug(error)
   }
 
-  const dataApi = await data()
-
   const schemaLink = new SchemaLink({
     schema,
     context: {
       signingKey: process.env.SECRET ?? 'secret',
       domain,
       jwt: { payload: user },
-      queryApi: dataApi.query,
-      updateQueryApi: dataApi.update,
     } as Partial<PlayniteContext>,
   })
 
@@ -235,16 +230,12 @@ async function handleBrowserRequest(
     debug(error)
   }
 
-  const dataApi = await data()
-
   const schemaLink = new SchemaLink({
     schema,
     context: {
       signingKey: process.env.SECRET ?? 'secret',
       domain: domain,
       jwt: { payload: user },
-      queryApi: dataApi.query,
-      updateQueryApi: dataApi.update,
     } as Partial<PlayniteContext>,
   })
 

@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { isEmpty, omit } from 'lodash-es'
-import { IQuery } from '../data/types.api.js'
+import { isEmpty, merge, omit } from 'lodash-es'
+import { prisma } from '../data/providers/postgres/client.js'
 import { User } from '../data/types.entities.js'
+import { create } from '../oid.js'
 
 type Claim = {
   user: Omit<User, 'password'> & { isAuthenticated: boolean }
@@ -10,7 +11,6 @@ type Claim = {
 }
 class IdentityService {
   constructor(
-    private _queryApi: IQuery,
     private readonly _secret?: string,
     private readonly _issuer?: string,
   ) {}
@@ -20,17 +20,10 @@ class IdentityService {
     }
 
     if (credential instanceof UsernamePasswordCredential) {
-      const matchedUsers = await this._queryApi.execute<User>({
-        type: 'AndMatch',
-        entityType: 'User',
-        filterItems: [
-          {
-            type: 'ExactMatch',
-            entityType: 'User',
-            field: 'username',
-            value: credential.username,
-          },
-        ],
+      const matchedUsers = await prisma.user.findMany({
+        where: {
+          username: credential.username,
+        },
       })
 
       if (!matchedUsers || isEmpty(matchedUsers)) {
@@ -44,8 +37,10 @@ class IdentityService {
         throw new Error(`Authentication failed.`)
       }
 
-      user.isAuthenticated = true
-      const scrubbedUser = omit(user, 'password')
+      const scrubbedUser: User = merge({}, omit(user, 'password', 'id'), {
+        isAuthenticated: true,
+        id: create('User', user.id).toString(),
+      })
 
       return {
         user: scrubbedUser,

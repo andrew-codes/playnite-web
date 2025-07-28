@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
-import { GameRelease } from 'apps/playnite-web/.generated/types.generated'
+import { Release } from '../../.generated/types.generated'
 import { Game_By_Id_Query } from './gameById'
 import { AllPlaylists } from './playlists'
 
@@ -16,7 +16,7 @@ const Activate_Mutation = gql`
 `
 
 const useStartRelease = () => {
-  return useMutation<{ startGameRelease: GameRelease }>(Activate_Mutation, {
+  return useMutation<{ startGameRelease: Release }>(Activate_Mutation, {
     update(cache, mutationResult) {
       cache.updateQuery({ query: AllPlaylists }, (data) => {
         return {

@@ -1,124 +1,92 @@
-import { first, isEmpty } from 'lodash-es'
+import { GraphQLError } from 'graphql'
 import type { GameResolvers } from '../../../../../../.generated/types.generated.js'
-import {
-  CompletionStatus,
-  GameAsset,
-  Release,
-} from '../../../../data/types.entities.js'
-import { create, createNull } from '../../../../oid.js'
-import { completionStatusSortOrder } from '../../completionStatus/resolvers/CompletionStatus.js'
+import { create, domains } from '../../../../oid.js'
+import { GraphCompletionStatus } from '../../../resolverTypes.js'
 
 export const Game: GameResolvers = {
   id: async (_parent, _arg, _ctx) => {
     return create('Game', _parent.id).toString()
   },
-  name: async (_parent, _arg, _ctx) => {
-    return _parent.name
-  },
-  description: async (_parent, _arg, _ctx) => {
-    const results = await Promise.all(
-      _parent.releaseIds.map((releaseId) =>
-        _ctx.queryApi.execute<Release>({
-          entityType: 'Release',
-          type: 'ExactMatch',
-          field: 'id',
-          value: releaseId,
-        }),
-      ),
-    )
-
-    return (
-      first(
-        results
-          .filter((result) => !isEmpty(result))
-          .map((result) => result?.[0])
-          .filter((result): result is Release => result !== null),
-      )?.description ?? ''
-    )
-  },
   releases: async (_parent, _arg, _ctx) => {
-    const results = await Promise.all(
-      _parent.releaseIds.map((releaseId) =>
-        _ctx.queryApi.execute<Release>({
-          entityType: 'Release',
-          type: 'ExactMatch',
-          field: 'id',
-          value: releaseId,
-        }),
-      ),
-    )
-
-    return results
-      .filter((result) => !isEmpty(result))
-      .map((result) => result?.[0])
-      .filter((result): result is Release => result !== null)
+    return _ctx.db.release.findMany({
+      where: {
+        Games: {
+          some: {
+            id: _parent.id,
+          },
+        },
+      },
+      orderBy: {
+        title: 'asc',
+      },
+    })
   },
-  cover: async (_parent, _arg, _ctx) => {
-    if (!_parent.cover) {
-      return null
-    }
-
-    const results = await _ctx.queryApi.execute<GameAsset>({
-      entityType: 'GameAsset',
-      type: 'ExactMatch',
-      field: 'id',
-      value: `${_parent.cover.split('\\')[1].split('.')[0]}.webp`,
+  completionStatus: async (_parent, _arg, _ctx) => {
+    const primaryRelease = await _ctx.db.release.findFirst({
+      where: {
+        PrimaryGame: {
+          id: _parent.id,
+        },
+      },
     })
 
-    return results?.[0] ?? null
-  },
+    let output: null | GraphCompletionStatus = null
+    if (primaryRelease?.completionStatusId) {
+      output = await _ctx.db.completionStatus.findUnique({
+        where: {
+          id: primaryRelease.completionStatusId,
+        },
+      })
+    }
+    if (!output) {
+      const defaultCompletionStatus = await _ctx.db.defaults.findFirst({
+        where: {
+          libraryId: _parent.libraryId,
+        },
+      })
 
-  completionStatus: async (_parent, _arg, _ctx) => {
-    const releases = (
-      await Promise.all(
-        _parent.releaseIds.map((releaseId) =>
-          _ctx.queryApi.execute<Release>({
-            entityType: 'Release',
-            type: 'ExactMatch',
-            field: 'id',
-            value: releaseId,
-          }),
-        ),
-      )
-    )
-      .filter((result) => result !== null)
-      .map((result) => result[0])
-
-    const completionStatusIds = releases
-      .map((release) => release.completionStatusId)
-      .filter((id) => id !== null)
-      .filter((id) => id !== '00000000-0000-0000-0000-000000000000') as string[]
-
-    const results = (
-      await Promise.all(
-        completionStatusIds.map((id) =>
-          _ctx.queryApi.execute<CompletionStatus>({
-            entityType: 'CompletionStatus',
-            type: 'ExactMatch',
-            field: 'id',
-            value: id,
-          }),
-        ),
-      )
-    )
-      .filter((result) => result !== null)
-      .map((result) => result[0])
-      .sort((a, b) => {
-        const aSort = completionStatusSortOrder.findIndex((p) => p.test(a.name))
-        const bSort = completionStatusSortOrder.findIndex((p) => p.test(b.name))
-        if (aSort > bSort) {
-          return 1
-        }
-        if (aSort < bSort) {
-          return -1
-        }
-        return 0
-      })?.[0] ?? {
-      _type: 'CompletionStatus',
-      id: createNull('CompletionStatus').toString(),
-      name: 'Backlog',
+      if (defaultCompletionStatus?.completionStatusId) {
+        output = await _ctx.db.completionStatus.findUnique({
+          where: {
+            id: defaultCompletionStatus.completionStatusId,
+          },
+        })
+      }
     }
 
-    return results
+    if (!output) {
+      output = await _ctx.db.completionStatus.findFirst({
+        where: {
+          libraryId: _parent.libraryId,
+        },
+      })
+    }
+
+    if (!output) {
+      throw new GraphQLError('No completion status found for game', {
+        extensions: {
+          code: 'NOT_FOUND',
+          entity: create('Asset', _parent.id).toString(),
+          type: domains.CompletionStatus,
+          library: create('Library', _parent.libraryId).toString(),
+        },
+      })
+    }
+
+    return output
+  },
+  platforms: async (_parent, _arg, _ctx) => {
+    return _ctx.db.platform.findMany({
+      where: {
+        Releases: {
+          some: {
+            id: _parent.releaseId,
+          },
+        },
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
   },
 }

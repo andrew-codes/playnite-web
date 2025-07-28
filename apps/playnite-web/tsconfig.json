@@ -16,7 +16,7 @@
       "react",
       "vite/client",
       "@vite-pwa/remix/remix-sw"
-    ],
+    ]
   },
   "include": [
     "src/**/*.ts",
@@ -29,10 +29,15 @@
     "../../graphql.config.ts",
     ".generated/resolvers.generated.ts",
     ".generated/typeDefs.generated.ts",
-    ".generated/types.generated.ts",
-    "cypress.config.mjs",
+    ".generated/types.generated.ts"
   ],
-  "exclude": [
-    "node_modules"
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./tsconfig.server.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    }
   ]
 }

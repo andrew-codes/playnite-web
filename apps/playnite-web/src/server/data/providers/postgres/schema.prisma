@@ -1,0 +1,257 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../../.generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Library   Library?
+
+  @@index([email])
+}
+
+model Library {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Releases       Release[]
+  Platform       Platform[] @relation("LibraryPlatforms")
+  Source         Source[]
+  Features       Feature[]
+  OwnedPlatforms Platform[] @relation("LibraryOwnedPlatforms")
+
+  User              User               @relation(fields: [userId], references: [id])
+  CompletionStatus  CompletionStatus[]
+  PlayniteRelease   PlayniteEntity[]
+  PlayniteLibraries PlayniteLibrary[]
+  Playlist          Playlist[]
+  Game              Game[]
+  Tag               Tag[]
+
+  @@index([userId])
+}
+
+model PlayniteLibrary {
+  id              Int              @id @default(autoincrement())
+  name            String
+  libraryId       Int              @unique
+  isSynced        Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  Library         Library          @relation(fields: [libraryId], references: [id])
+  PlayniteRelease PlayniteEntity[]
+
+  @@index([libraryId])
+}
+
+model PlayniteEntity {
+  id                Int    @id @default(autoincrement())
+  libraryId         Int
+  playniteLibraryId Int
+  entityId          String
+  entityType        String
+
+  library          Library            @relation(fields: [libraryId], references: [id])
+  PlayniteLibrary  PlayniteLibrary    @relation(fields: [playniteLibraryId], references: [id])
+  Releases         Release[]
+  Source           Source[]
+  Platform         Platform[]
+  Cover            Asset[]
+  Feature          Feature[]
+  CompletionStatus CompletionStatus[]
+
+  @@unique([entityId, playniteLibraryId])
+  @@index([libraryId])
+  @@index([playniteLibraryId])
+}
+
+model Release {
+  id                 Int       @id @default(autoincrement())
+  libraryId          Int
+  title              String
+  description        String?
+  coverId            Int?
+  releaseDate        DateTime?
+  releaseYear        Int?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  platformId         Int
+  sourceId           Int
+  communityScore     Float?
+  criticScore        Float?
+  hidden             Boolean   @default(false)
+  completionStatusId Int?
+  playniteEntityId   Int?
+
+  Library          Library           @relation(fields: [libraryId], references: [id])
+  Cover            Asset?            @relation(fields: [coverId], references: [id])
+  Source           Source            @relation(fields: [sourceId], references: [id])
+  Platform         Platform          @relation(fields: [platformId], references: [id])
+  Features         Feature[]
+  CompletionStatus CompletionStatus? @relation(fields: [completionStatusId], references: [id])
+  PlayniteEntity   PlayniteEntity?   @relation(fields: [playniteEntityId], references: [id])
+  PrimaryGame      Game?             @relation("PrimaryRelease")
+  Games            Game[]            @relation("GameReleases")
+  Tags             Tag[]
+
+  @@index([libraryId])
+  @@index([platformId])
+  @@index([sourceId])
+  @@index([title, libraryId])
+}
+
+model Source {
+  id               Int      @id @default(autoincrement())
+  libraryId        Int
+  name             String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  playniteEntityId Int?
+
+  Releases       Release[]
+  Library        Library         @relation(fields: [libraryId], references: [id])
+  PlayniteEntity PlayniteEntity? @relation(fields: [playniteEntityId], references: [id])
+
+  @@unique([name, libraryId])
+  @@index([libraryId])
+  @@index([name, libraryId])
+}
+
+model Platform {
+  id               Int      @id @default(autoincrement())
+  libraryId        Int
+  name             String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  playniteEntityId Int?
+  iconId           Int?
+
+  Releases       Release[]
+  Library        Library         @relation("LibraryPlatforms", fields: [libraryId], references: [id])
+  OwnedBy        Library[]       @relation("LibraryOwnedPlatforms")
+  PlayniteEntity PlayniteEntity? @relation(fields: [playniteEntityId], references: [id])
+  Icon           Asset?          @relation(fields: [iconId], references: [id])
+
+  @@unique([name, libraryId])
+  @@index([libraryId])
+  @@index([name, libraryId])
+}
+
+model Asset {
+  id               Int      @id @default(autoincrement())
+  url              String   @unique
+  type             String
+  playniteEntityId Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  Releases       Release[]
+  PlayniteEntity PlayniteEntity? @relation(fields: [playniteEntityId], references: [id])
+  Platform       Platform[]
+}
+
+model Feature {
+  id               Int      @id @default(autoincrement())
+  libraryId        Int
+  name             String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  playniteEntityId Int?
+
+  Releases       Release[]
+  Library        Library         @relation(fields: [libraryId], references: [id])
+  PlayniteEntity PlayniteEntity? @relation(fields: [playniteEntityId], references: [id])
+
+  @@unique([name, libraryId])
+  @@index([name, libraryId])
+  @@index([libraryId])
+}
+
+model CompletionStatus {
+  id               Int      @id @default(autoincrement())
+  libraryId        Int
+  playniteEntityId Int?
+  name             String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  PlayniteEntity PlayniteEntity? @relation(fields: [playniteEntityId], references: [id])
+  Releases       Release[]
+  Library        Library         @relation(fields: [libraryId], references: [id])
+
+  @@unique([name, libraryId])
+  @@index([libraryId])
+  @@index([name, libraryId])
+}
+
+model Playlist {
+  id        Int      @id @default(autoincrement())
+  libraryId Int
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Library Library @relation(fields: [libraryId], references: [id])
+  Games   Game[]
+
+  @@unique([name, libraryId])
+  @@index([libraryId])
+  @@index([name, libraryId])
+}
+
+model Game {
+  id        Int @id @default(autoincrement())
+  releaseId Int @unique
+  libraryId Int
+
+  PrimaryRelease Release    @relation("PrimaryRelease", fields: [releaseId], references: [id])
+  Releases       Release[]  @relation("GameReleases")
+  Library        Library    @relation(fields: [libraryId], references: [id])
+  Playlists      Playlist[]
+
+  @@unique([releaseId, libraryId])
+  @@index([libraryId])
+  @@index([releaseId])
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  libraryId Int
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Releases Release[]
+  Library  Library   @relation(fields: [libraryId], references: [id])
+
+  @@unique([name, libraryId])
+  @@index([libraryId])
+  @@index([libraryId, name])
+}
+
+model Defaults {
+  id                 Int @id @default(autoincrement())
+  libraryId          Int @unique
+  completionStatusId Int
+
+  @@index([libraryId])
+}

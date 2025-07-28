@@ -1,5 +1,10 @@
+enum GameAssetType {
+  cover
+  background
+  icon
+}
+
 type GameAsset {
   id: String!
-  type: String!
-  release: GameRelease!
+  type: GameAssetType!
 }

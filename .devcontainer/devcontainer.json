@@ -62,6 +62,7 @@
         "Orta.vscode-jest",
         "paulmolluzzo.convert-css-in-js",
         "pflannery.vscode-versionlens",
+        "Prisma.prisma",
         "redhat.vscode-xml",
         "redhat.vscode-yaml",
         "rpdswtk.vsmqtt",
@@ -76,9 +77,5 @@
   },
   "remoteUser": "root",
   "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
-  "appPort": [
-    "1883:1883",
-    "3000:3000",
-    "3001:3001"
-  ]
+  "appPort": ["1883:1883", "3000:3000", "3001:3001"]
 }

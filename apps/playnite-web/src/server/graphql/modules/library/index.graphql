@@ -1,0 +1,10 @@
+type Library {
+  id: String!
+  games: [Game!]!
+  platforms: [Platform!]!
+  playlists: [Playlist!]!
+}
+
+extend type Query {
+  library(userId: String!): Library
+}

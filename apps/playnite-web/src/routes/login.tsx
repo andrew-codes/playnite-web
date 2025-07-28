@@ -68,7 +68,7 @@ const TallStack = muiStyled(Stack)`
 // }
 
 const LoginForm = () => {
-  const [mutateFunction, { data, loading, error }] = useSignIn()
+  const [signIn, { data, loading, error }] = useSignIn()
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault()
@@ -78,7 +78,7 @@ const LoginForm = () => {
       password: formData.get('password') as string,
       rememberMe: formData.has('rememberMe'),
     }
-    mutateFunction({ variables: { input } })
+    signIn({ variables: { input } })
   }
   const navigate = useNavigate()
   const location = useLocation()

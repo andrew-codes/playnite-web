@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
-import { GameRelease } from 'apps/playnite-web/.generated/types.generated'
+import { Release } from '../../.generated/types.generated'
 
 const Restart_Game_Release_Mutation = gql`
   mutation restartGameRelease($releaseId: String!) {
@@ -11,7 +11,7 @@ const Restart_Game_Release_Mutation = gql`
 `
 
 const useRestartRelease = () => {
-  return useMutation<{ restartGameRelease: GameRelease }>(
+  return useMutation<{ restartGameRelease: Release }>(
     Restart_Game_Release_Mutation,
   )
 }

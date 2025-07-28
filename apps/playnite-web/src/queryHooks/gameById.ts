@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { QueryHookOptions } from '@apollo/client/react'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
-import { Game } from 'apps/playnite-web/.generated/types.generated'
 import { isEmpty } from 'lodash-es'
 import { useEffect } from 'react'
+import { Game } from '../../.generated/types.generated'
 import { useSubscribePlayniteEntityUpdates } from './subscribePlayniteEntityUpdates'
 import { useSubscribePlayniteWebRunStateUpdates } from './subscribePlayniteWebRunStateUpdates'
 

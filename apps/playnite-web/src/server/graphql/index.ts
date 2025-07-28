@@ -5,20 +5,14 @@ import {
   useJWT,
 } from '@graphql-yoga/plugin-jwt'
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
-import type { AsyncMqttClient } from 'async-mqtt'
 import { createYoga, YogaServerOptions } from 'graphql-yoga'
 import { IdentityService } from '../auth/index.js'
-import { updater } from '../updater.js'
-import data from './../data/data.js'
+import { prisma } from '../data/providers/postgres/client.js'
 import type { PlayniteContext } from './context.js'
 import schema from './schema.js'
 import { subscriptionPublisher } from './subscriptionPublisher.js'
 
-const graphql = (
-  endpoint: string,
-  signingKey: string,
-  mqttClient: AsyncMqttClient,
-) => {
+const graphql = (endpoint: string, signingKey: string) => {
   const domain = process.env.HOST ?? 'localhost'
 
   const config: YogaServerOptions<any, PlayniteContext> = {
@@ -42,18 +36,13 @@ const graphql = (
       }),
     ],
     context: async (req): Promise<PlayniteContext> => {
-      const dataApi = await data()
-
       return {
         ...req,
         domain,
-        identityService: new IdentityService(dataApi.query, signingKey, domain),
-        mqttClient,
-        queryApi: dataApi.query,
+        identityService: new IdentityService(signingKey, domain),
         signingKey,
         subscriptionPublisher,
-        updateQueryApi: dataApi.update,
-        update: updater(mqttClient, dataApi.query),
+        db: prisma,
       }
     },
   }

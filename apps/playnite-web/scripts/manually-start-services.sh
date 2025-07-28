@@ -2,31 +2,14 @@ echo "Starting dependent services..."
 
 REPO_ROOT=$PWD/../..
 
-echo "Loading environment variables..."
-set -o allexport
-. local.env
-set +o allexport
+docker container rm db --force || true
 
-docker stop playnite-web-db mqtt || true
-docker container rm playnite-web-db mqtt || true
-
-docker run --name playnite-web-db -d \
-  -p 27017:27017 \
-  -e MONGO_INITDB_ROOT_USERNAME=$DB_USERNAME \
-  -e MONGO_INITDB_ROOT_PASSWORD=$DB_PASSWORD \
+docker run --name db -d \
+  -p 5432:5432 \
+  -e POSTGRES_USER=local \
+  -e POSTGRES_PASSWORD=dev \
+  -v $REPO_ROOT/.data/postgres:/var/lib/postgresql/data \
   -v $REPO_ROOT/.data/games:/data/backup/games \
-  mongo:7.0.3-jammy
-docker exec -t playnite-web-db mongorestore --nsInclude games.* /data/backup
-
-rm $REPO_ROOT/.data/mqtt/data/*
-
-rm -rf ./src/public/assets/assets-by-id
-cp -r $REPO_ROOT/.data/asset-by-id ./src/public/assets
-
-docker run --name mqtt -d \
-  -p 1883:1883 \
-  -v $REPO_ROOT/.data/mqtt/config:/mosquitto/config \
-  -v $REPO_ROOT/.data/mqtt/data:/mosquitto/data \
-  eclipse-mosquitto:latest
+  postgres:latest
 
 echo 'Dependent services started.'

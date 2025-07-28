@@ -1,0 +1,18 @@
+type Release {
+  id: String!
+  communityScore: Int
+  completionStatus: CompletionStatus!
+  cover: GameAsset
+  criticScore: Int
+  description: String
+  features: [Feature!]!
+  game: Game!
+  hidden: Boolean!
+  platform: Platform!
+  playniteId: String
+  recentActivity: DateTime
+  releaseDate: DateTime
+  releaseYear: Int
+  source: Source!
+  title: String!
+}

@@ -1,7 +1,11 @@
 type Platform {
   id: String!
   name: String!
-  releases: [GameRelease]!
+  games: [Game!]!
   icon: GameAsset
-  isConsole: Boolean!
+}
+
+extend type Query {
+  platform(id: String!): Platform
+  platforms(libraryId: String!): [Platform!]!
 }

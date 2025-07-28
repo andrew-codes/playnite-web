@@ -1,16 +1,8 @@
-type EntityUpdate {
-  id: String!
-  type: String!
-}
-
 type PlayniteInstance {
   id: String!
-}
-
-extend type Subscription {
-  playniteEntitiesUpdated: [EntityUpdate]!
+  name: String!
 }
 
 extend type Query {
-  playniteInstances: [PlayniteInstance!]!
+  playniteInstances(libraryId: String!): [PlayniteInstance!]!
 }

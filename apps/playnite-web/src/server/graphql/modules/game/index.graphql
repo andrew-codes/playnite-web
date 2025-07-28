@@ -1,10 +1,9 @@
 type Game {
   id: String!
-  name: String!
-  description: String
   completionStatus: CompletionStatus!
-  cover: GameAsset
-  releases: [GameRelease!]!
+  platforms: [Platform!]!
+  primaryRelease: Release
+  releases: [Release!]!
 }
 
 input FilterItemInput {
@@ -20,14 +19,14 @@ input Filter {
 
 extend type Query {
   game(id: String!): Game
-  games(filter: Filter): [Game!]!
+  games(libraryId: String!, filter: Filter): [Game!]!
 }
 
-input UpdateGameInput {
-  description: String
-  completionStatusId: String
-}
+# input UpdateGameInput {
+#   description: String
+#   completionStatusId: String
+# }
 
-extend type Mutation {
-  updateGame(id: String!, input: UpdateGameInput!): BooleanMutationResult!
-}
+# extend type Mutation {
+#   updateGame(id: String!, input: UpdateGameInput!): BooleanMutationResult!
+# }

@@ -1,16 +1,5 @@
-import {
-  CompletionStatus,
-  Game,
-  GameAsset,
-  GameFeature,
-  GameSource,
-  Platform,
-  Playlist,
-  Release,
-  RunState,
-  Tag,
-  User,
-} from '../data/types.entities.js'
+import { Prisma } from '../../../.generated/prisma/index.js'
+import { RunState } from '../data/types.entities.js'
 
 type GameReleaseStateSubscriptionPayload = {
   id: string
@@ -18,24 +7,35 @@ type GameReleaseStateSubscriptionPayload = {
   runState: RunState
   processId: number | null
 }
-type GraphPlatform = Platform
-type GraphFeature = GameFeature
+type GraphPlatform = Prisma.PlatformGetPayload<{}>
+type GraphFeature = Prisma.FeatureGetPayload<{}>
 
-type GraphCompletionStatus = CompletionStatus
+type GraphCompletionStatus = Prisma.CompletionStatusGetPayload<{}>
 
-type GraphTag = Tag
+type GraphTag = Prisma.TagGetPayload<{}>
 
-type GraphSource = GameSource
+type GraphSource = Prisma.SourceGetPayload<{}>
 
-type GraphGame = Game
+type GraphGame = Prisma.GameGetPayload<{}>
 
-type GraphRelease = Release
+type GraphPlayniteInstance = Prisma.PlayniteLibraryGetPayload<{}>
 
-type GraphPlaylist = Playlist
+type GraphRelease = Prisma.ReleaseGetPayload<{}>
 
-type GraphGameAsset = GameAsset
+type GraphPlaylist = Prisma.PlaylistGetPayload<{}>
 
-type GraphUser = Omit<User, 'password'>
+type GraphGameAsset = Prisma.AssetGetPayload<{}>
+
+type User = Omit<Prisma.UserGetPayload<{}>, 'password'> & {
+  isAuthenticated?: boolean
+}
+
+type NullUser = Omit<User, 'createdAt' | 'updatedAt' | 'id'> & {
+  id: null
+}
+type GraphUser = User | NullUser
+
+type GraphLibrary = Prisma.LibraryGetPayload<{}>
 
 export type {
   GameReleaseStateSubscriptionPayload,
@@ -43,8 +43,10 @@ export type {
   GraphFeature,
   GraphGame,
   GraphGameAsset,
+  GraphLibrary,
   GraphPlatform,
   GraphPlaylist,
+  GraphPlayniteInstance,
   GraphRelease,
   GraphSource,
   GraphTag,

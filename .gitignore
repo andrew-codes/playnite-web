@@ -2,6 +2,7 @@
 .data/mongodb
 .data/mongodb-e2e
 .data/mqtt/data
+.data/postgres
 node_modules
 
 .nx
@@ -32,7 +33,8 @@ apps/playnite-web/src/public/assets/asset-by-id/*
 
 apps/playnite-web/public/assets/asset-by-id/*
 
-apps/playnite-web/**/*.generated.*
+**/*.generated.*
+**/.generated
 
 .devcontainer/.devpod-internal/
 
@@ -48,3 +50,4 @@ apps/playnite-web/**/*.generated.*
 
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
+

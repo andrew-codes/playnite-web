@@ -1,5 +1,4 @@
 import { createRequestHandler } from '@remix-run/express'
-import type { AsyncMqttClient } from 'async-mqtt'
 import compression from 'compression'
 import createDebugger from 'debug'
 import express from 'express'
@@ -7,54 +6,26 @@ import { useServer } from 'graphql-ws/use/ws'
 import helmet from 'helmet'
 import path from 'path'
 import { WebSocketServer } from 'ws'
-import { hashPassword } from './auth/hashPassword.js'
-import data from './data/data.js'
+import { prisma } from './data/providers/postgres/client.js'
 import createYoga from './graphql/index.js'
 import schema from './graphql/schema.js'
 import { subscriptionPublisher } from './graphql/subscriptionPublisher.js'
-import mqttUpdater from './mqttUpdater/index.js'
 
 const debug = createDebugger('playnite-web/app/server')
 
 const __dirname = import.meta.dirname
 
-async function run(mqttClient: AsyncMqttClient) {
+async function run() {
   const { PORT, HOST } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
   const domain = HOST ?? 'localhost'
 
-  debug('Starting Playnite Web game-db-updater...')
-
-  const dataApi = await data()
-
-  const { USERNAME, PASSWORD, SECRET } = process.env
-  if (USERNAME && PASSWORD && SECRET && SECRET !== '') {
-    await dataApi.delete.executeDelete({ type: 'MatchAll', entityType: 'User' })
-    await dataApi.update.executeUpdate(
-      { type: 'ExactMatch', entityType: 'User', field: 'id', value: '1' },
-      {
-        _type: 'User',
-        id: '1',
-        username: USERNAME,
-        password: hashPassword(PASSWORD),
-      },
+  const { SECRET } = process.env
+  if (!SECRET) {
+    throw new Error(
+      'SECRET environment variable is required for authentication.',
     )
   }
-
-  await mqttUpdater({
-    assetSaveDirectoryPath: path.join(
-      __dirname,
-      '..',
-      'public',
-      'assets',
-      'asset-by-id',
-    ),
-    mqtt: mqttClient,
-    pubsub: subscriptionPublisher,
-    queryApi: dataApi.query,
-    updateQueryApi: dataApi.update,
-    deleteQueryApi: dataApi.delete,
-  })
 
   let app = express()
 
@@ -73,7 +44,7 @@ async function run(mqttClient: AsyncMqttClient) {
   )
 
   const signingKey = process.env.SECRET ?? 'secret'
-  const yoga = createYoga('/api', signingKey, mqttClient)
+  const yoga = createYoga('/api', signingKey)
 
   if (process.env.TEST !== 'e2e' && process.env.DISABLE_CSP !== 'true') {
     const cspOrigins = (process.env.CSP_ORIGINS ?? '')
@@ -171,10 +142,8 @@ async function run(mqttClient: AsyncMqttClient) {
           ...req,
           signingKey,
           domain,
-          queryApi: dataApi.query,
-          updateQueryApi: dataApi.delete,
-          mqttClient,
           subscriptionPublisher,
+          db: prisma,
         }),
       },
       wsServer,

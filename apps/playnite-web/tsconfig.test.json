@@ -1,14 +1,12 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "moduleDetection": "force",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "noEmit": false,
-    "allowJs": true,
-    "module": "ESNext",
-    "moduleResolution": "nodenext",
+    "allowJs": true
   },
   "include": [
     "src/**/*.ts",
@@ -19,7 +17,5 @@
     ".generated/typeDefs.generated.ts",
     ".generated/types.generated.ts"
   ],
-  "exclude": [
-    "node_modules",
-  ]
+  "exclude": ["node_modules"]
 }

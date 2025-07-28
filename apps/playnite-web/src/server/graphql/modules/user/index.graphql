@@ -1,5 +1,6 @@
 type User {
   id: String!
+  email: String!
   username: String!
   isAuthenticated: Boolean!
   credential: String
@@ -7,4 +8,16 @@ type User {
 
 extend type Query {
   me: User
+}
+
+input SignUpInput {
+  email: String!
+  username: String!
+  name: String!
+  password: String!
+  passwordConfirmation: String!
+}
+
+extend type Mutation {
+  signUp(input: SignUpInput): Claim!
 }

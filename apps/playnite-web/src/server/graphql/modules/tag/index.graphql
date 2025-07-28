@@ -3,3 +3,8 @@ type Tag {
   name: String!
   games: [Game]!
 }
+
+extend type Query {
+  tag(id: String!): Tag
+  tags(libraryId: String!): [Tag!]!
+}
