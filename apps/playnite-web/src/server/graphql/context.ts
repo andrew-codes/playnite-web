@@ -10,7 +10,7 @@ type PlayniteContext = {
   domain: string
   jwt?: { payload: GraphUser }
   subscriptionPublisher: typeof subscriptionPublisher
-  db: PrismaClient
+  db: typeof PrismaClient
 } & YogaInitialContext
 
 export type { PlayniteContext }

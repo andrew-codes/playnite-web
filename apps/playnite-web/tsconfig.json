@@ -27,6 +27,7 @@
     "cypress/support/*.ts",
     "*.ts",
     "../../graphql.config.ts",
+    ".generated/**/*.*",
     ".generated/resolvers.generated.ts",
     ".generated/typeDefs.generated.ts",
     ".generated/types.generated.ts"

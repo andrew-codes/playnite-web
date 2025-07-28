@@ -18,6 +18,8 @@ const loader: LoaderFunction = async (args) => {
   if (userCount > 0) {
     return redirect('/')
   }
+
+  return null
 }
 
 const TallStack = muiStyled(Stack)`

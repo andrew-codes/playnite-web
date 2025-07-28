@@ -4,6 +4,6 @@
     "isolatedModules": false,
     "noEmit": false
   },
-  "include": ["src/server/**/*.ts", ".generated/*.ts"],
+  "include": ["src/server/**/*.ts", ".generated/**/*.*"],
   "exclude": ["**/__tests__/**", "**/__component_tests__/**", "node_modules"]
 }

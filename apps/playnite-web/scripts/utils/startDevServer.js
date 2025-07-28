@@ -4,6 +4,11 @@ import sh from 'shelljs'
 
 const __dirname = import.meta.dirname
 
+sh.exec(
+  `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma && yarn rimraf {projectRoot}/.generated/prisma/package.json`,
+)
+sh.exec(`yarn graphql-codegen --config codegen.ts`)
+
 nodemon({
   script: path.join(__dirname, '..', '..', 'src', 'server', 'server.ts'),
   ext: 'ts tsx js jsx json graphql env',
@@ -32,7 +37,6 @@ nodemon
     process.exit()
   })
   .on('restart', function (files) {
-    sh.exec(`yarn nx run playnite-web-app:prepare`)
     sh.exec(
       `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma && yarn rimraf {projectRoot}/.generated/prisma/package.json`,
     )

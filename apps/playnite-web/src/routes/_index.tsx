@@ -17,6 +17,8 @@ const loader: LoaderFunction = async (args) => {
   if (userCount === 0) {
     return redirect('/account/new', 307)
   }
+
+  return null
 }
 
 function Index() {

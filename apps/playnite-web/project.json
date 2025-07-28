@@ -54,11 +54,6 @@
     },
     "prepare": {
       "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/codegen.ts",
-        "{projectRoot}/src/server/graphql/resolverTypes.ts",
-        "{projectRoot}/src/server/graphql/modules/**/*.graphql"
-      ],
       "options": {
         "parallel": false,
         "commands": ["bash -c 'scripts/manually-start-services.sh'"],
@@ -67,6 +62,11 @@
     },
     "start": {
       "executor": "nx:run-commands",
+      "inputs": [
+        "{projectRoot}/codegen.ts",
+        "{projectRoot}/src/server/graphql/resolverTypes.ts",
+        "{projectRoot}/src/server/graphql/modules/**/*.graphql"
+      ],
       "options": {
         "cwd": "{projectRoot}",
         "parallel": false,
