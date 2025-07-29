@@ -85,12 +85,16 @@ const LoginForm = () => {
   useEffect(() => {
     if (data?.signIn.user.isAuthenticated) {
       const returnTo = new URLSearchParams(location.search).get('returnTo')
-      navigate(returnTo ?? '/')
+      navigate(returnTo ?? `/${data.signIn.user.username}`)
     }
-  }, [location.search, data?.signIn.user.isAuthenticated])
+  }, [
+    location.search,
+    data?.signIn.user.isAuthenticated,
+    data?.signIn.user.username,
+  ])
 
   return (
-    <form method="POST" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <Container fixed>
         <TallStack
           spacing={2}

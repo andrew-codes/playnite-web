@@ -4,6 +4,7 @@ import sh from 'shelljs'
 
 const __dirname = import.meta.dirname
 
+sh.exec(`kill -9 $(lsof -t -i:24678)`)
 sh.exec(
   `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma && yarn rimraf {projectRoot}/.generated/prisma/package.json`,
 )
@@ -37,6 +38,7 @@ nodemon
     process.exit()
   })
   .on('restart', function (files) {
+    sh.exec(`kill -9 $(lsof -t -i:24678)`)
     sh.exec(
       `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma && yarn rimraf {projectRoot}/.generated/prisma/package.json`,
     )

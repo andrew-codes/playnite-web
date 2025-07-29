@@ -44,10 +44,10 @@ const GameFigure: FC<
       >
         <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
           <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
-            {!imageHasError && game.cover?.id ? (
+            {!imageHasError && game.primaryRelease?.cover?.id ? (
               <Image
-                src={`/asset-by-id/${game.cover?.id}`}
-                alt={game.name}
+                src={`/asset-by-id/${game.primaryRelease?.cover?.id}`}
+                alt={game.primaryRelease?.title}
                 width={width}
                 loading="eager"
                 onError={(e) => {

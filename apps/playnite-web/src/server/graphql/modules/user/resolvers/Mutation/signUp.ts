@@ -45,7 +45,7 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
   }
 
   try {
-    const newUser = _ctx.db.user.create({
+    const newUser = await _ctx.db.user.create({
       data: {
         username: _arg.input.username,
         email: _arg.input.email,

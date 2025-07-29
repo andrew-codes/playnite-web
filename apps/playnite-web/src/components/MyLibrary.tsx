@@ -19,14 +19,14 @@ const MyLibrary: FC<{
     <>
       <Helmet>
         {games
-          .filter((game) => game.cover?.id)
+          .filter((game) => game.primaryRelease?.cover?.id)
           .slice(0, 15)
           .map((game) => (
             <link
               key={game.id}
               rel="preload"
               as="image"
-              href={`/asset-by-id/${game.cover?.id}`}
+              href={`/asset-by-id/${game.primaryRelease?.cover?.id}`}
             />
           ))}
       </Helmet>

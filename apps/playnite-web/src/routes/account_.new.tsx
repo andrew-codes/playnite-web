@@ -11,16 +11,16 @@ import { LoaderFunction, redirect } from '@remix-run/node'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { FormEventHandler, useEffect } from 'react'
 import { useRegisterAccount } from '../queryHooks/register'
-import { prisma } from '../server/data/providers/postgres/client'
+import { injectUser } from '../server/auth/routeAuthorization'
 
-const loader: LoaderFunction = async (args) => {
-  const userCount = await prisma.user.count()
-  if (userCount > 0) {
+const loader: LoaderFunction = injectUser(async (args, user) => {
+  const isLoggedIn = user?.isAuthenticated
+  if (isLoggedIn) {
     return redirect('/')
   }
 
   return null
-}
+})
 
 const TallStack = muiStyled(Stack)`
   height: 100vh;

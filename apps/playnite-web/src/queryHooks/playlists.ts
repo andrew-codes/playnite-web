@@ -1,41 +1,37 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
-import { isEmpty } from 'lodash-es'
-import { useEffect } from 'react'
 import { Playlist } from '../../.generated/types.generated'
-import { useSubscribePlayniteEntityUpdates } from './subscribePlayniteEntityUpdates'
-import { useSubscribePlayniteWebRunStateUpdates } from './subscribePlayniteWebRunStateUpdates'
 
 const AllPlaylists = gql`
-  query Playlist {
-    playlists {
-      id
-      name
-      games {
+  query library($input: String!) {
+    library(userId: $input) {
+      playlists {
         id
         name
-        description
-        completionStatus {
-          name
-        }
-        cover {
+        games {
           id
-        }
-        releases {
-          id
-          runState
-          playniteWebRunState
-          name
-          platform {
-            id
-            isConsole
+          completionStatus {
             name
-            icon {
+          }
+          primaryRelease {
+            id
+            title
+            cover {
               id
             }
           }
-          source {
-            name
+          releases {
+            id
+            platform {
+              id
+              name
+              icon {
+                id
+              }
+            }
+            source {
+              name
+            }
           }
         }
       }
@@ -43,22 +39,24 @@ const AllPlaylists = gql`
   }
 `
 
-const usePlaylists = () => {
-  const q = useQuery<{ playlists: Array<Playlist> }>(AllPlaylists)
+const usePlaylists = (username: string) => {
+  const q = useQuery<{ playlists: Array<Playlist> }>(AllPlaylists, {
+    variables: { input: username },
+  })
 
-  const { data } = useSubscribePlayniteEntityUpdates()
-  useEffect(() => {
-    if (!isEmpty(data?.playniteEntitiesUpdated)) {
-      q.refetch()
-    }
-  }, [data?.playniteEntitiesUpdated])
+  // const { data } = useSubscribePlayniteEntityUpdates()
+  // useEffect(() => {
+  //   if (!isEmpty(data?.playniteEntitiesUpdated)) {
+  //     q.refetch()
+  //   }
+  // }, [data?.playniteEntitiesUpdated])
 
-  const playniteWebRunStateUpdates = useSubscribePlayniteWebRunStateUpdates()
-  useEffect(() => {
-    if (!isEmpty(playniteWebRunStateUpdates.data?.playniteWebRunStateUpdated)) {
-      q.refetch()
-    }
-  }, [playniteWebRunStateUpdates.data?.playniteWebRunStateUpdated])
+  // const playniteWebRunStateUpdates = useSubscribePlayniteWebRunStateUpdates()
+  // useEffect(() => {
+  //   if (!isEmpty(playniteWebRunStateUpdates.data?.playniteWebRunStateUpdated)) {
+  //     q.refetch()
+  //   }
+  // }, [playniteWebRunStateUpdates.data?.playniteWebRunStateUpdated])
 
   return q
 }

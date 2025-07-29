@@ -1,52 +1,58 @@
 import { gql } from '@apollo/client/core/core.cjs'
-import { QueryHookOptions } from '@apollo/client/react'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
-import { isEmpty } from 'lodash-es'
-import { useEffect } from 'react'
 import { Game } from '../../.generated/types.generated'
-import { useSubscribePlayniteEntityUpdates } from './subscribePlayniteEntityUpdates'
 
-const All_Games_Query = gql`
-  query allGames($filter: Filter) {
-    games(filter: $filter) {
-      id
-      cover {
+const AllGames = gql`
+  query library($input: String!) {
+    library(userId: $input) {
+      games {
         id
-      }
-      name
-      completionStatus {
-        name
-      }
-      description
-      releases {
-        id
-        platform {
-          id
-          isConsole
+        completionStatus {
           name
-          icon {
+        }
+        primaryRelease {
+          id
+          title
+          cover {
             id
           }
         }
-        source {
-          name
+        releases {
+          id
+          platform {
+            id
+            name
+            icon {
+              id
+            }
+          }
+          source {
+            name
+          }
         }
       }
     }
   }
 `
 
-const useAllGames = (opts: QueryHookOptions) => {
-  const q = useQuery<{ games: Array<Game> }>(All_Games_Query, opts)
-
-  const { data } = useSubscribePlayniteEntityUpdates()
-  useEffect(() => {
-    if (!isEmpty(data?.playniteEntitiesUpdated)) {
-      q.refetch()
-    }
-  }, [data?.playniteEntitiesUpdated])
+const useAllGames = (username: string) => {
+  const q = useQuery<{ games: Array<Game> }>(AllGames, {
+    variables: { input: username },
+  })
 
   return q
 }
+// const useAllGames = (opts: QueryHookOptions) => {
+//   const q = useQuery<{ games: Array<Game> }>(All_Games_Query, opts)
 
-export { All_Games_Query, useAllGames }
+//   const { data } = useSubscribePlayniteEntityUpdates()
+//   useEffect(() => {
+//     if (!isEmpty(data?.playniteEntitiesUpdated)) {
+//       q.refetch()
+//     }
+//   }, [data?.playniteEntitiesUpdated])
+
+//   return q
+// }
+
+export { AllGames, useAllGames }

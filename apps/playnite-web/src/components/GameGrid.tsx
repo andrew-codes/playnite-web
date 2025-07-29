@@ -100,7 +100,7 @@ const GameGrid: FC<{
               WebkitBoxOrient: 'vertical ',
             }}
           >
-            {game.name}
+            {game.primaryRelease?.title || 'Unknown Game'}
           </Typography>
         </GameFigure>
       </div>

@@ -82,7 +82,6 @@ async function handleBotRequest(
   )
 
   let user = {
-    _type: 'User',
     id: createNull('User').toString(),
     username: 'Unknown',
     isAuthenticated: false,
@@ -206,7 +205,6 @@ async function handleBrowserRequest(
   )
 
   let user: Partial<User> = {
-    _type: 'User',
     id: createNull('User').toString(),
     username: 'Unknown',
     isAuthenticated: false,
