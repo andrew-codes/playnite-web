@@ -5,17 +5,13 @@ namespace PlayniteWeb
 {
   public class PlayniteWebSettings : ObservableObject
   {
-    private string clientId = Guid.NewGuid().ToString();
-
-    private string deviceId = Guid.NewGuid().ToString();
-
     private string deviceName;
 
     private string serverAddress;
 
-    private bool useSecureConnection = false;
+    private bool useSecureConnection = true;
 
-    private int? port = 1883;
+    private int? port = 443;
 
     private string username;
 
@@ -23,24 +19,10 @@ namespace PlayniteWeb
 
     private DateTime lastPublish = DateTime.Now;
 
-    private int publishingThrottle = 30;
-
-    public string ClientId
-    {
-      get => clientId;
-      set => SetValue(ref clientId, value);
-    }
-
     public string DeviceName
     {
       get => deviceName;
       set => SetValue(ref deviceName, value);
-    }
-
-    public string DeviceId
-    {
-      get => deviceId;
-      set => SetValue(ref deviceId, value);
     }
 
     public string ServerAddress
@@ -77,7 +59,5 @@ namespace PlayniteWeb
       get => lastPublish;
       set => SetValue(ref lastPublish, value);
     }
-
-    public int PublishingThrottle { get => publishingThrottle; set => SetValue(ref publishingThrottle, value); }
   }
 }

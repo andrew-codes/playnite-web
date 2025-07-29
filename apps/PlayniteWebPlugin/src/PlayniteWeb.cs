@@ -10,6 +10,7 @@ using PlayniteWeb.Models;
 using PlayniteWeb.Services;
 using PlayniteWeb.Services.Publishers;
 using PlayniteWeb.Services.Publishers.Mqtt;
+using PlayniteWeb.Services.Publishers.WebSocket;
 using PlayniteWeb.Services.Subscribers;
 using PlayniteWeb.Services.Subscribers.Mqtt;
 using PlayniteWeb.Services.Updaters;
@@ -20,6 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -35,7 +37,6 @@ namespace PlayniteWeb
 {
   public class PlayniteWeb : GenericPlugin
   {
-    private readonly Services.Publishers.Mqtt.MqttClient mqtt;
     private readonly ISubscribeToPlayniteWeb subscriber;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
     private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
@@ -61,6 +62,7 @@ namespace PlayniteWeb
     private readonly string _version;
     private readonly EntityUpdater entityUpdater;
     private readonly GameSource emulatorSource = new GameSource("Emulator");
+    private readonly ClientWebSocket webSocket = new ClientWebSocket();
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
@@ -72,9 +74,13 @@ namespace PlayniteWeb
         byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(emulatorSource.Name));
         emulatorSource.Id = new Guid(hash);
       }
+#if DEBUG
+      _version = "0.0.1";
+#else
       var extensionInfoYaml = System.IO.File.ReadAllText(Path.Combine(api.Paths.ExtensionsDataPath, "..", "Extensions", $"PlayniteWeb_{this.Id}", "extension.yaml"));
       var extension = Serialization.FromYaml<Dictionary<string, string>>(extensionInfoYaml);
       _version = extension["Version"];
+#endif
 
       entityUpdater = new EntityUpdater(api);
 
@@ -82,15 +88,13 @@ namespace PlayniteWeb
       topicManager = new TopicManager.TopicManager(settings.Settings);
       serializer = new ObjectSerializer();
 
-      mqtt = new Services.Publishers.Mqtt.MqttClient(new MqttFactory().CreateMqttClient(), topicManager, _version, settings, Id, serializer);
-
       var deserializer = new ObjectDeserializer();
-      subscriber = new PlayniteWebSubscriber(mqtt, topicManager, deserializer, api, settings.Settings.DeviceId);
+      //subscriber = new PlayniteWebSubscriber(mqtt, topicManager, deserializer, api, settings.Settings.DeviceId);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
       };
-      releasePublisher = new PublishRelease(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
+      releasePublisher = new PublishReleaseOverWebSockets(webSocket, topicManager, serializer, api.Database, settings.Settings.DeviceName);
       gamePublisher = new PublishGame(mqtt, topicManager, serializer, releasePublisher, settings.Settings.DeviceId);
       playlistPublisher = new PublishPlaylist(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
       platformPublisher = new PublishPlatform(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
@@ -194,8 +198,6 @@ namespace PlayniteWeb
 
     private IEnumerable<Task> SyncLibrary()
     {
-      mqtt.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.LibrarySync()), "syncing", MqttQualityOfServiceLevel.ExactlyOnce).Wait();
-
       var invalidPlayniteGames = PlayniteApi.Database.Games.Where(pg => string.IsNullOrEmpty(pg.Name) || string.IsNullOrWhiteSpace(pg.Name)).ToList();
       foreach (var playniteGame in invalidPlayniteGames)
       {
@@ -304,8 +306,6 @@ namespace PlayniteWeb
       {
         yield return task;
       }
-
-      mqtt.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.LibrarySync()), "synced", MqttQualityOfServiceLevel.ExactlyOnce).Wait();
     }
 
     private Release ReleaseFromPlayniteGame(Playnite.SDK.Models.Game game)
@@ -588,13 +588,22 @@ namespace PlayniteWeb
       StartConnection(e);
     }
 
-    private void StartConnection(PlayniteWebSettings settings)
+    private async Task StartConnection(PlayniteWebSettings settings)
     {
-      if (!string.IsNullOrEmpty(settings.DeviceId) && !string.IsNullOrWhiteSpace(settings.DeviceId))
+      if (webSocket.State == WebSocketState.Open)
       {
-        var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, Id.ToByteArray());
-        mqtt.StartConnection(options);
+        return;
       }
+
+      if (!string.IsNullOrEmpty(settings.ServerAddress) && !string.IsNullOrEmpty(settings.Username) && !settings.Password.Any())
+      {
+        logger.Error("Connection information is not properly configured. Please check your plugin settings.");
+        return;
+      }
+
+      var password = ProtectedData.Unprotect(settings.Password, Id.ToByteArray(), DataProtectionScope.CurrentUser).ToString();
+      webSocket.Options.SetRequestHeader("authorization", $"Basic {Convert.ToBase64String(Encoding.UTF8.GetBytes($"{settings.Username}:{password}"))}");
+      await webSocket.ConnectAsync(new Uri($"{(settings.UseSecureConnection ? "wss" : "ws")}://{settings.ServerAddress}:{settings.Port}/api/library"), System.Threading.CancellationToken.None);
     }
 
 
