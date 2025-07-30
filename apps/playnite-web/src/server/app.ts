@@ -6,7 +6,6 @@ import { useServer } from 'graphql-ws/use/ws'
 import helmet from 'helmet'
 import path from 'path'
 import { WebSocketServer } from 'ws'
-import { authenticateSocket } from './auth/socketAuthorization.js'
 import { prisma } from './data/providers/postgres/client.js'
 import createYoga from './graphql/index.js'
 import schema from './graphql/schema.js'
@@ -149,23 +148,6 @@ async function run() {
       },
       wsServer,
     )
-
-    const libraryConnectionSocket = new WebSocketServer({
-      server,
-      path: '/api/library',
-    })
-
-    libraryConnectionSocket.on(
-      'connection',
-      authenticateSocket((ws, req) => {
-        // Handle authenticated connection
-        ws.send('Authenticated!')
-      }),
-    )
-
-    libraryConnectionSocket.on('message', (message) => {
-      debug(`Library connection message: ${message}`)
-    })
   })
 }
 

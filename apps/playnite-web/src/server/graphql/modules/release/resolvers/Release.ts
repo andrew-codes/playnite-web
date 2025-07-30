@@ -18,16 +18,15 @@ export const Release: ReleaseResolvers = {
     }
 
     if (!output) {
-      const defaultCompletionStatus = await _ctx.db.defaults.findFirst({
+      const library = await _ctx.db.library.findUnique({
         where: {
-          libraryId: _parent.libraryId,
+          id: _parent.libraryId,
         },
       })
-
-      if (defaultCompletionStatus?.completionStatusId) {
-        output = await _ctx.db.completionStatus.findUnique({
+      if (library?.defaultCompletionStatusId) {
+        output = await _ctx.db.completionStatus.findFirst({
           where: {
-            id: defaultCompletionStatus.completionStatusId,
+            id: library.defaultCompletionStatusId,
           },
         })
       }

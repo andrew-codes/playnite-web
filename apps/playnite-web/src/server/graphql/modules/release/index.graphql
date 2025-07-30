@@ -11,7 +11,7 @@ type Release {
   platform: Platform!
   playniteId: String
   recentActivity: DateTime
-  releaseDate: DateTime
+  releaseDate: Date
   releaseYear: Int
   source: Source!
   title: String!

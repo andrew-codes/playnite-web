@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql'
 import type { MutationResolvers } from '../../../../../../../.generated/types.generated.js'
 import { UsernamePasswordCredential } from '../../../../../auth/index.js'
 
@@ -6,9 +7,8 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
   _arg,
   _ctx,
 ) => {
-  const gqlImport = await import('graphql')
   if (!_arg.input?.username || !_arg.input?.password) {
-    throw new gqlImport.GraphQLError('Missing username or password')
+    throw new GraphQLError('Missing username or password')
   }
   try {
     const claim = await _ctx.identityService.authenticate(
@@ -30,6 +30,6 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
     return claim
   } catch (error) {
     console.error(error)
-    throw new gqlImport.GraphQLError('Authentication failed')
+    throw new GraphQLError('Authentication failed')
   }
 }

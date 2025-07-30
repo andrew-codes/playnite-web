@@ -1,3 +1,4 @@
+import { Release } from 'apps/playnite-web/.generated/prisma/client.js'
 import { GraphQLError } from 'graphql'
 import type { GameResolvers } from '../../../../../../.generated/types.generated.js'
 import { create, domains } from '../../../../oid.js'
@@ -22,13 +23,46 @@ export const Game: GameResolvers = {
     })
   },
   completionStatus: async (_parent, _arg, _ctx) => {
-    const primaryRelease = await _ctx.db.release.findFirst({
+    const library = await _ctx.db.library.findUnique({
       where: {
-        PrimaryGame: {
-          id: _parent.id,
+        id: _parent.libraryId,
+      },
+    })
+    if (!library) {
+      throw new GraphQLError('Library not found', {
+        extensions: {
+          code: 'NOT_FOUND',
+          entity: create('Library', _parent.libraryId).toString(),
+        },
+      })
+    }
+    const releases = await _ctx.db.release.findMany({
+      where: {
+        libraryId: _parent.libraryId,
+        platformId: {
+          in: library.platformPriority,
         },
       },
     })
+
+    let primaryRelease: undefined | null | Release = null
+    for (const platformId of library.platformPriority) {
+      primaryRelease = releases?.find((r) => r.platformId === platformId)
+      if (primaryRelease) {
+        break
+      }
+    }
+
+    if (!primaryRelease) {
+      throw new GraphQLError('No primary release found for game', {
+        extensions: {
+          code: 'NOT_FOUND',
+          entity: create('Game', _parent.id).toString(),
+          type: domains.Release,
+          library: create('Library', _parent.libraryId).toString(),
+        },
+      })
+    }
 
     let output: null | GraphCompletionStatus = null
     if (primaryRelease?.completionStatusId) {
@@ -38,20 +72,12 @@ export const Game: GameResolvers = {
         },
       })
     }
-    if (!output) {
-      const defaultCompletionStatus = await _ctx.db.defaults.findFirst({
+    if (!output && library.defaultCompletionStatusId) {
+      output = await _ctx.db.completionStatus.findFirst({
         where: {
-          libraryId: _parent.libraryId,
+          id: library.defaultCompletionStatusId,
         },
       })
-
-      if (defaultCompletionStatus?.completionStatusId) {
-        output = await _ctx.db.completionStatus.findUnique({
-          where: {
-            id: defaultCompletionStatus.completionStatusId,
-          },
-        })
-      }
     }
 
     if (!output) {

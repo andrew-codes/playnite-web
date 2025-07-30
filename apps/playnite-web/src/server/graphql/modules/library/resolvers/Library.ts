@@ -9,9 +9,7 @@ export const Library: LibraryResolvers = {
         libraryId: library.id,
       },
       orderBy: {
-        PrimaryRelease: {
-          title: 'asc',
-        },
+        title: 'asc',
       },
     })
   },

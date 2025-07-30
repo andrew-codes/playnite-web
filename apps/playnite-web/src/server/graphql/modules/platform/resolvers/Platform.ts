@@ -27,9 +27,7 @@ export const Platform: PlatformResolvers = {
         },
       },
       orderBy: {
-        PrimaryRelease: {
-          title: 'asc',
-        },
+        title: 'asc',
       },
     })
   },

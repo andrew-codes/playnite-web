@@ -22,8 +22,5 @@ export const library: NonNullable<QueryResolvers['library']> = async (
     where: {
       userId: oid.id,
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
   })
 }

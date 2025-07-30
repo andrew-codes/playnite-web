@@ -1,8 +1,0 @@
-type PlayniteInstance {
-  id: String!
-  name: String!
-}
-
-extend type Query {
-  playniteInstances(libraryId: String!): [PlayniteInstance!]!
-}

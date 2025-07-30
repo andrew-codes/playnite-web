@@ -27,10 +27,7 @@ function parseJwtFromCookie(cookieHeader: string | null): string | null {
   return cookies['authorization'] ?? null
 }
 
-async function requireUser(
-  request: Request,
-  redirectTo: string = '/login',
-): Promise<User | null> {
+async function requireUser(request: Request): Promise<User | null> {
   const cookieHeader = request.headers.get('Cookie')
   const token = parseJwtFromCookie(cookieHeader)
   if (!token) {
@@ -40,12 +37,12 @@ async function requireUser(
   return verifyJwt(token)
 }
 
-const injectUser: (
+function injectUser(
   fn: (
     args: LoaderFunctionArgs,
     user: User | null,
   ) => ReturnType<LoaderFunction>,
-) => (args: LoaderFunctionArgs) => ReturnType<LoaderFunction> = (fn) => {
+): LoaderFunction {
   return async (args) => {
     const user = await requireUser(args.request)
 
@@ -53,7 +50,7 @@ const injectUser: (
   }
 }
 
-const requiresAuthentication: (fn: LoaderFunction) => LoaderFunction = (fn) => {
+function requiresAuthentication(fn: LoaderFunction): LoaderFunction {
   return injectUser((args, user) => {
     if (!user?.isAuthenticated) {
       return new Response('Unauthorized', { status: 401 })

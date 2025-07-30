@@ -5,6 +5,76 @@ type Library {
   playlists: [Playlist!]!
 }
 
+input ReleaseInput {
+  id: String!
+  title: String!
+  releaseDate: Date
+  communityScore: Int
+  completionStatus: String!
+  criticScore: Int
+  description: String
+  features: [String!]!
+  hidden: Boolean!
+  platform: String!
+  recentActivity: DateTime
+  source: String!
+  tags: [String!]!
+}
+
+input PlatformInput {
+  id: String!
+  name: String!
+}
+
+input SourceInput {
+  id: String!
+  name: String!
+  platform: String!
+}
+
+input TagInput {
+  id: String!
+  name: String!
+}
+
+input CompletionStateInput {
+  id: String!
+  name: String!
+}
+
+input FeatureInput {
+  id: String!
+  name: String!
+}
+
+input LibraryUpdateInput {
+  releases: [ReleaseInput!]!
+  platforms: [PlatformInput!]!
+  sources: [SourceInput!]!
+  tags: [TagInput!]!
+  completionStates: [CompletionStateInput!]!
+  features: [FeatureInput!]!
+}
+
+input LibraryRemovalInput {
+  releases: [String!]
+  platforms: [String!]
+  sources: [String!]
+  tags: [String!]
+  completionStates: [String!]
+  features: [String!]
+}
+
+input LibraryInput {
+  libraryId: String!
+  update: LibraryUpdateInput!
+  remove: LibraryRemovalInput!
+}
+
 extend type Query {
   library(userId: String!): Library
+}
+
+extend type Mutation {
+  syncLibrary(libraryData: LibraryInput!): Library
 }
