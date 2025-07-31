@@ -6,7 +6,9 @@ using PlayniteWeb.TopicManager;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +32,12 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
 
     public async void Publish()
     {
+
+      var gameCoverArt = db.Games
+        .Where(g => !string.IsNullOrEmpty(g.CoverImage) && !string.IsNullOrWhiteSpace(g.CoverImage) && File.Exists(db.GetFullFilePath(g.CoverImage)))
+        .Select(g => new { id = g.Id, type = "cover", data = new Asset(db, g.CoverImage).Data });
+
+
       var response = await gql.SendMutationAsync<dynamic>(new GraphQLHttpRequest
       {
         Query = @"mutation($libraryData: LibraryInput!) {
@@ -66,6 +74,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               tags = db.Tags.Select(t => new { id = t.Id, name = t.Name }),
               completionStates = db.CompletionStatuses.Select(c => new { id = c.Id, name = c.Name }),
               features = db.Features.Select(f => new { id = f.Id, name = f.Name }),
+              assets = gameCoverArt
             },
             remove = new
             {
@@ -75,6 +84,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               tags = Enumerable.Empty<string>(),
               completionStates = Enumerable.Empty<string>(),
               features = Enumerable.Empty<string>(),
+              assets = Enumerable.Empty<ByteArrayContent>()
             }
           }
         }

@@ -47,6 +47,12 @@ input FeatureInput {
   name: String!
 }
 
+input Asset {
+  id: String!
+  type: String!
+  data: Byte!
+}
+
 input LibraryUpdateInput {
   releases: [ReleaseInput!]!
   platforms: [PlatformInput!]!
@@ -54,6 +60,7 @@ input LibraryUpdateInput {
   tags: [TagInput!]!
   completionStates: [CompletionStateInput!]!
   features: [FeatureInput!]!
+  assets: [Asset!]!
 }
 
 input LibraryRemovalInput {
@@ -63,6 +70,7 @@ input LibraryRemovalInput {
   tags: [String!]!
   completionStates: [String!]!
   features: [String!]!
+  assets: [Asset!]!
 }
 
 input LibraryInput {

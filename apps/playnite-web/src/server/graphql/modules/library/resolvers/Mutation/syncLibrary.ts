@@ -11,6 +11,9 @@ export const syncLibrary: NonNullable<
     throw new GraphQLError(`Invalid user ID: ${_ctx.jwt?.payload.id}`)
   }
 
+  console.debug(_arg.libraryData.update.assets.length)
+  console.debug(_arg.libraryData.update.assets)
+
   let library = await _ctx.db.library.upsert({
     where: {
       playniteId_userId: {
@@ -21,10 +24,10 @@ export const syncLibrary: NonNullable<
     create: {
       playniteId: _arg.libraryData.libraryId,
       userId: userOid.id,
-      name: _arg.libraryData.name,
+      name: _arg.libraryData.name ?? '',
     },
     update: {
-      name: _arg.libraryData.name,
+      name: _arg.libraryData.name ?? '',
     },
   })
 

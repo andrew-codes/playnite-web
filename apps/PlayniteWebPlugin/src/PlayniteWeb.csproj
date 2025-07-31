@@ -123,6 +123,7 @@
     <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\IDeserializeObjects.cs" />
     <Compile Include="Services\ObjectDeserializer.cs" />
+    <Compile Include="Services\Publishers\Asset.cs" />
     <Compile Include="Services\Publishers\EntityUpdatePayload.cs" />
     <Compile Include="Services\Publishers\GameStatePayload.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishLibraryGraphQL.cs" />

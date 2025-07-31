@@ -3,3 +3,4 @@ type Mutation
 
 scalar Date
 scalar DateTime
+scalar Byte
