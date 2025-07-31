@@ -31,6 +31,7 @@ model User {
 model Library {
   id                        Int      @id @default(autoincrement())
   userId                    Int
+  name                      String
   createdAt                 DateTime @default(now())
   updatedAt                 DateTime @updatedAt
   playniteId                String?

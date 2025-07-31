@@ -11,24 +11,23 @@ export const syncLibrary: NonNullable<
     throw new GraphQLError(`Invalid user ID: ${_ctx.jwt?.payload.id}`)
   }
 
-  let library = await _ctx.db.library.findFirst({
+  let library = await _ctx.db.library.upsert({
     where: {
-      playniteId: _arg.libraryData.libraryId,
-      userId: userOid.id,
-    },
-    select: {
-      id: true,
-    },
-  })
-
-  if (!library) {
-    library = await _ctx.db.library.create({
-      data: {
+      playniteId_userId: {
         playniteId: _arg.libraryData.libraryId,
         userId: userOid.id,
       },
-    })
-  }
+    },
+    create: {
+      playniteId: _arg.libraryData.libraryId,
+      userId: userOid.id,
+      name: _arg.libraryData.name,
+    },
+    update: {
+      name: _arg.libraryData.name,
+    },
+  })
+
   const libraryId = library.id
 
   // Removals
@@ -147,6 +146,9 @@ export const syncLibrary: NonNullable<
   const platforms = await _ctx.db.platform.findMany({
     where: { libraryId },
     select: { id: true, playniteId: true },
+    orderBy: {
+      name: 'asc',
+    },
   })
   await Promise.all(
     _arg.libraryData.update.sources
@@ -340,5 +342,11 @@ export const syncLibrary: NonNullable<
     }),
   )
 
+  await _ctx.db.library.update({
+    where: { id: libraryId },
+    data: {
+      platformPriority: platforms.map((p) => p.id),
+    },
+  })
   return library
 }

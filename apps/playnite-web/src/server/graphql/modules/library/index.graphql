@@ -67,6 +67,7 @@ input LibraryRemovalInput {
 
 input LibraryInput {
   libraryId: String!
+  name: String
   update: LibraryUpdateInput!
   remove: LibraryRemovalInput!
 }
