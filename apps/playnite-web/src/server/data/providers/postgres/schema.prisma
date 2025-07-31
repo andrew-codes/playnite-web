@@ -131,14 +131,17 @@ model Platform {
 
 model Asset {
   id         Int      @id @default(autoincrement())
-  url        String   @unique
   type       String
+  libraryId  Int
   playniteId String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  deleted    Boolean  @default(false)
 
   Releases Release[]
   Platform Platform[]
+
+  @@unique([libraryId, playniteId])
 }
 
 model Feature {

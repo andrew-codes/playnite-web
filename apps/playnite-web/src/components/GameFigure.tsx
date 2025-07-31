@@ -46,7 +46,7 @@ const GameFigure: FC<
           <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
             {!imageHasError && game.primaryRelease?.cover?.id ? (
               <Image
-                src={`/asset-by-id/${game.primaryRelease?.cover?.id}`}
+                src={`${game.primaryRelease?.cover?.url}`}
                 alt={game.primaryRelease?.title}
                 width={width}
                 loading="eager"

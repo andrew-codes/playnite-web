@@ -210,9 +210,15 @@ namespace PlayniteWeb
       //{
       //    yield return task;
       //}
+      try
+      {
+        if (libraryPublisher != null)
+        {
+          libraryPublisher.Publish();
+        }
+      } catch(Exception e)
+      {
 
-      if (libraryPublisher != null) {
-        libraryPublisher.Publish();
       }
       yield return Task.CompletedTask;
       //var invalidPlayniteGames = PlayniteApi.Database.Games.Where(pg => string.IsNullOrEmpty(pg.Name) || string.IsNullOrWhiteSpace(pg.Name)).ToList();

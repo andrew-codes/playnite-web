@@ -1,6 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { groupBy } from 'lodash-es'
-import { fromString, hasIdentity } from '../../../../../oid'
+import { create, fromString, hasIdentity } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const syncLibrary: NonNullable<
@@ -10,9 +10,6 @@ export const syncLibrary: NonNullable<
   if (hasIdentity(userOid) === false) {
     throw new GraphQLError(`Invalid user ID: ${_ctx.jwt?.payload.id}`)
   }
-
-  console.debug(_arg.libraryData.update.assets.length)
-  console.debug(_arg.libraryData.update.assets)
 
   let library = await _ctx.db.library.upsert({
     where: {
@@ -109,6 +106,20 @@ export const syncLibrary: NonNullable<
       id: { in: gamesWithNoReleases.map((g) => g.id) },
     },
   })
+
+  // Assets
+  await Promise.all(
+    _arg.libraryData.remove.assets.map(async (asset) =>
+      _ctx.db.asset.update({
+        where: {
+          libraryId_playniteId: { playniteId: asset.id, libraryId },
+        },
+        data: {
+          deleted: true,
+        },
+      }),
+    ),
+  )
 
   // Updates
   // Features
@@ -342,6 +353,40 @@ export const syncLibrary: NonNullable<
           },
         },
       })
+    }),
+  )
+
+  const assets = await Promise.all(
+    _arg.libraryData.update.assets.map(async (asset) => {
+      const result = await _ctx.db.asset.upsert({
+        where: { libraryId_playniteId: { playniteId: asset.id, libraryId } },
+        create: {
+          playniteId: asset.id,
+          type: asset.type,
+          libraryId,
+        },
+        update: {
+          type: asset.type,
+        },
+      })
+
+      return {
+        id: result.id,
+        data: asset.data,
+      }
+    }),
+  )
+
+  await Promise.all(
+    assets.map(async (asset) => {
+      return _ctx.assets.persist(
+        {
+          userId: userOid,
+          assetId: create('Asset', asset.id),
+          libraryId: create('Library', libraryId),
+        },
+        asset.data,
+      )
     }),
   )
 

@@ -23,6 +23,13 @@ nodemon({
     path.join(__dirname, '..', '..', '*.env'),
     path.join(__dirname, '..', '..', 'codegen.ts'),
   ],
+  ignore: [
+    path.join(__dirname, '..', '..', 'src', '**', '*.webp'),
+    path.join(__dirname, '..', '..', 'src', '**', '*.png'),
+    path.join(__dirname, '..', '..', 'src', '**', '*.jpg'),
+    path.join(__dirname, '..', '..', 'src', '**', '*.jpeg'),
+    path.join(__dirname, '..', '..', 'src', '**', '*.gif'),
+  ],
   env: {
     NODE_ENV: 'development',
     DEBUG: process.env.DEBUG,

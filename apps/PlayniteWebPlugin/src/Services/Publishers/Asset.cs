@@ -1,11 +1,6 @@
-using MQTTnet.Protocol;
+using ImageMagick;
 using Playnite.SDK;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlayniteWeb.Services.Publishers
 {
@@ -19,12 +14,15 @@ namespace PlayniteWeb.Services.Publishers
     public Asset(IGameDatabaseAPI api, string filePath) {
       this.filePath = api.GetFullFilePath(filePath);
 
-      using (var fileStream = File.OpenRead(this.filePath))
-      {
-        var result = new byte[fileStream.Length];
-        fileStream.Read(result, 0, result.Length);
-        this.data = result;
-      }
+          using (var memoryStream = new MemoryStream())
+          {
+            var image = new MagickImage(this.filePath);
+          image.Format = MagickFormat.WebP;
+          image.Quality = 75;
+          image.Settings.SetDefine(MagickFormat.WebP,"method", "6");
+          image.Write(memoryStream, MagickFormat.WebP);
+          this.data = memoryStream.ToArray();
+          }
     }
   }
 }

@@ -92,7 +92,8 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
 
       if (response.Errors != null && response.Errors.Any())
       {
-        var errorMessage = string.Join(", ", response.Errors.Select(e => e.Message));
+        var graphResponse = response.AsGraphQLHttpResponse();
+        throw new GraphQLHttpRequestException(graphResponse.StatusCode, graphResponse.ResponseHeaders, string.Join(Environment.NewLine, response.Errors.Select(e => e.Message)));
       }
     }
   }

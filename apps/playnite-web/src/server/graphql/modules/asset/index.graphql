@@ -6,5 +6,7 @@ enum GameAssetType {
 
 type GameAsset {
   id: String!
+  libraryId: String!
   type: GameAssetType!
+  url: String!
 }

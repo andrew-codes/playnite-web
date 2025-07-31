@@ -98,8 +98,8 @@ function fromString(oidString: string): Identity {
   }
 }
 
-function create(assetType: DomainType, id: number): Identity {
-  return fromString(`${assetType}:${id}`)
+function create(assetType: DomainType, id: number): IIdentify {
+  return fromString(`${assetType}:${id}`) as IIdentify
 }
 
 function createNull(assetType: DomainType): Identity {
