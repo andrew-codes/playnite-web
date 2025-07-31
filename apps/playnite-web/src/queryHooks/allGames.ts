@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
-import { Game } from '../../.generated/types.generated'
+import { Library } from '../../.generated/types.generated'
 
 const AllGames = gql`
   query library($input: String!) {
@@ -36,7 +36,7 @@ const AllGames = gql`
 `
 
 const useAllGames = (username: string) => {
-  const q = useQuery<{ games: Array<Game> }>(AllGames, {
+  const q = useQuery<{ library: Library }>(AllGames, {
     variables: { input: username },
   })
 

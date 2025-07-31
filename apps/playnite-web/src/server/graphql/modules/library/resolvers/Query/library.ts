@@ -23,8 +23,6 @@ export const library: NonNullable<QueryResolvers['library']> = async (
       },
     })
   }
-  console.debug('library', user.id, _arg.username)
-
   return _ctx.db.library.findFirst({
     where: {
       userId: user.id,

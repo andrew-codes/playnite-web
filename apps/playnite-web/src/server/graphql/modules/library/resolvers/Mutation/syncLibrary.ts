@@ -342,11 +342,14 @@ export const syncLibrary: NonNullable<
     }),
   )
 
-  await _ctx.db.library.update({
-    where: { id: libraryId },
-    data: {
-      platformPriority: platforms.map((p) => p.id),
-    },
-  })
+  if (library.platformPriority.length === 0) {
+    await _ctx.db.library.update({
+      where: { id: libraryId },
+      data: {
+        platformPriority: platforms.map((p) => p.id),
+      },
+    })
+  }
+
   return library
 }

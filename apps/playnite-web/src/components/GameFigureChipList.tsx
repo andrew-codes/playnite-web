@@ -88,7 +88,7 @@ const GameFigureChipRoot = styled('div')(({ theme }) => ({
 
 const GameFigureChip: FC<{ children: string }> = ({ children }) => {
   const theme = useTheme<Theme>()
-  const Icon = theme.completionStatus[children].Icon ?? (() => null)
+  const Icon = theme.completionStatus[children]?.Icon ?? (() => null)
 
   const me = useMe()
   const completionStatuses = allCompletionStatuses()

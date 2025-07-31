@@ -26,7 +26,7 @@ function Browse() {
   const params = useParams<{ username: string }>()
   const { loading, data, error } = useAllGames(params.username ?? '')
 
-  const games = !loading ? (data?.games ?? []) : []
+  const games = !loading ? (data?.library?.games ?? []) : []
   if (error) {
     console.error(error, data)
   }
@@ -49,11 +49,11 @@ function Browse() {
       return
     }
 
-    navigate(`/browse`)
+    navigate(`/${params.username}/browse`)
   }, [location.pathname])
   const handleSelection = useCallback((evt, game: Game) => {
     setRightDrawerOpen(true)
-    navigate(`/browse/${game.id}`)
+    navigate(`/${params.username}/browse/${game.id}`)
   }, [])
 
   return (

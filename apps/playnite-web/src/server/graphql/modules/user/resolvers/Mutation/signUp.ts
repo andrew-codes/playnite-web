@@ -7,14 +7,6 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
   _arg,
   _ctx,
 ) => {
-  if (_arg.input?.password !== _arg.input?.passwordConfirmation) {
-    throw new GraphQLError('Passwords do not match.', {
-      extensions: {
-        code: 'BAD_USER_INPUT',
-        http: { status: 400 },
-      },
-    })
-  }
   if (
     !_arg.input?.username ||
     !_arg.input?.email ||
@@ -22,6 +14,15 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
     !_arg.input?.password
   ) {
     throw new GraphQLError('All fields are required.', {
+      extensions: {
+        code: 'BAD_USER_INPUT',
+        http: { status: 400 },
+      },
+    })
+  }
+
+  if (_arg.input?.password !== _arg.input?.passwordConfirmation) {
+    throw new GraphQLError('Passwords do not match.', {
       extensions: {
         code: 'BAD_USER_INPUT',
         http: { status: 400 },

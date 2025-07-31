@@ -13,7 +13,7 @@ import {
   styled,
 } from '@mui/material'
 import { FC, useMemo, useRef, useState } from 'react'
-import { Game, GameRelease } from '../../.generated/types.generated'
+import { Game, Release } from '../../.generated/types.generated'
 import { useMe } from '../queryHooks'
 import { useRestartRelease } from '../queryHooks/restartRelease'
 import { useStartRelease } from '../queryHooks/startRelease'
@@ -67,8 +67,8 @@ const Description = styled('div')(({ theme }) => ({
 }))
 
 const sortReleasesByPreferredPlatform = (
-  releases: Array<GameRelease>,
-): Array<GameRelease> => {
+  releases: Array<Release>,
+): Array<Release> => {
   const sortedReleases = releases.slice()
   const platformDisplays = {
     pc: { matcher: /PC/ },
@@ -93,7 +93,7 @@ const sortReleasesByPreferredPlatform = (
   ]
 
   sortedReleases.sort((a, b) => {
-    const aSort = sortOrder.findIndex((p) => p.matcher.test(a.platform.name))
+    const aSort = sortOrder.findIndex((p) => p.matcher.test(a?.platform.name))
     const bSort = sortOrder.findIndex((p) => p.matcher.test(b.platform.name))
     if (aSort > bSort) {
       return 1
@@ -146,7 +146,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
   return (
     <Details data-test="GameDetails">
       <Typography variant="h4" data-test="Name">
-        {game.name}
+        {game.primaryRelease?.title}
       </Typography>
 
       <Actions ref={platformsAnchorEl}>
@@ -205,7 +205,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                       <ClickAwayListener onClickAway={handleClose}>
                         <MenuList id="split-button-menu" autoFocusItem>
                           {releases
-                            .filter((r) => r.playniteWebRunState === 'stopped')
+                            .filter((r) => true)
                             .map((option, index) => (
                               <MenuItem
                                 key={option.id}
@@ -224,12 +224,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                 )}
               </Popper>
             </Action>
-            {releases.some(
-              (r) =>
-                r.playniteWebRunState === 'running' ||
-                r.playniteWebRunState === 'launching' ||
-                r.playniteWebRunState === 'restarting',
-            ) && (
+            {releases.some((r) => false) && (
               <>
                 <Action>
                   <Button
@@ -260,7 +255,9 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
       </Actions>
       <Divider />
       <Description data-test="Description">
-        <div dangerouslySetInnerHTML={{ __html: game.description }}></div>
+        <div
+          dangerouslySetInnerHTML={{ __html: game.primaryRelease?.description }}
+        ></div>
       </Description>
     </Details>
   )

@@ -40,6 +40,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         Variables = new {
           libraryData = new {
             libraryId = deviceId,
+            name = settings.DeviceName,
             update = new
             {
               releases = db.Games

@@ -11,21 +11,20 @@ const Game_By_Id_Query = gql`
   query game($id: String!) {
     game(id: $id) {
       id
-      name
-      description
-      cover {
-        id
+      primaryRelease {
+        title
+        description
+        cover {
+          id
+        }
       }
       completionStatus {
         name
       }
       releases {
         id
-        runState
-        playniteWebRunState
         platform {
           id
-          isConsole
           name
           icon {
             id
