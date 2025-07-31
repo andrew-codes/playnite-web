@@ -10,15 +10,15 @@ input ReleaseInput {
   title: String!
   releaseDate: Date
   communityScore: Int
-  completionStatus: String!
+  completionStatus: String
   criticScore: Int
   description: String
   features: [String!]!
   hidden: Boolean!
-  platform: String!
   recentActivity: DateTime
   source: String!
   tags: [String!]!
+  playTime: String
 }
 
 input PlatformInput {
@@ -57,12 +57,12 @@ input LibraryUpdateInput {
 }
 
 input LibraryRemovalInput {
-  releases: [String!]
-  platforms: [String!]
-  sources: [String!]
-  tags: [String!]
-  completionStates: [String!]
-  features: [String!]
+  releases: [String!]!
+  platforms: [String!]!
+  sources: [String!]!
+  tags: [String!]!
+  completionStates: [String!]!
+  features: [String!]!
 }
 
 input LibraryInput {
@@ -72,7 +72,7 @@ input LibraryInput {
 }
 
 extend type Query {
-  library(userId: String!): Library
+  library(username: String!): Library
 }
 
 extend type Mutation {

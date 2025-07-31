@@ -70,6 +70,7 @@ model Release {
   hidden             Boolean   @default(false)
   completionStatusId Int?
   playniteId         String?
+  playTime           BigInt?   @default(0)
 
   Library          Library           @relation(fields: [libraryId], references: [id])
   Cover            Asset?            @relation(fields: [coverId], references: [id])

@@ -13,10 +13,10 @@ namespace PlayniteWeb.TopicManager
 
     public string GetPublishTopic(string subTopic)
     {
-      if (string.IsNullOrEmpty(settings.DeviceId))
-      {
-        throw new NotSupportedException("Device ID is required to be set in the Plugin Settings pane.");
-      }
+      //if (string.IsNullOrEmpty(settings.DeviceId))
+      //{
+      //  throw new NotSupportedException("Device ID is required to be set in the Plugin Settings pane.");
+      //}
       return $"playnite/{settings.DeviceId}/{subTopic}";
     }
 

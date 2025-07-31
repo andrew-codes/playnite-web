@@ -1,14 +1,20 @@
 import { GraphQLError } from 'graphql'
 import { groupBy } from 'lodash-es'
+import { fromString, hasIdentity } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const syncLibrary: NonNullable<
   MutationResolvers['syncLibrary']
 > = async (_parent, _arg, _ctx) => {
-  const library = await _ctx.db.library.findFirst({
+  const userOid = fromString(_ctx.jwt?.payload.id)
+  if (hasIdentity(userOid) === false) {
+    throw new GraphQLError(`Invalid user ID: ${_ctx.jwt?.payload.id}`)
+  }
+
+  let library = await _ctx.db.library.findFirst({
     where: {
       playniteId: _arg.libraryData.libraryId,
-      userId: _ctx.jwt?.payload.id,
+      userId: userOid.id,
     },
     select: {
       id: true,
@@ -16,11 +22,10 @@ export const syncLibrary: NonNullable<
   })
 
   if (!library) {
-    throw new GraphQLError('Library not found', {
-      extensions: {
-        code: 'NOT_FOUND',
-        argumentName: 'libraryData.libraryId',
-        id: _arg.libraryData.libraryId,
+    library = await _ctx.db.library.create({
+      data: {
+        playniteId: _arg.libraryData.libraryId,
+        userId: userOid.id,
       },
     })
   }
@@ -106,7 +111,7 @@ export const syncLibrary: NonNullable<
   // Updates
   // Features
   await Promise.all(
-    _arg.libraryData.update.features.map(async (feature) => {
+    _arg.libraryData.update.features.map(async (feature) =>
       _ctx.db.feature.upsert({
         where: { playniteId_libraryId: { playniteId: feature.id, libraryId } },
         create: {
@@ -117,13 +122,13 @@ export const syncLibrary: NonNullable<
         update: {
           name: feature.name,
         },
-      })
-    }),
+      }),
+    ),
   )
 
   // Platforms
   await Promise.all(
-    _arg.libraryData.update.platforms.map(async (platform) => {
+    _arg.libraryData.update.platforms.map(async (platform) =>
       _ctx.db.platform.upsert({
         where: { playniteId_libraryId: { playniteId: platform.id, libraryId } },
         create: {
@@ -134,8 +139,8 @@ export const syncLibrary: NonNullable<
         update: {
           name: platform.name,
         },
-      })
-    }),
+      }),
+    ),
   )
 
   // Sources
@@ -148,7 +153,7 @@ export const syncLibrary: NonNullable<
       .filter((source) => {
         return platforms.some((p) => p.playniteId === source.platform)
       })
-      .map(async (source) => {
+      .map(async (source) =>
         _ctx.db.source.upsert({
           where: { playniteId_libraryId: { playniteId: source.id, libraryId } },
           create: {
@@ -164,8 +169,8 @@ export const syncLibrary: NonNullable<
           update: {
             name: source.name,
           },
-        })
-      }),
+        }),
+      ),
   )
 
   // Tags
@@ -187,7 +192,7 @@ export const syncLibrary: NonNullable<
 
   // CompletionStates
   await Promise.all(
-    _arg.libraryData.update.completionStates.map(async (status) => {
+    _arg.libraryData.update.completionStates.map(async (status) =>
       _ctx.db.completionStatus.upsert({
         where: { playniteId_libraryId: { playniteId: status.id, libraryId } },
         create: {
@@ -198,14 +203,14 @@ export const syncLibrary: NonNullable<
         update: {
           name: status.name,
         },
-      })
-    }),
+      }),
+    ),
   )
 
   // Releases
   const sources = await _ctx.db.source.findMany({
     where: { libraryId },
-    select: { id: true, playniteId: true },
+    select: { id: true, playniteId: true, platformId: true },
   })
   const features = await _ctx.db.feature.findMany({
     where: { libraryId },
@@ -219,26 +224,21 @@ export const syncLibrary: NonNullable<
     where: { libraryId },
     select: { id: true, playniteId: true },
   })
+
   await Promise.all(
     _arg.libraryData.update.releases
       .filter((release) => {
-        return [
-          platforms.some((p) => p.playniteId === release.platform),
-          sources.some((s) => s.playniteId === release.source),
-          features.every(
-            (f) =>
-              f.playniteId !== null && release.features.includes(f.playniteId),
-          ),
-          completionStates.some(
-            (cs) => cs.playniteId === release.completionStatus,
-          ),
-          tags.every(
-            (t) => t.playniteId !== null && release.tags.includes(t.playniteId),
-          ),
-        ].every(Boolean)
+        return [sources.some((s) => s.playniteId === release.source)].every(
+          Boolean,
+        )
       })
       .map(async (release) => {
-        _ctx.db.release.upsert({
+        const source = sources.find((s) => s.playniteId === release.source) as {
+          id: number
+          platformId: number
+        }
+
+        return _ctx.db.release.upsert({
           where: {
             playniteId_libraryId: { playniteId: release.id, libraryId },
           },
@@ -248,20 +248,13 @@ export const syncLibrary: NonNullable<
             libraryId,
             description: release.description,
             releaseDate: release.releaseDate,
-            releaseYear: release.releaseDate.getFullYear(),
+            releaseYear: release.releaseDate?.getFullYear(),
             criticScore: release.criticScore,
+            playTime: BigInt(release.playTime ?? '0'),
             communityScore: release.communityScore,
             hidden: release.hidden,
-            platformId: (
-              platforms.find((p) => p.playniteId === release.platform) as {
-                id: number
-              }
-            ).id,
-            sourceId: (
-              sources.find((s) => s.playniteId === release.source) as {
-                id: number
-              }
-            ).id,
+            platformId: source.platformId,
+            sourceId: source.id,
             Features: {
               connect: (release.features ?? [])
                 .filter((f) => f !== null)
@@ -269,15 +262,12 @@ export const syncLibrary: NonNullable<
                   return features.find((f2) => f2.playniteId === f) as {
                     id: number
                   }
-                }),
+                })
+                .filter(Boolean),
             },
-            completionStatusId: (
-              completionStates.find(
-                (cs) => cs.playniteId === release.completionStatus,
-              ) as {
-                id: number
-              }
-            ).id,
+            completionStatusId: completionStates.find(
+              (cs) => cs.playniteId === release.completionStatus,
+            )?.id,
             Tags: {
               connect: (release.tags ?? [])
                 .filter((t) => t !== null)
@@ -285,14 +275,15 @@ export const syncLibrary: NonNullable<
                   return tags.find((t2) => t2.playniteId === t) as {
                     id: number
                   }
-                }),
+                })
+                .filter(Boolean),
             },
           },
           update: {
             title: release.title,
             description: release.description,
             releaseDate: release.releaseDate,
-            releaseYear: release.releaseDate.getFullYear(),
+            releaseYear: release.releaseDate?.getFullYear(),
             criticScore: release.criticScore,
             communityScore: release.communityScore,
             hidden: release.hidden,
@@ -303,15 +294,12 @@ export const syncLibrary: NonNullable<
                   return features.find((f2) => f2.playniteId === f) as {
                     id: number
                   }
-                }),
+                })
+                .filter(Boolean),
             },
-            completionStatusId: (
-              completionStates.find(
-                (cs) => cs.playniteId === release.completionStatus,
-              ) as {
-                id: number
-              }
-            ).id,
+            completionStatusId: completionStates.find(
+              (cs) => cs.playniteId === release.completionStatus,
+            )?.id,
             Tags: {
               set: (release.tags ?? [])
                 .filter((t) => t !== null)
@@ -319,7 +307,8 @@ export const syncLibrary: NonNullable<
                   return tags.find((t2) => t2.playniteId === t) as {
                     id: number
                   }
-                }),
+                })
+                .filter(Boolean),
             },
           },
         })
@@ -329,7 +318,7 @@ export const syncLibrary: NonNullable<
   const games = groupBy(_arg.libraryData.update.releases, 'title')
   await Promise.all(
     Object.entries(games).map(async ([title, releases]) => {
-      const game = await _ctx.db.game.upsert({
+      return await _ctx.db.game.upsert({
         where: { title_libraryId: { title, libraryId } },
         create: {
           title,
@@ -351,7 +340,5 @@ export const syncLibrary: NonNullable<
     }),
   )
 
-  return _ctx.db.library.findFirst({
-    where: { id: libraryId },
-  })
+  return library
 }

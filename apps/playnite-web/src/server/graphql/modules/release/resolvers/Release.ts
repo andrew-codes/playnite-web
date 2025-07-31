@@ -39,17 +39,6 @@ export const Release: ReleaseResolvers = {
       })
     }
 
-    if (!output) {
-      throw new GraphQLError('Completion status not found', {
-        extensions: {
-          code: 'NOT_FOUND',
-          entity: create('Release', _parent.id).toString(),
-          type: domains.CompletionStatus,
-          library: create('Library', _parent.libraryId).toString(),
-        },
-      })
-    }
-
     return output
   },
 

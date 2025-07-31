@@ -33,11 +33,29 @@
     <IntermediateOutputPath>C:\Users\ANDREW~1\AppData\Local\Temp\vsD4DA.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GraphQL.Client, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\GraphQL.Client.6.1.0\lib\net461\GraphQL.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Client.Abstractions, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\GraphQL.Client.Abstractions.6.1.0\lib\netstandard2.0\GraphQL.Client.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Client.Abstractions.Websocket, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\GraphQL.Client.Abstractions.Websocket.6.1.0\lib\netstandard2.0\GraphQL.Client.Abstractions.Websocket.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Client.Serializer.Newtonsoft, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\GraphQL.Client.Serializer.Newtonsoft.6.1.0\lib\netstandard2.0\GraphQL.Client.Serializer.Newtonsoft.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphQL.Primitives, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\GraphQL.Primitives.6.1.0\lib\netstandard2.0\GraphQL.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="MQTTnet, Version=4.3.7.1207, Culture=neutral, PublicKeyToken=fdb7629f2e364a63, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\MQTTnet.4.3.7.1207\lib\net461\MQTTnet.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Playnite.SDK, Version=6.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\PlayniteSDK.6.12.0\lib\net462\Playnite.SDK.dll</HintPath>
@@ -51,6 +69,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.WebSockets.Client.Managed, Version=1.0.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\.nuget\System.Net.WebSockets.Client.Managed.1.0.22\lib\net45\System.Net.WebSockets.Client.Managed.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -104,6 +125,7 @@
     <Compile Include="Services\ObjectDeserializer.cs" />
     <Compile Include="Services\Publishers\EntityUpdatePayload.cs" />
     <Compile Include="Services\Publishers\GameStatePayload.cs" />
+    <Compile Include="Services\Publishers\GraphQL\PublishLibraryGraphQL.cs" />
     <Compile Include="Services\Publishers\IApplyPublisherOptions.cs" />
     <Compile Include="Services\Publishers\IPublishToPlayniteWeb.cs" />
     <Compile Include="Services\Publishers\Mqtt\FilePathExtractors\GameBackgroundFilePath.cs" />
@@ -122,7 +144,7 @@
     <Compile Include="Services\Publishers\Mqtt\PublishPlatform.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishGame.cs" />
     <Compile Include="Services\Publishers\Mqtt\PublishRelease.cs" />
-    <Compile Include="Services\Publishers\WebSocket\PublishReleaseOverWebSockets.cs" />
+    <Compile Include="Services\Publishers\GraphQL\PublishReleaseGraphQL.cs" />
     <Compile Include="Services\Subscribers\ISubscribeToPlayniteWeb.cs" />
     <Compile Include="Services\Subscribers\Models\StartReleasePayload.cs" />
     <Compile Include="Services\Subscribers\Mqtt\PlayniteWebSubscriber.cs" />

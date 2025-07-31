@@ -64,7 +64,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
 
     private Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
     {
-      client.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.online, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default).Wait();
+      //client.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.online, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default).Wait();
       if (ConnectedAsync == null) { return Task.CompletedTask; }
       return ConnectedAsync(arg);
     }
@@ -105,7 +105,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
         return Task.CompletedTask;
       }
 
-      client.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.offline, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
+      //client.PublishStringAsync(topicManager.GetPublishTopic(PublishTopics.Connection()), serializer.Serialize(new Connection(_version, ConnectionState.offline, settings.Settings.DeviceId)), MqttQualityOfServiceLevel.ExactlyOnce, retain: true, cancellationToken: default);
 
       if (DisconnectingAsync != null)
       {
@@ -187,7 +187,7 @@ namespace PlayniteWeb.Services.Publishers.Mqtt
           await Task.Delay(TimeSpan.FromSeconds(delayInSeconds));
 
           var settings = this.settings.Settings;
-          var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, pluginId.ToByteArray());
+          var options = new MqttPublisherOptions("", settings.ServerAddress, settings.Port, settings.Username, settings.Password, pluginId.ToByteArray());
           StartConnection(options);
 
           if (IsConnected)
