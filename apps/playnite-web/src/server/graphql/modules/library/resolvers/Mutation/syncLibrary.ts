@@ -1,7 +1,14 @@
 import { GraphQLError } from 'graphql'
 import { groupBy } from 'lodash-es'
-import { create, fromString, hasIdentity } from '../../../../../oid'
+import { fromString, hasIdentity } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
+
+function ignSlug(release: { title: string }): string {
+  return release.title
+    .toLowerCase()
+    .replace(/[.,!?<>/|\\:$\^&*(){}\[\]"';@#`~]|--+/g, '')
+    .replace(/ /g, '-')
+}
 
 export const syncLibrary: NonNullable<
   MutationResolvers['syncLibrary']
@@ -21,10 +28,10 @@ export const syncLibrary: NonNullable<
     create: {
       playniteId: _arg.libraryData.libraryId,
       userId: userOid.id,
-      name: _arg.libraryData.name ?? '',
+      name: _arg.libraryData.name ?? 'Default Library',
     },
     update: {
-      name: _arg.libraryData.name ?? '',
+      name: _arg.libraryData.name ?? 'Default Library',
     },
   })
 
@@ -106,20 +113,6 @@ export const syncLibrary: NonNullable<
       id: { in: gamesWithNoReleases.map((g) => g.id) },
     },
   })
-
-  // Assets
-  await Promise.all(
-    _arg.libraryData.remove.assets.map(async (asset) =>
-      _ctx.db.asset.update({
-        where: {
-          libraryId_playniteId: { playniteId: asset.id, libraryId },
-        },
-        data: {
-          deleted: true,
-        },
-      }),
-    ),
-  )
 
   // Updates
   // Features
@@ -223,20 +216,29 @@ export const syncLibrary: NonNullable<
     ),
   )
 
+  // IGN cover assets
+  const coverAssets = await _ctx.db.asset.findMany({
+    where: {
+      type: 'cover',
+      ignId: {
+        in: _arg.libraryData.update.releases
+          .map((r) => ignSlug(r))
+          .filter((slug) => slug !== ''),
+      },
+    },
+  })
+  await Promise.all(
+    coverAssets.map(async (asset) => {
+      return _ctx.assets.persist(asset)
+    }),
+  )
+
   // Releases
   const sources = await _ctx.db.source.findMany({
     where: { libraryId },
     select: { id: true, playniteId: true, platformId: true },
   })
-  const features = await _ctx.db.feature.findMany({
-    where: { libraryId },
-    select: { id: true, playniteId: true },
-  })
   const completionStates = await _ctx.db.completionStatus.findMany({
-    where: { libraryId },
-    select: { id: true, playniteId: true },
-  })
-  const tags = await _ctx.db.tag.findMany({
     where: { libraryId },
     select: { id: true, playniteId: true },
   })
@@ -261,39 +263,71 @@ export const syncLibrary: NonNullable<
           create: {
             playniteId: release.id,
             title: release.title,
-            libraryId,
             description: release.description,
             releaseDate: release.releaseDate,
             releaseYear: release.releaseDate?.getFullYear(),
             criticScore: release.criticScore,
             playTime: BigInt(release.playTime ?? '0'),
             communityScore: release.communityScore,
+            Library: {
+              connect: { id: libraryId },
+            },
+            Cover: {
+              create: {
+                type: 'cover',
+                ignId: ignSlug(release),
+              },
+            },
             hidden: release.hidden,
-            platformId: source.platformId,
-            sourceId: source.id,
+            Platform: {
+              connect: {
+                id: source.platformId,
+              },
+            },
+            Source: {
+              connect: {
+                id: source.id,
+              },
+            },
             Features: {
               connect: (release.features ?? [])
                 .filter((f) => f !== null)
                 .map((f) => {
-                  return features.find((f2) => f2.playniteId === f) as {
-                    id: number
+                  return {
+                    playniteId_libraryId: {
+                      playniteId: f,
+                      libraryId,
+                    },
                   }
-                })
-                .filter(Boolean),
+                }),
             },
-            completionStatusId: completionStates.find(
-              (cs) => cs.playniteId === release.completionStatus,
-            )?.id,
-            Tags: {
-              connect: (release.tags ?? [])
-                .filter((t) => t !== null)
-                .map((t) => {
-                  return tags.find((t2) => t2.playniteId === t) as {
-                    id: number
+            CompletionStatus: release.completionStatus
+              ? {
+                  connectOrCreate: {
+                    where: {
+                      playniteId_libraryId: {
+                        playniteId: release.completionStatus,
+                        libraryId,
+                      },
+                    },
+                    create: {
+                      playniteId: release.completionStatus,
+                      name: 'Unknown',
+                      libraryId,
+                    },
+                  },
+                }
+              : undefined,
+            Tags:
+              release.tags?.length > 0
+                ? {
+                    connect: release.tags
+                      .filter((t) => t !== null)
+                      .map((t) => ({
+                        playniteId_libraryId: { playniteId: t, libraryId },
+                      })),
                   }
-                })
-                .filter(Boolean),
-            },
+                : undefined,
           },
           update: {
             title: release.title,
@@ -304,28 +338,47 @@ export const syncLibrary: NonNullable<
             communityScore: release.communityScore,
             hidden: release.hidden,
             Features: {
-              set: (release.features ?? [])
+              connect: (release.features ?? [])
                 .filter((f) => f !== null)
                 .map((f) => {
-                  return features.find((f2) => f2.playniteId === f) as {
-                    id: number
+                  return {
+                    playniteId_libraryId: {
+                      playniteId: f,
+                      libraryId,
+                    },
                   }
-                })
-                .filter(Boolean),
+                }),
             },
-            completionStatusId: completionStates.find(
-              (cs) => cs.playniteId === release.completionStatus,
-            )?.id,
-            Tags: {
-              set: (release.tags ?? [])
-                .filter((t) => t !== null)
-                .map((t) => {
-                  return tags.find((t2) => t2.playniteId === t) as {
-                    id: number
+            Platform: {
+              connect: {
+                id: source.platformId,
+              },
+            },
+            Source: {
+              connect: {
+                id: source.id,
+              },
+            },
+            CompletionStatus: release.completionStatus
+              ? {
+                  connect: {
+                    playniteId_libraryId: {
+                      playniteId: release.completionStatus,
+                      libraryId,
+                    },
+                  },
+                }
+              : undefined,
+            Tags:
+              release.tags?.length > 0
+                ? {
+                    connect: release.tags
+                      .filter((t) => t !== null)
+                      .map((t) => ({
+                        playniteId_libraryId: { playniteId: t, libraryId },
+                      })),
                   }
-                })
-                .filter(Boolean),
-            },
+                : undefined,
           },
         })
       }),
@@ -353,40 +406,6 @@ export const syncLibrary: NonNullable<
           },
         },
       })
-    }),
-  )
-
-  const assets = await Promise.all(
-    _arg.libraryData.update.assets.map(async (asset) => {
-      const result = await _ctx.db.asset.upsert({
-        where: { libraryId_playniteId: { playniteId: asset.id, libraryId } },
-        create: {
-          playniteId: asset.id,
-          type: asset.type,
-          libraryId,
-        },
-        update: {
-          type: asset.type,
-        },
-      })
-
-      return {
-        id: result.id,
-        data: asset.data,
-      }
-    }),
-  )
-
-  await Promise.all(
-    assets.map(async (asset) => {
-      return _ctx.assets.persist(
-        {
-          userId: userOid,
-          assetId: create('Asset', asset.id),
-          libraryId: create('Library', libraryId),
-        },
-        asset.data,
-      )
     }),
   )
 

@@ -7,7 +7,8 @@ import {
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
 import { createYoga, YogaServerOptions } from 'graphql-yoga'
 import path from 'path'
-import { AssetFileHandler } from '../AssetFileHandler.js'
+import { AssetFileHandler } from '../assets/AssetFileHandler.js'
+import { IgnSourcedAssets } from '../assets/IgnSourcedAssets.js'
 import { IdentityService } from '../auth/index.js'
 import { prisma } from '../data/providers/postgres/client.js'
 import type { PlayniteContext } from './context.js'
@@ -46,7 +47,8 @@ const graphql = (endpoint: string, signingKey: string) => {
         subscriptionPublisher,
         db: prisma,
         assets: new AssetFileHandler(
-          path.join(import.meta.dirname, '..', '..', 'public', 'user-assets'),
+          path.join(import.meta.dirname, '..', '..', 'public'),
+          new IgnSourcedAssets(),
         ),
       }
 

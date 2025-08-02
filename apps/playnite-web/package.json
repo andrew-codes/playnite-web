@@ -52,7 +52,7 @@
     "remix-island": "^0.2.0",
     "remix-routes": "^1.7.7",
     "remix-utils": "^8.7.0",
-    "sharp": "0.34.3",
+    "sharp": "^0.34.3",
     "ua-parser-js": "^2.0.4",
     "uuid": "^11.1.0",
     "ws": "^8.18.3",

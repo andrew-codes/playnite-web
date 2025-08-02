@@ -59,7 +59,7 @@ model Release {
   libraryId          Int
   title              String
   description        String?
-  coverId            Int?
+  coverId            Int
   releaseDate        DateTime?
   releaseYear        Int?
   createdAt          DateTime  @default(now())
@@ -74,7 +74,7 @@ model Release {
   playTime           BigInt?   @default(0)
 
   Library          Library           @relation(fields: [libraryId], references: [id])
-  Cover            Asset?            @relation(fields: [coverId], references: [id])
+  Cover            Asset             @relation(fields: [coverId], references: [id])
   Source           Source            @relation(fields: [sourceId], references: [id])
   Platform         Platform          @relation(fields: [platformId], references: [id])
   Features         Feature[]
@@ -130,18 +130,17 @@ model Platform {
 }
 
 model Asset {
-  id         Int      @id @default(autoincrement())
-  type       String
-  libraryId  Int
-  playniteId String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  deleted    Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deleted   Boolean  @default(false)
+  ignId     String
 
   Releases Release[]
   Platform Platform[]
 
-  @@unique([libraryId, playniteId])
+  @@index([ignId])
 }
 
 model Feature {

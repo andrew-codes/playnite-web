@@ -21912,7 +21912,7 @@ __metadata:
     remix-routes: "npm:^1.7.7"
     remix-utils: "npm:^8.7.0"
     rimraf: "npm:^6.0.1"
-    sharp: "npm:0.34.3"
+    sharp: "npm:^0.34.3"
     shelljs: "npm:^0.10.0"
     start-server-and-test: "npm:^2.0.12"
     ts-jest: "npm:^29.4.0"
@@ -24131,7 +24131,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sharp@npm:0.34.3":
+"sharp@npm:^0.34.3":
   version: 0.34.3
   resolution: "sharp@npm:0.34.3"
   dependencies:

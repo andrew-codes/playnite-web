@@ -210,16 +210,11 @@ namespace PlayniteWeb
       //{
       //    yield return task;
       //}
-      try
-      {
         if (libraryPublisher != null)
         {
-          libraryPublisher.Publish();
+         yield return libraryPublisher.Publish();
         }
-      } catch(Exception e)
-      {
 
-      }
       yield return Task.CompletedTask;
       //var invalidPlayniteGames = PlayniteApi.Database.Games.Where(pg => string.IsNullOrEmpty(pg.Name) || string.IsNullOrWhiteSpace(pg.Name)).ToList();
       //foreach (var playniteGame in invalidPlayniteGames)
@@ -571,7 +566,7 @@ namespace PlayniteWeb
 
     private void HandleVerifySettings(object sender, PlayniteWebSettings e)
     {
-      StartConnection(e).Wait();
+      StartConnection(e);
     }
 
     private async Task StartConnection(PlayniteWebSettings settings)

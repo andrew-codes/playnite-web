@@ -29,7 +29,7 @@ apps/playnite-web/src/public/build
 apps/playnite-web/src/public/entry.worker.js
 apps/playnite-web/vite.config.js*
 !apps/playnite-web/vite.config.js
-**/user-assets/**
+**/game-assets/**
 
 apps/playnite-web/public/assets/asset-by-id/*
 

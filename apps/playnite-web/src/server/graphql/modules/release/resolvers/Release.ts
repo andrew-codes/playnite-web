@@ -43,6 +43,7 @@ export const Release: ReleaseResolvers = {
   },
 
   cover: async (_parent, _arg, _ctx) => {
+    console.debug(_parent)
     if (!_parent.coverId) {
       return null
     }
