@@ -5,6 +5,12 @@ import {
 } from 'esbuild-plugin-istanbul'
 import fs from 'fs/promises'
 import { glob } from 'glob'
+import sh from 'shelljs'
+
+sh.exec(
+  `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma`,
+)
+sh.exec(`yarn graphql-codegen --config codegen.ts`)
 
 const plugins: Array<Plugin> = []
 if (process.env.INSTRUMENT === 'true') {

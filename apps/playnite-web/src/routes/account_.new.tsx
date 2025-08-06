@@ -5,6 +5,7 @@ import {
   Snackbar,
   Stack,
   TextField,
+  Typography,
   styled as muiStyled,
 } from '@mui/material'
 import { LoaderFunction, redirect } from '@remix-run/node'
@@ -50,72 +51,72 @@ const Registration = () => {
   }, [location.search, data?.signUp.user.isAuthenticated])
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Container fixed>
-        <TallStack
-          spacing={2}
-          justifyContent="center"
-          sx={(theme) => ({
-            [theme.breakpoints.between('lg', 'xl')]: {
-              margin: '0 24px 0 96px',
-            },
-          })}
+    <div>
+      <Typography variant="h1" component="h1" gutterBottom>
+        Create Account
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Container fixed>
+          <TallStack
+            spacing={2}
+            justifyContent="center"
+            sx={(theme) => ({
+              [theme.breakpoints.between('lg', 'xl')]: {
+                margin: '0 24px 0 96px',
+              },
+            })}
+          >
+            <TextField
+              name="email"
+              label="Email"
+              variant="outlined"
+              autoComplete="email"
+            />
+            <TextField
+              name="username"
+              label="Username"
+              variant="outlined"
+              autoComplete="username"
+            />
+            <TextField
+              name="name"
+              type="text"
+              label="Name"
+              variant="outlined"
+              autoComplete="name"
+            />
+            <TextField
+              name="password"
+              type="password"
+              label="Password"
+              variant="outlined"
+              autoComplete="password"
+            />
+            <TextField
+              name="passwordConfirmation"
+              type="password"
+              label="Confirm Password"
+              variant="outlined"
+              autoComplete="password"
+            />
+            <Button variant="contained" type="submit">
+              Create Account
+            </Button>
+          </TallStack>
+        </Container>
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          open={!!error}
         >
-          <TextField
-            name="email"
-            label="Email"
-            variant="outlined"
-            autoComplete="email"
-            required
-          />
-          <TextField
-            name="username"
-            label="Username"
-            variant="outlined"
-            autoComplete="username"
-            required
-          />
-          <TextField
-            name="name"
-            type="text"
-            label="Name"
-            variant="outlined"
-            autoComplete="name"
-            required
-          />
-          <TextField
-            name="password"
-            type="password"
-            label="Password"
-            variant="outlined"
-            autoComplete="password"
-            required
-          />
-          <TextField
-            name="passwordConfirmation"
-            type="password"
-            label="Confirm Password"
-            variant="outlined"
-            autoComplete="password"
-            required
-          />
-          <Button variant="contained" type="submit">
-            Create Account
-          </Button>
-        </TallStack>
-      </Container>
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={!!error}
-      >
-        <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
-          Failed to create account. Please try again.
-          <br />
-          <br />
-          {error?.message && ` ${error.message}`}
-        </Alert>
-      </Snackbar>
-    </form>
+          <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
+            Failed to create account. Please try again.
+            <br />
+            <br />
+            {error?.message && ` ${error.message}`}
+          </Alert>
+        </Snackbar>
+      </form>
+    </div>
   )
 }
 

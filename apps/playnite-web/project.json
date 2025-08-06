@@ -3,6 +3,19 @@
   "sourceRoot": "apps/playnite-web-app/src",
   "projectType": "application",
   "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "clean/client",
+        "clean/server",
+        "clean/package",
+        "clean/test"
+      ],
+      "options": {
+        "parallel": true,
+        "commands": []
+      }
+    },
     "clean/client": {
       "executor": "nx:run-commands",
       "options": {
@@ -13,7 +26,7 @@
     "clean/server": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf .build-server",
+        "command": "yarn rimraf .build-server .generated",
         "cwd": "{projectRoot}"
       }
     },
@@ -73,7 +86,7 @@
         "commands": ["yarn tsx scripts/utils/startDevServer.js"],
         "env": {
           "NODE_ENV": "development",
-          "LOG_LEVEL": "debug"
+          "LOG_LEVEL": "silly"
         }
       }
     },
@@ -176,7 +189,7 @@
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
-          "LOG_LEVEL": "debug",
+          "LOG_LEVEL": "silly",
           "NODE_ENV": "development",
           "NODE_OPTIONS": "--no-experimental-require-module",
           "INSTRUMENT": "true"
@@ -193,7 +206,7 @@
         "env": {
           "CMD": "run",
           "CI": "true",
-          "LOG_LEVEL": "debug",
+          "LOG_LEVEL": "verbose",
           "TEST": "e2e",
           "START_SERVER_AND_TEST_INSECURE": "1",
           "NODE_ENV": "development",
@@ -218,7 +231,7 @@
           "env": {
             "CI": "true",
             "CMD": "open",
-            "LOG_LEVEL": "debug",
+            "LOG_LEVEL": "silly",
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "development",
@@ -240,7 +253,7 @@
           "INSTRUMENT": "true",
           "NODE_OPTIONS": "--no-experimental-require-module",
           "UPDATE": "true",
-          "LOG_LEVEL": "debugweb/nx/*"
+          "LOG_LEVEL": "info"
         }
       }
     },
@@ -268,7 +281,7 @@
       "executor": "nx:run-commands",
       "inputs": [
         "src",
-        "{projectRoot}/vite.config.js",
+        "{projectRoot}/vite.config.ts",
         "{projectRoot}/tsconfig.json"
       ],
       "dependsOn": ["clean/client"],
@@ -286,7 +299,7 @@
       "executor": "nx:run-commands",
       "inputs": [
         "src",
-        "{projectRoot}/vite.config.js",
+        "{projectRoot}/vite.config.ts",
         "{projectRoot}/tsconfig.json"
       ],
       "dependsOn": ["clean/client"],

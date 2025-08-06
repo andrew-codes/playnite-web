@@ -1,8 +1,8 @@
 import { GraphQLError } from 'graphql'
 import { groupBy } from 'lodash-es'
-import logger from '../../../../../logger'
-import { fromString, hasIdentity } from '../../../../../oid'
-import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
+import logger from '../../../../../logger.js'
+import { fromString, hasIdentity } from '../../../../../oid.js'
+import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
 
 function ignSlug(release: { title: string }): string {
   return release.title

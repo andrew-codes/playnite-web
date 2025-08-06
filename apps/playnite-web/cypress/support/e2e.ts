@@ -1,6 +1,6 @@
 import '@cypress/code-coverage/support'
+import 'cypress-cdp'
 import compareSnapshotCommand from 'cypress-image-diff-js/command'
-import 'cypress-plugin-tab'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -15,6 +15,20 @@ compareSnapshotCommand()
 
 beforeEach(() => {
   cy.clearAllCookies()
+})
+
+beforeEach(() => {
+  cy.CDP('Network.setCacheDisabled', { cacheDisabled: true })
+  cy.CDP('Emulation.setDeviceMetricsOverride', {
+    width: 1920,
+    height: 1080,
+    deviceScaleFactor: 2,
+    mobile: false,
+  })
+})
+
+beforeEach(() => {
+  cy.task('clearDatabase')
 })
 
 Cypress.Commands.add('signIn', () => {

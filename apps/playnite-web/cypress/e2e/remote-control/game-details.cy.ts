@@ -127,13 +127,6 @@ describe('Remote control.', () => {
                   let gameId: string | undefined
                   cy.get('@game').then(($el) => {
                     gameId = $el.attr('data-test-game-id')?.split(':')[1]
-                    cy.task('mqttPublish', {
-                      topic: 'playnite/deviceId/response/game/state',
-                      payload: JSON.stringify({
-                        state: 'installed',
-                        release: { id: gameId },
-                      }),
-                    })
                   })
                   cy.wait(3000)
 

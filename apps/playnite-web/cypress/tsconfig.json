@@ -2,17 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "baseUrl": ".",
-    "types": [
-      "cypress",
-      "node",
-      "react"
-    ],
+    "types": ["cypress", "node", "react"]
   },
   "extends": "../tsconfig.json",
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    "**/*.jsx"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
 }

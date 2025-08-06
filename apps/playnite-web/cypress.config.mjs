@@ -1,9 +1,8 @@
 import codeCoverage from '@cypress/code-coverage/task.js'
-import mqtt from 'async-mqtt'
 import { defineConfig } from 'cypress'
 import imageDiff from 'cypress-image-diff-js/plugin'
 import fs from 'fs'
-import { MongoClient } from 'mongodb'
+import { tasks } from './cypress/plugins/tasks.mjs'
 
 const config = {
   chromeWebSecurity: false,
@@ -66,48 +65,7 @@ const config = {
         }
       })
 
-      on('task', {
-        mqttPublish({ topic, payload }) {
-          const host = 'localhost'
-          const port = 1883
-          const username = 'local'
-          const password = 'dev'
-          return mqtt
-            .connectAsync(`tcp://${host}`, {
-              password,
-              port,
-              username,
-            })
-            .then((client) => {
-              client.publish(topic, payload)
-              return null
-            })
-        },
-      })
-
-      const url = `mongodb://${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? '27017'}`
-      const username = process.env.DB_USERNAME ?? 'local'
-      const password = process.env.DB_PASSWORD ?? 'dev'
-      const client = new MongoClient(url, {
-        auth: {
-          username,
-          password,
-        },
-        enableUtf8Validation: false,
-      })
-      on('task', {
-        async updateDatabase({ collection, filter, update }) {
-          try {
-            await client.connect()
-            const db = client.db('games')
-            const dbCollection = db.collection(collection)
-            return dbCollection.updateMany(filter, update)
-          } catch {
-            await client.close()
-          }
-        },
-      })
-
+      tasks(on, config)
       codeCoverage(on, config)
 
       return imageDiff(on, config)

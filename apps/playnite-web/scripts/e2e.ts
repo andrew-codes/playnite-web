@@ -4,8 +4,6 @@ import waitOn from 'wait-on'
 
 const __dirname = import.meta.dirname
 
-console.log(__dirname)
-
 let testCp: ChildProcess | null = null
 let runCp: ChildProcess | null = null
 process.on('exit', () => {
