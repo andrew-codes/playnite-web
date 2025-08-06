@@ -2,7 +2,6 @@ import { GraphQLError } from 'graphql'
 import { hashPassword } from '../../../../../auth/hashPassword.js'
 import { UsernamePasswordCredential } from '../../../../../auth/index.js'
 import Permission from '../../../../../auth/permissions.js'
-import logger from '../../../../../logger.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const signUp: NonNullable<MutationResolvers['signUp']> = async (
@@ -53,13 +52,26 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
     )
 
     return authenticatedUser
-  } catch (error) {
-    logger.error('Error creating and authorizing user.', error)
-    throw new GraphQLError('Failed to create user.', {
-      extensions: {
-        code: 'INTERNAL_SERVER_ERROR',
-        http: { status: 500 },
-      },
-    })
+  } catch (error: any) {
+    if (error?.meta?.target) {
+      const target = error.meta.target as string
+      if (target.includes('username')) {
+        throw new GraphQLError('Username is already taken.', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            http: { status: 400 },
+          },
+        })
+      }
+      if (target.includes('email')) {
+        throw new GraphQLError('Email is already in use.', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            http: { status: 400 },
+          },
+        })
+      }
+    }
+    throw error
   }
 }

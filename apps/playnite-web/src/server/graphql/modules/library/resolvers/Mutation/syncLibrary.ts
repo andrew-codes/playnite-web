@@ -16,9 +16,6 @@ export const syncLibrary: NonNullable<
 > = async (_parent, _arg, _ctx) => {
   const userOid = fromString(_ctx.jwt?.payload.id)
   if (hasIdentity(userOid) === false) {
-    logger.error(
-      `Invalid user ID: ${_ctx.jwt?.payload.id} in syncLibrary mutation`,
-    )
     throw new GraphQLError(`Invalid user ID: ${_ctx.jwt?.payload.id}`)
   }
 
@@ -27,6 +24,8 @@ export const syncLibrary: NonNullable<
     _arg.libraryData.libraryId,
     _arg.libraryData.name,
   )
+  logger.silly(`Library data`, _arg.libraryData)
+
   let library = await _ctx.db.library.upsert({
     where: {
       playniteId_userId: {
@@ -162,7 +161,9 @@ export const syncLibrary: NonNullable<
   await Promise.all(
     _arg.libraryData.update.features.map(async (feature) =>
       _ctx.db.feature.upsert({
-        where: { playniteId_libraryId: { playniteId: feature.id, libraryId } },
+        where: {
+          playniteId_libraryId: { playniteId: feature.id, libraryId },
+        },
         create: {
           playniteId: feature.id,
           name: feature.name,
@@ -183,7 +184,9 @@ export const syncLibrary: NonNullable<
   await Promise.all(
     _arg.libraryData.update.platforms.map(async (platform) =>
       _ctx.db.platform.upsert({
-        where: { playniteId_libraryId: { playniteId: platform.id, libraryId } },
+        where: {
+          playniteId_libraryId: { playniteId: platform.id, libraryId },
+        },
         create: {
           playniteId: platform.id,
           name: platform.name,
@@ -215,7 +218,9 @@ export const syncLibrary: NonNullable<
       })
       .map(async (source) =>
         _ctx.db.source.upsert({
-          where: { playniteId_libraryId: { playniteId: source.id, libraryId } },
+          where: {
+            playniteId_libraryId: { playniteId: source.id, libraryId },
+          },
           create: {
             playniteId: source.id,
             name: source.name,

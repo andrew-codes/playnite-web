@@ -16,6 +16,16 @@ const signUp = gql`
 `
 const useRegisterAccount = () =>
   useMutation<{ signUp: Claim }>(signUp, {
+    onError: (error) => {
+      error.message =
+        error.cause?.result?.errors?.map((e) => e.message).join(', ') ||
+        error.message
+      console.warn(
+        'Error during account registration:',
+        JSON.stringify(error, null, 2),
+        error.message,
+      )
+    },
     update: (cache, mutationResult) => {
       cache.updateQuery({ query: Me }, (data) => ({
         ...data,

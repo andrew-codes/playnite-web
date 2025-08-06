@@ -11,6 +11,7 @@ import {
 import { LoaderFunction, redirect } from '@remix-run/node'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { FormEventHandler, useEffect } from 'react'
+import OuterContainer from '../components/OuterContainer'
 import { useRegisterAccount } from '../queryHooks/register'
 import { injectUser } from '../server/loaders/requiresAuthorization'
 
@@ -51,11 +52,11 @@ const Registration = () => {
   }, [location.search, data?.signUp.user.isAuthenticated])
 
   return (
-    <div>
+    <OuterContainer>
       <Typography variant="h1" component="h1" gutterBottom>
         Create Account
       </Typography>
-      <form onSubmit={handleSubmit}>
+      <form data-name="registration" onSubmit={handleSubmit}>
         <Container fixed>
           <TallStack
             spacing={2}
@@ -107,6 +108,7 @@ const Registration = () => {
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           open={!!error}
+          autoHideDuration={null}
         >
           <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
             Failed to create account. Please try again.
@@ -116,7 +118,7 @@ const Registration = () => {
           </Alert>
         </Snackbar>
       </form>
-    </div>
+    </OuterContainer>
   )
 }
 

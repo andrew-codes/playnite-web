@@ -15,6 +15,14 @@ transports.push(
   }),
 )
 
+transports.push(
+  new winston.transports.File({
+    dirname: 'logs',
+    filename: 'error.log',
+    level: 'error',
+  }),
+)
+
 transports.forEach((transport) => {
   transport.on('error', (err) => {
     console.error('Logger transport error:', err)
