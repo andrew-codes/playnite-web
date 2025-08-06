@@ -1,4 +1,3 @@
-import createDebugger from 'debug'
 import dotenv from 'dotenv'
 import path from 'path'
 import app from './app.js'
@@ -15,22 +14,23 @@ dotenv.config({
   override: true,
 })
 
-const debug = createDebugger('playnite-web/app/server')
-
 async function run() {
-  debug('Starting Playnite Web applications...')
+  const logger = (await import('./logger.js')).default
 
-  debug('Starting Playnite Web app...')
-  await app()
+  logger.info('Starting Playnite Web applications...')
+
+  logger.info('Starting Playnite Web app...')
+  try {
+    await app()
+  } catch (error) {
+    logger.error('Error starting Playnite Web app:', error)
+    logger.info('Disconnected from Prisma client.')
+    await prisma.$disconnect()
+    logger.debug('Database connection closed.')
+    process.exit(1)
+  }
 }
 
-run()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (error) => {
-    debug('Error starting Playnite Web app:', error)
-    debug('Disconnected from Prisma client.')
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+run().then(async () => {
+  await prisma.$disconnect()
+})

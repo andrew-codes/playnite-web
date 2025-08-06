@@ -6,7 +6,7 @@
     "plugins": [
       {
         "name": "typescript-remix-routes-plugin",
-        "tag": "route",
+        "tag": "route"
       }
     ]
   },
@@ -18,10 +18,8 @@
     "**/testUtils/**/*.tsx",
     "*.ts",
     "**/cypress/*.ts",
-    "**/scripts/*.ts"
+    "**/scripts/*.ts",
+    "libs/playnite-plugin-installer-manifest/src/index.js"
   ],
-  "exclude": [
-    "node_modules",
-    ".yarn"
-  ]
+  "exclude": ["node_modules", ".yarn"]
 }

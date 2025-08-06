@@ -4,6 +4,7 @@
     "@types/node": "^22.16.5",
     "@types/shelljs": "^0.8.17",
     "debug": "^4.4.1",
+    "dev-logger": "workspace:*",
     "esbuild": "^0.25.8",
     "esbuild-register": "^3.6.0",
     "shelljs": "^0.10.0"

@@ -9,9 +9,8 @@ export const lookupUser: NonNullable<QueryResolvers['lookupUser']> = async (
       username: _arg.username,
     },
     select: {
-      id: true,
-      username: true,
-      name: true,
+      email: false,
+      password: false,
     },
   })
 }

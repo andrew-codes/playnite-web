@@ -12,6 +12,9 @@ import { useNavigateInGrid } from '../components/NavigateInGrid/context'
 import Drawer from '../components/Navigation/Drawer'
 import RightDrawer from '../components/RightDrawer'
 import { useAllGames } from '../queryHooks/allGames'
+import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
+
+const loader = requiresUserSetup()
 
 const isOnDetailsPage = (pathname) => /\/browse\/.+$/.test(pathname)
 
@@ -88,3 +91,4 @@ function Browse() {
 }
 
 export default Browse
+export { loader }

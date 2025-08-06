@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material'
-import { LoaderFunction, redirect } from '@remix-run/node'
+import { LoaderFunction } from '@remix-run/node'
 import { useCallback, useState } from 'react'
 import { Game, Playlist } from '../../.generated/types.generated'
 import GameDetails from '../components/GameDetails'
@@ -9,17 +9,9 @@ import Drawer from '../components/Navigation/Drawer'
 import OuterContainer from '../components/OuterContainer'
 import RightDrawer from '../components/RightDrawer'
 import { usePlaylists } from '../queryHooks/playlists'
-import { prisma } from '../server/data/providers/postgres/client'
+import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
-const loader: LoaderFunction = async (args) => {
-  const userCount = await prisma.user.count()
-
-  if (userCount === 0) {
-    return redirect('/account/new', 307)
-  }
-
-  return null
-}
+const loader: LoaderFunction = requiresUserSetup()
 
 function Index() {
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(false)

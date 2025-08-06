@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { isEmpty, merge, omit } from 'lodash-es'
+import { merge, omit } from 'lodash-es'
 import { prisma } from '../data/providers/postgres/client.js'
 import { User } from '../data/types.entities.js'
+import logger from '../logger.js'
 import { create } from '../oid.js'
 
 type Claim = {
@@ -16,31 +17,42 @@ class IdentityService {
   ) {}
   async authenticate(credential: UsernamePasswordCredential): Promise<Claim> {
     if (!this._secret) {
-      throw new Error('Authentication failed')
+      logger.info('No secret provided for authentication.')
+      throw new Error('Authentication failed.')
     }
 
     if (credential instanceof UsernamePasswordCredential) {
-      const matchedUsers = await prisma.user.findMany({
+      const matchedUser = await prisma.user.findUnique({
         where: {
           username: credential.username,
         },
       })
 
-      if (!matchedUsers || isEmpty(matchedUsers)) {
+      if (!matchedUser) {
+        logger.error(
+          `Authentication failed for user ${credential.username}: User not found.`,
+        )
         throw new Error(
           `Authentication failed for user ${credential.username}.`,
         )
       }
 
-      const [user] = matchedUsers
-      if (!bcrypt.compareSync(credential.password, user.password)) {
+      if (!bcrypt.compareSync(credential.password, matchedUser.password)) {
+        logger.error(
+          `Authentication failed for user ${credential.username}: Invalid password.`,
+          matchedUser.password,
+        )
         throw new Error(`Authentication failed.`)
       }
 
-      const scrubbedUser: User = merge({}, omit(user, 'password', 'id'), {
-        isAuthenticated: true,
-        id: create('User', user.id).toString(),
-      })
+      const scrubbedUser: User = merge(
+        {},
+        omit(matchedUser, 'password', 'id'),
+        {
+          isAuthenticated: true,
+          id: create('User', matchedUser.id).toString(),
+        },
+      )
 
       return {
         user: scrubbedUser,
@@ -50,6 +62,8 @@ class IdentityService {
         }),
       } as Claim
     }
+
+    logger.error('Invalid credential type provided for authentication.')
     throw new Error('Authentication failed.')
   }
 

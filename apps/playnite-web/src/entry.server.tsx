@@ -13,7 +13,6 @@ import { CacheProvider } from '@emotion/react'
 import { configureStore } from '@reduxjs/toolkit'
 import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
-import createDebugger from 'debug'
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql'
 import { createClient } from 'graphql-ws'
 import { isbot } from 'isbot'
@@ -28,10 +27,10 @@ import { Head } from './root'
 import { User } from './server/data/types.entities.js'
 import { PlayniteContext } from './server/graphql/context.js'
 import schema from './server/graphql/schema.js'
+import logger from './server/logger.js'
 import { createNull } from './server/oid.js'
 // import { preloadRouteAssets } from 'remix-utils/preload-route-assets'
 
-const debug = createDebugger('playnite-web/entry.server.tsx')
 const ABORT_DELAY = 5_000
 
 async function handleRequest(
@@ -102,7 +101,7 @@ async function handleBotRequest(
       })
     }
   } catch (error) {
-    debug(error)
+    logger.warn('Failed to decode JWT token from cookie.', error)
   }
 
   const schemaLink = new SchemaLink({
@@ -225,7 +224,7 @@ async function handleBrowserRequest(
       })
     }
   } catch (error) {
-    debug(error)
+    logger.warn('Failed to decode JWT token from cookie.', error)
   }
 
   const schemaLink = new SchemaLink({

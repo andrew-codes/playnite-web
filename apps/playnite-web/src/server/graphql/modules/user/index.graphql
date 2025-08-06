@@ -4,6 +4,8 @@ type User {
   username: String!
   isAuthenticated: Boolean!
   credential: String
+  permission: Int!
+  libraries: [Library!]!
 }
 
 extend type Query {

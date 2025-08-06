@@ -7,6 +7,9 @@ const Me = gql`
     me {
       username
       isAuthenticated
+      libraries {
+        id
+      }
     }
   }
 `

@@ -1,31 +1,24 @@
 import { GraphQLError } from 'graphql'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
+import { fromString, hasIdentity, IIdentify } from '../../../../../oid.js'
 
 export const library: NonNullable<QueryResolvers['library']> = async (
   _parent,
   _arg,
   _ctx,
 ) => {
-  const user = await _ctx.db.user.findUnique({
-    where: {
-      username: _arg.username,
-    },
-    select: {
-      id: true,
-    },
-  })
-
-  if (!user?.id) {
-    throw new GraphQLError('User not found', {
+  if (!hasIdentity(_arg.libraryId)) {
+    throw new GraphQLError('Invalid library ID', {
       extensions: {
-        code: 'NOT_FOUND',
-        entity: _arg.username,
+        code: 'BAD_USER_INPUT',
+        entity: _arg.libraryId,
       },
     })
   }
+
   return _ctx.db.library.findFirst({
     where: {
-      userId: user.id,
+      id: (fromString(_arg.libraryId) as IIdentify).id,
     },
   })
 }

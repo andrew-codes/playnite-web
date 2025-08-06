@@ -73,7 +73,7 @@
         "commands": ["yarn tsx scripts/utils/startDevServer.js"],
         "env": {
           "NODE_ENV": "development",
-          "DEBUG": "playnite*"
+          "LOG_LEVEL": "debug"
         }
       }
     },
@@ -172,10 +172,11 @@
       "dependsOn": ["clean/test"],
       "options": {
         "parallel": false,
-        "command": "yarn start-server-and-test 'cross-env NODE_ENV=production DEBUG=\"playnite*\" TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser electron'",
+        "command": "yarn start-server-and-test 'cross-env NODE_ENV=production TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser electron'",
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
+          "LOG_LEVEL": "debug",
           "NODE_ENV": "development",
           "NODE_OPTIONS": "--no-experimental-require-module",
           "INSTRUMENT": "true"
@@ -192,7 +193,7 @@
         "env": {
           "CMD": "run",
           "CI": "true",
-          "DEBUG": "playnite*",
+          "LOG_LEVEL": "debug",
           "TEST": "e2e",
           "START_SERVER_AND_TEST_INSECURE": "1",
           "NODE_ENV": "development",
@@ -217,7 +218,7 @@
           "env": {
             "CI": "true",
             "CMD": "open",
-            "DEBUG": "playnite*",
+            "LOG_LEVEL": "debug",
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "development",
@@ -239,7 +240,7 @@
           "INSTRUMENT": "true",
           "NODE_OPTIONS": "--no-experimental-require-module",
           "UPDATE": "true",
-          "DEBUG": "playnite-web/nx/*"
+          "LOG_LEVEL": "debugweb/nx/*"
         }
       }
     },

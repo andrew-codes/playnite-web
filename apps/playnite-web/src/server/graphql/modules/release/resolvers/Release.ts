@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql'
+import logger from '../../../../logger.js'
 import { create, domains } from '../../../../oid.js'
 import { GraphCompletionStatus } from '../../../resolverTypes'
 import type { ReleaseResolvers } from './../../../../../../.generated/types.generated'
@@ -43,7 +44,7 @@ export const Release: ReleaseResolvers = {
   },
 
   cover: async (_parent, _arg, _ctx) => {
-    console.debug(_parent)
+    logger.debug(`Fetching cover for release ${_parent.id}`, _parent)
     if (!_parent.coverId) {
       return null
     }

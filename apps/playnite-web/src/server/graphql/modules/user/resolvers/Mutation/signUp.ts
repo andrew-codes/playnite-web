@@ -1,5 +1,8 @@
 import { GraphQLError } from 'graphql'
-import { hashPassword } from '../../../../../auth/hashPassword'
+import { hashPassword } from '../../../../../auth/hashPassword.js'
+import { UsernamePasswordCredential } from '../../../../../auth/index.js'
+import Permission from '../../../../../auth/permissions.js'
+import logger from '../../../../../logger.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const signUp: NonNullable<MutationResolvers['signUp']> = async (
@@ -30,38 +33,28 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
     })
   }
 
-  const existingUser = await _ctx.db.user.findUnique({
-    where: {
-      email: _arg.input.email,
-    },
-  })
-
-  if (existingUser) {
-    throw new GraphQLError('Email is already in use.', {
-      extensions: {
-        code: 'BAD_USER_INPUT',
-        http: { status: 400 },
-      },
-    })
-  }
-
   try {
+    let permission = Permission.Write
+    if ((await _ctx.db.user.count()) > 0) {
+      permission = Permission.SiteAdmin
+    }
     const newUser = await _ctx.db.user.create({
       data: {
         username: _arg.input.username,
         email: _arg.input.email,
         name: _arg.input.name,
         password: hashPassword(_arg.input.password),
+        permission: permission,
       },
     })
 
-    const authenticatedUser = await _ctx.identityService.authenticate({
-      username: _arg.input.username,
-      password: _arg.input.password,
-    })
+    const authenticatedUser = await _ctx.identityService.authenticate(
+      new UsernamePasswordCredential(_arg.input.username, _arg.input.password),
+    )
 
     return authenticatedUser
   } catch (error) {
+    logger.error('Error creating and authorizing user.', error)
     throw new GraphQLError('Failed to create user.', {
       extensions: {
         code: 'INTERNAL_SERVER_ERROR',

@@ -1,5 +1,11 @@
 const exclude = process.env.EXCLUDE ? `--exclude='${process.env.EXCLUDE}'` : ''
 
+require('esbuild-register/dist/node')({
+  target: 'node22',
+  extensions: ['.ts', '.js'],
+  conditions: ['node'],
+})
+
 const config = {
   dryRun: false,
   branches: ['main', 'next'],

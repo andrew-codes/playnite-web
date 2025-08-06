@@ -1,5 +1,5 @@
-import { Release } from 'apps/playnite-web/.generated/prisma/client.js'
 import { GraphQLError } from 'graphql'
+import { Release } from '../../../../../../.generated/prisma/client.js'
 import type { GameResolvers } from '../../../../../../.generated/types.generated.js'
 import { create, domains } from '../../../../oid.js'
 import { GraphCompletionStatus } from '../../../resolverTypes.js'

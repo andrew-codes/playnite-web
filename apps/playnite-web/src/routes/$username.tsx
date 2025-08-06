@@ -10,6 +10,9 @@ import OuterContainer from '../components/OuterContainer'
 import RightDrawer from '../components/RightDrawer'
 import { usePlaylists } from '../queryHooks/playlists'
 import { useUserLookup } from '../queryHooks/userLookup'
+import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
+
+const loader = requiresUserSetup()
 
 function Index() {
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(false)
@@ -65,3 +68,4 @@ function Index() {
 }
 
 export default Index
+export { loader }

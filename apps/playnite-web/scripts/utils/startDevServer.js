@@ -32,7 +32,7 @@ nodemon({
   ],
   env: {
     NODE_ENV: 'development',
-    DEBUG: process.env.DEBUG,
+    LOG_LEVEL: process.env.LOG_LEVEL,
   },
 })
 

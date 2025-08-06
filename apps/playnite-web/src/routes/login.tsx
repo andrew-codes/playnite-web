@@ -15,6 +15,9 @@ import { useSignIn } from '../queryHooks'
 // import { IdentityService, UsernamePasswordCredential } from '../server/auth'
 // import * as cookies from '../server/cookies.js'
 // import data from './../server/data/data.js'
+import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
+
+const loader = requiresUserSetup()
 
 const TallStack = muiStyled(Stack)`
   height: 100vh;
@@ -145,4 +148,5 @@ const LoginForm = () => {
 type SearchParams = { returnTo?: string }
 
 export default LoginForm
+export { loader }
 export type { SearchParams }

@@ -1,8 +1,8 @@
-import { Asset } from 'apps/playnite-web/.generated/prisma/client'
 import { existsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
+import { Asset } from '../../../.generated/prisma/client'
 import { IPersistAssets, ISourceAssets } from './interfaces'
 
 class AssetFileHandler implements IPersistAssets {

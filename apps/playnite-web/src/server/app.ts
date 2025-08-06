@@ -1,6 +1,5 @@
 import { createRequestHandler } from '@remix-run/express'
 import compression from 'compression'
-import createDebugger from 'debug'
 import express from 'express'
 import { useServer } from 'graphql-ws/use/ws'
 import helmet from 'helmet'
@@ -10,8 +9,7 @@ import { prisma } from './data/providers/postgres/client.js'
 import createYoga from './graphql/index.js'
 import schema from './graphql/schema.js'
 import { subscriptionPublisher } from './graphql/subscriptionPublisher.js'
-
-const debug = createDebugger('playnite-web/app/server')
+import logger from './logger.js'
 
 const __dirname = import.meta.dirname
 
@@ -132,7 +130,7 @@ async function run() {
   app.use(compression())
 
   const server = app.listen(port, () => {
-    debug(`App listening on http://${domain}:${port}`)
+    logger.info(`App listening on http://${domain}:${port}`)
 
     const wsServer = new WebSocketServer({ server, path: '/api' })
     useServer(

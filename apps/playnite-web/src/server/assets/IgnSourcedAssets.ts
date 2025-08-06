@@ -1,4 +1,4 @@
-import { Asset } from 'apps/playnite-web/.generated/prisma/client'
+import { Asset } from '../../../.generated/prisma/client'
 import { ISourceAssets } from './interfaces'
 
 class IgnSourcedAssets implements ISourceAssets {

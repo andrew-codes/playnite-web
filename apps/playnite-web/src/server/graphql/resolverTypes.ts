@@ -18,8 +18,6 @@ type GraphSource = Prisma.SourceGetPayload<{}>
 
 type GraphGame = Prisma.GameGetPayload<{}>
 
-type GraphPlayniteInstance = Prisma.PlayniteLibraryGetPayload<{}>
-
 type GraphRelease = Prisma.ReleaseGetPayload<{}>
 
 type GraphPlaylist = Prisma.PlaylistGetPayload<{}>

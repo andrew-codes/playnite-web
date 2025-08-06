@@ -1,8 +1,6 @@
-import { LoaderFunction } from '@remix-run/node'
+import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
-const loader: LoaderFunction = async (args) => {
-  return null
-}
+const loader = requiresUserSetup()
 
 const Account = () => {
   return null

@@ -1,6 +1,9 @@
 import { useParams } from '@remix-run/react'
 import GameDetails from '../components/GameDetails'
 import { useGameById } from '../queryHooks/gameById'
+import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
+
+const loader = requiresUserSetup()
 
 function GameBrowseDetails() {
   const params = useParams()
@@ -15,3 +18,4 @@ function GameBrowseDetails() {
 }
 
 export default GameBrowseDetails
+export { loader }

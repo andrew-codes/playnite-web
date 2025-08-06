@@ -1,5 +1,6 @@
 import { GraphQLError } from 'graphql'
 import { groupBy } from 'lodash-es'
+import logger from '../../../../../logger'
 import { fromString, hasIdentity } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
@@ -15,9 +16,17 @@ export const syncLibrary: NonNullable<
 > = async (_parent, _arg, _ctx) => {
   const userOid = fromString(_ctx.jwt?.payload.id)
   if (hasIdentity(userOid) === false) {
+    logger.error(
+      `Invalid user ID: ${_ctx.jwt?.payload.id} in syncLibrary mutation`,
+    )
     throw new GraphQLError(`Invalid user ID: ${_ctx.jwt?.payload.id}`)
   }
 
+  logger.info(
+    `Syncing library for user ${userOid.id}`,
+    _arg.libraryData.libraryId,
+    _arg.libraryData.name,
+  )
   let library = await _ctx.db.library.upsert({
     where: {
       playniteId_userId: {
@@ -36,7 +45,12 @@ export const syncLibrary: NonNullable<
   })
 
   const libraryId = library.id
+  logger.info(`Library ID: ${libraryId}`)
 
+  logger.info(
+    `Removing features from library ${libraryId}`,
+    _arg.libraryData.remove.features,
+  )
   // Removals
   // Features
   await _ctx.db.feature.deleteMany({
@@ -48,6 +62,10 @@ export const syncLibrary: NonNullable<
     },
   })
 
+  logger.info(
+    `Removing sources from library ${libraryId}`,
+    _arg.libraryData.remove.sources,
+  )
   //  Sources
   await _ctx.db.source.deleteMany({
     where: {
@@ -58,6 +76,10 @@ export const syncLibrary: NonNullable<
     },
   })
 
+  logger.info(
+    `Removing platforms from library ${libraryId}`,
+    _arg.libraryData.remove.platforms,
+  )
   // Platforms
   await _ctx.db.platform.deleteMany({
     where: {
@@ -68,6 +90,10 @@ export const syncLibrary: NonNullable<
     },
   })
 
+  logger.info(
+    `Removing tags from library ${libraryId}`,
+    _arg.libraryData.remove.tags,
+  )
   // Tags
   await _ctx.db.tag.deleteMany({
     where: {
@@ -78,6 +104,10 @@ export const syncLibrary: NonNullable<
     },
   })
 
+  logger.info(
+    `Removing completion states from library ${libraryId}`,
+    _arg.libraryData.remove.completionStates,
+  )
   // CompletionStates
   await _ctx.db.completionStatus.deleteMany({
     where: {
@@ -88,6 +118,10 @@ export const syncLibrary: NonNullable<
     },
   })
 
+  logger.info(
+    `Removing releases from library ${libraryId}`,
+    _arg.libraryData.remove.releases,
+  )
   // Releases
   await _ctx.db.release.deleteMany({
     where: {
@@ -99,6 +133,7 @@ export const syncLibrary: NonNullable<
   })
 
   // Games
+  logger.info(`Removing games from library ${libraryId}`)
   const gamesWithNoReleases = await _ctx.db.game.findMany({
     where: {
       libraryId,
@@ -108,6 +143,10 @@ export const syncLibrary: NonNullable<
       id: true,
     },
   })
+  logger.info(
+    `Removing ${gamesWithNoReleases.length} games with no releases from library ${libraryId}`,
+    gamesWithNoReleases,
+  )
   await _ctx.db.game.deleteMany({
     where: {
       id: { in: gamesWithNoReleases.map((g) => g.id) },
@@ -115,6 +154,10 @@ export const syncLibrary: NonNullable<
   })
 
   // Updates
+  logger.info(
+    `Updating library ${libraryId} with new features`,
+    _arg.libraryData.update.features,
+  )
   // Features
   await Promise.all(
     _arg.libraryData.update.features.map(async (feature) =>
@@ -132,6 +175,10 @@ export const syncLibrary: NonNullable<
     ),
   )
 
+  logger.info(
+    `Updating library ${libraryId} with new platforms`,
+    _arg.libraryData.update.platforms,
+  )
   // Platforms
   await Promise.all(
     _arg.libraryData.update.platforms.map(async (platform) =>
@@ -149,6 +196,10 @@ export const syncLibrary: NonNullable<
     ),
   )
 
+  logger.info(
+    `Updating library ${libraryId} with new sources`,
+    _arg.libraryData.update.sources,
+  )
   // Sources
   const platforms = await _ctx.db.platform.findMany({
     where: { libraryId },
@@ -169,11 +220,14 @@ export const syncLibrary: NonNullable<
             playniteId: source.id,
             name: source.name,
             libraryId,
-            platformId: (
-              platforms.find((p) => p.playniteId === source.platform) as {
-                id: number
-              }
-            ).id,
+            Platform: {
+              connect: {
+                playniteId_libraryId: {
+                  playniteId: source.platform,
+                  libraryId,
+                },
+              },
+            },
           },
           update: {
             name: source.name,
@@ -182,10 +236,14 @@ export const syncLibrary: NonNullable<
       ),
   )
 
+  logger.info(
+    `Updating library ${libraryId} with new tags`,
+    _arg.libraryData.update.tags,
+  )
   // Tags
-  await Promise.all(
+  const tags = await Promise.all(
     _arg.libraryData.update.tags.map(async (tag) => {
-      _ctx.db.tag.upsert({
+      return _ctx.db.tag.upsert({
         where: { playniteId_libraryId: { playniteId: tag.id, libraryId } },
         create: {
           playniteId: tag.id,
@@ -199,6 +257,10 @@ export const syncLibrary: NonNullable<
     }),
   )
 
+  logger.info(
+    `Updating library ${libraryId} with new completion states`,
+    _arg.libraryData.update.completionStates,
+  )
   // CompletionStates
   await Promise.all(
     _arg.libraryData.update.completionStates.map(async (status) =>
@@ -215,7 +277,6 @@ export const syncLibrary: NonNullable<
       }),
     ),
   )
-
   // IGN cover assets
   const coverAssets = await _ctx.db.asset.findMany({
     where: {
@@ -227,6 +288,9 @@ export const syncLibrary: NonNullable<
       },
     },
   })
+  logger.info(
+    `Persisting ${coverAssets.length} assets from library ${libraryId}`,
+  )
   await Promise.all(
     coverAssets.map(async (asset) => {
       return _ctx.assets.persist(asset)
@@ -243,6 +307,7 @@ export const syncLibrary: NonNullable<
     select: { id: true, playniteId: true },
   })
 
+  logger.debug(`Updated`, sources, completionStates, tags, platforms)
   await Promise.all(
     _arg.libraryData.update.releases
       .filter((release) => {
@@ -256,135 +321,147 @@ export const syncLibrary: NonNullable<
           platformId: number
         }
 
-        return _ctx.db.release.upsert({
-          where: {
-            playniteId_libraryId: { playniteId: release.id, libraryId },
-          },
-          create: {
-            playniteId: release.id,
-            title: release.title,
-            description: release.description,
-            releaseDate: release.releaseDate,
-            releaseYear: release.releaseDate?.getFullYear(),
-            criticScore: release.criticScore,
-            playTime: BigInt(release.playTime ?? '0'),
-            communityScore: release.communityScore,
-            Library: {
-              connect: { id: libraryId },
+        // logger.verbose(
+        //   `Updating release ${release.id} for library ${libraryId}`,
+        //   release,
+        // )
+        try {
+          return await _ctx.db.release.upsert({
+            where: {
+              playniteId_libraryId: { playniteId: release.id, libraryId },
             },
-            Cover: {
-              create: {
-                type: 'cover',
-                ignId: ignSlug(release),
+            create: {
+              playniteId: release.id,
+              title: release.title,
+              description: release.description,
+              releaseDate: release.releaseDate,
+              releaseYear: release.releaseDate?.getFullYear(),
+              criticScore: release.criticScore,
+              playTime: BigInt(release.playTime ?? '0'),
+              communityScore: release.communityScore,
+              Library: {
+                connect: { id: libraryId },
               },
-            },
-            hidden: release.hidden,
-            Platform: {
-              connect: {
-                id: source.platformId,
+              Cover: {
+                create: {
+                  type: 'cover',
+                  ignId: ignSlug(release),
+                },
               },
-            },
-            Source: {
-              connect: {
-                id: source.id,
+              hidden: release.hidden,
+              Platform: {
+                connect: {
+                  id: source.platformId,
+                },
               },
+              Source: {
+                connect: {
+                  id: source.id,
+                },
+              },
+              Features: {
+                connect: (release.features ?? [])
+                  .filter((f) => f !== null)
+                  .map((f) => {
+                    return {
+                      playniteId_libraryId: {
+                        playniteId: f,
+                        libraryId,
+                      },
+                    }
+                  }),
+              },
+              CompletionStatus:
+                release?.completionStatus &&
+                release.completionStatus !==
+                  '00000000-0000-0000-0000-000000000000'
+                  ? {
+                      connect: {
+                        playniteId_libraryId: {
+                          playniteId: release.completionStatus,
+                          libraryId,
+                        },
+                      },
+                    }
+                  : undefined,
+              Tags:
+                release.tags?.length > 0
+                  ? {
+                      connect: release.tags
+                        .filter((t) => t !== null)
+                        .map((t) => ({
+                          playniteId_libraryId: { playniteId: t, libraryId },
+                        })),
+                    }
+                  : undefined,
             },
-            Features: {
-              connect: (release.features ?? [])
-                .filter((f) => f !== null)
-                .map((f) => {
-                  return {
-                    playniteId_libraryId: {
-                      playniteId: f,
-                      libraryId,
-                    },
-                  }
-                }),
-            },
-            CompletionStatus: release.completionStatus
-              ? {
-                  connectOrCreate: {
-                    where: {
+            update: {
+              title: release.title,
+              description: release.description,
+              releaseDate: release.releaseDate,
+              releaseYear: release.releaseDate?.getFullYear(),
+              criticScore: release.criticScore,
+              communityScore: release.communityScore,
+              hidden: release.hidden,
+              Features: {
+                connect: (release.features ?? [])
+                  .filter((f) => f !== null)
+                  .map((f) => {
+                    return {
+                      playniteId_libraryId: {
+                        playniteId: f,
+                        libraryId,
+                      },
+                    }
+                  }),
+              },
+              Platform: {
+                connect: {
+                  id: source.platformId,
+                },
+              },
+              Source: {
+                connect: {
+                  id: source.id,
+                },
+              },
+              CompletionStatus: release.completionStatus
+                ? {
+                    connect: {
                       playniteId_libraryId: {
                         playniteId: release.completionStatus,
                         libraryId,
                       },
                     },
-                    create: {
-                      playniteId: release.completionStatus,
-                      name: 'Unknown',
-                      libraryId,
-                    },
-                  },
-                }
-              : undefined,
-            Tags:
-              release.tags?.length > 0
-                ? {
-                    connect: release.tags
-                      .filter((t) => t !== null)
-                      .map((t) => ({
-                        playniteId_libraryId: { playniteId: t, libraryId },
-                      })),
                   }
                 : undefined,
-          },
-          update: {
-            title: release.title,
-            description: release.description,
-            releaseDate: release.releaseDate,
-            releaseYear: release.releaseDate?.getFullYear(),
-            criticScore: release.criticScore,
-            communityScore: release.communityScore,
-            hidden: release.hidden,
-            Features: {
-              connect: (release.features ?? [])
-                .filter((f) => f !== null)
-                .map((f) => {
-                  return {
-                    playniteId_libraryId: {
-                      playniteId: f,
-                      libraryId,
-                    },
-                  }
-                }),
+              Tags:
+                release.tags?.length > 0
+                  ? {
+                      connect: release.tags
+                        .filter((t) => t !== null)
+                        .map((t) => ({
+                          playniteId_libraryId: { playniteId: t, libraryId },
+                        })),
+                    }
+                  : undefined,
             },
-            Platform: {
-              connect: {
-                id: source.platformId,
-              },
-            },
-            Source: {
-              connect: {
-                id: source.id,
-              },
-            },
-            CompletionStatus: release.completionStatus
-              ? {
-                  connect: {
-                    playniteId_libraryId: {
-                      playniteId: release.completionStatus,
-                      libraryId,
-                    },
-                  },
-                }
-              : undefined,
-            Tags:
-              release.tags?.length > 0
-                ? {
-                    connect: release.tags
-                      .filter((t) => t !== null)
-                      .map((t) => ({
-                        playniteId_libraryId: { playniteId: t, libraryId },
-                      })),
-                  }
-                : undefined,
-          },
-        })
+          })
+        } catch (error) {
+          // logger.error(
+          //   `Error updating release ${release.id} for library ${libraryId}`,
+          //   release,
+          //   error,
+          // )
+          throw error
+        }
       }),
   )
 
   const games = groupBy(_arg.libraryData.update.releases, 'title')
+  logger.info(
+    `Updating library ${libraryId} with ${Object.keys(games).length} games`,
+  )
   await Promise.all(
     Object.entries(games).map(async ([title, releases]) => {
       return await _ctx.db.game.upsert({
@@ -417,6 +494,8 @@ export const syncLibrary: NonNullable<
       },
     })
   }
+
+  logger.info(`Library ${libraryId} synced successfully`)
 
   return library
 }

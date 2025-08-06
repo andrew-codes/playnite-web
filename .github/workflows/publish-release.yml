@@ -129,7 +129,7 @@ jobs:
         run: yarn nx run playnite-web-app:test/e2e:ci --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
-          DEBUG: 'playnite-web/*'
+          LOG_LEVEL: info
           PLATFORM: linux/amd64,linux/arm64
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
@@ -307,7 +307,7 @@ jobs:
         run: yarn dlx semantic-release
         env:
           NODE_ENV: production
-          DEBUG: 'playnite-web/*'
+          LOG_LEVEL: info
           PLATFORM: linux/amd64,linux/arm64
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXCLUDE: '*,!tag:linux'

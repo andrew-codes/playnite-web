@@ -11,7 +11,7 @@ import { LoaderFunction, redirect } from '@remix-run/node'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { FormEventHandler, useEffect } from 'react'
 import { useRegisterAccount } from '../queryHooks/register'
-import { injectUser } from '../server/auth/routeAuthorization'
+import { injectUser } from '../server/loaders/requiresAuthorization'
 
 const loader: LoaderFunction = injectUser(async (args, user) => {
   const isLoggedIn = user?.isAuthenticated
