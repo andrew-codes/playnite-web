@@ -28,7 +28,7 @@ const graphql = (endpoint: string, signingKey: string) => {
       subscriptionsProtocol: 'WS',
     },
     plugins: [
-      useCookies(),
+      useCookies<{}>(),
       useJWT({
         signingKeyProviders: [() => signingKey],
         tokenLookupLocations: [
@@ -72,7 +72,7 @@ const graphql = (endpoint: string, signingKey: string) => {
   }
 
   config.plugins.push({
-    onError({ error }) {
+    onError({ error, context }) {
       logger.error('GraphQL Error:', error)
     },
   })

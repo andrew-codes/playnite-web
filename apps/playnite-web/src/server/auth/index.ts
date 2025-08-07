@@ -1,8 +1,10 @@
 import bcrypt from 'bcrypt'
+import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
 import { merge, omit } from 'lodash-es'
 import { prisma } from '../data/providers/postgres/client.js'
 import { User } from '../data/types.entities.js'
+import { GraphUser } from '../graphql/resolverTypes.js'
 import logger from '../logger.js'
 import { create } from '../oid.js'
 
@@ -67,9 +69,17 @@ class IdentityService {
     throw new Error('Authentication failed.')
   }
 
-  async authorize(user?: User): Promise<void> {
+  async authorize(user?: GraphUser): Promise<void> {
     if (!user || !user.isAuthenticated) {
-      throw new Error(`Authorization failed for user ${user?.username}`)
+      throw new GraphQLError(
+        `Authorization failed for user ${user?.username}`,
+        {
+          extensions: {
+            code: 'UNAUTHORIZED',
+            http: { status: 401 },
+          },
+        },
+      )
     }
   }
 }

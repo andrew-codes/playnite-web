@@ -41,7 +41,6 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   const params = useParams<{ username?: string; libraryId?: string }>()
 
   const me = useMe()
-  console.log('me', me.data)
   const isAuthenticated = me.data?.me.isAuthenticated ?? false
   const [signOut] = useSignOut()
   const handleSignOut = () => {

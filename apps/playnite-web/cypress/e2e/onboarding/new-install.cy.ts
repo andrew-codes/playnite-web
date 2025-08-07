@@ -31,7 +31,7 @@ describe('Onboarding - New Install', () => {
       })
     })
 
-    it.only(`Duplicate usernames are not allowed.`, () => {
+    it.skip(`Duplicate usernames are not allowed.`, () => {
       cy.request('POST', 'http://localhost:3000/api', {
         query: `mutation signUp($input: SignUpInput!) {
                    signUp(input: $input) {

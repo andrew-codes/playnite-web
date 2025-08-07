@@ -14,6 +14,8 @@ function ignSlug(release: { title: string }): string {
 export const syncLibrary: NonNullable<
   MutationResolvers['syncLibrary']
 > = async (_parent, _arg, _ctx) => {
+  await _ctx.identityService.authorize(_ctx.jwt?.payload)
+
   const userOid = fromString(_ctx.jwt?.payload.id)
   if (hasIdentity(userOid) === false) {
     throw new GraphQLError(`Invalid user ID: ${_ctx.jwt?.payload.id}`)
@@ -167,7 +169,9 @@ export const syncLibrary: NonNullable<
         create: {
           playniteId: feature.id,
           name: feature.name,
-          libraryId,
+          Library: {
+            connect: { id: libraryId },
+          },
         },
         update: {
           name: feature.name,
@@ -190,7 +194,9 @@ export const syncLibrary: NonNullable<
         create: {
           playniteId: platform.id,
           name: platform.name,
-          libraryId,
+          Library: {
+            connect: { id: libraryId },
+          },
         },
         update: {
           name: platform.name,
@@ -224,7 +230,11 @@ export const syncLibrary: NonNullable<
           create: {
             playniteId: source.id,
             name: source.name,
-            libraryId,
+            Library: {
+              connect: {
+                id: libraryId,
+              },
+            },
             Platform: {
               connect: {
                 playniteId_libraryId: {
@@ -253,7 +263,9 @@ export const syncLibrary: NonNullable<
         create: {
           playniteId: tag.id,
           name: tag.name,
-          libraryId,
+          Library: {
+            connect: { id: libraryId },
+          },
         },
         update: {
           name: tag.name,
@@ -274,7 +286,9 @@ export const syncLibrary: NonNullable<
         create: {
           playniteId: status.id,
           name: status.name,
-          libraryId,
+          Library: {
+            connect: { id: libraryId },
+          },
         },
         update: {
           name: status.name,
@@ -326,10 +340,10 @@ export const syncLibrary: NonNullable<
           platformId: number
         }
 
-        // logger.verbose(
-        //   `Updating release ${release.id} for library ${libraryId}`,
-        //   release,
-        // )
+        logger.silly(
+          `Updating release ${release.id} for library ${libraryId}`,
+          release,
+        )
         try {
           return await _ctx.db.release.upsert({
             where: {
@@ -453,11 +467,10 @@ export const syncLibrary: NonNullable<
             },
           })
         } catch (error) {
-          // logger.error(
-          //   `Error updating release ${release.id} for library ${libraryId}`,
-          //   release,
-          //   error,
-          // )
+          logger.error(
+            `Error updating release ${release.id}, ${release.title} for library ${libraryId}`,
+            error,
+          )
           throw error
         }
       }),
@@ -473,7 +486,9 @@ export const syncLibrary: NonNullable<
         where: { title_libraryId: { title, libraryId } },
         create: {
           title,
-          libraryId,
+          Library: {
+            connect: { id: libraryId },
+          },
           Releases: {
             connect: releases.map((r) => ({
               playniteId_libraryId: { playniteId: r.id, libraryId },

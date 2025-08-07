@@ -1,13 +1,14 @@
 import { GraphQLError } from 'graphql'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
-import { fromString, hasIdentity, IIdentify } from '../../../../../oid.js'
+import { fromString, hasIdentity } from '../../../../../oid.js'
 
 export const library: NonNullable<QueryResolvers['library']> = async (
   _parent,
   _arg,
   _ctx,
 ) => {
-  if (!hasIdentity(_arg.libraryId)) {
+  const libraryId = fromString(_arg.libraryId)
+  if (!hasIdentity(libraryId)) {
     throw new GraphQLError('Invalid library ID', {
       extensions: {
         code: 'BAD_USER_INPUT',
@@ -18,7 +19,7 @@ export const library: NonNullable<QueryResolvers['library']> = async (
 
   return _ctx.db.library.findFirst({
     where: {
-      id: (fromString(_arg.libraryId) as IIdentify).id,
+      id: libraryId.id,
     },
   })
 }

@@ -6,7 +6,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      signIn: () => void
+      signIn: (username: string, password: string) => void
     }
   }
 }
@@ -31,7 +31,7 @@ beforeEach(() => {
   cy.task('clearDatabase')
 })
 
-Cypress.Commands.add('signIn', () => {
+Cypress.Commands.add('signIn', (username: string, password: string) => {
   return cy
     .request({
       method: 'POST',
@@ -43,7 +43,7 @@ Cypress.Commands.add('signIn', () => {
       body: JSON.stringify({
         operationName: 'signIn',
         variables: {
-          input: { username: 'local', password: 'dev', rememberMe: false },
+          input: { username, password, rememberMe: false },
         },
         query:
           'mutation signIn($input: SignInInput) { signIn(input: $input) { credential }}',

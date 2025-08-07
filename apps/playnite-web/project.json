@@ -126,7 +126,7 @@
         "{projectRoot}/visual-regression-tests/component-screenshots/diff"
       ],
       "options": {
-        "command": "yarn cypress open --component --browser electron",
+        "command": "yarn cypress open --component --browser edge",
         "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "dev",
@@ -139,7 +139,7 @@
           }
         },
         "ci": {
-          "command": "yarn cypress run --component --browser electron",
+          "command": "yarn cypress run --component --browser edge",
           "env": {
             "CI": "true",
             "TEST": "component",
@@ -147,7 +147,7 @@
           }
         },
         "ci/local": {
-          "command": "yarn cypress run --component --browser electron",
+          "command": "yarn cypress run --component --browser edge",
           "env": {
             "CI": "true",
             "NODE_OPTIONS": "--no-experimental-require-module",
@@ -185,7 +185,7 @@
       "dependsOn": ["clean/test"],
       "options": {
         "parallel": false,
-        "command": "yarn start-server-and-test 'cross-env NODE_ENV=production TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser electron'",
+        "command": "yarn start-server-and-test 'cross-env NODE_ENV=production TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser edge'",
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",

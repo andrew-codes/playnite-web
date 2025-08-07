@@ -44,16 +44,18 @@ const tasks = (on, config) => {
         await prisma.user.createMany({
           data: [
             {
-              username: 'john',
-              name: 'John Doe',
-              email: 'john@example.com',
-              password: hashPassword('john'),
+              username: 'test',
+              name: 'Test',
+              email: 'test@example.com',
+              password: hashPassword('test'),
+              permission: 32,
             },
             {
               username: 'jane',
               name: 'Jane Smith',
               email: 'jane@example.com',
               password: hashPassword('jane'),
+              permission: 2,
             },
           ],
         })

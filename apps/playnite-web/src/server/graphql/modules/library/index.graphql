@@ -8,7 +8,7 @@ type Library {
 input ReleaseInput {
   id: String!
   title: String!
-  releaseDate: Date
+  releaseDate: DateTime
   communityScore: Int
   completionStatus: String
   criticScore: Int
