@@ -26,27 +26,14 @@ const Drawer: FC<
         component={'main'}
         sx={(theme) => ({
           flexGrow: 1,
+          width: '100%',
           margin: '0 auto',
-          [theme.breakpoints.up('xs')]: {
-            padding: '0',
-          },
-          [theme.breakpoints.up('sm')]: {
-            padding: '0',
-          },
-          [theme.breakpoints.up('md')]: {
-            padding: '0',
-          },
-          [theme.breakpoints.up('lg')]: {
-            padding: '48px 0 48px 88px',
-          },
-          [theme.breakpoints.up('xl')]: {
-            padding: '48px 0 48px 88px',
-          },
-          [theme.breakpoints.down('xs')]: {
-            padding: '0',
+          [theme.breakpoints.down('lg')]: {
+            padding: '24px 16px',
           },
         })}
       >
+        {title}
         {children}
       </Box>
     </MobileDrawerNavigation>
@@ -55,24 +42,13 @@ const Drawer: FC<
       component={'main'}
       sx={(theme) => ({
         flexGrow: 1,
+        width: '100%',
         margin: '0 auto',
-        [theme.breakpoints.up('xs')]: {
-          padding: '0',
-        },
-        [theme.breakpoints.up('sm')]: {
-          padding: '0',
-        },
-        [theme.breakpoints.up('md')]: {
-          padding: '0',
-        },
         [theme.breakpoints.up('lg')]: {
-          padding: '48px 0 48px 88px',
+          padding: '88px 0 48px 102px',
         },
         [theme.breakpoints.up('xl')]: {
-          padding: '48px 0 48px 88px',
-        },
-        [theme.breakpoints.down('xs')]: {
-          padding: '0',
+          padding: '88px 0 48px 102px',
         },
       })}
     >

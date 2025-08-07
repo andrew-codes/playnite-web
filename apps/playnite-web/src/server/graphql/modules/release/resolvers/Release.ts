@@ -53,7 +53,7 @@ export const Release: ReleaseResolvers = {
       },
     })
 
-    return `/public/game-assets/${asset?.ignId}`
+    return `/public/game-assets/${asset?.ignId}.webp`
   },
   features: async (_parent, _arg, _ctx) => {
     return _ctx.db.feature.findMany({

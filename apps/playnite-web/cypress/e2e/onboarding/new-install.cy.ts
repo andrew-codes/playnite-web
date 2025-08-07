@@ -27,7 +27,7 @@ describe('Onboarding - New Install', () => {
       cy.get('[data-test=Navigation] > *').should('not.exist')
     })
 
-    it.skip(`Duplicate usernames are not allowed.`, () => {
+    it(`Duplicate usernames are not allowed.`, () => {
       cy.request('POST', 'http://localhost:3000/api', {
         query: `mutation signUp($input: SignUpInput!) {
                    signUp(input: $input) {

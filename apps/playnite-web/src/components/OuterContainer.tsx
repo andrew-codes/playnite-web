@@ -6,6 +6,7 @@ const OuterContainer: FC<PropsWithChildren<{}>> = ({ children }) => {
     <Box
       sx={(theme) => ({
         display: 'flex',
+        width: '100%',
         flexDirection: 'column',
         height: `calc(100vh - ${theme.spacing(12)})`,
         padding: `0 ${theme.spacing()} 0 ${theme.spacing()}`,

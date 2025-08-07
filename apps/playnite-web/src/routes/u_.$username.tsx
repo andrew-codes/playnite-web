@@ -39,7 +39,7 @@ function Index() {
           {userData?.lookupUser.libraries.map((library, i) => (
             <Grid key={library.id} size={3}>
               <div>
-                <Link to={`/${params.username}/${library.id}`}>
+                <Link to={`/u/${params.username}/${library.id}`}>
                   <Typography>{library.name ?? `Library ${i + 1}`}</Typography>
                 </Link>
               </div>

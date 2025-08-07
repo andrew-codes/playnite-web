@@ -19,25 +19,31 @@ const Layout: FC<
   const navigateInGrid = configure()
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Provider value={navigateInGrid}></Provider>
-      <div>
-        {shouldUseNonMobileDrawer ? (
-          <NonMobileDrawerNavigation navs={navs}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Drawer navs={navs} title={title}>
+    <AnimatePresence initial={false}>
+      <>
+        <Provider value={navigateInGrid}></Provider>
+        <div>
+          {shouldUseNonMobileDrawer ? (
+            <NonMobileDrawerNavigation navs={navs}>
+              <Box
+                sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}
+              >
+                <Drawer navs={navs} title={title}>
+                  <OuterContainer>{children}</OuterContainer>
+                </Drawer>
+              </Box>
+            </NonMobileDrawerNavigation>
+          ) : (
+            <Box
+              sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}
+            >
+              <Drawer navs={navs} title={title} secondaryMenu={secondaryMenu}>
                 <OuterContainer>{children}</OuterContainer>
               </Drawer>
             </Box>
-          </NonMobileDrawerNavigation>
-        ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Drawer navs={navs} title={title} secondaryMenu={secondaryMenu}>
-              <OuterContainer>{children}</OuterContainer>
-            </Drawer>
-          </Box>
-        )}
-      </div>
+          )}
+        </div>
+      </>
     </AnimatePresence>
   )
 }

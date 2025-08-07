@@ -47,7 +47,7 @@ describe('User Libraries', () => {
       cy.contains('a', 'Game Room').should(
         'have.attr',
         'href',
-        `/${username}/${libraryId}`,
+        `/u/${username}/${libraryId}`,
       )
     })
     cy.get<Cypress.Response<any>>('@library2').then((response) => {
@@ -55,7 +55,7 @@ describe('User Libraries', () => {
       cy.contains('a', 'Default Library').should(
         'have.attr',
         'href',
-        `/${username}/${libraryId}`,
+        `/u/${username}/${libraryId}`,
       )
     })
   })

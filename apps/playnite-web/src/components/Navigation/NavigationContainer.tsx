@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Divider } from '@mui/material'
-import { ComponentType, FC } from 'react'
+import { ComponentType, FC, Fragment } from 'react'
 
 const Navigation: FC<{
   open: boolean
@@ -10,12 +10,12 @@ const Navigation: FC<{
   return (
     <div data-test="Navigation" className={className} {...rest}>
       {navs.map((NavComponent, index) => (
-        <>
+        <Fragment key={index}>
           {index === 0 ? null : (
             <Divider key={`divider-${index}`} sx={{ margin: '0 10px' }} />
           )}
-          <NavComponent key={index} open={open} />
-        </>
+          <NavComponent open={open} />
+        </Fragment>
       ))}
     </div>
   )

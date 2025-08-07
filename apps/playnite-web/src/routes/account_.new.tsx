@@ -2,7 +2,6 @@ import {
   Alert,
   Button,
   Container,
-  styled as muiStyled,
   Snackbar,
   Stack,
   TextField,
@@ -26,10 +25,6 @@ const loader: LoaderFunction = injectUser(async (args, user) => {
   const userCount = await prisma.user.count()
   return { isSetup: userCount > 0 }
 })
-
-const TallStack = muiStyled(Stack)`
-  height: 100vh;
-`
 
 const Registration = () => {
   const { isSetup } = useLoaderData<{ isSetup: boolean }>()
@@ -56,18 +51,22 @@ const Registration = () => {
   const location = useLocation()
   useEffect(() => {
     if (data?.signUp.user.isAuthenticated) {
-      navigate(`/u/${data.signUp.user.id}/account`)
+      navigate(`/u/${data.signUp.user.username}/account`)
     }
   }, [location.search, data?.signUp.user.isAuthenticated])
 
   return (
-    <Layout title="Create Account" navs={navs}>
-      <Typography variant="h1" component="h1" gutterBottom>
-        Create Account
-      </Typography>
+    <Layout
+      title={
+        <Typography variant="h3" component="h1" gutterBottom>
+          Create Account
+        </Typography>
+      }
+      navs={navs}
+    >
       <form data-name="registration" onSubmit={handleSubmit}>
         <Container fixed>
-          <TallStack
+          <Stack
             spacing={2}
             justifyContent="center"
             sx={(theme) => ({
@@ -112,7 +111,7 @@ const Registration = () => {
             <Button variant="contained" type="submit">
               Create Account
             </Button>
-          </TallStack>
+          </Stack>
         </Container>
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

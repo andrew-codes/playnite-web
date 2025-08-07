@@ -1,5 +1,5 @@
 import { Box, Button, Stack, styled } from '@mui/material'
-import { createContext, FC, PropsWithChildren, useState } from 'react'
+import { createContext, FC, PropsWithChildren } from 'react'
 import { Game } from '../../.generated/types.generated'
 import GameFigureChipList from './GameFigureChipList'
 
@@ -32,8 +32,6 @@ const GameFigure: FC<
     onSelect?: (evt, game: Game) => void
   }>
 > = ({ children, game, style, onSelect, width, height }) => {
-  const [imageHasError, setImageHasError] = useState(false)
-
   return (
     <Context.Provider value={game}>
       <Figure
@@ -44,24 +42,12 @@ const GameFigure: FC<
       >
         <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
           <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
-            {!imageHasError && game.primaryRelease?.cover?.id ? (
-              <Image
-                src={`${game.primaryRelease?.cover?.url}`}
-                alt={game.primaryRelease?.title}
-                width={width}
-                loading="eager"
-                onError={(e) => {
-                  setImageHasError(true)
-                }}
-              />
-            ) : (
-              <Box
-                sx={{
-                  height: `${width}`,
-                  width: `${width}`,
-                }}
-              />
-            )}
+            <Image
+              src={`${game.primaryRelease?.cover}`}
+              alt={game.primaryRelease?.title}
+              width={width}
+              loading="eager"
+            />
           </Button>
           <Box
             sx={(theme) => ({
