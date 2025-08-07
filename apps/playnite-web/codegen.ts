@@ -16,7 +16,6 @@ const config: CodegenConfig = {
           Game: '../src/server/graphql/resolverTypes#GraphGame',
           Release: '../src/server/graphql/resolverTypes#GraphRelease',
           Platform: '../src/server/graphql/resolverTypes#GraphPlatform',
-          GameAsset: '../src/server/graphql/resolverTypes#GraphGameAsset',
           Playlist: '../src/server/graphql/resolverTypes#GraphPlaylist',
           Source: '../src/server/graphql/resolverTypes#GraphSource',
           User: '../src/server/graphql/resolverTypes#GraphUser',

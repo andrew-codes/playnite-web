@@ -13,19 +13,14 @@ const AllGames = gql`
         primaryRelease {
           id
           title
-          cover {
-            id
-            url
-          }
+          cover
         }
         releases {
           id
           platform {
             id
             name
-            icon {
-              id
-            }
+            icon
           }
           source {
             name

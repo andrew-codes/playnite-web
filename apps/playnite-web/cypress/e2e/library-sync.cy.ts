@@ -1,7 +1,9 @@
 describe('Library Sync', () => {
-  it(`Requires authentication.`, () => {
-    cy.task('seedDatabase')
+  beforeEach(() => {
+    cy.task('seedUsers')
+  })
 
+  it(`Requires authentication.`, () => {
     cy.fixture('librarySync.json').then((libraryData) => {
       cy.request({
         method: 'POST',
@@ -28,8 +30,6 @@ describe('Library Sync', () => {
   })
 
   it(`Syncs library when authenticated.`, () => {
-    cy.task('seedUsers')
-
     cy.fixture('librarySync.json').then((libraryData) => {
       cy.signIn('test', 'test')
 

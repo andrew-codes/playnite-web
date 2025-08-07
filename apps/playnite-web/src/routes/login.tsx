@@ -15,6 +15,8 @@ import { useSignIn } from '../queryHooks'
 // import { IdentityService, UsernamePasswordCredential } from '../server/auth'
 // import * as cookies from '../server/cookies.js'
 // import data from './../server/data/data.js'
+import Layout from '../components/Layout'
+import MainNavigation from '../components/Navigation/MainNavigation'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
 const loader = requiresUserSetup()
@@ -97,51 +99,53 @@ const LoginForm = () => {
   ])
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Container fixed>
-        <TallStack
-          spacing={2}
-          justifyContent="center"
-          sx={(theme) => ({
-            [theme.breakpoints.between('lg', 'xl')]: {
-              margin: '0 24px 0 96px',
-            },
-          })}
+    <Layout navs={[MainNavigation]}>
+      <form onSubmit={handleSubmit}>
+        <Container fixed>
+          <TallStack
+            spacing={2}
+            justifyContent="center"
+            sx={(theme) => ({
+              [theme.breakpoints.between('lg', 'xl')]: {
+                margin: '0 24px 0 96px',
+              },
+            })}
+          >
+            <TextField
+              name="username"
+              label="Username"
+              variant="outlined"
+              autoComplete="username"
+              required
+            />
+            <TextField
+              name="password"
+              type="password"
+              label="Password"
+              variant="outlined"
+              autoComplete="password"
+              required
+            />
+            <FormControlLabel
+              control={<Checkbox name="rememberMe" size="medium" />}
+              label="Remember Me"
+            />
+            <Button variant="contained" type="submit">
+              Sign In
+            </Button>
+          </TallStack>
+        </Container>
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          open={!!error}
+          autoHideDuration={6000}
         >
-          <TextField
-            name="username"
-            label="Username"
-            variant="outlined"
-            autoComplete="username"
-            required
-          />
-          <TextField
-            name="password"
-            type="password"
-            label="Password"
-            variant="outlined"
-            autoComplete="password"
-            required
-          />
-          <FormControlLabel
-            control={<Checkbox name="rememberMe" size="medium" />}
-            label="Remember Me"
-          />
-          <Button variant="contained" type="submit">
-            Sign In
-          </Button>
-        </TallStack>
-      </Container>
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={!!error}
-        autoHideDuration={6000}
-      >
-        <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
-          Failed to authenticate. Please try again.
-        </Alert>
-      </Snackbar>
-    </form>
+          <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
+            Failed to authenticate. Please try again.
+          </Alert>
+        </Snackbar>
+      </form>
+    </Layout>
   )
 }
 

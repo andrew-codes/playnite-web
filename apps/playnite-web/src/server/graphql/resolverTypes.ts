@@ -22,8 +22,6 @@ type GraphRelease = Prisma.ReleaseGetPayload<{}>
 
 type GraphPlaylist = Prisma.PlaylistGetPayload<{}>
 
-type GraphGameAsset = Prisma.AssetGetPayload<{}>
-
 type User = Omit<Prisma.UserGetPayload<{}>, 'password'> & {
   isAuthenticated?: boolean
 }
@@ -40,7 +38,6 @@ export type {
   GraphCompletionStatus,
   GraphFeature,
   GraphGame,
-  GraphGameAsset,
   GraphLibrary,
   GraphPlatform,
   GraphPlaylist,
@@ -48,4 +45,5 @@ export type {
   GraphSource,
   GraphTag,
   GraphUser,
+  User,
 }

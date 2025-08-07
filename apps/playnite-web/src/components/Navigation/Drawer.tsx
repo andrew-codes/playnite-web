@@ -1,18 +1,20 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material'
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import { ComponentType, FC, PropsWithChildren, ReactNode } from 'react'
 import MobileDrawerNavigation from './MobileDrawerNavigation'
 
 const Drawer: FC<
   PropsWithChildren<{
     title?: ReactNode | undefined
+    navs: Array<ComponentType<{ open: boolean }>>
     secondaryMenu?: ReactNode | undefined
   }>
-> = ({ children, secondaryMenu, title }) => {
+> = ({ children, navs, title, secondaryMenu }) => {
   const theme = useTheme()
   const shouldUseMobileDrawer = useMediaQuery(theme.breakpoints.down('lg'))
 
   return shouldUseMobileDrawer ? (
     <MobileDrawerNavigation
+      navs={navs}
       title={
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           {title}
@@ -85,6 +87,7 @@ const Drawer: FC<
       >
         {secondaryMenu}
       </Box>
+      {title}
       {children}
     </Box>
   )

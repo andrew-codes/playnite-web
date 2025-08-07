@@ -5,8 +5,7 @@ import { Game, Playlist } from '../../.generated/types.generated'
 import GameDetails from '../components/GameDetails'
 import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
-import Drawer from '../components/Navigation/Drawer'
-import OuterContainer from '../components/OuterContainer'
+import Layout from '../components/Layout'
 import RightDrawer from '../components/RightDrawer'
 import { usePlaylists } from '../queryHooks/playlists'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
@@ -32,26 +31,28 @@ function Index() {
     ?.games.find((g) => g.id === gameId)
 
   return (
-    <Drawer>
-      <OuterContainer>
-        <Header>
-          <Typography variant="h2">Library</Typography>
-        </Header>
-        {playlists?.map((playlist) => (
-          <section data-test="playlist" key={`${playlist.id}`}>
-            <Typography variant="h4">{playlist.name}</Typography>
-            <HorizontalGameList
-              games={playlist?.games ?? []}
-              noDeferCount={5}
-              onSelect={handleGameSelect(playlist)}
-            />
-          </section>
-        ))}
-      </OuterContainer>
+    <>
+      <Layout navs={[]}>
+        <>
+          <Header>
+            <Typography variant="h2">Library</Typography>
+          </Header>
+          {playlists?.map((playlist) => (
+            <section data-test="playlist" key={`${playlist.id}`}>
+              <Typography variant="h4">{playlist.name}</Typography>
+              <HorizontalGameList
+                games={playlist?.games ?? []}
+                noDeferCount={5}
+                onSelect={handleGameSelect(playlist)}
+              />
+            </section>
+          ))}
+        </>
+      </Layout>
       <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
         {game && <GameDetails game={game} />}
       </RightDrawer>
-    </Drawer>
+    </>
   )
 }
 

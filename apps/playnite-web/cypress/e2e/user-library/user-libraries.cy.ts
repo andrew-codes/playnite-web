@@ -59,4 +59,21 @@ describe('User Libraries', () => {
       )
     })
   })
+
+  describe('Navigation', () => {
+    it(`Libraries centric navigation.
+      - Library links are shown in the sidebar.
+      - Help link to sync library.`, () => {
+      cy.task('seedUsers')
+      cy.visit('/u/test')
+      cy.wait('@graphql')
+
+      cy.get('[aria-label="Libraries navigation"]').within(() => {
+        cy.get('.MuiListItemText-root').then(($els) => {
+          expect($els.eq(0)).to.contain('My Libraries')
+          expect($els.eq(1)).to.contain('Sync Library')
+        })
+      })
+    })
+  })
 })

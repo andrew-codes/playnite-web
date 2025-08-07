@@ -21,7 +21,7 @@ describe('Authentication', () => {
 - Authenticated user is redirected back to original page.
 - Authenticated users can immediately sign out.`, () => {
     cy.visit('/help/sync-library')
-    cy.get('[data-test="MainNavigation"]')
+    cy.get('[data-test="Navigation"]')
       .contains('span', 'Login')
       .parents('[role=button]')
       .click({ force: true })
@@ -33,13 +33,13 @@ describe('Authentication', () => {
     cy.location('pathname').should('equal', '/help/sync-library')
     cy.wait('@api')
 
-    cy.get('[data-test="MainNavigation"]')
+    cy.get('[data-test="Navigation"]')
       .contains('span', 'Logout')
       .parents('[role=button]')
       .click({ force: true, multiple: true })
     cy.wait('@api')
 
-    cy.get('[data-test="MainNavigation"]').contains('span', 'Login')
+    cy.get('[data-test="Navigation"]').contains('span', 'Login')
   })
 
   Cypress._.each(breakpoints, ([breakpointName, x, y]) => {

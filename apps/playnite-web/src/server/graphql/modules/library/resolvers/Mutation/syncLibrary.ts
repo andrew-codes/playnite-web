@@ -1,7 +1,5 @@
-import { GraphQLError } from 'graphql'
 import { groupBy } from 'lodash-es'
 import logger from '../../../../../logger.js'
-import { fromString, hasIdentity } from '../../../../../oid.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
 
 function ignSlug(release: { title: string }): string {
@@ -14,31 +12,23 @@ function ignSlug(release: { title: string }): string {
 export const syncLibrary: NonNullable<
   MutationResolvers['syncLibrary']
 > = async (_parent, _arg, _ctx) => {
-  await _ctx.identityService.authorize(_ctx.jwt?.payload)
+  const user = _ctx.jwt?.payload
+  
+  await _ctx.identityService.authorize(user)
 
-  const userOid = fromString(_ctx.jwt?.payload.id)
-  if (hasIdentity(userOid) === false) {
-    throw new GraphQLError(`Invalid user ID: ${_ctx.jwt?.payload.id}`)
-  }
-
-  logger.info(
-    `Syncing library for user ${userOid.id}`,
-    _arg.libraryData.libraryId,
-    _arg.libraryData.name,
-  )
   logger.silly(`Library data`, _arg.libraryData)
 
   let library = await _ctx.db.library.upsert({
     where: {
       playniteId_userId: {
         playniteId: _arg.libraryData.libraryId,
-        userId: userOid.id,
+        userId: user.id,
       },
     },
     create: {
       playniteId: _arg.libraryData.libraryId,
       User: {
-        connect: { id: userOid.id },
+        connect: { id: user.id },
       },
       name: _arg.libraryData.name ?? 'Default Library',
     },

@@ -2,7 +2,7 @@ type Platform {
   id: String!
   name: String!
   games: [Game!]!
-  icon: GameAsset
+  icon: String
 }
 
 extend type Query {

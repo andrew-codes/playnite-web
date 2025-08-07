@@ -2,17 +2,19 @@ import {
   Alert,
   Button,
   Container,
+  styled as muiStyled,
   Snackbar,
   Stack,
   TextField,
   Typography,
-  styled as muiStyled,
 } from '@mui/material'
 import { LoaderFunction, redirect } from '@remix-run/node'
-import { useLocation, useNavigate } from '@remix-run/react'
-import { FormEventHandler, useEffect } from 'react'
-import OuterContainer from '../components/OuterContainer'
+import { useLoaderData, useLocation, useNavigate } from '@remix-run/react'
+import { ComponentType, FormEventHandler, useEffect } from 'react'
+import Layout from '../components/Layout'
+import MainNavigation from '../components/Navigation/MainNavigation'
 import { useRegisterAccount } from '../queryHooks/register'
+import { prisma } from '../server/data/providers/postgres/client'
 import { injectUser } from '../server/loaders/requiresAuthorization'
 
 const loader: LoaderFunction = injectUser(async (args, user) => {
@@ -21,7 +23,8 @@ const loader: LoaderFunction = injectUser(async (args, user) => {
     return redirect('/')
   }
 
-  return null
+  const userCount = await prisma.user.count()
+  return { isSetup: userCount > 0 }
 })
 
 const TallStack = muiStyled(Stack)`
@@ -29,8 +32,13 @@ const TallStack = muiStyled(Stack)`
 `
 
 const Registration = () => {
-  const [registerAccount, { data, error }] = useRegisterAccount()
+  const { isSetup } = useLoaderData<{ isSetup: boolean }>()
+  const navs: Array<ComponentType<{ open: boolean }>> = []
+  if (isSetup) {
+    navs.push(MainNavigation)
+  }
 
+  const [registerAccount, { data, error }] = useRegisterAccount()
   const handleSubmit: FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault()
     const formData = new FormData(evt.currentTarget)
@@ -43,6 +51,7 @@ const Registration = () => {
     }
     registerAccount({ variables: { input } })
   }
+
   const navigate = useNavigate()
   const location = useLocation()
   useEffect(() => {
@@ -52,7 +61,7 @@ const Registration = () => {
   }, [location.search, data?.signUp.user.isAuthenticated])
 
   return (
-    <OuterContainer>
+    <Layout title="Create Account" navs={navs}>
       <Typography variant="h1" component="h1" gutterBottom>
         Create Account
       </Typography>
@@ -118,7 +127,7 @@ const Registration = () => {
           </Alert>
         </Snackbar>
       </form>
-    </OuterContainer>
+    </Layout>
   )
 }
 

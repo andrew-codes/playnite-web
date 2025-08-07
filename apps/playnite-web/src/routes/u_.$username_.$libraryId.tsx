@@ -7,9 +7,11 @@ import { Game } from '../../.generated/types.generated'
 import { $filterValuesForQuery } from '../api/client/state/librarySlice'
 import Filters from '../components/Filters'
 import IconButton from '../components/IconButton'
+import Layout from '../components/Layout'
 import MyLibrary from '../components/MyLibrary'
 import { useNavigateInGrid } from '../components/NavigateInGrid/context'
-import Drawer from '../components/Navigation/Drawer'
+import LibraryNavigation from '../components/Navigation/LibraryNavigation'
+import MainNavigation from '../components/Navigation/MainNavigation'
 import RightDrawer from '../components/RightDrawer'
 import { useAllGames } from '../queryHooks/allGames'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
@@ -60,7 +62,7 @@ function Browse() {
   }, [])
 
   return (
-    <Drawer
+    <Layout
       title={
         <Title>
           <Button variant="text" onClick={handleScrollTop}>
@@ -80,12 +82,13 @@ function Browse() {
           <FilterAlt />
         </IconButton>
       }
+      navs={[LibraryNavigation, MainNavigation]}
     >
       <MyLibrary games={games} onSelect={handleSelection} />
       <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
         {isFiltersInDrawer ? <Filters onClose={handleClose} /> : <Outlet />}
       </RightDrawer>
-    </Drawer>
+    </Layout>
   )
 }
 

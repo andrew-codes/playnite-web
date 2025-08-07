@@ -6,13 +6,16 @@ describe('User Library', () => {
   beforeEach(() => {
     cy.task('seedUsers')
     cy.fixture('librarySync.json').then((libraryData) => {
-      cy.syncLibrary('test', 'test', libraryData).as('library')
+      cy.syncLibrary('test', 'test', libraryData)
+        .as('library')
+        .then((library) => {
+          cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+        })
     })
   })
 
-  it(`Displays the total count of games in the library.`, () => {
-    cy.get<Cypress.Response<any>>('@library').then((library) => {
-      cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+  describe('Game grid', () => {
+    it(`Displays the total count of games in the library.`, () => {
       cy.wait('@graphql')
 
       cy.contains('h2', 'My Games')
@@ -20,58 +23,81 @@ describe('User Library', () => {
         .find(':not(h2)')
         .should('contains.text', '463')
     })
-  })
 
-  it(`Games are displayed in a grid.
+    it(`Games are displayed in a grid.
       - Each game has square cover art.
       - Game titles are displayed below the cover art.
       - Completion status is shown on the cover art.
       - Platform icons are shown on the cover art.
       `, () => {
-    cy.get<Cypress.Response<any>>('@library').then((library) => {
-      cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+      cy.wait('@graphql')
+
+      cy.get('[data-test="GameFigure"]').as('gameFigures')
+      cy.get('@gameFigures')
+        .eq(1)
+        .within(() => {
+          cy.get('img')
+            .should('have.css', 'width')
+            .then((width) => {
+              cy.get('img').should('have.css', 'height').should('equal', width)
+            })
+
+          cy.contains('figcaption', '7 Days to Die').should('be.visible')
+          cy.get('[data-test="GameFigureChipList"]').within(() => {
+            cy.contains('Played').should('be.visible')
+            cy.get('img').should('have.length.greaterThan', 0)
+          })
+        })
     })
 
-    cy.wait('@graphql')
-
-    cy.get('[data-test="GameFigure"]').as('gameFigures')
-    cy.get('@gameFigures')
-      .eq(1)
-      .within(() => {
-        cy.get('img')
-          .should('have.css', 'width')
-          .then((width) => {
-            cy.get('img').should('have.css', 'height').should('equal', width)
-          })
-
-        cy.contains('figcaption', '7 Days to Die').should('be.visible')
-        cy.get('[data-test="GameFigureChipList"]').within(() => {
-          cy.contains('Not Played').should('be.visible')
-          cy.get('img').should('have.length.greaterThan', 0)
-        })
-      })
-  })
-
-  it.only(`Games without cover art.
+    it(`Games without cover art.
       - No broken images are shown.
       `, () => {
-    cy.get<Cypress.Response<any>>('@library').then((library) => {
-      cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+      cy.wait('@graphql')
+
+      cy.get('[data-test="GameFigure"]').as('gameFigures')
+      cy.get('@gameFigures')
+        .eq(0)
+        .within(() => {
+          cy.get('button img').should('not.exist')
+
+          cy.contains('figcaption', '3DMark').should('be.visible')
+          cy.get('[data-test="GameFigureChipList"]').within(() => {
+            cy.contains('Played').should('be.visible')
+            cy.get('img').should('have.length.greaterThan', 0)
+          })
+        })
     })
+  })
 
-    cy.wait('@graphql')
+  describe('Navigation', () => {
+    it(`Library centric navigation.
+      - Link to view games in library.
+      - Link to view playlists in library.
+      - Link to go back to all user's libraries.
+      - Site-wide links are shown below.
+      `, () => {
+      cy.wait('@graphql')
 
-    cy.get('[data-test="GameFigure"]').as('gameFigures')
-    cy.get('@gameFigures')
-      .eq(0)
-      .within(() => {
-        cy.get('button img').should('not.exist')
+      cy.get('[data-test="Navigation"]').within(() => {
+        cy.get('[aria-label="Library navigation"]').within(() => {
+          cy.get('.MuiListItemText-root').then(($els) => {
+            expect($els).to.have.length(3)
+            expect($els.eq(0)).to.contain('Games')
+            expect($els.eq(1)).to.contain('Playlists')
+            expect($els.eq(2)).to.contain('Back to Libraries')
+          })
+        })
 
-        cy.contains('figcaption', '3DMark').should('be.visible')
-        cy.get('[data-test="GameFigureChipList"]').within(() => {
-          cy.contains('Played').should('be.visible')
-          cy.get('img').should('have.length.greaterThan', 0)
+        cy.get('[aria-label="Main navigation"]').within(() => {
+          cy.get('.MuiListItemText-root').then(($els) => {
+            expect($els).to.have.length.greaterThan(3)
+            expect($els.eq(0)).to.contain('Playnite Home')
+            expect($els.eq(1)).to.contain('Help')
+            expect($els.eq(2)).to.contain('Logout')
+          })
         })
       })
+    })
   })
 })

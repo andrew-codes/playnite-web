@@ -2,7 +2,7 @@ type Release {
   id: String!
   communityScore: Int
   completionStatus: CompletionStatus
-  cover: GameAsset
+  cover: String
   criticScore: Int
   description: String
   features: [Feature!]!
