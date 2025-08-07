@@ -69,6 +69,9 @@ async function loader({ request }: LoaderFunctionArgs) {
 
 const Head = createHead(() => (
   <>
+    {process.env.NODE_ENV === 'development' ? (
+      <script src="http://localhost:8097"></script>
+    ) : null}
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/icons/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

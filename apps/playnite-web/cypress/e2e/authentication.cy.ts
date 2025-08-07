@@ -1,4 +1,4 @@
-import breakpoints from '../fixtures/devices.json'
+import { breakpoints } from '../support/breakpoints'
 
 describe('Authentication', () => {
   beforeEach(() => {
@@ -12,29 +12,31 @@ describe('Authentication', () => {
     cy.intercept('POST', '/api').as('api')
   })
 
+  beforeEach(() => {
+    cy.task('seedUsers')
+  })
+
   it(`Authentication flow
 - User can authenticate with a username and password.
 - Authenticated user is redirected back to original page.
 - Authenticated users can immediately sign out.`, () => {
-    cy.visit('/browse')
-
+    cy.visit('/help/sync-library')
     cy.get('[data-test="MainNavigation"]')
       .contains('span', 'Login')
-      .parents('.MuiButtonBase-root')
-      .find('.MuiTouchRipple-root')
+      .parents('[role=button]')
       .click({ force: true })
 
-    cy.get('input[name="username"]').type('local')
-    cy.get('input[name="password"]').type('dev')
+    cy.get('input[name="username"]').type('test')
+    cy.get('input[name="password"]').type('test')
     cy.contains('button', 'Sign In').click()
 
-    cy.contains('h2', 'Library')
+    cy.location('pathname').should('equal', '/help/sync-library')
+    cy.wait('@api')
 
     cy.get('[data-test="MainNavigation"]')
       .contains('span', 'Logout')
-      .parents('.MuiButtonBase-root')
-      .find('.MuiTouchRipple-root')
-      .click({ force: true })
+      .parents('[role=button]')
+      .click({ force: true, multiple: true })
     cy.wait('@api')
 
     cy.get('[data-test="MainNavigation"]').contains('span', 'Login')
@@ -47,13 +49,8 @@ describe('Authentication', () => {
       })
 
       it(`Authentication page`, () => {
-        cy.visit('/')
-        cy.get('[data-test="MainNavigation"]')
-          .contains('span', 'Login')
-          .parents('.MuiButtonBase-root')
-          .find('.MuiTouchRipple-root')
-          .click({ force: true })
-        cy.wait(400)
+        cy.visit('/login')
+        cy.wait('@api')
         cy.compareSnapshot({ name: `login_${breakpointName}` })
       })
     })

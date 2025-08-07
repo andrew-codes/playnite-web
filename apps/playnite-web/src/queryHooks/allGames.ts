@@ -15,6 +15,7 @@ const AllGames = gql`
           title
           cover {
             id
+            url
           }
         }
         releases {

@@ -3,13 +3,11 @@ import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
 import { merge, omit } from 'lodash-es'
 import { prisma } from '../data/providers/postgres/client.js'
-import { User } from '../data/types.entities.js'
 import { GraphUser } from '../graphql/resolverTypes.js'
 import logger from '../logger.js'
-import { create } from '../oid.js'
 
 type Claim = {
-  user: Omit<User, 'password'> & { isAuthenticated: boolean }
+  user: Omit<GraphUser, 'password'> & { isAuthenticated: boolean }
   credential: string
 }
 class IdentityService {
@@ -47,14 +45,9 @@ class IdentityService {
         throw new Error(`Authentication failed.`)
       }
 
-      const scrubbedUser: User = merge(
-        {},
-        omit(matchedUser, 'password', 'id'),
-        {
-          isAuthenticated: true,
-          id: create('User', matchedUser.id).toString(),
-        },
-      )
+      const scrubbedUser: GraphUser = merge({}, omit(matchedUser, 'password'), {
+        isAuthenticated: true,
+      })
 
       return {
         user: scrubbedUser,

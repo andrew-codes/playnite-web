@@ -10,9 +10,9 @@ describe('Onboarding - New Install', () => {
         '/',
         '/browse',
         '/account',
-        '/username',
-        '/username/browse',
-        '/username/browse/gameId',
+        '/u',
+        '/u/username',
+        '/u/username/libraryId',
         '/login',
       ]
 
@@ -96,7 +96,7 @@ describe('Onboarding - New Install', () => {
       cy.get('@registrationForm').find('button[type="submit"]').click()
 
       cy.wait('@writeGraphQL')
-      cy.location('pathname').should('equal', '/account')
+      cy.location('pathname').should('equal', '/u/account')
     })
   })
 })

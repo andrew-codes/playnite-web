@@ -88,7 +88,7 @@ const LoginForm = () => {
   useEffect(() => {
     if (data?.signIn.user.isAuthenticated) {
       const returnTo = new URLSearchParams(location.search).get('returnTo')
-      navigate(returnTo ?? `/${data.signIn.user.username}`)
+      navigate(returnTo ?? `/u/${data.signIn.user.username}`)
     }
   }, [
     location.search,

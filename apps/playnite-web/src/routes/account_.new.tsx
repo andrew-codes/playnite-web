@@ -47,7 +47,7 @@ const Registration = () => {
   const location = useLocation()
   useEffect(() => {
     if (data?.signUp.user.isAuthenticated) {
-      navigate('/account')
+      navigate(`/u/${data.signUp.user.id}/account`)
     }
   }, [location.search, data?.signUp.user.isAuthenticated])
 

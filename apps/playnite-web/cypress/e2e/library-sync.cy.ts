@@ -28,7 +28,7 @@ describe('Library Sync', () => {
   })
 
   it(`Syncs library when authenticated.`, () => {
-    cy.task('seedDatabase')
+    cy.task('seedUsers')
 
     cy.fixture('librarySync.json').then((libraryData) => {
       cy.signIn('test', 'test')
@@ -64,6 +64,7 @@ describe('Library Sync', () => {
           0,
         )
         expect(releasesLength).to.equal(libraryData.update.releases.length)
+        throw new Error('Finish writing assertions here')
         // expect(response.body.data.syncLibrary.sources.length).to.equal(
         //   libraryData.update.sources.length,
         // )

@@ -19,8 +19,7 @@ export const GameAsset: GameAssetResolvers = {
 
     return type
   },
-
   url: (_parent, _args, context) => {
-    return `/user-assets/${context.jwt?.payload.id.replace(':', '-')}/${create('Library', _parent.libraryId).toString().replace(':', '-')}/${_parent.id}.webp`
+    return `/public/game-assets/${_parent.ignId}.webp`
   },
 }

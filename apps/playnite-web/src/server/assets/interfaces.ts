@@ -1,4 +1,4 @@
-import { Asset } from '../../../.generated/prisma/client'
+import { Asset } from '@prisma/client'
 
 interface IPersistAssets {
   persist(asset: Asset): Promise<void>

@@ -6,7 +6,12 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      signIn: (username: string, password: string) => void
+      signIn: (username: string, password: string) => Chainable<Response<any>>
+      syncLibrary: (
+        username: string,
+        password: string,
+        libraryData: any,
+      ) => Chainable<Response<any>>
     }
   }
 }
@@ -29,6 +34,12 @@ beforeEach(() => {
 
 beforeEach(() => {
   cy.task('clearDatabase')
+})
+
+Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
+  originalFn(url, options)
+  // TODO: This is to allow time for the page to bootstrap with React. This is a sign that there are some optimizations needed.
+  cy.wait(5000)
 })
 
 Cypress.Commands.add('signIn', (username: string, password: string) => {
@@ -57,4 +68,27 @@ Cypress.Commands.add('signIn', (username: string, password: string) => {
         domain: 'localhost',
       })
     })
+})
+
+Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
+  cy.signIn(username, password)
+
+  return cy.request({
+    method: 'POST',
+    url: 'http://localhost:3000/api',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      variables: {
+        libraryData,
+      },
+      query: `mutation syncLibrary($libraryData: LibraryInput!) {
+        syncLibrary(libraryData: $libraryData) {
+          id
+        }
+      }`,
+    }),
+  })
 })

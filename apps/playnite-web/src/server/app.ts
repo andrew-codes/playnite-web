@@ -95,7 +95,8 @@ async function run() {
     )
   }
   app.use(
-    express.static(path.join(__dirname, '..', 'public', 'assets'), {
+    '/public',
+    express.static(path.join(__dirname, '..', 'public'), {
       maxAge: '1y',
     }),
   )
@@ -120,6 +121,11 @@ async function run() {
     }
 
     if (req.path.startsWith('/api')) {
+      next()
+      return
+    }
+
+    if (req.path.startsWith('/public')) {
       next()
       return
     }

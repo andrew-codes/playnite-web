@@ -1,4 +1,4 @@
-import { Asset } from '../../../.generated/prisma/client'
+import { Asset } from '@prisma/client'
 import { ISourceAssets } from './interfaces'
 
 class IgnSourcedAssets implements ISourceAssets {

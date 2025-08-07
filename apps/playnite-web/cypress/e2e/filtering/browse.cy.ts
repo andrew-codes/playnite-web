@@ -1,4 +1,4 @@
-import breakpoints from '../../fixtures/devices.json'
+import { breakpoints } from '../../support/breakpoints'
 
 // Filtering is broken; tracked in separate issue.
 describe.skip('Filtering.', () => {

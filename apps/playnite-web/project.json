@@ -97,10 +97,7 @@
       "outputs": ["{projectRoot}/.test-runs/unit"],
       "options": {
         "command": "yarn jest --config jest.config.js",
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_OPTIONS": "--no-experimental-require-module"
-        }
+        "cwd": "{projectRoot}"
       },
       "configurations": {
         "ci": {}
@@ -126,7 +123,11 @@
         "{projectRoot}/visual-regression-tests/component-screenshots/diff"
       ],
       "options": {
-        "command": "yarn cypress open --component --browser edge",
+        "parallel": true,
+        "commands": [
+          "yarn cypress open --component --browser edge",
+          "yarn react-devtools"
+        ],
         "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "dev",
@@ -134,23 +135,23 @@
         "dev": {
           "env": {
             "TEST": "component",
-            "NODE_OPTIONS": "--no-experimental-require-module",
+            "NODE_ENV": "development",
             "CMD": "run"
           }
         },
         "ci": {
-          "command": "yarn cypress run --component --browser edge",
+          "commands": ["yarn cypress run --component --browser edge"],
           "env": {
             "CI": "true",
             "TEST": "component",
-            "NODE_OPTIONS": "--no-experimental-require-module"
+            "NODE_ENV": "production"
           }
         },
         "ci/local": {
-          "command": "yarn cypress run --component --browser edge",
+          "commands": ["yarn cypress run --component --browser edge"],
           "env": {
             "CI": "true",
-            "NODE_OPTIONS": "--no-experimental-require-module",
+            "NODE_ENV": "production",
             "TEST": "component",
             "CMD": "run"
           }
@@ -175,7 +176,7 @@
         "command": "yarn tsx scripts/component-for-update.ts",
         "cwd": "{projectRoot}",
         "env": {
-          "NODE_OPTIONS": "--no-experimental-require-module",
+          "NODE_ENV": "production",
           "TEST": "component"
         }
       }
@@ -184,14 +185,16 @@
       "executor": "nx:run-commands",
       "dependsOn": ["clean/test"],
       "options": {
-        "parallel": false,
-        "command": "yarn start-server-and-test 'cross-env NODE_ENV=production TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser edge'",
+        "parallel": true,
+        "commands": [
+          "yarn react-devtools",
+          "yarn start-server-and-test 'cross-env NODE_ENV=production TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser edge'"
+        ],
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
           "LOG_LEVEL": "silly",
           "NODE_ENV": "development",
-          "NODE_OPTIONS": "--no-experimental-require-module",
           "INSTRUMENT": "true"
         }
       }
@@ -209,8 +212,7 @@
           "LOG_LEVEL": "verbose",
           "TEST": "e2e",
           "START_SERVER_AND_TEST_INSECURE": "1",
-          "NODE_ENV": "development",
-          "NODE_OPTIONS": "--no-experimental-require-module",
+          "NODE_ENV": "production",
           "INSTRUMENT": "true"
         }
       },
@@ -222,8 +224,7 @@
             "CI": "true",
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
-            "NODE_ENV": "development",
-            "NODE_OPTIONS": "--no-experimental-require-module",
+            "NODE_ENV": "production",
             "INSTRUMENT": "true"
           }
         },
@@ -234,8 +235,7 @@
             "LOG_LEVEL": "silly",
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
-            "NODE_ENV": "development",
-            "NODE_OPTIONS": "--no-experimental-require-module",
+            "NODE_ENV": "production",
             "INSTRUMENT": "true"
           }
         }
@@ -251,7 +251,7 @@
         "env": {
           "CMD": "run",
           "INSTRUMENT": "true",
-          "NODE_OPTIONS": "--no-experimental-require-module",
+          "NODE_ENV": "production",
           "UPDATE": "true",
           "LOG_LEVEL": "info"
         }

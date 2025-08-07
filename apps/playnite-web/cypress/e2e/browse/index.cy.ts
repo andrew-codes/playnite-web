@@ -1,4 +1,4 @@
-import breakpoints from '../../fixtures/devices.json'
+import { breakpoints } from '../../support/breakpoints'
 
 describe('Browse.', () => {
   beforeEach(() => {

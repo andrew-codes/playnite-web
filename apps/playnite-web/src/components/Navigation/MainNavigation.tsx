@@ -14,7 +14,7 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { useNavigate, useParams } from '@remix-run/react'
+import { useLocation, useNavigate, useParams } from '@remix-run/react'
 import { isEmpty, merge } from 'lodash-es'
 import { FC } from 'react'
 import { useMe, useSignOut } from '../../queryHooks'
@@ -41,7 +41,7 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   const params = useParams<{ username?: string; libraryId?: string }>()
 
   const me = useMe()
-  const isAuthenticated = me.data?.me.isAuthenticated ?? false
+  console.debug(me)
   const [signOut] = useSignOut()
   const handleSignOut = () => {
     signOut()
@@ -57,6 +57,8 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
     evt.preventDefault()
     navigate(href)
   }
+
+  const location = useLocation()
 
   const theme = useTheme()
 
@@ -222,9 +224,11 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ display: 'block' }}>
-            {!isAuthenticated ? (
+            {!me.data?.me.isAuthenticated ? (
               <ListItemButton
-                onClick={handleNavigation('/login')}
+                onClick={handleNavigation(
+                  `/login?returnTo=${location.pathname}`,
+                )}
                 sx={{
                   minHeight: theme.spacing(6),
                   justifyContent: open ? 'initial' : 'center',

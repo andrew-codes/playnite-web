@@ -34,7 +34,7 @@ const tasks = (on, config) => {
       return true
     },
 
-    async seedDatabase() {
+    async seedUsers() {
       const prisma = new PrismaClient()
 
       try {
