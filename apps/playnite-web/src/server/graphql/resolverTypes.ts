@@ -1,4 +1,4 @@
-import { Prisma } from '../../../.generated/prisma/index.js'
+import { Prisma } from '@prisma/client'
 import { RunState } from '../data/types.entities.js'
 
 type GameReleaseStateSubscriptionPayload = {
@@ -44,7 +44,6 @@ export type {
   GraphLibrary,
   GraphPlatform,
   GraphPlaylist,
-  GraphPlayniteInstance,
   GraphRelease,
   GraphSource,
   GraphTag,

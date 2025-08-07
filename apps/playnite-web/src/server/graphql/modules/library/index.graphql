@@ -1,5 +1,6 @@
 type Library {
   id: String!
+  name: String
   games: [Game!]!
   platforms: [Platform!]!
   playlists: [Playlist!]!

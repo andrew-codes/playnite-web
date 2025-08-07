@@ -22,7 +22,7 @@ model User {
   password   String
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  Library    Library[]
+  Libraries  Library[]
   permission Int
 
   @@index([email])

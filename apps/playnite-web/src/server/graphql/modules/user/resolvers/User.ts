@@ -11,13 +11,13 @@ export const User: UserResolvers = {
     return parent.isAuthenticated ?? false
   },
   libraries: async (parent, _args, ctx) => {
-    if (!parent.libraries) {
+    if (!parent.id) {
       return []
     }
 
     const libraries = await ctx.db.library.findMany({
       where: {
-        id: { in: parent.libraries.map((library) => library.id) },
+        userId: parent.id,
       },
     })
 

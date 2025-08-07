@@ -37,7 +37,9 @@ export const syncLibrary: NonNullable<
     },
     create: {
       playniteId: _arg.libraryData.libraryId,
-      userId: userOid.id,
+      User: {
+        connect: { id: userOid.id },
+      },
       name: _arg.libraryData.name ?? 'Default Library',
     },
     update: {

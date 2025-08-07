@@ -4,7 +4,7 @@ import { Library } from '../../.generated/types.generated'
 
 const AllGames = gql`
   query library($input: String!) {
-    library(username: $input) {
+    library(libraryId: $input) {
       games {
         id
         completionStatus {

@@ -7,6 +7,10 @@ const UserLookup = gql`
     lookupUser(username: $username) {
       id
       username
+      libraries {
+        id
+        name
+      }
     }
   }
 `
