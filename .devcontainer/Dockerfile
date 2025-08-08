@@ -1,11 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/base:bookworm
 USER root
 
-# MQTT server and client
-RUN apt-get update -y
-RUN apt-get install -y \
-  mosquitto-clients
-
 RUN apt-get install -y \
   apt-transport-https \
   ca-certificates \
