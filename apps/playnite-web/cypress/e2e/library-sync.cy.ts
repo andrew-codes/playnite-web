@@ -48,6 +48,18 @@ describe('Library Sync', () => {
                   id
                 }
               }
+              sources {
+                id
+              }
+              features {
+                id
+              }
+              completionStates {
+                id
+              }
+              tags {
+                id
+              }
             }
           }`,
           variables: {
@@ -59,15 +71,28 @@ describe('Library Sync', () => {
         expect(response.body.data.syncLibrary.platforms.length).to.equal(
           libraryData.update.platforms.length,
         )
+
         const releasesLength = response.body.data.syncLibrary.games.reduce(
           (sum, game) => sum + game.releases.length,
           0,
         )
         expect(releasesLength).to.equal(libraryData.update.releases.length)
-        throw new Error('Finish writing assertions here')
-        // expect(response.body.data.syncLibrary.sources.length).to.equal(
-        //   libraryData.update.sources.length,
-        // )
+
+        expect(response.body.data.syncLibrary.sources.length).to.equal(
+          libraryData.update.sources.length,
+        )
+
+        expect(response.body.data.syncLibrary.features.length).to.equal(
+          libraryData.update.features.length,
+        )
+
+        expect(response.body.data.syncLibrary.completionStates.length).to.equal(
+          libraryData.update.completionStates.length,
+        )
+
+        expect(response.body.data.syncLibrary.tags.length).to.equal(
+          libraryData.update.tags.length,
+        )
       })
     })
   })

@@ -33,4 +33,44 @@ export const Library: LibraryResolvers = {
       },
     })
   },
+  sources: async (library, _args, ctx) => {
+    return ctx.db.source.findMany({
+      where: {
+        libraryId: library.id,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  },
+  features: async (library, _args, ctx) => {
+    return ctx.db.feature.findMany({
+      where: {
+        libraryId: library.id,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  },
+  completionStates: async (library, _args, ctx) => {
+    return ctx.db.completionStatus.findMany({
+      where: {
+        libraryId: library.id,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  },
+  tags: async (library, _args, ctx) => {
+    return ctx.db.tag.findMany({
+      where: {
+        libraryId: library.id,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  },
 }

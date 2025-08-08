@@ -4,6 +4,10 @@ type Library {
   games: [Game!]!
   platforms: [Platform!]!
   playlists: [Playlist!]!
+  sources: [Source!]!
+  features: [Feature!]!
+  completionStates: [CompletionStatus!]!
+  tags: [Tag!]!
 }
 
 input ReleaseInput {
