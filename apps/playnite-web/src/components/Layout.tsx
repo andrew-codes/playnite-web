@@ -14,6 +14,7 @@ const Layout: FC<
   }>
 > = ({ children, navs, title, secondaryMenu }) => {
   const theme = useTheme()
+
   const shouldUseNonMobileDrawer = useMediaQuery(theme.breakpoints.up('lg'))
 
   const navigateInGrid = configure()
@@ -26,7 +27,11 @@ const Layout: FC<
           {shouldUseNonMobileDrawer ? (
             <NonMobileDrawerNavigation navs={navs}>
               <Box
-                sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                }}
               >
                 <Drawer navs={navs} title={title}>
                   <OuterContainer>{children}</OuterContainer>

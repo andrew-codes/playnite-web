@@ -1,6 +1,6 @@
 import { useParams } from '@remix-run/react'
 import GameDetails from '../components/GameDetails'
-import { useGameById } from '../queryHooks/gameById'
+import { useGameById } from '../hooks/gameById'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
 const loader = requiresUserSetup()

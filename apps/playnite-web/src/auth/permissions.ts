@@ -1,10 +1,10 @@
-import { User } from '../../../.generated/types.generated'
+import { User } from '../../.generated/types.generated'
 
 enum PermissionValue {
   None = 0,
   Read = 1 << 0, // 1
-  Write = 1 << 1, // 2
-  SiteAdmin = Read | Write | (1 << 5), //   32
+  Write = (1 << 1) | (1 << 0), // 3
+  SiteAdmin = (1 << 0) | (1 << 1) | (1 << 5), //  35
 }
 const permissionNames = ['None', 'Read', 'Write', 'SiteAdmin'] as const
 type PermissionNames = (typeof permissionNames)[number]
@@ -19,9 +19,15 @@ const Permission: PermissionsType = {
   SiteAdmin: PermissionValue.SiteAdmin,
 }
 
-const userHasPermission = (user: User, requiredPermission: PermissionValue) => {
+const userHasPermission = (
+  user: User | null | undefined,
+  requiredPermission: PermissionValue,
+) => {
+  if (!user) {
+    return false
+  }
   return (user.permission & requiredPermission) === requiredPermission
 }
 
 export default Permission
-export { permissionNames, userHasPermission }
+export { permissionNames, PermissionValue, userHasPermission }

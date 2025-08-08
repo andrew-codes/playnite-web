@@ -4,6 +4,10 @@
     "isolatedModules": false,
     "noEmit": false
   },
-  "include": ["src/server/**/*.ts", ".generated/**/*.*"],
+  "include": [
+    "src/server/**/*.ts",
+    ".generated/**/*.*",
+    "src/auth/permissions.ts"
+  ],
   "exclude": ["**/__tests__/**", "**/__component_tests__/**", "node_modules"]
 }

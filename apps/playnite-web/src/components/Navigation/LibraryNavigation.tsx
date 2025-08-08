@@ -1,22 +1,10 @@
 import { Games, LocalLibrary } from '@mui/icons-material'
-import { List, styled } from '@mui/material'
 import { useParams } from '@remix-run/react'
 import { FC } from 'react'
 import NavMenu from './NavMenu'
 
-const NavigationList = styled(List, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<{ open: boolean }>(({ open, theme }) => ({
-  padding: '0 18px',
-  width: '100%',
-  ...(open && {
-    padding: '0 9px',
-  }),
-  ...(!open && {}),
-}))
-
 const LibraryNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
-  const params = useParams<{ username: string; libraryId: string }>()
+  const params = useParams()
   const { username, libraryId } = params
 
   return (
@@ -40,4 +28,7 @@ const LibraryNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   )
 }
 
+type SearchParams = { username: string; libraryId: string }
+
 export default LibraryNavigation
+export type { SearchParams }

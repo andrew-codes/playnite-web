@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 import app from './app.js'
 import { prisma } from './data/providers/postgres/client.js'
+import { setupApp } from './setupApp.js'
 
 const __dirname = import.meta.dirname
 
@@ -21,6 +22,10 @@ async function run() {
 
   logger.info('Starting Playnite Web app...')
   try {
+    await prisma.$connect()
+
+    await setupApp()
+
     await app()
   } catch (error) {
     logger.error('Error starting Playnite Web app:', error)

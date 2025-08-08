@@ -31,7 +31,8 @@
     ".generated/**/*.*",
     ".generated/resolvers.generated.ts",
     ".generated/typeDefs.generated.ts",
-    ".generated/types.generated.ts"
+    ".generated/types.generated.ts",
+    "cypress/e2e/errors.cy.ts"
   ],
   "exclude": ["node_modules"],
   "references": [

@@ -6,13 +6,13 @@ import Layout from '../components/Layout'
 import { Link } from '../components/Link'
 import LibrariesNavigation from '../components/Navigation/LibrariesNavigation'
 import MainNavigation from '../components/Navigation/MainNavigation'
-import { useUserLookup } from '../queryHooks/userLookup'
+import { useUserLookup } from '../hooks/userLookup'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
 const loader = requiresUserSetup()
 
 function Index() {
-  const params = useParams<{ username: string }>()
+  const params = useParams()
   const data = useUserLookup(params.username ?? '')
 
   const userData = data.data
@@ -22,7 +22,7 @@ function Index() {
     <Layout
       title={
         <Header>
-          <Typography variant="h2">Libraries</Typography>
+          <Typography variant="h1">Libraries</Typography>
         </Header>
       }
       navs={[LibrariesNavigation, MainNavigation]}
@@ -51,5 +51,8 @@ function Index() {
   )
 }
 
+type SearchParams = { username: string }
+
 export default Index
 export { loader }
+export type { SearchParams }

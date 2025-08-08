@@ -22986,7 +22986,6 @@ __metadata:
     react-window: "npm:^1.8.11"
     remix-auth: "npm:^4.2.0"
     remix-auth-form: "npm:^3.0.0"
-    remix-island: "npm:^0.2.0"
     remix-routes: "npm:^1.7.7"
     remix-utils: "npm:^8.7.0"
     rimraf: "npm:^6.0.1"
@@ -24363,18 +24362,6 @@ __metadata:
   version: 4.2.0
   resolution: "remix-auth@npm:4.2.0"
   checksum: 10c0/e01f6e18acbac801584c0a0127c29846923e229fe5f630065fc4b277e0721a34405dbb6bdb4736be578653d60600cbdef2f0e1920817fbcde559882e7b2e03af
-  languageName: node
-  linkType: hard
-
-"remix-island@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "remix-island@npm:0.2.0"
-  peerDependencies:
-    "@remix-run/react": ">= 1"
-    "@remix-run/server-runtime": ">= 1"
-    react: ">= 16.8"
-    react-dom: ">= 16.8"
-  checksum: 10c0/dcc8ce2e1dae186438ab000a4b5baa60a4692be6324da3ac6115ff7f839fc5324874e8da2c8c2fc76c46bdcc074ecd543c87318718f408c02ce8d4feb4fb47c2
   languageName: node
   linkType: hard
 

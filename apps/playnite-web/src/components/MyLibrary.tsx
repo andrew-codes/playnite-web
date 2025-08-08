@@ -5,7 +5,6 @@ import useDimensions from 'react-use-dimensions'
 import { Game } from '../../.generated/types.generated'
 import GameGrid from '../components/GameGrid'
 import Header from '../components/Header'
-import OuterContainer from './OuterContainer'
 import useThemeWidth from './useThemeWidth'
 
 const MyLibrary: FC<{
@@ -19,49 +18,43 @@ const MyLibrary: FC<{
     <>
       <Helmet>
         {games
-          .filter((game) => game.primaryRelease?.cover?.id)
+          .filter((game) => game.primaryRelease?.cover)
           .slice(0, 15)
           .map((game) => (
             <link
               key={game.id}
               rel="preload"
               as="image"
-              href={`/asset-by-id/${game.primaryRelease?.cover?.id}`}
+              href={`/asset-by-id/${game.primaryRelease?.cover}`}
             />
           ))}
       </Helmet>
-      <OuterContainer>
-        <Header>
-          <div>
-            <Typography variant="h2">My Games</Typography>
-            <Typography variant="subtitle1">
-              <span>{games.length}</span>&nbsp;games in library
-            </Typography>
-          </div>
-        </Header>
-        <Box
-          ref={ref}
-          sx={(theme) => ({
-            flexGrow: 1,
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            margin: '0 auto',
-            [theme.breakpoints.up('lg')]: {
-              overflowY: 'auto',
-            },
-            [theme.breakpoints.up('xl')]: {
-              width: `${width}px`,
-            },
-          })}
-        >
-          <GameGrid
-            games={games}
-            height={dims.height ?? 0}
-            onSelect={onSelect}
-          />
-        </Box>
-      </OuterContainer>
+      <Header>
+        <div>
+          <Typography variant="h2">My Games</Typography>
+          <Typography variant="subtitle1">
+            <span>{games.length}</span>&nbsp;games in library
+          </Typography>
+        </div>
+      </Header>
+      <Box
+        ref={ref}
+        sx={(theme) => ({
+          flexGrow: 1,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '0 auto',
+          [theme.breakpoints.up('lg')]: {
+            overflowY: 'auto',
+          },
+          [theme.breakpoints.up('xl')]: {
+            width: `${width}px`,
+          },
+        })}
+      >
+        <GameGrid games={games} height={dims.height ?? 0} onSelect={onSelect} />
+      </Box>
     </>
   )
 }

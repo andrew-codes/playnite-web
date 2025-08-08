@@ -13,7 +13,7 @@ import { useNavigateInGrid } from '../components/NavigateInGrid/context'
 import LibraryNavigation from '../components/Navigation/LibraryNavigation'
 import MainNavigation from '../components/Navigation/MainNavigation'
 import RightDrawer from '../components/RightDrawer'
-import { useAllGames } from '../queryHooks/allGames'
+import { useAllGames } from '../hooks/allGames'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
 const loader = requiresUserSetup()
@@ -28,7 +28,7 @@ const Title = styled('span')(({ theme }) => ({
 function Browse() {
   const { nameFilter, filterItems } = useSelector($filterValuesForQuery)
 
-  const params = useParams<{ username: string; libraryId: string }>()
+  const params = useParams()
   const { loading, data, error } = useAllGames(params.libraryId ?? '')
 
   const games = !loading ? (data?.library?.games ?? []) : []
@@ -92,5 +92,7 @@ function Browse() {
   )
 }
 
+type SearchParams = { username: string; libraryId: string }
+
 export default Browse
-export { loader }
+export { loader, SearchParams }

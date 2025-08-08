@@ -18,12 +18,9 @@ import { createClient } from 'graphql-ws'
 import { isbot } from 'isbot'
 import jwt from 'jsonwebtoken'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { Helmet } from 'react-helmet'
 import { Provider } from 'react-redux'
-import { renderHeadToString } from 'remix-island'
 import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
-import { Head } from './root'
 import { User } from './server/data/types.entities.js'
 import { PlayniteContext } from './server/graphql/context.js'
 import schema from './server/graphql/schema.js'
@@ -161,18 +158,12 @@ async function handleBotRequest(
         </>,
       )
 
-      const head = renderHeadToString({ request, remixContext, Head })
-      const helmet = Helmet.renderStatic()
-
       responseHeaders.set('Content-Type', 'text/html')
       resolve(
-        new Response(
-          `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body><div id="root">${renderedOutput}</div></body></html>`,
-          {
-            headers: responseHeaders,
-            status: responseStatusCode,
-          },
-        ),
+        new Response(`<!DOCTYPE html>${renderedOutput}`, {
+          headers: responseHeaders,
+          status: responseStatusCode,
+        }),
       )
     })
   })
@@ -184,8 +175,6 @@ async function handleBrowserRequest(
   responseHeaders: Headers,
   remixContext: EntryContext,
 ) {
-  const clientSideCache = createEmotionCache()
-  const store = configureStore({ reducer })
   const domain = process.env.HOST ?? 'localhost'
   const port = process.env.PORT ?? '3000'
 
@@ -255,13 +244,11 @@ async function handleBrowserRequest(
   })
   const App = (
     <ApolloProvider client={client}>
-      <Provider store={store}>
-        <RemixServer
-          context={remixContext}
-          url={request.url}
-          abortDelay={ABORT_DELAY}
-        />
-      </Provider>
+      <RemixServer
+        context={remixContext}
+        url={request.url}
+        abortDelay={ABORT_DELAY}
+      />
     </ApolloProvider>
   )
 
@@ -272,7 +259,10 @@ async function handleBrowserRequest(
 
       const renderedOutput = renderToStaticMarkup(
         <>
-          <CacheProvider value={clientSideCache}>{App}</CacheProvider>
+          {App}
+          {process.env.NODE_ENV === 'development' && (
+            <script src="http://localhost:8097"></script>
+          )}
           <script
             dangerouslySetInnerHTML={{
               __html: `window.__APOLLO_STATE__=${JSON.stringify(
@@ -283,18 +273,12 @@ async function handleBrowserRequest(
         </>,
       )
 
-      const head = renderHeadToString({ request, remixContext, Head })
-      const helmet = Helmet.renderStatic()
-
       responseHeaders.set('Content-Type', 'text/html')
       resolve(
-        new Response(
-          `<!DOCTYPE html><html lang="en-US"><head>${head}${helmet.link.toString()}</head><body><div id="root">${renderedOutput}</div></body></html>`,
-          {
-            headers: responseHeaders,
-            status: responseStatusCode,
-          },
-        ),
+        new Response(`<!DOCTYPE html>${renderedOutput}`, {
+          headers: responseHeaders,
+          status: responseStatusCode,
+        }),
       )
     })
   })

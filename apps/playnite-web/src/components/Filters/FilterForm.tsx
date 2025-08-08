@@ -26,7 +26,7 @@ import {
   useReducer,
   useState,
 } from 'react'
-import { useFilterItems } from '../../queryHooks/getFilterItems'
+import { useFilterItems } from '../../hooks/getFilterItems'
 import AutoComplete from '../AutoComplete'
 import SquareIconButton from '../IconButton'
 import Select from '../Select'

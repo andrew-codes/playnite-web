@@ -47,7 +47,6 @@
     "react-window": "^1.8.11",
     "remix-auth": "^4.2.0",
     "remix-auth-form": "^3.0.0",
-    "remix-island": "^0.2.0",
     "remix-routes": "^1.7.7",
     "remix-utils": "^8.7.0",
     "sharp": "^0.34.3",

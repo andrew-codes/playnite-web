@@ -21,6 +21,7 @@ const config: CodegenConfig = {
           User: '../src/server/graphql/resolverTypes#GraphUser',
           Library: '../src/server/graphql/resolverTypes#GraphLibrary',
           Tag: '../src/server/graphql/resolverTypes#GraphTag',
+          SiteSetting: '../src/server/graphql/resolverTypes#GraphSiteSetting',
         },
         contextType: '../src/server/graphql/context#PlayniteContext',
       },

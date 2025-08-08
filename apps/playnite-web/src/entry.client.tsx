@@ -69,7 +69,7 @@ startTransition(() => {
   })
 
   hydrateRoot(
-    document.getElementById('root')!,
+    document,
     <StrictMode>
       <CacheProvider value={clientSideCache}>
         <ApolloProvider client={client}>

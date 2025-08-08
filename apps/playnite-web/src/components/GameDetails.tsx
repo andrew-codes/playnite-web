@@ -14,10 +14,10 @@ import {
 } from '@mui/material'
 import { FC, useMemo, useRef, useState } from 'react'
 import { Game, Release } from '../../.generated/types.generated'
-import { useMe } from '../queryHooks'
-import { useRestartRelease } from '../queryHooks/restartRelease'
-import { useStartRelease } from '../queryHooks/startRelease'
-import { useStopRelease } from '../queryHooks/stopRelease'
+import { useMe } from '../hooks'
+import { useRestartRelease } from '../hooks/restartRelease'
+import { useStartRelease } from '../hooks/startRelease'
+import { useStopRelease } from '../hooks/stopRelease'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {

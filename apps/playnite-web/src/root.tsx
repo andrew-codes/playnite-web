@@ -1,7 +1,9 @@
-import { css, Global } from '@emotion/react'
-import { CssBaseline, ThemeProvider } from '@mui/material'
-import { json, LinksFunction, LoaderFunctionArgs } from '@remix-run/node'
+import { CacheProvider, css, Global } from '@emotion/react'
+import { CssBaseline, ThemeProvider, Typography } from '@mui/material'
+import { configureStore } from '@reduxjs/toolkit'
+import { LinksFunction, LoaderFunctionArgs } from '@remix-run/node'
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   MetaFunction,
@@ -9,12 +11,18 @@ import {
   ScrollRestoration,
   useLoaderData,
   useOutlet,
+  useRouteError,
 } from '@remix-run/react'
-import { FC, useEffect } from 'react'
-import { useStore } from 'react-redux'
-import { createHead } from 'remix-island'
+import { FC, PropsWithChildren, useEffect } from 'react'
+import { Helmet } from 'react-helmet'
+import { Provider, useDispatch } from 'react-redux'
+import { reducer } from './api/client/state'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
 import { UAParser } from './api/layout.server'
+import Header from './components/Header'
+import AppLayout from './components/Layout'
+import MainNavigation from './components/Navigation/MainNavigation'
+import createEmotionCache from './createEmotionCache'
 import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
@@ -47,6 +55,31 @@ const links: LinksFunction = () => {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap',
     },
+    {
+      rel: 'manifest',
+      href: '/manifest.webmanifest',
+    },
+    {
+      rel: 'icon',
+      href: '/icons/favicon.ico',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '32x32',
+      href: '/favicon-32x32.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '16x16',
+      href: '/favicon-16x16.png',
+    },
+    {
+      rel: 'apple-touch-icon',
+      sizes: '180x180',
+      href: '/icons/apple-touch-icon.png',
+    },
   ]
 }
 
@@ -59,42 +92,16 @@ async function loader({ request }: LoaderFunctionArgs) {
     model: ua?.device?.model ?? null,
   }
 
-  return json({
+  return {
     device,
-  })
+  }
 }
 
-const Head = createHead(() => (
-  <>
-    {process.env.NODE_ENV === 'development' ? (
-      <script src="http://localhost:8097"></script>
-    ) : null}
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/icons/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/icons/apple-touch-icon.png"
-    />
-    <Meta />
-    <Links />
-  </>
-))
-
 const App: FC<{}> = () => {
-  const { device, user } = useLoaderData<{
-    device: {
-      type: 'desktop' | 'tablet' | 'mobile'
-      vendor: string | null
-      model: string | null
-    }
-    user?: any
-  }>()
+  const outlet = useOutlet()
 
-  const store = useStore()
-
+  const dispatch = useDispatch()
+  const d = useLoaderData<ReturnType<typeof loader>>()
   useEffect(() => {
     let isTouchEnabled = false
     let orientation: null | OrientationType = null
@@ -119,15 +126,15 @@ const App: FC<{}> = () => {
     if (pwaMq?.media === '(display-mode: standalone)' && !!pwaMq.matches) {
       isPwa = true
     }
-    store.dispatch(
+    dispatch(
       setDeviceFeatures({
-        device,
+        device: d.device.type as any,
         isTouchEnabled,
         orientation,
         isPwa,
       }),
     )
-  }, [])
+  }, [d?.device])
   useEffect(() => {
     const handleOrientationChange = (evt) => {
       setDeviceFeatures({ orientation: window.screen.orientation.type })
@@ -139,43 +146,89 @@ const App: FC<{}> = () => {
     }
   }, [])
 
-  const outlet = useOutlet()
+  return <>{outlet}</>
+}
 
-  const theme = muiTheme(device.type ?? 'unknown')
+const Layout: FC<PropsWithChildren<{}>> = ({ children }) => {
+  const clientSideCache = createEmotionCache()
+
+  const store = configureStore({ reducer })
+
+  const theme = muiTheme('desktop')
 
   return (
-    <>
-      <Head />
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Global
-          styles={css`
-            * {
-              scrollbar-color: ${theme.palette.text.primary}
-                ${theme.palette.background.default};
-            }
-            ::-webkit-scrollbar {
-              background-color: ${theme.palette.background.default};
-            }
-            ::-webkit-scrollbar-thumb {
-              background-color: ${theme.palette.text.primary};
-              border-radius: 10px;
-            }
-            ::-webkit-scrollbar-button {
-              display: none;
-            }
-            ::-webkit-scrollbar-track {
-              background-color: ${theme.palette.background.default};
-            }
-          `}
-        />
-        {outlet}
-      </ThemeProvider>
-      <ScrollRestoration />
-      <Scripts />
-    </>
+    <html lang="en-us">
+      <head></head>
+      <body>
+        <Helmet>
+          <Meta />
+          <Links />
+        </Helmet>
+        <CacheProvider value={clientSideCache}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Global
+              styles={css`
+                * {
+                  scrollbar-color: ${theme.palette.text.primary}
+                    ${theme.palette.background.default};
+                }
+                ::-webkit-scrollbar {
+                  background-color: ${theme.palette.background.default};
+                }
+                ::-webkit-scrollbar-thumb {
+                  background-color: ${theme.palette.text.primary};
+                  border-radius: 10px;
+                }
+                ::-webkit-scrollbar-button {
+                  display: none;
+                }
+                ::-webkit-scrollbar-track {
+                  background-color: ${theme.palette.background.default};
+                }
+              `}
+            />
+            <Provider store={store}>{children}</Provider>
+          </ThemeProvider>
+        </CacheProvider>
+        <Scripts />
+        <ScrollRestoration />
+      </body>
+    </html>
+  )
+}
+
+const ErrorBoundary: FC<{}> = () => {
+  const error = useRouteError()
+  let errorTitle = <Typography variant="h1">Unexpected Error</Typography>
+  let content = (
+    <Typography variant="body1">
+      Oops, Something went wrong. Please try again later.
+    </Typography>
+  )
+
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 403) {
+      errorTitle = <Typography variant="h1">Forbidden</Typography>
+
+      content = (
+        <div className="error-container">
+          <p>You don't have permission to access this page.</p>
+        </div>
+      )
+    } else if (error.status === 404) {
+      errorTitle = <Typography variant="h1">Not Found</Typography>
+    } else {
+      errorTitle = <Typography variant="h1">{error.statusText}</Typography>
+    }
+  }
+
+  return (
+    <AppLayout title={<Header>{errorTitle}</Header>} navs={[MainNavigation]}>
+      {content}
+    </AppLayout>
   )
 }
 
 export default App
-export { Head, links, loader, meta }
+export { ErrorBoundary, Layout, links, loader, meta }

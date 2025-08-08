@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { FormEventHandler, useEffect } from 'react'
-import { useSignIn } from '../queryHooks'
+import { useSignIn } from '../hooks'
 // import { IdentityService, UsernamePasswordCredential } from '../server/auth'
 // import * as cookies from '../server/cookies.js'
 // import data from './../server/data/data.js'
@@ -116,7 +116,6 @@ const LoginForm = () => {
               label="Username"
               variant="outlined"
               autoComplete="username"
-              required
             />
             <TextField
               name="password"
@@ -124,7 +123,6 @@ const LoginForm = () => {
               label="Password"
               variant="outlined"
               autoComplete="password"
-              required
             />
             <FormControlLabel
               control={<Checkbox name="rememberMe" size="medium" />}

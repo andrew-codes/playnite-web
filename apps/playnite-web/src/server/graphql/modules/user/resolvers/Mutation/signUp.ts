@@ -1,7 +1,7 @@
 import { GraphQLError } from 'graphql'
+import Permission from '../../../../../../auth/permissions.js'
 import { hashPassword } from '../../../../../auth/hashPassword.js'
 import { UsernamePasswordCredential } from '../../../../../auth/index.js'
-import Permission from '../../../../../auth/permissions.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const signUp: NonNullable<MutationResolvers['signUp']> = async (

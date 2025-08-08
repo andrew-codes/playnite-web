@@ -10,9 +10,10 @@ import {
 import { LoaderFunction, redirect } from '@remix-run/node'
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react'
 import { ComponentType, FormEventHandler, useEffect } from 'react'
+import Header from '../components/Header'
 import Layout from '../components/Layout'
 import MainNavigation from '../components/Navigation/MainNavigation'
-import { useRegisterAccount } from '../queryHooks/register'
+import { useRegisterAccount } from '../hooks/register'
 import { prisma } from '../server/data/providers/postgres/client'
 import { injectUser } from '../server/loaders/requiresAuthorization'
 
@@ -58,9 +59,9 @@ const Registration = () => {
   return (
     <Layout
       title={
-        <Typography variant="h3" component="h1" gutterBottom>
-          Create Account
-        </Typography>
+        <Header>
+          <Typography variant="h1">Library</Typography>
+        </Header>
       }
       navs={navs}
     >

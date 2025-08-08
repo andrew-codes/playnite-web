@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
+import Permission from '../../src/auth/permissions.js'
+import { defaultSettings } from '../../src/server/siteSettings.js'
 import logger from 'dev-logger'
 
 const tasks = (on, config) => {
@@ -22,8 +24,26 @@ const tasks = (on, config) => {
         await prisma.playlist.deleteMany({})
         await prisma.library.deleteMany({})
         await prisma.user.deleteMany({})
+        await prisma.siteSettings.deleteMany({})
 
         logger.info('Database cleared successfully!')
+        logger.info('Ensuring default site settings...')
+        await Promise.all(
+          Object.values(defaultSettings).map(async (setting) => {
+            const storedSetting = await prisma.siteSettings.upsert({
+              where: { name: setting.name },
+              create: {
+                name: setting.name,
+                value: setting.value,
+                dataType: setting.dataType,
+              },
+              update: {},
+            })
+            logger.info(
+              ` - ${storedSetting.name}: ${storedSetting.value} (${storedSetting.dataType})`,
+            )
+          }),
+        )
       } catch (error) {
         logger.error('Error clearing database:', error)
         return error
@@ -48,14 +68,14 @@ const tasks = (on, config) => {
               name: 'Test',
               email: 'test@example.com',
               password: hashPassword('test'),
-              permission: 32,
+              permission: Permission.SiteAdmin,
             },
             {
               username: 'jane',
               name: 'Jane Smith',
               email: 'jane@example.com',
               password: hashPassword('jane'),
-              permission: 2,
+              permission: Permission.Write,
             },
           ],
         })

@@ -16,7 +16,7 @@ const config = defineConfig({
   ],
   define: {
     'globalThis.__DEV__': JSON.stringify(process.env.NODE_ENV !== 'production'),
-    'process.env.NODE_ENV': JSON.stringify(
+    'globalThis.process.env.NODE_ENV': JSON.stringify(
       process.env.NODE_ENV || 'production',
     ),
   },

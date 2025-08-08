@@ -1,7 +1,7 @@
-import { LoaderFunction, LoaderFunctionArgs } from '@remix-run/node'
+import { LoaderFunction, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import jwt from 'jsonwebtoken'
 import { User } from '../../../.generated/types.generated'
-import Permission, { userHasPermission } from '../auth/permissions.js'
+import { PermissionValue, userHasPermission } from '../../auth/permissions.js'
 
 function verifyJwt(token: string): User | null {
   if (!process.env.SECRET) {
@@ -51,21 +51,35 @@ function injectUser(
   }
 }
 
-function requiresAuthentication(
-  permission: Permission,
-  fn?: LoaderFunction,
-): LoaderFunction {
+function requiresSameUser(fn?: LoaderFunction): LoaderFunction {
   return injectUser((args, user) => {
-    if (!user?.isAuthenticated) {
-      return new Response('Unauthenticated', { status: 401 })
+    if (!user || !user.isAuthenticated) {
+      return redirect('/login')
     }
 
-    if (!userHasPermission(user, permission)) {
-      return new Response('Forbidden', { status: 403 })
+    if (args.params.username !== user.username) {
+      throw new Response('Forbidden', { status: 403 })
     }
 
     return fn?.(args) ?? null
   })
 }
 
-export { injectUser, requiresAuthentication }
+function requiresAuthorization(
+  permission: PermissionValue,
+  fn?: LoaderFunction,
+): LoaderFunction {
+  return injectUser((args, user) => {
+    if (!user || !user.isAuthenticated) {
+      return redirect('/login')
+    }
+
+    if (!userHasPermission(user, permission)) {
+      throw new Response('Forbidden', { status: 403 })
+    }
+
+    return fn?.(args) ?? null
+  })
+}
+
+export { injectUser, requiresAuthorization, requiresSameUser }

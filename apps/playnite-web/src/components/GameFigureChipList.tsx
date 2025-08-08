@@ -14,10 +14,10 @@ import {
 import { uniq } from 'lodash-es'
 import { FC, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { Platform } from '../../.generated/types.generated'
+import { useMe } from '../hooks'
+import { allCompletionStatuses } from '../hooks/completionStatuses'
+import { useUpdateGame } from '../hooks/useUpdateGame'
 import { Theme } from '../muiTheme'
-import { useMe } from '../queryHooks'
-import { allCompletionStatuses } from '../queryHooks/completionStatuses'
-import { useUpdateGame } from '../queryHooks/useUpdateGame'
 import { GameFigureContext } from './GameFigure'
 
 const PlatformImage = styled('img')(({ theme }) => ({

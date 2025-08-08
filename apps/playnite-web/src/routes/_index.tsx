@@ -7,7 +7,7 @@ import Header from '../components/Header'
 import HorizontalGameList from '../components/HorizontalGameList'
 import Layout from '../components/Layout'
 import RightDrawer from '../components/RightDrawer'
-import { usePlaylists } from '../queryHooks/playlists'
+import { usePlaylists } from '../hooks/playlists'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
 const loader: LoaderFunction = requiresUserSetup()
@@ -32,11 +32,15 @@ function Index() {
 
   return (
     <>
-      <Layout navs={[]}>
-        <>
+      <Layout
+        title={
           <Header>
-            <Typography variant="h2">Library</Typography>
+            <Typography variant="h1">Library</Typography>
           </Header>
+        }
+        navs={[]}
+      >
+        <>
           {playlists?.map((playlist) => (
             <section data-test="playlist" key={`${playlist.id}`}>
               <Typography variant="h4">{playlist.name}</Typography>

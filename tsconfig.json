@@ -19,7 +19,8 @@
     "*.ts",
     "**/cypress/*.ts",
     "**/scripts/*.ts",
-    "libs/playnite-plugin-installer-manifest/src/index.js"
+    "libs/playnite-plugin-installer-manifest/src/index.js",
+    "apps/playnite-web/cypress/e2e/errors.cy.ts"
   ],
   "exclude": ["node_modules", ".yarn"]
 }

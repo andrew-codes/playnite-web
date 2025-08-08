@@ -33,6 +33,8 @@ type GraphUser = User | NullUser
 
 type GraphLibrary = Prisma.LibraryGetPayload<{}>
 
+type GraphSiteSetting = Prisma.SiteSettingsGetPayload<{}>
+
 export type {
   GameReleaseStateSubscriptionPayload,
   GraphCompletionStatus,
@@ -42,6 +44,7 @@ export type {
   GraphPlatform,
   GraphPlaylist,
   GraphRelease,
+  GraphSiteSetting,
   GraphSource,
   GraphTag,
   GraphUser,
