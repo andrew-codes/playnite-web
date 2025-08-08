@@ -39,7 +39,6 @@
     "istanbul-lib-instrument": "^6.0.3",
     "jsonwebtoken": "^9.0.2",
     "lodash-es": "^4.17.21",
-    "mongodb": "6.18.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-helmet": "^6.1.0",

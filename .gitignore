@@ -1,7 +1,4 @@
 .DS_Store
-.data/mongodb
-.data/mongodb-e2e
-.data/mqtt/data
 .data/postgres
 node_modules
 
