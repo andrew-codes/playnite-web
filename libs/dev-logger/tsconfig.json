@@ -2,6 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "sourceMap": false,
+    "esModuleInterop": true,
     "types": ["node"]
   }
 }

@@ -4,7 +4,7 @@ import { rimraf } from 'rimraf'
 import sh from 'shelljs'
 
 const run = () => {
-  process.setMaxListeners(Infinity)
+  process.setMaxListeners(0)
 
   if (!fs.existsSync('build') || !fs.existsSync('.build-server')) {
     console.error('Build files not found. Please build the project first.')
