@@ -60,8 +60,9 @@
     },
     "db/push": {
       "executor": "nx:run-commands",
+      "dependsOn": ["start/services"],
       "options": {
-        "command": "yarn pnpify prisma db push --schema=src/server/data/providers/postgres/schema.prisma",
+        "command": "yarn pnpify prisma db push --schema=src/server/data/providers/postgres/schema.prisma --force-reset",
         "cwd": "{projectRoot}"
       }
     },
@@ -183,7 +184,7 @@
     },
     "test/e2e/dev": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test"],
+      "dependsOn": ["clean/test", "start/services", "db/push"],
       "options": {
         "parallel": true,
         "commands": [
@@ -201,7 +202,12 @@
     },
     "test/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/files/e2e", "start/services"],
+      "dependsOn": [
+        "clean/test",
+        "package/files/e2e",
+        "start/services",
+        "db/push"
+      ],
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
