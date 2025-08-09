@@ -16,6 +16,7 @@ import MainNavigation from '../components/Navigation/MainNavigation'
 import { useRegisterAccount } from '../hooks/register'
 import { prisma } from '../server/data/providers/postgres/client'
 import { injectUser } from '../server/loaders/requiresAuthorization'
+import { defaultSettings } from '../server/siteSettings'
 
 const loader: LoaderFunction = injectUser(async (args, user) => {
   const isLoggedIn = user?.isAuthenticated
@@ -23,7 +24,14 @@ const loader: LoaderFunction = injectUser(async (args, user) => {
     return redirect('/')
   }
 
+  const setting = await prisma.siteSettings.findUnique({
+    where: { id: defaultSettings.allowAnonymousAccountCreation.id },
+  })
   const userCount = await prisma.user.count()
+  if (setting?.value !== 'true' && userCount > 0) {
+    return redirect('/')
+  }
+
   return { isSetup: userCount > 0 }
 })
 

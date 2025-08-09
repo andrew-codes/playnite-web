@@ -1,4 +1,5 @@
 type SiteSetting = {
+  id: (typeof codes)[number]
   name: string
   value: string
   dataType: string
@@ -9,6 +10,7 @@ const codes = ['allowAnonymousAccountCreation'] as const
 
 const defaultSettings: Record<(typeof codes)[number], SiteSetting> = {
   allowAnonymousAccountCreation: {
+    id: 'allowAnonymousAccountCreation',
     name: 'Allow anonymous account creation',
     value: 'false',
     dataType: 'boolean',

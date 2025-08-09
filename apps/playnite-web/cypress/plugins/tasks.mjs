@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
 import Permission from '../../src/auth/permissions.js'
-import { defaultSettings } from '../../src/server/siteSettings.js'
+import { codes, defaultSettings } from '../../src/server/siteSettings.js'
 import logger from 'dev-logger'
 
 const tasks = (on, config) => {
@@ -84,6 +84,30 @@ const tasks = (on, config) => {
         logger.info('Database seeded successfully!')
       } catch (error) {
         logger.error('Error seeding database:', error)
+      } finally {
+        await prisma.$disconnect()
+      }
+
+      return true
+    },
+
+    async setSiteSettings(settings) {
+      const prisma = new PrismaClient()
+
+      try {
+        await prisma.$connect()
+        await Promise.all(
+          Object.entries(settings).map(async ([key, value]) => {
+            await prisma.siteSettings.update({
+              where: { id: key },
+              data: { value: value.toString() },
+            })
+          }),
+        )
+
+        logger.info(`Site setting updated: ${id} = ${value}`)
+      } catch (error) {
+        logger.error('Error updating site settings:', error)
       } finally {
         await prisma.$disconnect()
       }

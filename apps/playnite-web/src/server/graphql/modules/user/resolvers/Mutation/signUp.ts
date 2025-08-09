@@ -2,6 +2,7 @@ import { GraphQLError } from 'graphql'
 import Permission from '../../../../../../auth/permissions.js'
 import { hashPassword } from '../../../../../auth/hashPassword.js'
 import { UsernamePasswordCredential } from '../../../../../auth/index.js'
+import { defaultSettings } from '../../../../../siteSettings.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const signUp: NonNullable<MutationResolvers['signUp']> = async (
@@ -9,6 +10,22 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
   _arg,
   _ctx,
 ) => {
+  if (
+    (await _ctx.db.user.count()) > 1 &&
+    (
+      await _ctx.db.siteSettings.findUnique({
+        where: { id: defaultSettings.allowAnonymousAccountCreation.id },
+      })
+    )?.value !== 'true'
+  ) {
+    throw new GraphQLError('Anonymous account creation is not allowed.', {
+      extensions: {
+        code: 'FORBIDDEN',
+        http: { status: 403 },
+      },
+    })
+  }
+
   if (
     !_arg.input?.username ||
     !_arg.input?.email ||
@@ -21,6 +38,18 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
         http: { status: 400 },
       },
     })
+  }
+
+  if (!/^[a-zA-Z0-9-]+$/.test(_arg.input.username)) {
+    throw new GraphQLError(
+      'Username must use alphanumeric and "-" characters only.',
+      {
+        extensions: {
+          code: 'BAD_USER_INPUT',
+          http: { status: 400 },
+        },
+      },
+    )
   }
 
   if (_arg.input?.password !== _arg.input?.passwordConfirmation) {

@@ -11,5 +11,9 @@ export const lookupUser: NonNullable<QueryResolvers['lookupUser']> = async (
     },
   })
 
+  if (!user) {
+    return null
+  }
+
   return omit(user, 'password')
 }

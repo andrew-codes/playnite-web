@@ -69,7 +69,7 @@
         }
       }
     },
-    "prepare": {
+    "start/services": {
       "executor": "nx:run-commands",
       "options": {
         "parallel": false,
@@ -332,7 +332,7 @@
         "{projectRoot}/tsconfig.server.json"
       ],
       "outputs": ["{projectRoot}/.build-server"],
-      "dependsOn": ["prepare", "clean/server"],
+      "dependsOn": ["clean/server"],
       "options": {
         "parallel": false,
         "commands": ["yarn tsx scripts/utils/buildServer.ts"],
@@ -352,7 +352,7 @@
         "{projectRoot}/tsconfig.server.json"
       ],
       "outputs": ["{projectRoot}/.build-server"],
-      "dependsOn": ["prepare", "clean/server"],
+      "dependsOn": ["clean/server"],
       "options": {
         "parallel": false,
         "commands": ["yarn tsx scripts/utils/buildServer.ts"],
