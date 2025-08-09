@@ -1,11 +1,8 @@
 import fs from 'fs'
 import { globSync } from 'glob'
-import { rimraf } from 'rimraf'
 import sh from 'shelljs'
 
 const run = () => {
-  process.setMaxListeners(0)
-
   if (!fs.existsSync('build') || !fs.existsSync('.build-server')) {
     console.error('Build files not found. Please build the project first.')
     process.exit(1)
@@ -53,9 +50,6 @@ const run = () => {
   sh.mkdir('-p', '_packaged/src/public/assets')
   console.log('Copying non-asset-by-id assets')
   sh.exec('cp -r src/public/assets/* _packaged/src/public/assets')
-
-  console.log('Removing asset-by-id assets')
-  rimraf.sync('_packaged/src/public/assets/asset-by-id/*.*')
 }
 
 export default run

@@ -63,7 +63,10 @@
       "dependsOn": ["start/services"],
       "options": {
         "command": "yarn pnpify prisma db push --schema=src/server/data/providers/postgres/schema.prisma --force-reset",
-        "cwd": "{projectRoot}"
+        "cwd": "{projectRoot}",
+        "env": {
+          "DATABASE_URL": "postgres://local:dev@localhost:5432/games?schema=public"
+        }
       }
     },
     "prepare": {
