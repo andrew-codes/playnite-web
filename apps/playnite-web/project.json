@@ -235,6 +235,7 @@
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
             "INSTRUMENT": "true"
           }
         },
@@ -246,6 +247,7 @@
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
             "INSTRUMENT": "true"
           }
         }
