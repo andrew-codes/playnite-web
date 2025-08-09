@@ -1,5 +1,5 @@
 type SiteSetting {
-  id: Int!
+  id: String!
   name: String!
   value: String!
   dataType: String!
@@ -11,5 +11,5 @@ extend type Query {
 }
 
 extend type Mutation {
-  updateSiteSetting(id: Int!, value: String!): SiteSetting!
+  updateSiteSetting(id: String!, value: String!): SiteSetting!
 }

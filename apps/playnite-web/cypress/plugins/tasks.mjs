@@ -29,10 +29,11 @@ const tasks = (on, config) => {
         logger.info('Database cleared successfully!')
         logger.info('Ensuring default site settings...')
         await Promise.all(
-          Object.values(defaultSettings).map(async (setting) => {
+          Object.entries(defaultSettings).map(async ([id, setting]) => {
             const storedSetting = await prisma.siteSettings.upsert({
-              where: { name: setting.name },
+              where: { id },
               create: {
+                id,
                 name: setting.name,
                 value: setting.value,
                 dataType: setting.dataType,

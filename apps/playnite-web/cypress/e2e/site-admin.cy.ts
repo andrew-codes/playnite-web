@@ -37,26 +37,50 @@ describe('Site-wide Administration', () => {
   })
 
   describe('Changing settings', () => {
-    it(`Allowing anonymous account registration.
-      - Enabling will allow additional users to register new accounts without an invitation.`, () => {
-      cy.signIn('test', 'test')
-      cy.visit('/admin')
-      cy.wait('@graphql')
+    Cypress._.each(Object.entries(defaultSettings), ([id, setting]) => {
+      it(`${setting.name}.
+        - Failure to save will reset the setting to its previous value.`, () => {
+        cy.signIn('test', 'test')
+        cy.visit('/admin')
+        cy.wait('@graphql')
 
-      cy.get(
-        `[aria-label="${defaultSettings.allowAnonymousAccountCreation.name}"]`,
-      )
-        .parents('[data-test=Setting]')
-        .as('setting')
-        .contains('h2', defaultSettings.allowAnonymousAccountCreation.name)
+        cy.get(`[aria-label="${setting.name}"]`)
+          .parents('[data-test=Setting]')
+          .as('setting')
+          .contains('h2', setting.name)
 
-      cy.get('@setting').contains(
-        defaultSettings.allowAnonymousAccountCreation.description,
-      )
+        cy.get('@setting').contains(setting.description)
+        cy.get('@setting')
+          .find('input[type="checkbox"]')
+          .should('not.be.checked')
 
-      cy.get('@setting').find('input[type="checkbox"]').should('not.be.checked')
+        cy.get('@setting').find('input[type="checkbox"]').check()
+        cy.wait('@graphql')
+        cy.get('@setting').find('input[type="checkbox"]').should('be.checked')
 
-      throw new Error('Not implemented')
+        cy.get('@setting').find('input[type="checkbox"]').check()
+        cy.intercept('POST', '/api', (req) => {
+          if (req.body.query.includes('updateSiteSetting')) {
+            req.reply({
+              errors: [
+                {
+                  message: 'Unauthorized',
+                  locations: [
+                    {
+                      line: 2,
+                      column: 3,
+                    },
+                  ],
+                  path: ['updateSiteSetting'],
+                },
+              ],
+              data: null,
+            })
+          }
+        })
+        cy.wait('@graphql')
+        cy.get('@setting').find('input[type="checkbox"]').should('be.checked')
+      })
     })
   })
 })

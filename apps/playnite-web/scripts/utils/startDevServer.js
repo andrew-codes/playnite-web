@@ -50,4 +50,5 @@ nodemon
       `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma`,
     )
     sh.exec(`yarn graphql-codegen --config codegen.ts`)
+    sh.exec(`yarn nx db/push playnite-web-app`)
   })

@@ -5,5 +5,13 @@
     "types": ["cypress", "node", "react"]
   },
   "extends": "../tsconfig.json",
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx",
+    "../src/server/siteSettings.ts",
+    "../src/auth/*.ts",
+    "../src/server/auth/hashPassword.ts"
+  ]
 }

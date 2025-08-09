@@ -15,7 +15,7 @@ datasource db {
 }
 
 model SiteSettings {
-  id       Int    @id @default(autoincrement())
+  id       String @id @unique
   name     String @unique
   value    String
   dataType String

@@ -1,4 +1,5 @@
 import { Alert, Switch, Typography } from '@mui/material'
+import { useEffect } from 'react'
 import Permission from '../auth/permissions'
 import Header from '../components/Header'
 import Layout from '../components/Layout'
@@ -7,6 +8,7 @@ import MainNavigation from '../components/Navigation/MainNavigation'
 import SiteAdminNavigation from '../components/Navigation/SiteAdminNavigation'
 import { useMe } from '../hooks'
 import { useSiteSettings } from '../hooks/siteSettings'
+import { updateSiteSetting } from '../hooks/updateSiteSettings'
 import { requiresAuthorization } from '../server/loaders/requiresAuthorization'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
@@ -20,6 +22,12 @@ const Account = () => {
   }
 
   const settings = useSiteSettings()
+  const [updateSetting, result] = updateSiteSetting()
+  useEffect(() => {
+    if (!result.error) {
+      settings.refetch()
+    }
+  }, [result.error, settings])
 
   return (
     <Layout
@@ -43,7 +51,15 @@ const Account = () => {
           <Typography variant="body1">{setting.description}</Typography>
           <Switch
             aria-label={setting.name}
-            defaultChecked={setting.value === 'true'}
+            checked={setting.value === 'true'}
+            onChange={(evt) =>
+              updateSetting({
+                variables: {
+                  id: setting.id,
+                  value: evt.target.checked ? 'true' : 'false',
+                },
+              })
+            }
           />
         </div>
       ))}
