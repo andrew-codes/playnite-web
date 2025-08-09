@@ -218,6 +218,11 @@ const ErrorBoundary: FC<{}> = () => {
       )
     } else if (error.status === 404) {
       errorTitle = <Typography variant="h1">Not Found</Typography>
+      content = (
+        <div className="error-container">
+          <p>This is not the page you are looking for...</p>
+        </div>
+      )
     } else {
       errorTitle = <Typography variant="h1">{error.statusText}</Typography>
     }

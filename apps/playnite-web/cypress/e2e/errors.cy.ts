@@ -1,9 +1,18 @@
 describe('Errors', () => {
-  it('403 Unauthorized', () => {
-    throw new Error('Not implemented')
+  beforeEach(() => {
+    cy.task('seedUsers')
   })
 
-  it('Generic Error', () => {
-    throw new Error('Not implemented')
+  it('403 Unauthorized', () => {
+    cy.signIn('test', 'test')
+    cy.visit('/u/jane/account', { failOnStatusCode: false })
+
+    cy.contains('Forbidden').should('be.visible')
+  })
+
+  it('404 Not found', () => {
+    cy.visit('/not-found', { failOnStatusCode: false })
+
+    cy.contains('Not Found').should('be.visible')
   })
 })
