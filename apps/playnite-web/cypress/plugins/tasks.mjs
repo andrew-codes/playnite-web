@@ -105,7 +105,7 @@ const tasks = (on, config) => {
           }),
         )
 
-        logger.info(`Site setting updated: ${id} = ${value}`)
+        logger.info(`Site settings updated.`, settings)
       } catch (error) {
         logger.error('Error updating site settings:', error)
       } finally {

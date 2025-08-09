@@ -14,7 +14,7 @@ const run = () => {
   sh.exec('cp -R build/client _packaged/src')
 
   console.log('Copying Server built files to _packaged')
-  sh.exec(`cp -R .build-server/src/* _packaged/src/server`)
+  sh.exec(`cp -R .build-server/src/* _packaged/src`)
 
   console.log('Copying Generated files')
   sh.exec('cp -R .build-server/.generated _packaged')
