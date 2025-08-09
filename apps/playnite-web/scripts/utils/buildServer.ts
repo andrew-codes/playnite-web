@@ -42,13 +42,15 @@ if (process.env.INSTRUMENT === 'true') {
   )
 }
 
-const entryPoints = glob.sync('src/server/**/*.ts', {
-  ignore: ['**/*__tests__/**', '**/__component_tests__/**'],
-})
+const entryPointGlobs = ['src/server/**/*.ts', 'src/auth/**/*.ts']
 
 build({
   format: 'esm',
-  entryPoints: entryPoints,
+  entryPoints: entryPointGlobs.flatMap((g) =>
+    glob.sync(g, {
+      ignore: ['**/*__tests__/**', '**/__component_tests__/**'],
+    }),
+  ),
   tsconfig: 'tsconfig.server.json',
   bundle: false,
   minify: false,

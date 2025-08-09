@@ -27,7 +27,6 @@ process.on('SIGINT', () => {
 console.log('Removing package.json')
 sh.exec('rm _packaged/package.json')
 sh.exec('cp e2e.env _packaged/local.env')
-sh.exec(`cp -R ../../.data/asset-by-id ./_packaged/src/public/assets`)
 
 console.log('Starting server')
 runCp = sh.exec(`yarn nyc node server.js`, {
