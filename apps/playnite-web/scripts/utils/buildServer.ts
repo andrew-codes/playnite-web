@@ -39,18 +39,40 @@ if (process.env.INSTRUMENT === 'true') {
       preloader,
       name: 'istanbul-loader-ts',
     }),
+    esbuildPluginIstanbul({
+      filter: /src\/auth\/.*\.ts/,
+      loader: 'ts',
+      preloader,
+      name: 'istanbul-loader-ts',
+    }),
   )
 }
 
-const entryPointGlobs = ['src/server/**/*.ts', 'src/auth/**/*.ts']
+build({
+  format: 'esm',
+  entryPoints: glob.sync('src/server/**/*.ts', {
+    ignore: ['**/*__tests__/**', '**/__component_tests__/**'],
+  }),
+
+  tsconfig: 'tsconfig.server.json',
+  bundle: false,
+  minify: false,
+  outdir: '.build-server/src',
+  platform: 'node',
+  sourcemap:
+    process.env.NODE_ENV !== 'production' || process.env.INSTRUMENT === 'true',
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  },
+  plugins,
+})
 
 build({
   format: 'esm',
-  entryPoints: entryPointGlobs.flatMap((g) =>
-    glob.sync(g, {
-      ignore: ['**/*__tests__/**', '**/__component_tests__/**'],
-    }),
-  ),
+  entryPoints: glob.sync('src/auth/**/*.ts', {
+    ignore: ['**/*__tests__/**', '**/__component_tests__/**'],
+  }),
+
   tsconfig: 'tsconfig.server.json',
   bundle: false,
   minify: false,
