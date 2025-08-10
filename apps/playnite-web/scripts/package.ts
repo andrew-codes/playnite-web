@@ -25,4 +25,7 @@ async function run() {
   )
 }
 
-run()
+run().catch((error) => {
+  console.error('FAILURE', error)
+  process.exit(1)
+})

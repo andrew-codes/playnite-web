@@ -99,6 +99,7 @@ async function run() {
 
   await Promise.all([generateDb, buildRemix, buildGraphql])
 
+  console.debug(`Build server-side plus Remix combo`)
   await Promise.all([
     build({
       format: 'esm',
@@ -150,4 +151,7 @@ async function run() {
   ])
 }
 
-run()
+run().catch((error) => {
+  console.error('FAILURE', error)
+  process.exit(1)
+})
