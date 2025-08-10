@@ -75,7 +75,7 @@
       "options": {
         "cwd": "{projectRoot}",
         "parallel": false,
-        "commands": ["yarn tsx scripts/utils/startDevServer.js"],
+        "commands": ["yarn tsx scripts/startDevServer.ts"],
         "env": {
           "NODE_ENV": "development",
           "LOG_LEVEL": "silly"
@@ -198,7 +198,7 @@
         "start/services",
         "db/push"
       ],
-      "inputs": ["_packaged"],
+      "inputs": ["{projectRoot}/_packaged"],
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
@@ -258,13 +258,11 @@
       "defaultConfiguration": "production",
       "dependsOn": ["clean/build"],
       "options": {
-        "parallel": false,
         "cwd": "{projectRoot}",
-        "commands": []
+        "commands": ["yarn tsx scripts/build.ts"]
       },
       "configurations": {
         "production": {
-          "commands": ["yarn tsx scripts/build.ts"],
           "env": {
             "NODE_ENV": "production"
           }
