@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   unit_tests_linux:
-    name: Verify PR - Tests (Linux)
+    name: Verify PR - Unit Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -198,7 +198,7 @@ jobs:
           PLATFORM: linux/amd64,linux/arm64
 
   unit_tests_windows:
-    name: Verify PR - Tests (Windows)
+    name: Verify PR - Unit Tests (Windows)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4

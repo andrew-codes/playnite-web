@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   unit_tests_linux:
-    name: Verify Tests (Linux)
+    name: Verify Unit Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   component_tests_linux:
-    name: Verify PR - Component Tests (Linux)
+    name: Verify Component Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -86,7 +86,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   e2e_tests_linux:
-    name: Verify PR - e2e Tests (Linux)
+    name: Verify e2e Tests (Linux)
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
@@ -158,7 +158,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   unit_tests_windows:
-    name: Verify PR - Tests (Windows)
+    name: Verify Unit Tests (Windows)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
