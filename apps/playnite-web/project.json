@@ -50,7 +50,7 @@
       "executor": "nx:run-commands",
       "dependsOn": ["start/services"],
       "options": {
-        "command": "yarn pnpify prisma db push --schema=src/server/data/providers/postgres/schema.prisma --force-reset",
+        "command": "yarn pnpify prisma db push --schema=src/server/data/providers/postgres/schema.prisma --force-reset --skip-generate",
         "cwd": "{projectRoot}",
         "env": {
           "DATABASE_URL": "postgres://local:dev@localhost:5432/games?schema=public"
