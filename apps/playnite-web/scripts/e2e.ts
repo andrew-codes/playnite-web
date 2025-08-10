@@ -2,8 +2,6 @@ import { ChildProcess } from 'child_process'
 import sh from 'shelljs'
 import waitOn from 'wait-on'
 
-const __dirname = import.meta.dirname
-
 let testCp: ChildProcess | null = null
 let runCp: ChildProcess | null = null
 process.on('exit', () => {
@@ -34,7 +32,6 @@ runCp = sh.exec(`yarn nyc node server.js`, {
   shell: '/bin/bash',
   env: {
     ...process.env,
-    LOG_LEVEL: process.env.LOG_LEVEL,
     NODE_ENV: 'production',
   },
   async: true,

@@ -5,28 +5,16 @@
   "targets": {
     "clean": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        "clean/client",
-        "clean/server",
-        "clean/package",
-        "clean/test"
-      ],
+      "dependsOn": ["clean/package", "clean/test", "clean/build"],
       "options": {
         "parallel": true,
         "commands": []
       }
     },
-    "clean/client": {
+    "clean/build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf build",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "clean/server": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn rimraf .build-server .generated",
+        "command": "yarn rimraf build _build-output .generated",
         "cwd": "{projectRoot}"
       }
     },
@@ -198,8 +186,7 @@
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
           "LOG_LEVEL": "silly",
-          "NODE_ENV": "development",
-          "INSTRUMENT": "true"
+          "NODE_ENV": "development"
         }
       }
     },
@@ -222,7 +209,6 @@
           "TEST": "e2e",
           "START_SERVER_AND_TEST_INSECURE": "1",
           "NODE_ENV": "production",
-          "INSTRUMENT": "true",
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
         }
       },
@@ -235,8 +221,7 @@
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
-            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
-            "INSTRUMENT": "true"
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
           }
         },
         "ci/local": {
@@ -247,8 +232,7 @@
             "TEST": "e2e",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
-            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
-            "INSTRUMENT": "true"
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
           }
         }
       }
@@ -262,7 +246,6 @@
         "cwd": "{projectRoot}",
         "env": {
           "CMD": "run",
-          "INSTRUMENT": "true",
           "NODE_ENV": "production",
           "UPDATE": "true",
           "LOG_LEVEL": "info"
@@ -271,57 +254,89 @@
     },
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": ["build/client", "build/server"],
+      "defaultConfiguration": "production",
+      "dependsOn": ["clean/build"],
       "options": {
+        "parallel": false,
         "cwd": "{projectRoot}",
-        "commands": [],
-        "env": {
-          "NODE_ENV": "production"
+        "commands": []
+      },
+      "configurations": {
+        "production": {
+          "commands": [
+            "yarn nx run playnite-web-app:build/graphql",
+            "yarn nx run playnite-web-app:build/server",
+            "yarn nx run playnite-web-app:build/remix"
+          ],
+          "env": {
+            "NODE_ENV": "production"
+          }
+        },
+        "e2e": {
+          "commands": [
+            "yarn nx run playnite-web-app:build/graphql:e2e",
+            "yarn nx run playnite-web-app:build/server:e2e",
+            "yarn nx run playnite-web-app:build/remix:e2e"
+          ],
+          "env": {
+            "NODE_ENV": "production"
+          }
         }
       }
     },
-    "build/instrument": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["build/client/instrument", "build/server/instrument"],
-      "options": {
-        "cwd": "{projectRoot}",
-        "commands": ["bash -c \"echo 'Instrumented build'\""]
-      }
-    },
-    "build/client": {
+    "build/remix": {
       "cache": true,
       "executor": "nx:run-commands",
       "inputs": [
         "src",
         "{projectRoot}/vite.config.ts",
-        "{projectRoot}/tsconfig.json"
+        "{projectRoot}/tsconfig.json",
+        "generated"
       ],
-      "dependsOn": ["clean/client"],
       "outputs": ["{projectRoot}/build"],
+      "defaultConfiguration": "production",
       "options": {
         "command": "yarn remix vite:build",
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production"
+        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "NODE_ENV": "production"
+          }
+        },
+        "e2e": {
+          "env": {
+            "NODE_ENV": "production",
+            "INSTRUMENT": "true"
+          }
         }
       }
     },
-    "build/client/instrument": {
+    "build/graphql": {
       "cache": true,
       "executor": "nx:run-commands",
       "inputs": [
-        "src",
-        "{projectRoot}/vite.config.ts",
-        "{projectRoot}/tsconfig.json"
+        "{projectRoot}/tsconfig.server.json",
+        "{projectRoot}/codegen.ts"
       ],
-      "dependsOn": ["clean/client"],
-      "outputs": ["{projectRoot}/build"],
+      "outputs": ["{projectRoot}/.generated"],
+      "defaultConfiguration": "production",
       "options": {
-        "command": "yarn remix vite:build",
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production",
-          "INSTRUMENT": "true"
+        "commands": ["yarn graphql-codegen --config codegen.ts"],
+        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "NODE_ENV": "production"
+          }
+        },
+        "e2e": {
+          "env": {
+            "INSTRUMENT": "true",
+            "NODE_ENV": "production"
+          }
         }
       }
     },
@@ -334,35 +349,24 @@
         "{projectRoot}/scripts/utils/buildServer.ts",
         "{projectRoot}/tsconfig.server.json"
       ],
-      "outputs": ["{projectRoot}/.build-server"],
-      "dependsOn": ["clean/server"],
+      "outputs": ["{projectRoot}/_build-output"],
+      "defaultConfiguration": "production",
       "options": {
         "parallel": false,
         "commands": ["yarn tsx scripts/utils/buildServer.ts"],
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production"
-        }
-      }
-    },
-    "build/server/instrument": {
-      "cache": true,
-      "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/src/server/**",
-        "generated",
-        "{projectRoot}/scripts/utils/buildServer.ts",
-        "{projectRoot}/tsconfig.server.json"
-      ],
-      "outputs": ["{projectRoot}/.build-server"],
-      "dependsOn": ["clean/server"],
-      "options": {
-        "parallel": false,
-        "commands": ["yarn tsx scripts/utils/buildServer.ts"],
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production",
-          "INSTRUMENT": "true"
+        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "NODE_ENV": "production"
+          }
+        },
+        "e2e": {
+          "env": {
+            "NODE_ENV": "production",
+            "INSTRUMENT": "true"
+          }
         }
       }
     },
@@ -370,7 +374,7 @@
       "inputs": [
         "{projectRoot}/package.json",
         "{projectRoot}/build/**",
-        "{projectRoot}/.build-server/**",
+        "{projectRoot}/_build-output/**",
         "{projectRoot}/scripts/packageFiles.ts",
         "{projectRoot}/scripts/utils/packageFiles.ts",
         "{projectRoot}/scripts/package.ts"
@@ -409,17 +413,20 @@
       "inputs": [
         "{projectRoot}/package.json",
         "{projectRoot}/build/**",
-        "{projectRoot}/.build-server/**",
+        "{projectRoot}/_build-output/**",
         "{projectRoot}/scripts/packageFiles.ts",
         "{projectRoot}/scripts/utils/packageFiles.ts",
         "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build/instrument"],
+      "dependsOn": ["clean/package"],
       "options": {
         "parallel": false,
-        "command": "yarn tsx scripts/packageFiles.ts",
+        "commands": [
+          "yarn nx run playnite-web-app:build:e2e",
+          "yarn tsx scripts/packageFiles.ts"
+        ],
         "cwd": "{projectRoot}"
       }
     },

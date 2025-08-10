@@ -3,21 +3,16 @@ import { globSync } from 'glob'
 import sh from 'shelljs'
 
 const run = () => {
-  if (!fs.existsSync('build') || !fs.existsSync('.build-server')) {
+  if (!fs.existsSync('build') || !fs.existsSync('_build-output')) {
     console.error('Build files not found. Please build the project first.')
     process.exit(1)
   }
 
-  console.log('Copying Remix built files to _packaged')
+  console.log('Copying built files to _packaged')
   sh.mkdir('-p', '_packaged/src')
-  sh.exec('cp -R build/server _packaged/src')
-  sh.exec('cp -R build/client _packaged/src')
-
-  console.log('Copying Server built files to _packaged')
-  sh.exec(`cp -R .build-server/src/* _packaged/src`)
-
-  console.log('Copying Generated files')
-  sh.exec('cp -R .build-server/.generated _packaged')
+  sh.exec('cp -R build/ _packaged/src')
+  sh.exec('cp -R _build-output/.generated/ _packaged/.generated')
+  sh.exec('cp -R _build-output/server* _packaged/src/server')
 
   console.log('Modifying imports of generated files')
   globSync('_packaged/.generated/*.js').forEach((file: string) => {
@@ -48,7 +43,7 @@ const run = () => {
   )
 
   sh.mkdir('-p', '_packaged/src/public/assets')
-  console.log('Copying non-asset-by-id assets')
+  console.log('Copying assets')
   sh.exec('cp -r src/public/assets/* _packaged/src/public/assets')
 }
 

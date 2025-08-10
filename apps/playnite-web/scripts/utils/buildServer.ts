@@ -1,17 +1,15 @@
 import { build, transform, type Plugin } from 'esbuild'
 import {
   esbuildPluginIstanbul,
-  type IstanbulPluginPreloader,
+  IstanbulPluginPreloader,
 } from 'esbuild-plugin-istanbul'
 import fs from 'fs/promises'
-import { glob } from 'glob'
 import sh from 'shelljs'
 
 async function run() {
   sh.exec(
     `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma`,
   )
-  sh.exec(`yarn graphql-codegen --config codegen.ts`)
 
   const plugins: Array<Plugin> = []
   if (process.env.INSTRUMENT === 'true') {
@@ -32,16 +30,17 @@ async function run() {
         contents,
       }
     }
-
     plugins.push(
       esbuildPluginIstanbul({
-        filter: /src\/server\/.*\.ts/,
+        filter: /src\/.*\.ts/,
         loader: 'ts',
         preloader,
         name: 'istanbul-loader-ts',
       }),
+    )
+    plugins.push(
       esbuildPluginIstanbul({
-        filter: /src\/auth\/.*\.ts/,
+        filter: /.generated\/.*\.ts/,
         loader: 'ts',
         preloader,
         name: 'istanbul-loader-ts',
@@ -51,13 +50,14 @@ async function run() {
 
   await build({
     format: 'esm',
-    entryPoints: glob.sync('src/server/**/*.ts', {
-      ignore: ['**/*__tests__/**', '**/__component_tests__/**'],
-    }),
+    entryPoints: {
+      'server.js': 'src/server/server.ts',
+    },
     tsconfig: 'tsconfig.server.json',
-    bundle: false,
+    packages: 'external',
+    bundle: true,
     minify: false,
-    outdir: '.build-server/src/server',
+    outdir: '_build-output',
     platform: 'node',
     sourcemap:
       process.env.NODE_ENV !== 'production' ||
@@ -74,26 +74,7 @@ async function run() {
     tsconfig: 'tsconfig.server.json',
     bundle: false,
     minify: false,
-    outdir: '.build-server/.generated',
-    platform: 'node',
-    sourcemap:
-      process.env.NODE_ENV !== 'production' ||
-      process.env.INSTRUMENT === 'true',
-    define: {
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-    },
-    plugins,
-  })
-
-  await build({
-    format: 'esm',
-    entryPoints: glob.sync('src/auth/**/*.ts', {
-      ignore: ['**/*__tests__/**', '**/__component_tests__/**'],
-    }),
-    tsconfig: 'tsconfig.server.json',
-    bundle: false,
-    minify: false,
-    outdir: '.build-server/src/auth',
+    outdir: '_build-output/.generated',
     platform: 'node',
     sourcemap:
       process.env.NODE_ENV !== 'production' ||

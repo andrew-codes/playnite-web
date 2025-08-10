@@ -45,10 +45,11 @@ nodemon
     process.exit()
   })
   .on('restart', function (files) {
-    sh.exec(`kill -9 $(lsof -t -i:24678)`)
+    sh.exec(`kill -9 $(lsof -t -i:24678)`, { async: true })
     sh.exec(
       `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma`,
+      { async: true },
     )
-    sh.exec(`yarn graphql-codegen --config codegen.ts`)
-    sh.exec(`yarn nx db/push playnite-web-app`)
+    sh.exec(`yarn graphql-codegen --config codegen.ts`, { async: true })
+    sh.exec(`yarn nx db/push playnite-web-app`, { async: true })
   })

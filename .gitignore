@@ -8,8 +8,6 @@ node_modules
 
 .dist
 .test-runs
-.packaged
-_packaged
 .nuget
 *.log
 .vs
@@ -18,20 +16,20 @@ _packaged
 !local.env
 !e2e.env
 
-.build*
+
+**/*.generated.*
+**/.generated
+build
+_build*
+_instrumented
+_packaged
+.packaged
 
 apps/playnite-web/.cache
-apps/playnite-web/build
-apps/playnite-web/src/public/build
 apps/playnite-web/src/public/entry.worker.js
 apps/playnite-web/vite.config.js*
 !apps/playnite-web/vite.config.js
 **/game-assets/**
-
-apps/playnite-web/public/assets/asset-by-id/*
-
-**/*.generated.*
-**/.generated
 
 .devcontainer/.devpod-internal/
 
