@@ -198,6 +198,7 @@
         "start/services",
         "db/push"
       ],
+      "inputs": ["_packaged"],
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
@@ -263,101 +264,7 @@
       },
       "configurations": {
         "production": {
-          "commands": [
-            "yarn nx run playnite-web-app:build/graphql",
-            "yarn nx run playnite-web-app:build/server",
-            "yarn nx run playnite-web-app:build/remix"
-          ],
-          "env": {
-            "NODE_ENV": "production"
-          }
-        },
-        "e2e": {
-          "commands": [
-            "yarn nx run playnite-web-app:build/graphql:e2e",
-            "yarn nx run playnite-web-app:build/server:e2e",
-            "yarn nx run playnite-web-app:build/remix:e2e"
-          ],
-          "env": {
-            "NODE_ENV": "production"
-          }
-        }
-      }
-    },
-    "build/remix": {
-      "cache": true,
-      "executor": "nx:run-commands",
-      "inputs": [
-        "src",
-        "{projectRoot}/vite.config.ts",
-        "{projectRoot}/tsconfig.json",
-        "generated"
-      ],
-      "outputs": ["{projectRoot}/build"],
-      "defaultConfiguration": "production",
-      "options": {
-        "command": "yarn remix vite:build",
-        "cwd": "{projectRoot}"
-      },
-      "configurations": {
-        "production": {
-          "env": {
-            "NODE_ENV": "production"
-          }
-        },
-        "e2e": {
-          "env": {
-            "NODE_ENV": "production",
-            "INSTRUMENT": "true"
-          }
-        }
-      }
-    },
-    "build/graphql": {
-      "cache": true,
-      "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/tsconfig.server.json",
-        "{projectRoot}/codegen.ts"
-      ],
-      "outputs": ["{projectRoot}/.generated"],
-      "defaultConfiguration": "production",
-      "options": {
-        "commands": ["yarn graphql-codegen --config codegen.ts"],
-        "cwd": "{projectRoot}"
-      },
-      "configurations": {
-        "production": {
-          "env": {
-            "NODE_ENV": "production"
-          }
-        },
-        "e2e": {
-          "env": {
-            "INSTRUMENT": "true",
-            "NODE_ENV": "production"
-          }
-        }
-      }
-    },
-    "build/server": {
-      "cache": true,
-      "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/src/server/**",
-        "generated",
-        "{projectRoot}/scripts/utils/buildServer.ts",
-        "{projectRoot}/tsconfig.server.json"
-      ],
-      "outputs": ["{projectRoot}/_build-output"],
-      "defaultConfiguration": "production",
-      "options": {
-        "parallel": false,
-        "commands": ["yarn tsx scripts/utils/buildServer.ts"],
-        "cwd": "{projectRoot}"
-      },
-      "configurations": {
-        "production": {
+          "commands": ["yarn tsx scripts/build.ts"],
           "env": {
             "NODE_ENV": "production"
           }

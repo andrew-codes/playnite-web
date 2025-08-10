@@ -10,9 +10,8 @@ const run = () => {
 
   console.log('Copying built files to _packaged')
   sh.mkdir('-p', '_packaged/src/server')
-  sh.exec('cp -R build/ _packaged/src')
-  sh.exec('cp -R _build-output/.generated/ _packaged/.generated')
-  sh.exec('cp -R _build-output/server* _packaged/src/server')
+  sh.exec('cp -R _build-output/ _packaged')
+  sh.exec('cp -R build/client/ _packaged/src/client')
 
   console.log('Modifying imports of generated files')
   globSync('_packaged/.generated/*.js').forEach((file: string) => {
