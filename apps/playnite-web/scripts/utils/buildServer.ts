@@ -51,7 +51,7 @@ async function run() {
   await build({
     format: 'esm',
     entryPoints: {
-      'server.js': 'src/server/server.ts',
+      server: 'src/server/server.ts',
     },
     tsconfig: 'tsconfig.server.json',
     packages: 'external',
