@@ -12,6 +12,8 @@ const run = () => {
   sh.mkdir('-p', '_packaged/src/server')
   sh.exec('cp -R _build-output/ _packaged')
   sh.exec('cp -R build/client/ _packaged/src/client')
+  console.debug(`Contents of _packaged:`)
+  sh.exec(` ls -lRa apps/playnite-web/_packaged`)
 
   console.log('Modifying imports of generated files')
   globSync('_packaged/.generated/*.js').forEach((file: string) => {
