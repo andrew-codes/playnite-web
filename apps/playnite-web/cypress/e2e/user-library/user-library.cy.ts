@@ -120,6 +120,9 @@ describe('User Library', () => {
             .find('> div')
             .as('scrollArea')
           cy.get('@scrollArea').compareSnapshot(`library-${name}`)
+
+          cy.get('@scrollArea').scrollTo('bottom')
+          cy.get('@scrollArea').compareSnapshot(`library-scroll-bottom-${name}`)
         })
       })
     })
