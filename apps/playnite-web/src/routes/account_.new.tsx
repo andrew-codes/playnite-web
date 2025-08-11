@@ -68,7 +68,7 @@ const Registration = () => {
     <Layout
       title={
         <Header>
-          <Typography variant="h1">Library</Typography>
+          <Typography variant="h1">Create Account</Typography>
         </Header>
       }
       navs={navs}

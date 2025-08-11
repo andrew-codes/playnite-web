@@ -5,7 +5,7 @@ import type { ReleaseResolvers } from './../../../../../../.generated/types.gene
 
 export const Release: ReleaseResolvers = {
   id: async (_parent, _arg, _ctx) => {
-    return create('Game', _parent.id).toString()
+    return create('Release', _parent.id).toString()
   },
   description: async (_parent, _arg, _ctx) => {
     return _parent.description
@@ -138,5 +138,16 @@ export const Release: ReleaseResolvers = {
     }
 
     return output
+  },
+  tags: async (_parent, _arg, _ctx) => {
+    return _ctx.db.tag.findMany({
+      where: {
+        Releases: {
+          some: {
+            id: _parent.id,
+          },
+        },
+      },
+    })
   },
 }

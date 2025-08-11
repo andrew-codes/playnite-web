@@ -14,13 +14,11 @@ describe('Game details.', () => {
             cy.task('seedUsers')
             cy.viewport(x, y)
             cy.fixture('librarySync.json').then((libraryData) => {
-              cy.syncLibrary('test', 'test', libraryData)
-                .as('library')
-                .then((library) => {
-                  cy.visit(
-                    `/u/test/${library.body.data.syncLibrary.id}${locationPath}`,
-                  )
-                })
+              cy.syncLibrary('test', 'test', libraryData).then((library) => {
+                cy.visit(
+                  `/u/test/${library.body.data.syncLibrary.id}${locationPath}`,
+                )
+              })
               cy.wait('@graphql')
             })
           })

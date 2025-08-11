@@ -77,7 +77,7 @@ async function handleBotRequest(
     }),
   )
 
-  let user = {
+  let user: User = {
     id: createNull('User').toString(),
     username: 'Unknown',
     isAuthenticated: false,
@@ -92,10 +92,14 @@ async function handleBotRequest(
           .find((c) => c.startsWith('authorization=')) ?? ''
       ).split('=')[1] ?? null
     if (authCookie) {
-      user = jwt.decode(authCookie, process.env.SECRET ?? 'secret', {
-        issuer: domain,
-        algorithm: 'HS256',
+      let cookieUser = jwt.decode(authCookie, {
+        // secret: process.env.SECRET ?? 'secret',
+        // issuer: domain,
+        // algorithm: 'HS256',
       })
+      if (cookieUser) {
+        user = cookieUser as User
+      }
     }
   } catch (error) {
     logger.warn('Failed to decode JWT token from cookie.', error)
@@ -207,10 +211,14 @@ async function handleBrowserRequest(
           .find((c) => c.startsWith('authorization=')) ?? ''
       ).split('=')[1] ?? null
     if (authCookie) {
-      user = jwt.decode(authCookie, process.env.SECRET ?? 'secret', {
-        issuer: domain,
-        algorithm: 'HS256',
+      let cookieUser = jwt.decode(authCookie, {
+        // secret: process.env.SECRET ?? 'secret',
+        // issuer: domain,
+        // algorithm: 'HS256',
       })
+      if (cookieUser) {
+        user = cookieUser as User
+      }
     }
   } catch (error) {
     logger.warn('Failed to decode JWT token from cookie.', error)

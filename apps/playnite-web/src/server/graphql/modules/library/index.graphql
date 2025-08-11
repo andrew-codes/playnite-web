@@ -10,7 +10,7 @@ type Library {
   tags: [Tag!]!
 }
 
-input ReleaseInput {
+input LibraryReleaseInput {
   id: String!
   title: String!
   releaseDate: DateTime
@@ -26,39 +26,39 @@ input ReleaseInput {
   playTime: String
 }
 
-input PlatformInput {
+input LibraryPlatformInput {
   id: String!
   name: String!
 }
 
-input SourceInput {
+input LibrarySourceInput {
   id: String!
   name: String!
   platform: String!
 }
 
-input TagInput {
+input LibraryTagInput {
   id: String!
   name: String!
 }
 
-input CompletionStateInput {
+input LibraryCompletionStateInput {
   id: String!
   name: String!
 }
 
-input FeatureInput {
+input LibraryFeatureInput {
   id: String!
   name: String!
 }
 
 input LibraryUpdateInput {
-  releases: [ReleaseInput!]!
-  platforms: [PlatformInput!]!
-  sources: [SourceInput!]!
-  tags: [TagInput!]!
-  completionStates: [CompletionStateInput!]!
-  features: [FeatureInput!]!
+  releases: [LibraryReleaseInput!]!
+  platforms: [LibraryPlatformInput!]!
+  sources: [LibrarySourceInput!]!
+  tags: [LibraryTagInput!]!
+  completionStates: [LibraryCompletionStateInput!]!
+  features: [LibraryFeatureInput!]!
 }
 
 input LibraryRemovalInput {

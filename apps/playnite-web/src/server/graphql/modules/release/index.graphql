@@ -15,4 +15,25 @@ type Release {
   releaseYear: Int
   source: Source!
   title: String!
+  tags: [Tag!]!
+}
+
+input ReleaseInput {
+  id: String!
+  title: String
+  releaseDate: DateTime
+  communityScore: Int
+  completionStatus: String
+  criticScore: Int
+  description: String
+  features: [String!]
+  hidden: Boolean!
+  recentActivity: DateTime
+  source: String
+  tags: [String!]
+  playTime: String
+}
+
+extend type Mutation {
+  updateRelease(release: ReleaseInput!): Release!
 }

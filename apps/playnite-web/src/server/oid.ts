@@ -48,6 +48,10 @@ type Identity = IIdentify | IHaveNoIdentity
 function fromString(oidString: string): Identity {
   const [type, id, moment] = oidString.split(':')
 
+  if (!id || !type) {
+    throw new Error('Invalid OID format.')
+  }
+
   if (id === 'NULL') {
     return {
       type: type as DomainType,
@@ -145,4 +149,4 @@ export {
   hasIdentity,
   tryParseOid,
 }
-export type { DomainType, IIdentify }
+export type { DomainType, Identity, IIdentify }
