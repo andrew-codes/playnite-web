@@ -108,7 +108,7 @@ const sortReleasesByPreferredPlatform = (
 }
 
 const GameDetails: FC<{ game: Game }> = ({ game }) => {
-  const { data } = useMe()
+  const [{ data }] = useMe()
 
   const releases = useMemo(
     () => sortReleasesByPreferredPlatform(game.releases),

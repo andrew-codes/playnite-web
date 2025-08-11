@@ -18,17 +18,20 @@ import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
 const loader = requiresUserSetup()
 
-const isOnDetailsPage = (pathname) => /\/browse\/.+$/.test(pathname)
-
 const Title = styled('span')(({ theme }) => ({
   textAlign: 'center',
   flex: 1,
 }))
 
-function Browse() {
+function UserLibrary() {
   const { nameFilter, filterItems } = useSelector($filterValuesForQuery)
 
   const params = useParams()
+  const isOnDetailsPage = (pathname) =>
+    new RegExp(
+      `^/u/${params.username}/${params.libraryId}/Game:[1-9][0-9]*$`,
+    ).test(pathname)
+
   const { loading, data, error } = useAllGames(params.libraryId ?? '')
 
   const games = !loading ? (data?.library?.games ?? []) : []
@@ -58,7 +61,7 @@ function Browse() {
   }, [location.pathname])
   const handleSelection = useCallback((evt, game: Game) => {
     setRightDrawerOpen(true)
-    navigate(`/${params.username}/browse/${game.id}`)
+    navigate(`/u/${params.username}/${params.libraryId}/${game.id}`)
   }, [])
 
   return (
@@ -94,5 +97,5 @@ function Browse() {
 
 type SearchParams = { username: string; libraryId: string }
 
-export default Browse
-export { loader, SearchParams }
+export default UserLibrary
+export { loader, type SearchParams }

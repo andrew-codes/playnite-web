@@ -7,6 +7,9 @@ export const Release: ReleaseResolvers = {
   id: async (_parent, _arg, _ctx) => {
     return create('Game', _parent.id).toString()
   },
+  description: async (_parent, _arg, _ctx) => {
+    return _parent.description
+  },
   completionStatus: async (_parent, _arg, _ctx) => {
     let output: null | GraphCompletionStatus = null
     if (_parent.completionStatusId) {

@@ -103,7 +103,7 @@ describe('User Library', () => {
     })
   })
 
-  describe.only('UX', () => {
+  describe('UX', () => {
     Cypress._.each(breakpoints, ([name, x, y]) => {
       describe(`at ${name} breakpoint`, () => {
         beforeEach(() => {

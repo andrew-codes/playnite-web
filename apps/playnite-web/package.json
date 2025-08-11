@@ -36,6 +36,7 @@
     "intl-parse-accept-language": "^1.0.0",
     "is-ip": "^5.0.1",
     "isbot": "^5.1.28",
+    "isomorphic-dompurify": "^2.26.0",
     "istanbul-lib-instrument": "^6.0.3",
     "jsonwebtoken": "^9.0.2",
     "lodash-es": "^4.17.21",
