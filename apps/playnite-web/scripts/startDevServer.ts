@@ -2,6 +2,8 @@ import nodemon from 'nodemon'
 import path from 'path'
 import sh from 'shelljs'
 
+const __dirname = import.meta.dirname
+
 async function setup() {
   return Promise.all([
     new Promise((resolve, reject) => {
@@ -43,16 +45,12 @@ async function setup() {
         },
       )
     }),
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       sh.exec(
-        `kill -9 $(lsof -t -i:24678`,
+        `kill -9 $(lsof -t -i:24678)`,
         { async: true },
         (code, stdout, stderr) => {
-          if (code !== 0) {
-            reject(new Error(`Failed to push database: ${stderr}`))
-          } else {
-            resolve(stdout)
-          }
+          resolve(code)
         },
       )
     }),
@@ -62,24 +60,24 @@ async function run() {
   await setup()
 
   nodemon({
-    script: path.join(__dirname, '..', '..', 'src', 'server', 'server.ts'),
+    script: path.join('src/server/server.ts'),
     ext: 'ts tsx js jsx json graphql env',
     execMap: {
       js: 'yarn tsx',
       ts: 'yarn tsx',
     },
     watch: [
-      path.join(__dirname, '..', '..', 'src', 'server', '*.*'),
-      path.join(__dirname, '..', '..', 'src', 'server', '**', '*.*'),
-      path.join(__dirname, '..', '..', '*.env'),
-      path.join(__dirname, '..', '..', 'codegen.ts'),
+      path.join('src/server/*.*'),
+      path.join('src/server/**/*.*'),
+      path.join('*.env'),
+      path.join('codegen.ts'),
     ],
     ignore: [
-      path.join(__dirname, '..', '..', 'src', '**', '*.webp'),
-      path.join(__dirname, '..', '..', 'src', '**', '*.png'),
-      path.join(__dirname, '..', '..', 'src', '**', '*.jpg'),
-      path.join(__dirname, '..', '..', 'src', '**', '*.jpeg'),
-      path.join(__dirname, '..', '..', 'src', '**', '*.gif'),
+      path.join('src/**/*.webp'),
+      path.join('src/**/*.png'),
+      path.join('src/**/*.jpg'),
+      path.join('src/**/*.jpeg'),
+      path.join('src/**/*.gif'),
     ],
     env: {
       NODE_ENV: 'development',

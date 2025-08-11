@@ -1,19 +1,13 @@
 import { groupBy } from 'lodash-es'
+import { ignSlug } from '../../../../../assets/ignSlug.js'
 import logger from '../../../../../logger.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
-
-function ignSlug(release: { title: string }): string {
-  return release.title
-    .toLowerCase()
-    .replace(/[.,!?<>/|\\:$\^&*(){}\[\]"';@#`~]|--+/g, '')
-    .replace(/ /g, '-')
-}
 
 export const syncLibrary: NonNullable<
   MutationResolvers['syncLibrary']
 > = async (_parent, _arg, _ctx) => {
   const user = _ctx.jwt?.payload
-  
+
   await _ctx.identityService.authorize(user)
 
   logger.silly(`Library data`, _arg.libraryData)
@@ -288,23 +282,13 @@ export const syncLibrary: NonNullable<
       }),
     ),
   )
-  // IGN cover assets
-  const coverAssets = await _ctx.db.asset.findMany({
-    where: {
-      type: 'cover',
-      ignId: {
-        in: _arg.libraryData.update.releases
-          .map((r) => ignSlug(r))
-          .filter((slug) => slug !== ''),
-      },
-    },
-  })
+
   logger.info(
-    `Persisting ${coverAssets.length} assets from library ${libraryId}`,
+    `Persisting ${_arg.libraryData.update.releases.length} release assets for library ${libraryId}`,
   )
   await Promise.all(
-    coverAssets.map(async (asset) => {
-      return _ctx.assets.persist(asset)
+    _arg.libraryData.update.releases.map(async (release) => {
+      return _ctx.assets.persist(release)
     }),
   )
 

@@ -1,3 +1,5 @@
+import { breakpoints } from 'support/breakpoints'
+
 describe('Account Creation.', () => {
   beforeEach(() => {
     cy.task('seedUsers')
@@ -301,6 +303,18 @@ describe('Account Creation.', () => {
           cy.get('.MuiSnackbar-root').contains(
             'Username must use alphanumeric and "-" characters only.',
           )
+        })
+      })
+    })
+
+    describe('UX', () => {
+      Cypress._.each(breakpoints, ([name, x, y]) => {
+        describe(`at ${name} breakpoint`, () => {
+          it(`displays the registration form correctly`, () => {
+            cy.viewport(x, y)
+            cy.visit('/account/new')
+            cy.compareSnapshot(`registration-form-${name}`)
+          })
         })
       })
     })

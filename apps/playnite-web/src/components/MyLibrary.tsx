@@ -25,7 +25,7 @@ const MyLibrary: FC<{
               key={game.id}
               rel="preload"
               as="image"
-              href={`/asset-by-id/${game.primaryRelease?.cover}`}
+              href={`${game.primaryRelease?.cover}`}
             />
           ))}
       </Helmet>

@@ -1,3 +1,5 @@
+import { breakpoints } from 'support/breakpoints'
+
 describe('User Library', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api').as('graphql')
@@ -96,6 +98,28 @@ describe('User Library', () => {
             expect($els.eq(1)).to.contain('Help')
             expect($els.eq(2)).to.contain('Logout')
           })
+        })
+      })
+    })
+  })
+
+  describe.only('UX', () => {
+    Cypress._.each(breakpoints, ([name, x, y]) => {
+      describe(`at ${name} breakpoint`, () => {
+        beforeEach(() => {
+          cy.viewport(x, y)
+        })
+
+        it(`Displays the library correctly`, () => {
+          cy.wait('@graphql')
+          cy.intercept('GET', '*.webp').as('images')
+          cy.wait('@images')
+          cy.get('[data-test="GameFigure"]')
+            .parents('.MuiBox-root')
+            .eq(0)
+            .find('> div')
+            .as('scrollArea')
+          cy.get('@scrollArea').compareSnapshot(`library-${name}`)
         })
       })
     })

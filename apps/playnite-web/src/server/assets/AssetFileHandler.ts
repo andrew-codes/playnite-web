@@ -1,8 +1,8 @@
-import { Asset } from '@prisma/client'
 import { existsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
+import { ignSlug } from './ignSlug.js'
 import { IPersistAssets, ISourceAssets } from './interfaces'
 
 class AssetFileHandler implements IPersistAssets {
@@ -11,19 +11,18 @@ class AssetFileHandler implements IPersistAssets {
     private sourceAssets: ISourceAssets,
   ) {}
 
-  async persist(asset: Asset): Promise<void> {
+  async persist(release: { title: string }): Promise<void> {
     await fs.mkdir(path.join(this.rootAssetPath, 'game-assets'), {
       recursive: true,
     })
+    const ignId = ignSlug(release)
     if (
-      existsSync(
-        path.join(this.rootAssetPath, 'game-assets', `${asset.ignId}.webp`),
-      )
+      existsSync(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
     ) {
       return
     }
 
-    const imageSource = await this.sourceAssets.source(asset)
+    const imageSource = await this.sourceAssets.source(release)
     if (!imageSource) {
       return
     }
@@ -31,7 +30,7 @@ class AssetFileHandler implements IPersistAssets {
     const [mimeType, imageData] = imageSource
     const webp = await sharp(imageData).toFormat('webp').toBuffer()
     await fs.writeFile(
-      path.join(this.rootAssetPath, 'game-assets', `${asset.ignId}.webp`),
+      path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`),
       webp,
     )
   }

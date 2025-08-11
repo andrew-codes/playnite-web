@@ -1,13 +1,15 @@
-import { Asset } from '@prisma/client'
+import logger from '../logger'
+import { ignSlug } from './ignSlug.js'
 import { ISourceAssets } from './interfaces'
 
 class IgnSourcedAssets implements ISourceAssets {
-  async source(asset: Asset): Promise<[string, Buffer] | null> {
+  async source(release: { title: string }): Promise<[string, Buffer] | null> {
+    const ignId = ignSlug(release)
     try {
       const params = new URLSearchParams({
         operationName: 'ObjectSelectByTypeAndSlug',
         variables: JSON.stringify({
-          slug: asset.ignId,
+          slug: ignId,
           objectType: 'Game',
           filter: 'Latest',
           region: 'us',
@@ -33,12 +35,14 @@ class IgnSourcedAssets implements ISourceAssets {
         },
       ).then((response) => {
         if (!response.ok) {
+          logger.warn(`Failed to fetch from IGN API: ${ignId}`)
           return null
         }
         return response.json()
       })
 
       if (!ignResponse?.data?.objectSelectByTypeAndSlug?.primaryImage?.url) {
+        logger.warn(`No primary image found for asset: ${ignId}`)
         return null
       }
 
@@ -46,6 +50,9 @@ class IgnSourcedAssets implements ISourceAssets {
         ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url,
       )
       if (!imageResponse.ok) {
+        logger.warn(
+          `Failed to fetch image from IGN URL: ${ignId}, URL: ${ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url}`,
+        )
         return null
       }
 
@@ -67,7 +74,7 @@ class IgnSourcedAssets implements ISourceAssets {
       }
       return [mimeType, Buffer.from(await imageResponse.arrayBuffer())]
     } catch (error) {
-      console.error(`Error fetching image: ${asset.ignId}`, error)
+      logger.error(`Error fetching image: ${ignId}`, error)
       return null
     }
   }
