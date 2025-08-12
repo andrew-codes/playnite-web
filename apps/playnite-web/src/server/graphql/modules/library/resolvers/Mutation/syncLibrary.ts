@@ -43,78 +43,13 @@ export const syncLibrary: NonNullable<
     `Removing features from library ${libraryId}`,
     _arg.libraryData.remove.features,
   )
+
   // Removals
-  // Features
-  await _ctx.db.feature.deleteMany({
-    where: {
-      libraryId,
-      playniteId: {
-        in: _arg.libraryData.remove.features,
-      },
-    },
-  })
-
-  logger.info(
-    `Removing sources from library ${libraryId}`,
-    _arg.libraryData.remove.sources,
-  )
-  //  Sources
-  await _ctx.db.source.deleteMany({
-    where: {
-      libraryId,
-      playniteId: {
-        in: _arg.libraryData.remove.sources,
-      },
-    },
-  })
-
-  logger.info(
-    `Removing platforms from library ${libraryId}`,
-    _arg.libraryData.remove.platforms,
-  )
-  // Platforms
-  await _ctx.db.platform.deleteMany({
-    where: {
-      libraryId,
-      playniteId: {
-        in: _arg.libraryData.remove.platforms,
-      },
-    },
-  })
-
-  logger.info(
-    `Removing tags from library ${libraryId}`,
-    _arg.libraryData.remove.tags,
-  )
-  // Tags
-  await _ctx.db.tag.deleteMany({
-    where: {
-      libraryId,
-      playniteId: {
-        in: _arg.libraryData.remove.tags,
-      },
-    },
-  })
-
-  logger.info(
-    `Removing completion states from library ${libraryId}`,
-    _arg.libraryData.remove.completionStates,
-  )
-  // CompletionStates
-  await _ctx.db.completionStatus.deleteMany({
-    where: {
-      libraryId,
-      playniteId: {
-        in: _arg.libraryData.remove.completionStates,
-      },
-    },
-  })
-
+  // Releases
   logger.info(
     `Removing releases from library ${libraryId}`,
     _arg.libraryData.remove.releases,
   )
-  // Releases
   await _ctx.db.release.deleteMany({
     where: {
       libraryId,
@@ -142,6 +77,76 @@ export const syncLibrary: NonNullable<
   await _ctx.db.game.deleteMany({
     where: {
       id: { in: gamesWithNoReleases.map((g) => g.id) },
+    },
+  })
+
+  // Features
+  logger.info(
+    `Removing features from library ${libraryId}`,
+    _arg.libraryData.remove.features,
+  )
+  await _ctx.db.feature.deleteMany({
+    where: {
+      libraryId,
+      playniteId: {
+        in: _arg.libraryData.remove.features,
+      },
+    },
+  })
+
+  //  Sources
+  logger.info(
+    `Removing sources from library ${libraryId}`,
+    _arg.libraryData.remove.sources,
+  )
+  await _ctx.db.source.deleteMany({
+    where: {
+      libraryId,
+      playniteId: {
+        in: _arg.libraryData.remove.sources,
+      },
+    },
+  })
+
+  // Platforms
+  logger.info(
+    `Removing platforms from library ${libraryId}`,
+    _arg.libraryData.remove.platforms,
+  )
+  await _ctx.db.platform.deleteMany({
+    where: {
+      libraryId,
+      playniteId: {
+        in: _arg.libraryData.remove.platforms,
+      },
+    },
+  })
+
+  // Tags
+  logger.info(
+    `Removing tags from library ${libraryId}`,
+    _arg.libraryData.remove.tags,
+  )
+  await _ctx.db.tag.deleteMany({
+    where: {
+      libraryId,
+      playniteId: {
+        in: _arg.libraryData.remove.tags,
+      },
+    },
+  })
+
+  // CompletionStates
+  logger.info(
+    `Removing completion states from library ${libraryId}`,
+    _arg.libraryData.remove.completionStates,
+  )
+  await _ctx.db.completionStatus.deleteMany({
+    where: {
+      libraryId,
+      playniteId: {
+        in: _arg.libraryData.remove.completionStates,
+      },
     },
   })
 

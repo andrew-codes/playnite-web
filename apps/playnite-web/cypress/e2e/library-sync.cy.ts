@@ -165,10 +165,124 @@ describe('Library Sync', () => {
     })
   })
 
-  describe('Updates from Playnite.', () => {
+  describe('Entity Updates from Playnite.', () => {
     beforeEach(() => {
       cy.fixture('librarySync.json').then((libraryData) => {
         cy.syncLibrary('test', 'test', libraryData)
+      })
+    })
+
+    it(`Release title update.
+      - Release title is updated correctly.
+      - Creates a new game if no other game is found by the updated title.
+      - Removes the old game if it contains no releases after updated.`, () => {
+      throw new Error('Not implemented')
+      cy.fixture('librarySync.json').then((libraryData) => {
+        const completionStatus = libraryData.update.completionStates.find(
+          (state) => state.id !== '5546b6df-a6fb-404e-bcb9-82c78fd32745',
+        )
+        const playniteId = '38e4fe01-4224-4191-a967-c578245379f9'
+        const update = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [
+              {
+                completionStatus: completionStatus.id,
+                description: 'description',
+                features: [
+                  'c9a30422-b583-4c09-ae17-6face78a88f7',
+                  '0d300dc8-78a6-4d92-af6f-68918269c852',
+                ],
+                hidden: true,
+                id: playniteId,
+                playTime: '16381',
+                releaseDate: '2025-08-25T00:00:00.000Z',
+                source: '52ff97c9-14a6-490a-a1c6-fc4443edd918',
+                tags: [libraryData.update.tags[0].id],
+                title: '7 Days to Die',
+              },
+            ],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        id
+                        games {
+                          releases {
+                            id
+                            completionStatus {
+                              playniteId
+                            }
+                            description
+                            features {
+                              playniteId
+                            }
+                            hidden
+                            releaseDate
+                            source {
+                              playniteId
+                            }
+                            tags {
+                              playniteId
+                            }
+                            title
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: update,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+
+          const releasesLength = response.body.data.syncLibrary.games.reduce(
+            (sum, game) => sum + game.releases.length,
+            0,
+          )
+          expect(releasesLength).to.equal(libraryData.update.releases.length)
+
+          const release = response.body.data.syncLibrary.games[1].releases[0]
+          expect(release.completionStatus.playniteId).to.equal(
+            completionStatus.id,
+          )
+          expect(release.description).to.equal('description')
+          expect(
+            release.features.map((f) => f.playniteId),
+          ).to.contain.all.members([
+            'c9a30422-b583-4c09-ae17-6face78a88f7',
+            '0d300dc8-78a6-4d92-af6f-68918269c852',
+          ])
+          expect(release.hidden).to.equal(true)
+          expect(release.releaseDate).to.equal('2025-08-25')
+          expect(release.source.playniteId).to.equal(
+            '52ff97c9-14a6-490a-a1c6-fc4443edd918',
+          )
+          expect(release.tags.map((t) => t.playniteId)).to.contain.all.members([
+            libraryData.update.tags[0].id,
+          ])
+          expect(release.title).to.equal('7 Days to Die')
+        })
       })
     })
 
@@ -541,6 +655,77 @@ describe('Library Sync', () => {
       })
     })
 
+    it(`Completion Status updates.`, () => {
+      cy.fixture('librarySync.json').then((libraryData) => {
+        const update = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+          update: {
+            completionStates: [
+              { id: '5546b6df-a6fb-404e-bcb9-82c78fd32745', name: 'Done' }, // Update played
+            ],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        id
+                        completionStates {
+                          playniteId
+                          name
+                        }
+                        games {
+                          releases {
+                            completionStatus {
+                              name
+                            }
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: update,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          const completionStatus =
+            response.body.data.syncLibrary.completionStates.find(
+              (cs) => cs.playniteId === '5546b6df-a6fb-404e-bcb9-82c78fd32745',
+            )
+          expect(completionStatus).to.exist
+          expect(completionStatus.name).to.equal('Done')
+
+          const releases = response.body.data.syncLibrary.games.flatMap(
+            (g) => g.releases,
+          )
+          expect(releases.map((r) => r.completionStatus?.name)).not.to.contain(
+            'Played',
+          )
+          expect(releases.map((r) => r.completionStatus?.name)).to.contain(
+            'Done',
+          )
+        })
+      })
+    })
+
     it(`Feature updates.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const update = {
@@ -651,6 +836,699 @@ describe('Library Sync', () => {
           )
           expect(tag).to.exist
           expect(tag.name).to.equal('Awesome')
+        })
+      })
+    })
+  })
+
+  describe('Entity removals from Playnite.', () => {
+    beforeEach(() => {
+      cy.fixture('librarySync.json').then((libraryData) => {
+        cy.syncLibrary('test', 'test', libraryData)
+      })
+    })
+
+    it(`Remove release.
+      - Removes release.
+      - Removes game if there are no releases for the game after removal.`, () => {
+      cy.fixture('librarySync.json').then((libraryData) => {
+        const remove = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [
+              '38e4fe01-4224-4191-a967-c578245379f9', // 7 Days to Die, only one.
+              'e8aeb6e9-ea65-48d8-a344-4c4399025081', // Fallout 4, more than one.
+            ],
+            sources: [],
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        id
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            playniteId
+                            title
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: remove,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+
+          expect(
+            response.body.data.syncLibrary.games.map(
+              (g) => g.primaryRelease.title,
+            ),
+          ).to.not.include('7 Days to Die')
+          expect(
+            response.body.data.syncLibrary.games.find((g) =>
+              g.releases.some((r) => r.title === 'Fallout 4'),
+            ).releases.length,
+          ).to.equal(1)
+        })
+      })
+    })
+
+    it(`Remove platform.
+      - Errors if there are any releases with the platform (found via source).
+      - Otherwise, removes platform.`, () => {
+      cy.fixture('librarySync.json').then((libraryData) => {
+        const remove = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            playniteId
+                            title
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: remove,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body.errors.length).to.equal(1)
+        })
+
+        const validRemoval = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'], // Sony PlayStation 5
+            releases: libraryData.update.releases
+              .filter(
+                (r) => r.source === '8be14880-bd74-463f-b9b3-cf6b1cfede38',
+              )
+              .map((r) => r.id), // All PlayStation 5 releases by PlayStation source.
+            sources: ['8be14880-bd74-463f-b9b3-cf6b1cfede38'], // PlayStation source
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        platforms {
+                          playniteId
+                        }
+                        sources {
+                          playniteId
+                        }
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            source {
+                              playniteId
+                            }
+                            title
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: validRemoval,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(
+            response.body.data.syncLibrary.platforms.map((p) => p.playniteId),
+          ).to.not.include('72f01268-1ea4-431f-887e-ee5bfa7e6e6f')
+          expect(
+            response.body.data.syncLibrary.sources.map((s) => s.playniteId),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+          expect(
+            response.body.data.syncLibrary.games.flatMap((g) =>
+              g.releases.map((r) => r.source.playniteId),
+            ),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+        })
+      })
+    })
+
+    it(`Remove sources.
+      - Errors if there are any releases source.
+      - Otherwise, removes items.`, () => {
+      throw new Error('Not implemented')
+      cy.fixture('librarySync.json').then((libraryData) => {
+        const remove = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            playniteId
+                            title
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: remove,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body.errors.length).to.equal(1)
+        })
+
+        const validRemoval = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'], // Sony PlayStation 5
+            releases: libraryData.update.releases
+              .filter(
+                (r) => r.source === '8be14880-bd74-463f-b9b3-cf6b1cfede38',
+              )
+              .map((r) => r.id), // All PlayStation 5 releases by PlayStation source.
+            sources: ['8be14880-bd74-463f-b9b3-cf6b1cfede38'], // PlayStation source
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        platforms {
+                          playniteId
+                        }
+                        sources {
+                          playniteId
+                        }
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            source {
+                              playniteId
+                            }
+                            title
+                            }
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: validRemoval,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(
+            response.body.data.syncLibrary.platforms.map((p) => p.playniteId),
+          ).to.not.include('72f01268-1ea4-431f-887e-ee5bfa7e6e6f')
+          expect(
+            response.body.data.syncLibrary.sources.map((s) => s.playniteId),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+          expect(
+            response.body.data.syncLibrary.games.flatMap((g) =>
+              g.releases.map((r) => r.source.playniteId),
+            ),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+        })
+      })
+    })
+
+    it(`Remove completion states.
+      - Errors if there are any releases with completion states.
+      - Otherwise, removes items.`, () => {
+      throw new Error('Not implemented')
+      cy.fixture('librarySync.json').then((libraryData) => {
+        const remove = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            playniteId
+                            title
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: remove,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body.errors.length).to.equal(1)
+        })
+
+        const validRemoval = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'], // Sony PlayStation 5
+            releases: libraryData.update.releases
+              .filter(
+                (r) => r.source === '8be14880-bd74-463f-b9b3-cf6b1cfede38',
+              )
+              .map((r) => r.id), // All PlayStation 5 releases by PlayStation source.
+            sources: ['8be14880-bd74-463f-b9b3-cf6b1cfede38'], // PlayStation source
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        platforms {
+                          playniteId
+                        }
+                        sources {
+                          playniteId
+                        }
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            source {
+                              playniteId
+                            }
+                            title
+                            }
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: validRemoval,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(
+            response.body.data.syncLibrary.platforms.map((p) => p.playniteId),
+          ).to.not.include('72f01268-1ea4-431f-887e-ee5bfa7e6e6f')
+          expect(
+            response.body.data.syncLibrary.sources.map((s) => s.playniteId),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+          expect(
+            response.body.data.syncLibrary.games.flatMap((g) =>
+              g.releases.map((r) => r.source.playniteId),
+            ),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+        })
+      })
+    })
+
+    it(`Remove features.
+      - Errors if there are any releases with feature.
+      - Otherwise, removes items.`, () => {
+      throw new Error('Not implemented')
+      cy.fixture('librarySync.json').then((libraryData) => {
+        const remove = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            playniteId
+                            title
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: remove,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body.errors.length).to.equal(1)
+        })
+
+        const validRemoval = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'], // Sony PlayStation 5
+            releases: libraryData.update.releases
+              .filter(
+                (r) => r.source === '8be14880-bd74-463f-b9b3-cf6b1cfede38',
+              )
+              .map((r) => r.id), // All PlayStation 5 releases by PlayStation source.
+            sources: ['8be14880-bd74-463f-b9b3-cf6b1cfede38'], // PlayStation source
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        platforms {
+                          playniteId
+                        }
+                        sources {
+                          playniteId
+                        }
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            source {
+                              playniteId
+                            }
+                            title
+                            }
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: validRemoval,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(
+            response.body.data.syncLibrary.platforms.map((p) => p.playniteId),
+          ).to.not.include('72f01268-1ea4-431f-887e-ee5bfa7e6e6f')
+          expect(
+            response.body.data.syncLibrary.sources.map((s) => s.playniteId),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+          expect(
+            response.body.data.syncLibrary.games.flatMap((g) =>
+              g.releases.map((r) => r.source.playniteId),
+            ),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+        })
+      })
+    })
+
+    it(`Remove tags.
+      - Errors if there are any releases with tags.
+      - Otherwise, removes items.`, () => {
+      throw new Error('Not implemented')
+      cy.fixture('librarySync.json').then((libraryData) => {
+        const remove = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            playniteId
+                            title
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: remove,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(response.body.errors.length).to.equal(1)
+        })
+
+        const validRemoval = {
+          libraryId: libraryData.libraryId,
+          name: libraryData.name,
+          remove: {
+            completionStates: [],
+            features: [],
+            platforms: ['72f01268-1ea4-431f-887e-ee5bfa7e6e6f'], // Sony PlayStation 5
+            releases: libraryData.update.releases
+              .filter(
+                (r) => r.source === '8be14880-bd74-463f-b9b3-cf6b1cfede38',
+              )
+              .map((r) => r.id), // All PlayStation 5 releases by PlayStation source.
+            sources: ['8be14880-bd74-463f-b9b3-cf6b1cfede38'], // PlayStation source
+            tags: [],
+          },
+          update: {
+            completionStates: [],
+            features: [],
+            platforms: [],
+            releases: [],
+            sources: [],
+            tags: [],
+          },
+        }
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `mutation($libraryData: LibraryInput!) {
+                      syncLibrary(libraryData: $libraryData) {
+                        platforms {
+                          playniteId
+                        }
+                        sources {
+                          playniteId
+                        }
+                        games {
+                          primaryRelease {
+                            title
+                          }
+                          releases {
+                            source {
+                              playniteId
+                            }
+                            title
+                            }
+                          }
+                        }
+                      }
+                    }`,
+            variables: {
+              libraryData: validRemoval,
+            },
+          },
+        }).then((response) => {
+          expect(response.status).to.eq(200)
+          expect(
+            response.body.data.syncLibrary.platforms.map((p) => p.playniteId),
+          ).to.not.include('72f01268-1ea4-431f-887e-ee5bfa7e6e6f')
+          expect(
+            response.body.data.syncLibrary.sources.map((s) => s.playniteId),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
+          expect(
+            response.body.data.syncLibrary.games.flatMap((g) =>
+              g.releases.map((r) => r.source.playniteId),
+            ),
+          ).to.not.include('8be14880-bd74-463f-b9b3-cf6b1cfede38')
         })
       })
     })

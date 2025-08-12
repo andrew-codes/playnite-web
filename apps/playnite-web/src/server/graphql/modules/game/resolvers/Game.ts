@@ -45,11 +45,20 @@ export const Game: GameResolvers = {
           },
         },
       },
+      include: {
+        Source: {
+          include: {
+            Platform: true,
+          },
+        },
+      },
     })
 
     let primaryRelease: undefined | null | Release = null
     for (const platformId of library.platformPriority) {
-      primaryRelease = releases?.find((r) => r.platformId === platformId)
+      primaryRelease = releases?.find(
+        (r) => r.Source.Platform.id === platformId,
+      )
       if (primaryRelease) {
         break
       }
