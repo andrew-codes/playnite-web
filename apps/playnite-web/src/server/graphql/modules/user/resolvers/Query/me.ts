@@ -6,7 +6,7 @@ export const me: NonNullable<QueryResolvers['me']> = async (
   _arg,
   _ctx,
 ) => {
-  logger.info('User from cookie.', _ctx.jwt.payload)
+  logger.info('User from cookie.', _ctx.jwt?.payload)
 
   if (!_ctx.jwt?.payload) {
     return {
