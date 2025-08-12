@@ -18,11 +18,11 @@ input LibraryReleaseInput {
   completionStatus: String
   criticScore: Int
   description: String
-  features: [String!]!
+  features: [String!]
   hidden: Boolean!
   recentActivity: DateTime
   source: String!
-  tags: [String!]!
+  tags: [String!]
   playTime: String
 }
 

@@ -1,7 +1,5 @@
 type Game {
   id: String!
-  completionStatus: CompletionStatus!
-  platforms: [Platform!]!
   primaryRelease: Release
   releases: [Release!]!
 }

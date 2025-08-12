@@ -20,28 +20,6 @@ export const Release: ReleaseResolvers = {
       })
     }
 
-    if (!output) {
-      const library = await _ctx.db.library.findUnique({
-        where: {
-          id: _parent.libraryId,
-        },
-      })
-      if (library?.defaultCompletionStatusId) {
-        output = await _ctx.db.completionStatus.findFirst({
-          where: {
-            id: library.defaultCompletionStatusId,
-          },
-        })
-      }
-    }
-    if (!output) {
-      output = await _ctx.db.completionStatus.findFirst({
-        where: {
-          libraryId: _parent.libraryId,
-        },
-      })
-    }
-
     return output
   },
 
@@ -96,9 +74,9 @@ export const Release: ReleaseResolvers = {
   platform: async (_parent, _arg, _ctx) => {
     const output = await _ctx.db.platform.findFirst({
       where: {
-        Releases: {
+        Sources: {
           some: {
-            id: _parent.id,
+            id: _parent.sourceId,
           },
         },
       },

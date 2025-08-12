@@ -11,9 +11,9 @@ const Game_By_Id_Query = gql`
         title
         description
         cover
-      }
-      completionStatus {
-        name
+        completionStatus {
+          name
+        }
       }
       releases {
         platform {

@@ -22,15 +22,10 @@ type GraphRelease = Prisma.ReleaseGetPayload<{}>
 
 type GraphPlaylist = Prisma.PlaylistGetPayload<{}>
 
-type User = Omit<Prisma.UserGetPayload<{}>, 'password'> & {
+type GraphUser = Omit<Prisma.UserGetPayload<{}>, 'password' | 'id'> & {
+  id: string
   isAuthenticated?: boolean
 }
-
-type NullUser = Omit<User, 'createdAt' | 'updatedAt' | 'id'> & {
-  id: null
-}
-type GraphUser = User | NullUser
-
 type GraphLibrary = Prisma.LibraryGetPayload<{}>
 
 type GraphSiteSetting = Prisma.SiteSettingsGetPayload<{}>

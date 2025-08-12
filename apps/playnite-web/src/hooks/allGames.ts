@@ -7,13 +7,13 @@ const AllGames = gql`
     library(libraryId: $input) {
       games {
         id
-        completionStatus {
-          name
-        }
         primaryRelease {
           id
           title
           cover
+          completionStatus {
+            name
+          }
         }
         releases {
           id

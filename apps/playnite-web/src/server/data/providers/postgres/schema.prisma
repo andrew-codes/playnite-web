@@ -71,7 +71,6 @@ model Release {
   releaseYear        Int?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
-  platformId         Int
   sourceId           Int
   communityScore     Float?
   criticScore        Float?
@@ -83,7 +82,6 @@ model Release {
   Library          Library           @relation(fields: [libraryId], references: [id])
   Cover            Asset             @relation(fields: [coverId], references: [id])
   Source           Source            @relation(fields: [sourceId], references: [id])
-  Platform         Platform          @relation(fields: [platformId], references: [id])
   Features         Feature[]
   CompletionStatus CompletionStatus? @relation(fields: [completionStatusId], references: [id])
   Games            Game[]            @relation("GameReleases")
@@ -92,7 +90,6 @@ model Release {
 
   @@unique([playniteId, libraryId])
   @@index([libraryId])
-  @@index([platformId])
   @@index([sourceId])
   @@index([title, libraryId])
 }
@@ -125,10 +122,9 @@ model Platform {
   playniteId String?
   iconId     Int?
 
-  Releases Release[]
-  Library  Library   @relation("LibraryPlatforms", fields: [libraryId], references: [id])
-  Icon     Asset?    @relation(fields: [iconId], references: [id])
-  Sources  Source[]
+  Library Library  @relation("LibraryPlatforms", fields: [libraryId], references: [id])
+  Icon    Asset?   @relation(fields: [iconId], references: [id])
+  Sources Source[]
 
   @@unique([playniteId, libraryId])
   @@unique([name, libraryId])

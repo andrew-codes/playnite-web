@@ -1,6 +1,7 @@
 type Feature {
   id: String!
   name: String!
+  playniteId: String
   games: [Game!]!
 }
 

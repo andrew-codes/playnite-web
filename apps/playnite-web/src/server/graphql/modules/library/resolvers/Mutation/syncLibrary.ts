@@ -1,14 +1,19 @@
 import { groupBy } from 'lodash-es'
 import { ignSlug } from '../../../../../assets/ignSlug.js'
 import logger from '../../../../../logger.js'
+import { hasIdentity, tryParseOid } from '../../../../../oid.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
 
 export const syncLibrary: NonNullable<
   MutationResolvers['syncLibrary']
 > = async (_parent, _arg, _ctx) => {
-  const user = _ctx.jwt?.payload
+  const user = await _ctx.identityService.authorize(_ctx.jwt?.payload)
 
-  await _ctx.identityService.authorize(user)
+  const userId = tryParseOid(user.id)
+  logger.debug('User', user)
+  if (!userId || !hasIdentity(userId)) {
+    throw new Error('Invalid OID format.')
+  }
 
   logger.silly(`Library data`, _arg.libraryData)
 
@@ -16,13 +21,13 @@ export const syncLibrary: NonNullable<
     where: {
       playniteId_userId: {
         playniteId: _arg.libraryData.libraryId,
-        userId: user.id,
+        userId: userId.id,
       },
     },
     create: {
       playniteId: _arg.libraryData.libraryId,
       User: {
-        connect: { id: user.id },
+        connect: { id: userId.id },
       },
       name: _arg.libraryData.name ?? 'Default Library',
     },
@@ -232,6 +237,14 @@ export const syncLibrary: NonNullable<
           },
           update: {
             name: source.name,
+            Platform: {
+              connect: {
+                playniteId_libraryId: {
+                  playniteId: source.platform,
+                  libraryId,
+                },
+              },
+            },
           },
         }),
       ),
@@ -344,11 +357,6 @@ export const syncLibrary: NonNullable<
                 },
               },
               hidden: release.hidden,
-              Platform: {
-                connect: {
-                  id: source.platformId,
-                },
-              },
               Source: {
                 connect: {
                   id: source.id,
@@ -366,29 +374,25 @@ export const syncLibrary: NonNullable<
                     }
                   }),
               },
-              CompletionStatus:
-                release?.completionStatus &&
+              ...(release?.completionStatus &&
                 release.completionStatus !==
-                  '00000000-0000-0000-0000-000000000000'
-                  ? {
-                      connect: {
-                        playniteId_libraryId: {
-                          playniteId: release.completionStatus,
-                          libraryId,
-                        },
+                  '00000000-0000-0000-0000-000000000000' && {
+                  CompletionStatus: {
+                    connect: {
+                      playniteId_libraryId: {
+                        playniteId: release.completionStatus,
+                        libraryId,
                       },
-                    }
-                  : undefined,
-              Tags:
-                release.tags?.length > 0
-                  ? {
-                      connect: release.tags
-                        .filter((t) => t !== null)
-                        .map((t) => ({
-                          playniteId_libraryId: { playniteId: t, libraryId },
-                        })),
-                    }
-                  : undefined,
+                    },
+                  },
+                }),
+              Tags: {
+                connect: (release.tags ?? [])
+                  .filter((t) => t !== null)
+                  .map((t) => ({
+                    playniteId_libraryId: { playniteId: t, libraryId },
+                  })),
+              },
             },
             update: {
               title: release.title,
@@ -398,48 +402,46 @@ export const syncLibrary: NonNullable<
               criticScore: release.criticScore,
               communityScore: release.communityScore,
               hidden: release.hidden,
-              Features: {
-                connect: (release.features ?? [])
-                  .filter((f) => f !== null)
-                  .map((f) => {
-                    return {
-                      playniteId_libraryId: {
-                        playniteId: f,
-                        libraryId,
-                      },
-                    }
-                  }),
-              },
-              Platform: {
-                connect: {
-                  id: source.platformId,
+              ...(release.features && {
+                Features: {
+                  set: release.features
+                    .filter((f) => f !== null)
+                    .map((f) => {
+                      return {
+                        playniteId_libraryId: {
+                          playniteId: f,
+                          libraryId,
+                        },
+                      }
+                    }),
                 },
-              },
+              }),
               Source: {
                 connect: {
                   id: source.id,
                 },
               },
-              CompletionStatus: release.completionStatus
-                ? {
+              ...(release.completionStatus &&
+                release.completionStatus !==
+                  '00000000-0000-0000-0000-000000000000' && {
+                  CompletionStatus: {
                     connect: {
                       playniteId_libraryId: {
                         playniteId: release.completionStatus,
                         libraryId,
                       },
                     },
-                  }
-                : undefined,
-              Tags:
-                release.tags?.length > 0
-                  ? {
-                      connect: release.tags
-                        .filter((t) => t !== null)
-                        .map((t) => ({
-                          playniteId_libraryId: { playniteId: t, libraryId },
-                        })),
-                    }
-                  : undefined,
+                  },
+                }),
+              ...(release.tags && {
+                Tags: {
+                  set: release.tags
+                    .filter((t) => t !== null)
+                    .map((t) => ({
+                      playniteId_libraryId: { playniteId: t, libraryId },
+                    })),
+                },
+              }),
             },
           })
         } catch (error) {

@@ -59,7 +59,9 @@ const GameFigure: FC<
             })}
           >
             <GameFigureChipList
-              completionStatus={game.completionStatus?.name}
+              completionStatus={
+                game.primaryRelease?.completionStatus?.name ?? 'Unknown'
+              }
               platforms={game.releases.map((release) => release.platform)}
             />
           </Box>

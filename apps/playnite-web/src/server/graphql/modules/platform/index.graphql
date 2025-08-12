@@ -1,6 +1,7 @@
 type Platform {
   id: String!
   name: String!
+  playniteId: String
   games: [Game!]!
   icon: String
 }

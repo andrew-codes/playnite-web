@@ -1,35 +1,20 @@
 using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
-using MQTTnet;
-using MQTTnet.Client;
-using MQTTnet.Protocol;
-using Newtonsoft.Json.Linq;
 using Playnite.SDK;
-using Playnite.SDK.Data;
 using Playnite.SDK.Events;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
-using PlayniteWeb.Models;
 using PlayniteWeb.Services;
 using PlayniteWeb.Services.Publishers;
-using PlayniteWeb.Services.Publishers.Mqtt;
 using PlayniteWeb.Services.Publishers.WebSocket;
-using PlayniteWeb.Services.Subscribers;
-using PlayniteWeb.Services.Subscribers.Mqtt;
-using PlayniteWeb.Services.Updaters;
-using PlayniteWeb.TopicManager;
 using PlayniteWeb.UI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
@@ -42,45 +27,49 @@ namespace PlayniteWeb
 {
   public class PlayniteWeb : GenericPlugin
   {
-    private readonly ISubscribeToPlayniteWeb subscriber;
-    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Platform>>> platformUpdated;
-    private readonly Subject<ItemUpdatedEventArgs<Platform>> platformUpdates;
-    private PublishLibraryGraphQL libraryPublisher;
-    private readonly Subject<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>> gameUpdates;
     private readonly ISerializeObjects serializer;
-    private readonly IPublishToPlayniteWeb gamePublisher;
-    private readonly IPublishToPlayniteWeb playlistPublisher;
-    private readonly IPublishToPlayniteWeb releasePublisher;
-    private readonly IPublishToPlayniteWeb platformPublisher;
-    private readonly IPublishToPlayniteWeb gameEntityPublisher;
-    private readonly IPublishToPlayniteWeb gameEntityRemovalPublisher;
-    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>>> gameUpdated;
-    private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> otherEntityUpdates;
-    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> otherEntityUpdated;
+    private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> gameUpdates;
+    private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> platformUpdates;
+    private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> sourceUpdates;
+    private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> tagUpdates;
+    private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> completionStateUpdates;
+    private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> featureUpdates;
+
+    private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> entityUpdated;
+
     private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> collectionUpdates;
     private readonly IObservable<EventPattern<ItemCollectionChangedEventArgs<DatabaseObject>>> collectionUpdated;
     private readonly IEnumerable<MainMenuItem> mainMenuItems;
     private PlayniteWebSettingsViewModel settings { get; set; }
-    private readonly IManageTopics topicManager;
     private readonly ILogger logger = LogManager.GetLogger();
     private readonly Regex pcExpression = new Regex("Windows.*");
-    private readonly IEnumerable<Platform> pcPlatforms;
     private readonly string _version;
-    private readonly EntityUpdater entityUpdater;
     private readonly GameSource emulatorSource = new GameSource("Emulator");
+    private PublishLibraryGraphQL libraryPublisher;
+    private IPublishToPlayniteWeb<IIdentifiable> releasePublisher;
+    private IPublishToPlayniteWeb<IIdentifiable> platformPublisher;
+    private IPublishToPlayniteWeb<IIdentifiable> sourcePublisher;
+    private IPublishToPlayniteWeb<IIdentifiable> tagPublisher;
+    private IPublishToPlayniteWeb<IIdentifiable> completionStatusPublisher;
+    private IPublishToPlayniteWeb<IIdentifiable> featurePublisher;
     private GraphQLHttpClient gql;
-    private readonly int publishingThrottle = 3;
+
+#if DEBUG
+    private readonly int publishingThrottle = 1;
+#else
+    private readonly int publishingThrottle = 10;
+#endif
 
     public override Guid Id { get; } = Guid.Parse("ec3439e3-51ee-43cb-9a8a-5d82cf45edac");
 
     public PlayniteWeb(IPlayniteAPI api) : base(api)
     {
-      pcPlatforms = PlayniteApi.Database.Platforms.Where(p => pcExpression.IsMatch(p.Name));
       using (MD5 md5 = MD5.Create())
       {
         byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(emulatorSource.Name));
         emulatorSource.Id = new Guid(hash);
       }
+
 #if DEBUG
       _version = "0.0.1";
 #else
@@ -89,42 +78,34 @@ namespace PlayniteWeb
       _version = extension["Version"];
 #endif
 
-      entityUpdater = new EntityUpdater(api);
-     
-
       settings = new PlayniteWebSettingsViewModel(this, api.Database);
-      topicManager = new TopicManager.TopicManager(settings.Settings);
       serializer = new ObjectSerializer();
 
       var deserializer = new ObjectDeserializer();
-      //subscriber = new PlayniteWebSubscriber(mqtt, topicManager, deserializer, api, settings.Settings.DeviceId);
       Properties = new GenericPluginProperties
       {
         HasSettings = true
       };
-            //releasePublisher = new PublishReleaseOverWebSockets(webSocket, topicManager, serializer, api.Database, settings.Settings.DeviceName);
-            //gamePublisher = new PublishGame(mqtt, topicManager, serializer, releasePublisher, settings.Settings.DeviceId);
-            //playlistPublisher = new PublishPlaylist(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
-            //platformPublisher = new PublishPlatform(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
-            //gameEntityPublisher = new PublishGameEntity(mqtt, topicManager, serializer, settings.Settings.DeviceId);
-            //gameEntityRemovalPublisher = new PublishGameEntityRemoval(mqtt, topicManager, serializer, api.Database, settings.Settings.DeviceId);
 
-            gameUpdates = new Subject<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>>();
+      gameUpdates = new Subject<ItemUpdatedEventArgs<DatabaseObject>>();
       gameUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
-      gameUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<Playnite.SDK.Models.Game>>(h => PlayniteApi.Database.Games.ItemUpdated += h, h => PlayniteApi.Database.Games.ItemUpdated -= h);
-      gameUpdated.Subscribe(e => gameUpdates.OnNext(e.EventArgs));
-
-      platformUpdates = new Subject<ItemUpdatedEventArgs<Platform>>();
+      platformUpdates = new Subject<ItemUpdatedEventArgs<DatabaseObject>>();
       platformUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
-      platformUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<Platform>>(h => PlayniteApi.Database.Platforms.ItemUpdated += h, h => PlayniteApi.Database.Platforms.ItemUpdated -= h);
-      platformUpdated.Subscribe(e => platformUpdates.OnNext(e.EventArgs));
+      sourceUpdates = new Subject<ItemUpdatedEventArgs<DatabaseObject>>();
+      sourceUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      tagUpdates = new Subject<ItemUpdatedEventArgs<DatabaseObject>>();
+      tagUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      completionStateUpdates = new Subject<ItemUpdatedEventArgs<DatabaseObject>>();
+      completionStateUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      featureUpdates = new Subject<ItemUpdatedEventArgs<DatabaseObject>>();
+      featureUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
 
       var handlers = new EventHandlers();
 
-      otherEntityUpdates = new Subject<ItemUpdatedEventArgs<DatabaseObject>>();
-      otherEntityUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
-      otherEntityUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<DatabaseObject>>(h =>
+      entityUpdated = Observable.FromEventPattern<ItemUpdatedEventArgs<DatabaseObject>>(h =>
       {
+        PlayniteApi.Database.Games.ItemUpdated += handlers.RegisterItemUpdateHandler<Game>(h);
+        PlayniteApi.Database.Platforms.ItemUpdated+=  handlers.RegisterItemUpdateHandler<Platform>(h);
         PlayniteApi.Database.AgeRatings.ItemUpdated += handlers.RegisterItemUpdateHandler<AgeRating>(h);
         PlayniteApi.Database.Categories.ItemUpdated += handlers.RegisterItemUpdateHandler<Category>(h);
         PlayniteApi.Database.Companies.ItemUpdated += handlers.RegisterItemUpdateHandler<Company>(h);
@@ -138,6 +119,8 @@ namespace PlayniteWeb
       },
       h =>
       {
+        PlayniteApi.Database.Games.ItemUpdated -= handlers.GetItemUpdateHandler<Game>();
+        PlayniteApi.Database.Platforms.ItemUpdated -= handlers.GetItemUpdateHandler<Platform>();
         PlayniteApi.Database.AgeRatings.ItemUpdated -= handlers.GetItemUpdateHandler<AgeRating>();
         PlayniteApi.Database.Categories.ItemUpdated -= handlers.GetItemUpdateHandler<Category>();
         PlayniteApi.Database.Companies.ItemUpdated -= handlers.GetItemUpdateHandler<Company>();
@@ -149,7 +132,32 @@ namespace PlayniteWeb
         PlayniteApi.Database.Sources.ItemUpdated -= handlers.GetItemUpdateHandler<GameSource>();
         PlayniteApi.Database.Tags.ItemUpdated -= handlers.GetItemUpdateHandler<Tag>();
       });
-      otherEntityUpdated.Subscribe(e => otherEntityUpdates.OnNext(e.EventArgs));
+      entityUpdated.Subscribe(e =>{
+        var type = e.EventArgs.UpdatedItems.First().NewData;
+        if (type is Game) {
+          gameUpdates.OnNext(e.EventArgs);
+
+        } else if (type is Platform)
+        {
+          platformUpdates.OnNext(e.EventArgs);
+        }
+        else if (type is GameSource)
+        {
+          sourceUpdates.OnNext(e.EventArgs);
+        }
+        else if (type is Tag)
+        {
+          tagUpdates.OnNext(e.EventArgs);
+        }
+        else if (type is CompletionStatus)
+        {
+          completionStateUpdates.OnNext(e.EventArgs);
+        }
+        else if (type is GameFeature)
+        {
+          featureUpdates.OnNext(e.EventArgs);
+        }
+      });
 
       collectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
       collectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
@@ -160,7 +168,7 @@ namespace PlayniteWeb
         PlayniteApi.Database.Companies.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Company>(h);
         PlayniteApi.Database.CompletionStatuses.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<CompletionStatus>(h);
         PlayniteApi.Database.Features.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<GameFeature>(h);
-        PlayniteApi.Database.Games.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Playnite.SDK.Models.Game>(h);
+        PlayniteApi.Database.Games.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Game>(h);
         PlayniteApi.Database.Genres.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Genre>(h);
         PlayniteApi.Database.Platforms.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Platform>(h);
         PlayniteApi.Database.Regions.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<Region>(h);
@@ -175,7 +183,7 @@ namespace PlayniteWeb
         PlayniteApi.Database.Companies.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Company>();
         PlayniteApi.Database.CompletionStatuses.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<CompletionStatus>();
         PlayniteApi.Database.Features.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<GameFeature>();
-        PlayniteApi.Database.Games.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Playnite.SDK.Models.Game>();
+        PlayniteApi.Database.Games.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Game>();
         PlayniteApi.Database.Genres.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Genre>();
         PlayniteApi.Database.Platforms.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Platform>();
         PlayniteApi.Database.Regions.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Region>();
@@ -206,208 +214,126 @@ namespace PlayniteWeb
 
     private IEnumerable<Task> SyncLibrary()
     {
-      //foreach(var task in libraryPublisher.Publish())
-      //{
-      //    yield return task;
-      //}
-        if (libraryPublisher != null)
+        if (libraryPublisher == null)
         {
-         yield return libraryPublisher.Publish();
+            yield return Task.CompletedTask;
+            yield break;
         }
 
-      yield return Task.CompletedTask;
-      //var invalidPlayniteGames = PlayniteApi.Database.Games.Where(pg => string.IsNullOrEmpty(pg.Name) || string.IsNullOrWhiteSpace(pg.Name)).ToList();
-      //foreach (var playniteGame in invalidPlayniteGames)
-      //{
-      //  logger.Warn($"Found game with no name; therefore it cannot be grouped into Games and Releases. Check the Playnite Game with ID {playniteGame.Id}. This game will not be published to Playnite Web.");
-      //}
-
-
-      //var categories = PlayniteApi.Database.Categories.ToList();
-      //logger.Info($"Publishing a total of {categories.Count()} categories.");
-      //foreach (var task in categories.SelectMany(entity => gameEntityPublisher.Publish(entity)))
-      //{
-      //  yield return task;
-      //}
-
-      //var companies = PlayniteApi.Database.Companies.ToList();
-      //logger.Info($"Publishing a total of {companies.Count()} companies.");
-      //foreach (var task in companies.SelectMany(entity => gameEntityPublisher.Publish(entity)))
-      //{
-      //  yield return task;
-      //}
-
-      //var emulators = PlayniteApi.Database.Emulators.ToList();
-      //logger.Info($"Publishing a total of {emulators.Count()} emulators.");
-      //foreach (var task in emulators.SelectMany(entity => gameEntityPublisher.Publish(entity)))
-      //{
-      //  yield return task;
-      //}
-
-      //var ageRatings = PlayniteApi.Database.AgeRatings.ToList();
-      //logger.Info($"Publishing a total of {ageRatings.Count()} age ratings.");
-      //foreach (var task in ageRatings.SelectMany(entity => gameEntityPublisher.Publish(entity)))
-      //{
-      //  yield return task;
-      //}
-
-      //var genres = PlayniteApi.Database.Genres.ToList();
-      //logger.Info($"Publishing a total of {genres.Count()} genres.");
-      //foreach (var task in genres.SelectMany(entity => gameEntityPublisher.Publish(entity)))
-      //{
-      //  yield return task;
-      //}
-
-      //var regions = PlayniteApi.Database.Regions.ToList();
-      //logger.Info($"Publishing a total of {regions.Count()} regions.");
-      //foreach (var task in regions.SelectMany(entity => gameEntityPublisher.Publish(entity)))
-      //{
-      //  yield return task;
-      //}
-
-      //var series = PlayniteApi.Database.Series.ToList();
-      //logger.Info($"Publishing a total of {series.Count()} series.");
-      //foreach (var task in series.SelectMany(entity => gameEntityPublisher.Publish(entity)))
-      //{
-      //  yield return task;
-      //}
-
-      //var validPlayniteGamesByName = PlayniteApi.Database.Games.Where(pg => !string.IsNullOrEmpty(pg.Name) && !string.IsNullOrWhiteSpace(pg.Name)).GroupBy(pg => pg.Name);
-      //var allGames = validPlayniteGamesByName.Select(groupedByName => new Models.Game(groupedByName, pcPlatforms, emulatorSource)).Where(g => !g.Id.Equals(Guid.Empty)).ToList();
-      //logger.Info($"Publishing a total of {allGames.Count()} Playnite Web Games.");
-      //logger.Info($"Publshing a total of {allGames.SelectMany(game => game.Releases).Count()} Playnite Web Releases.");
-      //foreach (var task in allGames.SelectMany(game => gamePublisher.Publish(game)))
-      //{
-      //  yield return task;
-      //}
-
-
-      //var playlists = PlayniteApi.Database.Tags
-      //  .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
-      //  .Select(tag => new Playlist(tag.Name.Substring(9), allGames.Where(game => game.Releases.Any(release => release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false)))
-      //  ).ToList();
-      //logger.Info($"Publishing a total of {playlists.Count()} playlists.");
-      //foreach (var task in playlists.SelectMany(playlist => playlistPublisher.Publish(playlist)))
-      //{
-      //  yield return task;
-      //}
+      yield return libraryPublisher.Publish();
     }
 
-    private Release ReleaseFromPlayniteGame(Playnite.SDK.Models.Game game)
-    {
-      var g = GameFromRelease(game);
-      var release = g.Releases.FirstOrDefault(r => r.Id == game.Id);
-      if (release == null)
-      {
-        logger.Debug($"Release not found for Game {game.Name} with ID {game.Id}.");
-      }
+    //private Release ReleaseFromPlayniteGame(Game game)
+    //{
+    //  var g = GameFromRelease(game);
+    //  var release = g.Releases.FirstOrDefault(r => r.Id == game.Id);
+    //  if (release == null)
+    //  {
+    //    logger.Debug($"Release not found for Game {game.Name} with ID {game.Id}.");
+    //  }
 
-      return release;
+    //  return release;
+    //}
+
+    //private Models.Game GameFromRelease(Game game)
+    //{
+    //  var games = PlayniteApi.Database.Games.Where(g => g.Name == game.Name).ToList();
+    //  return new Models.Game(games, pcPlatforms, emulatorSource);
+    //}
+
+    //public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
+    //{
+    //}
+
+    //public override void OnGameInstalled(OnGameInstalledEventArgs args)
+    //{
+    //  var release = ReleaseFromPlayniteGame(args.Game);
+    //  //var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)mqtt, topicManager, serializer);
+    //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
+    //}
+
+    //public override void OnGameStarted(OnGameStartedEventArgs args)
+    //{
+    //  var release = ReleaseFromPlayniteGame(args.Game);
+    //  release.ProcessId = args.StartedProcessId;
+    //  //var gameStatePublisher = new PublishGameState(GameState.running, (IMqttClient)mqtt, topicManager, serializer);
+    //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
+    //}
+
+    //public override void OnGameStarting(OnGameStartingEventArgs args)
+    //{
+    //  var release = ReleaseFromPlayniteGame(args.Game);
+    //  //var gameStatePublisher = new PublishGameState(GameState.launching, (IMqttClient)mqtt, topicManager, serializer);
+    //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
+    //}
+
+    //public override void OnGameStopped(OnGameStoppedEventArgs args)
+    //{
+    //  var release = ReleaseFromPlayniteGame(args.Game);
+    //  //var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)mqtt, topicManager, serializer);
+    //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
+    //}
+
+    //public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
+    //{
+    //  var release = ReleaseFromPlayniteGame(args.Game);
+    //  //var gameStatePublisher = new PublishGameState(GameState.uninstalled, (IMqttClient)mqtt, topicManager, serializer);
+    //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
+    //}
+
+    //private void Subscriber_OnRestartRelease(object sender, Release e)
+    //{
+    //  this.Subscriber_OnStopRelease(sender, e);
+    //  Task.Delay(3000).ContinueWith(t => this.Subscriber_OnStartRelease(sender, e));
+    //}
+
+    //private void Subscriber_OnStopRelease(object sender, Release e)
+    //{
+    //  if (!canRunPlaynite(e.Platform))
+    //  {
+    //    logger.Debug($"Platform {e.Platform.Name} is not a PC platform.");
+    //    return;
+    //  }
+
+    //  if (e.RunState != RunState.Running)
+    //  {
+    //    logger.Debug($"Game {e.Name} is not running.");
+    //    return;
+    //  }
+
+    //  try
+    //  {
+    //    var gameProcess = Process.GetProcessById(e.ProcessId.Value);
+    //    gameProcess.Kill();
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    logger.Error(ex, $"Error occurred in Subscriber_OnStopRelease for Game ID {e.Id}.");
+    //    var process = Process.GetProcessesByName(e.Name).FirstOrDefault();
+    //    if (process == null)
+    //    {
+    //      process = Process.GetProcesses().Where(p => p.MainWindowTitle.Contains(e.Name)).FirstOrDefault();
+
+    //      if (process == null) { return; }
+    //    }
+
+    //    process.Kill();
+    //  }
+    //}
+
+    public override ISettings GetSettings(bool firstRunSettings)
+    {
+      return settings;
     }
 
-    private Models.Game GameFromRelease(Playnite.SDK.Models.Game game)
+    public override UserControl GetSettingsView(bool firstRunSettings)
     {
-      var games = PlayniteApi.Database.Games.Where(g => g.Name == game.Name).ToList();
-      return new Models.Game(games, pcPlatforms, emulatorSource);
+      return new PlayniteWebSettingsView();
     }
 
-    public override void OnLibraryUpdated(OnLibraryUpdatedEventArgs args)
+    public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
     {
-    }
-
-    public override void OnGameInstalled(OnGameInstalledEventArgs args)
-    {
-      var release = ReleaseFromPlayniteGame(args.Game);
-      //var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)mqtt, topicManager, serializer);
-      //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
-    }
-
-    public override void OnGameStarted(OnGameStartedEventArgs args)
-    {
-      var release = ReleaseFromPlayniteGame(args.Game);
-      release.ProcessId = args.StartedProcessId;
-      //var gameStatePublisher = new PublishGameState(GameState.running, (IMqttClient)mqtt, topicManager, serializer);
-      //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
-    }
-
-    public override void OnGameStarting(OnGameStartingEventArgs args)
-    {
-      var release = ReleaseFromPlayniteGame(args.Game);
-      //var gameStatePublisher = new PublishGameState(GameState.launching, (IMqttClient)mqtt, topicManager, serializer);
-      //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
-    }
-
-    public override void OnGameStopped(OnGameStoppedEventArgs args)
-    {
-      var release = ReleaseFromPlayniteGame(args.Game);
-      //var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)mqtt, topicManager, serializer);
-      //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
-    }
-
-    public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
-    {
-      var release = ReleaseFromPlayniteGame(args.Game);
-      //var gameStatePublisher = new PublishGameState(GameState.uninstalled, (IMqttClient)mqtt, topicManager, serializer);
-      //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
-    }
-
-    public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
-    {
-      settings.OnVerifySettings -= HandleVerifySettings;
-
-      //subscriber.OnUpdateLibrary -= Publisher_LibraryRefreshRequest;
-      //subscriber.OnStartRelease -= Subscriber_OnStartRelease;
-      //subscriber.OnInstallRelease -= Subscriber_OnInstallRelease;
-      //subscriber.OnUninstallRelease -= Subscriber_OnUninstallRelease;
-      //subscriber.OnStopRelease -= Subscriber_OnStopRelease;
-      //subscriber.OnRestartRelease -= Subscriber_OnRestartRelease;
-      //subscriber.OnUpdateEntity -= Subscriber_OnUpdateEntity;
-
-      //gameUpdates.Dispose();
-      //platformUpdates.Dispose();
-      //otherEntityUpdates.Dispose();
-      //collectionUpdates.Dispose();
-
-    }
-
-    private void Subscriber_OnRestartRelease(object sender, Release e)
-    {
-      this.Subscriber_OnStopRelease(sender, e);
-      Task.Delay(3000).ContinueWith(t => this.Subscriber_OnStartRelease(sender, e));
-    }
-
-    private void Subscriber_OnStopRelease(object sender, Release e)
-    {
-      if (!canRunPlaynite(e.Platform))
-      {
-        logger.Debug($"Platform {e.Platform.Name} is not a PC platform.");
-        return;
-      }
-
-      if (e.RunState != RunState.Running)
-      {
-        logger.Debug($"Game {e.Name} is not running.");
-        return;
-      }
-
-      try
-      {
-        var gameProcess = Process.GetProcessById(e.ProcessId.Value);
-        gameProcess.Kill();
-      }
-      catch (Exception ex)
-      {
-        logger.Error(ex, $"Error occurred in Subscriber_OnStopRelease for Game ID {e.Id}.");
-        var process = Process.GetProcessesByName(e.Name).FirstOrDefault();
-        if (process == null)
-        {
-          process = Process.GetProcesses().Where(p => p.MainWindowTitle.Contains(e.Name)).FirstOrDefault();
-
-          if (process == null) { return; }
-        }
-
-        process.Kill();
-      }
+      return mainMenuItems.AsEnumerable();
     }
 
     public override void OnApplicationStarted(OnApplicationStartedEventArgs args)
@@ -415,146 +341,155 @@ namespace PlayniteWeb
       settings.OnVerifySettings += HandleVerifySettings;
       StartConnection(settings.Settings);
 
-      //subscriber.OnUpdateLibrary += Publisher_LibraryRefreshRequest;
-      //subscriber.OnStartRelease += Subscriber_OnStartRelease;
-      //subscriber.OnInstallRelease += Subscriber_OnInstallRelease;
-      //subscriber.OnUninstallRelease += Subscriber_OnUninstallRelease;
-      //subscriber.OnStopRelease += Subscriber_OnStopRelease;
-      //subscriber.OnRestartRelease += Subscriber_OnRestartRelease;
-      //subscriber.OnUpdateEntity += Subscriber_OnUpdateEntity;
 
-      //gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
-      //platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
-      //otherEntityUpdates.Subscribe(e => HandleOtherGameEntitiesUpdated(this, e));
+      gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
+      platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));
+      sourceUpdates.Subscribe(e => HandleSourceUpdated(this, e));
+      tagUpdates.Subscribe(e => HandleTagUpdated(this, e));
+      completionStateUpdates.Subscribe(e => HandleCompletionStatusUpdated(this, e));
+      featureUpdates.Subscribe(e => HandleFeatureUpdated(this, e));
+
+
       //collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
     }
 
-    private void Subscriber_OnUpdateEntity(object sender, UpdateEntity e)
+    public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
-      try
-      {
-        if (e.EntityType == "Release")
-        {
-          var collection = PlayniteApi.Database.Games;
-          var entity = collection.Get(e.EntityId);
-          entity = entityUpdater.Update(entity, e.Entity);
-          collection.Update(entity);
-        }
-        //else if (e.EntityType == "Platform")
-        //{
-        //  var collection = PlayniteApi.Database.Platforms;
-        //  var entity = collection.Get(Guid.Parse(e.EntityId));
-        //  entity = entityUpdater.Update(entity, e.Fields);
-        //  collection.Update(entity);
-        //}
-        //else if (e.EntityType == "Genre")
-        //{
-        //  var collection = PlayniteApi.Database.Genres;
-        //  var entity = collection.Get(Guid.Parse(e.EntityId));
-        //  entity = entityUpdater.Update(entity, e.Fields);
-        //  collection.Update(entity);
-        //}
-        //else if (e.EntityType == "Tag")
-        //{
-        //  var collection = PlayniteApi.Database.Tags;
-        //  var entity = collection.Get(Guid.Parse(e.EntityId));
-        //  entity = entityUpdater.Update(entity, e.Fields);
-        //  collection.Update(entity);
-        //}
-        //else if (e.EntityType == "Feature")
-        //{
-        //  var collection = PlayniteApi.Database.Features;
-        //  var entity = collection.Get(Guid.Parse(e.EntityId));
-        //  entity = entityUpdater.Update(entity, e.Fields);
-        //  collection.Update(entity);
-        //}
-        //else if (e.EntityType == "Series")
-        //{
-        //  var collection = PlayniteApi.Database.Series;
-        //  var entity = collection.Get(Guid.Parse(e.EntityId));
-        //  entity = entityUpdater.Update(entity, e.Fields);
-        //  collection.Update(entity);
-        //}
-      }
-      catch (Exception ex)
-      {
-        logger.Error(ex, $"Error occurred in Subscriber_OnUpdateEntity for Entity ID {e.EntityId}.");
-      }
+      settings.OnVerifySettings -= HandleVerifySettings;
+
+      gameUpdates.Dispose();
+      platformUpdates.Dispose();
+      sourceUpdates.Dispose();
+      tagUpdates.Dispose();
+      completionStateUpdates.Dispose();
+      featureUpdates.Dispose();
+
+      //collectionUpdates.Dispose();
 
     }
 
-    private void Subscriber_OnUninstallRelease(object sender, Release e)
-    {
-      try
-      {
-        if (!canRunPlaynite(e.Platform) || !e.IsInstalled)
-        {
-          logger.Debug($"Platform {e.Platform.Name} is not a PC platform or game is not installed.");
-          return;
-        }
+    //private void Subscriber_OnUpdateEntity(object sender, UpdateEntity e)
+    //{
+    //  //try
+    //  //{
+    //  //  if (e.EntityType == "Release")
+    //  //  {
+    //  //    var collection = PlayniteApi.Database.Games;
+    //  //    var entity = collection.Get(e.EntityId);
+    //  //    entity = entityUpdater.Update(entity, e.Entity);
+    //  //    collection.Update(entity);
+    //    //}
+    //    //else if (e.EntityType == "Platform")
+    //    //{
+    //    //  var collection = PlayniteApi.Database.Platforms;
+    //    //  var entity = collection.Get(Guid.Parse(e.EntityId));
+    //    //  entity = entityUpdater.Update(entity, e.Fields);
+    //    //  collection.Update(entity);
+    //    //}
+    //    //else if (e.EntityType == "Genre")
+    //    //{
+    //    //  var collection = PlayniteApi.Database.Genres;
+    //    //  var entity = collection.Get(Guid.Parse(e.EntityId));
+    //    //  entity = entityUpdater.Update(entity, e.Fields);
+    //    //  collection.Update(entity);
+    //    //}
+    //    //else if (e.EntityType == "Tag")
+    //    //{
+    //    //  var collection = PlayniteApi.Database.Tags;
+    //    //  var entity = collection.Get(Guid.Parse(e.EntityId));
+    //    //  entity = entityUpdater.Update(entity, e.Fields);
+    //    //  collection.Update(entity);
+    //    //}
+    //    //else if (e.EntityType == "Feature")
+    //    //{
+    //    //  var collection = PlayniteApi.Database.Features;
+    //    //  var entity = collection.Get(Guid.Parse(e.EntityId));
+    //    //  entity = entityUpdater.Update(entity, e.Fields);
+    //    //  collection.Update(entity);
+    //    //}
+    //    //else if (e.EntityType == "Series")
+    //    //{
+    //    //  var collection = PlayniteApi.Database.Series;
+    //    //  var entity = collection.Get(Guid.Parse(e.EntityId));
+    //    //  entity = entityUpdater.Update(entity, e.Fields);
+    //    //  collection.Update(entity);
+    //    //}
+    //  //}
+    //  //catch (Exception ex)
+    //  //{
+    //  //  logger.Error(ex, $"Error occurred in Subscriber_OnUpdateEntity for Entity ID {e.EntityId}.");
+    //  //}
 
-        PlayniteApi.UninstallGame(e.Id);
-      }
-      catch (Exception ex)
-      {
-        logger.Error(ex, $"Error occurred in Subscriber_OnUninstallGameRequest for Game ID {e}.");
+    //}
 
-      }
-    }
+    //private void Subscriber_OnUninstallRelease(object sender, Release e)
+    //{
+    //  try
+    //  {
+    //    if (!canRunPlaynite(e.Platform) || !e.IsInstalled)
+    //    {
+    //      logger.Debug($"Platform {e.Platform.Name} is not a PC platform or game is not installed.");
+    //      return;
+    //    }
+
+    //    PlayniteApi.UninstallGame(e.Id);
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    logger.Error(ex, $"Error occurred in Subscriber_OnUninstallGameRequest for Game ID {e}.");
+
+    //  }
+    //}
 
 
-    private void Subscriber_OnInstallRelease(object sender, Release e)
-    {
-      try
-      {
-        if (!canRunPlaynite(e.Platform) || e.IsInstalled)
-        {
-          logger.Debug($"Platform {e.Platform.Name} is not a PC platform or game is already installed.");
-          return;
-        }
+    //private void Subscriber_OnInstallRelease(object sender, Release e)
+    //{
+    //  try
+    //  {
+    //    if (!canRunPlaynite(e.Platform) || e.IsInstalled)
+    //    {
+    //      logger.Debug($"Platform {e.Platform.Name} is not a PC platform or game is already installed.");
+    //      return;
+    //    }
 
-        //var gameStatePublisher = new PublishGameState(GameState.installing, (IMqttClient)mqtt, topicManager, serializer);
-        //Task.WaitAll(gameStatePublisher.Publish(e).ToArray());
-        PlayniteApi.InstallGame(e.Id);
-      }
-      catch (Exception ex)
-      {
-        logger.Error(ex, $"Error occurred in Subscriber_OnInstallGameRequest for Game ID {e}.");
+    //    //var gameStatePublisher = new PublishGameState(GameState.installing, (IMqttClient)mqtt, topicManager, serializer);
+    //    //Task.WaitAll(gameStatePublisher.Publish(e).ToArray());
+    //    PlayniteApi.InstallGame(e.Id);
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    logger.Error(ex, $"Error occurred in Subscriber_OnInstallGameRequest for Game ID {e}.");
 
-      }
-    }
+    //  }
+    //}
 
-    private void Subscriber_OnStartRelease(object sender, Release release)
-    {
-      if (!canRunPlaynite(release.Platform))
-      {
-        logger.Debug($"Platform {release.Platform.Name} is not a PC platform.");
-        return;
-      }
+    //private void Subscriber_OnStartRelease(object sender, Release release)
+    //{
+    //  if (!canRunPlaynite(release.Platform))
+    //  {
+    //    logger.Debug($"Platform {release.Platform.Name} is not a PC platform.");
+    //    return;
+    //  }
 
-      if (release.RunState == RunState.Running)
-      {
-        logger.Debug($"Game {release.Name} is already running.");
-        return;
-      }
+    //  if (release.RunState == RunState.Running)
+    //  {
+    //    logger.Debug($"Game {release.Name} is already running.");
+    //    return;
+    //  }
 
-      if (!release.IsInstalled)
-      {
-        logger.Debug($"Game {release.Name} is not installed. Installing instead of starting.");
-        //var gameStatePublisher = new PublishGameState(GameState.installing, (IMqttClient)mqtt, topicManager, serializer);
-        //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
-        PlayniteApi.InstallGame(release.Id);
+    //  if (!release.IsInstalled)
+    //  {
+    //    logger.Debug($"Game {release.Name} is not installed. Installing instead of starting.");
+    //    //var gameStatePublisher = new PublishGameState(GameState.installing, (IMqttClient)mqtt, topicManager, serializer);
+    //    //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
+    //    PlayniteApi.InstallGame(release.Id);
 
-        return;
-      }
+    //    return;
+    //  }
 
-      PlayniteApi.StartGame(release.Id);
-    }
+    //  PlayniteApi.StartGame(release.Id);
+    //}
 
-    private bool canRunPlaynite(Platform platform)
-    {
-      return pcExpression.IsMatch(platform.Name);
-    }
 
     private void Publisher_LibraryRefreshRequest(object sender, Task e)
     {
@@ -609,63 +544,156 @@ namespace PlayniteWeb
         var token = ProtectedData.Unprotect(settings.Token, Id.ToByteArray(), DataProtectionScope.CurrentUser);
         gql.HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Encoding.UTF8.GetString(token)}");
 
-        libraryPublisher = new PublishLibraryGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings);
-      } catch(Exception e)
-      {
+        libraryPublisher = new PublishLibraryGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, this);
+        releasePublisher = new PublishReleaseGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings);
+        platformPublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.platforms);
+        sourcePublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.sources);
+        tagPublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.tags);
+        completionStatusPublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.completionStates);
+        featurePublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.features);
+      }
+      catch(Exception e) {
         logger.Error(e.Message);
       }
     }
 
 
-    private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<Playnite.SDK.Models.Game> e)
+    private void HandleGameUpdated(object sender, ItemUpdatedEventArgs<DatabaseObject> e)
     {
-      try
-      {
-        var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name)
-            .Select(groupedByName => new Models.Game(groupedByName, pcPlatforms, emulatorSource))
-            .Where(g => !g.Id.Equals(Guid.Empty));
-
-        var updatedGamesData = e.UpdatedItems.Select(g => g.NewData);
-        var updatedGames = updatedGamesData
-            .Select(g => games.FirstOrDefault(game => game.Name == g.Name))
-            .Where(g => g != null);
-
-        if (!updatedGames.Any())
+        if (releasePublisher == null)
         {
-          logger.Debug("No matching games found for update.");
-
+          logger.Error("GraphQL client is not initialized. Cannot handle game updates.");
+          return;
         }
 
-        //Task.WaitAll(updatedGames.SelectMany(item => gamePublisher.Publish(item)).ToArray());
-
-        //var playlistPublications = PlayniteApi.Database.Tags
-        //    .Where(tag => Regex.IsMatch(tag.Name, "^playlist-", RegexOptions.IgnoreCase))
-        //    .Select(tag => new Playlist(tag.Name.Substring(9),
-        //        games.Where(game => game.Releases.Any(release =>
-        //            release.Tags?.Any(releaseTag => releaseTag.Id == tag.Id) ?? false))))
-        //    .SelectMany(playlist => playlistPublisher.Publish(playlist));
-
-        //Task.WaitAll(playlistPublications.ToArray());
-      }
-      catch (Exception ex)
+        logger.Debug($"Handling game update for {e.UpdatedItems.Count()} games.");
+      Task.WhenAll(releasePublisher.Publish(e.UpdatedItems.Select(g => g.NewData)))
+      .ContinueWith(t =>
       {
-        logger.Error(ex, "Error occurred in HandleGameUpdated method.");
-
+        if (t.IsFaulted)
+        {
+          logger.Error(t.Exception, "Error occurred while publishing game updates.");
+        }
+        else
+        {
+          logger.Debug($"Published {e.UpdatedItems.Count()} game updates successfully.");
+        }
+      });
+    }
+    private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<DatabaseObject> e)
+    {
+      if (platformPublisher == null) {
+        logger.Error("GraphQL client is not initialized. Cannot handle platform updates.");
+        return;
       }
-    }
-    private void HandlePlatformUpdated(object sender, ItemUpdatedEventArgs<Platform> e)
-    {
-      var updatedPlatforms = e.UpdatedItems.Select(g => g.NewData);
-     // Task.WaitAll(updatedPlatforms.SelectMany(item => platformPublisher.Publish(item)).ToArray()
-     //);
+      logger.Debug($"Handling platform update for {e.UpdatedItems.Count()} platforms.");
+      Task.WhenAll(platformPublisher.Publish(e.UpdatedItems.Select(g => g.NewData)))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing platform updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.UpdatedItems.Count()} platform updates successfully.");
+          }
+        })
+        .Wait();
     }
 
-    private void HandleOtherGameEntitiesUpdated(object sender, ItemUpdatedEventArgs<DatabaseObject> e)
+    private void HandleCompletionStatusUpdated(PlayniteWeb playniteWeb, ItemUpdatedEventArgs<DatabaseObject> e)
     {
-      var updates = e.UpdatedItems.Select(g => g.NewData);
-     // Task.WaitAll(updates.SelectMany(item => gameEntityPublisher.Publish(item)).ToArray()
-     //);
+      if (completionStatusPublisher == null)
+      {
+        logger.Error("GraphQL client is not initialized. Cannot handle platform updates.");
+        return;
+      }
+      logger.Debug($"Handling platform update for {e.UpdatedItems.Count()} platforms.");
+      Task.WhenAll(completionStatusPublisher.Publish(e.UpdatedItems.Select(g => g.NewData)))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing platform updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.UpdatedItems.Count()} platform updates successfully.");
+          }
+        })
+        .Wait();
     }
+
+    private void HandleFeatureUpdated(PlayniteWeb playniteWeb, ItemUpdatedEventArgs<DatabaseObject> e)
+    {
+      if (featurePublisher == null)
+      {
+        logger.Error("GraphQL client is not initialized. Cannot handle platform updates.");
+        return;
+      }
+      logger.Debug($"Handling platform update for {e.UpdatedItems.Count()} platforms.");
+      Task.WhenAll(featurePublisher.Publish(e.UpdatedItems.Select(g => g.NewData)))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing platform updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.UpdatedItems.Count()} platform updates successfully.");
+          }
+        })
+        .Wait();
+    }
+
+    private void HandleTagUpdated(PlayniteWeb playniteWeb, ItemUpdatedEventArgs<DatabaseObject> e)
+    {
+      if (tagPublisher == null)
+      {
+        logger.Error("GraphQL client is not initialized. Cannot handle platform updates.");
+        return;
+      }
+      logger.Debug($"Handling platform update for {e.UpdatedItems.Count()} platforms.");
+      Task.WhenAll(tagPublisher.Publish(e.UpdatedItems.Select(g => g.NewData)))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing platform updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.UpdatedItems.Count()} platform updates successfully.");
+          }
+        })
+        .Wait();
+    }
+
+    private void HandleSourceUpdated(PlayniteWeb playniteWeb, ItemUpdatedEventArgs<DatabaseObject> e)
+    {
+      if (sourcePublisher == null)
+      {
+        logger.Error("GraphQL client is not initialized. Cannot handle platform updates.");
+        return;
+      }
+      logger.Debug($"Handling platform update for {e.UpdatedItems.Count()} platforms.");
+      Task.WhenAll(sourcePublisher.Publish(e.UpdatedItems.Select(g => g.NewData)))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing platform updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.UpdatedItems.Count()} platform updates successfully.");
+          }
+        })
+        .Wait();
+    }
+
 
     private void HandleCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
     {
@@ -677,9 +705,9 @@ namespace PlayniteWeb
 
       //Task.WaitAll(e.AddedItems.SelectMany(item =>
       //{
-      //  if (item.GetType() == typeof(Playnite.SDK.Models.Game))
+      //  if (item.GetType() == typeof(Game))
       //  {
-      //    var updatedGame = games.FirstOrDefault(game => game.Name == ((Playnite.SDK.Models.Game)item).Name);
+      //    var updatedGame = games.FirstOrDefault(game => game.Name == ((Game)item).Name);
       //    return gamePublisher.Publish(updatedGame);
       //  }
       //  if (item.GetType() == typeof(Platform))
@@ -691,21 +719,6 @@ namespace PlayniteWeb
       //}).ToArray());
 
       //Task.WaitAll(e.RemovedItems.SelectMany(item => gameEntityRemovalPublisher.Publish(item)).ToArray());
-    }
-
-    public override ISettings GetSettings(bool firstRunSettings)
-    {
-      return settings;
-    }
-
-    public override UserControl GetSettingsView(bool firstRunSettings)
-    {
-      return new PlayniteWebSettingsView();
-    }
-
-    public override IEnumerable<MainMenuItem> GetMainMenuItems(GetMainMenuItemsArgs args)
-    {
-      return mainMenuItems.AsEnumerable();
     }
   }
 }

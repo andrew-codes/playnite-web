@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace PlayniteWeb.Services.Publishers
 {
-  public interface IPublishToPlayniteWeb
+  public interface IPublishToPlayniteWeb<in T> where T : IIdentifiable
   {
-    IEnumerable<Task> Publish(IIdentifiable gameEntity);
+    IEnumerable<Task> Publish(IEnumerable<T> entities);
   }
 }

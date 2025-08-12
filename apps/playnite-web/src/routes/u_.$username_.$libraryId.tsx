@@ -57,12 +57,15 @@ function UserLibrary() {
       return
     }
 
-    navigate(`/${params.username}/browse`)
-  }, [location.pathname])
-  const handleSelection = useCallback((evt, game: Game) => {
-    setRightDrawerOpen(true)
-    navigate(`/u/${params.username}/${params.libraryId}/${game.id}`)
-  }, [])
+    navigate(`/u/${params.username}/${params.libraryId}`)
+  }, [location.pathname, params.username, params.libraryId])
+  const handleSelection = useCallback(
+    (evt, game: Game) => {
+      setRightDrawerOpen(true)
+      navigate(`/u/${params.username}/${params.libraryId}/${game.id}`)
+    },
+    [params.username, params.libraryId],
+  )
 
   return (
     <Layout

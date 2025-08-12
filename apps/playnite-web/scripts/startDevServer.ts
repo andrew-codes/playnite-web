@@ -2,8 +2,6 @@ import nodemon from 'nodemon'
 import path from 'path'
 import sh from 'shelljs'
 
-const __dirname = import.meta.dirname
-
 async function setup() {
   return Promise.all([
     new Promise((resolve, reject) => {
@@ -32,19 +30,6 @@ async function setup() {
         },
       )
     }),
-    new Promise((resolve, reject) => {
-      sh.exec(
-        `yarn nx db/push playnite-web-app`,
-        { async: true },
-        (code, stdout, stderr) => {
-          if (code !== 0) {
-            reject(new Error(`Failed to push database: ${stderr}`))
-          } else {
-            resolve(stdout)
-          }
-        },
-      )
-    }),
     new Promise((resolve) => {
       sh.exec(
         `kill -9 $(lsof -t -i:24678)`,
@@ -58,6 +43,19 @@ async function setup() {
 }
 async function run() {
   await setup()
+  await new Promise((resolve, reject) => {
+    sh.exec(
+      `yarn nx db/push playnite-web-app`,
+      { async: true },
+      (code, stdout, stderr) => {
+        if (code !== 0) {
+          reject(new Error(`Failed to push database: ${stderr}`))
+        } else {
+          resolve(stdout)
+        }
+      },
+    )
+  })
 
   nodemon({
     script: path.join('src/server/server.ts'),

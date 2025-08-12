@@ -7,15 +7,12 @@ import {
   Identity,
   IIdentify,
 } from '../../../../../oid'
-import { User } from '../../../../resolverTypes'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const updateRelease: NonNullable<
   MutationResolvers['updateRelease']
 > = async (_parent, _arg, _ctx) => {
-  const user = _ctx.jwt?.payload as User
-
-  await _ctx.identityService.authorize(user)
+  const user = await _ctx.identityService.authorize(_ctx.jwt?.payload)
 
   try {
     const releaseId = fromString(_arg.release.id)

@@ -96,6 +96,11 @@ namespace PlayniteWeb.UI
         Settings = new PlayniteWebSettings();
         Settings.DeviceId = Guid.NewGuid();
       }
+
+#if DEBUG
+      // In debug mode, reset the last publish time to null to allow testing.
+      Settings.LastPublish = null;
+#endif
     }
 
     public void SavePassword(string password)

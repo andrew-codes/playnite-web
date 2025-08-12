@@ -2,6 +2,7 @@ type CompletionStatus {
   id: String!
   name: String!
   releases: [Release]!
+  playniteId: String
 }
 
 extend type Query {

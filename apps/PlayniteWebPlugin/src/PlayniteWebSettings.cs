@@ -23,7 +23,7 @@ namespace PlayniteWeb
 
     private IDictionary<Guid, Guid> sourcePlatforms = new Dictionary<Guid, Guid>();
 
-    private DateTime lastPublish = DateTime.Now;
+    private DateTime? lastPublish;
 
     public string DeviceName
     {
@@ -74,7 +74,7 @@ namespace PlayniteWeb
       set => SetValue(ref deviceId, value);
     }
 
-    public DateTime LastPublish {
+    public DateTime? LastPublish {
       get => lastPublish;
       set => SetValue(ref lastPublish, value);
     }

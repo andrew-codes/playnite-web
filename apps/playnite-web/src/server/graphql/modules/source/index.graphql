@@ -1,5 +1,6 @@
 type Source {
   id: String!
+  playniteId: String
   name: String!
   releases: [Release]!
 }
