@@ -12,6 +12,8 @@ const config: CodegenConfig = {
         mappers: {
           CompletionStatus:
             '../src/server/graphql/resolverTypes#GraphCompletionStatus',
+          EntityUpdateDetails:
+            '../src/server/graphql/resolverTypes#GraphEntityUpdateDetails',
           Feature: '../src/server/graphql/resolverTypes#GraphFeature',
           Game: '../src/server/graphql/resolverTypes#GraphGame',
           Release: '../src/server/graphql/resolverTypes#GraphRelease',

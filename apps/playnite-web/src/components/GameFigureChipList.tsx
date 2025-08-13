@@ -11,12 +11,13 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
+import { useParams } from '@remix-run/react'
 import { uniq } from 'lodash-es'
 import { FC, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { Platform } from '../../.generated/types.generated'
-import { useMe } from '../hooks'
-import { allCompletionStatuses } from '../hooks/completionStatuses'
-import { useUpdateGame } from '../hooks/useUpdateGame'
+import { allCompletionStates } from '../hooks/completionStatuses'
+import { useMe } from '../hooks/me'
+import { useUpdateRelease } from '../hooks/updateRelease'
 import { Theme } from '../muiTheme'
 import { GameFigureContext } from './GameFigure'
 
@@ -67,37 +68,41 @@ const GameFigureChip: FC<{ children: string }> = ({ children }) => {
   const theme = useTheme<Theme>()
   const Icon = theme.completionStatus[children]?.Icon ?? (() => null)
 
-  const me = useMe()
-  const completionStatuses = allCompletionStatuses()
+  const [me] = useMe()
+  const params = useParams()
+  const [completionStatesResult] = allCompletionStates(params.libraryId)
+
+  const completionStates =
+    completionStatesResult?.data?.library.completionStates ?? []
 
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLDivElement>(null)
   const selectedIndex = useMemo(
-    () => completionStatuses.findIndex((status) => status.name === children),
-    [children, completionStatuses],
+    () => completionStates.findIndex((status) => status.name === children),
+    [children, completionStates],
   )
   const handleOpen = useCallback(() => setOpen(true), [])
   const handleClose = useCallback(() => setOpen(false), [])
 
   const game = useContext(GameFigureContext)
-  const [updateGame] = useUpdateGame()
+  const [updateGame] = useUpdateRelease()
   const handleMenuItemClick = (event, index) => {
     setOpen(false)
-    if (!game?.id) {
+    if (!game?.primaryRelease?.id) {
       return
     }
-    const completionStatusId = completionStatuses[index].id
+    const completionStatusId = completionStates[index].id
     updateGame({
       variables: {
-        id: game?.id,
-        input: {
-          completionStatusId,
+        release: {
+          id: game.primaryRelease.id,
+          completionStatus: completionStatusId,
         },
       },
     })
   }
 
-  return me.data?.me?.isAuthenticated ? (
+  return me.data?.me?.isAuthenticated && game?.primaryRelease?.id ? (
     <ButtonGroup
       variant="contained"
       ref={anchorRef}
@@ -138,7 +143,7 @@ const GameFigureChip: FC<{ children: string }> = ({ children }) => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" autoFocusItem>
-                  {completionStatuses.map((option, index) => (
+                  {completionStates.map((option, index) => (
                     <MenuItem
                       key={option.id}
                       selected={index === selectedIndex}

@@ -17,7 +17,9 @@ export const User: UserResolvers = {
 
     const libraries = await ctx.db.library.findMany({
       where: {
-        userId: parent.id,
+        User: {
+          id: parent.id,
+        },
       },
     })
 

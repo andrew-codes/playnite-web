@@ -7,6 +7,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       signIn: (username: string, password: string) => Chainable<Response<any>>
+      signOut: () => Chainable<null>
       syncLibrary: (
         username: string,
         password: string,
@@ -91,4 +92,8 @@ Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
       }`,
     }),
   })
+})
+
+Cypress.Commands.add('signOut', () => {
+  return cy.clearAllCookies()
 })

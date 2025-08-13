@@ -2,7 +2,8 @@ import { AccountCircle, Home } from '@mui/icons-material'
 import { useLocation } from '@remix-run/react'
 import { merge } from 'lodash-es'
 import { FC } from 'react'
-import { useMe, useSignOut } from '../../hooks'
+import { useMe } from '../../hooks/me'
+import { useSignOut } from '../../hooks/signOut'
 import NavMenu from './NavMenu'
 
 const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {

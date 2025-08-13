@@ -1,7 +1,7 @@
 import { groupBy } from 'lodash-es'
 import { ignSlug } from '../../../../../assets/ignSlug.js'
 import logger from '../../../../../logger.js'
-import { hasIdentity, tryParseOid } from '../../../../../oid.js'
+import { hasIdentity } from '../../../../../oid.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
 
 export const syncLibrary: NonNullable<
@@ -9,7 +9,7 @@ export const syncLibrary: NonNullable<
 > = async (_parent, _arg, _ctx) => {
   const user = await _ctx.identityService.authorize(_ctx.jwt?.payload)
 
-  const userId = tryParseOid(user.id)
+  const userId = user.id
   logger.debug('User', user)
   if (!userId || !hasIdentity(userId)) {
     throw new Error('Invalid OID format.')
@@ -139,7 +139,7 @@ export const syncLibrary: NonNullable<
     _arg.libraryData.update.features,
   )
   // Features
-  await Promise.all(
+  const updatedFeatures = await Promise.all(
     _arg.libraryData.update.features.map(async (feature) =>
       _ctx.db.feature.upsert({
         where: {
@@ -164,7 +164,7 @@ export const syncLibrary: NonNullable<
     _arg.libraryData.update.platforms,
   )
   // Platforms
-  await Promise.all(
+  const updatedPlatforms = await Promise.all(
     _arg.libraryData.update.platforms.map(async (platform) =>
       _ctx.db.platform.upsert({
         where: {
@@ -196,7 +196,7 @@ export const syncLibrary: NonNullable<
       name: 'asc',
     },
   })
-  await Promise.all(
+  const updatedSources = await Promise.all(
     _arg.libraryData.update.sources
       .filter((source) => {
         return platforms.some((p) => p.playniteId === source.platform)
@@ -243,7 +243,7 @@ export const syncLibrary: NonNullable<
     _arg.libraryData.update.tags,
   )
   // Tags
-  const tags = await Promise.all(
+  const updatedTags = await Promise.all(
     _arg.libraryData.update.tags.map(async (tag) => {
       return _ctx.db.tag.upsert({
         where: { playniteId_libraryId: { playniteId: tag.id, libraryId } },
@@ -266,7 +266,7 @@ export const syncLibrary: NonNullable<
     _arg.libraryData.update.completionStates,
   )
   // CompletionStates
-  await Promise.all(
+  const updatedCompletionStates = await Promise.all(
     _arg.libraryData.update.completionStates.map(async (status) =>
       _ctx.db.completionStatus.upsert({
         where: { playniteId_libraryId: { playniteId: status.id, libraryId } },
@@ -303,8 +303,8 @@ export const syncLibrary: NonNullable<
     select: { id: true, playniteId: true },
   })
 
-  logger.debug(`Updated`, sources, completionStates, tags, platforms)
-  await Promise.all(
+  logger.debug(`Updated`, sources, completionStates, updatedTags, platforms)
+  const updatedReleases = await Promise.all(
     _arg.libraryData.update.releases
       .filter((release) => {
         return [sources.some((s) => s.playniteId === release.source)].every(
@@ -344,7 +344,7 @@ export const syncLibrary: NonNullable<
                   ignId: ignSlug(release),
                 },
               },
-              hidden: release.hidden,
+              hidden: release.hidden ?? false,
               Source: {
                 connect: {
                   id: source.id,
@@ -389,7 +389,7 @@ export const syncLibrary: NonNullable<
               releaseYear: release.releaseDate?.getFullYear(),
               criticScore: release.criticScore,
               communityScore: release.communityScore,
-              hidden: release.hidden,
+              hidden: release.hidden ?? false,
               ...(release.features && {
                 Features: {
                   set: release.features
@@ -446,7 +446,7 @@ export const syncLibrary: NonNullable<
   logger.info(
     `Updating library ${libraryId} with ${Object.keys(games).length} games`,
   )
-  await Promise.all(
+  const updatedGames = await Promise.all(
     Object.entries(games).map(async ([title, releases]) => {
       return await _ctx.db.game.upsert({
         where: { title_libraryId: { title, libraryId } },
@@ -494,6 +494,12 @@ export const syncLibrary: NonNullable<
   }
 
   logger.info(`Library ${libraryId} synced successfully`)
+
+  _ctx.subscriptionPublisher.publish('librarySynced', [
+    {
+      id: libraryId,
+    },
+  ])
 
   return library
 }

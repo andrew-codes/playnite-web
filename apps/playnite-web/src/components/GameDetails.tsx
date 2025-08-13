@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import { FC, useMemo, useRef, useState } from 'react'
 import { Game, Release } from '../../.generated/types.generated'
-import { useMe } from '../hooks'
+import { useMe } from '../hooks/me'
 import { useRestartRelease } from '../hooks/restartRelease'
 import { useStartRelease } from '../hooks/startRelease'
 import { useStopRelease } from '../hooks/stopRelease'

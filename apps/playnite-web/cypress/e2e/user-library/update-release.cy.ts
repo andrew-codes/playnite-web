@@ -256,7 +256,7 @@ describe('Update a release.', () => {
     })
   })
 
-  it.only(`Updated.
+  it(`Updated.
     - Fields are updated.
     - Relational fields can be updated.
     - UI is notified and updates with latest changes.`, () => {
@@ -329,25 +329,25 @@ describe('Update a release.', () => {
             url: '/api',
             body: {
               query: `mutation MyMutation($release: ReleaseInput!) {
-                    updateRelease(release: $release) {
-                      id
-                      hidden
-                      description
-                      releaseDate
-                      source {
-                        id
-                      }
-                      features {
-                        id
-                      }
-                      tags {
-                        id
-                      }
-                      completionStatus {
-                        id
-                      }
-                    }
-                  }`,
+                        updateRelease(release: $release) {
+                          id
+                          hidden
+                          description
+                          releaseDate
+                          source {
+                            id
+                          }
+                          features {
+                            id
+                          }
+                          tags {
+                            id
+                          }
+                          completionStatus {
+                            id
+                          }
+                        }
+                      }`,
               variables: {
                 release: {
                   id: response.body.data.library.games[1].primaryRelease.id,

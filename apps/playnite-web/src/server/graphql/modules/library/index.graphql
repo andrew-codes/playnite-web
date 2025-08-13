@@ -10,6 +10,11 @@ type Library {
   tags: [Tag!]!
 }
 
+extend type Query {
+  libraries(username: String!): [Library!]!
+  library(libraryId: String!): Library
+}
+
 input LibraryReleaseInput {
   id: String!
   title: String!
@@ -77,11 +82,22 @@ input LibraryInput {
   remove: LibraryRemovalInput!
 }
 
-extend type Query {
-  libraries(username: String!): [Library!]!
-  library(libraryId: String!): Library
-}
-
 extend type Mutation {
   syncLibrary(libraryData: LibraryInput!): Library
+}
+
+type EntityUpdate {
+  source: String!
+  updated: [EntityUpdateDetails!]!
+  removed: [EntityUpdateDetails!]!
+}
+
+type EntityUpdateDetails {
+  type: String!
+  id: String!
+}
+
+extend type Subscription {
+  entityUpdated: [EntityUpdate!]!
+  librarySynced: [EntityUpdateDetails!]!
 }

@@ -13,6 +13,7 @@ export const updateRelease: NonNullable<
   MutationResolvers['updateRelease']
 > = async (_parent, _arg, _ctx) => {
   const user = await _ctx.identityService.authorize(_ctx.jwt?.payload)
+  const userId = user.id
 
   try {
     const releaseId = fromString(_arg.release.id)
@@ -25,7 +26,7 @@ export const updateRelease: NonNullable<
         id: releaseId.id,
         Library: {
           User: {
-            id: user.id,
+            id: userId.id,
           },
         },
       },
@@ -42,7 +43,7 @@ export const updateRelease: NonNullable<
           id: sourceId.id,
           Library: {
             User: {
-              id: user.id,
+              id: userId.id,
             },
           },
         },
@@ -83,13 +84,13 @@ export const updateRelease: NonNullable<
         releaseYear: _arg.release.releaseDate?.getFullYear(),
         playTime: BigInt(_arg.release.playTime ?? '0'),
         criticScore: _arg.release.criticScore,
-        hidden: _arg.release.hidden,
+        hidden: _arg.release.hidden ?? false,
         ...(source && {
           Source: {
             connect: {
               Library: {
                 User: {
-                  id: user.id,
+                  id: userId.id,
                 },
               },
               id: source.id,
@@ -101,7 +102,7 @@ export const updateRelease: NonNullable<
             connect: {
               Library: {
                 User: {
-                  id: user.id,
+                  id: userId.id,
                 },
               },
               id: source.platformId,
@@ -113,7 +114,7 @@ export const updateRelease: NonNullable<
             connect: featureIds.map((oid) => ({
               Library: {
                 User: {
-                  id: user.id,
+                  id: userId.id,
                 },
               },
               id: oid.id,
@@ -125,7 +126,7 @@ export const updateRelease: NonNullable<
             connect: {
               Library: {
                 User: {
-                  id: user.id,
+                  id: userId.id,
                 },
               },
               id: completionStatusId.id,
@@ -137,7 +138,7 @@ export const updateRelease: NonNullable<
             connect: tagIds.map((oid) => ({
               Library: {
                 User: {
-                  id: user.id,
+                  id: userId.id,
                 },
               },
               id: oid.id,
@@ -146,6 +147,14 @@ export const updateRelease: NonNullable<
         }),
       },
     })
+
+    _ctx.subscriptionPublisher.publish('entityUpdated', [
+      {
+        source: 'PlayniteWeb',
+        updated: [{ id: releaseId.id, type: 'Release' }],
+        removed: [],
+      },
+    ])
 
     return release
   } catch (error: any) {

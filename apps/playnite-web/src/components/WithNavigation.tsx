@@ -29,7 +29,7 @@ import {
   useState,
 } from 'react'
 import { $path } from 'remix-routes'
-import { useMe, useSignOut } from '../hooks'
+import { useMe, useSignOut } from '../hooks/me'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',

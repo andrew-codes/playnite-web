@@ -22,17 +22,27 @@ type GraphRelease = Prisma.ReleaseGetPayload<{}>
 
 type GraphPlaylist = Prisma.PlaylistGetPayload<{}>
 
-type GraphUser = Omit<Prisma.UserGetPayload<{}>, 'password' | 'id'> & {
-  id: string
+type GraphUser = Omit<Prisma.UserGetPayload<{}>, 'password'> & {
   isAuthenticated?: boolean
+}
+
+type ClaimUser = Omit<GraphUser, 'id'> & {
+  id: string
 }
 type GraphLibrary = Prisma.LibraryGetPayload<{}>
 
 type GraphSiteSetting = Prisma.SiteSettingsGetPayload<{}>
 
+type GraphEntityUpdateDetails = {
+  id: number
+  type: string
+}
+
 export type {
+  ClaimUser,
   GameReleaseStateSubscriptionPayload,
   GraphCompletionStatus,
+  GraphEntityUpdateDetails,
   GraphFeature,
   GraphGame,
   GraphLibrary,
@@ -43,5 +53,4 @@ export type {
   GraphSource,
   GraphTag,
   GraphUser,
-  User,
 }

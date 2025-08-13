@@ -6,7 +6,7 @@ import Layout from '../components/Layout'
 import LibrariesNavigation from '../components/Navigation/LibrariesNavigation'
 import MainNavigation from '../components/Navigation/MainNavigation'
 import SiteAdminNavigation from '../components/Navigation/SiteAdminNavigation'
-import { useMe } from '../hooks'
+import { useMe } from '../hooks/me'
 import {
   requiresAuthorization,
   requiresSameUser,

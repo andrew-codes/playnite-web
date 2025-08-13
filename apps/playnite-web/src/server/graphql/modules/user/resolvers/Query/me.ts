@@ -1,6 +1,8 @@
+import { merge } from 'lodash-es'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
 import logger from '../../../../../logger.js'
-import { createNull } from '../../../../../oid.js'
+import { fromString, hasIdentity } from '../../../../../oid.js'
+
 export const me: NonNullable<QueryResolvers['me']> = async (
   _parent,
   _arg,
@@ -10,21 +12,22 @@ export const me: NonNullable<QueryResolvers['me']> = async (
 
   if (!_ctx.jwt?.payload) {
     return {
-      id: createNull('User'),
+      id: null,
       username: 'Unknown',
       email: 'Unknown',
       name: 'Unknown',
     }
   }
 
-  if (_ctx.jwt.payload.id === null) {
+  const userId = fromString(_ctx.jwt.payload.id)
+  if (!hasIdentity(userId)) {
     return {
-      id: createNull('User'),
+      id: null,
       username: 'Unknown',
       email: 'Unknown',
       name: 'Unknown',
     }
   }
 
-  return _ctx.jwt?.payload
+  return merge({}, _ctx.jwt?.payload, { id: userId.id })
 }

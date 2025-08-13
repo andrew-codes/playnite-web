@@ -27,7 +27,7 @@ input ReleaseInput {
   criticScore: Int
   description: String
   features: [String!]
-  hidden: Boolean!
+  hidden: Boolean
   recentActivity: DateTime
   source: String
   tags: [String!]

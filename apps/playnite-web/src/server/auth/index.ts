@@ -1,16 +1,12 @@
+import { Claim, User } from 'apps/playnite-web/.generated/types.generated.js'
 import bcrypt from 'bcrypt'
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
 import { merge, omit } from 'lodash-es'
 import { prisma } from '../data/providers/postgres/client.js'
-import { GraphUser } from '../graphql/resolverTypes.js'
 import logger from '../logger.js'
-import { create } from '../oid.js'
+import { create, fromString, hasIdentity, IIdentify } from '../oid.js'
 
-type Claim = {
-  user: Omit<GraphUser, 'password'> & { isAuthenticated: boolean }
-  credential: string
-}
 class IdentityService {
   constructor(
     private readonly _secret?: string,
@@ -46,10 +42,14 @@ class IdentityService {
         throw new Error(`Authentication failed.`)
       }
 
-      const scrubbedUser: GraphUser = merge({}, omit(matchedUser, 'password'), {
-        isAuthenticated: true,
-        id: create('User', matchedUser.id).toString(),
-      })
+      const scrubbedUser: Omit<User, 'libraries'> = merge(
+        {},
+        omit(matchedUser, 'password'),
+        {
+          isAuthenticated: true,
+          id: create('User', matchedUser.id).toString(),
+        },
+      )
 
       return {
         user: scrubbedUser,
@@ -64,7 +64,9 @@ class IdentityService {
     throw new Error('Authentication failed.')
   }
 
-  async authorize(user?: GraphUser): Promise<GraphUser> {
+  async authorize(
+    user?: Omit<User, 'libraries'>,
+  ): Promise<Omit<User, 'libraries' | 'id'> & { id: IIdentify }> {
     if (!user || !user.isAuthenticated) {
       throw new GraphQLError(
         `Authorization failed for user ${user?.username}`,
@@ -77,7 +79,20 @@ class IdentityService {
       )
     }
 
-    return user
+    const userId = fromString(user.id)
+    if (!hasIdentity(userId)) {
+      throw new GraphQLError(
+        `Authorization failed for user ${user?.username}: Invalid user ID.`,
+        {
+          extensions: {
+            code: 'UNAUTHORIZED',
+            http: { status: 401 },
+          },
+        },
+      )
+    }
+
+    return merge({}, user, { id: userId })
   }
 }
 

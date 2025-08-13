@@ -57,7 +57,7 @@ export const Game: GameResolvers = {
     let primaryRelease: undefined | null | Release = null
     for (const platformId of library.platformPriority) {
       primaryRelease = releases?.find(
-        (r) => r.Source.Platform.id === platformId,
+        (r) => r.Source.Platform?.id === platformId,
       )
       if (primaryRelease) {
         break
@@ -76,5 +76,13 @@ export const Game: GameResolvers = {
     }
 
     return primaryRelease
+  },
+
+  library: async (_parent, _arg, _ctx) => {
+    return _ctx.db.library.findUniqueOrThrow({
+      where: {
+        id: _parent.libraryId,
+      },
+    })
   },
 }

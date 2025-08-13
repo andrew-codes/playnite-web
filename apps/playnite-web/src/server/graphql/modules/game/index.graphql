@@ -2,6 +2,7 @@ type Game {
   id: String!
   primaryRelease: Release
   releases: [Release!]!
+  library: Library!
 }
 
 input FilterItemInput {

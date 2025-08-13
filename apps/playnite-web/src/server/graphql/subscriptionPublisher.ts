@@ -1,26 +1,20 @@
 import { createPubSub } from 'graphql-yoga'
 
 export type PubSubChannels = {
-  releaseRunStateChanged: [
+  entityUpdated: [
     {
-      id: string
-      gameId: string
-      runState: string
-      processId: string | null
+      source: string
+      updated: Array<{
+        type: string
+        id: number
+      }>
+      removed: Array<{
+        type: string
+        id: number
+      }>
     },
   ]
-  playniteWebRunStateUpdated: [
-    {
-      id: string
-      runState: string
-    },
-  ]
-  playniteEntitiesUpdated: [
-    Array<{
-      type: string
-      id: string
-    }>,
-  ]
+  librarySynced: [{ id: number }]
 }
 
 const subscriptionPublisher = createPubSub<PubSubChannels>()
