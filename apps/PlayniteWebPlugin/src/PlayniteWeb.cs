@@ -34,11 +34,13 @@ namespace PlayniteWeb
     private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> tagUpdates;
     private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> completionStateUpdates;
     private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> featureUpdates;
-
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> entityUpdated;
 
     private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> collectionUpdates;
+    private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> gameCollectionUpdates;
     private readonly IObservable<EventPattern<ItemCollectionChangedEventArgs<DatabaseObject>>> collectionUpdated;
+
+
     private readonly IEnumerable<MainMenuItem> mainMenuItems;
     private PlayniteWebSettingsViewModel settings { get; set; }
     private readonly ILogger logger = LogManager.GetLogger();
@@ -161,6 +163,8 @@ namespace PlayniteWeb
 
       collectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
       collectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      gameCollectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
+      gameCollectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
       collectionUpdated = Observable.FromEventPattern<ItemCollectionChangedEventArgs<DatabaseObject>>(h =>
       {
         PlayniteApi.Database.AgeRatings.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<AgeRating>(h);
@@ -192,7 +196,17 @@ namespace PlayniteWeb
         PlayniteApi.Database.Tags.ItemCollectionChanged -= handlers.GetCollectionUpdateHandler<Tag>();
       }
         );
-      collectionUpdated.Subscribe(e => collectionUpdates.OnNext(e.EventArgs));
+      collectionUpdated.Subscribe(e => {
+        var entity = e.EventArgs.AddedItems.First();
+        if (entity is Game)
+        {
+          gameCollectionUpdates.OnNext(e.EventArgs);
+        }
+        else
+        {
+          collectionUpdates.OnNext(e.EventArgs);
+        }
+      });
 
       mainMenuItems = new List<MainMenuItem>
             {
@@ -350,8 +364,11 @@ namespace PlayniteWeb
       featureUpdates.Subscribe(e => HandleFeatureUpdated(this, e));
 
 
-      //collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
+      gameCollectionUpdates.Subscribe(e => HandleGameCollectionUpdate(this, e));
+      collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
     }
+
+
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
@@ -364,8 +381,8 @@ namespace PlayniteWeb
       completionStateUpdates.Dispose();
       featureUpdates.Dispose();
 
-      //collectionUpdates.Dispose();
-
+      gameCollectionUpdates.Dispose();
+      collectionUpdates.Dispose();
     }
 
     //private void Subscriber_OnUpdateEntity(object sender, UpdateEntity e)
@@ -719,6 +736,10 @@ namespace PlayniteWeb
       //}).ToArray());
 
       //Task.WaitAll(e.RemovedItems.SelectMany(item => gameEntityRemovalPublisher.Publish(item)).ToArray());
+    }
+    private object HandleGameCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
+    {
+      throw new NotImplementedException();
     }
   }
 }

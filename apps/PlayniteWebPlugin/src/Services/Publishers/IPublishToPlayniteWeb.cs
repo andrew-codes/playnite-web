@@ -8,4 +8,9 @@ namespace PlayniteWeb.Services.Publishers
   {
     IEnumerable<Task> Publish(IEnumerable<T> entities);
   }
+
+  public interface IPublishCollectionsToPlayniteWeb<in T> where T : IIdentifiable
+  {
+    IEnumerable<Task> Publish(IEnumerable<T> added, IEnumerable<T> removed);
+  }
 }

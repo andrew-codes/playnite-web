@@ -7,18 +7,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-public enum EntityType
-{
-  platforms,
-  sources,
-  tags,
-  completionStates,
-  features
-}
-
 namespace PlayniteWeb.Services.Publishers.WebSocket
 {
-  public class PublishEntityGraphQL : IPublishToPlayniteWeb<IIdentifiable>
+  public class PublishEntiyCollectionGraphQL : IPublishCollectionsToPlayniteWeb<IIdentifiable>
   {
     private readonly GraphQLHttpClient gql;
     private readonly IGameDatabaseAPI db;
@@ -26,7 +17,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
     private readonly PlayniteWebSettings settings;
     private readonly EntityType type;
 
-    public PublishEntityGraphQL(GraphQLHttpClient gql, IGameDatabaseAPI db, string deviceId, PlayniteWebSettings settings, EntityType type)
+    public PublishEntiyCollectionGraphQL(GraphQLHttpClient gql, IGameDatabaseAPI db, string deviceId, PlayniteWebSettings settings, EntityType type)
     {
       this.gql = gql;
       this.db = db;
@@ -35,7 +26,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
       this.type = type;
     }
 
-    public IEnumerable<Task> Publish(IEnumerable<IIdentifiable> entities)
+    public IEnumerable<Task> Publish(IEnumerable<IIdentifiable> added, IEnumerable<IIdentifiable> removed)
     {
 
       if (settings.LastPublish == null)
@@ -58,7 +49,24 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         throw new Exception ($"Invalid type specified: {this.type}");
       }
 
-      update[key] = entities.Select(e => new { id = e.Id, name = GetNameProperty(e) });
+      update[key] = added.Select(e => new { id = e.Id, name = GetNameProperty(e) });
+
+      var removedUpdate = new Dictionary<string, object>
+      {
+        ["releases"] = Enumerable.Empty<string>(),
+        ["platforms"] = Enumerable.Empty<string>(),
+        ["sources"] = Enumerable.Empty<string>(),
+        ["tags"] = Enumerable.Empty<string>(),
+        ["completionStates"] = Enumerable.Empty<string>(),
+        ["features"] = Enumerable.Empty<string>()
+      };
+
+      if (!removedUpdate.ContainsKey(key))
+      {
+        throw new Exception($"Invalid type specified for removal: {this.type}");
+      }
+      removedUpdate[key] = removed.Select(e => e.Id);
+
 
       yield return gql.SendMutationAsync<dynamic>(new GraphQLHttpRequest
       {
@@ -74,15 +82,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
             libraryId = deviceId,
             name = settings.DeviceName,
             update,
-            remove = new
-            {
-              releases = Enumerable.Empty<string>(),
-              platforms = Enumerable.Empty<string>(),
-              sources = Enumerable.Empty<string>(),
-              tags = Enumerable.Empty<string>(),
-              completionStates = Enumerable.Empty<string>(),
-              features = Enumerable.Empty<string>(),
-            }
+            remove = removedUpdate
           }
         }
       }).ContinueWith(r =>
