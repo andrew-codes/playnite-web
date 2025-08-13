@@ -26,16 +26,16 @@ const allCompletionStates = (
   }>(
     AllCompletionStatesQuery,
     merge({}, opts, {
-      variables: { libraryId },
+      variables: { libraryId: libraryId ?? '' },
     }),
   )
 
   const { data } = useSubscribeEntityUpdates()
+  console.dir(data)
   useEffect(() => {
     if (data?.entityUpdated.every((e) => e.type === 'CompletionStatus')) {
       return
     }
-
     result.refetch()
   }, [data?.entityUpdated])
 

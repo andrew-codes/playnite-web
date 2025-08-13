@@ -2,6 +2,7 @@ import { Source } from '@prisma/client'
 import { GraphQLError } from 'graphql'
 import logger from '../../../../../logger'
 import {
+  domains,
   fromString,
   hasIdentity,
   Identity,
@@ -148,13 +149,12 @@ export const updateRelease: NonNullable<
       },
     })
 
-    _ctx.subscriptionPublisher.publish('entityUpdated', [
-      {
-        source: 'PlayniteWeb',
-        updated: [{ id: releaseId.id, type: 'Release' }],
-        removed: [],
-      },
-    ])
+    _ctx.subscriptionPublisher.publish('entityUpdated', {
+      id: releaseId.id,
+      source: 'PlayniteWeb',
+      type: domains.Release,
+      fields: Object.keys(_arg.release).filter((key) => key !== 'id'),
+    })
 
     return release
   } catch (error: any) {

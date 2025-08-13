@@ -8,8 +8,8 @@ import { useSubscribeEntityUpdates } from './subscribeEntityUpdates'
 import { useSubscribeLibrarySync } from './subscribeLibrarySync'
 
 const AllGames = gql`
-  query library($input: String!) {
-    library(libraryId: $input) {
+  query library($libraryId: String!) {
+    library(libraryId: $libraryId) {
       id
       games {
         id
@@ -38,27 +38,26 @@ const AllGames = gql`
 `
 
 const useAllGames = (
-  username: string,
+  libraryId?: string,
   opts?: Omit<QueryHookOptions, 'variables'>,
 ) => {
   const q = useQuery<{ library: Library }>(
     AllGames,
     merge({}, opts, {
-      variables: { input: username },
+      variables: { libraryId: libraryId ?? '' },
     }),
   )
 
   const { data } = useSubscribeEntityUpdates()
   useEffect(() => {
-    console.dir(data)
     if (
       data?.entityUpdated.every(
         (e) =>
-          e.type === 'Game' ||
-          e.type === 'Release' ||
-          e.type === 'Platform' ||
-          e.type === 'Source' ||
-          e.type === 'CompletionStatus',
+          e.type !== 'Game' &&
+          e.type !== 'Release' &&
+          e.type !== 'Platform' &&
+          e.type !== 'Source' &&
+          e.type !== 'CompletionStatus',
       )
     ) {
       return

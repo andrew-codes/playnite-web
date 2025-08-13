@@ -76,6 +76,7 @@ input LibraryRemovalInput {
 }
 
 input LibraryInput {
+  source: String!
   libraryId: String!
   name: String
   update: LibraryUpdateInput!
@@ -86,18 +87,25 @@ extend type Mutation {
   syncLibrary(libraryData: LibraryInput!): Library
 }
 
-type EntityUpdate {
+type EntityCollectionUpdate {
   source: String!
-  updated: [EntityUpdateDetails!]!
-  removed: [EntityUpdateDetails!]!
+  updated: [EntityCollectionUpdateDetails!]!
+  removed: [EntityCollectionUpdateDetails!]!
 }
 
-type EntityUpdateDetails {
+type EntityCollectionUpdateDetails {
   type: String!
   id: String!
 }
 
+type EntityUpdateDetails {
+  source: String!
+  type: String!
+  id: String!
+  fields: [String!]!
+}
+
 extend type Subscription {
-  entityUpdated: [EntityUpdate!]!
+  entityUpdated: [EntityUpdateDetails!]!
   librarySynced: [EntityUpdateDetails!]!
 }

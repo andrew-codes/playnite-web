@@ -3,7 +3,8 @@ export const librarySynced: NonNullable<
   SubscriptionResolvers['librarySynced']
 > = {
   subscribe: async (_parent, _arg, _ctx) => {
-    return _ctx.subscriptionPublisher.subscribe('librarySynced')
+    return (await _ctx.subscriptionPublisher.subscribe('librarySynced').next())
+      .value
   },
-  resolve: (payload) => payload,
+  resolve: (payload) => Array.isArray(payload) ? payload : [payload],
 }

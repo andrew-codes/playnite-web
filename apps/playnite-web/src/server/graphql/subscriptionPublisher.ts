@@ -1,20 +1,16 @@
 import { createPubSub } from 'graphql-yoga'
+import { DomainType } from '../oid'
 
 export type PubSubChannels = {
   entityUpdated: [
     {
       source: string
-      updated: Array<{
-        type: string
-        id: number
-      }>
-      removed: Array<{
-        type: string
-        id: number
-      }>
+      type: DomainType
+      id: number
+      fields: Array<string>
     },
   ]
-  librarySynced: [{ id: number }]
+  librarySynced: [{ id: number; source: string; type: DomainType }]
 }
 
 const subscriptionPublisher = createPubSub<PubSubChannels>()

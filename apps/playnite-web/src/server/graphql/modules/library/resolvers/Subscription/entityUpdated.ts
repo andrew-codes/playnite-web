@@ -6,5 +6,5 @@ export const entityUpdated: NonNullable<
   subscribe: async (_parent, _arg, _ctx) => {
     return _ctx.subscriptionPublisher.subscribe('entityUpdated')
   },
-  resolve: (payload) => payload,
+  resolve: (payload) => Array.isArray(payload) ? payload : [payload],
 }

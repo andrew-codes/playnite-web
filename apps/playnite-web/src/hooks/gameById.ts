@@ -37,14 +37,14 @@ const Game_By_Id_Query = gql`
 `
 
 const useGameById = (
-  id: string,
+  id?: string,
   opts?: Omit<QueryHookOptions, 'variables'>,
 ) => {
   const q = useQuery<{ game: Game }>(
     Game_By_Id_Query,
     merge({}, opts, {
       variables: {
-        id,
+        id: id ?? '',
       },
     }),
   )
@@ -52,7 +52,7 @@ const useGameById = (
   const { data } = useSubscribeEntityUpdates()
   useEffect(() => {
     if (
-      data?.entityUpdated.some(
+      data?.entityUpdated.every(
         (e) =>
           e.type !== 'Game' &&
           e.type !== 'Release' &&

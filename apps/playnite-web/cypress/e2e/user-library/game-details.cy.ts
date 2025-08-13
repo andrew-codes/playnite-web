@@ -27,8 +27,8 @@ describe('Game details.', () => {
           })
 
           it(`Displays game details
-- Opens right navigation drawer when a game is clicked
-- Game details display the game name and description`, () => {
+            - Opens right navigation drawer when a game is clicked
+            - Game details display the game name and description`, () => {
             cy.get('[data-test="GameFigure"] button')
               .eq(1)
               .click({ force: true })

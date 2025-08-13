@@ -14,6 +14,8 @@ const config: CodegenConfig = {
             '../src/server/graphql/resolverTypes#GraphCompletionStatus',
           EntityUpdateDetails:
             '../src/server/graphql/resolverTypes#GraphEntityUpdateDetails',
+          EntityCollectionUpdateDetails:
+            '../src/server/graphql/resolverTypes#GraphEntityCollectionUpdateDetails',
           Feature: '../src/server/graphql/resolverTypes#GraphFeature',
           Game: '../src/server/graphql/resolverTypes#GraphGame',
           Release: '../src/server/graphql/resolverTypes#GraphRelease',

@@ -179,6 +179,7 @@ describe('Library Sync', () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const playniteId = '38e4fe01-4224-4191-a967-c578245379f9'
         const update = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -297,6 +298,7 @@ describe('Library Sync', () => {
         )
         const playniteId = '38e4fe01-4224-4191-a967-c578245379f9'
         const update = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -407,6 +409,7 @@ describe('Library Sync', () => {
         )
         const playniteId = '38e4fe01-4224-4191-a967-c578245379f9'
         const update = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -510,6 +513,7 @@ describe('Library Sync', () => {
     it(`Platform updates.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const update = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -576,6 +580,7 @@ describe('Library Sync', () => {
     it(`Source updates.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const update = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -662,6 +667,7 @@ describe('Library Sync', () => {
     it(`Completion Status updates.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const update = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -733,6 +739,7 @@ describe('Library Sync', () => {
     it(`Feature updates.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const update = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -790,6 +797,7 @@ describe('Library Sync', () => {
     it(`Tag updates.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const update = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -857,6 +865,7 @@ describe('Library Sync', () => {
       - Removes game if there are no releases for the game after removal.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const remove = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -924,6 +933,7 @@ describe('Library Sync', () => {
       - Otherwise, removes platform.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const remove = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -971,6 +981,7 @@ describe('Library Sync', () => {
         })
 
         const validRemoval = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -1046,6 +1057,7 @@ describe('Library Sync', () => {
       - Otherwise, removes items.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const remove = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -1093,6 +1105,7 @@ describe('Library Sync', () => {
         })
 
         const validRemoval = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -1166,6 +1179,7 @@ describe('Library Sync', () => {
     it(`Remove completion states.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const remove = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -1228,6 +1242,7 @@ describe('Library Sync', () => {
     it(`Remove features.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const remove = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {
@@ -1287,6 +1302,7 @@ describe('Library Sync', () => {
     it(`Remove tags.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const remove = {
+          source: libraryData.libraryId,
           libraryId: libraryData.libraryId,
           name: libraryData.name,
           remove: {

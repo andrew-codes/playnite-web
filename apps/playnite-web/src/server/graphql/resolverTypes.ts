@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client'
 import { RunState } from '../data/types.entities.js'
+import { DomainType } from '../oid.js'
 
 type GameReleaseStateSubscriptionPayload = {
   id: string
@@ -34,14 +35,21 @@ type GraphLibrary = Prisma.LibraryGetPayload<{}>
 type GraphSiteSetting = Prisma.SiteSettingsGetPayload<{}>
 
 type GraphEntityUpdateDetails = {
+  source: string
   id: number
-  type: string
+  type: DomainType
+  fields: Array<string>
+}
+type GraphEntityCollectionUpdateDetails = {
+  id: number
+  type: DomainType
 }
 
 export type {
   ClaimUser,
   GameReleaseStateSubscriptionPayload,
   GraphCompletionStatus,
+  GraphEntityCollectionUpdateDetails,
   GraphEntityUpdateDetails,
   GraphFeature,
   GraphGame,

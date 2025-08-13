@@ -1,20 +1,24 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useSubscription } from '@apollo/client/react/hooks/hooks.cjs'
+import type { DomainType } from '../server/oid'
 
 const SubscribeEntityUpdates = gql`
   subscription entityUpdates {
     entityUpdated {
-      updated {
-        id
-        type
-      }
+      id
+      type
+      fields
     }
   }
 `
 
 const useSubscribeEntityUpdates = () =>
   useSubscription<{
-    entityUpdated: Array<{ updated: Array<{ type: string; id: string }> }>
+    entityUpdated: Array<{
+      id: string
+      fields: Array<string>
+      type: DomainType
+    }>
   }>(SubscribeEntityUpdates)
 
 export { SubscribeEntityUpdates, useSubscribeEntityUpdates }
