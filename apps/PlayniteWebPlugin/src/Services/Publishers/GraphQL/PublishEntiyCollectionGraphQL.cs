@@ -79,6 +79,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         {
           libraryData = new
           {
+            source = deviceId,
             libraryId = deviceId,
             name = settings.DeviceName,
             update,

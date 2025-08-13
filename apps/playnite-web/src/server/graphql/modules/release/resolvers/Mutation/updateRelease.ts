@@ -153,7 +153,12 @@ export const updateRelease: NonNullable<
       id: releaseId.id,
       source: 'PlayniteWeb',
       type: domains.Release,
-      fields: Object.keys(_arg.release).filter((key) => key !== 'id'),
+      fields: Object.fromEntries(
+        Object.entries(_arg.release)
+          .filter(([, v]) => v !== undefined)
+          .filter(([k]) => k !== 'id'),
+      ),
+      playniteId: release.playniteId,
     })
 
     return release

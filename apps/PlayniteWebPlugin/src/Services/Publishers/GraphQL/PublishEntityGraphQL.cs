@@ -21,7 +21,6 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
   public class PublishEntityGraphQL : IPublishToPlayniteWeb<IIdentifiable>
   {
     private readonly GraphQLHttpClient gql;
-    private readonly IGameDatabaseAPI db;
     private readonly string deviceId;
     private readonly PlayniteWebSettings settings;
     private readonly EntityType type;
@@ -29,7 +28,6 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
     public PublishEntityGraphQL(GraphQLHttpClient gql, IGameDatabaseAPI db, string deviceId, PlayniteWebSettings settings, EntityType type)
     {
       this.gql = gql;
-      this.db = db;
       this.deviceId = deviceId;
       this.settings = settings;
       this.type = type;
@@ -71,6 +69,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         {
           libraryData = new
           {
+            source = deviceId,
             libraryId = deviceId,
             name = settings.DeviceName,
             update,

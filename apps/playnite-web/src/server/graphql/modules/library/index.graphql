@@ -102,6 +102,7 @@ type EntityUpdateDetails {
   source: String!
   type: String!
   id: String!
+  playniteId: String
   fields: [String!]!
 }
 

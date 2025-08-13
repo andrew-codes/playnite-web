@@ -7,7 +7,8 @@ export type PubSubChannels = {
       source: string
       type: DomainType
       id: number
-      fields: Array<string>
+      fields: Record<string, string>
+      playniteId?: string
     },
   ]
   librarySynced: [{ id: number; source: string; type: DomainType }]
