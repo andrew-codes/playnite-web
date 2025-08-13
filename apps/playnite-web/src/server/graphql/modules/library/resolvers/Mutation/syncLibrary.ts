@@ -16,6 +16,9 @@ export const syncLibrary: NonNullable<
   }
 
   logger.silly(`Library data`, _arg.libraryData)
+  logger.info(
+    `Syncing library ${_arg.libraryData.libraryId} for user ${userId.id}`,
+  )
 
   let library = await _ctx.db.library.upsert({
     where: {
@@ -39,18 +42,13 @@ export const syncLibrary: NonNullable<
   const libraryId = library.id
   logger.info(`Library ID: ${libraryId}`)
 
-  logger.info(
-    `Removing features from library ${libraryId}`,
-    _arg.libraryData.remove.features,
-  )
-
   // Removals
   // Releases
-  logger.info(
+  logger.debug(
     `Removing releases from library ${libraryId}`,
     _arg.libraryData.remove.releases,
   )
-  await _ctx.db.release.deleteMany({
+  const removedReleases = await _ctx.db.release.deleteMany({
     where: {
       libraryId,
       playniteId: {
@@ -58,34 +56,14 @@ export const syncLibrary: NonNullable<
       },
     },
   })
-
-  // Games
-  logger.info(`Removing games from library ${libraryId}`)
-  const gamesWithNoReleases = await _ctx.db.game.findMany({
-    where: {
-      libraryId,
-      Releases: { none: {} },
-    },
-    select: {
-      id: true,
-    },
-  })
-  logger.info(
-    `Removing ${gamesWithNoReleases.length} games with no releases from library ${libraryId}`,
-    gamesWithNoReleases,
-  )
-  await _ctx.db.game.deleteMany({
-    where: {
-      id: { in: gamesWithNoReleases.map((g) => g.id) },
-    },
-  })
+  logger.debug(`Removed ${removedReleases.count} releases.`)
 
   // Features
-  logger.info(
+  logger.debug(
     `Removing features from library ${libraryId}`,
     _arg.libraryData.remove.features,
   )
-  await _ctx.db.feature.deleteMany({
+  const removedFeatures = await _ctx.db.feature.deleteMany({
     where: {
       libraryId,
       playniteId: {
@@ -93,13 +71,14 @@ export const syncLibrary: NonNullable<
       },
     },
   })
+  logger.debug(`Removed ${removedFeatures.count} features.`)
 
   //  Sources
-  logger.info(
+  logger.debug(
     `Removing sources from library ${libraryId}`,
     _arg.libraryData.remove.sources,
   )
-  await _ctx.db.source.deleteMany({
+  const removedSources = await _ctx.db.source.deleteMany({
     where: {
       libraryId,
       playniteId: {
@@ -107,13 +86,14 @@ export const syncLibrary: NonNullable<
       },
     },
   })
+  logger.debug(`Removed ${removedSources.count} sources.`)
 
   // Platforms
-  logger.info(
+  logger.debug(
     `Removing platforms from library ${libraryId}`,
     _arg.libraryData.remove.platforms,
   )
-  await _ctx.db.platform.deleteMany({
+  const deletedPlatforms = await _ctx.db.platform.deleteMany({
     where: {
       libraryId,
       playniteId: {
@@ -121,13 +101,14 @@ export const syncLibrary: NonNullable<
       },
     },
   })
+  logger.debug(`Removed ${deletedPlatforms.count} platforms.`)
 
   // Tags
-  logger.info(
+  logger.debug(
     `Removing tags from library ${libraryId}`,
     _arg.libraryData.remove.tags,
   )
-  await _ctx.db.tag.deleteMany({
+  const tagsRemoved = await _ctx.db.tag.deleteMany({
     where: {
       libraryId,
       playniteId: {
@@ -135,13 +116,14 @@ export const syncLibrary: NonNullable<
       },
     },
   })
+  logger.debug(`Removed ${tagsRemoved.count} tags.`)
 
   // CompletionStates
-  logger.info(
+  logger.debug(
     `Removing completion states from library ${libraryId}`,
     _arg.libraryData.remove.completionStates,
   )
-  await _ctx.db.completionStatus.deleteMany({
+  const completionStatesRemoved = await _ctx.db.completionStatus.deleteMany({
     where: {
       libraryId,
       playniteId: {
@@ -149,9 +131,10 @@ export const syncLibrary: NonNullable<
       },
     },
   })
+  logger.debug(`Removed ${completionStatesRemoved.count} completion states.`)
 
   // Updates
-  logger.info(
+  logger.debug(
     `Updating library ${libraryId} with new features`,
     _arg.libraryData.update.features,
   )
@@ -176,7 +159,7 @@ export const syncLibrary: NonNullable<
     ),
   )
 
-  logger.info(
+  logger.debug(
     `Updating library ${libraryId} with new platforms`,
     _arg.libraryData.update.platforms,
   )
@@ -201,7 +184,7 @@ export const syncLibrary: NonNullable<
     ),
   )
 
-  logger.info(
+  logger.debug(
     `Updating library ${libraryId} with new sources`,
     _arg.libraryData.update.sources,
   )
@@ -255,7 +238,7 @@ export const syncLibrary: NonNullable<
       ),
   )
 
-  logger.info(
+  logger.debug(
     `Updating library ${libraryId} with new tags`,
     _arg.libraryData.update.tags,
   )
@@ -278,7 +261,7 @@ export const syncLibrary: NonNullable<
     }),
   )
 
-  logger.info(
+  logger.debug(
     `Updating library ${libraryId} with new completion states`,
     _arg.libraryData.update.completionStates,
   )
@@ -301,7 +284,7 @@ export const syncLibrary: NonNullable<
     ),
   )
 
-  logger.info(
+  logger.debug(
     `Persisting ${_arg.libraryData.update.releases.length} release assets for library ${libraryId}`,
   )
   await Promise.all(
@@ -487,6 +470,18 @@ export const syncLibrary: NonNullable<
         },
       })
     }),
+  )
+
+  // Clean up games without releases
+  logger.info(`Removing games without releases from library ${libraryId}`)
+  const removedGames = await _ctx.db.game.deleteMany({
+    where: {
+      libraryId,
+      Releases: { none: {} },
+    },
+  })
+  logger.debug(
+    `Removed ${removedGames.count} games without releases from library ${libraryId}`,
   )
 
   if (library.platformPriority.length === 0) {
