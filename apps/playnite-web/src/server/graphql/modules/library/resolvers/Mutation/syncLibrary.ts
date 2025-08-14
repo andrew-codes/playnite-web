@@ -1,7 +1,7 @@
 import { groupBy } from 'lodash-es'
 import { ignSlug } from '../../../../../assets/ignSlug.js'
 import logger from '../../../../../logger.js'
-import { domains, hasIdentity } from '../../../../../oid.js'
+import { create, domains, hasIdentity } from '../../../../../oid.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
 
 export const syncLibrary: NonNullable<
@@ -494,7 +494,12 @@ export const syncLibrary: NonNullable<
     _ctx.subscriptionPublisher.publish('entityUpdated', {
       id: libraryId,
       type: domains.Library,
-      fields: ['platformPriority'],
+      fields: [
+        {
+          key: 'platformPriority',
+          values: platforms.map((p) => create('Platform', p.id)),
+        },
+      ],
       source: _arg.libraryData.source,
     })
   }

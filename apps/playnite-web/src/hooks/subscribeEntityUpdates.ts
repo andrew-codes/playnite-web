@@ -7,7 +7,11 @@ const SubscribeEntityUpdates = gql`
     entityUpdated {
       id
       type
-      fields
+      fields {
+        key
+        value
+        values
+      }
     }
   }
 `

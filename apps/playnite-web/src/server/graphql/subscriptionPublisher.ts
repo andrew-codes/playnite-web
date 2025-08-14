@@ -7,7 +7,11 @@ export type PubSubChannels = {
       source: string
       type: DomainType
       id: number
-      fields: Record<string, string>
+      fields: Array<{
+        key: string
+        value?: string
+        values?: Array<string>
+      }>
       playniteId?: string
     },
   ]

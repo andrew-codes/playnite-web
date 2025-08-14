@@ -98,12 +98,20 @@ type EntityCollectionUpdateDetails {
   id: String!
 }
 
+type EntityUpdateField {
+  key: String!
+  value: String
+  values: [String!]!
+  playniteId: String
+  playniteIds: [String!]!
+}
+
 type EntityUpdateDetails {
   source: String!
   type: String!
   id: String!
   playniteId: String
-  fields: [String!]!
+  fields: [EntityUpdateField!]!
 }
 
 extend type Subscription {

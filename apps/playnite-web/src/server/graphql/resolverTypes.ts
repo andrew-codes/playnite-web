@@ -38,7 +38,7 @@ type GraphEntityUpdateDetails = {
   source: string
   id: number
   type: DomainType
-  fields: Array<string>
+  fields: Array<{ key: string; value: string; values?: Array<string> }>
 }
 type GraphEntityCollectionUpdateDetails = {
   id: number

@@ -149,17 +149,26 @@ export const updateRelease: NonNullable<
       },
     })
 
-    _ctx.subscriptionPublisher.publish('entityUpdated', {
-      id: releaseId.id,
-      source: 'PlayniteWeb',
-      type: domains.Release,
-      fields: Object.fromEntries(
-        Object.entries(_arg.release)
+    if (release.playniteId) {
+      _ctx.subscriptionPublisher.publish('entityUpdated', {
+        id: releaseId.id,
+        source: 'PlayniteWeb',
+        type: domains.Release,
+        fields: Object.entries(_arg.release)
           .filter(([, v]) => v !== undefined)
-          .filter(([k]) => k !== 'id'),
-      ),
-      playniteId: release.playniteId,
-    })
+          .filter(([k]) => k !== 'id')
+          .map(([k, v]) => {
+            if (v instanceof Date) {
+              return { key: k, value: v.toISOString() }
+            }
+            if (Array.isArray(v)) {
+              return { key: k, values: v }
+            }
+            return { key: k, value: String(v) }
+          }),
+        playniteId: release.playniteId,
+      })
+    }
 
     return release
   } catch (error: any) {

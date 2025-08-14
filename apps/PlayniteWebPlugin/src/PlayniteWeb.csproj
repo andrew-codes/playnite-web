@@ -112,8 +112,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventHandlers.cs" />
+    <Compile Include="Models\EntityUpdate.cs" />
     <Compile Include="Models\Release.cs" />
     <Compile Include="Models\UpdateEntity.cs" />
+    <Compile Include="Models\PendingUpdate.cs" />
     <Compile Include="Services\GameState.cs" />
     <Compile Include="Services\IDeserializeObjects.cs" />
     <Compile Include="Services\ObjectDeserializer.cs" />
