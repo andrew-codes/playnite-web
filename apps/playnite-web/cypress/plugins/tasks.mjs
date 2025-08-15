@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
 import Permission from '../../src/auth/permissions.js'
-import { codes, defaultSettings } from '../../src/server/siteSettings.js'
+import { defaultSettings } from '../../src/server/siteSettings.js'
 import logger from 'dev-logger'
 
 const tasks = (on, config) => {

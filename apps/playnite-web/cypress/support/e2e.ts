@@ -1,3 +1,4 @@
+import '@cypress-audit/lighthouse/commands'
 import '@cypress/code-coverage/support'
 import 'cypress-cdp'
 import compareSnapshotCommand from 'cypress-image-diff-js/command'
@@ -13,6 +14,11 @@ declare global {
         password: string,
         libraryData: any,
       ) => Chainable<Response<any>>
+      lighthouse: (
+        thresholds?: any,
+        options?: any,
+        config?: any,
+      ) => Chainable<any>
     }
   }
 }

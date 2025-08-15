@@ -3,6 +3,7 @@ import { defineConfig } from 'cypress'
 import imageDiff from 'cypress-image-diff-js/plugin'
 import fs from 'fs'
 import { tasks } from './cypress/plugins/tasks.mjs'
+import { lighthouse, prepareAudit } from '@cypress-audit/lighthouse'
 
 const config = {
   chromeWebSecurity: false,
@@ -30,6 +31,8 @@ const config = {
       on('before:browser:launch', (browser, launchOptions) => {
         switch (browser?.name) {
           case 'chrome':
+            launchOptions.args.push(`--remote-debugging-port=9222`)
+            prepareAudit(launchOptions)
           case 'edge':
             launchOptions.args.push(
               `--window-size=${viewportWidth},${viewportHeight}`,
@@ -65,6 +68,9 @@ const config = {
         }
       })
 
+      on('task', {
+        lighthouse: lighthouse(),
+      })
       tasks(on, config)
       codeCoverage(on, config)
 

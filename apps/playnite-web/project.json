@@ -117,7 +117,7 @@
       "options": {
         "parallel": true,
         "commands": [
-          "yarn cypress open --component --browser edge",
+          "yarn cypress open --component --browser chrome",
           "yarn react-devtools"
         ],
         "cwd": "{projectRoot}"
@@ -132,7 +132,7 @@
           }
         },
         "ci": {
-          "commands": ["yarn cypress run --component --browser edge"],
+          "commands": ["yarn cypress run --component --browser chrome"],
           "env": {
             "CI": "true",
             "TEST": "component",
@@ -140,7 +140,7 @@
           }
         },
         "ci/local": {
-          "commands": ["yarn cypress run --component --browser edge"],
+          "commands": ["yarn cypress run --component --browser chrome"],
           "env": {
             "CI": "true",
             "NODE_ENV": "production",
@@ -180,13 +180,14 @@
         "parallel": true,
         "commands": [
           "yarn react-devtools",
-          "yarn start-server-and-test 'cross-env NODE_ENV=production TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser edge'"
+          "yarn start-server-and-test 'cross-env NODE_ENV=production TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser chrome'"
         ],
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
           "LOG_LEVEL": "silly",
-          "NODE_ENV": "development"
+          "NODE_ENV": "development",
+          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222"
         }
       }
     },
@@ -210,6 +211,7 @@
           "TEST": "e2e",
           "START_SERVER_AND_TEST_INSECURE": "1",
           "NODE_ENV": "production",
+          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
         }
       },
@@ -220,6 +222,7 @@
             "CMD": "run",
             "CI": "true",
             "TEST": "e2e",
+            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
@@ -231,6 +234,7 @@
             "CMD": "open",
             "LOG_LEVEL": "silly",
             "TEST": "e2e",
+            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
@@ -247,6 +251,7 @@
         "cwd": "{projectRoot}",
         "env": {
           "CMD": "run",
+          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
           "NODE_ENV": "production",
           "UPDATE": "true",
           "LOG_LEVEL": "info"
