@@ -61,8 +61,6 @@ Cypress.on('window:before:load', (win) => {
 
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   originalFn(url, options)
-  // TODO: This is to allow time for the page to bootstrap with React. This is a sign that there are some optimizations needed.
-  cy.wait(5000)
 })
 
 Cypress.Commands.add('signIn', (username: string, password: string) => {
