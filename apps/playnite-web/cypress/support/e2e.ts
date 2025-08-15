@@ -43,6 +43,22 @@ beforeEach(() => {
   cy.task('clearDatabase')
 })
 
+Cypress.on('window:before:load', (win) => {
+  const doc = win.document
+  // If it's not already the first child, make it so:
+  const marker =
+    doc.querySelector('meta[name="emotion-insertion-point"]') ??
+    (() => {
+      const m = doc.createElement('meta')
+      m.setAttribute('name', 'emotion-insertion-point')
+      m.setAttribute('content', '')
+      return m
+    })()
+  if (doc.head.firstChild !== marker) {
+    doc.head.insertBefore(marker, doc.head.firstChild)
+  }
+})
+
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   originalFn(url, options)
   // TODO: This is to allow time for the page to bootstrap with React. This is a sign that there are some optimizations needed.

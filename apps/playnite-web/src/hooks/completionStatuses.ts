@@ -2,7 +2,7 @@ import { gql } from '@apollo/client/core'
 import { QueryHookOptions } from '@apollo/client/react'
 import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
 import { merge } from 'lodash-es'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSubscribeEntityUpdates } from './subscribeEntityUpdates'
 import { useSubscribeLibrarySync } from './subscribeLibrarySync'
 
@@ -21,17 +21,17 @@ const allCompletionStates = (
   libraryId?: string,
   opts?: Omit<QueryHookOptions, 'variables'>,
 ) => {
+  const options = useMemo(() => {
+    return merge({}, opts, {
+      variables: { libraryId: libraryId ?? '' },
+    })
+  }, [libraryId])
+
   const result = useQuery<{
     library: { completionStates: Array<{ id: string; name: string }> }
-  }>(
-    AllCompletionStatesQuery,
-    merge({}, opts, {
-      variables: { libraryId: libraryId ?? '' },
-    }),
-  )
+  }>(AllCompletionStatesQuery, options)
 
   const { data } = useSubscribeEntityUpdates()
-  console.dir(data)
   useEffect(() => {
     if (data?.entityUpdated.every((e) => e.type === 'CompletionStatus')) {
       return

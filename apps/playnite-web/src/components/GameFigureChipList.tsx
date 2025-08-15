@@ -70,7 +70,10 @@ const GameFigureChip: FC<{ children: string }> = ({ children }) => {
 
   const [me] = useMe()
   const params = useParams()
-  const [completionStatesResult] = allCompletionStates(params.libraryId)
+  const [completionStatesResult] = allCompletionStates(params.libraryId, {
+    fetchPolicy: 'cache-only',
+    nextFetchPolicy: 'cache-only',
+  })
 
   const completionStates =
     completionStatesResult?.data?.library.completionStates ?? []

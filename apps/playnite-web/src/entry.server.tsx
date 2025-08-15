@@ -10,14 +10,14 @@ import { ApolloProvider } from '@apollo/client/react/react.cjs'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { CacheProvider } from '@emotion/react'
+import createEmotionServer from '@emotion/server/create-instance'
 import { configureStore } from '@reduxjs/toolkit'
 import type { AppLoadContext, EntryContext } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql'
 import { createClient } from 'graphql-ws'
-import { isbot } from 'isbot'
 import jwt from 'jsonwebtoken'
-import { renderToStaticMarkup } from 'react-dom/server'
+import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
@@ -37,19 +37,12 @@ async function handleRequest(
   remixContext: EntryContext,
   loadContext: AppLoadContext,
 ) {
-  return isbot(request.headers.get('user-agent'))
-    ? handleBotRequest(
-        request,
-        responseStatusCode,
-        responseHeaders,
-        remixContext,
-      )
-    : handleBrowserRequest(
-        request,
-        responseStatusCode,
-        responseHeaders,
-        remixContext,
-      )
+  return handleBrowserRequest(
+    request,
+    responseStatusCode,
+    responseHeaders,
+    remixContext,
+  )
 }
 
 async function handleBotRequest(
@@ -149,7 +142,7 @@ async function handleBotRequest(
       // Extract the entirety of the Apollo Client cache's current state
       const initialState = client.extract()
 
-      const renderedOutput = renderToStaticMarkup(
+      const renderedOutput = renderToString(
         <>
           <CacheProvider value={clientSideCache}>{App}</CacheProvider>
           <script
@@ -250,45 +243,47 @@ async function handleBrowserRequest(
     cache: new InMemoryCache(),
     link,
   })
+
+  const clientSideCache = createEmotionCache()
+  const { extractCriticalToChunks, constructStyleTagsFromChunks } =
+    createEmotionServer(clientSideCache)
+
   const App = (
-    <ApolloProvider client={client}>
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />
-    </ApolloProvider>
+    <CacheProvider value={clientSideCache}>
+      <ApolloProvider client={client}>
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />
+      </ApolloProvider>
+    </CacheProvider>
   )
 
-  return new Promise((resolve, reject) => {
-    return getDataFromTree(App).then(() => {
-      // Extract the entirety of the Apollo Client cache's current state
-      const initialState = client.extract()
+  await getDataFromTree(App)
+  const initialState = client.extract()
 
-      const renderedOutput = renderToStaticMarkup(
-        <>
-          {App}
-          {process.env.NODE_ENV === 'development' && (
-            <script src="http://localhost:8097"></script>
-          )}
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.__APOLLO_STATE__=${JSON.stringify(
-                initialState,
-              ).replace(/</g, '\\u003c')}`, // The replace call escapes the < character to prevent cross-site scripting attacks that are possible via the presence of </script> in a string literal
-            }}
-          />
-        </>,
-      )
+  const html = renderToString(App)
 
-      responseHeaders.set('Content-Type', 'text/html')
-      resolve(
-        new Response(`<!DOCTYPE html>${renderedOutput}`, {
-          headers: responseHeaders,
-          status: responseStatusCode,
-        }),
-      )
-    })
+  const emotionChunks = extractCriticalToChunks(html)
+  const emotionStyleTags = constructStyleTagsFromChunks(emotionChunks)
+  let doc = html.replace(
+    '<meta name="emotion-insertion-point" content=""/>',
+    `<meta name="emotion-insertion-point" content=""/>${emotionStyleTags}`,
+  )
+
+  doc = `<!DOCTYPE html>${doc}`
+
+  const apolloStateScript = `<script>window.__APOLLO_STATE__=${JSON.stringify(initialState).replace(/</g, '\\u003c')}</script>`
+  doc = doc.replace(
+    '</body>',
+    `${apolloStateScript}${process.env.NODE_ENV === 'development' ? '<script src="http://localhost:8097"></script>' : ''}</body>`,
+  )
+
+  responseHeaders.set('Content-Type', 'text/html')
+  return new Response(doc, {
+    headers: responseHeaders,
+    status: responseStatusCode,
   })
 }
 

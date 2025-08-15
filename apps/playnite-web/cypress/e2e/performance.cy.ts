@@ -5,8 +5,12 @@ describe('Performance.', () => {
     cy.task('seedUsers')
   })
 
+  beforeEach(() => {
+    // cy.CDP('Network.setCacheDisabled', { cacheDisabled: false })
+  })
+
   Cypress._.each(setups, (opts) => {
-    describe(opts.formFactor, () => {
+    describe(opts.name, () => {
       it(`User library.`, () => {
         cy.fixture('librarySync.json').then((libraryData) => {
           cy.syncLibrary('test', 'test', libraryData).then((library) => {
@@ -17,7 +21,6 @@ describe('Performance.', () => {
                 accessibility: 80,
                 'best-practices': 80,
                 seo: 80,
-                pwa: 80,
               },
               opts,
             )

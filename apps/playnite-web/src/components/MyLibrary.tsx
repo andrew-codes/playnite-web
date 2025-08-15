@@ -1,6 +1,5 @@
 import { Box, Typography } from '@mui/material'
 import { FC } from 'react'
-import { Helmet } from 'react-helmet'
 import useDimensions from 'react-use-dimensions'
 import { Game } from '../../.generated/types.generated'
 import GameGrid from '../components/GameGrid'
@@ -16,19 +15,6 @@ const MyLibrary: FC<{
 
   return (
     <>
-      <Helmet>
-        {games
-          .filter((game) => game.primaryRelease?.cover)
-          .slice(0, 15)
-          .map((game) => (
-            <link
-              key={game.id}
-              rel="preload"
-              as="image"
-              href={`${game.primaryRelease?.cover}`}
-            />
-          ))}
-      </Helmet>
       <Header>
         <div>
           <Typography variant="h2">My Games</Typography>

@@ -26,6 +26,7 @@ async function run() {
   }
 
   let app = express()
+  app.use(compression())
 
   const viteDevServer =
     process.env.NODE_ENV === 'production'
@@ -132,8 +133,6 @@ async function run() {
 
     remixHandler(req, resp, next)
   })
-
-  app.use(compression())
 
   const server = app.listen(port, () => {
     logger.info(`App listening on http://${domain}:${port}`)

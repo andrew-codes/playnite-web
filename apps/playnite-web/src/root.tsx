@@ -1,4 +1,4 @@
-import { CacheProvider, css, Global } from '@emotion/react'
+import { css, Global } from '@emotion/react'
 import { CssBaseline, ThemeProvider, Typography } from '@mui/material'
 import { configureStore } from '@reduxjs/toolkit'
 import { LinksFunction, LoaderFunctionArgs } from '@remix-run/node'
@@ -7,14 +7,13 @@ import {
   Links,
   Meta,
   MetaFunction,
+  Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useOutlet,
   useRouteError,
 } from '@remix-run/react'
 import { FC, PropsWithChildren, useEffect } from 'react'
-import { Helmet } from 'react-helmet'
 import { Provider, useDispatch } from 'react-redux'
 import { reducer } from './api/client/state'
 import { setDeviceFeatures } from './api/client/state/deviceFeaturesSlice'
@@ -22,7 +21,6 @@ import { UAParser } from './api/layout.server'
 import Header from './components/Header'
 import AppLayout from './components/Layout'
 import MainNavigation from './components/Navigation/MainNavigation'
-import createEmotionCache from './createEmotionCache'
 import muiTheme from './muiTheme'
 
 const meta: MetaFunction = () => {
@@ -98,8 +96,6 @@ async function loader({ request }: LoaderFunctionArgs) {
 }
 
 const App: FC<{}> = () => {
-  const outlet = useOutlet()
-
   const dispatch = useDispatch()
   const d = useLoaderData<ReturnType<typeof loader>>()
   useEffect(() => {
@@ -137,7 +133,9 @@ const App: FC<{}> = () => {
   }, [d?.device])
   useEffect(() => {
     const handleOrientationChange = (evt) => {
-      setDeviceFeatures({ orientation: window.screen.orientation.type })
+      dispatch(
+        setDeviceFeatures({ orientation: window.screen.orientation.type }),
+      )
     }
     window.addEventListener('orientationchange', handleOrientationChange)
 
@@ -146,51 +144,47 @@ const App: FC<{}> = () => {
     }
   }, [])
 
-  return <>{outlet}</>
+  return <Outlet />
 }
 
 const Layout: FC<PropsWithChildren<{}>> = ({ children }) => {
-  const clientSideCache = createEmotionCache()
-
   const store = configureStore({ reducer })
 
   const theme = muiTheme('desktop')
 
   return (
-    <html lang="en-us">
-      <head></head>
+    <html lang="en-us" suppressHydrationWarning>
+      <head suppressHydrationWarning>
+        <Meta />
+        <Links />
+        <meta name="emotion-insertion-point" content="" />
+      </head>
       <body>
-        <Helmet>
-          <Meta />
-          <Links />
-        </Helmet>
-        <CacheProvider value={clientSideCache}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Global
-              styles={css`
-                * {
-                  scrollbar-color: ${theme.palette.text.primary}
-                    ${theme.palette.background.default};
-                }
-                ::-webkit-scrollbar {
-                  background-color: ${theme.palette.background.default};
-                }
-                ::-webkit-scrollbar-thumb {
-                  background-color: ${theme.palette.text.primary};
-                  border-radius: 10px;
-                }
-                ::-webkit-scrollbar-button {
-                  display: none;
-                }
-                ::-webkit-scrollbar-track {
-                  background-color: ${theme.palette.background.default};
-                }
-              `}
-            />
-            <Provider store={store}>{children}</Provider>
-          </ThemeProvider>
-        </CacheProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Global
+            styles={css`
+              * {
+                scrollbar-color: ${theme.palette.text.primary}
+                  ${theme.palette.background.default};
+              }
+              ::-webkit-scrollbar {
+                background-color: ${theme.palette.background.default};
+              }
+              ::-webkit-scrollbar-thumb {
+                background-color: ${theme.palette.text.primary};
+                border-radius: 10px;
+              }
+              ::-webkit-scrollbar-button {
+                display: none;
+              }
+              ::-webkit-scrollbar-track {
+                background-color: ${theme.palette.background.default};
+              }
+            `}
+          />
+          <Provider store={store}>{children}</Provider>
+        </ThemeProvider>
         <Scripts />
         <ScrollRestoration />
       </body>

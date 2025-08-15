@@ -28,7 +28,10 @@ class AssetFileHandler implements IPersistAssets {
     }
 
     const [mimeType, imageData] = imageSource
-    const webp = await sharp(imageData).toFormat('webp').toBuffer()
+    const webp = await sharp(imageData)
+      .resize(325, 325)
+      .toFormat('webp')
+      .toBuffer()
     await fs.writeFile(
       path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`),
       webp,

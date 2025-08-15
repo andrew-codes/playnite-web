@@ -9,27 +9,21 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions/subscriptions.c
 import { ApolloProvider } from '@apollo/client/react/react.cjs'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { CacheProvider } from '@emotion/react'
-import { configureStore } from '@reduxjs/toolkit'
 import { RemixBrowser } from '@remix-run/react'
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql'
 import { createClient } from 'graphql-ws'
 import { startTransition, StrictMode } from 'react'
-import { hydrateRoot } from 'react-dom/client'
-import { Provider } from 'react-redux'
-import { reducer } from './api/client/state'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import createEmotionCache from './createEmotionCache'
 
 declare global {
   interface Window {
     __APOLLO_STATE__: any
+    Cypress?: any
   }
 }
 
-const clientSideCache = createEmotionCache()
-
 startTransition(() => {
-  const store = configureStore({ reducer })
-
   const host = location.host
 
   const wsLink = new GraphQLWsLink(
@@ -68,16 +62,20 @@ startTransition(() => {
     link,
   })
 
-  hydrateRoot(
-    document,
+  const clientSideCache = createEmotionCache()
+
+  const App = (
     <StrictMode>
       <CacheProvider value={clientSideCache}>
         <ApolloProvider client={client}>
-          <Provider store={store}>
-            <RemixBrowser />
-          </Provider>
+          <RemixBrowser />
         </ApolloProvider>
       </CacheProvider>
-    </StrictMode>,
+    </StrictMode>
   )
+  if (window.Cypress) {
+    createRoot(document.body).render(App)
+  } else {
+    hydrateRoot(document, App)
+  }
 })
