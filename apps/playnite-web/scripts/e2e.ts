@@ -66,7 +66,7 @@ waitOn({ resources: ['http://localhost:3000'], timeout: 30000 }, (err) => {
   const [, , specFilter] = process.argv
   console.log('Running Cypress tests')
   testCp = sh.exec(
-    `yarn cypress ${process.env.CMD ?? 'run'} --e2e --browser electron ${specFilter && `--spec cypress/e2e/**/${specFilter}*`}`,
+    `yarn cypress ${process.env.CMD ?? 'run'} --e2e --browser chrome ${specFilter && `--spec cypress/e2e/**/${specFilter}*`}`,
     {
       env: {
         ...process.env,
