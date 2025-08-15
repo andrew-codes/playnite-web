@@ -121,11 +121,13 @@
     <Compile Include="Services\ObjectDeserializer.cs" />
     <Compile Include="Services\Publishers\EntityUpdatePayload.cs" />
     <Compile Include="Services\Publishers\GameStatePayload.cs" />
+    <Compile Include="Services\Publishers\GraphQL\OnlyPublishAfterSync.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishEntiyCollectionGraphQL.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishEntityGraphQL.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishReleaseCollectionGraphQL.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishReleaseGraphQL.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishLibraryGraphQL.cs" />
+    <Compile Include="Services\Publishers\GraphQL\ReflectPropertyValue.cs" />
     <Compile Include="Services\Publishers\IApplyPublisherOptions.cs" />
     <Compile Include="Services\Publishers\IPublishToPlayniteWeb.cs" />
     <Compile Include="Services\Subscribers\ISubscribeToPlayniteWeb.cs" />

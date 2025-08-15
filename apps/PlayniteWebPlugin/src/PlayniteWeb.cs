@@ -8,6 +8,7 @@ using Playnite.SDK.Plugins;
 using PlayniteWeb.Models;
 using PlayniteWeb.Services;
 using PlayniteWeb.Services.Publishers;
+using PlayniteWeb.Services.Publishers.GraphQL;
 using PlayniteWeb.Services.Publishers.WebSocket;
 using PlayniteWeb.UI;
 using System;
@@ -39,8 +40,12 @@ namespace PlayniteWeb
     private readonly Subject<ItemUpdatedEventArgs<DatabaseObject>> featureUpdates;
     private readonly IObservable<EventPattern<ItemUpdatedEventArgs<DatabaseObject>>> entityUpdated;
 
-    private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> collectionUpdates;
     private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> gameCollectionUpdates;
+    private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> platformCollectionUpdates;
+    private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> sourceCollectionUpdates;
+    private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> tagCollectionUpdates;
+    private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> completionStateCollectionUpdates;
+    private readonly Subject<ItemCollectionChangedEventArgs<DatabaseObject>> featureCollectionUpdates;
     private readonly IObservable<EventPattern<ItemCollectionChangedEventArgs<DatabaseObject>>> collectionUpdated;
     private readonly ConcurrentDictionary<Guid, PendingUpdate> pendingUpdates = new ConcurrentDictionary<Guid, PendingUpdate>();
     private readonly IEnumerable<MainMenuItem> mainMenuItems;
@@ -56,8 +61,15 @@ namespace PlayniteWeb
     private IPublishToPlayniteWeb<IIdentifiable> tagPublisher;
     private IPublishToPlayniteWeb<IIdentifiable> completionStatusPublisher;
     private IPublishToPlayniteWeb<IIdentifiable> featurePublisher;
+    private OnlyPublishCollectionAfterSync releaseCollectionPublisher;
+    private OnlyPublishCollectionAfterSync platformCollectionPublisher;
+    private OnlyPublishCollectionAfterSync sourceCollectionPublisher;
+    private OnlyPublishCollectionAfterSync tagCollectionPublisher;
     private IObservable<GraphQLResponse<dynamic>> entityUpdates;
     private GraphQLHttpClient gql;
+    private OnlyPublishCollectionAfterSync completionStatusCollectionPublisher;
+    private OnlyPublishCollectionAfterSync featureStatusCollectionPublisher;
+
 
 #if DEBUG
     private readonly int publishingThrottle = 1;
@@ -142,7 +154,8 @@ namespace PlayniteWeb
         if (type is Game) {
           gameUpdates.OnNext(e.EventArgs);
 
-        } else if (type is Platform)
+        }
+        else if (type is Platform)
         {
           platformUpdates.OnNext(e.EventArgs);
         }
@@ -164,10 +177,18 @@ namespace PlayniteWeb
         }
       });
 
-      collectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
-      collectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
       gameCollectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
       gameCollectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      platformCollectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
+      platformCollectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      sourceCollectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
+      sourceCollectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      tagCollectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
+      tagCollectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      completionStateCollectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
+      completionStateCollectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
+      featureCollectionUpdates = new Subject<ItemCollectionChangedEventArgs<DatabaseObject>>();
+      featureCollectionUpdates.Throttle(TimeSpan.FromSeconds(publishingThrottle));
       collectionUpdated = Observable.FromEventPattern<ItemCollectionChangedEventArgs<DatabaseObject>>(h =>
       {
         PlayniteApi.Database.AgeRatings.ItemCollectionChanged += handlers.RegisterCollectionUpdateHandler<AgeRating>(h);
@@ -200,14 +221,43 @@ namespace PlayniteWeb
       }
         );
       collectionUpdated.Subscribe(e => {
-        var entity = e.EventArgs.AddedItems.First();
+        DatabaseObject entity = null;
+        if (e.EventArgs.AddedItems.Any())
+        {
+          entity = e.EventArgs.AddedItems.FirstOrDefault();
+        } else if (e.EventArgs.RemovedItems.Any())
+        {
+          entity = e.EventArgs.RemovedItems.FirstOrDefault();
+        }
+        if (entity == null)
+        {
+          logger.Error("No entity found in collection update event.");
+          return;
+        }
+
         if (entity is Game)
         {
           gameCollectionUpdates.OnNext(e.EventArgs);
         }
-        else
+        else if (entity is Platform)
         {
-          collectionUpdates.OnNext(e.EventArgs);
+          platformCollectionUpdates.OnNext(e.EventArgs);
+        }
+        else if (entity is GameSource)
+        {
+          sourceCollectionUpdates.OnNext(e.EventArgs);
+        }
+        else if (entity is Tag)
+        {
+          tagCollectionUpdates.OnNext(e.EventArgs);
+        }
+        else if (entity is CompletionStatus)
+        {
+          completionStateCollectionUpdates.OnNext(e.EventArgs);
+        }
+        else if (entity is GameFeature)
+        {
+          featureCollectionUpdates.OnNext(e.EventArgs);
         }
       });
 
@@ -368,10 +418,12 @@ namespace PlayniteWeb
 
 
       gameCollectionUpdates.Subscribe(e => HandleGameCollectionUpdate(this, e));
-      collectionUpdates.Subscribe(e => HandleCollectionUpdate(this, e));
+      platformCollectionUpdates.Subscribe(e => HandlePlatformCollectionUpdate(this, e));
+      sourceCollectionUpdates.Subscribe(e => HandleSourceCollectionUpdate(this, e));
+      tagCollectionUpdates.Subscribe(e => HandleTagCollectionUpdate(this, e));
+      completionStateCollectionUpdates.Subscribe(e => HandleCompletionStateCollectionUpdate(this, e));
+      featureCollectionUpdates.Subscribe(e => HandleFeatureCollectionUpdate(this, e));
     }
-
-
 
     public override void OnApplicationStopped(OnApplicationStoppedEventArgs args)
     {
@@ -385,7 +437,11 @@ namespace PlayniteWeb
       featureUpdates.Dispose();
 
       gameCollectionUpdates.Dispose();
-      collectionUpdates.Dispose();
+      platformCollectionUpdates.Dispose();
+      sourceCollectionUpdates.Dispose();
+      tagCollectionUpdates.Dispose();
+      completionStateCollectionUpdates.Dispose();
+      featureCollectionUpdates.Dispose();
     }
 
     private void HandleVerifySettings(object sender, PlayniteWebSettings e)
@@ -434,14 +490,21 @@ namespace PlayniteWeb
         gql.HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Encoding.UTF8.GetString(token)}");
 
         libraryPublisher = new PublishLibraryGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, this);
-        releasePublisher = new PublishReleaseGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings);
-        platformPublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.platforms);
-        sourcePublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.sources);
-        tagPublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.tags);
-        completionStatusPublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.completionStates);
-        featurePublisher = new PublishEntityGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, EntityType.features);
+        releasePublisher = new OnlyPublishAfterSync(settings, new PublishReleaseGraphQL(gql, settings.DeviceId.ToString(), settings));
+        platformPublisher = new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.platforms));
+        sourcePublisher =  new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.sources));
+        tagPublisher =  new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.tags));
+        completionStatusPublisher =  new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.completionStates));
+        featurePublisher =  new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.features));
 
-        entityUpdates = gql.CreateSubscriptionStream<dynamic>(new GraphQLHttpRequest
+        releaseCollectionPublisher = new OnlyPublishCollectionAfterSync(settings, new PublishReleaseCollectionGraphQL(gql, settings.DeviceId.ToString(), settings));
+        platformCollectionPublisher = new OnlyPublishCollectionAfterSync(settings, new PublishEntiyCollectionGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.platforms));
+        sourceCollectionPublisher = new OnlyPublishCollectionAfterSync(settings, new PublishEntiyCollectionGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.sources));
+        tagCollectionPublisher = new OnlyPublishCollectionAfterSync(settings, new PublishEntiyCollectionGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.tags));
+        completionStatusCollectionPublisher = new OnlyPublishCollectionAfterSync(settings, new PublishEntiyCollectionGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.completionStates));
+        featureStatusCollectionPublisher = new OnlyPublishCollectionAfterSync(settings, new PublishEntiyCollectionGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.features));
+
+      entityUpdates = gql.CreateSubscriptionStream<dynamic>(new GraphQLHttpRequest
         {
           Query = @"subscription {
               entityUpdated {
@@ -692,34 +755,134 @@ namespace PlayniteWeb
     }
 
 
-    private void HandleCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
+    private void HandleGameCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
     {
-      //var games = PlayniteApi.Database.Games.ToList().GroupBy(game => game.Name)
-      //      .Select(groupedByName => new Models.Game(groupedByName, pcPlatforms, emulatorSource))
-      //      .Where(g => g != null)
-      //      .Where(g => !g.Id.Equals(Guid.Empty))
-      //      .ToList();
+      if (releaseCollectionPublisher == null)
+      {
+        logger.Warn("GraphQL client is not initialized. Cannot handle game collection updates.");
+        return;
+      }
 
-      //Task.WaitAll(e.AddedItems.SelectMany(item =>
-      //{
-      //  if (item.GetType() == typeof(Game))
-      //  {
-      //    var updatedGame = games.FirstOrDefault(game => game.Name == ((Game)item).Name);
-      //    return gamePublisher.Publish(updatedGame);
-      //  }
-      //  if (item.GetType() == typeof(Platform))
-      //  {
-      //    return platformPublisher.Publish(item);
-      //  }
-
-      //  return gameEntityPublisher.Publish(item);
-      //}).ToArray());
-
-      //Task.WaitAll(e.RemovedItems.SelectMany(item => gameEntityRemovalPublisher.Publish(item)).ToArray());
+      Task.WhenAll(releaseCollectionPublisher.Publish(e.AddedItems, e.RemovedItems))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing game collection updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.AddedItems.Count()} game collection updates successfully.");
+          }
+        });
     }
-    private object HandleGameCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
+
+
+    private void HandlePlatformCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
     {
-      throw new NotImplementedException();
+      if (platformCollectionPublisher == null) {
+        logger.Warn("GraphQL client is not initialized. Cannot handle platform collection updates.");
+        return;
+      }
+
+
+        Task.WhenAll(platformCollectionPublisher.Publish(e.AddedItems, e.RemovedItems))
+         .ContinueWith(t =>
+         {
+           if (t.IsFaulted)
+           {
+             logger.Error(t.Exception, "Error occurred while publishing platform collection updates.");
+           }
+           else
+           {
+             logger.Debug($"Published {e.AddedItems.Count()} platform collection updates successfully.");
+           }
+         });
+
+    }
+
+    private void HandleSourceCollectionUpdate (PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
+    {
+      if (sourceCollectionPublisher == null) {
+        logger.Warn("GraphQL client is not initialized. Cannot handle source collection updates.");
+        return;
+        }
+
+       Task.WhenAll(sourceCollectionPublisher.Publish(e.AddedItems, e.RemovedItems))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing source collection updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.AddedItems.Count()} source collection updates successfully.");
+          }
+        });
+    }
+
+    private void HandleTagCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
+    {
+      if (tagCollectionPublisher == null) {
+        logger.Warn("GraphQL client is not initialized. Cannot handle tag collection updates.");
+        return;
+        }
+
+       Task.WhenAll(tagCollectionPublisher.Publish(e.AddedItems, e.RemovedItems))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing tag collection updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.AddedItems.Count()} tag collection updates successfully.");
+          }
+        });
+    }
+
+    private void HandleCompletionStateCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
+    {
+      if (completionStatusCollectionPublisher == null) {
+        logger.Warn("GraphQL client is not initialized. Cannot handle source collection updates.");
+        return;
+        }
+
+       Task.WhenAll(completionStatusCollectionPublisher.Publish(e.AddedItems, e.RemovedItems))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing source collection updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.AddedItems.Count()} source collection updates successfully.");
+          }
+        });
+    }
+
+    private void HandleFeatureCollectionUpdate(PlayniteWeb playniteWeb, ItemCollectionChangedEventArgs<DatabaseObject> e)
+    {
+      if (featureStatusCollectionPublisher == null) {
+        logger.Warn("GraphQL client is not initialized. Cannot handle feature collection updates.");
+        return;
+        }
+
+       Task.WhenAll(featureStatusCollectionPublisher.Publish(e.AddedItems, e.RemovedItems))
+        .ContinueWith(t =>
+        {
+          if (t.IsFaulted)
+          {
+            logger.Error(t.Exception, "Error occurred while publishing feature collection updates.");
+          }
+          else
+          {
+            logger.Debug($"Published {e.AddedItems.Count()} feature collection updates successfully.");
+          }
+        });
     }
   }
 }

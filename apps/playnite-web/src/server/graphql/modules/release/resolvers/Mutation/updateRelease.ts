@@ -83,7 +83,7 @@ export const updateRelease: NonNullable<
         description: _arg.release.description,
         releaseDate: _arg.release.releaseDate,
         releaseYear: _arg.release.releaseDate?.getFullYear(),
-        playTime: BigInt(_arg.release.playTime ?? '0'),
+        playtime: BigInt(_arg.release.playtime ?? '0'),
         criticScore: _arg.release.criticScore,
         hidden: _arg.release.hidden ?? false,
         ...(source && {

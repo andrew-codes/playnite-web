@@ -1,17 +1,10 @@
-using GraphQL;
 using GraphQL.Client.Http;
 using Playnite.SDK;
-using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
-using PlayniteWeb.Models;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.WebSockets;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PlayniteWeb.Services.Publishers.WebSocket
@@ -66,7 +59,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
                    //genres = g.Genres.Select(ge => ge.Id),
                    //categories = g.Categories.Select(c => c.Id),
                    releaseDate = !g.ReleaseDate.HasValue ? (string)null : g.ReleaseDate.Value.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
-                   playTime = g.Playtime.ToString(),
+                   playtime = g.Playtime.ToString(),
                  }),
               platforms = db.Platforms.Select(p => new { id = p.Id, name = p.Name }),
               sources = db.Sources.Select(s => new { id = s.Id, name = s.Name, platform = settings.SourcePlatforms[s.Id] }),

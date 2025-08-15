@@ -1,5 +1,4 @@
 using GraphQL.Client.Http;
-using Playnite.SDK;
 using Playnite.SDK.Models;
 using System;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
     private readonly PlayniteWebSettings settings;
     private readonly EntityType type;
 
-    public PublishEntityGraphQL(GraphQLHttpClient gql, IGameDatabaseAPI db, string deviceId, PlayniteWebSettings settings, EntityType type)
+    public PublishEntityGraphQL(GraphQLHttpClient gql, string deviceId, PlayniteWebSettings settings, EntityType type)
     {
       this.gql = gql;
       this.deviceId = deviceId;
@@ -35,12 +34,6 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
 
     public IEnumerable<Task> Publish(IEnumerable<IIdentifiable> entities)
     {
-
-      if (settings.LastPublish == null)
-      {
-        yield break;
-      }
-
       var update = new Dictionary<string, object> {
         ["releases"] = Enumerable.Empty<object>(),
         ["platforms"] = Enumerable.Empty<object>(),

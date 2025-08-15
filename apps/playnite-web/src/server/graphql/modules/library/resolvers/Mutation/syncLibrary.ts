@@ -322,6 +322,15 @@ export const syncLibrary: NonNullable<
           release,
         )
         try {
+          logger.silly(
+            'before we created',
+            await _ctx.db.release.findUnique({
+              where: {
+                playniteId_libraryId: { playniteId: release.id, libraryId },
+              },
+            }),
+          )
+
           return await _ctx.db.release.upsert({
             where: {
               playniteId_libraryId: { playniteId: release.id, libraryId },
@@ -333,7 +342,7 @@ export const syncLibrary: NonNullable<
               releaseDate: release.releaseDate,
               releaseYear: release.releaseDate?.getFullYear(),
               criticScore: release.criticScore,
-              playTime: BigInt(release.playTime ?? '0'),
+              playtime: BigInt(release.playtime ?? '0'),
               communityScore: release.communityScore,
               Library: {
                 connect: { id: libraryId },
@@ -437,7 +446,6 @@ export const syncLibrary: NonNullable<
             `Error updating release ${release.id}, ${release.title} for library ${libraryId}`,
             error,
           )
-          throw error
         }
       }),
   )

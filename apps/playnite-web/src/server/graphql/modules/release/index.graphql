@@ -31,7 +31,7 @@ input ReleaseInput {
   recentActivity: DateTime
   source: String
   tags: [String!]
-  playTime: String
+  playtime: String
 }
 
 extend type Mutation {

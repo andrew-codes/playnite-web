@@ -28,7 +28,7 @@ input LibraryReleaseInput {
   recentActivity: DateTime
   source: String!
   tags: [String!]
-  playTime: String
+  playtime: String
 }
 
 input LibraryPlatformInput {
