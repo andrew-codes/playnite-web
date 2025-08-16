@@ -45,7 +45,7 @@ const Drawer: FC<
         width: '100%',
         margin: '0 auto',
         [theme.breakpoints.up('lg')]: {
-          padding: `${theme.spacing(11)} 0 ${theme.spacing(6)} ${theme.spacing(16)}`,
+          padding: `${theme.spacing(11)} ${theme.spacing(5)} ${theme.spacing(6)} ${theme.spacing(16)}`,
         },
       })}
     >

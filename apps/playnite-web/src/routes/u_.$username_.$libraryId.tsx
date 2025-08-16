@@ -1,11 +1,12 @@
 import { FilterAlt } from '@mui/icons-material'
-import { Button, styled } from '@mui/material'
+import { styled, Typography } from '@mui/material'
 import { Outlet, useLocation, useNavigate, useParams } from '@remix-run/react'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Game } from '../../.generated/types.generated'
 import { $filterValuesForQuery } from '../api/client/state/librarySlice'
 import Filters from '../components/Filters'
+import Header from '../components/Header'
 import IconButton from '../components/IconButton'
 import Layout from '../components/Layout'
 import MyLibrary from '../components/MyLibrary'
@@ -70,11 +71,17 @@ function UserLibrary() {
   return (
     <Layout
       title={
-        <Title>
-          <Button variant="text" onClick={handleScrollTop}>
-            My Games
-          </Button>
-        </Title>
+        <Header>
+          <Typography variant="h1">My Games</Typography>
+          <Typography variant="subtitle1">
+            <span>{games.length}</span>&nbsp;games in library
+          </Typography>
+        </Header>
+        // <Title>
+        //   <Button variant="text" onClick={handleScrollTop}>
+        //     My Games
+        //   </Button>
+        // </Title>
       }
       secondaryMenu={
         <IconButton

@@ -1,9 +1,8 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { FC } from 'react'
 import useDimensions from 'react-use-dimensions'
 import { Game } from '../../.generated/types.generated'
 import GameGrid from '../components/GameGrid'
-import Header from '../components/Header'
 import useThemeWidth from './useThemeWidth'
 
 const MyLibrary: FC<{
@@ -14,34 +13,24 @@ const MyLibrary: FC<{
   const [ref, dims] = useDimensions({ liveMeasure: true })
 
   return (
-    <>
-      <Header>
-        <div>
-          <Typography variant="h2">My Games</Typography>
-          <Typography variant="subtitle1">
-            <span>{games.length}</span>&nbsp;games in library
-          </Typography>
-        </div>
-      </Header>
-      <Box
-        ref={ref}
-        sx={(theme) => ({
-          flexGrow: 1,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          margin: '0 auto',
-          [theme.breakpoints.up('lg')]: {
-            overflowY: 'auto',
-          },
-          [theme.breakpoints.up('xl')]: {
-            width: `${width}px`,
-          },
-        })}
-      >
-        <GameGrid games={games} height={dims.height ?? 0} onSelect={onSelect} />
-      </Box>
-    </>
+    <Box
+      ref={ref}
+      sx={(theme) => ({
+        flexGrow: 1,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        margin: '0 auto',
+        [theme.breakpoints.up('lg')]: {
+          overflowY: 'auto',
+        },
+        [theme.breakpoints.up('xl')]: {
+          width: `${width}px`,
+        },
+      })}
+    >
+      <GameGrid games={games} height={dims.height ?? 0} onSelect={onSelect} />
+    </Box>
   )
 }
 

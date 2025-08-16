@@ -3,12 +3,8 @@ import { FC, PropsWithChildren } from 'react'
 
 const HeaderContainer = styled('section')(({ theme }) => ({
   display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'flex-end',
-  [theme.breakpoints.down('lg')]: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
+  flexDirection: 'column',
+  alignItems: 'flex-start',
 }))
 
 const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
@@ -17,7 +13,7 @@ const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
       <Box
         sx={(theme) => ({
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
           top: 0,
           zIndex: 1000,
           backgroundColor: theme.palette.background.default,
