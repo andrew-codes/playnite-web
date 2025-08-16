@@ -29,7 +29,7 @@ const Drawer: FC<
           width: '100%',
           margin: '0 auto',
           [theme.breakpoints.down('lg')]: {
-            padding: '24px 16px',
+            padding: `${theme.spacing(3)} ${theme.spacing(2)}`,
           },
         })}
       >
@@ -45,10 +45,7 @@ const Drawer: FC<
         width: '100%',
         margin: '0 auto',
         [theme.breakpoints.up('lg')]: {
-          padding: '88px 0 48px 102px',
-        },
-        [theme.breakpoints.up('xl')]: {
-          padding: '88px 0 48px 102px',
+          padding: `${theme.spacing(11)} 0 ${theme.spacing(6)} ${theme.spacing(16)}`,
         },
       })}
     >
@@ -56,8 +53,8 @@ const Drawer: FC<
         sx={{
           display: 'flex',
           position: 'absolute',
-          top: '24px',
-          right: '24px',
+          top: 3,
+          right: 3,
           zIndex: 1200,
         }}
       >

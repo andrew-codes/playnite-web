@@ -18,7 +18,6 @@ const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
         sx={(theme) => ({
           display: 'flex',
           flexDirection: 'column',
-          paddingTop: theme.spacing(4),
           top: 0,
           zIndex: 1000,
           backgroundColor: theme.palette.background.default,
@@ -28,7 +27,9 @@ const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
         })}
       >
         <HeaderContainer {...rest}>{children}</HeaderContainer>
-        <Divider sx={(theme) => ({ margin: `${theme.spacing(4)} 0` })} />
+        <Divider
+          sx={(theme) => ({ margin: 0, marginTop: 2, marginBottom: 2 })}
+        />
       </Box>
     </>
   )

@@ -10,6 +10,7 @@ import {
 import { LoaderFunction, redirect } from '@remix-run/node'
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react'
 import { ComponentType, FormEventHandler, useEffect } from 'react'
+import { Form } from '../components/Form'
 import Header from '../components/Header'
 import Layout from '../components/Layout'
 import MainNavigation from '../components/Navigation/MainNavigation'
@@ -73,7 +74,7 @@ const Registration = () => {
       }
       navs={navs}
     >
-      <form data-name="registration" onSubmit={handleSubmit}>
+      <Form data-name="registration" onSubmit={handleSubmit}>
         <Container fixed>
           <Stack
             spacing={2}
@@ -134,7 +135,7 @@ const Registration = () => {
             {error?.message && ` ${error.message}`}
           </Alert>
         </Snackbar>
-      </form>
+      </Form>
     </Layout>
   )
 }

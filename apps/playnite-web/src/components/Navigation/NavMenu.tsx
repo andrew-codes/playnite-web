@@ -13,24 +13,16 @@ import { EventHandler, FC, ReactNode } from 'react'
 const NavigationList = styled(List, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<{ open: boolean }>(({ open, theme }) => ({
-  padding: '0 18px',
   width: '100%',
-  ...(open && {
-    padding: '0 9px',
-  }),
-  ...(!open && {}),
 }))
 
-const NavMenu: FC<{
-  title: string
-  open: boolean
-  'data-test'?: string
-  navItems: Array<{
-    to: string | EventHandler<React.MouseEvent>
-    icon: ReactNode
-    text: string
-  }>
-}> = ({ open, navItems, 'data-test': dataTest, title, ...rest }) => {
+type NavItemProps = {
+  to: string | EventHandler<React.MouseEvent>
+  icon?: ReactNode
+  text: string
+}
+
+const NavItem: FC<{ item: NavItemProps; open: boolean }> = ({ item, open }) => {
   const navigate = useNavigate()
   const handleNavigation = (href: string) => {
     navigate(href)
@@ -39,39 +31,51 @@ const NavMenu: FC<{
   const theme = useTheme()
 
   return (
+    <ListItemButton
+      onClick={(evt) => {
+        evt.preventDefault()
+        if (typeof item.to === 'string') {
+          handleNavigation(item.to)
+        } else {
+          item.to?.(evt)
+        }
+      }}
+      sx={{
+        minHeight: theme.spacing(6),
+      }}
+    >
+      {item.icon && (
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: open ? 2 : 0,
+            justifyContent: 'center',
+          }}
+        >
+          {item.icon}
+        </ListItemIcon>
+      )}
+      {open && <ListItemText primary={item.text} />}
+    </ListItemButton>
+  )
+}
+
+const NavMenu: FC<{
+  title: string
+  open: boolean
+  'data-test'?: string
+  navItems: Array<NavItemProps>
+}> = ({ open, navItems, 'data-test': dataTest, title, ...rest }) => {
+  return (
     <nav data-test={dataTest} aria-label={title} {...rest}>
       <NavigationList open={open}>
-        {navItems.map((item, i) => (
-          <ListItem key={i} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              onClick={(evt) => {
-                evt.preventDefault()
-                if (typeof item.to === 'string') {
-                  handleNavigation(item.to)
-                } else {
-                  item.to(evt)
-                }
-              }}
-              sx={{
-                minHeight: theme.spacing(6),
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.text}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        {navItems.map((item, i) => {
+          return (
+            <ListItem key={i} disablePadding sx={{ display: 'block' }}>
+              <NavItem item={item} open={open} />
+            </ListItem>
+          )
+        })}
       </NavigationList>
     </nav>
   )

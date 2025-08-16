@@ -117,6 +117,26 @@ const theme = (
             xs: 390,
           },
         },
+        typography: {
+          h1: {
+            fontSize: '2rem',
+          },
+          h2: {
+            fontSize: '1.5rem',
+          },
+          h3: {
+            fontSize: '1.25rem',
+          },
+          h4: {
+            fontSize: '1rem',
+          },
+          h5: {
+            fontSize: '0.875rem',
+          },
+          h6: {
+            fontSize: '0.75rem',
+          },
+        },
         components: {
           MuiAppBar: {
             styleOverrides: {
@@ -144,11 +164,6 @@ const theme = (
               paper: {
                 backgroundColor: 'unset',
               },
-            },
-          },
-          MuiTypography: {
-            styleOverrides: {
-              h1: {},
             },
           },
           MuiCssBaseline: {
@@ -194,6 +209,13 @@ const theme = (
                     },
                   },
                 },
+              },
+            },
+          },
+          MuiListItemButton: {
+            styleOverrides: {
+              root: {
+                borderRadius: 8,
               },
             },
           },

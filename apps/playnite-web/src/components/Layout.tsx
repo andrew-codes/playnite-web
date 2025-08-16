@@ -22,32 +22,33 @@ const Layout: FC<
   return (
     <AnimatePresence initial={false}>
       <>
-        <Provider value={navigateInGrid}></Provider>
-        <div>
-          {shouldUseNonMobileDrawer ? (
-            <NonMobileDrawerNavigation navs={navs}>
+        <Provider value={navigateInGrid}>
+          <div>
+            {shouldUseNonMobileDrawer ? (
+              <NonMobileDrawerNavigation navs={navs}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                  }}
+                >
+                  <Drawer navs={navs} title={title}>
+                    <OuterContainer>{children}</OuterContainer>
+                  </Drawer>
+                </Box>
+              </NonMobileDrawerNavigation>
+            ) : (
               <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '100%',
-                }}
+                sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}
               >
-                <Drawer navs={navs} title={title}>
+                <Drawer navs={navs} title={title} secondaryMenu={secondaryMenu}>
                   <OuterContainer>{children}</OuterContainer>
                 </Drawer>
               </Box>
-            </NonMobileDrawerNavigation>
-          ) : (
-            <Box
-              sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}
-            >
-              <Drawer navs={navs} title={title} secondaryMenu={secondaryMenu}>
-                <OuterContainer>{children}</OuterContainer>
-              </Drawer>
-            </Box>
-          )}
-        </div>
+            )}
+          </div>
+        </Provider>
       </>
     </AnimatePresence>
   )
