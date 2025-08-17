@@ -50,7 +50,9 @@ const graphql = (endpoint: string, signingKey: string) => {
         subscriptionPublisher,
         db: prisma,
         assets: new AssetFileHandler(
-          path.join('../public'),
+          process.env.NODE_ENV === 'development'
+            ? path.join('src/public')
+            : path.join('../public'),
           new IgnSourcedAssets(),
         ),
       }

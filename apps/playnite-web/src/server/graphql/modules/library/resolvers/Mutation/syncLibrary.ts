@@ -303,7 +303,7 @@ export const syncLibrary: NonNullable<
     select: { id: true, playniteId: true },
   })
 
-  logger.debug(`Updated`, sources, completionStates, updatedTags, platforms)
+  // logger.debug(`Updated`, sources, completionStates, updatedTags, platforms)
   const updatedReleases = await Promise.all(
     _arg.libraryData.update.releases
       .filter((release) => {
@@ -322,15 +322,6 @@ export const syncLibrary: NonNullable<
           release,
         )
         try {
-          logger.silly(
-            'before we created',
-            await _ctx.db.release.findUnique({
-              where: {
-                playniteId_libraryId: { playniteId: release.id, libraryId },
-              },
-            }),
-          )
-
           return await _ctx.db.release.upsert({
             where: {
               playniteId_libraryId: { playniteId: release.id, libraryId },

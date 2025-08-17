@@ -2,6 +2,7 @@ import { existsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
+import logger from '../logger.js'
 import { ignSlug } from './ignSlug.js'
 import { IPersistAssets, ISourceAssets } from './interfaces'
 
@@ -15,14 +16,17 @@ class AssetFileHandler implements IPersistAssets {
     await fs.mkdir(path.join(this.rootAssetPath, 'game-assets'), {
       recursive: true,
     })
+
     const ignId = ignSlug(release)
     if (
       existsSync(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
     ) {
       return
     }
+    logger.debug(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
 
     const imageSource = await this.sourceAssets.source(release)
+    console.debug('Image source', imageSource ? 'found' : 'not found')
     if (!imageSource) {
       return
     }

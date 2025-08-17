@@ -13,7 +13,7 @@ const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
       <Box
         sx={(theme) => ({
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: 'column',
           top: 0,
           zIndex: 1000,
           backgroundColor: theme.palette.background.default,

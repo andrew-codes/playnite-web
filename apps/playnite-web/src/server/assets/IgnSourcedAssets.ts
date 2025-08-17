@@ -42,7 +42,11 @@ class IgnSourcedAssets implements ISourceAssets {
       })
 
       if (!ignResponse?.data?.objectSelectByTypeAndSlug?.primaryImage?.url) {
-        logger.warn(`No primary image found for asset: ${ignId}`)
+        logger.warn(
+          `No primary image found for asset: ${ignId}`,
+          JSON.stringify(ignResponse),
+        )
+        logger.warn(JSON.stringify(ignResponse))
         return null
       }
 

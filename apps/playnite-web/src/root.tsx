@@ -168,6 +168,11 @@ const Layout: FC<PropsWithChildren<{}>> = ({ children }) => {
                 scrollbar-color: ${theme.palette.text.primary}
                   ${theme.palette.background.default};
               }
+              body {
+                margin: 0;
+                padding: 0;
+                height: 100vh;
+              }
               ::-webkit-scrollbar {
                 background-color: ${theme.palette.background.default};
               }
