@@ -4,14 +4,15 @@ import { FixedSizeGrid as Grid } from 'react-window'
 import { Game } from '../../.generated/types.generated'
 import GameFigure from './GameFigure'
 import { useNavigateInGrid } from './NavigateInGrid/context'
-import useThemeWidth from './useThemeWidth'
 
 const GameGrid: FC<{
   games: Array<Game>
   height: number | string
   onSelect?: (evt, game: Game) => void
-}> = ({ games, height, onSelect }) => {
+  width: number
+}> = ({ games, height, onSelect, width }) => {
   const theme = useTheme()
+  const isXxl = useMediaQuery(theme.breakpoints.up('xxl'))
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
   const isLg = useMediaQuery(theme.breakpoints.up('lg'))
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
@@ -19,14 +20,14 @@ const GameGrid: FC<{
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
   const useMoreSpacing = useMediaQuery(theme.breakpoints.down('lg')) && isSm
   const columns = useMemo(() => {
-    if (isXl) return 5
-    if (isLg) return 4
+    if (isXxl) return 8
+    if (isXl) return 7
+    if (isLg) return 5
     if (isMd) return 3
     if (isSm) return 2
     if (isXs) return 2
     return 2
   }, [isXl, isLg, isMd, isSm, isXs])
-  const width = useThemeWidth()
   const columnWidth = useMemo(() => {
     return Math.floor((width - columns * 16) / columns)
   }, [width, columns])
