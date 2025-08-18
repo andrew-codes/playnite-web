@@ -11,11 +11,11 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { useParams } from '@remix-run/react'
 import { uniq } from 'lodash-es'
 import { FC, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Platform } from '../../.generated/types.generated'
-import { allCompletionStates } from '../hooks/completionStatuses'
+import { getCompletionStates } from '../api/client/state/completionStatesSlice'
 import { useMe } from '../hooks/me'
 import { useUpdateRelease } from '../hooks/updateRelease'
 import { Theme } from '../muiTheme'
@@ -64,20 +64,14 @@ const GameFigureChipRoot = styled('div')(({ theme }) => ({
   },
 }))
 
-const GameFigureChip: FC<{ children: string }> = ({ children }) => {
+const GameFigureChip: FC<{
+  children: string
+  completionStates: Array<{ id: string; name: string }>
+}> = ({ children, completionStates }) => {
   const theme = useTheme<Theme>()
   const Icon = theme.completionStatus[children]?.Icon ?? (() => null)
 
   const [me] = useMe()
-  const params = useParams()
-  const [completionStatesResult] = allCompletionStates(params.libraryId, {
-    fetchPolicy: 'cache-only',
-    nextFetchPolicy: 'cache-only',
-  })
-
-  const completionStates =
-    completionStatesResult?.data?.library.completionStates ?? []
-
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLDivElement>(null)
   const selectedIndex = useMemo(
@@ -205,6 +199,8 @@ const GameFigureChipList: FC<{
   platforms: Array<Platform>
   completionStatus: string
 }> = ({ platforms, completionStatus }) => {
+  const completionStates = useSelector(getCompletionStates)
+
   const maxPlatforms = 2
   const condensedPlatforms = useMemo(() => {
     return (
@@ -220,7 +216,9 @@ const GameFigureChipList: FC<{
         <PlatformListItem platform={platform} key={index} />
       ))}
       <li>
-        <GameFigureChip>{completionStatus}</GameFigureChip>
+        <GameFigureChip completionStates={completionStates}>
+          {completionStatus}
+        </GameFigureChip>
       </li>
     </List>
   )

@@ -9,40 +9,38 @@ const MyLibrary: FC<{
   onSelect?: (evt, game: Game) => void
 }> = ({ games, onSelect }) => {
   const [ref, dims] = useDimensions({ liveMeasure: true })
-  const [windowHeight, setWindowHeight] = useState(0)
   const [heightBottomOffset, setHeightBottomOffset] = useState<null | number>(
     null,
   )
   const [height, setHeight] = useState(0)
-  const [windowWidth, setWindowWidth] = useState(0)
   const [width, setWidth] = useState(0)
-
   useEffect(() => {
-    function resizeListener(evt: UIEvent) {
-      setWindowHeight((evt.target as Window)?.document.body.offsetHeight)
-      setWindowWidth((evt.target as Window)?.document.body.offsetWidth)
+    function resize(win: Window) {
+      if (!dims.y || !dims.x || !dims.right || !dims.bottom) {
+        return
+      }
+      setHeight(win.document.body.offsetHeight - dims.y)
+      setHeightBottomOffset(win.document.body.offsetHeight - dims.bottom)
+      setWidth(
+        win.document.body.offsetWidth -
+          dims.x -
+          (win.document.body.offsetWidth - dims.right),
+      )
     }
+    function resizeListener(evt: UIEvent) {
+      resize(evt.target as Window)
+    }
+
+    if (!height && !width) {
+      resize(window)
+    }
+
     window.addEventListener('resize', resizeListener)
-    setWindowHeight(window.document.body.offsetHeight)
-    setWindowWidth(window.document.body.offsetWidth)
 
     return () => {
       window.removeEventListener('resize', resizeListener)
     }
-  }, [])
-  useEffect(() => {
-    if (heightBottomOffset !== null || windowHeight === 0 || !dims?.bottom) {
-      return
-    }
-    setHeightBottomOffset(windowHeight - dims.bottom)
-  }, [windowHeight, dims.bottom])
-  useEffect(() => {
-    if (!dims.y || !dims.x || !dims.right) {
-      return
-    }
-    setHeight((windowHeight ?? 0) - dims.y)
-    setWidth((windowWidth ?? 0) - dims.x - (windowWidth - dims.right))
-  }, [dims.y, windowHeight, windowWidth, dims.x])
+  }, [dims.y, dims.x, dims.right, dims.bottom])
 
   return (
     <Box

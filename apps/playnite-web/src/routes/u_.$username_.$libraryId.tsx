@@ -1,9 +1,10 @@
 import { FilterAlt } from '@mui/icons-material'
 import { styled, Typography } from '@mui/material'
 import { Outlet, useLocation, useNavigate, useParams } from '@remix-run/react'
-import { useCallback, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Game } from '../../.generated/types.generated'
+import { setCompletionStates } from '../api/client/state/completionStatesSlice'
 import { $filterValuesForQuery } from '../api/client/state/librarySlice'
 import Filters from '../components/Filters'
 import Header from '../components/Header'
@@ -33,7 +34,14 @@ function UserLibrary() {
       `^/u/${params.username}/${params.libraryId}/Game:[1-9][0-9]*$`,
     ).test(pathname)
 
+  const dispatch = useDispatch()
   const { loading, data, error } = useAllGames(params.libraryId ?? '')
+  useEffect(() => {
+    if (!data?.library?.completionStates) {
+      return
+    }
+    dispatch(setCompletionStates(data.library.completionStates))
+  }, [data?.library?.completionStates])
 
   const games = !loading ? (data?.library?.games ?? []) : []
   if (error) {
@@ -49,6 +57,9 @@ function UserLibrary() {
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(
     isOnDetailsPage(location.pathname),
   )
+  useEffect(() => {
+    setRightDrawerOpen(isOnDetailsPage(location.pathname))
+  }, [location.pathname])
   const [isFiltersInDrawer, setFiltersInDrawer] = useState(false)
   const navigate = useNavigate()
   const handleClose = useCallback(() => {

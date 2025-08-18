@@ -23,6 +23,17 @@ const Image = styled('img', {
   display: 'block',
 }))
 
+const ImagePlaceholder = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'width',
+})<{ width: string }>(({ width, theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[3],
+  height: `${width}`,
+  objectFit: 'cover',
+  width,
+  display: 'block',
+}))
+
 const GameFigure: FC<
   PropsWithChildren<{
     game: Game
@@ -42,12 +53,17 @@ const GameFigure: FC<
       >
         <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
           <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
-            <Image
-              src={`${game.primaryRelease?.cover}`}
-              alt={game.primaryRelease?.title}
-              width={width}
-              loading="eager"
-            />
+            {game.primaryRelease?.cover && (
+              <Image
+                src={`${game.primaryRelease?.cover}`}
+                alt={game.primaryRelease?.title}
+                width={width}
+                loading="eager"
+              />
+            )}
+            {game.primaryRelease?.cover === null && (
+              <ImagePlaceholder width={width} />
+            )}
           </Button>
           <Box
             sx={(theme) => ({

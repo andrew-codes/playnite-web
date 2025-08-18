@@ -7,31 +7,50 @@ import { Library } from '../../.generated/types.generated'
 import { useSubscribeEntityUpdates } from './subscribeEntityUpdates'
 import { useSubscribeLibrarySync } from './subscribeLibrarySync'
 
+const CompletionStatusFragment = gql`
+  fragment CompletionStates on CompletionStatus {
+    id
+    name
+  }
+`
+
+const GameFragment = gql`
+  fragment Game on Game {
+    id
+    primaryRelease {
+      id
+      title
+      cover
+      completionStatus {
+        name
+      }
+    }
+    releases {
+      id
+      platform {
+        id
+        name
+        icon
+      }
+      source {
+        name
+      }
+    }
+  }
+`
+
 const AllGames = gql`
+  ${CompletionStatusFragment}
+  ${GameFragment}
+
   query library($libraryId: String!) {
     library(libraryId: $libraryId) {
       id
+      completionStates {
+        ...CompletionStates
+      }
       games {
-        id
-        primaryRelease {
-          id
-          title
-          cover
-          completionStatus {
-            name
-          }
-        }
-        releases {
-          id
-          platform {
-            id
-            name
-            icon
-          }
-          source {
-            name
-          }
-        }
+        ...Game
       }
     }
   }
@@ -45,6 +64,8 @@ const useAllGames = (
     AllGames,
     merge({}, opts, {
       variables: { libraryId: libraryId ?? '' },
+      fetchPolicy: 'cache-and-network',
+      nextFetchPolicy: 'cache-and-network',
     }),
   )
 
@@ -82,4 +103,4 @@ const useAllGames = (
   return q
 }
 
-export { AllGames, useAllGames }
+export { AllGames, CompletionStatusFragment, GameFragment, useAllGames }

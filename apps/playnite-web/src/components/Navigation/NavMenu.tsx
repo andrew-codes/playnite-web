@@ -71,7 +71,11 @@ const NavMenu: FC<{
       <NavigationList open={open}>
         {navItems.map((item, i) => {
           return (
-            <ListItem key={i} disablePadding sx={{ display: 'block' }}>
+            <ListItem
+              key={i}
+              disablePadding
+              sx={{ display: 'block', justifyItems: 'center' }}
+            >
               <NavItem item={item} open={open} />
             </ListItem>
           )

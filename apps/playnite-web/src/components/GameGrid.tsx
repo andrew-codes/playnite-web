@@ -1,5 +1,5 @@
 import { Typography, useMediaQuery, useTheme } from '@mui/material'
-import { createRef, FC, forwardRef, useMemo } from 'react'
+import { createRef, FC, forwardRef, useEffect, useMemo } from 'react'
 import { FixedSizeGrid as Grid } from 'react-window'
 import { Game } from '../../.generated/types.generated'
 import GameFigure from './GameFigure'
@@ -40,9 +40,11 @@ const GameGrid: FC<{
     scrollToItem: (params: { rowIndex: number; columnIndex: number }) => void
   }>()
   const [_, subscribe] = useNavigateInGrid()
-  subscribe((rowIndex, columnIndex) => {
-    gridRef.current?.scrollToItem({ rowIndex: 0, columnIndex: 0 })
-  })
+  useEffect(() => {
+    subscribe((rowIndex, columnIndex) => {
+      gridRef.current?.scrollToItem({ rowIndex: 0, columnIndex: 0 })
+    })
+  }, [])
 
   const horizontalGutter = useMoreSpacing ? 16 : 8
   const verticalGutter = 6
