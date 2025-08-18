@@ -10,9 +10,13 @@ const MyLibrary: FC<{
 }> = ({ games, onSelect }) => {
   const [ref, dims] = useDimensions({ liveMeasure: true })
   const [windowHeight, setWindowHeight] = useState(0)
+  const [heightBottomOffset, setHeightBottomOffset] = useState<null | number>(
+    null,
+  )
   const [height, setHeight] = useState(0)
   const [windowWidth, setWindowWidth] = useState(0)
   const [width, setWidth] = useState(0)
+
   useEffect(() => {
     function resizeListener(evt: UIEvent) {
       setWindowHeight((evt.target as Window)?.document.body.offsetHeight)
@@ -27,11 +31,19 @@ const MyLibrary: FC<{
     }
   }, [])
   useEffect(() => {
+    if (heightBottomOffset !== null || windowHeight === 0 || !dims?.bottom) {
+      return
+    }
+    setHeightBottomOffset(windowHeight - dims.bottom)
+  }, [windowHeight, dims.bottom])
+  useEffect(() => {
+    if (!dims.y || !dims.x || !dims.right) {
+      return
+    }
     setHeight((windowHeight ?? 0) - dims.y)
     setWidth((windowWidth ?? 0) - dims.x - (windowWidth - dims.right))
   }, [dims.y, windowHeight, windowWidth, dims.x])
 
-  console.debug({ height, width }, dims, windowWidth)
   return (
     <Box
       ref={ref}
@@ -47,12 +59,14 @@ const MyLibrary: FC<{
         },
       })}
     >
-      <GameGrid
-        games={games}
-        height={height}
-        onSelect={onSelect}
-        width={width}
-      />
+      {height > 0 && width > 0 && heightBottomOffset !== null && (
+        <GameGrid
+          games={games}
+          height={height - heightBottomOffset}
+          onSelect={onSelect}
+          width={width}
+        />
+      )}
     </Box>
   )
 }
