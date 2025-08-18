@@ -287,11 +287,6 @@ export const syncLibrary: NonNullable<
   logger.debug(
     `Persisting ${_arg.libraryData.update.releases.length} release assets for library ${libraryId}`,
   )
-  await Promise.all(
-    _arg.libraryData.update.releases.map(async (release) => {
-      return _ctx.assets.persist(release)
-    }),
-  )
 
   // Releases
   const sources = await _ctx.db.source.findMany({
@@ -303,8 +298,7 @@ export const syncLibrary: NonNullable<
     select: { id: true, playniteId: true },
   })
 
-  // logger.debug(`Updated`, sources, completionStates, updatedTags, platforms)
-  const updatedReleases = await Promise.all(
+  const persistedCovers = await Promise.all(
     _arg.libraryData.update.releases
       .filter((release) => {
         return [sources.some((s) => s.playniteId === release.source)].every(
@@ -312,6 +306,18 @@ export const syncLibrary: NonNullable<
         )
       })
       .map(async (release) => {
+        return _ctx.assets.persist(release)
+      }),
+  )
+
+  const updatedReleases = await Promise.all(
+    _arg.libraryData.update.releases
+      .filter((release) => {
+        return [sources.some((s) => s.playniteId === release.source)].every(
+          Boolean,
+        )
+      })
+      .map(async (release, i) => {
         const source = sources.find((s) => s.playniteId === release.source) as {
           id: number
           platformId: number
@@ -341,7 +347,7 @@ export const syncLibrary: NonNullable<
               Cover: {
                 create: {
                   type: 'cover',
-                  ignId: ignSlug(release),
+                  ignId: persistedCovers[i] ? ignSlug(release) : null,
                 },
               },
               hidden: release.hidden ?? false,
@@ -390,6 +396,12 @@ export const syncLibrary: NonNullable<
               criticScore: release.criticScore,
               communityScore: release.communityScore,
               hidden: release.hidden ?? false,
+              Cover: {
+                update: {
+                  type: 'cover',
+                  ignId: persistedCovers[i] ? ignSlug(release) : null,
+                },
+              },
               ...(release.features && {
                 Features: {
                   set: release.features
@@ -496,7 +508,7 @@ export const syncLibrary: NonNullable<
       fields: [
         {
           key: 'platformPriority',
-          values: platforms.map((p) => create('Platform', p.id)),
+          values: platforms.map((p) => create('Platform', p.id).toString()),
         },
       ],
       source: _arg.libraryData.source,

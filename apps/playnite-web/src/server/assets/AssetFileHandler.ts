@@ -12,7 +12,7 @@ class AssetFileHandler implements IPersistAssets {
     private sourceAssets: ISourceAssets,
   ) {}
 
-  async persist(release: { title: string }): Promise<void> {
+  async persist(release: { title: string }): Promise<boolean> {
     await fs.mkdir(path.join(this.rootAssetPath, 'game-assets'), {
       recursive: true,
     })
@@ -21,14 +21,14 @@ class AssetFileHandler implements IPersistAssets {
     if (
       existsSync(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
     ) {
-      return
+      return true
     }
     logger.debug(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
 
     const imageSource = await this.sourceAssets.source(release)
     console.debug('Image source', imageSource ? 'found' : 'not found')
     if (!imageSource) {
-      return
+      return false
     }
 
     const [mimeType, imageData] = imageSource
@@ -40,6 +40,7 @@ class AssetFileHandler implements IPersistAssets {
       path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`),
       webp,
     )
+    return true
   }
 }
 

@@ -1,5 +1,5 @@
 interface IPersistAssets {
-  persist(asset: { title: string }): Promise<void>
+  persist(asset: { title: string }): Promise<boolean>
 }
 
 interface ISourceAssets {
