@@ -20,9 +20,9 @@ describe('User Library', () => {
     it(`Displays the total count of games in the library.`, () => {
       cy.wait('@graphql')
 
-      cy.contains('h2', 'My Games')
+      cy.contains('h1', 'My Games')
         .parent()
-        .find(':not(h2)')
+        .find(':not(h1)')
         .should('contains.text', '463')
     })
 
@@ -62,6 +62,7 @@ describe('User Library', () => {
         .eq(0)
         .within(() => {
           cy.get('button img').should('not.exist')
+          cy.get('button > div').should('be.visible')
 
           cy.contains('figcaption', '3DMark').should('be.visible')
           cy.get('[data-test="GameFigureChipList"]').within(() => {
@@ -73,7 +74,7 @@ describe('User Library', () => {
   })
 
   describe('Navigation', () => {
-    it(`Library centric navigation.
+    it.only(`Library centric navigation.
       - Link to view games in library.
       - Link to view playlists in library.
       - Link to go back to all user's libraries.
@@ -83,20 +84,21 @@ describe('User Library', () => {
 
       cy.get('[data-test="Navigation"]').within(() => {
         cy.get('[aria-label="Library navigation"]').within(() => {
-          cy.get('.MuiListItemText-root').then(($els) => {
-            expect($els).to.have.length(3)
-            expect($els.eq(0)).to.contain('Games')
-            expect($els.eq(1)).to.contain('Playlists')
-            expect($els.eq(2)).to.contain('Back to Libraries')
+          cy.get('[role="button"] > div').then(($els) => {
+            expect($els).to.have.length(2)
+            expect($els.eq(0)).to.have.attr('aria-label', 'Games')
+            expect($els.eq(1)).to.have.attr('aria-label', 'Back to Libraries')
           })
         })
 
         cy.get('[aria-label="Main navigation"]').within(() => {
-          cy.get('.MuiListItemText-root').then(($els) => {
-            expect($els).to.have.length.greaterThan(3)
-            expect($els.eq(0)).to.contain('Playnite Home')
-            expect($els.eq(1)).to.contain('Help')
-            expect($els.eq(2)).to.contain('Logout')
+          cy.get('[role="button"] > div').then(($els) => {
+            expect($els).to.have.length(2)
+            expect($els.eq(0)).to.have.attr(
+              'aria-label',
+              'Playnite Web Libraries',
+            )
+            expect($els.eq(1)).to.have.attr('aria-label', 'Sign Out')
           })
         })
       })

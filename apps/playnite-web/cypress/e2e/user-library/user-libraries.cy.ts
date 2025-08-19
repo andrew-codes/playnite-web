@@ -10,7 +10,7 @@ describe('User Libraries', () => {
     cy.visit('/u/test')
     cy.wait('@graphql')
 
-    cy.get('h2').contains('Libraries')
+    cy.get('h1').contains('Libraries')
     cy.contains('No libraries found for this user.')
     cy.contains('a', 'Sync your Library').should(
       'have.attr',
@@ -38,7 +38,7 @@ describe('User Libraries', () => {
     cy.visit('/u/test')
     cy.wait('@graphql')
 
-    cy.get('h2').contains('Libraries')
+    cy.get('h1').contains('Libraries')
     cy.contains('Game Room')
     cy.contains('Default Library')
 
@@ -69,9 +69,9 @@ describe('User Libraries', () => {
       cy.wait('@graphql')
 
       cy.get('[aria-label="Libraries navigation"]').within(() => {
-        cy.get('.MuiListItemText-root').then(($els) => {
-          expect($els.eq(0)).to.contain('My Libraries')
-          expect($els.eq(1)).to.contain('Sync Library')
+        cy.get('[role="button"] > div').then(($els) => {
+          expect($els.eq(0)).to.have.attr('aria-label', 'My Libraries')
+          expect($els.eq(1)).to.have.attr('aria-label', 'Sync Library')
         })
       })
     })
