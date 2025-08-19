@@ -145,7 +145,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
 
   return (
     <Details data-test="GameDetails">
-      <Typography variant="h4" data-test="Name">
+      <Typography variant="h3" data-test="Name">
         {game.primaryRelease?.title}
       </Typography>
 

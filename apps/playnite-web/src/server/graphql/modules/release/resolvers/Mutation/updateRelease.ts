@@ -98,18 +98,6 @@ export const updateRelease: NonNullable<
             },
           },
         }),
-        ...(source && {
-          Platform: {
-            connect: {
-              Library: {
-                User: {
-                  id: userId.id,
-                },
-              },
-              id: source.platformId,
-            },
-          },
-        }),
         ...(featureIds && {
           Features: {
             connect: featureIds.map((oid) => ({

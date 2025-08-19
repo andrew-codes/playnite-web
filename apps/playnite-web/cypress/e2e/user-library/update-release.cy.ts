@@ -25,9 +25,6 @@ describe('Update a release.', () => {
           query: `query library($id: String!) {
                     library(libraryId: $id) {
                       games {
-                        completionStatus {
-                          name
-                        }
                         primaryRelease {
                           id
                         }
@@ -88,11 +85,11 @@ describe('Update a release.', () => {
                         id
                       }
                       games {
-                        completionStatus {
-                          id
-                        }
                         primaryRelease {
                           id
+                          completionStatus {
+                            id
+                          }
                           source {
                             id
                           }
@@ -285,9 +282,6 @@ describe('Update a release.', () => {
                         id
                       }
                       games {
-                        completionStatus {
-                          id
-                        }
                         primaryRelease {
                           id
                           completionStatus {
@@ -309,14 +303,15 @@ describe('Update a release.', () => {
         }).then((response) => {
           const source = response.body.data.library.sources.find(
             (s) =>
-              s.id ===
+              s.id !==
               response.body.data.library.games[1].primaryRelease.source.id,
           )
           const completionStatus =
             response.body.data.library.completionStates.find(
               (cs) =>
-                cs.id ===
-                response.body.data.library.games[1].completionStatus.id,
+                cs.id !==
+                response.body.data.library.games[1].primaryRelease
+                  .completionStatus.id,
             )
           const features = response.body.data.library.features.filter(
             (f) =>
