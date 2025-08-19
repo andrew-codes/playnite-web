@@ -80,6 +80,18 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
       new UsernamePasswordCredential(_arg.input.username, _arg.input.password),
     )
 
+    const expires = new Date()
+    expires.setFullYear(expires.getFullYear() + 1)
+    _ctx.request.cookieStore?.set({
+      name: 'authorization',
+      sameSite: 'strict',
+      secure: true,
+      domain: _ctx.domain,
+      expires: expires,
+      value: authenticatedUser.credential,
+      httpOnly: true,
+    })
+
     return authenticatedUser
   } catch (error: any) {
     if (error?.meta?.target) {

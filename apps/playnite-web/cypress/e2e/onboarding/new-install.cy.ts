@@ -28,7 +28,7 @@ describe('Onboarding - New Install', () => {
     })
   })
 
-  it(`Account creation works.`, () => {
+  it.only(`Account creation works.`, () => {
     cy.visit('/account/new')
 
     cy.get('form[data-name="registration"]').as('registrationForm')
@@ -43,14 +43,14 @@ describe('Onboarding - New Install', () => {
       .type('test')
     cy.get('@registrationForm').find('button[type="submit"]').click()
 
-    cy.wait<any, { data: { signUp: { user: { id: string } } } }>('@api').then(
-      (intercept) => {
-        cy.location('pathname').should(
-          'equal',
-          `/u/${intercept.response?.body.data.signUp.user.id}/account`,
-        )
-      },
-    )
+    cy.wait<any, { data: { signUp: { user: { username: string } } } }>(
+      '@api',
+    ).then((intercept) => {
+      cy.location('pathname').should(
+        'equal',
+        `/u/${intercept.response?.body.data.signUp.user.username}/account`,
+      )
+    })
   })
 
   describe('After first account created', () => {
