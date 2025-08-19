@@ -3,6 +3,7 @@ import Permission from '../../../../../../auth/permissions.js'
 import { hashPassword } from '../../../../../auth/hashPassword.js'
 import { UsernamePasswordCredential } from '../../../../../auth/index.js'
 import { defaultSettings } from '../../../../../siteSettings.js'
+import { defaultSettings as defaultUserSettings } from '../../../../../userSettings.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const signUp: NonNullable<MutationResolvers['signUp']> = async (
@@ -73,6 +74,14 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
         name: _arg.input.name,
         password: hashPassword(_arg.input.password),
         permission: permission,
+        Settings: {
+          create: Object.entries(defaultUserSettings).map(([id, setting]) => ({
+            id,
+            name: setting.name,
+            value: setting.value,
+            dataType: setting.dataType,
+          })),
+        },
       },
     })
 

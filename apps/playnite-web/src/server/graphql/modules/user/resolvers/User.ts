@@ -25,4 +25,20 @@ export const User: UserResolvers = {
 
     return libraries
   },
+
+  settings: async (parent, _args, ctx) => {
+    if (!parent.id) {
+      return []
+    }
+
+    const settings = await ctx.db.userSetting.findMany({
+      where: {
+        User: {
+          id: parent.id,
+        },
+      },
+    })
+
+    return settings
+  },
 }

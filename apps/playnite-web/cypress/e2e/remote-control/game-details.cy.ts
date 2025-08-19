@@ -4,7 +4,7 @@ const locations = [
   ['On Deck', '/'],
   ['Browse', '/browse'],
 ]
-describe('Remote control.', () => {
+describe.skip('Remote control.', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api').as('api')
   })

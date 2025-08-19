@@ -12,6 +12,7 @@
     "**/*.jsx",
     "../src/server/siteSettings.ts",
     "../src/auth/*.ts",
-    "../src/server/auth/hashPassword.ts"
+    "../src/server/auth/hashPassword.ts",
+    "../src/server/userSettings.ts"
   ]
 }

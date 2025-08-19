@@ -1,4 +1,5 @@
 import { breakpoints } from 'support/breakpoints'
+import { defaultSettings as defaultUserSettings } from '../../src/server/userSettings'
 
 describe('Account Creation.', () => {
   beforeEach(() => {
@@ -67,7 +68,8 @@ describe('Account Creation.', () => {
       })
     })
 
-    it(`Account registration is allowed via API.`, () => {
+    it(`Account registration is allowed via API.
+        - User settings are initialized.`, () => {
       cy.request({
         method: 'POST',
         url: '/api',
@@ -99,12 +101,27 @@ describe('Account Creation.', () => {
             lookupUser(username: "new-user") {
               id
               username
+              settings {
+                id
+                name
+                value
+                dataType
+              }
             }
           }
         `,
       }).then((response) => {
         expect(response.status).to.equal(200)
         expect(response.body.data.lookupUser.username).to.equal('new-user')
+
+        Object.values(defaultUserSettings).forEach((setting, i) => {
+          expect(response.body.data.lookupUser.settings[i]).to.include({
+            id: setting.id,
+            name: setting.name,
+            value: setting.value,
+            dataType: setting.dataType,
+          })
+        })
       })
     })
 

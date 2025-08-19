@@ -33,6 +33,7 @@ type ClaimUser = Omit<GraphUser, 'id'> & {
 type GraphLibrary = Prisma.LibraryGetPayload<{}>
 
 type GraphSiteSetting = Prisma.SiteSettingsGetPayload<{}>
+type GraphUserSetting = Prisma.UserSettingGetPayload<{}>
 
 type GraphEntityUpdateDetails = {
   source: string
@@ -61,4 +62,5 @@ export type {
   GraphSource,
   GraphTag,
   GraphUser,
+  GraphUserSetting,
 }

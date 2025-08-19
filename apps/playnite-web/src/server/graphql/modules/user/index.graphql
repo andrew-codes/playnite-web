@@ -6,6 +6,14 @@ type User {
   credential: String
   permission: Int!
   libraries: [Library!]!
+  settings: [UserSetting!]!
+}
+type UserSetting {
+  id: String!
+  name: String!
+  value: String
+  dataType: String!
+  description: String!
 }
 
 extend type Query {

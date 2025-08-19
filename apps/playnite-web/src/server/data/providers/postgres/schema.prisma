@@ -21,6 +21,15 @@ model SiteSettings {
   dataType String
 }
 
+model UserSetting {
+  id       String  @id @unique
+  name     String  @unique
+  value    String?
+  dataType String
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   Int?
+}
+
 model User {
   id         Int       @id @default(autoincrement())
   email      String    @unique
@@ -31,6 +40,8 @@ model User {
   updatedAt  DateTime  @updatedAt
   Libraries  Library[]
   permission Int
+
+  Settings UserSetting[]
 
   @@index([email])
 }
