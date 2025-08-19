@@ -9,6 +9,7 @@ import MainNavigation from '../components/Navigation/MainNavigation'
 import SiteAdminNavigation from '../components/Navigation/SiteAdminNavigation'
 import { Setting } from '../components/Setting'
 import { useMe } from '../hooks/me'
+import { updateUserSettings } from '../hooks/updateUserSettings'
 import {
   requiresAuthorization,
   requiresSameUser,
@@ -22,10 +23,6 @@ const loader = requiresUserSetup(
 const Account = () => {
   const [{ data }, hasPermissions] = useMe()
 
-  if (!data) {
-    return null
-  }
-
   const navs: Array<ComponentType<{ open: boolean }>> = [
     LibrariesNavigation,
     MainNavigation,
@@ -36,6 +33,12 @@ const Account = () => {
   }
 
   const theme = useTheme()
+
+  const [saveSettings] = updateUserSettings()
+
+  if (!data) {
+    return null
+  }
 
   return (
     <Layout
@@ -49,7 +52,17 @@ const Account = () => {
       }
       navs={navs}
     >
-      <Form>
+      <Form
+        onSubmit={(evt) => {
+          evt.preventDefault()
+          const formData = new FormData(evt.currentTarget)
+          const settings: Array<{ id: string; value: string }> = []
+          for (const [key, value] of formData.entries()) {
+            settings.push({ id: key, value: value.toString() })
+          }
+          saveSettings({ variables: { settings } })
+        }}
+      >
         {data.me.settings.map((setting) => (
           <Setting key={setting.id} setting={setting} />
         ))}
@@ -62,12 +75,7 @@ const Account = () => {
             marginRight: `calc(400px + ${theme.spacing(2)}) !important`,
           }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            disabled={!hasPermissions(Permission.Write)}
-          >
+          <Button variant="contained" color="primary" type="submit">
             Save Changes
           </Button>
           <Button variant="contained" color="secondary" type="reset">

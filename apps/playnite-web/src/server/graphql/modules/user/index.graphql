@@ -30,6 +30,16 @@ input SignUpInput {
   passwordConfirmation: String!
 }
 
+input SaveSettingsInput {
+  settings: [UserSettingInput!]!
+}
+
+input UserSettingInput {
+  id: String!
+  value: String
+}
+
 extend type Mutation {
   signUp(input: SignUpInput): Claim!
+  updateUserSettings(input: SaveSettingsInput!): [UserSetting!]!
 }

@@ -75,7 +75,7 @@ const NavMenu: FC<{
             <ListItem
               key={i}
               disablePadding
-              sx={{ display: 'block', justifyItems: 'center' }}
+              sx={{ display: 'block', justifyItems: open ? 'start' : 'center' }}
             >
               <NavItem item={item} open={open} />
             </ListItem>

@@ -8,12 +8,16 @@ const Setting: FC<{ setting: UserSetting }> = ({ setting }) => {
     switch (setting.dataType) {
       case 'string':
         return (
-          <TextField sx={{ width: '100%' }} helperText={setting.helperText} />
+          <TextField
+            sx={{ width: '100%' }}
+            helperText={setting.helperText}
+            data-test={setting.id}
+          />
         )
       default:
         return <div></div>
     }
-  }, [setting.dataType, setting.helperText])
+  }, [setting.dataType, setting.helperText, setting.id])
 
   return (
     <Box

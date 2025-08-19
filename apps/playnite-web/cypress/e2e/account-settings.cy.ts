@@ -1,8 +1,12 @@
 import { breakpoints } from 'support/breakpoints'
+import { defaultSettings } from '../../src/server/userSettings'
 
 describe('Account Settings', () => {
   beforeEach(() => {
     cy.task('seedUsers')
+  })
+  beforeEach(() => {
+    cy.intercept('POST', '/api').as('graphql')
   })
 
   describe('Authorization', () => {
@@ -30,43 +34,76 @@ describe('Account Settings', () => {
         expect(interception?.response?.statusCode).to.equal(200)
       })
     })
+  })
 
-    describe('UI.', () => {
-      beforeEach(() => {
-        cy.signIn('test', 'test')
-      })
+  describe('UI.', () => {
+    beforeEach(() => {
+      cy.signIn('test', 'test')
+    })
 
-      Cypress._.each(breakpoints, ([name, x, y]) => {
-        describe(`at ${name} breakpoint.`, () => {
-          it(`Account settings.`, () => {
-            cy.viewport(x, y)
-            cy.visit('/u/test/account')
+    Cypress._.each(breakpoints, ([name, x, y]) => {
+      describe(`at ${name} breakpoint.`, () => {
+        it(`Account settings.`, () => {
+          cy.viewport(x, y)
+          cy.visit('/u/test/account')
 
-            cy.compareSnapshot({
-              name: `${name} Account Settings`,
-              cypressScreenshotOptions: {
-                onBeforeScreenshot($el) {
-                  $el
-                    .find('[data-test="Setting"] > div')
-                    .each((i, $setting) => {
-                      $setting.style.opacity = '0'
-                    })
-                },
+          cy.compareSnapshot({
+            name: `${name} Account Settings`,
+            cypressScreenshotOptions: {
+              onBeforeScreenshot($el) {
+                $el.find('[data-test="Setting"] > div').each((i, $setting) => {
+                  $setting.style.opacity = '0'
+                })
               },
-            })
+            },
           })
         })
       })
     })
+  })
 
-    describe('Change user settings.', () => {
-      beforeEach(() => {
-        cy.signIn('test', 'test')
-      })
+  it(`Reset/cancel saving settings.
+          - Changes are not persisted.`, () => {
+    cy.signIn('test', 'test')
+    cy.visit('/u/test/account')
 
-      it('Webhook URL setting', () => {
-        cy.visit('/u/test/account')
-      })
+    const settings = Cypress._.merge({}, defaultSettings)
+    settings.webhook.value = 'https://example.com/webhook'
+
+    Object.values(settings).forEach((setting) => {
+      cy.get(`[data-test="${setting.id}"]`).type(setting.value ?? '')
+    })
+
+    cy.contains('button', 'Cancel').click()
+    cy.reload()
+
+    Object.values(settings).forEach((setting) => {
+      cy.get(`[data-test="${setting.id}"]`).should('have.value', '')
+    })
+  })
+
+  it(`Change user settings.
+            - Settings can be changed and are persisted.
+            - Persisted settings load correctly on subsequent visits.`, () => {
+    cy.signIn('test', 'test')
+    cy.visit('/u/test/account')
+
+    const settings = Cypress._.merge({}, defaultSettings)
+    settings.webhook.value = 'https://example.com/webhook'
+
+    Object.values(settings).forEach((setting) => {
+      cy.get(`[data-test="${setting.id}"]`).type(setting.value ?? '')
+    })
+
+    cy.contains('button', 'Save Changes').click()
+    cy.wait('@graphql')
+    cy.reload()
+
+    Object.values(settings).forEach((setting) => {
+      cy.get(`[data-test="${setting.id}"] input`).should(
+        'have.value',
+        setting.value,
+      )
     })
   })
 })
