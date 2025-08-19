@@ -46,6 +46,7 @@ const NavItem: FC<{ item: NavItemProps; open: boolean }> = ({ item, open }) => {
     >
       {item.icon && (
         <ListItemIcon
+          aria-label={item.text}
           sx={{
             minWidth: 0,
             mr: open ? 2 : 0,

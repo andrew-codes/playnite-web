@@ -36,7 +36,7 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
             ? `/login?returnTo=${location.pathname}`
             : handleSignOut,
           icon: <AccountCircle />,
-          text: !me.data?.me.isAuthenticated ? 'Sign In' : 'Logout',
+          text: !me.data?.me.isAuthenticated ? 'Sign In' : 'Sign Out',
         },
       ]}
     />

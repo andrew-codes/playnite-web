@@ -19,6 +19,7 @@ declare global {
         options?: any,
         config?: any,
       ) => Chainable<any>
+      clickMenuItem: () => Chainable<JQuery<HTMLElement>>
     }
   }
 }
@@ -60,7 +61,10 @@ Cypress.on('window:before:load', (win) => {
 })
 
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
+  cy.intercept('GET', /.*emotion_cache\.js.*/).as('getJs')
   originalFn(url, options)
+  cy.wait('@getJs')
+  cy.wait(100)
 })
 
 Cypress.Commands.add('signIn', (username: string, password: string) => {
@@ -116,4 +120,13 @@ Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
 
 Cypress.Commands.add('signOut', () => {
   return cy.clearAllCookies()
+})
+
+Cypress.Commands.add('clickMenuItem', { prevSubject: true }, (subject) => {
+  return cy
+    .wrap(subject)
+    .parents('[role="button"]')
+    .trigger('touchstart')
+    .find('.MuiTouchRipple-root')
+    .click({ force: true })
 })

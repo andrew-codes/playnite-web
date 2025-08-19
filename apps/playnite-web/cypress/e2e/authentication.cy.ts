@@ -22,9 +22,8 @@ describe('Authentication', () => {
 - Authenticated users can immediately sign out.`, () => {
     cy.visit('/help/sync-library')
     cy.get('[data-test="Navigation"]')
-      .contains('span', 'Login')
-      .parents('[role=button]')
-      .click({ force: true })
+      .find('[aria-label="Sign In"]')
+      .clickMenuItem()
 
     cy.get('input[name="username"]').type('test')
     cy.get('input[name="password"]').type('test')
@@ -34,12 +33,11 @@ describe('Authentication', () => {
     cy.wait('@api')
 
     cy.get('[data-test="Navigation"]')
-      .contains('span', 'Logout')
-      .parents('[role=button]')
-      .click({ force: true, multiple: true })
+      .find('[aria-label="Sign Out"]')
+      .clickMenuItem()
     cy.wait('@api')
 
-    cy.get('[data-test="Navigation"]').contains('span', 'Login')
+    cy.get('[data-test="Navigation"]').find('[aria-label="Sign In"]')
   })
 
   Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
