@@ -1,12 +1,4 @@
-import {
-  Alert,
-  Button,
-  Container,
-  Snackbar,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Alert, Button, Snackbar, TextField, Typography } from '@mui/material'
 import { LoaderFunction, redirect } from '@remix-run/node'
 import { useLoaderData, useLocation, useNavigate } from '@remix-run/react'
 import { ComponentType, FormEventHandler, useEffect } from 'react'
@@ -75,67 +67,55 @@ const Registration = () => {
       navs={navs}
     >
       <Form data-name="registration" onSubmit={handleSubmit}>
-        <Container fixed>
-          <Stack
-            spacing={2}
-            justifyContent="center"
-            sx={(theme) => ({
-              [theme.breakpoints.between('lg', 'xl')]: {
-                margin: '0 24px 0 96px',
-              },
-            })}
-          >
-            <TextField
-              name="email"
-              label="Email"
-              variant="outlined"
-              autoComplete="email"
-            />
-            <TextField
-              name="username"
-              label="Username"
-              variant="outlined"
-              autoComplete="username"
-            />
-            <TextField
-              name="name"
-              type="text"
-              label="Name"
-              variant="outlined"
-              autoComplete="name"
-            />
-            <TextField
-              name="password"
-              type="password"
-              label="Password"
-              variant="outlined"
-              autoComplete="password"
-            />
-            <TextField
-              name="passwordConfirmation"
-              type="password"
-              label="Confirm Password"
-              variant="outlined"
-              autoComplete="password"
-            />
-            <Button variant="contained" type="submit">
-              Create Account
-            </Button>
-          </Stack>
-        </Container>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          open={!!error}
-          autoHideDuration={null}
-        >
-          <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
-            Failed to create account. Please try again.
-            <br />
-            <br />
-            {error?.message && ` ${error.message}`}
-          </Alert>
-        </Snackbar>
+        <TextField
+          name="email"
+          label="Email"
+          variant="outlined"
+          autoComplete="email"
+        />
+        <TextField
+          name="username"
+          label="Username"
+          variant="outlined"
+          autoComplete="username"
+        />
+        <TextField
+          name="name"
+          type="text"
+          label="Name"
+          variant="outlined"
+          autoComplete="name"
+        />
+        <TextField
+          name="password"
+          type="password"
+          label="Password"
+          variant="outlined"
+          autoComplete="password"
+        />
+        <TextField
+          name="passwordConfirmation"
+          type="password"
+          label="Confirm Password"
+          variant="outlined"
+          autoComplete="password"
+        />
+        <Button variant="contained" type="submit">
+          Create Account
+        </Button>
       </Form>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={!!error}
+        autoHideDuration={null}
+      >
+        <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
+          Failed to create account. Please try again.
+          <br />
+          <br />
+          {error?.message && ` ${error.message}`}
+        </Alert>
+      </Snackbar>
     </Layout>
   )
 }

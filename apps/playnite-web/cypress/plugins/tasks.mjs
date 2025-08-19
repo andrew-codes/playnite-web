@@ -2,13 +2,16 @@ import { PrismaClient } from '@prisma/client'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
 import Permission from '../../src/auth/permissions.js'
 import { defaultSettings } from '../../src/server/siteSettings.js'
+import { defaultSettings as defaultUserSettings } from '../../src/server/userSettings.js'
 import logger from 'dev-logger'
+import e from 'express'
 
 const tasks = (on, config) => {
   on('task', {
     async clearDatabase() {
       const prisma = new PrismaClient()
 
+      let e = null
       try {
         await prisma.$connect()
 
@@ -24,6 +27,7 @@ const tasks = (on, config) => {
         await prisma.playlist.deleteMany({})
         await prisma.library.deleteMany({})
         await prisma.user.deleteMany({})
+        await prisma.userSetting.deleteMany({})
         await prisma.siteSettings.deleteMany({})
 
         logger.info('Database cleared successfully!')
@@ -46,10 +50,13 @@ const tasks = (on, config) => {
           }),
         )
       } catch (error) {
+        e = error
         logger.error('Error clearing database:', error)
-        return error
       } finally {
         await prisma.$disconnect()
+      }
+      if (e) {
+        throw new Error('Error clearing database:', e)
       }
 
       return true
@@ -58,42 +65,68 @@ const tasks = (on, config) => {
     async seedUsers() {
       const prisma = new PrismaClient()
 
+      let e = null
       try {
         await prisma.$connect()
 
         // Seed data for all tables
-        await prisma.user.createMany({
-          data: [
-            {
-              username: 'test',
-              name: 'Test',
-              email: 'test@example.com',
-              password: hashPassword('test'),
-              permission: Permission.SiteAdmin,
+        await prisma.user.create({
+          data: {
+            username: 'test',
+            name: 'Test',
+            email: 'test@example.com',
+            password: hashPassword('test'),
+            permission: Permission.SiteAdmin,
+            Settings: {
+              create: Object.entries(defaultUserSettings).map(
+                ([id, setting]) => ({
+                  id,
+                  name: setting.name,
+                  value: setting.value,
+                  dataType: setting.dataType,
+                }),
+              ),
             },
-            {
-              username: 'jane',
-              name: 'Jane Smith',
-              email: 'jane@example.com',
-              password: hashPassword('jane'),
-              permission: Permission.Write,
+          },
+        })
+
+        prisma.user.create({
+          data: {
+            username: 'jane',
+            name: 'Jane Smith',
+            email: 'jane@example.com',
+            password: hashPassword('jane'),
+            permission: Permission.Write,
+            Settings: {
+              create: Object.entries(defaultUserSettings).map(
+                ([id, setting]) => ({
+                  id,
+                  name: setting.name,
+                  value: setting.value,
+                  dataType: setting.dataType,
+                }),
+              ),
             },
-          ],
+          },
         })
 
         logger.info('Database seeded successfully!')
       } catch (error) {
+        e = error
         logger.error('Error seeding database:', error)
       } finally {
         await prisma.$disconnect()
       }
 
+      if (e) {
+        throw new Error('Error seeding database:', e)
+      }
       return true
     },
 
     async setSiteSettings(settings) {
       const prisma = new PrismaClient()
-
+      let e = null
       try {
         await prisma.$connect()
         await Promise.all(
@@ -107,9 +140,13 @@ const tasks = (on, config) => {
 
         logger.info(`Site settings updated.`, settings)
       } catch (error) {
+        e = error
         logger.error('Error updating site settings:', error)
       } finally {
         await prisma.$disconnect()
+      }
+      if (e) {
+        throw new Error('Error updating site settings:', e)
       }
 
       return true

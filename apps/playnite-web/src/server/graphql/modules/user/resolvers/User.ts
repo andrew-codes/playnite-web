@@ -31,14 +31,10 @@ export const User: UserResolvers = {
       return []
     }
 
-    const settings = await ctx.db.userSetting.findMany({
+    return ctx.db.userSetting.findMany({
       where: {
-        User: {
-          id: parent.id,
-        },
+        userId: parent.id,
       },
     })
-
-    return settings
   },
 }

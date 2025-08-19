@@ -8,5 +8,14 @@ export const UserSetting: UserSettingResolvers = {
         (setting) => setting.name === parent.name,
       )?.description || ''
     )
+      .split('\n')
+      .join('<br />')
+  },
+  helperText: async (parent) => {
+    return (
+      Object.values(defaultSettings).find(
+        (setting) => setting.name === parent.name,
+      )?.helperText || ''
+    )
   },
 }

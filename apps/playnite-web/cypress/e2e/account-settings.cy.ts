@@ -1,3 +1,5 @@
+import { breakpoints } from 'support/breakpoints'
+
 describe('Account Settings', () => {
   beforeEach(() => {
     cy.task('seedUsers')
@@ -26,6 +28,44 @@ describe('Account Settings', () => {
 
       cy.wait('@testAccount').then((interception) => {
         expect(interception?.response?.statusCode).to.equal(200)
+      })
+    })
+
+    describe('UI.', () => {
+      beforeEach(() => {
+        cy.signIn('test', 'test')
+      })
+
+      Cypress._.each(breakpoints, ([name, x, y]) => {
+        describe(`at ${name} breakpoint.`, () => {
+          it(`Account settings.`, () => {
+            cy.viewport(x, y)
+            cy.visit('/u/test/account')
+
+            cy.compareSnapshot({
+              name: `${name} Account Settings`,
+              cypressScreenshotOptions: {
+                onBeforeScreenshot($el) {
+                  $el
+                    .find('[data-test="Setting"] > div')
+                    .each((i, $setting) => {
+                      $setting.style.opacity = '0'
+                    })
+                },
+              },
+            })
+          })
+        })
+      })
+    })
+
+    describe('Change user settings.', () => {
+      beforeEach(() => {
+        cy.signIn('test', 'test')
+      })
+
+      it('Webhook URL setting', () => {
+        cy.visit('/u/test/account')
       })
     })
   })

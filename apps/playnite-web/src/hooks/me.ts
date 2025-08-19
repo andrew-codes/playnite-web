@@ -8,9 +8,18 @@ const Me = gql`
   query Me {
     me {
       username
+      permission
       isAuthenticated
       libraries {
         id
+      }
+      settings {
+        id
+        name
+        value
+        description
+        helperText
+        dataType
       }
     }
   }

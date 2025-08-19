@@ -2,7 +2,6 @@ import {
   Alert,
   Button,
   Checkbox,
-  Container,
   FormControlLabel,
   Snackbar,
   Stack,
@@ -60,48 +59,36 @@ const LoginForm = () => {
       navs={[MainNavigation]}
     >
       <Form onSubmit={handleSubmit}>
-        <Container fixed>
-          <Stack
-            spacing={2}
-            justifyContent="center"
-            sx={(theme) => ({
-              [theme.breakpoints.between('lg', 'xl')]: {
-                margin: '0 24px',
-              },
-            })}
-          >
-            <TextField
-              name="username"
-              label="Username"
-              variant="outlined"
-              autoComplete="username"
-            />
-            <TextField
-              name="password"
-              type="password"
-              label="Password"
-              variant="outlined"
-              autoComplete="password"
-            />
-            <FormControlLabel
-              control={<Checkbox name="rememberMe" size="medium" />}
-              label="Remember Me"
-            />
-            <Button variant="contained" type="submit">
-              Sign In
-            </Button>
-          </Stack>
-        </Container>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          open={!!error}
-          autoHideDuration={6000}
-        >
-          <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
-            Failed to authenticate. Please try again.
-          </Alert>
-        </Snackbar>
+        <TextField
+          name="username"
+          label="Username"
+          variant="outlined"
+          autoComplete="username"
+        />
+        <TextField
+          name="password"
+          type="password"
+          label="Password"
+          variant="outlined"
+          autoComplete="password"
+        />
+        <FormControlLabel
+          control={<Checkbox name="rememberMe" size="medium" />}
+          label="Remember Me"
+        />
+        <Button variant="contained" type="submit">
+          Sign In
+        </Button>
       </Form>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={!!error}
+        autoHideDuration={6000}
+      >
+        <Alert severity="error" variant="filled" sx={{ width: '100%' }}>
+          Failed to authenticate. Please try again.
+        </Alert>
+      </Snackbar>
     </Layout>
   )
 }

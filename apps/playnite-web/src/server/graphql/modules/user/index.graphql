@@ -13,6 +13,7 @@ type UserSetting {
   name: String!
   value: String
   dataType: String!
+  helperText: String!
   description: String!
 }
 
