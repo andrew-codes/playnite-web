@@ -247,6 +247,7 @@ describe('Account Creation.', () => {
         ]
 
         invalidCharacters.forEach((char, index) => {
+          cy.log(`Testing invalid characters for username: ${char}`)
           cy.request({
             method: 'POST',
             url: 'http://localhost:3000/api',
@@ -278,32 +279,26 @@ describe('Account Creation.', () => {
               'Username must use alphanumeric and "-" characters only.',
             )
           })
-
-          cy.intercept('POST', 'http://localhost:3000/api').as('signUp')
-          cy.visit('/account/new')
-          cy.get('form[data-name="registration"]').as('registrationForm')
-          cy.get('@registrationForm')
-            .find('input[name="email"]')
-            .type(`test${index}@example.com`)
-          cy.get('@registrationForm')
-            .find('input[name="username"]')
-            .type(`test${char}`)
-          cy.get('@registrationForm')
-            .find('input[name="name"]')
-            .type('Test User')
-          cy.get('@registrationForm')
-            .find('input[name="password"]')
-            .type('test')
-          cy.get('@registrationForm')
-            .find('input[name="passwordConfirmation"]')
-            .type('test')
-          cy.get('@registrationForm').find('button[type="submit"]').click()
-          cy.wait('@signUp')
-
-          cy.get('.MuiSnackbar-root').contains(
-            'Username must use alphanumeric and "-" characters only.',
-          )
         })
+
+        cy.intercept('POST', 'http://localhost:3000/api').as('signUp')
+        cy.visit('/account/new')
+        cy.get('form[data-name="registration"]').as('registrationForm')
+        cy.get('@registrationForm')
+          .find('input[name="email"]')
+          .type(`test@example.com`)
+        cy.get('@registrationForm').find('input[name="username"]').type(`test@`)
+        cy.get('@registrationForm').find('input[name="name"]').type('Test User')
+        cy.get('@registrationForm').find('input[name="password"]').type('test')
+        cy.get('@registrationForm')
+          .find('input[name="passwordConfirmation"]')
+          .type('test')
+        cy.get('@registrationForm').find('button[type="submit"]').click()
+        cy.wait('@signUp')
+
+        cy.get('.MuiSnackbar-root').contains(
+          'Username must use alphanumeric and "-" characters only.',
+        )
       })
     })
 
