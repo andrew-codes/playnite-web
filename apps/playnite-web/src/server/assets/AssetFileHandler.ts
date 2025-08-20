@@ -26,7 +26,6 @@ class AssetFileHandler implements IPersistAssets {
     logger.debug(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
 
     const imageSource = await this.sourceAssets.source(release)
-    console.debug('Image source', imageSource ? 'found' : 'not found')
     if (!imageSource) {
       return false
     }
