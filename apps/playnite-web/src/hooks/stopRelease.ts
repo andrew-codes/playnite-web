@@ -2,11 +2,10 @@ import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import { Release } from '../../.generated/types.generated'
 import { GameByIdQuery } from './gameById'
-import { AllPlaylists } from './playlists'
 
-const Stop_Game_Release_Mutation = gql`
-  mutation stopGameRelease($releaseId: String!) {
-    stopGameRelease(releaseId: $releaseId) {
+const StopReleaseMutation = gql`
+  mutation stopRelease($id: String!) {
+    stopRelease(id: $id) {
       id
       game {
         id
@@ -16,46 +15,19 @@ const Stop_Game_Release_Mutation = gql`
 `
 
 const useStopRelease = () => {
-  return useMutation<{ stopGameRelease: Release }>(Stop_Game_Release_Mutation, {
+  return useMutation<{ stopRelease: Release }>(StopReleaseMutation, {
     update: (cache, mutationResult) => {
-      cache.updateQuery({ query: AllPlaylists }, (data) => {
-        return {
-          ...data,
-          playlists: data?.playlists.map((playlist) => {
-            return {
-              ...playlist,
-              games: playlist.games.map((game) => {
-                return {
-                  ...game,
-                  releases: game.releases.map((release) => {
-                    if (
-                      release.id === mutationResult.data?.stopGameRelease.id
-                    ) {
-                      return {
-                        ...release,
-                        runState: 'installed',
-                      }
-                    }
-
-                    return release
-                  }),
-                }
-              }),
-            }
-          }),
-        }
-      })
       cache.updateQuery(
         {
           query: GameByIdQuery,
-          variables: { id: mutationResult.data?.stopGameRelease.game.id },
+          variables: { id: mutationResult.data?.stopRelease.game.id },
         },
         (data) => ({
           ...data,
           game: {
             ...data?.game,
             releases: data?.game.releases.map((release) => {
-              if (release.id === mutationResult.data?.stopGameRelease.id) {
+              if (release.id === mutationResult.data?.stopRelease.id) {
                 return {
                   ...release,
                   runState: 'installed',
@@ -70,4 +42,4 @@ const useStopRelease = () => {
     },
   })
 }
-export { Stop_Game_Release_Mutation, useStopRelease }
+export { StopReleaseMutation, useStopRelease }

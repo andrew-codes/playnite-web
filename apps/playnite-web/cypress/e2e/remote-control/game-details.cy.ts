@@ -74,7 +74,7 @@ describe(`Game details remote control.
       it(`Play button.
           - Is visible.
           - Buttons to play on each source of the game.
-          - Graph mutation.
+          - Graph mutation posts to webhook.
           - Playing triggers restart and stop buttons to appear.`, () => {
         cy.contains("Assassin's Creed Odyssey")
           .parents('[data-test=GameFigure]')
@@ -111,7 +111,7 @@ describe(`Game details remote control.
           cy.log(JSON.stringify(log, null, 2))
           cy.get('[data-test="Actions"] button').then(($btn) => {
             const event = log[0].body
-            expect(event.type).to.equal('ReleaseStarted')
+            expect(event.type).to.equal('StartReleaseRequested')
             expect(event.payload).to.nested.include({
               coverUrl:
                 'https://localhost:3000/public/game-assets/assassins-creed-odyssey.webp',
@@ -131,6 +131,115 @@ describe(`Game details remote control.
           .eq(1)
           .contains('button', 'Restart game')
         cy.get('[data-test="Actions"] li').eq(2).contains('button', 'Stop game')
+      })
+
+      it(`Stop button.
+          - Is visible for a starting or started game.
+          - Graph mutation posts to webhook.
+          - Stop and restart buttons disappear.`, () => {
+        cy.contains("Assassin's Creed Odyssey")
+          .parents('[data-test=GameFigure]')
+          .find('button img')
+          .click({ force: true })
+
+        cy.get('[data-test="Actions"] button')
+          .eq(0)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] button').last().click()
+
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+          .click()
+
+        cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('button', 'Stop game')
+          .click()
+        cy.get('[data-test="Actions"] li').should('have.length', 1)
+        cy.wait(300)
+
+        cy.task<Array<any>>('readRequestLog').then((log) => {
+          cy.log(JSON.stringify(log, null, 2))
+          cy.get('[data-test="Actions"] button').then(($btn) => {
+            const event = log[1].body
+            expect(event.type).to.equal('StopReleaseRequested')
+            expect(event.payload).to.nested.include({
+              coverUrl:
+                'https://localhost:3000/public/game-assets/assassins-creed-odyssey.webp',
+              id: $btn.data('release-id'),
+              title: "Assassin's Creed Odyssey",
+              'library.name': 'Game Room',
+              'platform.name': 'Sony PlayStation 5',
+              'source.name': 'PlayStation',
+            })
+            expect(event.payload.library.id).to.match(/Library:\d+/)
+            expect(event.payload.platform.id).to.match(/Platform:\d+/)
+            expect(event.payload.source.id).to.match(/Source:\d+/)
+          })
+        })
+      })
+
+      it(`Restart button.
+          - Is visible for a starting or started game.
+          - Graph mutation posts to webhook.
+          - All controls remain visible.`, () => {
+        cy.contains("Assassin's Creed Odyssey")
+          .parents('[data-test=GameFigure]')
+          .find('button img')
+          .click({ force: true })
+
+        cy.get('[data-test="Actions"] button')
+          .eq(0)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] button').last().click()
+
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+          .click()
+
+        cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('button', 'Restart game')
+          .click()
+        cy.wait(300)
+
+        cy.task<Array<any>>('readRequestLog').then((log) => {
+          cy.log(JSON.stringify(log, null, 2))
+          cy.get('[data-test="Actions"] button').then(($btn) => {
+            const event = log[1].body
+            expect(event.type).to.equal('RestartReleaseRequested')
+            expect(event.payload).to.nested.include({
+              coverUrl:
+                'https://localhost:3000/public/game-assets/assassins-creed-odyssey.webp',
+              id: $btn.data('release-id'),
+              title: "Assassin's Creed Odyssey",
+              'library.name': 'Game Room',
+              'platform.name': 'Sony PlayStation 5',
+              'source.name': 'PlayStation',
+            })
+            expect(event.payload.library.id).to.match(/Library:\d+/)
+            expect(event.payload.platform.id).to.match(/Platform:\d+/)
+            expect(event.payload.source.id).to.match(/Source:\d+/)
+          })
+        })
       })
     })
 

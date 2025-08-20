@@ -56,7 +56,7 @@ export const startRelease: NonNullable<
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        type: 'ReleaseStarted',
+        type: 'StartReleaseRequested',
         payload: {
           id: create('Release', release.id),
           title: release.title,

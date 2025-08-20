@@ -238,7 +238,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                     color="secondary"
                     onClick={(evt) =>
                       restartRelease({
-                        variables: { releaseId: releases[selectedIndex].id },
+                        variables: { id: releases[selectedIndex].id },
                       })
                     }
                   >{`Restart game`}</Button>
@@ -249,7 +249,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                     color="secondary"
                     onClick={(evt) =>
                       stopRelease({
-                        variables: { releaseId: releases[selectedIndex].id },
+                        variables: { id: releases[selectedIndex].id },
                       })
                     }
                   >{`Stop game`}</Button>
