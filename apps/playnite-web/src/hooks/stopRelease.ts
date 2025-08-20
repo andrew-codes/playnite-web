@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import { Release } from '../../.generated/types.generated'
-import { Game_By_Id_Query } from './gameById'
+import { GameByIdQuery } from './gameById'
 import { AllPlaylists } from './playlists'
 
 const Stop_Game_Release_Mutation = gql`
@@ -47,7 +47,7 @@ const useStopRelease = () => {
       })
       cache.updateQuery(
         {
-          query: Game_By_Id_Query,
+          query: GameByIdQuery,
           variables: { id: mutationResult.data?.stopGameRelease.game.id },
         },
         (data) => ({

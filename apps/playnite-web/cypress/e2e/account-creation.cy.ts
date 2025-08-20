@@ -319,7 +319,7 @@ describe('Account Creation.', () => {
       })
     })
 
-    describe('UX', () => {
+    describe('UI', () => {
       Cypress._.each(breakpoints, ([name, x, y]) => {
         describe(`at ${name} breakpoint`, () => {
           it(`displays the registration form correctly`, () => {

@@ -7,7 +7,7 @@ import { Game } from '../../.generated/types.generated'
 import { useSubscribeEntityUpdates } from './subscribeEntityUpdates'
 import { useSubscribeLibrarySync } from './subscribeLibrarySync'
 
-const Game_By_Id_Query = gql`
+const GameByIdQuery = gql`
   query game($id: String!) {
     game(id: $id) {
       id
@@ -15,6 +15,7 @@ const Game_By_Id_Query = gql`
         id
       }
       primaryRelease {
+        id
         title
         description
         cover
@@ -23,6 +24,8 @@ const Game_By_Id_Query = gql`
         }
       }
       releases {
+        id
+        runState
         platform {
           id
           name
@@ -41,7 +44,7 @@ const useGameById = (
   opts?: Omit<QueryHookOptions, 'variables'>,
 ) => {
   const q = useQuery<{ game: Game }>(
-    Game_By_Id_Query,
+    GameByIdQuery,
     merge({}, opts, {
       variables: {
         id: id ?? '',
@@ -84,4 +87,4 @@ const useGameById = (
   return q
 }
 
-export { Game_By_Id_Query, useGameById }
+export { GameByIdQuery, useGameById }

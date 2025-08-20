@@ -1,12 +1,12 @@
 import { gql } from '@apollo/client/core/core.cjs'
 import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
 import { Release } from '../../.generated/types.generated'
-import { Game_By_Id_Query } from './gameById'
-import { AllPlaylists } from './playlists'
+import { runState } from '../api/client/runStates'
+import { GameByIdQuery } from './gameById'
 
-const Activate_Mutation = gql`
-  mutation startGameRelease($releaseId: String!) {
-    startGameRelease(releaseId: $releaseId) {
+const StartReleaseMutation = gql`
+  mutation startRelease($id: String!) {
+    startRelease(id: $id) {
       id
       game {
         id
@@ -16,38 +16,12 @@ const Activate_Mutation = gql`
 `
 
 const useStartRelease = () => {
-  return useMutation<{ startGameRelease: Release }>(Activate_Mutation, {
+  return useMutation<{ startRelease: Release }>(StartReleaseMutation, {
     update(cache, mutationResult) {
-      cache.updateQuery({ query: AllPlaylists }, (data) => {
-        return {
-          ...data,
-          playlists: data?.playlists.map((playlist) => {
-            return {
-              ...playlist,
-              games: playlist.games.map((game) => {
-                return {
-                  ...game,
-                  releases: game.releases.map((release) => {
-                    if (
-                      release.id === mutationResult.data?.startGameRelease.id
-                    ) {
-                      return {
-                        ...release,
-                        runState: 'running',
-                      }
-                    }
-                    return release
-                  }),
-                }
-              }),
-            }
-          }),
-        }
-      })
       cache.updateQuery(
         {
-          query: Game_By_Id_Query,
-          variables: { id: mutationResult?.data?.startGameRelease.game.id },
+          query: GameByIdQuery,
+          variables: { id: mutationResult?.data?.startRelease.game.id },
         },
         (data) => {
           return {
@@ -55,10 +29,10 @@ const useStartRelease = () => {
             game: {
               ...data?.game,
               releases: data?.game.releases.map((release) => {
-                if (release.id === mutationResult.data?.startGameRelease.id) {
+                if (release.id === mutationResult.data?.startRelease.id) {
                   return {
                     ...release,
-                    runState: 'running',
+                    runState: runState.starting,
                   }
                 }
                 return release
@@ -70,4 +44,4 @@ const useStartRelease = () => {
     },
   })
 }
-export { Activate_Mutation, useStartRelease }
+export { StartReleaseMutation as Activate_Mutation, useStartRelease }

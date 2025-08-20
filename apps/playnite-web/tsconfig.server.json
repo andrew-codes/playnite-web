@@ -7,7 +7,8 @@
   "include": [
     "src/server/**/*.ts",
     ".generated/**/*.*",
-    "src/auth/permissions.ts"
+    "src/auth/permissions.ts",
+    "src/api/client/runStates.ts"
   ],
   "exclude": ["**/__tests__/**", "**/__component_tests__/**", "node_modules"]
 }

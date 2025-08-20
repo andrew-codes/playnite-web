@@ -18,6 +18,7 @@ import { useMe } from '../hooks/me'
 import { useRestartRelease } from '../hooks/restartRelease'
 import { useStartRelease } from '../hooks/startRelease'
 import { useStopRelease } from '../hooks/stopRelease'
+import { defaultSettings as defaultUserSettings } from '../server/userSettings'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -109,6 +110,9 @@ const sortReleasesByPreferredPlatform = (
 
 const GameDetails: FC<{ game: Game }> = ({ game }) => {
   const [{ data }] = useMe()
+  const hasWebhookSetting = !!data?.me.settings.find(
+    (s) => s.name === defaultUserSettings.webhook.name,
+  )?.value
 
   const releases = useMemo(
     () => sortReleasesByPreferredPlatform(game.releases),
@@ -144,13 +148,13 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
   }
 
   return (
-    <Details data-test="GameDetails">
+    <Details data-test="GameDetails" data-release-id={game.primaryRelease?.id}>
       <Typography variant="h3" data-test="Name">
         {game.primaryRelease?.title}
       </Typography>
 
-      <Actions ref={platformsAnchorEl}>
-        {data?.me.isAuthenticated && (
+      <Actions ref={platformsAnchorEl} data-test="Actions">
+        {data?.me.isAuthenticated && hasWebhookSetting && (
           <>
             <Action>
               <ButtonGroup
@@ -164,7 +168,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                   onClick={(evt) => {
                     startRelease({
                       variables: {
-                        releaseId: releases[selectedIndex].id,
+                        id: releases[selectedIndex].id,
                       },
                     })
                   }}
@@ -224,7 +228,9 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                 )}
               </Popper>
             </Action>
-            {releases.some((r) => false) && (
+            {releases.some(
+              (r) => r.runState === 'starting' || r.runState === 'started',
+            ) && (
               <>
                 <Action>
                   <Button

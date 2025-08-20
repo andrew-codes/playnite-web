@@ -4,7 +4,6 @@ import Permission from '../../src/auth/permissions.js'
 import { defaultSettings } from '../../src/server/siteSettings.js'
 import { defaultSettings as defaultUserSettings } from '../../src/server/userSettings.js'
 import logger from 'dev-logger'
-import e from 'express'
 
 const tasks = (on, config) => {
   on('task', {
@@ -26,8 +25,8 @@ const tasks = (on, config) => {
         await prisma.tag.deleteMany({})
         await prisma.playlist.deleteMany({})
         await prisma.library.deleteMany({})
-        await prisma.user.deleteMany({})
         await prisma.userSetting.deleteMany({})
+        await prisma.user.deleteMany({})
         await prisma.siteSettings.deleteMany({})
 
         logger.info('Database cleared successfully!')
@@ -69,7 +68,6 @@ const tasks = (on, config) => {
       try {
         await prisma.$connect()
 
-        // Seed data for all tables
         await prisma.user.create({
           data: {
             username: 'test',
@@ -80,7 +78,6 @@ const tasks = (on, config) => {
             Settings: {
               create: Object.entries(defaultUserSettings).map(
                 ([id, setting]) => ({
-                  id,
                   name: setting.name,
                   value: setting.value,
                   dataType: setting.dataType,
@@ -90,7 +87,7 @@ const tasks = (on, config) => {
           },
         })
 
-        prisma.user.create({
+        await prisma.user.create({
           data: {
             username: 'jane',
             name: 'Jane Smith',
@@ -100,7 +97,6 @@ const tasks = (on, config) => {
             Settings: {
               create: Object.entries(defaultUserSettings).map(
                 ([id, setting]) => ({
-                  id,
                   name: setting.name,
                   value: setting.value,
                   dataType: setting.dataType,
@@ -150,6 +146,48 @@ const tasks = (on, config) => {
       }
 
       return true
+    },
+
+    async setUserSettings({ username, settings }) {
+      const prisma = new PrismaClient()
+      let e = null
+      let results = []
+      try {
+        await prisma.$connect()
+
+        const user = await prisma.user.findUnique({
+          where: { username },
+          select: { id: true },
+        })
+
+        results = await Promise.all(
+          Object.entries(settings).map(async ([code, value]) => {
+            const name = defaultUserSettings[code]?.name || code
+
+            return await prisma.userSetting.update({
+              where: {
+                userId_name: {
+                  userId: user.id,
+                  name,
+                },
+              },
+              data: { value: value.toString() },
+            })
+          }),
+        )
+
+        logger.info(`Site settings updated.`, settings)
+      } catch (error) {
+        e = error
+        logger.error('Error updating site settings:', error)
+      } finally {
+        await prisma.$disconnect()
+      }
+      if (e) {
+        throw new Error('Error updating site settings:', e)
+      }
+
+      return results
     },
   })
 

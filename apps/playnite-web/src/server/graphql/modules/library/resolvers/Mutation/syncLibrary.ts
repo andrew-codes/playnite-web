@@ -1,4 +1,5 @@
 import { groupBy } from 'lodash-es'
+import { runState } from '../../../../../../api/client/runStates.js'
 import { ignSlug } from '../../../../../assets/ignSlug.js'
 import logger from '../../../../../logger.js'
 import { create, domains, hasIdentity } from '../../../../../oid.js'
@@ -341,6 +342,7 @@ export const syncLibrary: NonNullable<
               criticScore: release.criticScore,
               playtime: BigInt(release.playtime ?? '0'),
               communityScore: release.communityScore,
+              runState: runState.stopped,
               Library: {
                 connect: { id: libraryId },
               },

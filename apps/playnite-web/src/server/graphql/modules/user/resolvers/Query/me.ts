@@ -1,3 +1,4 @@
+import { merge, omit } from 'lodash-es'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
 import logger from '../../../../../logger.js'
 import { fromString, hasIdentity } from '../../../../../oid.js'
@@ -28,5 +29,11 @@ export const me: NonNullable<QueryResolvers['me']> = async (
     }
   }
 
-  return _ctx.db.user.findUniqueOrThrow({ where: { id: userId.id } })
+  return merge(
+    {},
+    _ctx.jwt.payload,
+    omit(await _ctx.db.user.findUniqueOrThrow({ where: { id: userId.id } }), [
+      'password',
+    ]),
+  )
 }

@@ -16,6 +16,7 @@ type Release {
   source: Source!
   title: String!
   tags: [Tag!]!
+  runState: String!
 }
 
 input ReleaseInput {
@@ -32,8 +33,12 @@ input ReleaseInput {
   source: String
   tags: [String!]
   playtime: String
+  runState: String
 }
 
 extend type Mutation {
   updateRelease(release: ReleaseInput!): Release!
+  startRelease(id: String!): Release!
+  restartRelease(id: String!): Release!
+  stopRelease(id: String!): Release!
 }

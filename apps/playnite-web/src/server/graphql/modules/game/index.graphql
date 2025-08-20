@@ -20,12 +20,3 @@ extend type Query {
   game(id: String!): Game
   games(libraryId: String!, filter: Filter): [Game!]!
 }
-
-# input UpdateGameInput {
-#   description: String
-#   completionStatusId: String
-# }
-
-# extend type Mutation {
-#   updateGame(id: String!, input: UpdateGameInput!): BooleanMutationResult!
-# }

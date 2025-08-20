@@ -42,7 +42,7 @@ class IdentityService {
         throw new Error(`Authentication failed.`)
       }
 
-      const scrubbedUser: Omit<User, 'libraries'> = merge(
+      const scrubbedUser: Omit<User, 'libraries' | 'settings'> = merge(
         {},
         omit(matchedUser, 'password'),
         {

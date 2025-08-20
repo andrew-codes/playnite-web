@@ -22,12 +22,14 @@ model SiteSettings {
 }
 
 model UserSetting {
-  id       String  @id @unique
-  name     String  @unique
+  id       Int     @id @default(autoincrement())
+  name     String
   value    String?
   dataType String
-  User     User?   @relation(fields: [userId], references: [id])
-  userId   Int?
+  User     User    @relation(fields: [userId], references: [id])
+  userId   Int
+
+  @@unique([userId, name])
 }
 
 model User {
@@ -89,6 +91,7 @@ model Release {
   completionStatusId Int?
   playniteId         String?
   playtime           BigInt?   @default(0)
+  runState           String
 
   Library          Library           @relation(fields: [libraryId], references: [id])
   Cover            Asset             @relation(fields: [coverId], references: [id])
