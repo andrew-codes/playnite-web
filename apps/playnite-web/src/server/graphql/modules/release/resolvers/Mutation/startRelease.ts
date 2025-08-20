@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { fromString, hasIdentity } from '../../../../../oid'
+import { create, fromString, hasIdentity } from '../../../../../oid'
 import { defaultSettings as defaultUserSettings } from '../../../../../userSettings'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
@@ -33,7 +33,7 @@ export const startRelease: NonNullable<
     },
   })
 
-  const webhookSetting = _ctx.db.userSetting.findUniqueOrThrow({
+  const webhookSetting = await _ctx.db.userSetting.findUniqueOrThrow({
     where: {
       userId_name: {
         name: defaultUserSettings.webhook.name,
@@ -52,16 +52,31 @@ export const startRelease: NonNullable<
 
     await fetch(webhookSetting.value, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         type: 'ReleaseStarted',
         payload: {
-          id: release.id,
+          id: create('Release', release.id),
           title: release.title,
           playniteId: release.PlayniteId,
           coverUrl: `https://${domain}:${port}/public/game-assets/${release.Cover.ignId}.webp`,
-          library: release.Library,
-          platform: release.Source.Platform,
-          source: release.Source,
+          library: {
+            id: create('Library', release.Library.id),
+            name: release.Library.name,
+            playniteId: release.Library.PlayniteId,
+          },
+          platform: {
+            id: create('Platform', release.Source.Platform.id),
+            name: release.Source.Platform.name,
+            playniteId: release.Source.Platform.PlayniteId,
+          },
+          source: {
+            id: create('Source', release.Source.id),
+            name: release.Source.name,
+            playniteId: release.Source.PlayniteId,
+          },
         },
       }),
     })

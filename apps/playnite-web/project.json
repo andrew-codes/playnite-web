@@ -194,6 +194,7 @@
           "START_SERVER_AND_TEST_INSECURE": "1",
           "LOG_LEVEL": "silly",
           "NODE_ENV": "development",
+          "TEST": "e2e",
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222"
         }
       }

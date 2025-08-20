@@ -32,6 +32,7 @@ runCp = sh.exec(`yarn nyc node server.js`, {
   shell: '/bin/bash',
   env: {
     ...process.env,
+    TEST: 'e2e',
     NODE_ENV: 'production',
   },
   async: true,

@@ -110,6 +110,18 @@ async function run() {
     })
   }
 
+  if (process.env.TEST === 'e2e') {
+    app.use(express.json())
+    app.use(express.urlencoded({ extended: true }))
+    app.use(express.text())
+    app.use(express.raw())
+    app.post('/echo', (req, resp) => {
+      const body = req.body
+      logger.e2e('Request received', { body })
+      resp.send(body)
+    })
+  }
+
   const build = viteDevServer
     ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
     : await import(path.join(__dirname, 'index.js'))

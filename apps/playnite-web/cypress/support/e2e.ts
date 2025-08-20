@@ -44,6 +44,10 @@ beforeEach(() => {
   cy.task('clearDatabase')
 })
 
+beforeEach(() => {
+  cy.task('clearRequestLog')
+})
+
 Cypress.on('window:before:load', (win) => {
   const doc = win.document
   // If it's not already the first child, make it so:

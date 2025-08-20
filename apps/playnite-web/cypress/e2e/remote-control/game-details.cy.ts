@@ -55,7 +55,7 @@ describe(`Game details remote control.
         cy.task('setUserSettings', {
           username: 'test',
           settings: {
-            webhook: 'https://localhost',
+            webhook: 'http://localhost:3000/echo',
           },
         })
       })
@@ -98,7 +98,6 @@ describe(`Game details remote control.
             expect(req.body.query).to.include('startRelease')
             expect(req.body.variables.id).to.equal($btn.data('release-id'))
           })
-          req.reply((res) => {})
         })
         cy.get('[data-test="Actions"] li')
           .eq(2)
@@ -106,7 +105,27 @@ describe(`Game details remote control.
           .click()
 
         cy.get('[data-test="Actions"] button').eq(0).click()
-        cy.wait('@graphql')
+        cy.wait(300)
+
+        cy.task<Array<any>>('readRequestLog').then((log) => {
+          cy.log(JSON.stringify(log, null, 2))
+          cy.get('[data-test="Actions"] button').then(($btn) => {
+            const event = log[0].body
+            expect(event.type).to.equal('ReleaseStarted')
+            expect(event.payload).to.nested.include({
+              coverUrl:
+                'https://localhost:3000/public/game-assets/assassins-creed-odyssey.webp',
+              id: $btn.data('release-id'),
+              title: "Assassin's Creed Odyssey",
+              'library.name': 'Game Room',
+              'platform.name': 'Sony PlayStation 5',
+              'source.name': 'PlayStation',
+            })
+            expect(event.payload.library.id).to.match(/Library:\d+/)
+            expect(event.payload.platform.id).to.match(/Platform:\d+/)
+            expect(event.payload.source.id).to.match(/Source:\d+/)
+          })
+        })
 
         cy.get('[data-test="Actions"] li')
           .eq(1)
