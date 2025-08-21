@@ -16,6 +16,8 @@ node_modules
 !local.env
 !e2e.env
 
+**/cypress/downloads
+
 
 **/*.generated.*
 **/.generated
