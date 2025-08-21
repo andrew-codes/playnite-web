@@ -108,6 +108,7 @@ describe(`Game details remote control.
 
         cy.task<Array<any>>('readRequestLog').then((log) => {
           cy.log(JSON.stringify(log, null, 2))
+          console.debug('e2e logs', log)
           cy.get('[data-test="Actions"] button').then(($btn) => {
             const event = log[0].body
             expect(event.type).to.equal('StartReleaseRequested')
