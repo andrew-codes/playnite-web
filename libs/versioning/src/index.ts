@@ -1,5 +1,5 @@
 import logger from 'dev-logger'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import semver from 'semver'
 import sh from 'shelljs'
 

@@ -29068,7 +29068,7 @@ __metadata:
     "@types/shelljs": "npm:^0.8.17"
     debug: "npm:^4.4.1"
     dev-logger: "workspace:*"
-    lodash: "npm:^4.17.21"
+    lodash-es: "npm:^4.17.21"
     nx: "npm:^21.3.7"
     rimraf: "npm:^6.0.1"
     semver: "npm:^7.7.2"

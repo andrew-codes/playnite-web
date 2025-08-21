@@ -2,10 +2,11 @@
   "name": "versioning",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "main": "src/index.ts",
   "dependencies": {
     "debug": "^4.4.1",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "semver": "^7.7.2",
     "shelljs": "^0.10.0"
   },

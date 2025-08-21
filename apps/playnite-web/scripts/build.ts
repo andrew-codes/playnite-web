@@ -97,7 +97,10 @@ async function run() {
     )
   }
 
-  await Promise.all([generateDb, buildRemix, buildGraphql])
+  const codes = await Promise.all([generateDb, buildRemix, buildGraphql])
+  console.debug(
+    `Prisma generate, Remix build, and GraphQL codegen completed with codes: ${codes}`,
+  )
 
   console.debug(`Build server-side plus Remix combo`)
   await Promise.all([
@@ -149,6 +152,8 @@ async function run() {
       plugins,
     }),
   ])
+
+  console.debug(`Build complete`)
 }
 
 run().catch((error) => {
