@@ -187,15 +187,27 @@ describe('User Library', () => {
         it(`Displays the library correctly`, () => {
           cy.wait('@graphql')
           cy.wait('@images')
+          cy.wait(3000)
           cy.get('[data-test="GameFigure"]')
             .parents('.MuiBox-root')
             .eq(0)
             .find('> div')
             .as('scrollArea')
-          cy.get('@scrollArea').compareSnapshot(`library-${name}`)
+          cy.get('@scrollArea').compareSnapshot({
+            name: `library-${name}`,
+            cypressScreenshotOptions: {
+              onBeforeScreenshot($el) {
+                Cypress.$('[data-test="GameCoverImage"]').css(
+                  'visibility',
+                  'hidden',
+                )
+              },
+            },
+          })
 
           cy.get('@scrollArea').scrollTo('bottom')
           cy.wait('@images')
+          cy.wait(3000)
           cy.get('@scrollArea').compareSnapshot(`library-scroll-bottom-${name}`)
         })
       })

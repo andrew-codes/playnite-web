@@ -31,7 +31,9 @@ beforeEach(() => {
 })
 
 beforeEach(() => {
-  cy.CDP('Network.setCacheDisabled', { cacheDisabled: true })
+  if (Cypress.env('NODE_ENV') === 'development') {
+    cy.CDP('Network.setCacheDisabled', { cacheDisabled: true })
+  }
   cy.CDP('Emulation.setDeviceMetricsOverride', {
     width: 1920,
     height: 1080,

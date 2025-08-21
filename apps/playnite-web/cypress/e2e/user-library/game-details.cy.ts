@@ -40,7 +40,14 @@ describe('Game details.', () => {
                 name: `${locationName}-${breakpointName}`,
                 cypressScreenshotOptions: {
                   onBeforeScreenshot($el) {
-                    Cypress.$('[data-test="GameFigure"]').css('opacity', '0')
+                    Cypress.$('[data-test="GameGrid"]').css(
+                      'visibility',
+                      'hidden',
+                    )
+                    Cypress.$('[data-test="Description"]').css(
+                      'overflow-y',
+                      'hidden',
+                    )
                   },
                 },
               })

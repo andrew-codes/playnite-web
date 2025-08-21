@@ -55,6 +55,7 @@ const GameFigure: FC<
           <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
             {game.primaryRelease?.cover && (
               <Image
+                data-test="GameCoverImage"
                 src={`${game.primaryRelease?.cover}`}
                 alt={game.primaryRelease?.title}
                 width={width}
@@ -62,7 +63,7 @@ const GameFigure: FC<
               />
             )}
             {game.primaryRelease?.cover === null && (
-              <ImagePlaceholder width={width} />
+              <ImagePlaceholder data-test="GameCoverImage" width={width} />
             )}
           </Button>
           <Box

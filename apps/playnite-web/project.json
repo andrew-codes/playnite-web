@@ -187,7 +187,7 @@
         "parallel": true,
         "commands": [
           "yarn react-devtools",
-          "yarn start-server-and-test 'cross-env NODE_ENV=production TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser chrome'"
+          "yarn start-server-and-test 'cross-env NODE_ENV=development TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env NODE_ENV=development TEST=e2e CI=true yarn cypress open --e2e --browser chrome'"
         ],
         "cwd": "{projectRoot}",
         "env": {

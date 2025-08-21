@@ -1,4 +1,11 @@
-import { Button, Divider, Stack, Typography, useTheme } from '@mui/material'
+import {
+  Button,
+  Divider,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import { ComponentType } from 'react'
 import Permission from '../auth/permissions'
 import { Form } from '../components/Form'
@@ -33,6 +40,8 @@ const Account = () => {
   }
 
   const theme = useTheme()
+  const isLgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'))
+  const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
   const [saveSettings] = updateUserSettings()
 
@@ -72,7 +81,9 @@ const Account = () => {
           spacing={2}
           sx={{
             justifyContent: 'end',
-            marginRight: `calc(400px + ${theme.spacing(2)}) !important`,
+            marginRight: isMdDown
+              ? '0'
+              : `calc(${isLgDown ? '250px' : '400px'} + ${theme.spacing(2)}) !important`,
           }}
         >
           <Button variant="contained" color="primary" type="submit">

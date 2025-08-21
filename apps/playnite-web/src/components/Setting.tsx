@@ -1,4 +1,4 @@
-import { Box, FormControlLabel, TextField } from '@mui/material'
+import { Box, FormControlLabel, TextField, useMediaQuery } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import { FC, useMemo } from 'react'
 import { UserSetting } from '../../.generated/types.generated'
@@ -19,11 +19,17 @@ const Setting: FC<{ setting: UserSetting }> = ({ setting }) => {
     }
   }, [setting.dataType, setting.helperText, setting.id])
 
+  const isLgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'))
+  const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
+
+  console.debug(isMdDown)
+
   return (
     <Box
       sx={{
         display: 'flex',
         alignItems: 'start',
+        flexDirection: isMdDown ? 'column' : 'row',
         label: {
           alignItems: 'start !important',
         },
@@ -43,7 +49,7 @@ const Setting: FC<{ setting: UserSetting }> = ({ setting }) => {
       />
       <Box
         sx={{
-          width: '400px',
+          width: isLgDown ? '250px' : '400px',
           pt: 4,
           px: 2,
         }}

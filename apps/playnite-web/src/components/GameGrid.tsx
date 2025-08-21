@@ -111,18 +111,20 @@ const GameGrid: FC<{
   }
 
   return (
-    <Grid
-      ref={gridRef}
-      columnCount={columns}
-      columnWidth={columnWidth + horizontalGutter}
-      height={height}
-      innerElementType={innerElementType}
-      rowCount={rowCount}
-      rowHeight={rowHeight + verticalGutter}
-      width={width + horizontalGutter * 2}
-    >
-      {Cell}
-    </Grid>
+    <div data-test="GameGrid">
+      <Grid
+        ref={gridRef}
+        columnCount={columns}
+        columnWidth={columnWidth + horizontalGutter}
+        height={height}
+        innerElementType={innerElementType}
+        rowCount={rowCount}
+        rowHeight={rowHeight + verticalGutter}
+        width={width + horizontalGutter * 2}
+      >
+        {Cell}
+      </Grid>
+    </div>
   )
 }
 
