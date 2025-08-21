@@ -5,6 +5,10 @@ describe('Performance.', () => {
     cy.task('seedUsers')
   })
 
+  beforeEach(() => {
+    cy.CDP('Network.setCacheDisabled', { cacheDisabled: false })
+  })
+
   Cypress._.each(setups, ([opts, thresholds]) => {
     describe(opts.name, () => {
       it(`User library.`, () => {

@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { create, fromString, hasIdentity } from '../../../../../oid'
+import { create, createNull, fromString, hasIdentity } from '../../../../../oid'
 import { defaultSettings as defaultUserSettings } from '../../../../../userSettings'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
@@ -60,22 +60,24 @@ export const startRelease: NonNullable<
         payload: {
           id: create('Release', release.id),
           title: release.title,
-          playniteId: release.PlayniteId,
+          playniteId: release.playniteId,
           coverUrl: `https://${domain}:${port}/public/game-assets/${release.Cover.ignId}.webp`,
           library: {
             id: create('Library', release.Library.id),
             name: release.Library.name,
-            playniteId: release.Library.PlayniteId,
+            playniteId: release.Library.playniteId,
           },
           platform: {
-            id: create('Platform', release.Source.Platform.id),
-            name: release.Source.Platform.name,
-            playniteId: release.Source.Platform.PlayniteId,
+            id: release.Source?.Platform?.id
+              ? create('Platform', release.Source.Platform.id)
+              : createNull('Platform'),
+            name: release.Source?.Platform?.name ?? '',
+            playniteId: release.Source?.Platform?.playniteId,
           },
           source: {
             id: create('Source', release.Source.id),
             name: release.Source.name,
-            playniteId: release.Source.PlayniteId,
+            playniteId: release.Source.playniteId,
           },
         },
       }),

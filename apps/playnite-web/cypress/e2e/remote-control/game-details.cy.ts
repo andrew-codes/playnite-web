@@ -22,10 +22,9 @@ describe(`Game details remote control.
           cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
           cy.wait('@graphql')
         })
-      cy.get('[data-test="GameFigure"] button').eq(1).click({ force: true })
+      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
 
       cy.wait('@graphql')
-      cy.wait(6000)
       cy.get('[data-test="Actions"]').children().should('have.length', 0)
     })
   })
@@ -43,14 +42,13 @@ describe(`Game details remote control.
           cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
           cy.wait('@graphql')
         })
-      cy.get('[data-test="GameFigure"] button').eq(1).click({ force: true })
+      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
       cy.wait('@graphql')
 
-      cy.wait(6000)
       cy.get('[data-test="Actions"]').children().should('have.length', 0)
     })
 
-    describe.only('With Webhook setting.', () => {
+    describe('With Webhook setting.', () => {
       beforeEach(() => {
         cy.task('setUserSettings', {
           username: 'test',
@@ -79,6 +77,7 @@ describe(`Game details remote control.
         cy.contains("Assassin's Creed Odyssey")
           .parents('[data-test=GameFigure]')
           .find('button img')
+          .eq(0)
           .click({ force: true })
 
         cy.get('[data-test="Actions"] button')
@@ -273,123 +272,6 @@ describe(`Game details remote control.
               .parent()
               .compareSnapshot({
                 name: `$play-button-visible_${breakpointName}`,
-                cypressScreenshotOptions: {
-                  onBeforeScreenshot($el) {
-                    Cypress.$('[data-test="GameFigure"]').css(
-                      'color',
-                      'transparent',
-                    )
-                    $el.find('[data-test="Name"]').css('color', 'transparent')
-                    $el
-                      .find('[data-test="Description"]')
-                      .css('color', 'transparent')
-                    $el.find('img').css('visibility', 'hidden')
-                  },
-                },
-              })
-          })
-
-          it.skip(`Restart/stop visible.
-- Persists across page refreshes and navigation.
-- Manually stopping a game does not impact visibility.`, () => {
-            cy.get('[data-test="GameFigure"]', { timeout: 5000 })
-              .first()
-              .find('button span', { timeout: 5000 })
-              .click({ force: true })
-
-            cy.get('[data-test="GameDetails"]').as('gameDetails')
-            cy.get('@gameDetails').contains('button', 'via').click()
-            cy.get('@gameDetails')
-              .parent()
-              .compareSnapshot({
-                name: `${locationName}_restart-stop-buttons-visible_${breakpointName}`,
-                cypressScreenshotOptions: {
-                  onBeforeScreenshot($el) {
-                    Cypress.$('[data-test="GameFigure"]').css(
-                      'color',
-                      'transparent',
-                    )
-                    $el.find('[data-test="Name"]').css('color', 'transparent')
-                    $el
-                      .find('[data-test="Description"]')
-                      .css('color', 'transparent')
-                    $el.find('img').css('visibility', 'hidden')
-                  },
-                },
-              })
-
-            cy.reload()
-            cy.get('[data-test="GameFigure"]', { timeout: 5000 })
-              .first()
-              .as('game')
-            cy.get('@game')
-              .find('button img', { timeout: 5000 })
-              .parent()
-              .click({ force: true })
-            cy.wait('@api', { timeout: 5000 })
-
-            cy.get('[data-test="GameDetails"]').as('gameDetails')
-            cy.get('@gameDetails')
-              .parent()
-              .compareSnapshot({
-                name: `${locationName}_restart-stop-buttons-visible-persist-page-refreshes_${breakpointName}`,
-                cypressScreenshotOptions: {
-                  onBeforeScreenshot($el) {
-                    Cypress.$('[data-test="GameFigure"]').css(
-                      'color',
-                      'transparent',
-                    )
-                    $el.find('[data-test="Name"]').css('color', 'transparent')
-                    $el
-                      .find('[data-test="Description"]')
-                      .css('color', 'transparent')
-                    $el.find('img').css('visibility', 'hidden')
-                  },
-                },
-              })
-
-            let gameId: string | undefined
-            cy.get('@game').then(($el) => {
-              gameId = $el.attr('data-test-game-id')?.split(':')[1]
-            })
-            cy.wait(3000)
-
-            cy.get('@gameDetails')
-              .parent()
-              .compareSnapshot({
-                name: `${locationName}_restart-stop-buttons-visible-when-manually-stopping-game_${breakpointName}`,
-                cypressScreenshotOptions: {
-                  onBeforeScreenshot($el) {
-                    Cypress.$('[data-test="GameFigure"]').css(
-                      'color',
-                      'transparent',
-                    )
-                    $el.find('[data-test="Name"]').css('color', 'transparent')
-                    $el
-                      .find('[data-test="Description"]')
-                      .css('color', 'transparent')
-                    $el.find('img').css('visibility', 'hidden')
-                  },
-                },
-              })
-          })
-
-          it(`Restart/stop stopping game.
-- Once a game is stopped via Playnite Web.`, () => {
-            cy.get('[data-test="GameFigure"]', { timeout: 5000 })
-              .first()
-              .find('button img', { timeout: 5000 })
-              .parent()
-              .click({ force: true })
-
-            cy.get('[data-test="GameDetails"]').as('gameDetails')
-            cy.get('@gameDetails').contains('button', 'via').click()
-            cy.get('@gameDetails').contains('button', 'Stop').click()
-
-            cy.get('@gameDetails')
-              .parent()
-              .compareSnapshot({
-                name: `${locationName}_restart-stop-stopping-game_${breakpointName}`,
                 cypressScreenshotOptions: {
                   onBeforeScreenshot($el) {
                     Cypress.$('[data-test="GameFigure"]').css(

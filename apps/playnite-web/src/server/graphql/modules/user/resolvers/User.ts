@@ -1,4 +1,5 @@
 import type { UserResolvers } from '../../../../../../.generated/types.generated.js'
+import Permission from '../../../../../auth/permissions.js'
 import { create, createNull } from '../../../../oid.js'
 
 export const User: UserResolvers = {
@@ -36,5 +37,9 @@ export const User: UserResolvers = {
         userId: parent.id,
       },
     })
+  },
+
+  permission: async (parent, _args, ctx) => {
+    return parent.permission ?? Permission.None
   },
 }

@@ -116,7 +116,6 @@ describe('Account Creation.', () => {
 
         Object.values(defaultUserSettings).forEach((setting, i) => {
           expect(response.body.data.lookupUser.settings[i]).to.include({
-            id: setting.id,
             name: setting.name,
             value: setting.value,
             dataType: setting.dataType,
@@ -166,6 +165,7 @@ describe('Account Creation.', () => {
 
         cy.intercept('POST', 'http://localhost:3000/api').as('signUp')
         cy.visit('/account/new')
+        cy.wait(100)
         cy.get('form[data-name="registration"]').as('registrationForm')
         cy.get('@registrationForm')
           .find('input[name="email"]')
@@ -217,6 +217,7 @@ describe('Account Creation.', () => {
 
         cy.intercept('POST', 'http://localhost:3000/api').as('signUp')
         cy.visit('/account/new')
+        cy.wait(100)
         cy.get('form[data-name="registration"]').as('registrationForm')
         cy.get('@registrationForm')
           .find('input[name="email"]')
@@ -300,6 +301,7 @@ describe('Account Creation.', () => {
 
         cy.intercept('POST', 'http://localhost:3000/api').as('signUp')
         cy.visit('/account/new')
+        cy.wait(100)
         cy.get('form[data-name="registration"]').as('registrationForm')
         cy.get('@registrationForm')
           .find('input[name="email"]')

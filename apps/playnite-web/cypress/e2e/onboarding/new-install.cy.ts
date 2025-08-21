@@ -28,8 +28,9 @@ describe('Onboarding - New Install', () => {
     })
   })
 
-  it.only(`Account creation works.`, () => {
+  it(`Account creation works.`, () => {
     cy.visit('/account/new')
+    cy.wait(100)
 
     cy.get('form[data-name="registration"]').as('registrationForm')
     cy.get('@registrationForm')

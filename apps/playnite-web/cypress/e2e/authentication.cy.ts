@@ -16,7 +16,7 @@ describe('Authentication', () => {
     cy.task('seedUsers')
   })
 
-  it.only(`Authentication flow
+  it(`Authentication flow
 - User can authenticate with a username and password.
 - Authenticated user is redirected back to original page.
 - Authenticated users can immediately sign out.`, () => {
@@ -48,7 +48,6 @@ describe('Authentication', () => {
 
       it(`Authentication page`, () => {
         cy.visit('/login')
-        cy.wait('@api')
         cy.compareSnapshot({ name: `login_${breakpointName}` })
       })
     })

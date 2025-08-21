@@ -65,9 +65,7 @@ Cypress.on('window:before:load', (win) => {
 })
 
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
-  cy.intercept('GET', /.*emotion_cache\.js.*/).as('getJs')
   originalFn(url, options)
-  cy.wait('@getJs')
   cy.wait(100)
 })
 

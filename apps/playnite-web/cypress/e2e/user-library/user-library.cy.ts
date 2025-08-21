@@ -16,6 +16,76 @@ describe('User Library', () => {
     })
   })
 
+  describe('Update completion status.', () => {
+    it(`Update completion status.
+    - Authenticated user owns library.
+    - Other user libraries may not be updated.
+    - Updates show in UI without a page refresh.`, () => {
+      cy.wait('@graphql')
+      cy.get('[data-test="GameFigure"]')
+        .contains('3DMark')
+        .parents('[data-test="GameFigure"]')
+        .as('gameFigure')
+      cy.get('@gameFigure')
+        .contains('[data-test="GameFigureChipList"] button', 'Played')
+        .click()
+      cy.get('.MuiPopper-root')
+        .contains('li', 'Beaten')
+        .eq(0)
+        .click({ force: true })
+      cy.wait('@graphql')
+      cy.wait('@graphql')
+
+      cy.get('@gameFigure').contains(
+        '[data-test="GameFigureChipList"]',
+        'Beaten',
+      )
+
+      cy.signOut()
+      cy.reload()
+      cy.wait(5000)
+      cy.wait('@graphql')
+      cy.get('[data-test="GameFigure"]')
+        .find('[data-test="GameFigureChipList"] button')
+        .should('not.exist')
+      cy.get('[data-test="GameFigure"]')
+        .contains('3DMark')
+        .parents('[data-test="GameFigure"]')
+        .contains('[data-test="GameFigureChipList"]', 'Beaten')
+        .eq(0)
+        .click({ force: true })
+      cy.get('.MuiPopper-root').should('not.exist')
+    })
+
+    it(`Update completion status: after scrolling.`, () => {
+      cy.wait('@graphql')
+      cy.get('[data-test="GameFigure"]').as('games')
+      cy.get('@games')
+        .parents('.MuiBox-root')
+        .eq(0)
+        .find('> div')
+        .scrollTo('bottom')
+      cy.get('[data-test="GameFigure"]')
+        .contains('Yakuza: Like A Dragon')
+        .parents('[data-test="GameFigure"]')
+        .as('gameFigure')
+      cy.get('@gameFigure')
+        .contains('[data-test="GameFigureChipList"] button', 'Not Played')
+        .click()
+      cy.get('.MuiPopper-root')
+        .contains('li', 'Beaten')
+        .eq(0)
+        .click({ force: true })
+      cy.wait('@graphql')
+      cy.wait('@graphql')
+
+      cy.get('@gameFigure').contains(
+        '[data-test="GameFigureChipList"]',
+        'Beaten',
+      )
+    })
+  })
+
   describe('Game grid', () => {
     it(`Displays the total count of games in the library.`, () => {
       cy.wait('@graphql')
@@ -74,7 +144,7 @@ describe('User Library', () => {
   })
 
   describe('Navigation', () => {
-    it.only(`Library centric navigation.
+    it(`Library centric navigation.
       - Link to view games in library.
       - Link to view playlists in library.
       - Link to go back to all user's libraries.
