@@ -10,6 +10,7 @@ const domainTypes = [
   'Source',
   'Tag',
   'User',
+  'UserSetting',
 ] as const
 const domains: Record<DomainType, DomainType> = {
   Asset: 'Asset',
@@ -23,6 +24,7 @@ const domains: Record<DomainType, DomainType> = {
   Source: 'Source',
   Tag: 'Tag',
   User: 'User',
+  UserSetting: 'UserSetting',
 }
 type DomainType = (typeof domainTypes)[number]
 

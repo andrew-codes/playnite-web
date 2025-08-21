@@ -10,6 +10,7 @@ type User {
 }
 type UserSetting {
   id: String!
+  code: String!
   name: String!
   value: String
   dataType: String!

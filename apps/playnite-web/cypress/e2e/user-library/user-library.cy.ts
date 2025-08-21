@@ -3,6 +3,7 @@ import { breakpoints } from 'support/breakpoints'
 describe('User Library', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api').as('graphql')
+    cy.intercept('GET', '*.webp').as('images')
   })
 
   beforeEach(() => {
@@ -65,6 +66,7 @@ describe('User Library', () => {
         .eq(0)
         .find('> div')
         .scrollTo('bottom')
+      cy.wait('@images')
       cy.get('[data-test="GameFigure"]')
         .contains('Yakuza: Like A Dragon')
         .parents('[data-test="GameFigure"]')
@@ -177,14 +179,13 @@ describe('User Library', () => {
 
   describe('UI', () => {
     Cypress._.each(breakpoints, ([name, x, y]) => {
-      describe(`at ${name} breakpoint`, () => {
+      describe(`${name} breakpoint`, () => {
         beforeEach(() => {
           cy.viewport(x, y)
         })
 
         it(`Displays the library correctly`, () => {
           cy.wait('@graphql')
-          cy.intercept('GET', '*.webp').as('images')
           cy.wait('@images')
           cy.get('[data-test="GameFigure"]')
             .parents('.MuiBox-root')
@@ -194,6 +195,7 @@ describe('User Library', () => {
           cy.get('@scrollArea').compareSnapshot(`library-${name}`)
 
           cy.get('@scrollArea').scrollTo('bottom')
+          cy.wait('@images')
           cy.get('@scrollArea').compareSnapshot(`library-scroll-bottom-${name}`)
         })
       })

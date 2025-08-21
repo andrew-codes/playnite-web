@@ -15,6 +15,7 @@ const Me = gql`
       }
       settings {
         id
+        code
         name
         value
         description

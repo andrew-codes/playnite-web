@@ -10,6 +10,7 @@ const config = {
   viewportWidth: 1920,
   viewportHeight: 1080,
   e2e: {
+    reporter: 'list',
     env: {
       codeCoverage: {
         exclude: [

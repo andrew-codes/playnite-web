@@ -11,7 +11,7 @@ const Setting: FC<{ setting: UserSetting }> = ({ setting }) => {
           <TextField
             sx={{ width: '100%' }}
             helperText={setting.helperText}
-            data-test={setting.id}
+            data-test={setting.code}
           />
         )
       default:
