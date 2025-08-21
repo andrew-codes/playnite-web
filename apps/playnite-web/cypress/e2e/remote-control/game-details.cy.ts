@@ -104,7 +104,7 @@ describe(`Game details remote control.
           .click()
 
         cy.get('[data-test="Actions"] button').eq(0).click()
-        cy.wait(300)
+        cy.wait(1000)
 
         cy.task<Array<any>>('readRequestLog').then((log) => {
           cy.log(JSON.stringify(log, null, 2))
@@ -165,7 +165,7 @@ describe(`Game details remote control.
           .contains('button', 'Stop game')
           .click()
         cy.get('[data-test="Actions"] li').should('have.length', 1)
-        cy.wait(300)
+        cy.wait(1500)
 
         cy.task<Array<any>>('readRequestLog').then((log) => {
           cy.log(JSON.stringify(log, null, 2))
@@ -219,7 +219,7 @@ describe(`Game details remote control.
           .eq(1)
           .contains('button', 'Restart game')
           .click()
-        cy.wait(300)
+        cy.wait(2000)
 
         cy.task<Array<any>>('readRequestLog').then((log) => {
           cy.log(JSON.stringify(log, null, 2))
