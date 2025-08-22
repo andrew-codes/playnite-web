@@ -1,9 +1,11 @@
-import { Typography, useMediaQuery, useTheme } from '@mui/material'
+import { styled, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { createRef, FC, forwardRef, useEffect, useMemo } from 'react'
 import { FixedSizeGrid as Grid } from 'react-window'
 import { Game } from '../../.generated/types.generated'
 import GameFigure from './GameFigure'
 import { useNavigateInGrid } from './NavigateInGrid/context'
+
+const GridRoot = styled('div')``
 
 const GameGrid: FC<{
   games: Array<Game>
@@ -21,8 +23,8 @@ const GameGrid: FC<{
   const useMoreSpacing = useMediaQuery(theme.breakpoints.down('lg')) && isSm
   const columns = useMemo(() => {
     if (isXxl) return 8
-    if (isXl) return 7
-    if (isLg) return 5
+    if (isXl) return 6
+    if (isLg) return 4
     if (isMd) return 3
     if (isSm) return 2
     if (isXs) return 2
@@ -111,7 +113,7 @@ const GameGrid: FC<{
   }
 
   return (
-    <div data-test="GameGrid">
+    <GridRoot data-test="GameGrid">
       <Grid
         ref={gridRef}
         columnCount={columns}
@@ -124,7 +126,7 @@ const GameGrid: FC<{
       >
         {Cell}
       </Grid>
-    </div>
+    </GridRoot>
   )
 }
 

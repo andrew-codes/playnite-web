@@ -50,11 +50,7 @@ describe('Account Settings', () => {
           cy.compareSnapshot({
             name: `${name} Account Settings`,
             cypressScreenshotOptions: {
-              onBeforeScreenshot($el) {
-                $el.find('[data-test="Setting"] > div').each((i, $setting) => {
-                  $setting.style.opacity = '0'
-                })
-              },
+              blackout: ['[data-test="Setting"] > div'],
             },
           })
         })

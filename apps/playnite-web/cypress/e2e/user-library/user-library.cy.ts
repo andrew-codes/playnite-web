@@ -3,17 +3,14 @@ import { breakpoints } from 'support/breakpoints'
 describe('User Library', () => {
   beforeEach(() => {
     cy.intercept('POST', '/api').as('graphql')
-    cy.intercept('GET', '*.webp').as('images')
   })
 
   beforeEach(() => {
     cy.task('seedUsers')
     cy.fixture('librarySync.json').then((libraryData) => {
-      cy.syncLibrary('test', 'test', libraryData)
-        .as('library')
-        .then((library) => {
-          cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-        })
+      cy.syncLibrary('test', 'test', libraryData).then((library) => {
+        cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+      })
     })
   })
 
@@ -60,13 +57,9 @@ describe('User Library', () => {
 
     it(`Update completion status: after scrolling.`, () => {
       cy.wait('@graphql')
-      cy.get('[data-test="GameFigure"]').as('games')
-      cy.get('@games')
-        .parents('.MuiBox-root')
-        .eq(0)
-        .find('> div')
-        .scrollTo('bottom')
-      cy.wait('@images')
+      cy.get('[data-test="GameGrid"]').as('games')
+      cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
+      cy.wait(3000)
       cy.get('[data-test="GameFigure"]')
         .contains('Yakuza: Like A Dragon')
         .parents('[data-test="GameFigure"]')
@@ -176,39 +169,65 @@ describe('User Library', () => {
       })
     })
   })
+})
 
+describe('User Library', () => {
   describe('UI', () => {
     Cypress._.each(breakpoints, ([name, x, y]) => {
       describe(`${name} breakpoint`, () => {
         beforeEach(() => {
+          cy.intercept('POST', '/api').as('graphql')
+        })
+
+        beforeEach(() => {
           cy.viewport(x, y)
+        })
+
+        beforeEach(() => {
+          cy.task('seedUsers')
+          cy.fixture('librarySync.json').then((libraryData) => {
+            cy.syncLibrary('test', 'test', libraryData).then((library) => {
+              cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+            })
+          })
         })
 
         it(`Displays the library correctly`, () => {
           cy.wait('@graphql')
-          cy.wait('@images')
-          cy.wait(3000)
-          cy.get('[data-test="GameFigure"]')
-            .parents('.MuiBox-root')
-            .eq(0)
-            .find('> div')
-            .as('scrollArea')
-          cy.get('@scrollArea').compareSnapshot({
+          cy.get('[data-test="GameGrid"]').find('> div').scrollIntoView()
+          cy.wait(500)
+          cy.compareSnapshot({
             name: `library-${name}`,
             cypressScreenshotOptions: {
+              blackout: ['[data-test="GameFigure"] button'],
               onBeforeScreenshot($el) {
-                Cypress.$('[data-test="GameCoverImage"]').css(
+                Cypress.$('body').css('overflow-y', 'hidden')
+                Cypress.$('[data-test="GameFigure"] button').css(
                   'visibility',
                   'hidden',
                 )
               },
             },
           })
+        })
 
-          cy.get('@scrollArea').scrollTo('bottom')
-          cy.wait('@images')
-          cy.wait(3000)
-          cy.get('@scrollArea').compareSnapshot(`library-scroll-bottom-${name}`)
+        it(`Scrolled`, () => {
+          cy.wait('@graphql')
+          cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
+          cy.wait(500)
+          cy.compareSnapshot({
+            name: `scrolled-${name}`,
+            cypressScreenshotOptions: {
+              blackout: ['[data-test="GameFigure"] button'],
+              onBeforeScreenshot($el) {
+                Cypress.$('body').css('overflow-y', 'hidden')
+                Cypress.$('[data-test="GameFigure"] button').css(
+                  'visibility',
+                  'hidden',
+                )
+              },
+            },
+          })
         })
       })
     })

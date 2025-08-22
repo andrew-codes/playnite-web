@@ -39,6 +39,15 @@ async function setup() {
         },
       )
     }),
+    new Promise((resolve) => {
+      sh.exec(
+        `kill -9 $(lsof -t -i:3000)`,
+        { async: true },
+        (code, stdout, stderr) => {
+          resolve(code)
+        },
+      )
+    }),
   ])
 }
 async function run() {

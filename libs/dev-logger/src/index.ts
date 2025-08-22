@@ -1,4 +1,5 @@
 import winston from 'winston'
+import 'winston-daily-rotate-file'
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -13,17 +14,23 @@ const logger = winston.createLogger({
         winston.format.simple(),
       ),
     }),
-    new winston.transports.File({
-      filename: 'logs/dev/info.log',
+    new winston.transports.DailyRotateFile({
+      filename: 'logs/dev/info-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
       level: 'info',
+      maxFiles: '1d',
     }),
-    new winston.transports.File({
-      filename: 'logs/dev/error.log',
+    new winston.transports.DailyRotateFile({
+      filename: 'logs/dev/error-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
       level: 'error',
+      maxFiles: '1d',
     }),
-    new winston.transports.File({
-      filename: 'logs/dev/verbose.log',
+    new winston.transports.DailyRotateFile({
+      filename: 'logs/dev/verbose-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
       level: 'verbose',
+      maxFiles: '1d',
     }),
   ],
 })

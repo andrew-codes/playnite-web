@@ -1,4 +1,5 @@
 import winston from 'winston'
+import 'winston-daily-rotate-file'
 
 const customLevels = {
   levels: {
@@ -25,38 +26,48 @@ const customLevels = {
 
 winston.addColors(customLevels.colors)
 
-const transports: Array<winston.transport> = [
-  new winston.transports.Console({
-    level: process.env.NODE_ENV === 'development' ? 'silly' : 'info',
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple(),
-    ),
-  }),
-]
+const transports: Array<winston.transport> = []
 
-transports.push(
-  new winston.transports.File({
-    dirname: 'logs',
-    filename: 'server.log',
-    level: 'silly',
-  }),
-)
+if (process.env.NODE_ENV === 'development') {
+  transports.push(
+    new winston.transports.Console({
+      level: process.env.NODE_ENV === 'development' ? 'silly' : 'info',
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple(),
+      ),
+    }),
+  )
 
-transports.push(
-  new winston.transports.File({
-    dirname: 'logs',
-    filename: 'error.log',
-    level: 'error',
-  }),
-)
-transports.push(
-  new winston.transports.File({
-    dirname: 'logs',
-    filename: 'e2e.log',
-    level: 'e2e',
-  }),
-)
+  transports.push(
+    new winston.transports.DailyRotateFile({
+      dirname: 'logs',
+      filename: 'dev-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      level: 'silly',
+      maxFiles: '1d',
+    }),
+  )
+  transports.push(
+    new winston.transports.DailyRotateFile({
+      dirname: 'logs',
+      filename: 'dev-%DATE%.log',
+      datePattern: 'YYYY-MM-DD',
+      level: 'error',
+      maxFiles: '1d',
+    }),
+  )
+}
+
+if (process.env.TEST === 'e2e') {
+  transports.push(
+    new winston.transports.File({
+      dirname: 'logs',
+      filename: 'e2e.log',
+      level: 'e2e',
+    }),
+  )
+}
 
 transports.forEach((transport) => {
   transport.on('error', (err) => {

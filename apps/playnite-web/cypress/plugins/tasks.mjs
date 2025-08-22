@@ -16,20 +16,16 @@ const tasks = (on, config) => {
       try {
         await prisma.$connect()
 
-        // Delete data from all tables
-        await prisma.game.deleteMany({})
-        await prisma.release.deleteMany({})
-        await prisma.source.deleteMany({})
-        await prisma.platform.deleteMany({})
-        await prisma.asset.deleteMany({})
-        await prisma.feature.deleteMany({})
-        await prisma.completionStatus.deleteMany({})
-        await prisma.tag.deleteMany({})
-        await prisma.playlist.deleteMany({})
-        await prisma.library.deleteMany({})
-        await prisma.userSetting.deleteMany({})
-        await prisma.user.deleteMany({})
-        await prisma.siteSettings.deleteMany({})
+        const tables = await prisma.$queryRaw`
+          SELECT tablename FROM pg_tables
+          WHERE schemaname = 'public'
+          AND tablename != '_prisma_migrations'
+        `
+        for (const table of tables) {
+          await prisma.$executeRawUnsafe(
+            `TRUNCATE TABLE "${table.tablename}" RESTART IDENTITY CASCADE;`,
+          )
+        }
 
         logger.info('Database cleared successfully!')
         logger.info('Ensuring default site settings...')

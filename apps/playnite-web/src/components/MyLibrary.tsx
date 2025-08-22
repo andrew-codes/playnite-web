@@ -7,11 +7,9 @@ import GameGrid from '../components/GameGrid'
 const MyLibrary: FC<{
   games: Array<Game>
   onSelect?: (evt, game: Game) => void
-}> = ({ games, onSelect }) => {
+  bottomOffset: number
+}> = ({ games, onSelect, bottomOffset }) => {
   const [ref, dims] = useDimensions({ liveMeasure: true })
-  const [heightBottomOffset, setHeightBottomOffset] = useState<null | number>(
-    null,
-  )
   const [height, setHeight] = useState(0)
   const [width, setWidth] = useState(0)
   useEffect(() => {
@@ -19,8 +17,7 @@ const MyLibrary: FC<{
       if (!dims.y || !dims.x || !dims.right || !dims.bottom) {
         return
       }
-      setHeight(win.document.body.offsetHeight - dims.y)
-      setHeightBottomOffset(win.document.body.offsetHeight - dims.bottom)
+      setHeight(win.document.body.offsetHeight - dims.y - bottomOffset)
       setWidth(
         win.document.body.offsetWidth -
           dims.x -
@@ -40,7 +37,7 @@ const MyLibrary: FC<{
     return () => {
       window.removeEventListener('resize', resizeListener)
     }
-  }, [dims.y, dims.x, dims.right, dims.bottom])
+  }, [dims.x, dims.right, dims.y, bottomOffset])
 
   return (
     <Box
@@ -52,15 +49,12 @@ const MyLibrary: FC<{
         display: 'flex',
         justifyContent: 'center',
         margin: '0 auto',
-        [theme.breakpoints.up('lg')]: {
-          overflowY: 'auto',
-        },
       })}
     >
-      {height > 0 && width > 0 && heightBottomOffset !== null && (
+      {height > 0 && width > 0 && (
         <GameGrid
           games={games}
-          height={height - heightBottomOffset}
+          height={height}
           onSelect={onSelect}
           width={width}
         />

@@ -39,13 +39,17 @@ describe('Game details.', () => {
               cy.compareSnapshot({
                 name: `${locationName}-${breakpointName}`,
                 cypressScreenshotOptions: {
+                  blackout: [
+                    '[data-test="GameFigure"] button',
+                    '[data-test="Description"]',
+                  ],
                   onBeforeScreenshot($el) {
-                    Cypress.$('[data-test="GameGrid"]').css(
-                      'visibility',
-                      'hidden',
-                    )
                     Cypress.$('[data-test="Description"]').css(
                       'overflow-y',
+                      'hidden',
+                    )
+                    Cypress.$('[data-test="GameFigure"] button').css(
+                      'visibility',
                       'hidden',
                     )
                   },

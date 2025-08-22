@@ -65,7 +65,7 @@
         "cwd": "{projectRoot}"
       }
     },
-    "start/seedTestData": {
+    "db/data": {
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn tsx scripts/seedTestData.ts",

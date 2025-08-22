@@ -1,5 +1,3 @@
-import { breakpoints } from '../../support/breakpoints'
-
 describe(`Game details remote control.
               - Requires user to be signed in.
               - Only visible in libraries the authenticated user owns.`, () => {
@@ -238,55 +236,6 @@ describe(`Game details remote control.
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
-          })
-        })
-      })
-    })
-
-    describe.skip('UI.', () => {
-      Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
-        describe(`Screen size: ${breakpointName}.`, () => {
-          beforeEach(() => {
-            cy.viewport(x, y)
-            cy.task('setUserSettings', {
-              username: 'test',
-              settings: {
-                webhook: 'https://localhost',
-              },
-            })
-            cy.fixture('librarySync.json')
-              .then((libraryData) => {
-                return cy.syncLibrary('test', 'test', libraryData)
-              })
-              .then((library) => {
-                cy.signIn('test', 'test')
-                cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-              })
-          })
-
-          it(`Play button is visible.`, () => {
-            cy.get('[data-test="GameFigure"] button')
-              .eq(1)
-              .click({ force: true })
-
-            cy.get('[data-test="GameDetails"]')
-              .parent()
-              .compareSnapshot({
-                name: `$play-button-visible_${breakpointName}`,
-                cypressScreenshotOptions: {
-                  onBeforeScreenshot($el) {
-                    Cypress.$('[data-test="GameFigure"]').css(
-                      'color',
-                      'transparent',
-                    )
-                    $el.find('[data-test="Name"]').css('color', 'transparent')
-                    $el
-                      .find('[data-test="Description"]')
-                      .css('color', 'transparent')
-                    $el.find('img').css('visibility', 'hidden')
-                  },
-                },
-              })
           })
         })
       })

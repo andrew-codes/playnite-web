@@ -96,7 +96,6 @@ const config = {
           })
 
           const report = await lighthouseTask(allOptions)
-          // insert the text into the report returned the test
           report.txt = txt
           return report
         },

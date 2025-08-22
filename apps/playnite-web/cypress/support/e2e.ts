@@ -19,7 +19,7 @@ declare global {
         options?: any,
         config?: any,
       ) => Chainable<any>
-      clickMenuItem: () => Chainable<JQuery<HTMLElement>>
+      clickMenuItem: (text: string) => Chainable<JQuery<HTMLElement>>
     }
   }
 }
@@ -126,11 +126,14 @@ Cypress.Commands.add('signOut', () => {
   return cy.clearAllCookies()
 })
 
-Cypress.Commands.add('clickMenuItem', { prevSubject: true }, (subject) => {
-  return cy
-    .wrap(subject)
-    .parents('[role="button"]')
-    .trigger('touchstart')
-    .find('.MuiTouchRipple-root')
-    .click({ force: true })
-})
+Cypress.Commands.add(
+  'clickMenuItem',
+  { prevSubject: true },
+  (subject, text) => {
+    return cy
+      .wrap(subject)
+      .find(`[aria-label="${text}"]`)
+      .parents('[role="button"]')
+      .click({ force: true })
+  },
+)

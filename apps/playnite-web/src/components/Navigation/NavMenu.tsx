@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@mui/material'
 import { useNavigate } from '@remix-run/react'
-import { EventHandler, FC, ReactNode } from 'react'
+import { EventHandler, FC, ReactNode, useEffect, useState } from 'react'
 
 const NavigationList = styled(List, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -28,6 +28,11 @@ const NavItem: FC<{ item: NavItemProps; open: boolean }> = ({ item, open }) => {
     navigate(href)
   }
 
+  const [disableRipple, setDisableRipple] = useState(false)
+  useEffect(() => {
+    setDisableRipple(!!window.__TEST__)
+  }, [])
+
   const theme = useTheme()
 
   return (
@@ -43,6 +48,7 @@ const NavItem: FC<{ item: NavItemProps; open: boolean }> = ({ item, open }) => {
       sx={{
         minHeight: theme.spacing(6),
       }}
+      disableRipple={disableRipple}
     >
       {item.icon && (
         <ListItemIcon

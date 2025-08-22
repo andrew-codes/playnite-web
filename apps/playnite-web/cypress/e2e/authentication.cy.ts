@@ -21,9 +21,8 @@ describe('Authentication', () => {
 - Authenticated user is redirected back to original page.
 - Authenticated users can immediately sign out.`, () => {
     cy.visit('/help/sync-library')
-    cy.get('[data-test="Navigation"]')
-      .find('[aria-label="Sign In"]')
-      .clickMenuItem()
+    cy.wait(100)
+    cy.get('[data-test="Navigation"]').clickMenuItem('Sign In')
 
     cy.get('input[name="username"]').type('test')
     cy.get('input[name="password"]').type('test')
@@ -32,9 +31,7 @@ describe('Authentication', () => {
     cy.location('pathname').should('equal', '/help/sync-library')
     cy.wait('@api')
 
-    cy.get('[data-test="Navigation"]')
-      .find('[aria-label="Sign Out"]')
-      .clickMenuItem()
+    cy.get('[data-test="Navigation"]').clickMenuItem('Sign Out')
     cy.wait('@api')
 
     cy.get('[data-test="Navigation"]').find('[aria-label="Sign In"]')

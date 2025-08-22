@@ -108,7 +108,7 @@ function UserLibrary() {
       }
       navs={[LibraryNavigation, MainNavigation]}
     >
-      <MyLibrary games={games} onSelect={handleSelection} />
+      <MyLibrary games={games} onSelect={handleSelection} bottomOffset={48} />
       <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
         {isFiltersInDrawer ? <Filters onClose={handleClose} /> : <Outlet />}
       </RightDrawer>
