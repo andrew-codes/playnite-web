@@ -11140,7 +11140,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:2.8.8"],\
           ["pretty-ms", "npm:7.0.1"],\
           ["react", "npm:18.3.1"],\
-          ["react-dom", "virtual:1df8a68e62b7a13d7251aa821cec3c6a6c7380e243df0fc6c56f6b4864a920082c1498d61d93860447fcaf9d10b9ffd7dc5ded2073dd3d807f33daf7ad66a84b#npm:18.3.1"],\
+          ["react-dom", "virtual:733e97d70b1e9e8b7469f99c23eb2da97457e01fb27a2b61165e9d9eb4378a1e7d91f91bde351491b4f59aa5942f4bc391122594d2fd5b829fd7f14e7a8c9e69#npm:18.3.1"],\
           ["react-refresh", "npm:0.14.0"],\
           ["remark-frontmatter", "npm:4.0.1"],\
           ["remark-mdx-frontmatter", "npm:1.1.1"],\
@@ -17964,6 +17964,8 @@ const RAW_RUNTIME_STATE =
           ["pretty-bytes", "npm:5.6.0"],\
           ["process", "npm:0.11.10"],\
           ["proxy-from-env", "npm:1.0.0"],\
+          ["react", "npm:18.3.1"],\
+          ["react-dom", "virtual:733e97d70b1e9e8b7469f99c23eb2da97457e01fb27a2b61165e9d9eb4378a1e7d91f91bde351491b4f59aa5942f4bc391122594d2fd5b829fd7f14e7a8c9e69#npm:18.3.1"],\
           ["request-progress", "npm:3.0.0"],\
           ["semver", "npm:7.7.2"],\
           ["supports-color", "npm:8.1.1"],\
@@ -18015,6 +18017,8 @@ const RAW_RUNTIME_STATE =
           ["pretty-bytes", "npm:5.6.0"],\
           ["process", "npm:0.11.10"],\
           ["proxy-from-env", "npm:1.0.0"],\
+          ["react", "npm:18.3.1"],\
+          ["react-dom", "virtual:733e97d70b1e9e8b7469f99c23eb2da97457e01fb27a2b61165e9d9eb4378a1e7d91f91bde351491b4f59aa5942f4bc391122594d2fd5b829fd7f14e7a8c9e69#npm:18.3.1"],\
           ["request-progress", "npm:3.0.0"],\
           ["semver", "npm:7.7.2"],\
           ["supports-color", "npm:8.1.1"],\
@@ -30895,13 +30899,13 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:1df8a68e62b7a13d7251aa821cec3c6a6c7380e243df0fc6c56f6b4864a920082c1498d61d93860447fcaf9d10b9ffd7dc5ded2073dd3d807f33daf7ad66a84b#npm:18.3.1", {\
-        "packageLocation": "./.yarn/__virtual__/react-dom-virtual-bb0f1d4c74/0/cache/react-dom-npm-18.3.1-a805663f38-a752496c19.zip/node_modules/react-dom/",\
+      ["virtual:733e97d70b1e9e8b7469f99c23eb2da97457e01fb27a2b61165e9d9eb4378a1e7d91f91bde351491b4f59aa5942f4bc391122594d2fd5b829fd7f14e7a8c9e69#npm:18.3.1", {\
+        "packageLocation": "./.yarn/__virtual__/react-dom-virtual-457ef49713/0/cache/react-dom-npm-18.3.1-a805663f38-a752496c19.zip/node_modules/react-dom/",\
         "packageDependencies": [\
           ["@types/react", null],\
           ["loose-envify", "npm:1.4.0"],\
           ["react", "npm:18.3.1"],\
-          ["react-dom", "virtual:1df8a68e62b7a13d7251aa821cec3c6a6c7380e243df0fc6c56f6b4864a920082c1498d61d93860447fcaf9d10b9ffd7dc5ded2073dd3d807f33daf7ad66a84b#npm:18.3.1"],\
+          ["react-dom", "virtual:733e97d70b1e9e8b7469f99c23eb2da97457e01fb27a2b61165e9d9eb4378a1e7d91f91bde351491b4f59aa5942f4bc391122594d2fd5b829fd7f14e7a8c9e69#npm:18.3.1"],\
           ["scheduler", "npm:0.23.2"]\
         ],\
         "packagePeers": [\

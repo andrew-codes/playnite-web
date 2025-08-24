@@ -138,7 +138,8 @@ const config = defineConfig({
     },
     video: process.env.CMD === 'run',
     videoCompression: 32,
-    setupNodeEvents: (on, config) => {
+    setupNodeEvents: async (on, config) => {
+      await import('@yarnpkg/pnpify')
       const { viewportWidth, viewportHeight } = config
       on('before:browser:launch', (browser, launchOptions) => {
         switch (browser?.name) {
