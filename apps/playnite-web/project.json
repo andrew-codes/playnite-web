@@ -252,7 +252,12 @@
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/files/e2e", "start/services"],
+      "dependsOn": [
+        "clean/test",
+        "package/files/e2e",
+        "start/services",
+        "db/push"
+      ],
       "options": {
         "parallel": false,
         "command": "yarn tsx scripts/e2e.ts",
