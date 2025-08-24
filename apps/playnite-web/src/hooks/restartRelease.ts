@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
+import { gql } from '@apollo/client/core'
+import { useMutation } from '@apollo/client/react'
 import { Release } from '../../.generated/types.generated'
 
 const RestartReleaseMutation = gql`

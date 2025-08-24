@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client'
 import { RunState } from '../data/types.entities.js'
 import { DomainType } from '../oid.js'
+import { Prisma } from './../data/providers/postgres/client.js'
 
 type GameReleaseStateSubscriptionPayload = {
   id: string

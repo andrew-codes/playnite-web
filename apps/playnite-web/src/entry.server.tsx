@@ -1,12 +1,7 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  Operation,
-  split,
-} from '@apollo/client/apollo-client.cjs'
-import { SchemaLink } from '@apollo/client/link/schema/schema.cjs'
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions/subscriptions.cjs'
-import { ApolloProvider } from '@apollo/client/react/react.cjs'
+import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client'
+import { SchemaLink } from '@apollo/client/link/schema'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { ApolloProvider } from '@apollo/client/react'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { CacheProvider } from '@emotion/react'
@@ -107,8 +102,8 @@ async function handleBotRequest(
     } as Partial<PlayniteContext>,
   })
 
-  const link = split(
-    ({ query }: Operation) => {
+  const link = ApolloLink.split(
+    ({ query }: ApolloLink.Operation) => {
       const mainDefinition: OperationDefinitionNode | FragmentDefinitionNode =
         getMainDefinition(query)
       return (
@@ -226,8 +221,8 @@ async function handleBrowserRequest(
     } as Partial<PlayniteContext>,
   })
 
-  const link = split(
-    ({ query }: Operation) => {
+  const link = ApolloLink.split(
+    ({ query }: ApolloLink.Operation) => {
       const mainDefinition: OperationDefinitionNode | FragmentDefinitionNode =
         getMainDefinition(query)
       return (

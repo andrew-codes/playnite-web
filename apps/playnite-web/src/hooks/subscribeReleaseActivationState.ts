@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { useSubscription } from '@apollo/client/react/hooks/hooks.cjs'
+import { gql } from '@apollo/client/core'
+import { useSubscription } from '@apollo/client/react'
 import { RunState } from '../server/data/types.entities'
 
 const Subscribe_Release_Activation_State = gql`

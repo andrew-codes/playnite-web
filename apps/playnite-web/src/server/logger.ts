@@ -28,7 +28,7 @@ winston.addColors(customLevels.colors)
 
 const transports: Array<winston.transport> = []
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'development' || process.env.TEST === 'e2e') {
   transports.push(
     new winston.transports.Console({
       level: process.env.NODE_ENV === 'development' ? 'silly' : 'info',

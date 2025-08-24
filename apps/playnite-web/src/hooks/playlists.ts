@@ -1,6 +1,5 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { QueryHookOptions } from '@apollo/client/react'
-import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
+import { gql } from '@apollo/client/core'
+import { useQuery } from '@apollo/client/react'
 import { Playlist } from '../../.generated/types.generated'
 
 const AllPlaylists = gql`
@@ -36,7 +35,9 @@ const AllPlaylists = gql`
   }
 `
 
-const usePlaylists = (opts: QueryHookOptions) => {
+const usePlaylists = (
+  opts: useQuery.Options<{ playlists: Array<Playlist> }>,
+) => {
   const q = useQuery<{ playlists: Array<Playlist> }>(AllPlaylists, opts)
 
   // const { data } = useSubscribePlayniteEntityUpdates()

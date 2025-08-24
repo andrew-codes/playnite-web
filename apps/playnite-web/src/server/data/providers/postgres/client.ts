@@ -1,9 +1,12 @@
-import { PrismaClient } from '@prisma/client'
-import { htmlSanitizationExtension } from './extensions/htmlSanitization'
+import {
+  Prisma,
+  PrismaClient,
+} from '../../../../../.generated/prisma/client.js'
+import { htmlSanitizationExtension } from './extensions/htmlSanitization.js'
 
 const base = new PrismaClient()
 const prisma = base.$extends(htmlSanitizationExtension)
 
-export * from '@prisma/client'
+export * from '../../../../../.generated/prisma/client.js'
 export { prisma }
-export type { PrismaClient }
+export type { Prisma, PrismaClient }

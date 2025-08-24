@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { useSubscription } from '@apollo/client/react/hooks/hooks.cjs'
+import { gql } from '@apollo/client/core'
+import { useSubscription } from '@apollo/client/react'
 
 const LibrarySubscriptionQuery = gql`
   subscription syncedLibrary {

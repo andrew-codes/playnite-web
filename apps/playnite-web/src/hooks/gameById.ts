@@ -1,10 +1,8 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { QueryHookOptions } from '@apollo/client/react'
-import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
+import { gql } from '@apollo/client/core'
+import { useQuery } from '@apollo/client/react'
 import { merge } from 'lodash-es'
 import { useEffect } from 'react'
 import { Game } from '../../.generated/types.generated'
-import { useSubscribeEntityUpdates } from './subscribeEntityUpdates'
 import { useSubscribeLibrarySync } from './subscribeLibrarySync'
 
 const GameByIdQuery = gql`
@@ -41,7 +39,7 @@ const GameByIdQuery = gql`
 
 const useGameById = (
   id?: string,
-  opts?: Omit<QueryHookOptions, 'variables'>,
+  opts?: Omit<useQuery.Options<{ game: Game }>, 'variables'>,
 ) => {
   const q = useQuery<{ game: Game }>(
     GameByIdQuery,
@@ -51,25 +49,6 @@ const useGameById = (
       },
     }),
   )
-
-  const { data } = useSubscribeEntityUpdates()
-  useEffect(() => {
-    if (
-      data?.entityUpdated.every(
-        (e) =>
-          e.type !== 'Game' &&
-          e.type !== 'Release' &&
-          e.type !== 'Platform' &&
-          e.type !== 'Source' &&
-          e.type !== 'CompletionStatus' &&
-          e.id !== id,
-      )
-    ) {
-      return
-    }
-
-    q.refetch()
-  }, [data?.entityUpdated])
 
   const librarySubscription = useSubscribeLibrarySync()
   useEffect(() => {

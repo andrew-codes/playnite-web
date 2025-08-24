@@ -1,6 +1,5 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { QueryResult } from '@apollo/client/react'
-import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
+import { gql } from '@apollo/client/core'
+import { QueryResult, useQuery } from '@apollo/client/react'
 import { User } from '../../.generated/types.generated'
 import { PermissionValue, userHasPermission } from '../auth/permissions'
 

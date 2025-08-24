@@ -1,5 +1,5 @@
-import { Source } from '@prisma/client'
 import { GraphQLError } from 'graphql'
+import { Source } from '../../../../../data/providers/postgres/client.js'
 import logger from '../../../../../logger'
 import {
   domains,

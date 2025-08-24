@@ -1,6 +1,6 @@
-import { Release } from '@prisma/client.js'
 import { GraphQLError } from 'graphql'
 import type { GameResolvers } from '../../../../../../.generated/types.generated.js'
+import { Release } from '../../../../data/providers/postgres/client.js'
 import { create, domains } from '../../../../oid.js'
 
 export const Game: GameResolvers = {

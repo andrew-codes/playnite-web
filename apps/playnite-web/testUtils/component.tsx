@@ -1,12 +1,7 @@
-import {
-  ApolloClient,
-  InMemoryCache,
-  Operation,
-  split,
-} from '@apollo/client/apollo-client.cjs'
-import { HttpLink } from '@apollo/client/core/core.cjs'
-import { GraphQLWsLink } from '@apollo/client/link/subscriptions/subscriptions.cjs'
-import { ApolloProvider } from '@apollo/client/react/react.cjs'
+import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client'
+import { HttpLink } from '@apollo/client/core'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { ApolloProvider } from '@apollo/client/react'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { Box, CssBaseline, ThemeProvider } from '@mui/material'
 import { configureStore, StateFromReducersMapObject } from '@reduxjs/toolkit'
@@ -47,8 +42,8 @@ const TestWrapper: FC<
     credentials: 'same-origin',
   })
 
-  const link = split(
-    ({ query }: Operation) => {
+  const link = ApolloLink.split(
+    ({ query }: ApolloLink.Operation) => {
       const mainDefinition: OperationDefinitionNode | FragmentDefinitionNode =
         getMainDefinition(query)
       return (

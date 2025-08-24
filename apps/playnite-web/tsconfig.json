@@ -26,13 +26,14 @@
     "testUtils/**/*.ts",
     "testUtils/**/*.tsx",
     "cypress/support/*.ts",
+    "cypress/plugins/*.ts",
     "*.ts",
     "../../graphql.config.ts",
     ".generated/**/*.*",
     ".generated/resolvers.generated.ts",
     ".generated/typeDefs.generated.ts",
     ".generated/types.generated.ts",
-    "cypress/e2e/errors.cy.ts"
+    "cypress.config.ts"
   ],
   "exclude": ["node_modules"],
   "references": [

@@ -14,7 +14,7 @@
     "@types/semver": "^7.7.0",
     "@types/shelljs": "^0.8.17",
     "dev-logger": "workspace:*",
-    "nx": "^21.3.7",
+    "nx": "^21.4.1",
     "rimraf": "^6.0.1"
   }
 }

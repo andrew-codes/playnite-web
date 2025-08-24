@@ -7,10 +7,10 @@
   "devDependencies": {
     "@types/lodash": "^4.17.20",
     "@types/shelljs": "^0.8.17",
-    "esbuild": "^0.25.8",
+    "esbuild": "^0.25.9",
     "esbuild-register": "^3.6.0",
     "lodash": "^4.17.21",
-    "nx": "^21.3.7",
+    "nx": "^21.4.1",
     "shelljs": "^0.10.0",
     "versioning": "workspace:*"
   }

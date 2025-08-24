@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client/core'
-import { QueryHookOptions } from '@apollo/client/react'
-import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
+import { useQuery } from '@apollo/client/react'
 import { merge } from 'lodash-es'
 import { useEffect, useMemo } from 'react'
 import { useSubscribeEntityUpdates } from './subscribeEntityUpdates'
@@ -19,7 +18,12 @@ const AllCompletionStatesQuery = gql`
 
 const allCompletionStates = (
   libraryId?: string,
-  opts?: Omit<QueryHookOptions, 'variables'>,
+  opts?: Omit<
+    useQuery.Options<{
+      library: { completionStates: Array<{ id: string; name: string }> }
+    }>,
+    'variables'
+  >,
 ) => {
   const options = useMemo(() => {
     return merge({}, opts, {

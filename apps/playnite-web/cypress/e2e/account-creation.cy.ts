@@ -9,7 +9,7 @@ describe('Account Creation.', () => {
   describe(`allowAnonymousAccountCreation setting is disabled.`, () => {
     beforeEach(() => {
       cy.task('setSiteSettings', {
-        allowAnonymousAccountCreation: false,
+        allowAnonymousAccountCreation: 'false',
       })
     })
 
@@ -64,7 +64,7 @@ describe('Account Creation.', () => {
   describe(`allowAnonymousAccountCreation setting is enabled.`, () => {
     beforeEach(() => {
       cy.task('setSiteSettings', {
-        allowAnonymousAccountCreation: true,
+        allowAnonymousAccountCreation: 'true',
       })
     })
 

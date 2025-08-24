@@ -1,5 +1,6 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { useMutation } from '@apollo/client/react/hooks/hooks.cjs'
+import { gql } from '@apollo/client/core'
+import { useMutation } from '@apollo/client/react'
+import { merge } from 'lodash-es'
 import { Release } from '../../.generated/types.generated'
 import { runState } from '../api/client/runStates'
 import { GameByIdQuery } from './gameById'
@@ -23,22 +24,19 @@ const useStartRelease = () => {
           query: GameByIdQuery,
           variables: { id: mutationResult?.data?.startRelease.game.id },
         },
-        (data) => {
-          return {
-            ...data,
+        (data: any) => {
+          return merge({}, data ?? {}, {
             game: {
-              ...data?.game,
               releases: data?.game.releases.map((release) => {
                 if (release.id === mutationResult.data?.startRelease.id) {
-                  return {
-                    ...release,
+                  return merge({}, release, {
                     runState: runState.starting,
-                  }
+                  })
                 }
                 return release
               }),
             },
-          }
+          })
         },
       )
     },

@@ -11,6 +11,7 @@
   "include": [
     "src/**/*.ts",
     "testUtils/**/*.ts",
+    "cypress/plugins/*.ts",
     "*.ts",
     "../../graphql.config.ts",
     ".generated/resolvers.generated.ts",

@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client/core/core.cjs'
-import { useQuery } from '@apollo/client/react/hooks/hooks.cjs'
+import { gql } from '@apollo/client/core'
+import { useQuery } from '@apollo/client/react'
 import { User } from '../../.generated/types.generated'
 
 const UserLookup = gql`
