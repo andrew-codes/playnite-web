@@ -24488,49 +24488,6 @@ const RAW_RUNTIME_STATE =
           "ts-node"\
         ],\
         "linkType": "HARD"\
-      }],\
-      ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:30.0.5", {\
-        "packageLocation": "./.yarn/__virtual__/jest-config-virtual-23233eb90c/0/cache/jest-config-npm-30.0.5-c544726592-da68048801.zip/node_modules/jest-config/",\
-        "packageDependencies": [\
-          ["@babel/core", "npm:7.28.3"],\
-          ["@jest/get-type", "npm:30.0.1"],\
-          ["@jest/pattern", "npm:30.0.1"],\
-          ["@jest/test-sequencer", "npm:30.0.5"],\
-          ["@jest/types", "npm:30.0.5"],\
-          ["@types/esbuild-register", null],\
-          ["@types/node", "npm:22.16.5"],\
-          ["@types/ts-node", null],\
-          ["babel-jest", "virtual:eeead8c1c9bc28b8d51afeaa327fd10d1461d3a2261e59f330363a13957b2d3a021175f66c08fdc93a57324ed7867fe859aa791115bba76c93bb34e812a5cfc5#npm:30.0.5"],\
-          ["chalk", "npm:4.1.2"],\
-          ["ci-info", "npm:4.3.0"],\
-          ["deepmerge", "npm:4.3.1"],\
-          ["esbuild-register", null],\
-          ["glob", "npm:10.3.10"],\
-          ["graceful-fs", "npm:4.2.11"],\
-          ["jest-circus", "npm:30.0.5"],\
-          ["jest-config", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:30.0.5"],\
-          ["jest-docblock", "npm:30.0.1"],\
-          ["jest-environment-node", "npm:30.0.5"],\
-          ["jest-regex-util", "npm:30.0.1"],\
-          ["jest-resolve", "npm:30.0.5"],\
-          ["jest-runner", "npm:30.0.5"],\
-          ["jest-util", "npm:30.0.5"],\
-          ["jest-validate", "npm:30.0.5"],\
-          ["micromatch", "npm:4.0.8"],\
-          ["parse-json", "npm:5.2.0"],\
-          ["pretty-format", "npm:30.0.5"],\
-          ["slash", "npm:3.0.0"],\
-          ["strip-json-comments", "npm:3.1.1"],\
-          ["ts-node", null]\
-        ],\
-        "packagePeers": [\
-          "@types/esbuild-register",\
-          "@types/node",\
-          "@types/ts-node",\
-          "esbuild-register",\
-          "ts-node"\
-        ],\
-        "linkType": "HARD"\
       }]\
     ]],\
     ["jest-diff", [\
@@ -29922,7 +29879,6 @@ const RAW_RUNTIME_STATE =
           ["istanbul-lib-coverage", "npm:3.2.2"],\
           ["istanbul-lib-instrument", "npm:6.0.3"],\
           ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:30.0.5"],\
-          ["jest-config", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:30.0.5"],\
           ["jsonwebtoken", "npm:9.0.2"],\
           ["lightningcss", "npm:1.30.1"],\
           ["lodash", "npm:4.17.21"],\
