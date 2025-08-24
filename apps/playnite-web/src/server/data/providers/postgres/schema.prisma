@@ -5,9 +5,10 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider     = "prisma-client"
-  output       = "../../../../../.generated/prisma"
-  moduleFormat = "esm"
+  provider      = "prisma-client"
+  output        = "../../../../../.generated/prisma"
+  moduleFormat  = "esm"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
 
 datasource db {

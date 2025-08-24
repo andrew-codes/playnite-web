@@ -201,9 +201,44 @@
     },
     "test/e2e": {
       "executor": "nx:run-commands",
+      "dependsOn": ["clean/test", "start/services", "db/push"],
+      "inputs": ["{projectRoot}/_packaged"],
+      "options": {
+        "parallel": false,
+        "cwd": "{projectRoot}",
+        "command": "yarn tsx scripts/e2e.ts",
+        "env": {
+          "CMD": "run",
+          "CI": "true",
+          "LOG_LEVEL": "verbose",
+          "TEST": "e2e",
+          "START_SERVER_AND_TEST_INSECURE": "1",
+          "NODE_ENV": "production",
+          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+        }
+      },
+      "defaultConfiguration": "ci",
+      "configurations": {
+        "ci": {
+          "env": {
+            "CMD": "run",
+            "CI": "true",
+            "TEST": "e2e",
+            "LOG_LEVEL": "silly",
+            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
+            "START_SERVER_AND_TEST_INSECURE": "1",
+            "NODE_ENV": "production",
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+          }
+        }
+      }
+    },
+    "test/e2e/local": {
+      "executor": "nx:run-commands",
       "dependsOn": [
         "clean/test",
-        "package/files/e2e",
+        "package/e2e/local",
         "start/services",
         "db/push"
       ],
@@ -223,21 +258,24 @@
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
         }
       },
-      "defaultConfiguration": "ci/local",
+      "defaultConfiguration": "ci",
       "configurations": {
         "ci": {
           "env": {
             "CMD": "run",
+            "LOCAL": "true",
             "CI": "true",
             "TEST": "e2e",
+            "LOG_LEVEL": "silly",
             "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
           }
         },
-        "ci/local": {
+        "dev": {
           "env": {
+            "LOCAL": "true",
             "CI": "true",
             "CMD": "open",
             "LOG_LEVEL": "silly",
@@ -321,6 +359,31 @@
             "yarn tsx scripts/package.ts"
           ]
         }
+      }
+    },
+    "package/e2e/local": {
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{projectRoot}/build/**",
+        "{projectRoot}/_build-output/**",
+        "{projectRoot}/scripts/packageFiles.ts",
+        "{projectRoot}/scripts/utils/packageFiles.ts",
+        "{projectRoot}/scripts/package.ts"
+      ],
+      "outputs": ["{projectRoot}/_packaged"],
+      "executor": "nx:run-commands",
+      "cache": false,
+      "dependsOn": ["clean/package", "build"],
+      "options": {
+        "parallel": false,
+        "commands": [
+          "yarn tsx scripts/packageFiles.ts",
+          "yarn tsx scripts/package.ts"
+        ],
+        "env": {
+          "LOCAL": "true"
+        },
+        "cwd": "{projectRoot}"
       }
     },
     "package/prune": {

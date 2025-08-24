@@ -125,6 +125,8 @@ jobs:
   e2e_tests_linux:
     name: Verify e2e Tests (Linux)
     runs-on: ubuntu-latest
+    needs:
+      - package_linux
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes

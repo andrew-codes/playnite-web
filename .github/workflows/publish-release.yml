@@ -91,7 +91,6 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      PUBLISH: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -125,6 +124,12 @@ jobs:
         run: yarn nx run-many --target=version --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
+      - name: Package projects
+        run: yarn nx run-many --target=package --configuration=production --parallel --verbose --exclude '*,!tag:linux'
+        env:
+          NODE_ENV: production
+          LOG_LEVEL: info
+          PLATFORM: linux/amd64,linux/arm64
       - name: Run all e2e tests
         run: yarn nx run playnite-web-app:test/e2e:ci --verbose --exclude='*,!tag:linux'
         env:

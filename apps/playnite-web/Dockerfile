@@ -27,5 +27,7 @@ WORKDIR /opt/playnite-web-app
 COPY --from=builder /opt/playnite-web-app .
 
 WORKDIR /opt/playnite-web-app/src/server
+ENV NODE_ENV=production
+COPY .generated/prisma/*.node .
 
 ENTRYPOINT ["node", "server.js"]

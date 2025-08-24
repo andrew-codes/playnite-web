@@ -1,6 +1,5 @@
 echo "Starting dependent services..."
 
-REPO_ROOT=$PWD/../..
 
 echo 'Dependent services started.'
 echo "Starting dependent services..."
@@ -13,6 +12,7 @@ docker run --name db -d \
   -p 5432:5432 \
   -e POSTGRES_USER=local \
   -e POSTGRES_PASSWORD=dev \
+  --network host \
   postgres:latest
 
 echo "Waiting for PostgreSQL to be ready..."
