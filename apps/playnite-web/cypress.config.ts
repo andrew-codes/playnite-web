@@ -3,7 +3,6 @@ import codeCoverage from '@cypress/code-coverage/task.js'
 import { defineConfig } from 'cypress'
 import imageDiff from 'cypress-image-diff-js/plugin'
 import fs from 'fs'
-import { tasks } from './cypress/plugins/tasks'
 
 const config = defineConfig({
   chromeWebSecurity: false,
@@ -35,7 +34,7 @@ const config = defineConfig({
     baseUrl: 'http://localhost:3000',
     video: process.env.CMD === 'run',
     videoCompression: 32,
-    setupNodeEvents: (on, config) => {
+    setupNodeEvents: async (on, config) => {
       const { viewportWidth, viewportHeight } = config
       on('before:browser:launch', (browser, launchOptions) => {
         switch (browser?.name) {
@@ -80,7 +79,7 @@ const config = defineConfig({
       on('task', {
         lighthouse: lighthouse(),
       })
-
+      const { tasks } = await import('./cypress/plugins/tasks')
       tasks(on, config)
       codeCoverage(on, config)
 

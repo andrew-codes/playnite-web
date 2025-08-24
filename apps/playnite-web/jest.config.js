@@ -1,4 +1,4 @@
-import * as defaultJestConfig from 'jest-config'
+import * as defaultJestConfig from 'jest-config/build/index'
 
 const defaultConfig = {
   testEnvironment: 'node',
