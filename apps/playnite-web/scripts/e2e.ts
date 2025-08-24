@@ -68,7 +68,7 @@ if (process.env.CI !== 'true') {
   }
   logger.debug(`Using docker tag: ${tag}`)
   sh.exec(`docker container rm playnite-web --force || true`)
-  sh.exec(
+  const runCp = sh.exec(
     `docker run --name playnite-web --network host -d -p 3000:3000 -e TEST=e2e -e SECRET="Secret" -e DATABASE_URL="postgresql://local:dev@localhost:5432/games?schema=public" ghcr.io/andrew-codes/playnite-web-app:${tag}`,
     {
       env: {
@@ -77,6 +77,19 @@ if (process.env.CI !== 'true') {
       async: true,
     },
   )
+  runCp.stdout?.on('data', (data) => {
+    logger.info(data.toString())
+  })
+  runCp.stderr?.on('data', (data) => {
+    logger.error(data.toString())
+  })
+  runCp.on('close', (code) => {
+    logger.info('Server closing.')
+    if (code !== 0) {
+      logger.error(`Server exited with code ${code}`)
+      process.exit(code)
+    }
+  })
 }
 
 logger.info('Waiting for server to start')
