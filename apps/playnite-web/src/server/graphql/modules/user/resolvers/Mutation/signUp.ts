@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql'
+import { merge, omit } from 'lodash-es'
 import Permission from '../../../../../../auth/permissions.js'
 import { hashPassword } from '../../../../../auth/hashPassword.js'
 import { UsernamePasswordCredential } from '../../../../../auth/index.js'
@@ -100,7 +101,7 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
       httpOnly: true,
     })
 
-    return authenticatedUser
+    return merge({}, authenticatedUser, omit(newUser, ['password']))
   } catch (error: any) {
     if (error?.meta?.target) {
       const target = error.meta.target as string

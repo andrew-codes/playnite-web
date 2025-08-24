@@ -131,39 +131,15 @@ describe('Account Creation.', () => {
 
     describe(`Account requirements.`, () => {
       it(`Duplicate usernames are not allowed.`, () => {
-        cy.request({
-          method: 'POST',
-          url: 'http://localhost:3000/api',
-          failOnStatusCode: false,
-          body: {
-            query: `mutation signUp($input: SignUpInput!) {
-                   signUp(input: $input) {
-                    user {
-                      id
-                      username
-                      isAuthenticated
-                    }
-                  }
-                }`,
-            variables: {
-              input: {
-                name: 'Test User',
-                username: 'test',
-                email: 'test2@example.com',
-                password: 'test',
-                passwordConfirmation: 'test',
-              },
-            },
-          },
-        }).then((response) => {
-          expect(response.status).to.equal(400)
-          expect(response.body.errors.length).to.equal(1)
-          expect(response.body.errors?.[0].message).to.equal(
-            'Username is already taken.',
-          )
-        })
-
-        cy.intercept('POST', 'http://localhost:3000/api').as('signUp')
+        cy.intercept('POST', 'http://localhost:3000/api', (req) => {
+          req.reply((response) => {
+            expect(response.statusCode).to.equal(400)
+            expect(response.body.errors.length).to.equal(1)
+            expect(response.body.errors?.[0].message).to.equal(
+              'Username is already taken.',
+            )
+          })
+        }).as('signUp')
         cy.visit('/account/new')
         cy.wait(100)
         cy.get('form[data-name="registration"]').as('registrationForm')
@@ -183,39 +159,15 @@ describe('Account Creation.', () => {
       })
 
       it(`Duplicate emails are not allowed.`, () => {
-        cy.request({
-          method: 'POST',
-          url: 'http://localhost:3000/api',
-          failOnStatusCode: false,
-          body: {
-            query: `mutation signUp($input: SignUpInput!) {
-                   signUp(input: $input) {
-                    user {
-                      id
-                      username
-                      isAuthenticated
-                    }
-                  }
-                }`,
-            variables: {
-              input: {
-                name: 'Test User',
-                username: 'test',
-                email: 'test@example.com',
-                password: 'test',
-                passwordConfirmation: 'test',
-              },
-            },
-          },
-        }).then((response) => {
-          expect(response.status).to.equal(400)
-          expect(response.body.errors.length).to.equal(1)
-          expect(response.body.errors?.[0].message).to.equal(
-            'Email is already in use.',
-          )
-        })
-
-        cy.intercept('POST', 'http://localhost:3000/api').as('signUp')
+        cy.intercept('POST', 'http://localhost:3000/api', (req) => {
+          req.reply((response) => {
+            expect(response.statusCode).to.equal(400)
+            expect(response.body.errors.length).to.equal(1)
+            expect(response.body.errors?.[0].message).to.equal(
+              'Email is already in use.',
+            )
+          })
+        }).as('signUp')
         cy.visit('/account/new')
         cy.wait(100)
         cy.get('form[data-name="registration"]').as('registrationForm')

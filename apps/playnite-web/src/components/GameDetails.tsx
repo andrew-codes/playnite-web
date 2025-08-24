@@ -110,8 +110,8 @@ const sortReleasesByPreferredPlatform = (
 
 const GameDetails: FC<{ game: Game }> = ({ game }) => {
   const [{ data }] = useMe()
-  const hasWebhookSetting = !!data?.me.settings.find(
-    (s) => s.name === defaultUserSettings.webhook.name,
+  const hasWebhookSetting = !!data?.me?.settings?.find(
+    (s) => s?.name === defaultUserSettings.webhook.name,
   )?.value
 
   const releases = useMemo(
@@ -135,7 +135,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen)
   }
-  const platformsAnchorEl = useRef<HTMLDivElement>(null)
+  const platformsAnchorEl = useRef<HTMLOListElement>(null)
   const handleClose = (event: Event) => {
     if (
       platformsAnchorEl.current &&
@@ -154,7 +154,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
       </Typography>
 
       <Actions ref={platformsAnchorEl} data-test="Actions">
-        {data?.me.isAuthenticated && hasWebhookSetting && (
+        {data?.me?.isAuthenticated && hasWebhookSetting && (
           <>
             <Action>
               <ButtonGroup
@@ -262,7 +262,9 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
       <Divider />
       <Description data-test="Description">
         <div
-          dangerouslySetInnerHTML={{ __html: game.primaryRelease?.description }}
+          dangerouslySetInnerHTML={{
+            __html: game.primaryRelease?.description ?? '',
+          }}
         ></div>
       </Description>
     </Details>

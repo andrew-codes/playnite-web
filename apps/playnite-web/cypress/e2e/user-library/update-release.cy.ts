@@ -367,11 +367,8 @@ describe('Update a release.', () => {
             ).to.contain.all.members(features.map((f) => f.id).sort())
             expect(release.tags).to.deep.eq([])
             expect(release.completionStatus).to.deep.eq(completionStatus)
-
-            cy.contains('div', 'Updated Release description').should(
-              'be.visible',
-            )
           })
+          cy.contains('div', 'Updated Release description').should('be.visible')
         })
       })
     })

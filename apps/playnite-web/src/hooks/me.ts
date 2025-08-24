@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client/core'
-import { QueryResult, useQuery } from '@apollo/client/react'
+import { useQuery } from '@apollo/client/react'
 import { User } from '../../.generated/types.generated'
 import { PermissionValue, userHasPermission } from '../auth/permissions'
 
@@ -26,7 +26,7 @@ const Me = gql`
 `
 
 const useMe: () => [
-  QueryResult<{ me: User }>,
+  useQuery.Result<{ me: User }>,
   hasPermission: (target: PermissionValue) => boolean,
 ] = () => {
   const result = useQuery<{ me: User }>(Me)

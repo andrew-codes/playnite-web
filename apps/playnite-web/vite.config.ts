@@ -14,6 +14,9 @@ const config = defineConfig({
     }),
     remixRoutes(),
   ],
+  server: {
+    hmr: process.env.TEST !== 'e2e',
+  },
   define: {
     'globalThis.__DEV__': JSON.stringify(process.env.NODE_ENV !== 'production'),
     'globalThis.__TEST__': JSON.stringify(process.env.TEST),

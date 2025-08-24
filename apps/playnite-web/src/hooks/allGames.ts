@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client/react'
 import { merge } from 'lodash-es'
 import { useEffect } from 'react'
 import { Library } from '../../.generated/types.generated'
+import { useSubscribeEntityUpdates } from './subscribeEntityUpdates'
 import { useSubscribeLibrarySync } from './subscribeLibrarySync'
 
 const CompletionStatusFragment = gql`
@@ -66,6 +67,24 @@ const useAllGames = (
       nextFetchPolicy: 'cache-and-network',
     }),
   )
+
+  const { data } = useSubscribeEntityUpdates()
+  useEffect(() => {
+    if (
+      data?.entityUpdated.every(
+        (e) =>
+          e.type !== 'Game' &&
+          e.type !== 'Release' &&
+          e.type !== 'Platform' &&
+          e.type !== 'Source' &&
+          e.type !== 'CompletionStatus',
+      )
+    ) {
+      return
+    }
+
+    q.refetch()
+  }, [data?.entityUpdated])
 
   const librarySubscription = useSubscribeLibrarySync()
   useEffect(() => {

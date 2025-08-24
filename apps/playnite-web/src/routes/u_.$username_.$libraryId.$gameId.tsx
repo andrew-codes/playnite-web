@@ -12,13 +12,9 @@ function GameDetailsRoute() {
   if (error) {
     console.error(error)
   }
-  if (loading || !data?.game) {
-    return null
-  }
+  const game = data?.game
 
-  const game = data.game
-
-  return <GameDetails game={game} />
+  return <div>{game && <GameDetails game={game} />}</div>
 }
 
 type SearchParams = { username: string; libraryId: string; gameId: string }

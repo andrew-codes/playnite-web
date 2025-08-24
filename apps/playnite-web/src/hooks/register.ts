@@ -16,6 +16,7 @@ const signUp = gql`
 `
 const useRegisterAccount = () =>
   useMutation<{ signUp: Claim }>(signUp, {
+    errorPolicy: 'all',
     onError: (error) => {
       error.message =
         error.cause?.result?.errors?.map((e) => e.message).join(', ') ||
@@ -27,7 +28,7 @@ const useRegisterAccount = () =>
       )
     },
     update: (cache, mutationResult) => {
-      cache.updateQuery({ query: Me }, (data) => ({
+      cache.updateQuery({ query: Me }, (data: any) => ({
         ...data,
         me: mutationResult.data?.signUp.user,
       }))
