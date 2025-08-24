@@ -206,7 +206,10 @@
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
-        "command": "yarn tsx scripts/e2e.ts",
+        "commands": [
+          "yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma",
+          "yarn tsx scripts/e2e.ts"
+        ],
         "env": {
           "CMD": "run",
           "CI": "true",
@@ -246,7 +249,10 @@
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
-        "command": "yarn tsx scripts/e2e.ts",
+        "commands": [
+          "yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma",
+          "yarn tsx scripts/e2e.ts"
+        ],
         "env": {
           "CMD": "run",
           "CI": "true",
