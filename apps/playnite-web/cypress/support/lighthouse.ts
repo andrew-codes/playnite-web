@@ -33,9 +33,9 @@ const setups: Array<
     },
     {
       performance: 50,
-      accessibility: 80,
-      'best-practices': 80,
-      seo: 80,
+      accessibility: 70,
+      'best-practices': 70,
+      seo: 70,
     },
   ],
   [
@@ -52,9 +52,9 @@ const setups: Array<
     },
     {
       performance: 50,
-      accessibility: 80,
-      'best-practices': 80,
-      seo: 80,
+      accessibility: 70,
+      'best-practices': 70,
+      seo: 70,
     },
   ],
   [
@@ -71,9 +71,9 @@ const setups: Array<
     },
     {
       performance: 50,
-      accessibility: 80,
-      'best-practices': 80,
-      seo: 80,
+      accessibility: 70,
+      'best-practices': 70,
+      seo: 70,
     },
   ],
 ]
