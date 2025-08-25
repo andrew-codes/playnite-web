@@ -8,7 +8,6 @@ describe('User Libraries', () => {
     cy.task('seedUsers')
 
     cy.visit('/u/test')
-    cy.wait('@graphql')
 
     cy.get('h1').contains('Libraries')
     cy.contains('No libraries found for this user.')
