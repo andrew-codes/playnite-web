@@ -378,7 +378,7 @@
       ],
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
-      "cache": false,
+      "cache": true,
       "dependsOn": ["clean/package", "build"],
       "options": {
         "parallel": false,

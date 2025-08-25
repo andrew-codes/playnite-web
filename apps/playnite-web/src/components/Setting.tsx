@@ -22,8 +22,6 @@ const Setting: FC<{ setting: UserSetting }> = ({ setting }) => {
   const isLgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'))
   const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
-  console.debug(isMdDown)
-
   return (
     <Box
       sx={{
