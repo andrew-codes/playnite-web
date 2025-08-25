@@ -35,7 +35,10 @@ function UserLibrary() {
     ).test(pathname)
 
   const dispatch = useDispatch()
-  const { loading, data, error } = useAllGames(params.libraryId ?? '')
+  const { data, error } = useAllGames(params.libraryId, {
+    fetchPolicy: 'cache-first',
+    errorPolicy: 'all',
+  })
   useEffect(() => {
     if (!data?.library?.completionStates) {
       return
@@ -43,7 +46,7 @@ function UserLibrary() {
     dispatch(setCompletionStates(data.library.completionStates))
   }, [data?.library?.completionStates])
 
-  const games = !loading ? (data?.library?.games ?? []) : []
+  const games = data?.library?.games ?? []
   if (error) {
     console.error(error, data)
   }

@@ -7,7 +7,7 @@ const loader = requiresUserSetup()
 
 function GameDetailsRoute() {
   const { gameId } = useParams()
-  const { loading, data, error } = useGameById(gameId)
+  const { data, error } = useGameById(gameId)
 
   if (error) {
     console.error(error)

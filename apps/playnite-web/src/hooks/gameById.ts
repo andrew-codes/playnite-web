@@ -53,35 +53,30 @@ const useGameById = (
 
   const { data } = useSubscribeEntityUpdates()
   useEffect(() => {
-    console.debug('updated', data)
     if (
-      data?.entityUpdated.every(
+      data?.entityUpdated.some(
         (e) =>
-          e.type !== 'Game' &&
-          e.type !== 'Release' &&
-          e.type !== 'Platform' &&
-          e.type !== 'Source' &&
-          e.type !== 'CompletionStatus' &&
-          e.id !== id,
+          e.type === 'Game' ||
+          e.type === 'Release' ||
+          e.type === 'Platform' ||
+          e.type === 'Source' ||
+          e.type === 'CompletionStatus' ||
+          e.id === id,
       )
     ) {
-      return
+      q.refetch()
     }
-
-    q.refetch()
   }, [data?.entityUpdated])
 
   const librarySubscription = useSubscribeLibrarySync()
   useEffect(() => {
     if (
-      librarySubscription.data?.librarySynced.every(
-        (e) => e.id !== q.data?.game.library.id,
+      librarySubscription.data?.librarySynced.some(
+        (e) => e.id == q.data?.game.library.id,
       )
     ) {
-      return
+      q.refetch()
     }
-
-    q.refetch()
   }, [librarySubscription?.data?.librarySynced])
 
   return q

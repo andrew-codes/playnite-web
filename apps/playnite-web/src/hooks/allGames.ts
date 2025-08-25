@@ -62,22 +62,18 @@ const useAllGames = (
     AllGamesQuery,
     merge({}, opts, {
       variables: { libraryId: libraryId ?? '' },
-      fetchPolicy: 'cache-and-network',
-      nextFetchPolicy: 'cache-and-network',
     }),
   )
 
   const librarySubscription = useSubscribeLibrarySync()
   useEffect(() => {
     if (
-      librarySubscription.data?.librarySynced.every(
-        (e) => e.id !== q.data?.library.id,
+      librarySubscription.data?.librarySynced.some(
+        (e) => e.id === q.data?.library.id,
       )
     ) {
-      return
+      q.refetch()
     }
-
-    q.refetch()
   }, [librarySubscription?.data?.librarySynced])
 
   return q

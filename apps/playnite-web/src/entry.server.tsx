@@ -2,7 +2,7 @@ import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client'
 import { SchemaLink } from '@apollo/client/link/schema'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { ApolloProvider } from '@apollo/client/react'
-import { getDataFromTree } from '@apollo/client/react/ssr'
+import { getDataFromTree, prerenderStatic } from '@apollo/client/react/ssr'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { CacheProvider } from '@emotion/react'
 import createEmotionServer from '@emotion/server/create-instance'
@@ -16,6 +16,7 @@ import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { reducer } from './api/client/state'
 import createEmotionCache from './createEmotionCache'
+import { prisma } from './server/data/providers/postgres/client'
 import { User } from './server/data/types.entities.js'
 import { PlayniteContext } from './server/graphql/context.js'
 import schema from './server/graphql/schema.js'
@@ -218,6 +219,7 @@ async function handleBrowserRequest(
       signingKey: process.env.SECRET ?? 'secret',
       domain: domain,
       jwt: { payload: user },
+      db: prisma,
     } as Partial<PlayniteContext>,
   })
 
@@ -255,10 +257,14 @@ async function handleBrowserRequest(
     </CacheProvider>
   )
 
-  await getDataFromTree(App)
+  const result = await prerenderStatic({
+    tree: App,
+    renderFunction: renderToString,
+    diagnostics: true,
+  })
   const initialState = client.extract()
 
-  const html = renderToString(App)
+  const html = result.result
 
   const emotionChunks = extractCriticalToChunks(html)
   const emotionStyleTags = constructStyleTagsFromChunks(emotionChunks)
@@ -272,7 +278,7 @@ async function handleBrowserRequest(
   const apolloStateScript = `<script>window.__APOLLO_STATE__=${JSON.stringify(initialState).replace(/</g, '\\u003c')}</script>`
   doc = doc.replace(
     '</body>',
-    `${apolloStateScript}${process.env.NODE_ENV === 'development' ? '<script src="http://localhost:8097"></script>' : ''}</body>`,
+    `${apolloStateScript}${process.env.TEST === 'e2e' ? '<script defer src="http://localhost:8097"></script>' : ''}</body>`,
   )
 
   responseHeaders.set('Content-Type', 'text/html')
