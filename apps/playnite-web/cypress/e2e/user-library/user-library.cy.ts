@@ -220,7 +220,6 @@ describe('User Library', () => {
         })
 
         it(`Displays the library correctly`, () => {
-          cy.wait('@graphql')
           cy.get('[data-test="GameGrid"]').find('> div').scrollIntoView()
           cy.wait(500)
           cy.compareSnapshot({
@@ -239,7 +238,6 @@ describe('User Library', () => {
         })
 
         it(`Scrolled`, () => {
-          cy.wait('@graphql')
           cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
           cy.wait(500)
           cy.compareSnapshot({
