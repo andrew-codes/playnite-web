@@ -23,7 +23,6 @@ describe('Game details.', () => {
                     `/u/test/${library.body.data.syncLibrary.id}${locationPath}`,
                   )
                 })
-                cy.wait('@graphql')
               })
             })
 

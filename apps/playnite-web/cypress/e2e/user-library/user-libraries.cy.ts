@@ -36,7 +36,6 @@ describe('User Libraries', () => {
     })
 
     cy.visit('/u/test')
-    cy.wait('@graphql')
 
     cy.get('h1').contains('Libraries')
     cy.contains('Game Room')
@@ -66,7 +65,6 @@ describe('User Libraries', () => {
       - Help link to sync library.`, () => {
       cy.task('seedUsers')
       cy.visit('/u/test')
-      cy.wait('@graphql')
 
       cy.get('[aria-label="Libraries navigation"]').within(() => {
         cy.get('[role="button"] > div').then(($els) => {

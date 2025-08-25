@@ -18,7 +18,6 @@ describe(`Game details remote control.
         })
         .then((library) => {
           cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-          cy.wait('@graphql')
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
 
@@ -38,7 +37,6 @@ describe(`Game details remote control.
         .then((library) => {
           cy.signIn('test', 'test')
           cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
-          cy.wait('@graphql')
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
       cy.wait('@graphql')
