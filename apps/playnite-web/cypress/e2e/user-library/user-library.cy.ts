@@ -14,6 +14,10 @@ describe('User Library', () => {
     })
   })
 
+  beforeEach(() => {
+    cy.signIn('test', 'test')
+  })
+
   describe('Update completion status.', () => {
     it(`Update completion status.
     - Authenticated user owns library.
@@ -53,6 +57,29 @@ describe('User Library', () => {
         .eq(0)
         .click({ force: true })
       cy.get('.MuiPopper-root').should('not.exist')
+
+      cy.request({
+        method: 'POST',
+        url: '/api',
+        failOnStatusCode: false,
+        body: {
+          query: `
+             mutation updateRelease($release: ReleaseInput!) {
+              updateRelease(release: $release) {
+                id
+              }
+            }
+          `,
+          variables: {
+            release: {
+              id: '3DMark',
+              completionStatus: 'CompletionStatus:1',
+            },
+          },
+        },
+      }).then((response) => {
+        expect(response.status).to.equal(401)
+      })
     })
 
     it(`Update completion status: after scrolling.`, () => {

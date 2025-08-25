@@ -115,9 +115,14 @@ async function run() {
     app.use(express.urlencoded({ extended: true }))
     app.use(express.text())
     app.use(express.raw())
+    const requestBodies: Array<any> = []
     app.post('/echo', (req, resp) => {
       const body = req.body
-      logger.e2e('Request received', { body })
+      requestBodies.push(body)
+      resp.send(body)
+    })
+    app.get('/echo', (req, resp) => {
+      const body = requestBodies.pop()
       resp.send(body)
     })
   }

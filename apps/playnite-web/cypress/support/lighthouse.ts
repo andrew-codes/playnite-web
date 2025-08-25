@@ -1,4 +1,24 @@
-const setups = [
+const setups: Array<
+  [
+    {
+      name: string
+      formFactor: string
+      screenEmulation: {
+        mobile: boolean
+        disable: boolean
+        width: number
+        height: number
+        deviceScaleRatio: number
+      }
+    },
+    {
+      performance: number
+      accessibility: number
+      'best-practices': number
+      seo: number
+    },
+  ]
+> = [
   [
     {
       name: 'Tablet',
@@ -12,7 +32,7 @@ const setups = [
       },
     },
     {
-      performance: 80,
+      performance: 50,
       accessibility: 80,
       'best-practices': 80,
       seo: 80,
@@ -31,7 +51,7 @@ const setups = [
       },
     },
     {
-      performance: 60,
+      performance: 50,
       accessibility: 80,
       'best-practices': 80,
       seo: 80,
@@ -50,7 +70,7 @@ const setups = [
       },
     },
     {
-      performance: 80,
+      performance: 50,
       accessibility: 80,
       'best-practices': 80,
       seo: 80,

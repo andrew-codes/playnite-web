@@ -1,6 +1,4 @@
 import logger from 'dev-logger'
-import fs from 'fs/promises'
-import path from 'path'
 import { Prisma, PrismaClient } from '../../.generated/prisma/client.js'
 import Permission from '../../src/auth/permissions.js'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
@@ -195,30 +193,6 @@ const tasks = (on, config) => {
       }
 
       return results
-    },
-
-    async clearRequestLog() {
-      try {
-        await fs.writeFile(path.join('logs', 'e2e.log'), '', 'utf8')
-      } catch (e) {
-        logger.error('Error clearing request log:', e)
-      }
-
-      return true
-    },
-
-    async readRequestLog() {
-      try {
-        const data = await fs.readFile(path.join('logs', 'e2e.log'), 'utf-8')
-
-        return data
-          .split('\n')
-          .filter(Boolean)
-          .map((line) => JSON.parse(line))
-      } catch (e) {
-        logger.error('Error reading request log:', e)
-        return []
-      }
     },
   })
 

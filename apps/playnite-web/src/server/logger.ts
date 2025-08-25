@@ -3,7 +3,6 @@ import 'winston-daily-rotate-file'
 
 const customLevels = {
   levels: {
-    e2e: 0,
     error: 1,
     warn: 2,
     info: 3,
@@ -19,7 +18,6 @@ const customLevels = {
     http: 'magenta',
     verbose: 'gray',
     debug: 'blue',
-    e2e: 'cyan',
     silly: 'rainbow',
   },
 }
@@ -55,16 +53,6 @@ if (process.env.NODE_ENV !== 'development' || process.env.TEST === 'e2e') {
       datePattern: 'YYYY-MM-DD',
       level: 'error',
       maxFiles: '1d',
-    }),
-  )
-}
-
-if (process.env.TEST === 'e2e') {
-  transports.push(
-    new winston.transports.File({
-      dirname: 'logs',
-      filename: 'e2e.log',
-      level: 'e2e',
     }),
   )
 }

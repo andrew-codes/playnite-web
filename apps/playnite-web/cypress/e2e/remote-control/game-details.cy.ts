@@ -102,13 +102,14 @@ describe(`Game details remote control.
           .click()
 
         cy.get('[data-test="Actions"] button').eq(0).click()
-        cy.wait(10000)
+        cy.wait('@graphql')
 
-        cy.task<Array<any>>('readRequestLog').then((log) => {
-          cy.log(JSON.stringify(log, null, 2))
-          console.debug('e2e logs', log)
+        cy.request({
+          method: 'GET',
+          url: '/echo',
+        }).then((response) => {
           cy.get('[data-test="Actions"] button').then(($btn) => {
-            const event = log[0].body
+            const event = response.body
             expect(event.type).to.equal('StartReleaseRequested')
             expect(event.payload).to.nested.include({
               coverUrl:
@@ -163,12 +164,14 @@ describe(`Game details remote control.
           .contains('button', 'Stop game')
           .click()
         cy.get('[data-test="Actions"] li').should('have.length', 1)
-        cy.wait(10000)
+        cy.wait('@graphql')
 
-        cy.task<Array<any>>('readRequestLog').then((log) => {
-          cy.log(JSON.stringify(log, null, 2))
+        cy.request({
+          method: 'GET',
+          url: '/echo',
+        }).then((response) => {
           cy.get('[data-test="Actions"] button').then(($btn) => {
-            const event = log[1].body
+            const event = response.body
             expect(event.type).to.equal('StopReleaseRequested')
             expect(event.payload).to.nested.include({
               coverUrl:
@@ -217,12 +220,14 @@ describe(`Game details remote control.
           .eq(1)
           .contains('button', 'Restart game')
           .click()
-        cy.wait(10000)
+        cy.wait('@graphql')
 
-        cy.task<Array<any>>('readRequestLog').then((log) => {
-          cy.log(JSON.stringify(log, null, 2))
+        cy.request({
+          method: 'GET',
+          url: '/echo',
+        }).then((response) => {
           cy.get('[data-test="Actions"] button').then(($btn) => {
-            const event = log[1].body
+            const event = response.body
             expect(event.type).to.equal('RestartReleaseRequested')
             expect(event.payload).to.nested.include({
               coverUrl:
