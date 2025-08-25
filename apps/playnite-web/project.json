@@ -201,44 +201,6 @@
     },
     "test/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "start/services", "db/push"],
-      "inputs": ["{projectRoot}/_packaged"],
-      "options": {
-        "parallel": false,
-        "cwd": "{projectRoot}",
-        "commands": [
-          "yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma",
-          "yarn tsx scripts/e2e.ts"
-        ],
-        "env": {
-          "CMD": "run",
-          "CI": "true",
-          "LOG_LEVEL": "verbose",
-          "TEST": "e2e",
-          "START_SERVER_AND_TEST_INSECURE": "1",
-          "NODE_ENV": "production",
-          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
-          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
-        }
-      },
-      "defaultConfiguration": "ci",
-      "configurations": {
-        "ci": {
-          "env": {
-            "CMD": "run",
-            "CI": "true",
-            "TEST": "e2e",
-            "LOG_LEVEL": "silly",
-            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
-            "START_SERVER_AND_TEST_INSECURE": "1",
-            "NODE_ENV": "production",
-            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
-          }
-        }
-      }
-    },
-    "test/e2e/local": {
-      "executor": "nx:run-commands",
       "dependsOn": [
         "clean/test",
         "package/e2e/local",
@@ -281,9 +243,9 @@
         },
         "dev": {
           "env": {
+            "CMD": "open",
             "LOCAL": "true",
             "CI": "true",
-            "CMD": "open",
             "LOG_LEVEL": "silly",
             "TEST": "e2e",
             "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
