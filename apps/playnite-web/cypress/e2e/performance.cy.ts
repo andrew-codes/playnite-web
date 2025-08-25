@@ -6,6 +6,10 @@ describe('Performance.', () => {
   })
 
   beforeEach(() => {
+    cy.intercept(/u\/test\/.*/).as('getLibrary')
+  })
+
+  beforeEach(() => {
     cy.CDP('Network.setCacheDisabled', { cacheDisabled: false })
   })
 
@@ -15,7 +19,7 @@ describe('Performance.', () => {
         cy.fixture('librarySync.json').then((libraryData) => {
           cy.syncLibrary('test', 'test', libraryData).then((library) => {
             cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-            cy.wait(400)
+            cy.wait('@getLibrary')
             cy.lighthouse(thresholds, opts)
           })
         })
