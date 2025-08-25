@@ -62,6 +62,7 @@ describe('Account Settings', () => {
           - Changes are not persisted.`, () => {
     cy.signIn('test', 'test')
     cy.visit('/u/test/account')
+    cy.wait(200)
 
     const settings = Cypress._.merge({}, defaultSettings)
     settings.webhook.value = 'https://example.com/webhook'
@@ -83,6 +84,7 @@ describe('Account Settings', () => {
             - Persisted settings load correctly on subsequent visits.`, () => {
     cy.signIn('test', 'test')
     cy.visit('/u/test/account')
+    cy.wait(200)
 
     const settings = Cypress._.merge({}, defaultSettings)
     settings.webhook.value = 'https://example.com/webhook'
