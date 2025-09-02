@@ -341,10 +341,11 @@
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
       "cache": true,
-      "dependsOn": ["clean/package", "build"],
+      "dependsOn": ["clean/package"],
       "options": {
         "parallel": false,
         "commands": [
+          "yarn nx run playnite-web-app:build:e2e",
           "yarn tsx scripts/packageFiles.ts",
           "yarn tsx scripts/package.ts"
         ],
