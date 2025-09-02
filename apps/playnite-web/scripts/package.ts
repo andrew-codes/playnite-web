@@ -22,7 +22,7 @@ async function run() {
       (tag) =>
         new Promise((resolve) => {
           const child = sh.exec(
-            `docker buildx build ${process.env.PUBLISH === 'true' ? '--push' : ''} --platform ${platform} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
+            `docker buildx build ${process.env.PUBLISH === 'true' ? '--push' : '--load'} --platform ${platform} --tag "${REGISTRY}/${OWNER}/${pkg.name}:${tag}" --file Dockerfile .`,
             { async: true },
           )
           child.on('exit', resolve)
