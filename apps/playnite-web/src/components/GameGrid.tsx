@@ -1,6 +1,6 @@
 import { styled, Typography, useMediaQuery, useTheme } from '@mui/material'
-import { createRef, FC, forwardRef, useEffect, useMemo } from 'react'
-import { FixedSizeGrid as Grid } from 'react-window'
+import { createRef, FC, useEffect, useMemo } from 'react'
+import { Grid } from 'react-window'
 import { Game } from '../../.generated/types.generated'
 import GameFigure from './GameFigure'
 import { useNavigateInGrid } from './NavigateInGrid/context'
@@ -9,10 +9,9 @@ const GridRoot = styled('div')``
 
 const GameGrid: FC<{
   games: Array<Game>
-  height: number | string
   onSelect?: (evt, game: Game) => void
   width: number
-}> = ({ games, height, onSelect, width }) => {
+}> = ({ games, onSelect, width }) => {
   const theme = useTheme()
   const isXxl = useMediaQuery(theme.breakpoints.up('xxl'))
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
@@ -50,19 +49,6 @@ const GameGrid: FC<{
 
   const horizontalGutter = useMoreSpacing ? 16 : 8
   const verticalGutter = 6
-  const innerElementType = forwardRef<HTMLDivElement, { style: any }>(
-    ({ style, ...rest }, ref) => (
-      <div
-        ref={ref}
-        style={{
-          ...style,
-          paddingLeft: horizontalGutter,
-          paddingTop: verticalGutter,
-        }}
-        {...rest}
-      />
-    ),
-  )
 
   const Cell = ({ columnIndex, rowIndex, style }) => {
     const game = games[rowIndex * columns + columnIndex]
@@ -75,7 +61,6 @@ const GameGrid: FC<{
         style={{
           ...style,
           left: style.left + horizontalGutter,
-          top: style.top + verticalGutter,
           width: style.width - horizontalGutter,
           height: style.height - verticalGutter,
         }}
@@ -114,18 +99,14 @@ const GameGrid: FC<{
 
   return (
     <GridRoot data-test="GameGrid">
-      <Grid
-        ref={gridRef}
+      <Grid<{ games: Array<Game> }>
+        cellProps={{ games }}
+        cellComponent={Cell}
         columnCount={columns}
         columnWidth={columnWidth + horizontalGutter}
-        height={height}
-        innerElementType={innerElementType}
         rowCount={rowCount}
         rowHeight={rowHeight + verticalGutter}
-        width={width + horizontalGutter * 2}
-      >
-        {Cell}
-      </Grid>
+      />
     </GridRoot>
   )
 }

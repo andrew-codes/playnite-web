@@ -27,6 +27,7 @@ const Drawer: FC<
         sx={(theme) => ({
           flexGrow: 1,
           width: '100%',
+          height: '100%',
           margin: '0 auto',
           [theme.breakpoints.down('lg')]: {
             padding: `${theme.spacing(3)} ${theme.spacing(2)}`,
@@ -43,6 +44,7 @@ const Drawer: FC<
       sx={(theme) => ({
         flexGrow: 1,
         width: '100%',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         margin: '0 auto',

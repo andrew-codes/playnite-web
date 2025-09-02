@@ -23,7 +23,6 @@ describe('User Library', () => {
     - Authenticated user owns library.
     - Other user libraries may not be updated.
     - Updates show in UI without a page refresh.`, () => {
-      cy.wait('@graphql')
       cy.get('[data-test="GameFigure"]')
         .contains('3DMark')
         .parents('[data-test="GameFigure"]')
@@ -36,7 +35,6 @@ describe('User Library', () => {
         .eq(0)
         .click({ force: true })
       cy.wait('@graphql')
-      cy.wait('@graphql')
 
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',
@@ -45,8 +43,6 @@ describe('User Library', () => {
 
       cy.signOut()
       cy.reload()
-      cy.wait(5000)
-      cy.wait('@graphql')
       cy.get('[data-test="GameFigure"]')
         .find('[data-test="GameFigureChipList"] button')
         .should('not.exist')
@@ -83,10 +79,9 @@ describe('User Library', () => {
     })
 
     it(`Update completion status: after scrolling.`, () => {
-      cy.wait('@graphql')
       cy.get('[data-test="GameGrid"]').as('games')
+      cy.wait(500)
       cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
-      cy.wait(3000)
       cy.get('[data-test="GameFigure"]')
         .contains('Yakuza: Like A Dragon')
         .parents('[data-test="GameFigure"]')
@@ -99,7 +94,6 @@ describe('User Library', () => {
         .eq(0)
         .click({ force: true })
       cy.wait('@graphql')
-      cy.wait('@graphql')
 
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',
@@ -110,8 +104,6 @@ describe('User Library', () => {
 
   describe('Game grid', () => {
     it(`Displays the total count of games in the library.`, () => {
-      cy.wait('@graphql')
-
       cy.contains('h1', 'My Games')
         .parent()
         .find(':not(h1)')
@@ -124,8 +116,6 @@ describe('User Library', () => {
       - Completion status is shown on the cover art.
       - Platform icons are shown on the cover art.
       `, () => {
-      cy.wait('@graphql')
-
       cy.get('[data-test="GameFigure"]').as('gameFigures')
       cy.get('@gameFigures')
         .eq(1)
@@ -147,8 +137,6 @@ describe('User Library', () => {
     it(`Games without cover art.
       - No broken images are shown.
       `, () => {
-      cy.wait('@graphql')
-
       cy.get('[data-test="GameFigure"]').as('gameFigures')
       cy.get('@gameFigures')
         .eq(0)
@@ -172,8 +160,6 @@ describe('User Library', () => {
       - Link to go back to all user's libraries.
       - Site-wide links are shown below.
       `, () => {
-      cy.wait('@graphql')
-
       cy.get('[data-test="Navigation"]').within(() => {
         cy.get('[aria-label="Library navigation"]').within(() => {
           cy.get('[role="button"] > div').then(($els) => {

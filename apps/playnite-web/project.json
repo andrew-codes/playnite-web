@@ -379,7 +379,7 @@
       "options": {
         "parallel": false,
         "commands": [
-          "yarn nx run playnite-web-app:build:e2e",
+          "yarn nx run playnite-web-app:build:e2e --skip-nx-cache",
           "yarn tsx scripts/packageFiles.ts"
         ],
         "cwd": "{projectRoot}"

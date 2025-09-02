@@ -7,7 +7,7 @@ import { CacheProvider } from '@emotion/react'
 import { RemixBrowser } from '@remix-run/react'
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql'
 import { createClient } from 'graphql-ws'
-import { startTransition } from 'react'
+import { startTransition, StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import createEmotionCache from './createEmotionCache'
 
@@ -56,17 +56,18 @@ startTransition(() => {
   const client = new ApolloClient({
     cache: new InMemoryCache().restore(hydratedState || {}),
     link,
-    devtools: { enabled: true },
   })
 
   const clientSideCache = createEmotionCache()
 
   const App = (
-    <CacheProvider value={clientSideCache}>
-      <ApolloProvider client={client}>
-        <RemixBrowser />
-      </ApolloProvider>
-    </CacheProvider>
+    <StrictMode>
+      <CacheProvider value={clientSideCache}>
+        <ApolloProvider client={client}>
+          <RemixBrowser />
+        </ApolloProvider>
+      </CacheProvider>
+    </StrictMode>
   )
   if (window.Cypress) {
     createRoot(document.body).render(App)

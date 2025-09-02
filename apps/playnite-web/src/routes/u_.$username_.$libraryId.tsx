@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Game } from '../../.generated/types.generated'
 import { setCompletionStates } from '../api/client/state/completionStatesSlice'
 import { $filterValuesForQuery } from '../api/client/state/librarySlice'
-import Filters from '../components/Filters'
+// import Filters from '../components/Filters'
 import Header from '../components/Header'
 import IconButton from '../components/IconButton'
 import Layout from '../components/Layout'
@@ -111,9 +111,9 @@ function UserLibrary() {
       }
       navs={[LibraryNavigation, MainNavigation]}
     >
-      <MyLibrary games={games} onSelect={handleSelection} bottomOffset={48} />
+      <MyLibrary games={games} onSelect={handleSelection} />
       <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
-        {isFiltersInDrawer ? <Filters onClose={handleClose} /> : <Outlet />}
+        {isFiltersInDrawer ? null : <Outlet />}
       </RightDrawer>
     </Layout>
   )

@@ -1,43 +1,45 @@
 import { Box } from '@mui/material'
-import { FC, useEffect, useState } from 'react'
-import useDimensions from 'react-use-dimensions'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Game } from '../../.generated/types.generated'
-import GameGrid from '../components/GameGrid'
+import GameGrid from './GameGrid'
 
 const MyLibrary: FC<{
   games: Array<Game>
   onSelect?: (evt, game: Game) => void
-  bottomOffset: number
-}> = ({ games, onSelect, bottomOffset }) => {
-  const [ref, dims] = useDimensions({ liveMeasure: true })
-  const [height, setHeight] = useState(0)
-  const [width, setWidth] = useState(0)
+}> = ({ games, onSelect }) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [dimensions, setDimensions] = useState({ width: 1366 })
+
+  const [isClient, setIsClient] = useState(false)
   useEffect(() => {
-    function resize(win: Window) {
-      if (!dims.y || !dims.x || !dims.right || !dims.bottom) {
-        return
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient || !ref.current) return
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width: elementWidth } = entry.contentRect
+        setDimensions({
+          width: Math.max(0, elementWidth),
+        })
       }
-      setHeight(win.document.body.offsetHeight - dims.y - bottomOffset)
-      setWidth(
-        win.document.body.offsetWidth -
-          dims.x -
-          (win.document.body.offsetWidth - dims.right),
-      )
-    }
-    function resizeListener(evt: UIEvent) {
-      resize(evt.target as Window)
-    }
+    })
 
-    if (!height && !width) {
-      resize(window)
-    }
+    resizeObserver.observe(ref.current)
 
-    window.addEventListener('resize', resizeListener)
+    const rect = ref.current.getBoundingClientRect()
+    const initialWidth = rect.width
+
+    setDimensions({
+      width: Math.max(0, initialWidth),
+    })
 
     return () => {
-      window.removeEventListener('resize', resizeListener)
+      resizeObserver.disconnect()
     }
-  }, [dims.x, dims.right, dims.y, bottomOffset])
+  }, [isClient])
 
   return (
     <Box
@@ -46,19 +48,13 @@ const MyLibrary: FC<{
         flex: 1,
         flexGrow: 1,
         width: '100%',
+        height: '100%',
         display: 'flex',
         justifyContent: 'center',
         margin: '0 auto',
       })}
     >
-      {height > 0 && width > 0 && (
-        <GameGrid
-          games={games}
-          height={height}
-          onSelect={onSelect}
-          width={width}
-        />
-      )}
+      <GameGrid games={games} onSelect={onSelect} width={dimensions.width} />
     </Box>
   )
 }

@@ -260,7 +260,6 @@ async function handleBrowserRequest(
   const result = await prerenderStatic({
     tree: App,
     renderFunction: renderToString,
-    diagnostics: true,
   })
   const initialState = client.extract()
 

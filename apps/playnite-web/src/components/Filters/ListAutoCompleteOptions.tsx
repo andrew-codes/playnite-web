@@ -1,5 +1,5 @@
 import { Box, List, ListItem, styled } from '@mui/material'
-import useDimensions from 'react-use-dimensions'
+import useMeasure from 'react-use-measure'
 import { AutoCompleteItem, RenderOptions } from '../AutoComplete'
 
 const FullHeightList = styled(List)(({ theme }) => ({
@@ -41,7 +41,7 @@ const ListAutoCompleteOptions: RenderOptions = ({
 }
 
 const HeightBoundListAutoCompleteOptions: RenderOptions = (props) => {
-  const [ref, dims] = useDimensions({ liveMeasure: true })
+  const [ref, dims] = useMeasure({ polyfill: ResizeObserver })
 
   return (
     <Box
