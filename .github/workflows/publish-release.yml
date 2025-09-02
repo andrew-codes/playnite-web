@@ -129,7 +129,7 @@ jobs:
         env:
           NODE_ENV: production
           LOG_LEVEL: info
-          PLATFORM: linux/amd64,linux/arm64
+          PLATFORM: linux/amd64
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
