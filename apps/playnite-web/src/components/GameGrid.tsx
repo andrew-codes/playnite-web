@@ -20,15 +20,16 @@ const GameGrid: FC<{
   const isSm = useMediaQuery(theme.breakpoints.up('sm'))
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
   const useMoreSpacing = useMediaQuery(theme.breakpoints.down('lg')) && isSm
+
   const columns = useMemo(() => {
-    if (isXxl) return 8
+    if (isXxl) return 9
     if (isXl) return 6
     if (isLg) return 4
     if (isMd) return 3
     if (isSm) return 2
     if (isXs) return 2
     return 2
-  }, [isXl, isLg, isMd, isSm, isXs])
+  }, [isXxl, isXl, isLg, isMd, isSm, isXs])
   const columnWidth = useMemo(() => {
     return Math.floor((width - columns * 16) / columns)
   }, [width, columns])

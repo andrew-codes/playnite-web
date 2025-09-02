@@ -58,8 +58,8 @@ const Drawer: FC<
           display: 'flex',
           position: 'absolute',
           flex: 1,
-          top: 3,
-          right: 3,
+          top: theme.spacing(3),
+          right: theme.spacing(3),
           zIndex: 1200,
         }}
       >

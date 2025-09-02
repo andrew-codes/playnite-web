@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Game } from '../../.generated/types.generated'
 import { setCompletionStates } from '../api/client/state/completionStatesSlice'
 import { $filterValuesForQuery } from '../api/client/state/librarySlice'
-// import Filters from '../components/Filters'
+import Filters from '../components/Filters'
 import Header from '../components/Header'
 import IconButton from '../components/IconButton'
 import Layout from '../components/Layout'
@@ -16,6 +16,7 @@ import LibraryNavigation from '../components/Navigation/LibraryNavigation'
 import MainNavigation from '../components/Navigation/MainNavigation'
 import RightDrawer from '../components/RightDrawer'
 import { useAllGames } from '../hooks/allGames'
+import { useFilteredGames } from '../hooks/useFilteredGames'
 import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
 const loader = requiresUserSetup()
@@ -26,7 +27,7 @@ const Title = styled('span')(({ theme }) => ({
 }))
 
 function UserLibrary() {
-  const { nameFilter, filterItems } = useSelector($filterValuesForQuery)
+  const { filterItems } = useSelector($filterValuesForQuery)
 
   const params = useParams()
   const isOnDetailsPage = (pathname) =>
@@ -46,7 +47,7 @@ function UserLibrary() {
     dispatch(setCompletionStates(data.library.completionStates))
   }, [data?.library?.completionStates])
 
-  const games = data?.library?.games ?? []
+  const games = useFilteredGames(data?.library?.games ?? [])
   if (error) {
     console.error(error, data)
   }
@@ -113,7 +114,7 @@ function UserLibrary() {
     >
       <MyLibrary games={games} onSelect={handleSelection} />
       <RightDrawer open={isRightDrawerOpen} onClose={handleClose}>
-        {isFiltersInDrawer ? null : <Outlet />}
+        {isFiltersInDrawer ? <Filters onClose={handleClose} /> : <Outlet />}
       </RightDrawer>
     </Layout>
   )

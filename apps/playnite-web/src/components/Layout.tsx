@@ -34,7 +34,11 @@ const Layout: FC<
                     height: '100vh',
                   }}
                 >
-                  <Drawer navs={navs} title={title}>
+                  <Drawer
+                    navs={navs}
+                    title={title}
+                    secondaryMenu={secondaryMenu}
+                  >
                     <OuterContainer>{children}</OuterContainer>
                   </Drawer>
                 </Box>

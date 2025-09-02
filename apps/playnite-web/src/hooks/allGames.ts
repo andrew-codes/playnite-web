@@ -19,8 +19,16 @@ const GameFragment = gql`
       id
       title
       cover
+      releaseYear
+      platform {
+        id
+      }
       completionStatus {
+        id
         name
+      }
+      features {
+        id
       }
     }
     releases {
