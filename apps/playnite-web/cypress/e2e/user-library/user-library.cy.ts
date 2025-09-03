@@ -14,10 +14,6 @@ describe('User Library', () => {
     })
   })
 
-  beforeEach(() => {
-    cy.signIn('test', 'test')
-  })
-
   describe('Update completion status.', () => {
     it(`Update completion status.
     - Authenticated user owns library.

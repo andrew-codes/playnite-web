@@ -8,7 +8,7 @@ const MyLibrary: FC<{
   onSelect?: (evt, game: Game) => void
 }> = ({ games, onSelect }) => {
   const ref = useRef<HTMLDivElement>(null)
-  const [dimensions, setDimensions] = useState({ width: 1366 })
+  const [width, setWidth] = useState<null | number>(null)
 
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
@@ -21,9 +21,7 @@ const MyLibrary: FC<{
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const { width: elementWidth } = entry.contentRect
-        setDimensions({
-          width: Math.max(0, elementWidth),
-        })
+        setWidth(Math.max(0, elementWidth))
       }
     })
 
@@ -32,9 +30,7 @@ const MyLibrary: FC<{
     const rect = ref.current.getBoundingClientRect()
     const initialWidth = rect.width
 
-    setDimensions({
-      width: Math.max(0, initialWidth),
-    })
+    setWidth(Math.max(0, initialWidth))
 
     return () => {
       resizeObserver.disconnect()
@@ -54,7 +50,7 @@ const MyLibrary: FC<{
         margin: '0 auto',
       })}
     >
-      <GameGrid games={games} onSelect={onSelect} width={dimensions.width} />
+      {width && <GameGrid games={games} onSelect={onSelect} width={width} />}
     </Box>
   )
 }

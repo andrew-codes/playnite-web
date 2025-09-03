@@ -63,7 +63,7 @@ const GameGrid: FC<{
           ...style,
           left: style.left + horizontalGutter,
           width: style.width - horizontalGutter,
-          height: style.height - verticalGutter,
+          ...(style.height && { height: style?.height - verticalGutter }),
         }}
       >
         <GameFigure
