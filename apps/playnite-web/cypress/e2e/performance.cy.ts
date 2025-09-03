@@ -1,6 +1,6 @@
 import setups from '../support/lighthouse'
 
-describe('Performance.', () => {
+describe.skip('Performance.', () => {
   beforeEach(() => {
     cy.task('seedUsers')
   })

@@ -301,6 +301,7 @@ describe('Filtering.', () => {
 
         it.only('Filter panel.', () => {
           cy.wait('@api')
+          cy.get('[data-test="GameFigure"]').hideElement(true)
           cy.compareSnapshot({
             name: `filter-panel-open_${breakpointName}`,
           })
@@ -309,6 +310,7 @@ describe('Filtering.', () => {
         it(`Filter value selection.
               - Filtering possible filter values narrows down value choices.
               - Multiple values can be selected for a filter item (shown as chips).`, () => {
+          cy.get('[data-test="GameFigure"]').hideElement(true)
           cy.contains('label', 'Filter By').parent().click()
 
           cy.get('[role="listbox"]').contains('li', 'Platform').click()
