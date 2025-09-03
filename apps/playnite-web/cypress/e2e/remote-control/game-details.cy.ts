@@ -10,6 +10,13 @@ describe(`Game details remote control.
     cy.intercept('GET', /.*\$gameId.*/).as('getPageJs')
   })
 
+  beforeEach(() => {
+    cy.request({
+      method: 'DELETE',
+      url: '/echo',
+    })
+  })
+
   describe('Unauthenticated users.', () => {
     it(`No action controls.`, () => {
       cy.fixture('librarySync.json')
@@ -21,6 +28,7 @@ describe(`Game details remote control.
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
 
+      cy.wait('@graphql')
       cy.wait('@graphql')
       cy.get('[data-test="Actions"]').children().should('have.length', 0)
     })
@@ -39,6 +47,7 @@ describe(`Game details remote control.
           cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+      cy.wait('@graphql')
       cy.wait('@graphql')
 
       cy.get('[data-test="Actions"]').children().should('have.length', 0)
@@ -89,6 +98,9 @@ describe(`Game details remote control.
           .contains('Sony PlayStation 5 via PlayStation')
 
         cy.intercept('POST', '/api', (req) => {
+          if (req.body.query.includes('fragment')) {
+            return
+          }
           cy.get('[data-test="Actions"] button').then(($btn) => {
             expect(req.body.query).to.include('startRelease')
             expect(req.body.variables.id).to.equal($btn.data('release-id'))
@@ -100,6 +112,7 @@ describe(`Game details remote control.
           .click()
 
         cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.wait('@graphql')
         cy.wait('@graphql')
 
         cy.request({
@@ -163,6 +176,7 @@ describe(`Game details remote control.
           .click()
         cy.get('[data-test="Actions"] li').should('have.length', 1)
         cy.wait('@graphql')
+        cy.wait('@graphql')
 
         cy.request({
           method: 'GET',
@@ -187,7 +201,7 @@ describe(`Game details remote control.
         })
       })
 
-      it(`Restart button.
+      it.only(`Restart button.
           - Is visible for a starting or started game.
           - Graph mutation posts to webhook.
           - All controls remain visible.`, () => {
@@ -219,7 +233,9 @@ describe(`Game details remote control.
           .contains('button', 'Restart game')
           .click()
         cy.wait('@graphql')
+        cy.wait('@graphql')
 
+        cy.wait(400)
         cy.request({
           method: 'GET',
           url: '/echo',

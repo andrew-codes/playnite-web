@@ -37,9 +37,11 @@ export function useFilteredGames(games: Game[]): Game[] {
           }
 
           const gameValue = get(game, filterItem.field)
-          console.debug(game, gameValue, filterItem.values)
 
-          // Handle array values (e.g., features)
+          if (!gameValue) {
+            return false
+          }
+
           if (Array.isArray(gameValue)) {
             return gameValue.some((item) => {
               const itemValue = item?.id?.toString() || item?.toString()

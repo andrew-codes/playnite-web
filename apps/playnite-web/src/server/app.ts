@@ -115,7 +115,7 @@ async function run() {
     app.use(express.urlencoded({ extended: true }))
     app.use(express.text())
     app.use(express.raw())
-    const requestBodies: Array<any> = []
+    let requestBodies: Array<any> = []
     app.post('/echo', (req, resp) => {
       const body = req.body
       requestBodies.push(body)
@@ -124,6 +124,10 @@ async function run() {
     app.get('/echo', (req, resp) => {
       const body = requestBodies.pop()
       resp.send(body)
+    })
+    app.delete('/echo', (req, resp) => {
+      requestBodies = []
+      resp.sendStatus(204)
     })
   }
 

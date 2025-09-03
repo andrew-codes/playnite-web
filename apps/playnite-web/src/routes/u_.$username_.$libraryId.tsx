@@ -1,11 +1,16 @@
 import { FilterAlt } from '@mui/icons-material'
-import { styled, Typography } from '@mui/material'
-import { Outlet, useLocation, useNavigate, useParams } from '@remix-run/react'
+import { Typography } from '@mui/material'
+import {
+  Location,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from '@remix-run/react'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Game } from '../../.generated/types.generated'
 import { setCompletionStates } from '../api/client/state/completionStatesSlice'
-import { $filterValuesForQuery } from '../api/client/state/librarySlice'
 import Filters from '../components/Filters'
 import Header from '../components/Header'
 import IconButton from '../components/IconButton'
@@ -21,19 +26,16 @@ import { requiresUserSetup } from '../server/loaders/requiresUserSetup'
 
 const loader = requiresUserSetup()
 
-const Title = styled('span')(({ theme }) => ({
-  textAlign: 'center',
-  flex: 1,
-}))
-
 function UserLibrary() {
-  const { filterItems } = useSelector($filterValuesForQuery)
-
   const params = useParams()
-  const isOnDetailsPage = (pathname) =>
+  const isOnDetailsPage = (location: Location) =>
     new RegExp(
       `^/u/${params.username}/${params.libraryId}/Game:[1-9][0-9]*$`,
-    ).test(pathname)
+    ).test(location.pathname)
+  const isOnFilterPane = (location: Location) =>
+    new RegExp(`^/u/${params.username}/${params.libraryId}`).test(
+      location.pathname,
+    ) && location.search.includes('showFilterPane=true')
 
   const dispatch = useDispatch()
   const { data, error } = useAllGames(params.libraryId, {
@@ -58,30 +60,32 @@ function UserLibrary() {
   }
 
   const location = useLocation()
+
   const [isRightDrawerOpen, setRightDrawerOpen] = useState(
-    isOnDetailsPage(location.pathname),
+    isOnDetailsPage(location) || isOnFilterPane(location),
+  )
+  const [isFiltersInDrawer, setFiltersInDrawer] = useState(
+    isOnFilterPane(location),
   )
   useEffect(() => {
-    setRightDrawerOpen(isOnDetailsPage(location.pathname))
-  }, [location.pathname])
-  const [isFiltersInDrawer, setFiltersInDrawer] = useState(false)
+    setRightDrawerOpen(isOnDetailsPage(location) || isOnFilterPane(location))
+    setFiltersInDrawer(isOnFilterPane(location))
+  }, [location])
+
   const navigate = useNavigate()
   const handleClose = useCallback(() => {
-    setRightDrawerOpen(false)
-    setFiltersInDrawer(false)
-    if (!isOnDetailsPage(location.pathname)) {
-      return
-    }
-
     navigate(`/u/${params.username}/${params.libraryId}`)
-  }, [location.pathname, params.username, params.libraryId])
+  }, [location, params.username, params.libraryId])
   const handleSelection = useCallback(
     (evt, game: Game) => {
-      setRightDrawerOpen(true)
       navigate(`/u/${params.username}/${params.libraryId}/${game.id}`)
     },
     [params.username, params.libraryId],
   )
+
+  const handleOpenFilter = () => {
+    navigate(`/u/${params.username}/${params.libraryId}?showFilterPane=true`)
+  }
 
   return (
     <Layout
@@ -101,10 +105,7 @@ function UserLibrary() {
       secondaryMenu={
         <IconButton
           aria-label="Open filter drawer"
-          onClick={() => {
-            setFiltersInDrawer(true)
-            setRightDrawerOpen(true)
-          }}
+          onClick={handleOpenFilter}
           name="open-filter-drawer"
         >
           <FilterAlt />

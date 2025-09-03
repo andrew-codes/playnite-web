@@ -261,10 +261,14 @@ describe('Update a release.', () => {
       cy.syncLibrary('test', 'test', libraryData).then((library) => {
         cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
         cy.wait(200)
-        cy.get('[data-test=GameFigure]').eq(1).click()
-        cy.wait('@userLibrary')
-        cy.wait('@graphql', { timeout: 3000 })
-        cy.wait(200)
+        cy.get('[data-test=GameFigure]')
+          .eq(1)
+          .find('button img')
+          .parent()
+          .click()
+        cy.wait('@graphql')
+        cy.wait('@graphql')
+
         cy.contains('h2', 'HOW LONG WILL YOU SURVIVE?').should('be.visible')
 
         cy.request('POST', '/api', {

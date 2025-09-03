@@ -74,21 +74,6 @@ export const syncLibrary: NonNullable<
   })
   logger.debug(`Removed ${removedFeatures.count} features.`)
 
-  // Platforms
-  logger.debug(
-    `Removing platforms from library ${libraryId}`,
-    _arg.libraryData.remove.platforms,
-  )
-  const deletedPlatforms = await _ctx.db.platform.deleteMany({
-    where: {
-      libraryId,
-      playniteId: {
-        in: _arg.libraryData.remove.platforms,
-      },
-    },
-  })
-  logger.debug(`Removed ${deletedPlatforms.count} platforms.`)
-
   //  Sources
   logger.debug(
     `Removing sources from library ${libraryId}`,
@@ -103,6 +88,21 @@ export const syncLibrary: NonNullable<
     },
   })
   logger.debug(`Removed ${removedSources.count} sources.`)
+
+  // Platforms
+  logger.debug(
+    `Removing platforms from library ${libraryId}`,
+    _arg.libraryData.remove.platforms,
+  )
+  const deletedPlatforms = await _ctx.db.platform.deleteMany({
+    where: {
+      libraryId,
+      playniteId: {
+        in: _arg.libraryData.remove.platforms,
+      },
+    },
+  })
+  logger.debug(`Removed ${deletedPlatforms.count} platforms.`)
 
   // Tags
   logger.debug(
