@@ -35,20 +35,14 @@ describe('Game details.', () => {
               cy.wait('@graphql')
               cy.get('[data-test="GameDetails"]').should('be.visible')
 
+              cy.get('[data-test="GameFigure"] button img').hideElement(true)
               cy.compareSnapshot({
                 name: `${locationName}-${breakpointName}`,
                 cypressScreenshotOptions: {
-                  blackout: [
-                    '[data-test="GameFigure"] button',
-                    '[data-test="Description"]',
-                  ],
+                  blackout: ['[data-test="Description"]'],
                   onBeforeScreenshot($el) {
                     Cypress.$('[data-test="Description"]').css(
                       'overflow-y',
-                      'hidden',
-                    )
-                    Cypress.$('[data-test="GameFigure"] button').css(
-                      'visibility',
                       'hidden',
                     )
                   },

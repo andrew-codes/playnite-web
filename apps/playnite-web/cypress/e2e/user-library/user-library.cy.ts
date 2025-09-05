@@ -204,10 +204,10 @@ describe('User Library', () => {
         it(`Displays the library correctly`, () => {
           cy.get('[data-test="GameGrid"]').find('> div').scrollIntoView()
           cy.wait(500)
+          cy.get('[data-test="GameFigure"] button img').hideElement(true)
           cy.compareSnapshot({
             name: `library-${name}`,
             cypressScreenshotOptions: {
-              blackout: ['[data-test="GameFigure"] button'],
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
                 Cypress.$('[data-test="GameFigure"] button').css(
@@ -222,10 +222,10 @@ describe('User Library', () => {
         it(`Scrolled`, () => {
           cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
           cy.wait(500)
+          cy.get('[data-test="GameFigure"] button img').hideElement(true)
           cy.compareSnapshot({
             name: `scrolled-${name}`,
             cypressScreenshotOptions: {
-              blackout: ['[data-test="GameFigure"] button'],
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
                 Cypress.$('[data-test="GameFigure"] button').css(

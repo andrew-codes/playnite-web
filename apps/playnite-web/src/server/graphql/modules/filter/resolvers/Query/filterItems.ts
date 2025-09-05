@@ -16,6 +16,9 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
     select: {
       releaseYear: true,
     },
+    orderBy: {
+      releaseYear: 'desc',
+    },
   })
 
   if (releaseYears.length > 0) {
@@ -39,6 +42,9 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
       id: true,
       name: true,
     },
+    orderBy: {
+      name: 'asc',
+    },
   })
 
   if (completionStates.length > 0) {
@@ -58,6 +64,9 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
       id: true,
       name: true,
     },
+    orderBy: {
+      name: 'asc',
+    },
   })
   if (features.length > 0) {
     filterItems.push({
@@ -75,6 +84,9 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
     select: {
       id: true,
       name: true,
+    },
+    orderBy: {
+      name: 'asc',
     },
   })
   if (platforms) {

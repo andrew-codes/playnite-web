@@ -52,7 +52,10 @@ const GameFigure: FC<
         width={width}
       >
         <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
-          <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
+          <Button
+            onClick={(evt) => onSelect?.(evt, game)}
+            sx={{ padding: 0, height: width, width }}
+          >
             {game.primaryRelease?.cover && (
               <Image
                 data-test="GameCoverImage"

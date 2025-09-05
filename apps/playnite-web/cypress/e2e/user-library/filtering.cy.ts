@@ -299,7 +299,7 @@ describe('Filtering.', () => {
           })
         })
 
-        it.only('Filter panel.', () => {
+        it('Filter panel.', () => {
           cy.wait('@api')
           cy.get('[data-test="GameFigure"]').hideElement(true)
           cy.compareSnapshot({
