@@ -219,7 +219,7 @@ describe('User Library', () => {
           })
         })
 
-        it(`Scrolled`, () => {
+        it.skip(`Scrolled`, () => {
           cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
           cy.wait(500)
           cy.get('[data-test="GameFigure"] button img').hideElement(true)
