@@ -16,7 +16,6 @@ const Image = styled('img', {
   shouldForwardProp: (prop) => prop !== 'width',
 })<{ width: string }>(({ width, theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
   height: `${width}`,
   objectFit: 'cover',
   width,
@@ -27,7 +26,6 @@ const ImagePlaceholder = styled('div', {
   shouldForwardProp: (prop) => prop !== 'width',
 })<{ width: string }>(({ width, theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
   height: `${width}`,
   objectFit: 'cover',
   width,
@@ -54,7 +52,13 @@ const GameFigure: FC<
         <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
           <Button
             onClick={(evt) => onSelect?.(evt, game)}
-            sx={{ padding: 0, height: width, width }}
+            sx={(theme) => ({
+              padding: 0,
+              height: width,
+              width,
+              borderRadius: `${theme.shape.borderRadius}px`,
+              boxShadow: theme.shadows[3],
+            })}
           >
             {game.primaryRelease?.cover && (
               <Image

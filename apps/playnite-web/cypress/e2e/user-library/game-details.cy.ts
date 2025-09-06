@@ -35,7 +35,7 @@ describe('Game details.', () => {
               cy.wait('@graphql')
               cy.get('[data-test="GameDetails"]').should('be.visible')
               cy.wait('@graphql')
-              cy.get('[data-test="GameFigure"] button img').hideElement(true)
+              cy.get('[data-test="GameFigure"]').hideElement(true)
               cy.compareSnapshot({
                 name: `${locationName}-${breakpointName}`,
                 cypressScreenshotOptions: {

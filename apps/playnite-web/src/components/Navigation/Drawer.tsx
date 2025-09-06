@@ -16,9 +16,15 @@ const Drawer: FC<
     <MobileDrawerNavigation
       navs={navs}
       title={
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          {title}
-          <Box sx={{ alignSelf: 'flex-end' }}>{secondaryMenu}</Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            width: '100%',
+          }}
+        >
+          {secondaryMenu}
         </Box>
       }
     >
@@ -29,6 +35,7 @@ const Drawer: FC<
           width: '100%',
           height: '100%',
           margin: '0 auto',
+          overflow: 'hidden',
           [theme.breakpoints.down('lg')]: {
             padding: `${theme.spacing(3)} ${theme.spacing(2)}`,
           },
@@ -48,6 +55,7 @@ const Drawer: FC<
         display: 'flex',
         flexDirection: 'column',
         margin: '0 auto',
+        overflow: 'hidden',
         [theme.breakpoints.up('lg')]: {
           padding: `${theme.spacing(11)} ${theme.spacing(5)} ${theme.spacing(6)} ${theme.spacing(16)}`,
         },

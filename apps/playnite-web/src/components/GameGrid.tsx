@@ -19,7 +19,7 @@ const GameGrid: FC<{
   const isMd = useMediaQuery(theme.breakpoints.up('md'))
   const isSm = useMediaQuery(theme.breakpoints.up('sm'))
   const isXs = useMediaQuery(theme.breakpoints.up('xs'))
-  const useMoreSpacing = useMediaQuery(theme.breakpoints.down('lg')) && isSm
+  const useMoreSpacing = isSm
 
   const columns = useMemo(() => {
     if (isXxl) return 9
@@ -30,11 +30,12 @@ const GameGrid: FC<{
     if (isXs) return 2
     return 2
   }, [isXxl, isXl, isLg, isMd, isSm, isXs])
+  const horizontalGap = useMoreSpacing ? 24 : 8
   const columnWidth = useMemo(() => {
-    return Math.floor((width - columns * 16) / columns)
+    return Math.floor((width - columns) / columns)
   }, [width, columns])
   const rowHeight = useMemo(() => {
-    return columnWidth + 96
+    return columnWidth + 64
   }, [columnWidth])
   const rowCount = Math.ceil(games.length / columns)
 
@@ -48,9 +49,6 @@ const GameGrid: FC<{
     })
   }, [])
 
-  const horizontalGutter = useMoreSpacing ? 16 : 8
-  const verticalGutter = 6
-
   const Cell = ({ columnIndex, rowIndex, style }) => {
     const game = games[rowIndex * columns + columnIndex]
     if (!game) {
@@ -61,15 +59,15 @@ const GameGrid: FC<{
       <div
         style={{
           ...style,
-          left: style.left + horizontalGutter,
-          width: style.width - horizontalGutter,
-          ...(style.height && { height: style?.height - verticalGutter }),
+          left: style.left,
+          width: style.width,
+          ...(style.height && { height: style?.height }),
         }}
       >
         <GameFigure
           game={game}
           height={`${rowHeight}px`}
-          width={`calc(${columnWidth}px)`}
+          width={`${style.width - horizontalGap}px`}
           onSelect={(evt) => {
             onSelect?.(evt, game)
           }}
@@ -104,9 +102,9 @@ const GameGrid: FC<{
         cellProps={{ games }}
         cellComponent={Cell}
         columnCount={columns}
-        columnWidth={columnWidth + horizontalGutter}
+        columnWidth={columnWidth}
         rowCount={rowCount}
-        rowHeight={rowHeight + verticalGutter}
+        rowHeight={rowHeight}
       />
     </GridRoot>
   )

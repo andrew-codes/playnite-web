@@ -208,6 +208,7 @@ const MobileDrawerNavigation: FC<
               )}
             </IconButton>
           </AppBarHeader>
+          {title}
         </Toolbar>
       </AppBar>
       <Drawer

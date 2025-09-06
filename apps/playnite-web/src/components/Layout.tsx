@@ -49,6 +49,7 @@ const Layout: FC<
                   display: 'flex',
                   flexDirection: 'column',
                   width: '100%',
+                  height: '100vh',
                 }}
               >
                 <Drawer navs={navs} title={title} secondaryMenu={secondaryMenu}>

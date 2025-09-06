@@ -319,20 +319,27 @@ const FilterForm: FC<{
         <Dialog
           open={filterByOpen}
           onClose={handleCloseFilterValues}
-          PaperProps={{
-            sx: (theme) => ({
-              width: '100%',
-              maxWidth: '100%',
-              maxHeight: '100%',
-              height: `calc(100% - ${theme.spacing(6)})`,
-              padding: '24px',
-
-              '.MuiDialogContent-root': {
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-              },
-            }),
+          slotProps={{
+            paper: {
+              sx: (theme) => ({
+                width: '100%',
+                maxWidth: '100%',
+                maxHeight: '100%',
+                height: `calc(100% - ${theme.spacing(6)})`,
+                padding: '24px',
+                '> .MuiTypography-root': {
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                },
+                '.MuiDialogContent-root': {
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                },
+              }),
+            },
           }}
         >
           <DialogTitle>

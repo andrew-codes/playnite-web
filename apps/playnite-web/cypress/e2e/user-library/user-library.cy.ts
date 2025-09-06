@@ -31,6 +31,8 @@ describe('User Library', () => {
         .eq(0)
         .click({ force: true })
       cy.wait('@graphql')
+      cy.wait('@graphql')
+      cy.wait(500)
 
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',
@@ -76,7 +78,7 @@ describe('User Library', () => {
 
     it(`Update completion status: after scrolling.`, () => {
       cy.get('[data-test="GameGrid"]').as('games')
-      cy.wait(500)
+      cy.get('[data-test="GameFigure"]').contains('3DMark')
       cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
       cy.get('[data-test="GameFigure"]')
         .contains('Yakuza: Like A Dragon')
@@ -90,6 +92,8 @@ describe('User Library', () => {
         .eq(0)
         .click({ force: true })
       cy.wait('@graphql')
+      cy.wait('@graphql')
+      cy.wait(500)
 
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',
@@ -203,35 +207,29 @@ describe('User Library', () => {
 
         it(`Displays the library correctly`, () => {
           cy.get('[data-test="GameGrid"]').find('> div').scrollIntoView()
+          cy.get('[data-test="GameFigure"]').contains('3DMark')
           cy.wait(500)
-          cy.get('[data-test="GameFigure"] button img').hideElement(true)
+          cy.get('[data-test="GameFigure"] button > *').hideElement(true)
           cy.compareSnapshot({
             name: `library-${name}`,
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
-                Cypress.$('[data-test="GameFigure"] button').css(
-                  'visibility',
-                  'hidden',
-                )
               },
             },
           })
         })
 
-        it.skip(`Scrolled`, () => {
+        it(`Scrolled`, () => {
           cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
+          cy.get('[data-test="GameFigure"]').contains('Yakuza: Like A Dragon')
           cy.wait(500)
-          cy.get('[data-test="GameFigure"] button img').hideElement(true)
+          cy.get('[data-test="GameFigure"] button > *').hideElement(true)
           cy.compareSnapshot({
             name: `scrolled-${name}`,
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
-                Cypress.$('[data-test="GameFigure"] button').css(
-                  'visibility',
-                  'hidden',
-                )
               },
             },
           })
