@@ -34,7 +34,7 @@ describe('Game details.', () => {
                 .click({ force: true })
               cy.wait('@graphql')
               cy.get('[data-test="GameDetails"]').should('be.visible')
-
+              cy.wait('@graphql')
               cy.get('[data-test="GameFigure"] button img').hideElement(true)
               cy.compareSnapshot({
                 name: `${locationName}-${breakpointName}`,
