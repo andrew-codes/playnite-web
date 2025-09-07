@@ -14,10 +14,10 @@ Playnite Web offers:
 - remote control of staring and stopping games with home automation; locked behind a username/password login screen
 - a graph API to help you build your own, unique experiences
 
-![Browse screenshot](_docs/assets/images/browse-screenshot.png)
+![Browse screenshot](./docs/assets/images/browse-screenshot.png)
 
 ## Getting Started
 
-1. [Install and run Playnite Web](./docs/documents/guides/setup.md)
+1. [Install and run Playnite Web](./docs/guides/setup.md)
 2. [Playnite Web API and other documentation](./docs)
-3. [Contributions](./docs/documents/CONTRIBUTING.md) and [local development environment](./docs/documents/contributing/development-environment)
+3. [Contributions](./docs/CONTRIBUTING.md) and [local development environment](./docs/contributing/development-environment/index.md)
