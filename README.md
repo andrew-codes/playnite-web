@@ -19,5 +19,5 @@ Playnite Web offers:
 ## Getting Started
 
 1. [Install and run Playnite Web](./docs/guides/setup.md)
-2. [Playnite Web API and other documentation](./docs)
+2. [Playnite Web API](./docs/api/data-model.md) and other documentation lives in the [docs](./docs/) directory of this repo.
 3. [Contributions](./docs/CONTRIBUTING.md) and [local development environment](./docs/contributing/development-environment/index.md)
