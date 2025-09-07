@@ -42,6 +42,11 @@ beforeEach(() => {
 
 beforeEach(() => {
   cy.intercept('POST', '/api').as('finish')
+  cy.get('@finish.all', { log: false }).then((recs) => {
+    if (recs?.length) {
+      cy.wait('@finish', { requestTimeout: 10000 })
+    }
+  })
 })
 
 afterEach(() => {
