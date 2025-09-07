@@ -87,8 +87,6 @@ const RAW_RUNTIME_STATE =
           ["semantic-release", "npm:24.2.7"],\
           ["ts-jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.4.1"],\
           ["tslib", "npm:2.8.1"],\
-          ["typedoc", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:0.28.10"],\
-          ["typedoc-plugin-markdown", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:4.8.1"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["typescript-remix-routes-plugin", "npm:1.0.1"]\
         ],\
@@ -7290,20 +7288,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@gerrit0/mini-shiki", [\
-      ["npm:3.11.0", {\
-        "packageLocation": "./.yarn/cache/@gerrit0-mini-shiki-npm-3.11.0-4a65f5a51e-9e58d72447.zip/node_modules/@gerrit0/mini-shiki/",\
-        "packageDependencies": [\
-          ["@gerrit0/mini-shiki", "npm:3.11.0"],\
-          ["@shikijs/engine-oniguruma", "npm:3.11.0"],\
-          ["@shikijs/langs", "npm:3.11.0"],\
-          ["@shikijs/themes", "npm:3.11.0"],\
-          ["@shikijs/types", "npm:3.11.0"],\
-          ["@shikijs/vscode-textmate", "npm:10.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@graphql-codegen/add", [\
       ["npm:5.0.3", {\
         "packageLocation": "./.yarn/cache/@graphql-codegen-add-npm-5.0.3-77e9d3caa9-2ddb8b57a0.zip/node_modules/@graphql-codegen/add/",\
@@ -12214,57 +12198,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@shikijs/engine-oniguruma", [\
-      ["npm:3.11.0", {\
-        "packageLocation": "./.yarn/cache/@shikijs-engine-oniguruma-npm-3.11.0-a45409fff3-bacad748f0.zip/node_modules/@shikijs/engine-oniguruma/",\
-        "packageDependencies": [\
-          ["@shikijs/engine-oniguruma", "npm:3.11.0"],\
-          ["@shikijs/types", "npm:3.11.0"],\
-          ["@shikijs/vscode-textmate", "npm:10.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@shikijs/langs", [\
-      ["npm:3.11.0", {\
-        "packageLocation": "./.yarn/cache/@shikijs-langs-npm-3.11.0-57e8643205-6eb1e9ba28.zip/node_modules/@shikijs/langs/",\
-        "packageDependencies": [\
-          ["@shikijs/langs", "npm:3.11.0"],\
-          ["@shikijs/types", "npm:3.11.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@shikijs/themes", [\
-      ["npm:3.11.0", {\
-        "packageLocation": "./.yarn/cache/@shikijs-themes-npm-3.11.0-f2c924f614-825576620d.zip/node_modules/@shikijs/themes/",\
-        "packageDependencies": [\
-          ["@shikijs/themes", "npm:3.11.0"],\
-          ["@shikijs/types", "npm:3.11.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@shikijs/types", [\
-      ["npm:3.11.0", {\
-        "packageLocation": "./.yarn/cache/@shikijs-types-npm-3.11.0-2663ddf03c-a209a84d86.zip/node_modules/@shikijs/types/",\
-        "packageDependencies": [\
-          ["@shikijs/types", "npm:3.11.0"],\
-          ["@shikijs/vscode-textmate", "npm:10.0.2"],\
-          ["@types/hast", "npm:3.0.4"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@shikijs/vscode-textmate", [\
-      ["npm:10.0.2", {\
-        "packageLocation": "./.yarn/cache/@shikijs-vscode-textmate-npm-10.0.2-c80a8c15da-36b682d691.zip/node_modules/@shikijs/vscode-textmate/",\
-        "packageDependencies": [\
-          ["@shikijs/vscode-textmate", "npm:10.0.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@sideway/address", [\
       ["npm:4.1.5", {\
         "packageLocation": "./.yarn/cache/@sideway-address-npm-4.1.5-a3852745c8-638eb6f7e7.zip/node_modules/@sideway/address/",\
@@ -12808,14 +12741,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/hast", "npm:2.3.8"],\
           ["@types/unist", "npm:2.0.10"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:3.0.4", {\
-        "packageLocation": "./.yarn/cache/@types-hast-npm-3.0.4-640776a343-3249781a51.zip/node_modules/@types/hast/",\
-        "packageDependencies": [\
-          ["@types/hast", "npm:3.0.4"],\
-          ["@types/unist", "npm:3.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -13379,13 +13304,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-unist-npm-2.0.10-f9b9ac478e-5f247dc222.zip/node_modules/@types/unist/",\
         "packageDependencies": [\
           ["@types/unist", "npm:2.0.10"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/cache/@types-unist-npm-3.0.3-1c20461f2e-2b1e4adcab.zip/node_modules/@types/unist/",\
-        "packageDependencies": [\
-          ["@types/unist", "npm:3.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -19351,13 +19269,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/entities-npm-2.2.0-0fc8d5b2f7-7fba6af1f1.zip/node_modules/entities/",\
         "packageDependencies": [\
           ["entities", "npm:2.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:4.5.0", {\
-        "packageLocation": "./.yarn/cache/entities-npm-4.5.0-7cdb83b832-5b039739f7.zip/node_modules/entities/",\
-        "packageDependencies": [\
-          ["entities", "npm:4.5.0"]\
         ],\
         "linkType": "HARD"\
       }],\
@@ -25679,16 +25590,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["linkify-it", [\
-      ["npm:5.0.0", {\
-        "packageLocation": "./.yarn/cache/linkify-it-npm-5.0.0-adb5f9c96f-ff4abbcdfa.zip/node_modules/linkify-it/",\
-        "packageDependencies": [\
-          ["linkify-it", "npm:5.0.0"],\
-          ["uc.micro", "npm:2.1.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["listr2", [\
       ["npm:3.14.0", {\
         "packageLocation": "./.yarn/cache/listr2-npm-3.14.0-446f504112-8301703876.zip/node_modules/listr2/",\
@@ -26212,15 +26113,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["lunr", [\
-      ["npm:2.3.9", {\
-        "packageLocation": "./.yarn/cache/lunr-npm-2.3.9-fa3aa9c2d6-77d7dbb4fb.zip/node_modules/lunr/",\
-        "packageDependencies": [\
-          ["lunr", "npm:2.3.9"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["magic-string", [\
       ["npm:0.25.9", {\
         "packageLocation": "./.yarn/cache/magic-string-npm-0.25.9-0b51c0ea50-37f5e01a7e.zip/node_modules/magic-string/",\
@@ -26361,21 +26253,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/markdown-extensions-npm-1.1.1-633329e3d0-eb91540165.zip/node_modules/markdown-extensions/",\
         "packageDependencies": [\
           ["markdown-extensions", "npm:1.1.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["markdown-it", [\
-      ["npm:14.1.0", {\
-        "packageLocation": "./.yarn/cache/markdown-it-npm-14.1.0-e337d75bfe-9a6bb44418.zip/node_modules/markdown-it/",\
-        "packageDependencies": [\
-          ["argparse", "npm:2.0.1"],\
-          ["entities", "npm:4.5.0"],\
-          ["linkify-it", "npm:5.0.0"],\
-          ["markdown-it", "npm:14.1.0"],\
-          ["mdurl", "npm:2.0.0"],\
-          ["punycode.js", "npm:2.3.1"],\
-          ["uc.micro", "npm:2.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -26617,15 +26494,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@types/mdast", "npm:3.0.15"],\
           ["mdast-util-to-string", "npm:3.2.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["mdurl", [\
-      ["npm:2.0.0", {\
-        "packageLocation": "./.yarn/cache/mdurl-npm-2.0.0-3259713daf-633db52227.zip/node_modules/mdurl/",\
-        "packageDependencies": [\
-          ["mdurl", "npm:2.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -29779,8 +29647,6 @@ const RAW_RUNTIME_STATE =
           ["semantic-release", "npm:24.2.7"],\
           ["ts-jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.4.1"],\
           ["tslib", "npm:2.8.1"],\
-          ["typedoc", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:0.28.10"],\
-          ["typedoc-plugin-markdown", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:4.8.1"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["typescript-remix-routes-plugin", "npm:1.0.1"]\
         ],\
@@ -30607,15 +30473,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/punycode-npm-2.3.1-97543c420d-14f76a8206.zip/node_modules/punycode/",\
         "packageDependencies": [\
           ["punycode", "npm:2.3.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["punycode.js", [\
-      ["npm:2.3.1", {\
-        "packageLocation": "./.yarn/cache/punycode.js-npm-2.3.1-9084ecbbf5-1d12c1c0e0.zip/node_modules/punycode.js/",\
-        "packageDependencies": [\
-          ["punycode.js", "npm:2.3.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -34830,55 +34687,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["typedoc", [\
-      ["npm:0.28.10", {\
-        "packageLocation": "./.yarn/cache/typedoc-npm-0.28.10-58a1d5be8e-e1a91b87d2.zip/node_modules/typedoc/",\
-        "packageDependencies": [\
-          ["typedoc", "npm:0.28.10"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:0.28.10", {\
-        "packageLocation": "./.yarn/__virtual__/typedoc-virtual-74e726483d/0/cache/typedoc-npm-0.28.10-58a1d5be8e-e1a91b87d2.zip/node_modules/typedoc/",\
-        "packageDependencies": [\
-          ["@gerrit0/mini-shiki", "npm:3.11.0"],\
-          ["@types/typescript", null],\
-          ["lunr", "npm:2.3.9"],\
-          ["markdown-it", "npm:14.1.0"],\
-          ["minimatch", "npm:9.0.5"],\
-          ["typedoc", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:0.28.10"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
-          ["yaml", "npm:2.8.0"]\
-        ],\
-        "packagePeers": [\
-          "@types/typescript",\
-          "typescript"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["typedoc-plugin-markdown", [\
-      ["npm:4.8.1", {\
-        "packageLocation": "./.yarn/cache/typedoc-plugin-markdown-npm-4.8.1-1ccb344fb6-8db5ff5498.zip/node_modules/typedoc-plugin-markdown/",\
-        "packageDependencies": [\
-          ["typedoc-plugin-markdown", "npm:4.8.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
-      ["virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:4.8.1", {\
-        "packageLocation": "./.yarn/__virtual__/typedoc-plugin-markdown-virtual-3e4de5e5cb/0/cache/typedoc-plugin-markdown-npm-4.8.1-1ccb344fb6-8db5ff5498.zip/node_modules/typedoc-plugin-markdown/",\
-        "packageDependencies": [\
-          ["@types/typedoc", null],\
-          ["typedoc", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:0.28.10"],\
-          ["typedoc-plugin-markdown", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:4.8.1"]\
-        ],\
-        "packagePeers": [\
-          "@types/typedoc",\
-          "typedoc"\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["typescript", [\
       ["patch:typescript@npm%3A4.9.5#optional!builtin<compat/typescript>::version=4.9.5&hash=289587", {\
         "packageLocation": "./.yarn/cache/typescript-patch-32ada147aa-e3333f887c.zip/node_modules/typescript/",\
@@ -34933,15 +34741,6 @@ const RAW_RUNTIME_STATE =
           ["node-fetch", "virtual:9c67668db478e95ba4d6a763bc55027eeff0d22eaf59478017ea07386fc33a3c7b7b625af78aa86a33991a9a500a7aa216e28632de568f02adefd662ef53a42d#npm:2.7.0"],\
           ["ua-is-frozen", "npm:0.1.2"],\
           ["ua-parser-js", "npm:2.0.4"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["uc.micro", [\
-      ["npm:2.1.0", {\
-        "packageLocation": "./.yarn/cache/uc.micro-npm-2.1.0-c45282c865-8862eddb41.zip/node_modules/uc.micro/",\
-        "packageDependencies": [\
-          ["uc.micro", "npm:2.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -37055,13 +36854,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/yaml-npm-2.7.0-bb348b356b-886a7d2abb.zip/node_modules/yaml/",\
         "packageDependencies": [\
           ["yaml", "npm:2.7.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:2.8.0", {\
-        "packageLocation": "./.yarn/cache/yaml-npm-2.8.0-01747dd315-f6f7310cf7.zip/node_modules/yaml/",\
-        "packageDependencies": [\
-          ["yaml", "npm:2.8.0"]\
         ],\
         "linkType": "HARD"\
       }],\

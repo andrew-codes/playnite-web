@@ -7,5 +7,4 @@ type Tag {
 
 extend type Query {
   tag(id: String!): Tag
-  tags(libraryId: String!): [Tag!]!
 }

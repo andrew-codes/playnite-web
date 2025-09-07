@@ -17,9 +17,7 @@ export const Tag: TagResolvers = {
         },
       },
       orderBy: {
-        PrimaryRelease: {
-          title: 'asc',
-        },
+        title: 'asc',
       },
     })
     return games

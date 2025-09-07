@@ -75,10 +75,4 @@ const logger = winston.createLogger({
   transports: transports,
 })
 
-declare module 'winston' {
-  interface Logger {
-    e2e(message: string, meta?: any): Logger
-  }
-}
-
 export default logger

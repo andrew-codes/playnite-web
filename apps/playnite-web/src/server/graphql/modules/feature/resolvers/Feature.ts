@@ -19,9 +19,7 @@ export const Feature: FeatureResolvers = {
         },
       },
       orderBy: {
-        PrimaryRelease: {
-          title: 'asc',
-        },
+        title: 'asc',
       },
     })
     return games

@@ -2,6 +2,7 @@ import { merge, omit } from 'lodash-es'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
 import logger from '../../../../../logger.js'
 import { fromString, hasIdentity } from '../../../../../oid.js'
+import { GraphUser } from '../../../../resolverTypes.js'
 
 export const me: NonNullable<QueryResolvers['me']> = async (
   _parent,
@@ -16,7 +17,7 @@ export const me: NonNullable<QueryResolvers['me']> = async (
       username: 'Unknown',
       email: 'Unknown',
       name: 'Unknown',
-    }
+    } as unknown as GraphUser
   }
 
   const userId = fromString(_ctx.jwt.payload.id)
@@ -26,7 +27,7 @@ export const me: NonNullable<QueryResolvers['me']> = async (
       username: 'Unknown',
       email: 'Unknown',
       name: 'Unknown',
-    }
+    } as unknown as GraphUser
   }
 
   return merge(

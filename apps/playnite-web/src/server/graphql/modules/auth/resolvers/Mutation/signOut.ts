@@ -25,6 +25,4 @@ export const signOut: NonNullable<MutationResolvers['signOut']> = async (
   return _ctx.db.user.findUniqueOrThrow({
     where: { id: userId.id },
   })
-
-  return claim
 }

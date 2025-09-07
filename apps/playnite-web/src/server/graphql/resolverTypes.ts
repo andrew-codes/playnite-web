@@ -1,4 +1,4 @@
-import { RunState } from '../data/types.entities.js'
+import { RunState } from '../../api/client/runStates.js'
 import { DomainType } from '../oid.js'
 import { Prisma } from './../data/providers/postgres/client.js'
 
@@ -39,7 +39,13 @@ type GraphEntityUpdateDetails = {
   source: string
   id: number
   type: DomainType
-  fields: Array<{ key: string; value: string; values?: Array<string> }>
+  fields: Array<{
+    key: string
+    value: string
+    values: Array<string>
+    playniteId: string
+    playniteIds: Array<string>
+  }>
 }
 type GraphEntityCollectionUpdateDetails = {
   id: number
