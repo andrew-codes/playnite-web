@@ -42,7 +42,7 @@ describe('Account Settings', () => {
     })
 
     Cypress._.each(breakpoints, ([name, x, y]) => {
-      describe(`at ${name} breakpoint.`, () => {
+      describe(`${name}.`, () => {
         it(`Account settings.`, () => {
           cy.viewport(x, y)
           cy.visit('/u/test/account')
@@ -50,7 +50,7 @@ describe('Account Settings', () => {
           cy.compareSnapshot({
             name: `${name} Account Settings`,
             cypressScreenshotOptions: {
-              blackout: ['[data-test="Setting"] > div'],
+              blackout: ['[data-test="SettingDescription"]'],
             },
           })
         })

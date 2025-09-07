@@ -185,9 +185,9 @@ describe('User Library', () => {
 })
 
 describe('User Library', () => {
-  describe('UI', () => {
+  describe('UI.', () => {
     Cypress._.each(breakpoints, ([name, x, y]) => {
-      describe(`${name} breakpoint`, () => {
+      describe(`${name}.`, () => {
         beforeEach(() => {
           cy.intercept('POST', '/api').as('graphql')
         })
@@ -209,7 +209,14 @@ describe('User Library', () => {
           cy.get('[data-test="GameGrid"]').find('> div').scrollIntoView()
           cy.get('[data-test="GameFigure"]').contains('3DMark')
           cy.wait(500)
-          cy.get('[data-test="GameFigure"] button > *').hideElement(true)
+          cy.get('[data-test="GameFigure"]').then(($gameFigures) => {
+            $gameFigures.each((_, el) => {
+              const $el = Cypress.$(el)
+              cy.wrap($el.find('button').eq(0).find('> *')).hideElement(true)
+            })
+          })
+
+          cy.pause()
           cy.compareSnapshot({
             name: `library-${name}`,
             cypressScreenshotOptions: {
@@ -224,7 +231,12 @@ describe('User Library', () => {
           cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
           cy.get('[data-test="GameFigure"]').contains('Yakuza: Like A Dragon')
           cy.wait(500)
-          cy.get('[data-test="GameFigure"] button > *').hideElement(true)
+          cy.get('[data-test="GameFigure"]').then(($gameFigures) => {
+            $gameFigures.each((_, el) => {
+              const $el = Cypress.$(el)
+              cy.wrap($el.find('button').eq(0).find('> *')).hideElement(true)
+            })
+          })
           cy.compareSnapshot({
             name: `scrolled-${name}`,
             cypressScreenshotOptions: {

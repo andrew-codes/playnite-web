@@ -1,4 +1,10 @@
-import { Box, FormControlLabel, TextField, useMediaQuery } from '@mui/material'
+import {
+  Box,
+  FormControlLabel,
+  Stack,
+  TextField,
+  useMediaQuery,
+} from '@mui/material'
 import Typography from '@mui/material/Typography'
 import { FC, useMemo } from 'react'
 import { UserSetting } from '../../.generated/types.generated'
@@ -23,15 +29,13 @@ const Setting: FC<{ setting: UserSetting }> = ({ setting }) => {
   const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'start',
-        flexDirection: isMdDown ? 'column' : 'row',
-        label: {
-          alignItems: 'start !important',
-        },
-      }}
+    <Stack
+      direction={isMdDown ? 'column' : 'row'}
+      spacing={2}
+      alignItems="flex-start"
+      mb={2}
+      mt={2}
+      width="100%"
       data-test="Setting"
     >
       <FormControlLabel
@@ -43,13 +47,14 @@ const Setting: FC<{ setting: UserSetting }> = ({ setting }) => {
         value={setting.value}
         sx={{
           flex: 1,
+          alignItems: 'flex-start',
+          alignSelf: isMdDown ? 'stretch' : 'start',
         }}
       />
       <Box
+        data-test="SettingDescription"
         sx={{
-          width: isLgDown ? '250px' : '400px',
-          pt: 4,
-          px: 2,
+          width: isMdDown ? 'unset' : isLgDown ? '250px' : '400px',
         }}
       >
         <div
@@ -58,7 +63,7 @@ const Setting: FC<{ setting: UserSetting }> = ({ setting }) => {
           }}
         ></div>
       </Box>
-    </Box>
+    </Stack>
   )
 }
 

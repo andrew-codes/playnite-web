@@ -273,9 +273,9 @@ describe('Account Creation.', () => {
       })
     })
 
-    describe('UI', () => {
+    describe('UI.', () => {
       Cypress._.each(breakpoints, ([name, x, y]) => {
-        describe(`at ${name} breakpoint`, () => {
+        describe(`${name}.`, () => {
           it(`displays the registration form correctly`, () => {
             cy.viewport(x, y)
             cy.visit('/account/new')

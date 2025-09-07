@@ -28,12 +28,10 @@ compareSnapshotCommand()
 
 beforeEach(() => {
   cy.clearAllCookies()
+  cy.CDP('Network.clearBrowserCache')
 })
 
 beforeEach(() => {
-  if (Cypress.env('NODE_ENV') === 'development') {
-    cy.CDP('Network.setCacheDisabled', { cacheDisabled: true })
-  }
   cy.CDP('Emulation.setDeviceMetricsOverride', {
     width: 1920,
     height: 1080,

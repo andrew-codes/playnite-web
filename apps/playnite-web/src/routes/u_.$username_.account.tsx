@@ -72,10 +72,12 @@ const Account = () => {
           saveSettings({ variables: { settings } })
         }}
       >
-        {data.me.settings.map((setting) => (
-          <Setting key={setting.id} setting={setting} />
+        {data.me?.settings?.map((setting) => (
+          <>
+            <Setting key={setting.id} setting={setting} />
+            <Divider />
+          </>
         ))}
-        <Divider />
         <Stack
           direction="row"
           spacing={2}

@@ -10,11 +10,11 @@ describe('Game details.', () => {
     cy.task('seedUsers')
   })
 
-  describe('UI', () => {
+  describe('UI.', () => {
     Cypress._.each(locations, ([locationName, locationPath]) => {
       describe(`${locationName}`, () => {
         Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
-          describe(`Screen size: ${breakpointName}.`, () => {
+          describe(`${breakpointName}.`, () => {
             beforeEach(() => {
               cy.viewport(x, y)
               cy.fixture('librarySync.json').then((libraryData) => {
@@ -32,20 +32,12 @@ describe('Game details.', () => {
               cy.get('[data-test="GameFigure"] button img')
                 .eq(0)
                 .click({ force: true })
-              cy.wait('@graphql')
               cy.get('[data-test="GameDetails"]').should('be.visible')
-              cy.wait('@graphql')
               cy.get('[data-test="GameFigure"]').hideElement(true)
               cy.compareSnapshot({
                 name: `${locationName}-${breakpointName}`,
                 cypressScreenshotOptions: {
                   blackout: ['[data-test="Description"]'],
-                  onBeforeScreenshot($el) {
-                    Cypress.$('[data-test="Description"]').css(
-                      'overflow-y',
-                      'hidden',
-                    )
-                  },
                 },
               })
 

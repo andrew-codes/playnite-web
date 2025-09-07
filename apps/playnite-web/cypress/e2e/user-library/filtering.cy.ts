@@ -284,7 +284,7 @@ describe('Filtering.', () => {
 
   describe('UI.', () => {
     Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
-      describe(`Screen size: ${breakpointName}.`, () => {
+      describe(`${breakpointName}.`, () => {
         beforeEach(() => {
           cy.viewport(x, y)
         })
