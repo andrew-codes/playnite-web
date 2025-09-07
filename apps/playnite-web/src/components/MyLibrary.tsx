@@ -1,68 +1,57 @@
-import { Box, Typography } from '@mui/material'
-import { FC } from 'react'
-import { Helmet } from 'react-helmet'
-import useDimensions from 'react-use-dimensions'
+import { Box } from '@mui/material'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Game } from '../../.generated/types.generated'
-import GameGrid from '../components/GameGrid'
-import Header from '../components/Header'
-import OuterContainer from './OuterContainer'
-import useThemeWidth from './useThemeWidth'
+import GameGrid from './GameGrid'
 
 const MyLibrary: FC<{
   games: Array<Game>
   onSelect?: (evt, game: Game) => void
 }> = ({ games, onSelect }) => {
-  const width = useThemeWidth()
-  const [ref, dims] = useDimensions({ liveMeasure: true })
+  const ref = useRef<HTMLDivElement>(null)
+  const [width, setWidth] = useState<null | number>(null)
+
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient || !ref.current) return
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width: elementWidth } = entry.contentRect
+        setWidth(Math.max(0, elementWidth))
+      }
+    })
+
+    resizeObserver.observe(ref.current)
+
+    const rect = ref.current.getBoundingClientRect()
+    const initialWidth = rect.width
+
+    setWidth(Math.max(0, initialWidth))
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [isClient])
 
   return (
-    <>
-      <Helmet>
-        {games
-          .filter((game) => game.cover?.id)
-          .slice(0, 15)
-          .map((game) => (
-            <link
-              key={game.id}
-              rel="preload"
-              as="image"
-              href={`/asset-by-id/${game.cover?.id}`}
-            />
-          ))}
-      </Helmet>
-      <OuterContainer>
-        <Header>
-          <div>
-            <Typography variant="h2">My Games</Typography>
-            <Typography variant="subtitle1">
-              <span>{games.length}</span>&nbsp;games in library
-            </Typography>
-          </div>
-        </Header>
-        <Box
-          ref={ref}
-          sx={(theme) => ({
-            flexGrow: 1,
-            width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            margin: '0 auto',
-            [theme.breakpoints.up('lg')]: {
-              overflowY: 'auto',
-            },
-            [theme.breakpoints.up('xl')]: {
-              width: `${width}px`,
-            },
-          })}
-        >
-          <GameGrid
-            games={games}
-            height={dims.height ?? 0}
-            onSelect={onSelect}
-          />
-        </Box>
-      </OuterContainer>
-    </>
+    <Box
+      ref={ref}
+      sx={(theme) => ({
+        flex: 1,
+        flexGrow: 1,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        margin: '0 auto',
+      })}
+    >
+      {width && <GameGrid games={games} onSelect={onSelect} width={width} />}
+    </Box>
   )
 }
 

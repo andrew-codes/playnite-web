@@ -1,5 +1,11 @@
 type CompletionStatus {
   id: String!
   name: String!
-  releases: [GameRelease]!
+  releases: [Release]!
+  playniteId: String
+}
+
+extend type Query {
+  completionStatus(id: String!): CompletionStatus
+  completionStatuses(libraryId: String!): [CompletionStatus!]!
 }

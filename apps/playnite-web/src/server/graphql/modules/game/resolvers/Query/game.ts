@@ -1,18 +1,26 @@
+import { GraphQLError } from 'graphql'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
-import { Game } from '../../../../../data/types.entities.js'
-import { fromString } from '../../../../../oid.js'
+import { fromString, hasIdentity } from '../../../../../oid.js'
 
 export const game: NonNullable<QueryResolvers['game']> = async (
   _parent,
   _arg,
   _ctx,
 ) => {
-  const result = await _ctx.queryApi.execute<Game>({
-    entityType: 'Game',
-    type: 'ExactMatch',
-    field: 'id',
-    value: fromString(_arg.id).id,
-  })
+  const oid = fromString(_arg.id)
+  if (!hasIdentity(oid)) {
+    throw new GraphQLError(`Invalid game ID: ${_arg.id}`, {
+      extensions: {
+        code: 'INVALID_ID',
+        argumentName: 'id',
+        id: _arg.id,
+      },
+    })
+  }
 
-  return result?.[0] ?? null
+  return _ctx.db.game.findUnique({
+    where: {
+      id: oid.id,
+    },
+  })
 }

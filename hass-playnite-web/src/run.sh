@@ -7,7 +7,7 @@ export DB_HOST=$(bashio::config 'DB_HOST')
 export DB_PORT=$(bashio::config 'DB_PORT')
 export DB_USERNAME=$(bashio::config 'DB_USERNAME')
 export DB_PASSWORD=$(bashio::config 'DB_PASSWORD')
-export DEBUG=$(bashio::config 'DEBUG')
+export LOG_LEVEL=$(bashio::config 'LOG_LEVEL')
 export USERNAME=$(bashio::config 'USERNAME')
 export PASSWORD=$(bashio::config 'PASSWORD')
 export SECRET=$(bashio::config 'SECRET')
@@ -21,7 +21,7 @@ echo "PORT: $PORT"
 echo "DB_HOST: $DB_HOST"
 echo "DB_PORT: $DB_PORT"
 echo "DB_USERNAME: $DB_USERNAME"
-echo "DEBUG: $DEBUG"
+echo "LOG_LEVEL: $LOG_LEVEL"
 echo "USERNAME: $USERNAME"
 echo "PASSWORD: $PASSWORD"
 echo "SECRET: $SECRET"

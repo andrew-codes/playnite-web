@@ -180,7 +180,11 @@ const AutoComplete: FC<{
         <Label {...getInputLabelProps()}>{label}</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
           {value.map((option: AutoCompleteItem, index: number) => (
-            <StyledTag label={option.display} {...getTagProps({ index })} />
+            <StyledTag
+              label={option.display}
+              {...getTagProps({ index })}
+              key={index}
+            />
           ))}
           <input
             {...restInputProps}

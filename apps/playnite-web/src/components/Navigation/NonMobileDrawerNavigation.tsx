@@ -6,9 +6,15 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { FC, PropsWithChildren, ReactNode, useState } from 'react'
+import {
+  ComponentType,
+  FC,
+  PropsWithChildren,
+  ReactNode,
+  useState,
+} from 'react'
 import IconButton from '../IconButton'
-import MainNavigation from './MainNavigation'
+import { NavigationContainer } from './NavigationContainer'
 
 const drawerWidth = 320
 const openedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
@@ -105,9 +111,12 @@ const DrawerBody = styled('div', {
   }),
 }))
 
-const DrawerNavigation: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
-  children,
-}) => {
+const DrawerNavigation: FC<
+  PropsWithChildren<{
+    title?: ReactNode
+    navs: Array<ComponentType<{ open: boolean }>>
+  }>
+> = ({ children, navs = [] }) => {
   const theme = useTheme()
 
   const [open, setOpen] = useState(false)
@@ -138,7 +147,7 @@ const DrawerNavigation: FC<PropsWithChildren<{ title?: ReactNode }>> = ({
           </IconButton>
         </DrawerHeader>
         <DrawerBody open={open}>
-          <MainNavigation open={open} />
+          <NavigationContainer open={open} navs={navs} />
         </DrawerBody>
       </Drawer>
       {children}

@@ -12,7 +12,7 @@ Install the following software on your local development machine:
    - [nvm for OSX](https://github.com/nvm-sh/nvm)
    - [nvm for Windows](https://github.com/coreybutler/nvm-windows)
 6. [yarn@^4.0.0](https://yarnpkg.com/getting-started)
-   - With Node.js installed, run `corepack enable && corepack prepare --activate yarn@^4.5.1 && yarn set version 4.5.1`
+   - With Node.js installed, run `corepack enable && corepack prepare --activate yarn` in the repo directory.
 
 ## Preparing Codebase
 
@@ -22,9 +22,8 @@ Install the following software on your local development machine:
 4. Run `yarn`
 5. Run `yarn nx run devenv:prepare`. This is only required for the first time working with the codebase.
 6. Run `yarn nx run playnite-web-app:start` and navigate to [http://localhost:3000](http://localhost:3000)
-   - Note that MQTT and Mongo will be started via docker automatically.
-   - Mongo will restore a default database if no database already exists (if there are no files in `.data/mongodb`).
-   - Note MQTT currently starts with no username/password configured.
+   - Note an empty games database will be started automaticallk via Docker.
+   - Restore a test database via `yarn nx run playnite-web-app:db/data`
 7. \[Optional\]: override environment variables when running locally via `cp apps/playnite-web/local.env apps/playnite-web/overrides.env`
    - **REMEMBER: do not commit `overrides.env` or sensitive information in `local.env`.**
 8. Continue to see [commands](./index.md#running-playnite-web) for running tests.

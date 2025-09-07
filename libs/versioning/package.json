@@ -2,17 +2,19 @@
   "name": "versioning",
   "version": "0.0.0",
   "private": true,
-  "main": "src/index.js",
+  "type": "module",
+  "main": "src/index.ts",
   "dependencies": {
-    "debug": "^4.4.0",
-    "lodash": "^4.17.21",
-    "semver": "^7.7.1",
-    "shelljs": "^0.8.5"
+    "debug": "^4.4.1",
+    "lodash-es": "^4.17.21",
+    "semver": "^7.7.2",
+    "shelljs": "^0.10.0"
   },
   "devDependencies": {
-    "@types/semver": "^7.5.8",
-    "@types/shelljs": "^0.8.15",
-    "nx": "^20.4.2",
+    "@types/semver": "^7.7.0",
+    "@types/shelljs": "^0.8.17",
+    "dev-logger": "workspace:*",
+    "nx": "^21.4.1",
     "rimraf": "^6.0.1"
   }
 }

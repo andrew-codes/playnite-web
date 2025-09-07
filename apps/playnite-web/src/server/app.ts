@@ -1,62 +1,32 @@
 import { createRequestHandler } from '@remix-run/express'
-import type { AsyncMqttClient } from 'async-mqtt'
 import compression from 'compression'
-import createDebugger from 'debug'
 import express from 'express'
 import { useServer } from 'graphql-ws/use/ws'
 import helmet from 'helmet'
 import path from 'path'
 import { WebSocketServer } from 'ws'
-import { hashPassword } from './auth/hashPassword.js'
-import data from './data/data.js'
+import { prisma } from './data/providers/postgres/client.js'
 import createYoga from './graphql/index.js'
 import schema from './graphql/schema.js'
 import { subscriptionPublisher } from './graphql/subscriptionPublisher.js'
-import mqttUpdater from './mqttUpdater/index.js'
-
-const debug = createDebugger('playnite-web/app/server')
+import logger from './logger.js'
 
 const __dirname = import.meta.dirname
 
-async function run(mqttClient: AsyncMqttClient) {
+async function run() {
   const { PORT, HOST } = process.env
   const port = PORT ? parseInt(PORT, 10) : 3000
   const domain = HOST ?? 'localhost'
 
-  debug('Starting Playnite Web game-db-updater...')
-
-  const dataApi = await data()
-
-  const { USERNAME, PASSWORD, SECRET } = process.env
-  if (USERNAME && PASSWORD && SECRET && SECRET !== '') {
-    await dataApi.delete.executeDelete({ type: 'MatchAll', entityType: 'User' })
-    await dataApi.update.executeUpdate(
-      { type: 'ExactMatch', entityType: 'User', field: 'id', value: '1' },
-      {
-        _type: 'User',
-        id: '1',
-        username: USERNAME,
-        password: hashPassword(PASSWORD),
-      },
+  const { SECRET } = process.env
+  if (!SECRET) {
+    throw new Error(
+      'SECRET environment variable is required for authentication.',
     )
   }
 
-  await mqttUpdater({
-    assetSaveDirectoryPath: path.join(
-      __dirname,
-      '..',
-      'public',
-      'assets',
-      'asset-by-id',
-    ),
-    mqtt: mqttClient,
-    pubsub: subscriptionPublisher,
-    queryApi: dataApi.query,
-    updateQueryApi: dataApi.update,
-    deleteQueryApi: dataApi.delete,
-  })
-
   let app = express()
+  app.use(compression())
 
   const viteDevServer =
     process.env.NODE_ENV === 'production'
@@ -73,7 +43,7 @@ async function run(mqttClient: AsyncMqttClient) {
   )
 
   const signingKey = process.env.SECRET ?? 'secret'
-  const yoga = createYoga('/api', signingKey, mqttClient)
+  const yoga = createYoga('/api', signingKey)
 
   if (process.env.TEST !== 'e2e' && process.env.DISABLE_CSP !== 'true') {
     const cspOrigins = (process.env.CSP_ORIGINS ?? '')
@@ -126,7 +96,8 @@ async function run(mqttClient: AsyncMqttClient) {
     )
   }
   app.use(
-    express.static(path.join(__dirname, '..', 'public', 'assets'), {
+    '/public',
+    express.static(path.join(__dirname, '..', 'public'), {
       maxAge: '1y',
     }),
   )
@@ -136,6 +107,27 @@ async function run(mqttClient: AsyncMqttClient) {
   if (global.__coverage__) {
     app.get('/__coverage__', (req, resp) => {
       resp.json({ coverage: global.__coverage__ })
+    })
+  }
+
+  if (process.env.TEST === 'e2e') {
+    app.use(express.json())
+    app.use(express.urlencoded({ extended: true }))
+    app.use(express.text())
+    app.use(express.raw())
+    let requestBodies: Array<any> = []
+    app.post('/echo', (req, resp) => {
+      const body = req.body
+      requestBodies.push(body)
+      resp.send(body)
+    })
+    app.get('/echo', (req, resp) => {
+      const body = requestBodies.pop()
+      resp.send(body)
+    })
+    app.delete('/echo', (req, resp) => {
+      requestBodies = []
+      resp.sendStatus(204)
     })
   }
 
@@ -155,13 +147,16 @@ async function run(mqttClient: AsyncMqttClient) {
       return
     }
 
+    if (req.path.startsWith('/public')) {
+      next()
+      return
+    }
+
     remixHandler(req, resp, next)
   })
 
-  app.use(compression())
-
   const server = app.listen(port, () => {
-    debug(`App listening on http://${domain}:${port}`)
+    logger.info(`App listening on http://${domain}:${port}`)
 
     const wsServer = new WebSocketServer({ server, path: '/api' })
     useServer(
@@ -171,10 +166,8 @@ async function run(mqttClient: AsyncMqttClient) {
           ...req,
           signingKey,
           domain,
-          queryApi: dataApi.query,
-          updateQueryApi: dataApi.delete,
-          mqttClient,
           subscriptionPublisher,
+          db: prisma,
         }),
       },
       wsServer,

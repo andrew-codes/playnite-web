@@ -13,11 +13,12 @@ import {
 } from '@mui/material'
 import { uniq } from 'lodash-es'
 import { FC, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Platform } from '../../.generated/types.generated'
+import { getCompletionStates } from '../api/client/state/completionStatesSlice'
+import { useMe } from '../hooks/me'
+import { useUpdateRelease } from '../hooks/updateRelease'
 import { Theme } from '../muiTheme'
-import { useMe } from '../queryHooks'
-import { allCompletionStatuses } from '../queryHooks/completionStatuses'
-import { useUpdateGame } from '../queryHooks/useUpdateGame'
 import { GameFigureContext } from './GameFigure'
 
 const PlatformImage = styled('img')(({ theme }) => ({
@@ -39,35 +40,12 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
     )
   }
 
-  let src = `/asset-by-id/${platform.icon?.id}`
-  if (!platform.icon?.id) {
-    if (/(windows)/i.test(platform.name)) {
-      src = `/platforms/pc-windows.webp`
-    } else if (/(mac)/i.test(platform.name)) {
-      src = `/platforms/macintosh.webp`
-    } else if (/(linux)/i.test(platform.name)) {
-      src = `/platforms/pc-linux.webp`
-    } else if (/(playstation)/i.test(platform.name)) {
-      if (/5/i.test(platform.name)) {
-        src = `/platforms/sony-playstation-5.webp`
-      } else if (/4/i.test(platform.name)) {
-        src = `/platforms/sony-playstation-4.webp`
-      } else if (/3/i.test(platform.name)) {
-        src = `/platforms/sony-playstation-3.webp`
-      } else if (/2/i.test(platform.name)) {
-        src = `/platforms/sony-playstation-2.webp`
-      } else {
-        src = `/platforms/sony-playstation.webp`
-      }
-    }
-  }
-
   return (
     <li>
       <PlatformImage
         data-test="PlatformListItem"
         alt={platform.name}
-        src={src}
+        src={platform.icon ?? ''}
       />
     </li>
   )
@@ -86,41 +64,42 @@ const GameFigureChipRoot = styled('div')(({ theme }) => ({
   },
 }))
 
-const GameFigureChip: FC<{ children: string }> = ({ children }) => {
+const GameFigureChip: FC<{
+  children: string
+  completionStates: Array<{ id: string; name: string }>
+}> = ({ children, completionStates }) => {
   const theme = useTheme<Theme>()
-  const Icon = theme.completionStatus[children].Icon ?? (() => null)
+  const Icon = theme.completionStatus[children]?.Icon ?? (() => null)
 
-  const me = useMe()
-  const completionStatuses = allCompletionStatuses()
-
+  const [me] = useMe()
   const [open, setOpen] = useState(false)
   const anchorRef = useRef<HTMLDivElement>(null)
   const selectedIndex = useMemo(
-    () => completionStatuses.findIndex((status) => status.name === children),
-    [children, completionStatuses],
+    () => completionStates.findIndex((status) => status.name === children),
+    [children, completionStates],
   )
   const handleOpen = useCallback(() => setOpen(true), [])
   const handleClose = useCallback(() => setOpen(false), [])
 
   const game = useContext(GameFigureContext)
-  const [updateGame] = useUpdateGame()
+  const [updateGame] = useUpdateRelease()
   const handleMenuItemClick = (event, index) => {
     setOpen(false)
-    if (!game?.id) {
+    if (!game?.primaryRelease?.id) {
       return
     }
-    const completionStatusId = completionStatuses[index].id
+    const completionStatusId = completionStates[index].id
     updateGame({
       variables: {
-        id: game?.id,
-        input: {
-          completionStatusId,
+        release: {
+          id: game.primaryRelease.id,
+          completionStatus: completionStatusId,
         },
       },
     })
   }
 
-  return me.data?.me?.isAuthenticated ? (
+  return me.data?.me?.isAuthenticated && game?.primaryRelease?.id ? (
     <ButtonGroup
       variant="contained"
       ref={anchorRef}
@@ -161,7 +140,7 @@ const GameFigureChip: FC<{ children: string }> = ({ children }) => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" autoFocusItem>
-                  {completionStatuses.map((option, index) => (
+                  {completionStates.map((option, index) => (
                     <MenuItem
                       key={option.id}
                       selected={index === selectedIndex}
@@ -220,6 +199,8 @@ const GameFigureChipList: FC<{
   platforms: Array<Platform>
   completionStatus: string
 }> = ({ platforms, completionStatus }) => {
+  const completionStates = useSelector(getCompletionStates)
+
   const maxPlatforms = 2
   const condensedPlatforms = useMemo(() => {
     return (
@@ -235,7 +216,9 @@ const GameFigureChipList: FC<{
         <PlatformListItem platform={platform} key={index} />
       ))}
       <li>
-        <GameFigureChip>{completionStatus}</GameFigureChip>
+        <GameFigureChip completionStates={completionStates}>
+          {completionStatus}
+        </GameFigureChip>
       </li>
     </List>
   )

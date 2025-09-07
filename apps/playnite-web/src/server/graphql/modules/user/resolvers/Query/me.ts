@@ -1,20 +1,39 @@
-import { User } from 'apps/playnite-web/src/server/data/types.entities.js'
+import { merge, omit } from 'lodash-es'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated.js'
-import { createNull } from '../../../../../oid.js'
+import logger from '../../../../../logger.js'
+import { fromString, hasIdentity } from '../../../../../oid.js'
 
 export const me: NonNullable<QueryResolvers['me']> = async (
   _parent,
   _arg,
   _ctx,
 ) => {
-  const user: User =
-    _ctx.jwt?.payload ??
-    ({
-      _type: 'User',
-      id: createNull('User').toString(),
-      username: 'Unknown',
-      isAuthenticated: false,
-    } as User)
+  logger.info('User from cookie.', _ctx.jwt?.payload)
 
-  return user
+  if (!_ctx.jwt?.payload) {
+    return {
+      id: null,
+      username: 'Unknown',
+      email: 'Unknown',
+      name: 'Unknown',
+    }
+  }
+
+  const userId = fromString(_ctx.jwt.payload.id)
+  if (!hasIdentity(userId)) {
+    return {
+      id: null,
+      username: 'Unknown',
+      email: 'Unknown',
+      name: 'Unknown',
+    }
+  }
+
+  return merge(
+    {},
+    _ctx.jwt.payload,
+    omit(await _ctx.db.user.findUniqueOrThrow({ where: { id: userId.id } }), [
+      'password',
+    ]),
+  )
 }
