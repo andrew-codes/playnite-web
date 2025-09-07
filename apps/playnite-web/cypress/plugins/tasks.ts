@@ -43,7 +43,7 @@ const tasks = (on, config) => {
                   `Deadlock detected on table ${table.tablename}, retrying... (${retryCount}/${maxRetries})`,
                 )
                 await new Promise((resolve) =>
-                  setTimeout(resolve, 100 * retryCount),
+                  setTimeout(resolve, 1000 * Math.pow(2, retryCount)),
                 )
               } else {
                 throw error
