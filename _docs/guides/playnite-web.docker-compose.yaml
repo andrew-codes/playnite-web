@@ -1,18 +1,11 @@
 services:
-  mqtt:
-    image: eclipse-mosquitto:latest
+  db:
+    image: postgres:13.22
     ports:
-      - '1883:1883'
-    volumes:
-      - mqtt_data:/mosquitto/data
-      - mqtt_log:/mosquitto/log
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
-    restart: unless-stopped
-
-  mongodb:
-    image: mongo:focal
-    ports:
-      - '27017:27017'
+      - '5432:5432'
+    envrironment:
+      - POSTGRES_USER={{db_user}}
+      - POSTGRES_PASSWORD={{db_password}}
     restart: unless-stopped
 
   playnite-web:
@@ -22,18 +15,12 @@ services:
     environment:
       - PORT=3000
       - HOST=localhost
-      - DB_HOST=mongodb
-      - DB_PORT=27017
-      - MQTT_HOST=mqtt
-      - MQTT_PORT=1883
+      - DB_URL=postgres://{{db_user}}:{{db_password}}@games:5432?schema=public
     volumes:
-      - playnite_assets:/opt/playnite-web-app/public/assets/asset-by-id
+      - playnite_assets:/opt/playnite-web-app/public/assets/game-assets
     depends_on:
-      - mqtt
-      - mongodb
+      - db
     restart: unless-stopped
 
 volumes:
-  mqtt_data:
-  mqtt_log:
   playnite_assets:

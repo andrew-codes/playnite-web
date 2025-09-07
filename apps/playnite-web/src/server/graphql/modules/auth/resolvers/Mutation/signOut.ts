@@ -1,4 +1,6 @@
+import { GraphQLError } from 'graphql'
 import type { MutationResolvers } from '../../../../../../../.generated/types.generated.js'
+import { fromString, hasIdentity } from '../../../../../oid.js'
 
 export const signOut: NonNullable<MutationResolvers['signOut']> = async (
   _parent,
@@ -7,12 +9,22 @@ export const signOut: NonNullable<MutationResolvers['signOut']> = async (
 ) => {
   const claim = _ctx.jwt?.payload
   if (!claim) {
-    const gqlImport = await import('graphql')
-    throw new gqlImport.GraphQLError('Not authenticated')
+    throw new GraphQLError('Not authenticated')
   }
 
   _ctx.request.cookieStore?.delete('authorization')
   claim.isAuthenticated = false
+
+  const userId = fromString(claim.id)
+  if (!hasIdentity(userId)) {
+    throw new GraphQLError('Invalid OID format.', {
+      extensions: { code: 'NOT_FOUND', http: { status: 404 } },
+    })
+  }
+
+  return _ctx.db.user.findUniqueOrThrow({
+    where: { id: userId.id },
+  })
 
   return claim
 }

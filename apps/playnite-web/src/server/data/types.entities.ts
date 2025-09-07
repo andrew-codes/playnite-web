@@ -1,3 +1,4 @@
+import { Game } from './../graphql/modules/game/resolvers/Game'
 /**
  * Foundation of all data entities; all data entities have an ID.
  */
@@ -10,6 +11,7 @@ type Identifiable = {
 
 const entities = [
   'Platform',
+  'PlatformDevice',
   'GameFeature',
   'CompletionStatus',
   'Tag',
@@ -17,12 +19,12 @@ const entities = [
   'Game',
   'Release',
   'Playlist',
-  'GameAsset',
   'Series',
   'Genre',
   'User',
   'Connection',
   'UpdateRequest',
+  'GameLibrary',
 ] as const
 type EntityType = (typeof entities)[number]
 
@@ -35,12 +37,13 @@ const RelationshipTypes: Record<EntityType, Array<EntityType>> = {
   GameSource: [],
   Release: ['Platform', 'GameFeature', 'CompletionStatus', 'Tag'],
   Playlist: ['Game'],
-  GameAsset: [],
   Series: [],
   User: [],
   Genre: [],
   Connection: [],
   UpdateRequest: [],
+  PlatformDevice: [],
+  GameLibrary: ['User', 'Game', 'Platform'],
 } as const
 
 type StringFromType<T> = T extends Platform
@@ -377,9 +380,7 @@ type GameAsset = Identifiable & {
  * Users are used to authenticate and authorize access to the application.
  */
 type User = Identifiable & {
-  _type: 'User'
   username: string
-  password: string
   isAuthenticated: boolean
 }
 

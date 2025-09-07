@@ -1,5 +1,11 @@
 const exclude = process.env.EXCLUDE ? `--exclude='${process.env.EXCLUDE}'` : ''
 
+require('esbuild-register/dist/node')({
+  target: 'node22',
+  extensions: ['.ts', '.js'],
+  conditions: ['node'],
+})
+
 const config = {
   dryRun: false,
   branches: ['main', 'next'],
@@ -56,7 +62,7 @@ const config = {
       {
         manifestFilePath: 'apps/PlayniteWebPlugin/src/manifest.yaml',
         extensionFilePath: 'apps/PlayniteWebPlugin/src/extension.yaml',
-        requiredApiVersion: '6.11.0',
+        requiredApiVersion: '6.12.0',
         presetConfig: {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
@@ -94,7 +100,7 @@ const config = {
         assets: [
           'apps/PlayniteWebPlugin/src/manifest.yaml',
           'apps/PlayniteWebPlugin/src/extension.yaml',
-          'hass-playnite-web/config.json'
+          'hass-playnite-web/config.json',
         ],
         message:
           'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',

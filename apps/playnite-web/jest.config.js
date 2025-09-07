@@ -1,5 +1,3 @@
-import * as defaultJestConfig from 'jest-config'
-
 const defaultConfig = {
   testEnvironment: 'node',
   transform: {
@@ -16,10 +14,7 @@ const defaultConfig = {
   passWithNoTests: false,
   coverageDirectory: '<rootDir>/.test-runs/unit',
   collectCoverage: true,
-  moduleFileExtensions: [
-    ...defaultJestConfig.defaults.moduleFileExtensions,
-    'ts',
-  ],
+  moduleFileExtensions: ['json', 'js', 'ts'],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coveragePathIgnorePatterns: [
     '/__tests__/',

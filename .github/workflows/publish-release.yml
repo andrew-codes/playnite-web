@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   unit_tests_linux:
-    name: Verify Tests (Linux)
+    name: Verify Unit Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   component_tests_linux:
-    name: Verify PR - Component Tests (Linux)
+    name: Verify Component Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -86,12 +86,11 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   e2e_tests_linux:
-    name: Verify PR - e2e Tests (Linux)
+    name: Verify e2e Tests (Linux)
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      PUBLISH: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -129,8 +128,8 @@ jobs:
         run: yarn nx run playnite-web-app:test/e2e:ci --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
-          DEBUG: 'playnite-web/*'
-          PLATFORM: linux/amd64,linux/arm64
+          LOG_LEVEL: info
+          PLATFORM: linux/amd64
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
@@ -158,7 +157,7 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   unit_tests_windows:
-    name: Verify PR - Tests (Windows)
+    name: Verify Unit Tests (Windows)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -198,7 +197,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
       - name: Download Playnite Toolbox
         run: |-
-          mkdir -p .tools/Playnite && curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
+          mkdir -p .tools/Playnite && curl -L "https://github.com/JosefNemec/Playnite/releases/download/10.37/Playnite1037.zip" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
@@ -307,7 +306,7 @@ jobs:
         run: yarn dlx semantic-release
         env:
           NODE_ENV: production
-          DEBUG: 'playnite-web/*'
+          LOG_LEVEL: info
           PLATFORM: linux/amd64,linux/arm64
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXCLUDE: '*,!tag:linux'

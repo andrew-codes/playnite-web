@@ -1,8 +1,8 @@
-import createDebugger from 'debug'
 import dotenv from 'dotenv'
 import path from 'path'
 import app from './app.js'
-import { createConnectedMqttClient } from './mqtt.js'
+import { prisma } from './data/providers/postgres/client.js'
+import { setupApp } from './setupApp.js'
 
 const __dirname = import.meta.dirname
 
@@ -15,15 +15,27 @@ dotenv.config({
   override: true,
 })
 
-const debug = createDebugger('playnite-web/app/server')
-
 async function run() {
-  debug('Starting Playnite Web applications...')
+  const logger = (await import('./logger.js')).default
 
-  const mqttClient = await createConnectedMqttClient()
+  logger.info('Starting Playnite Web applications...')
 
-  debug('Starting Playnite Web app...')
-  await app(mqttClient)
+  logger.info('Starting Playnite Web app...')
+  try {
+    await prisma.$connect()
+
+    await setupApp()
+
+    await app()
+  } catch (error) {
+    logger.error('Error starting Playnite Web app:', error)
+    logger.info('Disconnected from Prisma client.')
+    await prisma.$disconnect()
+    logger.debug('Database connection closed.')
+    process.exit(1)
+  }
 }
 
-run()
+run().then(async () => {
+  await prisma.$disconnect()
+})

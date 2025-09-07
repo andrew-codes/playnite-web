@@ -1,5 +1,11 @@
 type Source {
   id: String!
+  playniteId: String
   name: String!
-  releases: [GameRelease]!
+  releases: [Release]!
+}
+
+extend type Query {
+  source(id: String!): Source
+  sources(libraryId: String!): [Source!]!
 }

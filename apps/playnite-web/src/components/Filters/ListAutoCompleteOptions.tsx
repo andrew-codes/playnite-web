@@ -1,5 +1,5 @@
 import { Box, List, ListItem, styled } from '@mui/material'
-import useDimensions from 'react-use-dimensions'
+import { useEffect, useRef, useState } from 'react'
 import { AutoCompleteItem, RenderOptions } from '../AutoComplete'
 
 const FullHeightList = styled(List)(({ theme }) => ({
@@ -41,7 +41,37 @@ const ListAutoCompleteOptions: RenderOptions = ({
 }
 
 const HeightBoundListAutoCompleteOptions: RenderOptions = (props) => {
-  const [ref, dims] = useDimensions({ liveMeasure: true })
+  const ref = useRef<HTMLDivElement>(null)
+  const [dimensions, setDimensions] = useState({ height: 0 })
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient || !ref.current) return
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { height: elementHeight } = entry.contentRect
+        setDimensions({
+          height: Math.max(0, elementHeight),
+        })
+      }
+    })
+
+    resizeObserver.observe(ref.current)
+
+    const rect = ref.current.getBoundingClientRect()
+
+    setDimensions({
+      height: rect.height,
+    })
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [isClient])
 
   return (
     <Box
@@ -50,8 +80,8 @@ const HeightBoundListAutoCompleteOptions: RenderOptions = (props) => {
         flex: 1,
         display: 'block',
         height: '100%',
-        ...(!!dims.height && {
-          maxHeight: `${dims.height}px`,
+        ...(!!dimensions.height && {
+          maxHeight: `${dimensions.height}px`,
         }),
         '& ul': {
           overflowY: 'auto',

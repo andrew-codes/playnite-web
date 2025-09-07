@@ -2,17 +2,18 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "baseUrl": ".",
-    "types": [
-      "cypress",
-      "node",
-      "react"
-    ],
+    "types": ["cypress", "node", "react"]
   },
   "extends": "../tsconfig.json",
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "**/*.js",
-    "**/*.jsx"
-  ],
+    "**/*.jsx",
+    "../src/server/siteSettings.ts",
+    "../src/auth/*.ts",
+    "../src/server/auth/hashPassword.ts",
+    "../src/server/userSettings.ts",
+    "../.generated/**/*.*"
+  ]
 }

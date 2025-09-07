@@ -16,23 +16,32 @@
       "react",
       "vite/client",
       "@vite-pwa/remix/remix-sw"
-    ],
+    ]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.jsx",
+    "scripts/**/*.ts",
     "testUtils/**/*.ts",
     "testUtils/**/*.tsx",
     "cypress/support/*.ts",
+    "cypress/plugins/*.ts",
     "*.ts",
     "../../graphql.config.ts",
+    ".generated/**/*.*",
     ".generated/resolvers.generated.ts",
     ".generated/typeDefs.generated.ts",
     ".generated/types.generated.ts",
-    "cypress.config.mjs",
+    "cypress.config.ts"
   ],
-  "exclude": [
-    "node_modules"
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./tsconfig.server.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    }
   ]
 }

@@ -1,16 +1,6 @@
-import {
-  CompletionStatus,
-  Game,
-  GameAsset,
-  GameFeature,
-  GameSource,
-  Platform,
-  Playlist,
-  Release,
-  RunState,
-  Tag,
-  User,
-} from '../data/types.entities.js'
+import { RunState } from '../data/types.entities.js'
+import { DomainType } from '../oid.js'
+import { Prisma } from './../data/providers/postgres/client.js'
 
 type GameReleaseStateSubscriptionPayload = {
   id: string
@@ -18,35 +8,59 @@ type GameReleaseStateSubscriptionPayload = {
   runState: RunState
   processId: number | null
 }
-type GraphPlatform = Platform
-type GraphFeature = GameFeature
+type GraphPlatform = Prisma.PlatformGetPayload<{}>
+type GraphFeature = Prisma.FeatureGetPayload<{}>
 
-type GraphCompletionStatus = CompletionStatus
+type GraphCompletionStatus = Prisma.CompletionStatusGetPayload<{}>
 
-type GraphTag = Tag
+type GraphTag = Prisma.TagGetPayload<{}>
 
-type GraphSource = GameSource
+type GraphSource = Prisma.SourceGetPayload<{}>
 
-type GraphGame = Game
+type GraphGame = Prisma.GameGetPayload<{}>
 
-type GraphRelease = Release
+type GraphRelease = Prisma.ReleaseGetPayload<{}>
 
-type GraphPlaylist = Playlist
+type GraphPlaylist = Prisma.PlaylistGetPayload<{}>
 
-type GraphGameAsset = GameAsset
+type GraphUser = Omit<Prisma.UserGetPayload<{}>, 'password'> & {
+  isAuthenticated?: boolean
+}
 
-type GraphUser = Omit<User, 'password'>
+type ClaimUser = Omit<GraphUser, 'id'> & {
+  id: string
+}
+type GraphLibrary = Prisma.LibraryGetPayload<{}>
+
+type GraphSiteSetting = Prisma.SiteSettingsGetPayload<{}>
+type GraphUserSetting = Prisma.UserSettingGetPayload<{}>
+
+type GraphEntityUpdateDetails = {
+  source: string
+  id: number
+  type: DomainType
+  fields: Array<{ key: string; value: string; values?: Array<string> }>
+}
+type GraphEntityCollectionUpdateDetails = {
+  id: number
+  type: DomainType
+}
 
 export type {
+  ClaimUser,
   GameReleaseStateSubscriptionPayload,
   GraphCompletionStatus,
+  GraphEntityCollectionUpdateDetails,
+  GraphEntityUpdateDetails,
   GraphFeature,
   GraphGame,
-  GraphGameAsset,
+  GraphLibrary,
   GraphPlatform,
   GraphPlaylist,
   GraphRelease,
+  GraphSiteSetting,
   GraphSource,
   GraphTag,
   GraphUser,
+  GraphUserSetting,
 }

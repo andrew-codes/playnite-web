@@ -33,7 +33,6 @@
         "bierner.github-markdown-preview",
         "bierner.markdown-yaml-preamble",
         "capaj.vscode-exports-autocomplete",
-        "cmstead.js-codeformer",
         "cmstead.jsrefactor",
         "codecov.codecov",
         "DavidAnson.vscode-markdownlint",
@@ -63,9 +62,9 @@
         "Orta.vscode-jest",
         "paulmolluzzo.convert-css-in-js",
         "pflannery.vscode-versionlens",
+        "Prisma.prisma",
         "redhat.vscode-xml",
         "redhat.vscode-yaml",
-        "rpdswtk.vsmqtt",
         "sburg.vscode-javascript-booster",
         "steoates.autoimport",
         "streetsidesoftware.code-spell-checker",
@@ -77,9 +76,5 @@
   },
   "remoteUser": "root",
   "postCreateCommand": "bash -i -c './.devcontainer/post-create.sh'",
-  "appPort": [
-    "1883:1883",
-    "3000:3000",
-    "3001:3001"
-  ]
+  "appPort": ["1883:1883", "3000:3000", "3001:3001"]
 }

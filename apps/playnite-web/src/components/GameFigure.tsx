@@ -1,5 +1,5 @@
 import { Box, Button, Stack, styled } from '@mui/material'
-import { createContext, FC, PropsWithChildren, useState } from 'react'
+import { createContext, FC, PropsWithChildren } from 'react'
 import { Game } from '../../.generated/types.generated'
 import GameFigureChipList from './GameFigureChipList'
 
@@ -16,7 +16,16 @@ const Image = styled('img', {
   shouldForwardProp: (prop) => prop !== 'width',
 })<{ width: string }>(({ width, theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
+  height: `${width}`,
+  objectFit: 'cover',
+  width,
+  display: 'block',
+}))
+
+const ImagePlaceholder = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'width',
+})<{ width: string }>(({ width, theme }) => ({
+  borderRadius: theme.shape.borderRadius,
   height: `${width}`,
   objectFit: 'cover',
   width,
@@ -32,8 +41,6 @@ const GameFigure: FC<
     onSelect?: (evt, game: Game) => void
   }>
 > = ({ children, game, style, onSelect, width, height }) => {
-  const [imageHasError, setImageHasError] = useState(false)
-
   return (
     <Context.Provider value={game}>
       <Figure
@@ -43,24 +50,27 @@ const GameFigure: FC<
         width={width}
       >
         <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
-          <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
-            {!imageHasError && game.cover?.id ? (
+          <Button
+            onClick={(evt) => onSelect?.(evt, game)}
+            sx={(theme) => ({
+              padding: 0,
+              height: width,
+              width,
+              borderRadius: `${theme.shape.borderRadius}px`,
+              boxShadow: theme.shadows[3],
+            })}
+          >
+            {game.primaryRelease?.cover && (
               <Image
-                src={`/asset-by-id/${game.cover?.id}`}
-                alt={game.name}
+                data-test="GameCoverImage"
+                src={`${game.primaryRelease?.cover}`}
+                alt={game.primaryRelease?.title}
                 width={width}
                 loading="eager"
-                onError={(e) => {
-                  setImageHasError(true)
-                }}
               />
-            ) : (
-              <Box
-                sx={{
-                  height: `${width}`,
-                  width: `${width}`,
-                }}
-              />
+            )}
+            {game.primaryRelease?.cover === null && (
+              <ImagePlaceholder data-test="GameCoverImage" width={width} />
             )}
           </Button>
           <Box
@@ -73,7 +83,9 @@ const GameFigure: FC<
             })}
           >
             <GameFigureChipList
-              completionStatus={game.completionStatus?.name}
+              completionStatus={
+                game.primaryRelease?.completionStatus?.name ?? 'Unknown'
+              }
               platforms={game.releases.map((release) => release.platform)}
             />
           </Box>

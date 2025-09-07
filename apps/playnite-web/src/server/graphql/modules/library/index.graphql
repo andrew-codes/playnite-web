@@ -1,0 +1,120 @@
+type Library {
+  id: String!
+  name: String
+  games: [Game!]!
+  platforms: [Platform!]!
+  playlists: [Playlist!]!
+  sources: [Source!]!
+  features: [Feature!]!
+  completionStates: [CompletionStatus!]!
+  tags: [Tag!]!
+}
+
+extend type Query {
+  libraries(username: String!): [Library!]!
+  library(libraryId: String!): Library
+}
+
+input LibraryReleaseInput {
+  id: String!
+  title: String!
+  releaseDate: DateTime
+  communityScore: Int
+  completionStatus: String
+  criticScore: Int
+  description: String
+  features: [String!]
+  hidden: Boolean!
+  recentActivity: DateTime
+  source: String!
+  tags: [String!]
+  playtime: String
+}
+
+input LibraryPlatformInput {
+  id: String!
+  name: String!
+}
+
+input LibrarySourceInput {
+  id: String!
+  name: String!
+  platform: String!
+}
+
+input LibraryTagInput {
+  id: String!
+  name: String!
+}
+
+input LibraryCompletionStateInput {
+  id: String!
+  name: String!
+}
+
+input LibraryFeatureInput {
+  id: String!
+  name: String!
+}
+
+input LibraryUpdateInput {
+  releases: [LibraryReleaseInput!]!
+  platforms: [LibraryPlatformInput!]!
+  sources: [LibrarySourceInput!]!
+  tags: [LibraryTagInput!]!
+  completionStates: [LibraryCompletionStateInput!]!
+  features: [LibraryFeatureInput!]!
+}
+
+input LibraryRemovalInput {
+  releases: [String!]!
+  platforms: [String!]!
+  sources: [String!]!
+  tags: [String!]!
+  completionStates: [String!]!
+  features: [String!]!
+}
+
+input LibraryInput {
+  source: String!
+  libraryId: String!
+  name: String
+  update: LibraryUpdateInput!
+  remove: LibraryRemovalInput!
+}
+
+extend type Mutation {
+  syncLibrary(libraryData: LibraryInput!): Library
+}
+
+type EntityCollectionUpdate {
+  source: String!
+  updated: [EntityCollectionUpdateDetails!]!
+  removed: [EntityCollectionUpdateDetails!]!
+}
+
+type EntityCollectionUpdateDetails {
+  type: String!
+  id: String!
+}
+
+type EntityUpdateField {
+  key: String!
+  value: String
+  values: [String!]!
+  playniteId: String
+  playniteIds: [String!]!
+}
+
+type EntityUpdateDetails {
+  source: String!
+  type: String!
+  id: String!
+  playniteId: String
+  fields: [EntityUpdateField!]!
+}
+
+extend type Subscription {
+  entityUpdated: [EntityUpdateDetails!]!
+  librarySynced: [EntityUpdateDetails!]!
+}
