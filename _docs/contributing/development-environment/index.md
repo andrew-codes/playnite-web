@@ -3,11 +3,14 @@
 - [Development Environment](#development-environment)
   - [Setup](#setup)
   - [Running Playnite Web](#running-playnite-web)
+    - [Database/schema Changes](#databaseschema-changes)
   - [Playnite Web Plugin Development](#playnite-web-plugin-development)
 
 ## Setup
 
 There are a few options for running Playnite Web for local development. Choose a path and follow its corresponding guide. Then, return to continue the next section.
+
+> Note code spaces and dev containers do not work well with E2E tests, so it is recommended to use Option 1 below.
 
 1. [Local environment](./local-environment.md): use your local machine as the development environment. This requires installing more software than the number 2, but may have a smoother experience.
 2. [GitHub code spaces](./codespaces.md).
@@ -25,6 +28,10 @@ There are a few options for running Playnite Web for local development. Choose a
 | Playnite Web App | `yarn nx run playnite-web-app:test/e2e/update`                     | Run end-to-end (e2e) tests with intention to update a baseline screenshot.                                                                                                                                 |
 | Playnite Web App | `yarn nx run playnite-web-app:test/e2e/update $GLOB_FILE_MATCH`    | Run end-to-end (e2e) tests with intention to update a baseline screenshot. Runs only tests matching glob CLI parameter' e.g. `yarn nx run playnite-web-app:test/e2e/update **/browse*`                     |
 | Playnite Web App | `yarn nx run playnite-web-app:test/e2e`                            | Build and package to run end-to-end (e2e) tests. Note updates to the source application will not be reflected after running this command and will require re-running the command.                          |
+
+### Database/schema Changes
+
+Changing the database schema (defined in the [schema.prisma](../../../apps/playnite-web/src/server/data/providers/postgres/schema.prisma) file) will require the changes to be tracked as a database migration. This can be done after changes are made to the schema by running `yarn nx run playnite-web:db/migrate`. All SQL migrations files must then be committed to the repo.
 
 ## Playnite Web Plugin Development
 
