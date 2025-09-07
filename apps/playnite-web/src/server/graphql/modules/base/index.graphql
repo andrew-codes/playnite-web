@@ -4,3 +4,4 @@ type Subscription
 
 scalar Date
 scalar DateTime
+scalar Byte

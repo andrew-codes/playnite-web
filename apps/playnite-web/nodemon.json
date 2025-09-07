@@ -1,0 +1,5 @@
+{
+  "watch": ["src/server.ts", "src/server/**/*", "next.config.js"],
+  "exec": "tsx src/server.ts",
+  "ext": "js ts"
+}

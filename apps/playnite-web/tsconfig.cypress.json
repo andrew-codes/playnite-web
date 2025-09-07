@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "out-tsc/cypress",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "types": ["cypress", "node", "react", "react-dom", "lodash"],
+    "sourceMap": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "cypress.config.ts",
+    "cypress/**/*.ts",
+    "**/*.d.ts",
+    "cypress/**/*.ts",
+    "testUtils/**/*.ts",
+    "testUtils/**/*.tsx"
+  ],
+  "exclude": ["out-tsc", "test-output", "src/**/__tests__/**/*"]
+}

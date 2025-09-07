@@ -3,6 +3,7 @@
     "allowJs": true,
     "baseUrl": "./",
     "checkJs": true,
+    "composite": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,

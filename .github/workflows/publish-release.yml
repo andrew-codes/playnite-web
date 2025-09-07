@@ -1,17 +1,22 @@
-name: 'Release'
+name: "Release"
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
 
 jobs:
   unit_tests_linux:
-    name: Verify Tests (Linux)
+    name: Verify Unit Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
@@ -20,28 +25,37 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ steps.node_version.outputs.value }}'
+          node-version: "${{ steps.node_version.outputs.value }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Install docker-compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
       - name: Use Yarn
         run: corepack enable
       - name: Install deps
         run: yarn
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --configuration=ci --parallel --verbose --projects=tag:linux
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: '**/.test-runs/unit/lcov.info'
+          files: "**/.test-runs/unit/lcov.info"
           flags: unit-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   component_tests_linux:
-    name: Verify PR - Component Tests (Linux)
+    name: Verify Component Tests (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
@@ -50,13 +64,13 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ steps.node_version.outputs.value }}'
+          node-version: "${{ steps.node_version.outputs.value }}"
       - name: Use Yarn
         run: corepack enable
       - name: Install deps
         run: yarn
         env:
-          YARN_ENABLE_HARDENED_MODE: '0'
+          YARN_ENABLE_HARDENED_MODE: "0"
       - name: Run all component tests
         run: yarn nx run-many --target=test/components --configuration=ci --parallel --verbose --projects=tag:linux
       - name: Upload visual regression artifacts
@@ -77,25 +91,28 @@ jobs:
         with:
           name: component-cypress-screenshots
           path: apps/playnite-web/cypress/screenshots
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: '**/.test-runs/**/lcov.info'
+          files: "**/.test-runs/**/lcov.info"
           flags: component-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  e2e_tests_linux:
-    name: Verify PR - e2e Tests (Linux)
+  e2e_tests_app:
+    name: Verify e2e Tests (Playnite Web App - Linux)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4, 5]
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      PUBLISH: 'true'
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
@@ -104,64 +121,111 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ steps.node_version.outputs.value }}'
+          node-version: "${{ steps.node_version.outputs.value }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Install docker-compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
       - name: Use Yarn
         run: corepack enable
       - name: Install deps
         run: yarn
         env:
-          YARN_ENABLE_HARDENED_MODE: '0'
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY}}
-          username: ${{ env.OWNER }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Run Version
-        run: yarn nx run-many --target=version --exclude='*,!tag:linux'
-        env:
-          NODE_ENV: production
+          YARN_ENABLE_HARDENED_MODE: "0"
       - name: Run all e2e tests
         run: yarn nx run playnite-web-app:test/e2e:ci --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
-          DEBUG: 'playnite-web/*'
-          PLATFORM: linux/amd64,linux/arm64
+          LOG_LEVEL: info
+          PLATFORM: linux/amd64
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-visual-regression
+          name: e2e-visual-regression-job-${{ matrix.containers }}
           path: apps/playnite-web/visual-regression-tests
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-cypress-videos
+          name: e2e-cypress-videos-job-${{ matrix.containers }}
           path: apps/playnite-web/cypress/videos
       - name: Upload test screenshot artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-cypress-screenshots
+          name: e2e-cypress-screenshots-job-${{ matrix.containers }}
           path: apps/playnite-web/cypress/screenshots
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: '**/.test-runs/**/lcov.info'
+          files: "**/.test-runs/**/lcov.info"
+          flags: e2e-tests
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  e2e_tests_processor:
+    name: Verify e2e Tests (Game Assets Processor - Linux)
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      OWNER: andrew-codes
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "${{ steps.node_version.outputs.value }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Install docker-compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install deps
+        run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: "0"
+      - name: Run e2e tests
+        run: yarn nx run game-assets-processor:test/e2e:ci --verbose --exclude='*,!tag:linux'
+        env:
+          NODE_ENV: production
+          LOG_LEVEL: info
+          PLATFORM: linux/amd64
+      - uses: codecov/codecov-action@v5
+        if: always()
+        with:
+          files: "**/.test-runs/**/lcov.info"
           flags: e2e-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   unit_tests_windows:
-    name: Verify PR - Tests (Windows)
+    name: Verify Unit Tests (Windows)
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
@@ -171,7 +235,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ steps.node_version.outputs.value }}'
+          node-version: "${{ steps.node_version.outputs.value }}"
       - name: Read Yarn version
         run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
         shell: bash
@@ -182,7 +246,7 @@ jobs:
       - name: Install deps
         run: yarn
         env:
-          YARN_ENABLE_HARDENED_MODE: '0'
+          YARN_ENABLE_HARDENED_MODE: "0"
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --configuration=ci --parallel --verbose --projects=tag:windows
 
@@ -194,11 +258,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
       - name: Download Playnite Toolbox
         run: |-
-          mkdir -p .tools/Playnite && curl "${{ secrets.PLAYNITE_TOOLBOX_URL }}" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
+          mkdir -p .tools/Playnite && curl -L "https://github.com/JosefNemec/Playnite/releases/download/10.37/Playnite1037.zip" -o Playnite.zip && unzip Playnite.zip -d .tools/Playnite
       - name: Install jq
         run: curl -L -o jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe
       - name: Read Node version
@@ -208,7 +274,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ steps.node_version.outputs.value }}'
+          node-version: "${{ steps.node_version.outputs.value }}"
       - name: Read Yarn version
         run: echo "value=$(./jq.exe -r .engines.yarn package.json | sed -e 's/"//g')" >> $GITHUB_OUTPUT
         shell: bash
@@ -219,7 +285,7 @@ jobs:
       - name: Install deps
         run: yarn
         env:
-          YARN_ENABLE_HARDENED_MODE: '0'
+          YARN_ENABLE_HARDENED_MODE: "0"
       - name: Get next version
         run: echo "value=$(yarn node nextVersion.js)" >> $GITHUB_OUTPUT
         shell: bash
@@ -228,12 +294,12 @@ jobs:
         run: yarn nx run-many --target=version --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
-          VERSION: '${{ steps.nextVersion.outputs.value }}'
+          VERSION: "${{ steps.nextVersion.outputs.value }}"
       - name: Package projects
         run: yarn nx run-many --target=package --configuration=production --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
-          VERSION: '${{ steps.nextVersion.outputs.value }}'
+          VERSION: "${{ steps.nextVersion.outputs.value }}"
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -246,12 +312,13 @@ jobs:
       - unit_tests_linux
       - unit_tests_windows
       - component_tests_linux
-      - e2e_tests_linux
+      - e2e_tests_app
+      - e2e_tests_processor
       - package_windows
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
-      PUBLISH: 'true'
+      PUBLISH: "true"
     permissions:
       packages: write
       contents: write
@@ -262,7 +329,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Download plugin artifact
         uses: actions/download-artifact@v4
         with:
@@ -276,7 +343,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ steps.node_version.outputs.value }}'
+          node-version: "${{ steps.node_version.outputs.value }}"
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: yarn_version
@@ -285,14 +352,14 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '${{ steps.node_version.outputs.value }}'
+          node-version: "${{ steps.node_version.outputs.value }}"
       - name: Use Yarn
         run: corepack enable
       - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
         env:
-          YARN_ENABLE_HARDENED_MODE: '0'
+          YARN_ENABLE_HARDENED_MODE: "0"
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -307,8 +374,8 @@ jobs:
         run: yarn dlx semantic-release
         env:
           NODE_ENV: production
-          DEBUG: 'playnite-web/*'
+          LOG_LEVEL: info
           PLATFORM: linux/amd64,linux/arm64
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXCLUDE: '*,!tag:linux'
-          INCLUDE_GH_RELEASE: 'true'
+          EXCLUDE: "*,!tag:linux"
+          INCLUDE_GH_RELEASE: "true"

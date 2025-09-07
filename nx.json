@@ -1,12 +1,74 @@
 {
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "plugins": [
+    {
+      "plugin": "@nx/next/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "devTargetName": "start",
+        "startTargetName": "start/prod",
+        "serveStaticTargetName": "start/static"
+      }
+    },
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test/unit"
+      }
+    },
+    {
+      "plugin": "@nx/cypress/plugin",
+      "options": {
+        "targetName": "test/e2e",
+        "ciTargetName": "test/e2e/ci",
+        "componentTestingTargetName": "test/component",
+        "openTargetName": "test/open"
+      }
+    },
+    {
+      "plugin": "@nx/react/router-plugin",
+      "options": {
+        "buildTargetName": "build",
+        "devTargetName": "dev",
+        "startTargetName": "start",
+        "watchDepsTargetName": "watch-deps",
+        "buildDepsTargetName": "build-deps",
+        "typecheckTargetName": "typecheck"
+      }
+    }
+  ],
   "namedInputs": {
     "src": ["{projectRoot}/src/**"],
     "generated": ["{projectRoot}/.generated"]
   },
   "targetDefaults": {
     "build": {
-      "inputs": ["src", "generated"],
-      "dependsOn": ["prepare", "^build", "build/restore"],
+      "outputs": ["{projectRoot}/build"],
+      "dependsOn": [
+        "clean/build",
+        "prepare",
+        "^prepare",
+        "build/restore",
+        "^start"
+      ],
+      "cache": true
+    },
+    "build/e2e": {
+      "outputs": ["{projectRoot}/build"],
+      "dependsOn": [
+        "clean/build",
+        "prepare",
+        "^prepare",
+        "^build",
+        "build/restore",
+        "^start"
+      ],
       "cache": true
     },
     "build/restore": {
@@ -19,11 +81,16 @@
       "cache": true
     },
     "start": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["prepare", "^build", "^start"],
       "cache": false
     },
     "package": {
+      "dependsOn": ["clean/package", "build"],
       "cache": true
+    },
+    "package/e2e": {
+      "cache": true,
+      "dependsOn": ["clean/package", "build/e2e"]
     },
     "publish": {
       "dependsOn": ["package"],
@@ -38,23 +105,36 @@
       "cache": true
     },
     "test/components": {
-      "dependsOn": ["prepare"],
-      "cache": false
+      "dependsOn": ["clean/test", "prepare"],
+      "cache": true
     },
     "test/components/update": {
-      "dependsOn": [],
+      "dependsOn": ["clean/test", "prepare"],
       "cache": false
     },
     "test/e2e": {
-      "dependsOn": [],
+      "dependsOn": ["clean/test", "package/e2e", "^start"],
       "cache": false
     },
     "test/e2e/update": {
-      "dependsOn": [],
+      "dependsOn": ["clean/test", "package/e2e", "^start"],
       "cache": false
     }
   },
   "affected": {
     "defaultBase": "main"
+  },
+  "generators": {
+    "@nx/next": {
+      "application": {
+        "style": "@emotion/styled",
+        "linter": "eslint"
+      }
+    },
+    "@nx/react": {
+      "library": {
+        "unitTestRunner": "none"
+      }
+    }
   }
 }

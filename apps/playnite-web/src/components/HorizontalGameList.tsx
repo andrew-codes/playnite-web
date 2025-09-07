@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import { FC, useMemo } from 'react'
 import { Game } from '../../.generated/types.generated'
-import GameFigure from './GameFigure'
+import GameFigure from '../feature/library/components/GameFigure'
 import useThemeWidth from './useThemeWidth'
 
 const ImageListWithoutOverflow = styled(ImageList)`
@@ -58,9 +58,9 @@ const HorizontalGameList: FC<{
           >
             <GameFigure
               game={game}
-              height={`${rowHeight}px`}
               onSelect={onSelect}
               width={`calc(${columnWidth}px)`}
+              priority={true}
             >
               <Typography
                 variant="caption"
@@ -79,26 +79,8 @@ const HorizontalGameList: FC<{
                   WebkitBoxOrient: 'vertical ',
                 }}
               >
-                {game.name}
+                {game.primaryRelease?.title}
               </Typography>
-              {/* <Typography
-                variant="body2"
-                component="div"
-                sx={{
-                  textWrap: 'balance',
-                  lineHeight: '1',
-                  textOverflow: 'ellipsis',
-                  overflowY: 'hidden',
-                  maxHeight: '2rem',
-                  lineClamp: '1',
-                  fontSize: '13px',
-                  display: '-webkit-box',
-                  WebkitLineClamp: '1',
-                  WebkitBoxOrient: 'vertical ',
-                }}
-              >
-                {game.developers.map((d) => d.name).join(', ')}
-              </Typography> */}
             </GameFigure>
           </ImageListItem>
         ))}

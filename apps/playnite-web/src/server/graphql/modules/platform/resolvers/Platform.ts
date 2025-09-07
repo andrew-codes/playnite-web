@@ -1,39 +1,39 @@
-import type { PlatformResolvers } from '../../../../../../.generated/types.generated.js'
-import { GameAsset, Release } from '../../../../data/types.entities.js'
-import { create } from '../../../../oid.js'
+import type { PlatformResolvers } from '../../../../../../.generated/types.generated'
+import { create } from '../../../../oid'
+import { resolve } from '../../../../resolveAssets'
 
 export const Platform: PlatformResolvers = {
   id: async (_parent, _arg, _ctx) => {
     return create('Platform', _parent.id).toString()
   },
-  name: async (_parent, _arg, _ctx) => {
-    return _parent.name
-  },
-  releases: async (_parent, _arg, _ctx) => {
-    const results = await _ctx.queryApi.execute<Release>({
-      entityType: 'Release',
-      type: 'ExactMatch',
-      field: 'platformId',
-      value: _parent.id,
-    })
-
-    return results ?? []
-  },
   icon: async (_parent, _arg, _ctx) => {
-    if (!_parent.icon) {
+    if (!_parent.name) {
       return null
     }
 
-    const results = await _ctx.queryApi.execute<GameAsset>({
-      entityType: 'GameAsset',
-      type: 'ExactMatch',
-      field: 'id',
-      value: `${_parent.icon.split('\\')[1].split('.')[0]}.webp`,
-    })
-
-    return results?.[0] ?? null
+    return resolve(
+      `/assets/platforms/${_parent.name
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[.,!?<>/|\\:$&*(){}[\]"';@#`~]|--+/g, '')}.webp`,
+    )
   },
-  isConsole: async (_parent, _arg, _ctx) => {
-    return !/(PC)|(Macintosh)|(Linux)/.test(_parent.name)
+  games: async (_parent, _arg, _ctx) => {
+    return _ctx.db.game.findMany({
+      where: {
+        Releases: {
+          some: {
+            Source: {
+              Platform: {
+                id: _parent.id,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        title: 'asc',
+      },
+    })
   },
 }

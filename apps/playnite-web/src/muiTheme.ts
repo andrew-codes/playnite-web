@@ -79,7 +79,7 @@ const ssrMatchMedia =
           ? '390px'
           : deviceType === 'tablet'
             ? '768px'
-            : '1366px',
+            : '1920px',
     }),
   })
 
@@ -117,7 +117,33 @@ const theme = (
             xs: 390,
           },
         },
+        typography: {
+          h1: {
+            fontSize: '2rem',
+          },
+          h2: {
+            fontSize: '1.5rem',
+          },
+          h3: {
+            fontSize: '1.25rem',
+          },
+          h4: {
+            fontSize: '1rem',
+          },
+          h5: {
+            fontSize: '0.875rem',
+          },
+          h6: {
+            fontSize: '0.75rem',
+          },
+        },
         components: {
+          MuiButtonBase: {
+            defaultProps: {
+              disableRipple:
+                typeof window !== 'undefined' && window.__TEST__ === true,
+            },
+          },
           MuiAppBar: {
             styleOverrides: {
               root: {
@@ -144,11 +170,6 @@ const theme = (
               paper: {
                 backgroundColor: 'unset',
               },
-            },
-          },
-          MuiTypography: {
-            styleOverrides: {
-              h1: {},
             },
           },
           MuiCssBaseline: {
@@ -197,9 +218,16 @@ const theme = (
               },
             },
           },
+          MuiListItemButton: {
+            styleOverrides: {
+              root: {
+                borderRadius: 8,
+              },
+            },
+          },
         },
         shape: {
-          borderRadius: 8,
+          borderRadius: `8px`,
         },
       },
       {

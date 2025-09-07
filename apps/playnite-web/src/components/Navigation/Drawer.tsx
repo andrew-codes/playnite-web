@@ -1,22 +1,30 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material'
-import { FC, PropsWithChildren, ReactNode } from 'react'
+import { ComponentType, FC, PropsWithChildren, ReactNode } from 'react'
 import MobileDrawerNavigation from './MobileDrawerNavigation'
 
 const Drawer: FC<
   PropsWithChildren<{
     title?: ReactNode | undefined
+    navs: Array<ComponentType<{ open: boolean }>>
     secondaryMenu?: ReactNode | undefined
   }>
-> = ({ children, secondaryMenu, title }) => {
+> = ({ children, navs, title, secondaryMenu }) => {
   const theme = useTheme()
   const shouldUseMobileDrawer = useMediaQuery(theme.breakpoints.down('lg'))
 
   return shouldUseMobileDrawer ? (
     <MobileDrawerNavigation
+      navs={navs}
       title={
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          {title}
-          <Box sx={{ alignSelf: 'flex-end' }}>{secondaryMenu}</Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            width: '100%',
+          }}
+        >
+          {secondaryMenu}
         </Box>
       }
     >
@@ -24,27 +32,15 @@ const Drawer: FC<
         component={'main'}
         sx={(theme) => ({
           flexGrow: 1,
+          width: '100%',
+          height: '100%',
           margin: '0 auto',
-          [theme.breakpoints.up('xs')]: {
-            padding: '0',
-          },
-          [theme.breakpoints.up('sm')]: {
-            padding: '0',
-          },
-          [theme.breakpoints.up('md')]: {
-            padding: '0',
-          },
-          [theme.breakpoints.up('lg')]: {
-            padding: '48px 0 48px 88px',
-          },
-          [theme.breakpoints.up('xl')]: {
-            padding: '48px 0 48px 88px',
-          },
-          [theme.breakpoints.down('xs')]: {
-            padding: '0',
+          '>*>*': {
+            paddingX: theme.spacing(2),
           },
         })}
       >
+        {title}
         {children}
       </Box>
     </MobileDrawerNavigation>
@@ -53,39 +49,36 @@ const Drawer: FC<
       component={'main'}
       sx={(theme) => ({
         flexGrow: 1,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
         margin: '0 auto',
-        [theme.breakpoints.up('xs')]: {
-          padding: '0',
-        },
-        [theme.breakpoints.up('sm')]: {
-          padding: '0',
-        },
-        [theme.breakpoints.up('md')]: {
-          padding: '0',
-        },
-        [theme.breakpoints.up('lg')]: {
-          padding: '48px 0 48px 88px',
-        },
-        [theme.breakpoints.up('xl')]: {
-          padding: '48px 0 48px 88px',
-        },
-        [theme.breakpoints.down('xs')]: {
-          padding: '0',
-        },
       })}
     >
       <Box
         sx={{
           display: 'flex',
-          position: 'absolute',
-          top: '24px',
-          right: '24px',
+          position: 'fixed',
+          flex: 1,
+          top: theme.spacing(3),
+          right: theme.spacing(3),
           zIndex: 1200,
         }}
       >
         {secondaryMenu}
       </Box>
-      {children}
+      <Box
+        sx={{
+          '> * > *': {
+            paddingRight: `${theme.spacing(5)} !important`,
+            paddingLeft: `${theme.spacing(16)} !important`,
+          },
+        }}
+      >
+        {title}
+        {children}
+      </Box>
     </Box>
   )
 }

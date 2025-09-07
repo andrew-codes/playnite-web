@@ -5,42 +5,30 @@ namespace PlayniteWeb
 {
   public class PlayniteWebSettings : ObservableObject
   {
-    private string clientId = Guid.NewGuid().ToString();
+    private Guid deviceId;
 
-    private string deviceId = Guid.NewGuid().ToString();
+    private byte[] token;
 
     private string deviceName;
 
     private string serverAddress;
 
-    private bool useSecureConnection = false;
+    private bool useSecureConnection = true;
 
-    private int? port = 1883;
+    private int? port = 443;
 
     private string username;
 
     private byte[] password;
 
-    private DateTime lastPublish = DateTime.Now;
+    private IDictionary<Guid, Guid> sourcePlatforms = new Dictionary<Guid, Guid>();
 
-    private int publishingThrottle = 30;
-
-    public string ClientId
-    {
-      get => clientId;
-      set => SetValue(ref clientId, value);
-    }
+    private DateTime? lastPublish;
 
     public string DeviceName
     {
       get => deviceName;
       set => SetValue(ref deviceName, value);
-    }
-
-    public string DeviceId
-    {
-      get => deviceId;
-      set => SetValue(ref deviceId, value);
     }
 
     public string ServerAddress
@@ -70,14 +58,36 @@ namespace PlayniteWeb
     public bool UseSecureConnection
     {
       get => useSecureConnection;
-      set => SetValue(ref useSecureConnection, value);
+      set
+      {
+        SetValue(ref useSecureConnection, value);
+        if (this.port == null)
+        {
+          this.Port = value ? 443 : 80;
+        }
+      }
     }
 
-    public DateTime LastPublish {
+    public Guid DeviceId
+    {
+      get => deviceId;
+      set => SetValue(ref deviceId, value);
+    }
+
+    public DateTime? LastPublish {
       get => lastPublish;
       set => SetValue(ref lastPublish, value);
     }
 
-    public int PublishingThrottle { get => publishingThrottle; set => SetValue(ref publishingThrottle, value); }
+    public byte[] Token {
+      get => token;
+      set => SetValue(ref token, value);
+    }
+
+    public IDictionary<Guid, Guid> SourcePlatforms
+      {
+      get => sourcePlatforms;
+      set => SetValue(ref sourcePlatforms, value);
+    }
   }
 }

@@ -1,3 +1,6 @@
+'use client'
+
+import { noop } from 'lodash'
 import { createContext, useContext } from 'react'
 
 const configure = () => {
@@ -14,8 +17,8 @@ const ctx = createContext<{
   subscribe: (cb: (rowIndex: number, columnIndex: number) => void) => void
   trigger: (rowIndex: number, columnIndex: number) => void
 }>({
-  subscribe: () => {},
-  trigger: () => {},
+  subscribe: noop,
+  trigger: noop,
 })
 
 const useNavigateInGrid = () => {

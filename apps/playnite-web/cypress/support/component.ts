@@ -1,6 +1,6 @@
 import '@cypress/code-coverage/support'
+import 'cypress-cdp'
 import compareSnapshotCommand from 'cypress-image-diff-js/command'
-import 'cypress-plugin-tab'
 import { mount } from 'cypress/react'
 
 declare global {
@@ -11,7 +11,15 @@ declare global {
     }
   }
 }
+compareSnapshotCommand()
 
 Cypress.Commands.add('mount', mount)
 
-compareSnapshotCommand()
+beforeEach(() => {
+  cy.CDP('Emulation.setDeviceMetricsOverride', {
+    width: 1920,
+    height: 1080,
+    deviceScaleFactor: 2,
+    mobile: false,
+  })
+})

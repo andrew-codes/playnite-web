@@ -1,12 +1,26 @@
+import '@cypress-audit/lighthouse/commands'
 import '@cypress/code-coverage/support'
+import 'cypress-cdp'
 import compareSnapshotCommand from 'cypress-image-diff-js/command'
-import 'cypress-plugin-tab'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      signIn: () => void
+      signIn: (username: string, password: string) => Chainable<Response<any>>
+      signOut: () => Chainable<null>
+      syncLibrary: (
+        username: string,
+        password: string,
+        libraryData: any,
+      ) => Chainable<Response<any>>
+      waitForImages: () => Chainable<JQuery<HTMLImageElement>>
+      lighthouse: (
+        thresholds?: any,
+        options?: any,
+        config?: any,
+      ) => Chainable<any>
+      clickMenuItem: (text: string) => Chainable<JQuery<HTMLElement>>
     }
   }
 }
@@ -15,9 +29,54 @@ compareSnapshotCommand()
 
 beforeEach(() => {
   cy.clearAllCookies()
+  cy.CDP('Network.setCacheDisabled', { cacheDisabled: false })
 })
 
-Cypress.Commands.add('signIn', () => {
+beforeEach(() => {
+  cy.CDP('Emulation.setDeviceMetricsOverride', {
+    width: 1920,
+    height: 1080,
+    deviceScaleFactor: 2,
+    mobile: false,
+  })
+})
+
+beforeEach(() => {
+  cy.intercept('POST', '/api').as('api')
+})
+
+beforeEach(() => {
+  cy.task('clearDatabase')
+})
+
+Cypress.on('window:before:load', (win) => {
+  // Set __TEST__ flag to disable MUI ripple effects in e2e tests
+  win.__TEST__ = true
+
+  const doc = win.document
+  // If it's not already the first child, make it so:
+  const marker =
+    doc.querySelector('meta[name="emotion-insertion-point"]') ??
+    (() => {
+      const m = doc.createElement('meta')
+      m.setAttribute('name', 'emotion-insertion-point')
+      m.setAttribute('content', '')
+      return m
+    })()
+  if (doc.head.firstChild !== marker) {
+    doc.head.insertBefore(marker, doc.head.firstChild)
+  }
+})
+
+Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
+  originalFn(url, options)
+  cy.get('[data-test=Navigation]', { timeout: 15000 })
+  cy.waitForImages()
+  // Wait for MUI to be ready
+  // cy.wait(2200)
+})
+
+Cypress.Commands.add('signIn', (username: string, password: string) => {
   return cy
     .request({
       method: 'POST',
@@ -29,7 +88,7 @@ Cypress.Commands.add('signIn', () => {
       body: JSON.stringify({
         operationName: 'signIn',
         variables: {
-          input: { username: 'local', password: 'dev', rememberMe: false },
+          input: { username, password, rememberMe: false },
         },
         query:
           'mutation signIn($input: SignInInput) { signIn(input: $input) { credential }}',
@@ -43,4 +102,51 @@ Cypress.Commands.add('signIn', () => {
         domain: 'localhost',
       })
     })
+})
+
+Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
+  cy.signIn(username, password)
+
+  return cy.request({
+    method: 'POST',
+    url: 'http://localhost:3000/api',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      variables: {
+        libraryData,
+      },
+      query: `mutation syncLibrary($libraryData: LibraryInput!) {
+        syncLibrary(libraryData: $libraryData) {
+          id
+        }
+      }`,
+    }),
+  })
+})
+
+Cypress.Commands.add('signOut', () => {
+  return cy.clearAllCookies()
+})
+
+Cypress.Commands.add(
+  'clickMenuItem',
+  { prevSubject: true },
+  (subject, text) => {
+    return cy
+      .wrap(subject)
+      .find(`[aria-label="${text}"]`)
+      .parents('[role="button"]')
+      .click({ force: true })
+  },
+)
+
+Cypress.Commands.add('waitForImages', () => {
+  return cy.get('img', { timeout: 10000 }).should(($images) => {
+    $images.each((_, img) => {
+      expect(img.complete).to.equal(true)
+    })
+  })
 })
