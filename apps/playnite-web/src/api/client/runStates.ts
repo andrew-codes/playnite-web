@@ -7,4 +7,5 @@ const runState: Record<RunState, string> = {
   stopped: 'stopped',
 }
 
-export { RunState, runState, runStates }
+export { runState, runStates }
+export type { RunState }

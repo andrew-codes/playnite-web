@@ -3,7 +3,7 @@ import type { SourceResolvers } from './../../../../../../.generated/types.gener
 
 export const Source: SourceResolvers = {
   id: async (parent, _args, _ctx) => {
-    return create('Source', parent.id)
+    return create('Source', parent.id).toString()
   },
   releases: async (parent, _args, ctx) => {
     const releases = await ctx.db.release.findMany({

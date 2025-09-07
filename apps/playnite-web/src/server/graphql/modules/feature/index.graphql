@@ -7,5 +7,4 @@ type Feature {
 
 extend type Query {
   feature(id: String!): Feature
-  features(libraryId: String!): [Feature!]!
 }

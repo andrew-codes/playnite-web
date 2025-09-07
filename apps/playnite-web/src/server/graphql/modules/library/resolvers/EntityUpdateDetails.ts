@@ -22,6 +22,6 @@ export const EntityUpdateDetails: EntityUpdateDetailsResolvers = {
     return type
   },
   fields: (parent) => {
-    return parent.fields ?? []
+    return parent.fields
   },
 }

@@ -7,5 +7,4 @@ type Source {
 
 extend type Query {
   source(id: String!): Source
-  sources(libraryId: String!): [Source!]!
 }

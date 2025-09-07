@@ -53,6 +53,11 @@ afterEach(() => {
 })
 
 beforeEach(() => {
+  cy.get('@finish.all', { log: false }).then((recs) => {
+    if (recs?.length) {
+      cy.wait('@finish', { requestTimeout: 10000 })
+    }
+  })
   cy.task('clearDatabase')
 })
 
