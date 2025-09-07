@@ -1,5 +1,0 @@
-type GameAsset {
-  id: String!
-  type: String!
-  release: GameRelease!
-}

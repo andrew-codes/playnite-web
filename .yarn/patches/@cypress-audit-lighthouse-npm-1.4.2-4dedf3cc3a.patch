@@ -1,0 +1,55 @@
+diff --git a/src/task.js b/src/task.js
+index 72a65263d0cd7f20e7a59a6d4f2fb70e2276ee92..45fafc61b64931c6c09b08c15ce6c7c5136c6145 100644
+--- a/src/task.js
++++ b/src/task.js
+@@ -8,34 +8,28 @@ const {
+ const lighthouse =
+   (callback) =>
+   ({ url, thresholds, opts = {}, config }) => {
+-    if (global.cypress_audit_port) {
+-      opts.port = global.cypress_audit_port;
++    opts.port = 9222;
+ 
+-      if (!opts.onlyCategories) {
+-        opts.onlyCategories = Object.keys(thresholds);
+-      }
+-
+-      if (opts.disableStorageReset === undefined) {
+-        opts.disableStorageReset = true;
+-      }
++    if (!opts.onlyCategories) {
++      opts.onlyCategories = Object.keys(thresholds);
++    }
+ 
+-      return lighthouseLib(url, opts, config).then((results) => {
+-        if (callback) {
+-          callback(results);
+-        }
++    if (opts.disableStorageReset === undefined) {
++      opts.disableStorageReset = true;
++    }
+ 
+-        const computedAudits = computeAudits(results.lhr.audits);
+-        const computedCategories = computeCategories(results.lhr.categories);
++    return lighthouseLib(url, opts, config).then((results) => {
++      if (callback) {
++        callback(results);
++      }
+ 
+-        const allMetrics = { ...computedAudits, ...computedCategories };
++      const computedAudits = computeAudits(results.lhr.audits);
++      const computedCategories = computeCategories(results.lhr.categories);
+ 
+-        return compareWithThresholds(allMetrics, thresholds);
+-      });
+-    }
++      const allMetrics = { ...computedAudits, ...computedCategories };
+ 
+-    throw new Error(
+-      "The Cypress port could not be resolved. Have you setup the project following this guide: https://github.com/mfrachet/cypress-audit/blob/master/packages/lighthouse/README.md#preparing-the-server-configuration ?"
+-    );
++      return compareWithThresholds(allMetrics, thresholds);
++    });
+   };
+ 
+ module.exports = { lighthouse };

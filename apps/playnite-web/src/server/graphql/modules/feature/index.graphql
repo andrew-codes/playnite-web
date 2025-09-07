@@ -1,5 +1,10 @@
 type Feature {
   id: String!
   name: String!
-  releases: [GameRelease]!
+  playniteId: String
+  games: [Game!]!
+}
+
+extend type Query {
+  feature(id: String!): Feature
 }

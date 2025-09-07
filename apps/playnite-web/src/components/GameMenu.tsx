@@ -1,12 +1,11 @@
 import { Menu as MenuIcon } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem } from '@mui/material'
+import { Game } from 'apps/playnite-web/.generated/types.generated'
 import { FC, SyntheticEvent, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { getIsAuthenticated } from '../api/client/state/authSlice'
-import { GameOnPlatformDto } from '../domain/types'
+import { useMe } from '../feature/account/hooks/me'
 
 const GameMenu: FC<{
-  game: GameOnPlatformDto[]
+  game: Game[]
   onActivate: (evt: SyntheticEvent, id: string) => void
 }> = ({ game, onActivate }) => {
   const [anchorEl, setAnchorEl] = useState<null | Element>(null)
@@ -16,9 +15,9 @@ const GameMenu: FC<{
   }
   const handleClose = () => setAnchorEl(null)
 
-  const isAuthenticated = useSelector(getIsAuthenticated)
+  const [me] = useMe()
   const handleActivate = (id: string) => (evt: SyntheticEvent) => {
-    if (isAuthenticated) {
+    if (me.data?.me?.isAuthenticated) {
       onActivate(evt, id)
     }
   }
@@ -26,7 +25,7 @@ const GameMenu: FC<{
   return (
     <>
       <IconButton
-        aria-label={`info about ${game[0].name}`}
+        aria-label={`info about ${game[0]?.primaryRelease?.title}`}
         onClick={handleOpen}
       >
         <MenuIcon />
@@ -40,12 +39,12 @@ const GameMenu: FC<{
         open={open}
       >
         {game
-          .filter((g) => !!g.platform)
+          .filter((g) => !!g.primaryRelease?.platform)
           .map((g) => (
             <MenuItem key={g.id} onClick={handleActivate(g.id)}>
-              {isAuthenticated
-                ? `Play on ${g.platform?.name}`
-                : g.platform?.name}
+              {me.data?.me?.isAuthenticated
+                ? `Play on ${g.primaryRelease?.platform.name}`
+                : g.primaryRelease?.platform.name}
             </MenuItem>
           ))}
       </Menu>

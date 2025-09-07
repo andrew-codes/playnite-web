@@ -1,3 +1,5 @@
+'use client'
+
 import {
   AccountCircle,
   Home,
@@ -16,8 +18,8 @@ import {
   alpha,
   styled,
 } from '@mui/material'
-import { useLocation } from '@remix-run/react'
-import { debounce, stubTrue } from 'lodash-es'
+import { debounce, stubTrue } from 'lodash'
+import { useRouter } from 'next/router'
 import {
   ChangeEvent,
   FC,
@@ -28,8 +30,8 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { $path } from 'remix-routes'
-import { useMe, useSignOut } from '../queryHooks'
+import { useMe } from '../feature/account/hooks/me'
+import { useSignOut } from '../feature/account/hooks/signOut'
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -91,10 +93,10 @@ const WithNavigation: FC<
     handleFilter(evt)
   }, [])
 
-  const { pathname } = useLocation()
+  const { pathname } = useRouter()
 
-  const { data } = useMe()
-  const isAuthenticated = data?.me.isAuthenticated ?? false
+  const [{ data }] = useMe()
+  const isAuthenticated = data?.me?.isAuthenticated ?? false
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -149,10 +151,7 @@ const WithNavigation: FC<
         }}
       >
         {!isAuthenticated && (
-          <MenuItem
-            href={$path('/login', { returnTo: pathname })}
-            component={Link}
-          >
+          <MenuItem href={`/login?returnTo=${pathname}`} component={Link}>
             Sign In
           </MenuItem>
         )}

@@ -1,0 +1,44 @@
+import { ErrorLike, gql } from '@apollo/client/core'
+import { useMutation } from '@apollo/client/react'
+import { Claim } from '../../../server/auth'
+import { MeQuery } from './me'
+
+const signUp = gql`
+  mutation signUp($input: SignUpInput!) {
+    signUp(input: $input) {
+      user {
+        id
+        username
+        isAuthenticated
+      }
+    }
+  }
+`
+const useRegisterAccount = () =>
+  useMutation<{ signUp: Claim }>(signUp, {
+    errorPolicy: 'all',
+    onError: (error) => {
+      let e = error as ErrorLike & {
+        cause: { result: { errors: Array<{ message: string }> } }
+      }
+      e.message =
+        e.cause?.result?.errors?.map((_e) => _e.message).join(', ') || e.message
+      console.warn(
+        'Error during account registration:',
+        JSON.stringify(error, null, 2),
+        error.message,
+      )
+    },
+    update: (cache, mutationResult) => {
+      if (mutationResult.errors || !mutationResult.data?.signUp.user) {
+        return
+      }
+
+      cache.updateQuery({ query: MeQuery }, (data: any) => ({
+        ...data,
+        me: mutationResult.data?.signUp.user,
+      }))
+    },
+  })
+
+export { signUp, useRegisterAccount }

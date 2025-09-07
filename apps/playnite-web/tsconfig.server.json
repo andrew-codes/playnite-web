@@ -1,17 +1,44 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "isolatedModules": false,
-    "noEmit": false,
-    "moduleResolution": "nodenext",
+    "jsx": "preserve",
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "esModuleInterop": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["node"],
+    "outDir": "dist",
+    "rootDir": ".",
+    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
+    "target": "esnext",
+    "skipLibCheck": true
   },
-  "include": [
-    "src/server/**/*.ts",
-    ".generated/*.ts",
-  ],
+  "include": ["src/server.ts"],
   "exclude": [
-    "**/__tests__/**",
-    "**/__component_tests__/**",
-    "node_modules"
-  ]
+    "out-tsc",
+    "dist",
+    "node_modules",
+    "jest.config.ts",
+    "src/**/__tests__/**/*",
+    "src/**/__component_tests__/**/*",
+    ".next",
+    "eslint.config.js",
+    "eslint.config.cjs",
+    "eslint.config.mjs"
+  ],
+  "references": []
 }

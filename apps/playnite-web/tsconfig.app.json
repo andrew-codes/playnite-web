@@ -1,0 +1,55 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["node"],
+    "outDir": "dist",
+    "rootDir": ".",
+    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
+    "target": "ES2017",
+    "skipLibCheck": true
+  },
+  "include": [
+    "../../apps/web/.next/types/**/*.ts",
+    "../../dist/apps/web/.next/types/**/*.ts",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "../../apps/web/build/.next/types/**/*.ts",
+    ".generated/*.ts"
+  ],
+  "exclude": [
+    "out-tsc",
+    "dist",
+    "node_modules",
+    "jest.config.ts",
+    "src/**/__tests__/**/*",
+    "src/**/__component_tests__/**/*",
+    ".next",
+    "eslint.config.js",
+    "eslint.config.cjs",
+    "eslint.config.mjs"
+  ],
+  "references": []
+}

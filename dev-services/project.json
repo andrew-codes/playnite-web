@@ -1,0 +1,30 @@
+{
+  "name": "dev-services",
+  "sourceRoot": "libs/dev-services/src",
+  "projectType": "library",
+  "targets": {
+    "prepare": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.generated"],
+      "options": {
+        "parallel": false,
+        "commands": ["echo 'Preparing dev-services...'"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn tsx scripts/start.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "DB_USER": "local",
+          "DB_PASSWORD": "dev",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+        }
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}
