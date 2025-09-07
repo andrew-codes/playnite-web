@@ -1,5 +1,6 @@
 import dotenv from 'dotenv'
 import path from 'path'
+import sh from 'shelljs'
 import app from './app.js'
 import { prisma } from './data/providers/postgres/client.js'
 import { setupApp } from './setupApp.js'
@@ -17,10 +18,16 @@ dotenv.config({
 
 async function run() {
   const logger = (await import('./logger.js')).default
+  logger.info('Migrating database...')
+  if (process.env.NODE_ENV === 'production') {
+    logger.info('Applying database migrations...')
+    sh.exec(
+      `npx prisma migrate deploy --schema ${path.join(__dirname, 'db', 'schema.prisma')}`,
+      { silent: false, async: false },
+    )
+  }
 
-  logger.info('Starting Playnite Web applications...')
-
-  logger.info('Starting Playnite Web app...')
+  logger.info('Starting Playnite Web...')
   try {
     await prisma.$connect()
 
@@ -28,8 +35,8 @@ async function run() {
 
     await app()
   } catch (error) {
-    logger.error('Error starting Playnite Web app:', error)
-    logger.info('Disconnected from Prisma client.')
+    logger.error('Error starting Playnite Web:', error)
+    logger.info('Disconnecting from Prisma client.')
     await prisma.$disconnect()
     logger.debug('Database connection closed.')
     process.exit(1)

@@ -54,7 +54,7 @@ async function run() {
   await setup()
   await new Promise((resolve, reject) => {
     sh.exec(
-      `yarn nx db/push playnite-web-app`,
+      `yarn pnpify prisma migrate deploy --schema=src/server/data/providers/postgres/schema.prisma`,
       { async: true },
       (code, stdout, stderr) => {
         if (code !== 0) {
