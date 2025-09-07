@@ -32,29 +32,18 @@
         "cwd": "{projectRoot}"
       }
     },
-    "db/deploy": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn pnpify prisma migrate deploy --schema=src/server/data/providers/postgres/schema.prisma",
-        "cwd": "{projectRoot}"
-      }
-    },
     "db/migrate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn pnpify prisma migrate dev --schema=src/server/data/providers/postgres/schema.prisma",
+        "command": "yarn pnpify prisma migrate dev --create-only --schema=src/server/data/providers/postgres/schema.prisma",
         "cwd": "{projectRoot}"
       }
     },
-    "db/push": {
+    "db/migrate/reset": {
       "executor": "nx:run-commands",
-      "dependsOn": ["start/services"],
       "options": {
-        "command": "yarn pnpify prisma db push --schema=src/server/data/providers/postgres/schema.prisma --force-reset --skip-generate",
-        "cwd": "{projectRoot}",
-        "env": {
-          "DATABASE_URL": "postgres://local:dev@localhost:5432/games?schema=public"
-        }
+        "command": "yarn pnpify prisma migrate reset --force --schema=src/server/data/providers/postgres/schema.prisma",
+        "cwd": "{projectRoot}"
       }
     },
     "start/services": {
@@ -182,7 +171,7 @@
     },
     "test/e2e/dev": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "start/services", "db/push"],
+      "dependsOn": ["clean/test", "start/services"],
       "options": {
         "parallel": true,
         "commands": [
@@ -201,12 +190,7 @@
     },
     "test/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        "clean/test",
-        "package/e2e/local",
-        "start/services",
-        "db/push"
-      ],
+      "dependsOn": ["clean/test", "package/e2e/local", "start/services"],
       "inputs": ["{projectRoot}/_packaged"],
       "options": {
         "parallel": false,
@@ -258,12 +242,7 @@
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        "clean/test",
-        "package/files/e2e",
-        "start/services",
-        "db/push"
-      ],
+      "dependsOn": ["clean/test", "package/files/e2e", "start/services"],
       "options": {
         "parallel": false,
         "command": "yarn tsx scripts/e2e.ts",

@@ -101,7 +101,7 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
       httpOnly: true,
     })
 
-    return merge({}, authenticatedUser, omit(newUser, ['password']))
+    return merge({}, authenticatedUser, { user: omit(newUser, ['password']) })
   } catch (error: any) {
     if (error?.meta?.target) {
       const target = error.meta.target as string

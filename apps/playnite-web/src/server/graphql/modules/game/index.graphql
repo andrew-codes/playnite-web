@@ -18,5 +18,4 @@ input Filter {
 
 extend type Query {
   game(id: String!): Game
-  games(libraryId: String!, filter: Filter): [Game!]!
 }

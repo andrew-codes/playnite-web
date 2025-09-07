@@ -4,8 +4,3 @@ type CompletionStatus {
   releases: [Release]!
   playniteId: String
 }
-
-extend type Query {
-  completionStatus(id: String!): CompletionStatus
-  completionStatuses(libraryId: String!): [CompletionStatus!]!
-}

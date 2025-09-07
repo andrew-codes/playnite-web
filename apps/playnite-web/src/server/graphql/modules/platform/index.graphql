@@ -8,5 +8,4 @@ type Platform {
 
 extend type Query {
   platform(id: String!): Platform
-  platforms(libraryId: String!): [Platform!]!
 }

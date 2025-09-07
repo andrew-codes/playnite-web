@@ -67,13 +67,17 @@ export const htmlSanitizationExtension = Prisma.defineExtension({
       },
 
       async createMany({ args, query, model }) {
-        args.data = args.data.map((item) => sanitizeObject(item))
+        if (Array.isArray(args.data)) {
+          args.data = args.data.map((item) => sanitizeObject(item))
+        }
 
         return query(args)
       },
 
       async updateMany({ args, query, model }) {
-        args.data = args.data.map((item) => sanitizeObject(item))
+        if (Array.isArray(args.data)) {
+          args.data = args.data.map((item) => sanitizeObject(item))
+        }
 
         return query(args)
       },

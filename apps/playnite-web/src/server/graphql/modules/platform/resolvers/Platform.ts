@@ -19,8 +19,10 @@ export const Platform: PlatformResolvers = {
       where: {
         Releases: {
           some: {
-            Platform: {
-              id: _parent.id,
+            Source: {
+              Platform: {
+                id: _parent.id,
+              },
             },
           },
         },
