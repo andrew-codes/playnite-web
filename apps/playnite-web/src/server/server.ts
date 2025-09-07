@@ -21,10 +21,11 @@ async function run() {
   logger.info('Migrating database...')
   if (process.env.NODE_ENV === 'production') {
     logger.info('Applying database migrations...')
-    sh.exec(
-      `npx prisma migrate deploy --schema ${path.join(__dirname, 'db', 'schema.prisma')}`,
-      { silent: false, async: false },
-    )
+    sh.exec(`npx prisma migrate deploy schema.prisma`, {
+      silent: false,
+      async: false,
+      cwd: path.join(__dirname, 'db'),
+    })
   }
 
   logger.info('Starting Playnite Web...')
