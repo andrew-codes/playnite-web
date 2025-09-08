@@ -14,7 +14,7 @@ describe('User Library', () => {
     })
   })
 
-  describe.only('Update completion status.', () => {
+  describe('Update completion status.', () => {
     it(`Update completion status.
     - Authenticated user owns library.
     - Other user libraries may not be updated.
@@ -75,6 +75,7 @@ describe('User Library', () => {
         expect(response.status).to.equal(401)
       })
     })
+  })
 
 
   describe('Game grid', () => {
