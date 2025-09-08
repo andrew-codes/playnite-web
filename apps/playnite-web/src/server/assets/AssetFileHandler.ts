@@ -31,15 +31,20 @@ class AssetFileHandler implements IPersistAssets {
     }
 
     const [mimeType, imageData] = imageSource
-    const webp = await sharp(imageData)
-      .resize(325, 325)
-      .toFormat('webp')
-      .toBuffer()
-    await fs.writeFile(
-      path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`),
-      webp,
-    )
-    return true
+    try {
+      const webp = await sharp(imageData)
+        .resize(325, 325)
+        .toFormat('webp')
+        .toBuffer()
+      await fs.writeFile(
+        path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`),
+        webp,
+      )
+      return true
+    } catch (err) {
+      logger.error(`Failed to process image for ${release.title}: ${err}`)
+      return false
+    }
   }
 }
 

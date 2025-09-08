@@ -95,6 +95,10 @@ jobs:
   e2e_tests_linux:
     name: Verify PR - e2e Tests (Linux)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4, 5]
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
@@ -127,23 +131,25 @@ jobs:
           NODE_ENV: production
           LOG_LEVEL: info
           PLATFORM: linux/amd64
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-visual-regression
+          name: e2e-visual-regression-job-${{ matrix.containers }}
           path: apps/playnite-web/visual-regression-tests
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-cypress-videos
+          name: e2e-cypress-videos-job-${{ matrix.containers }}
           path: apps/playnite-web/cypress/videos
       - name: Upload test screenshot artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-cypress-screenshots
+          name: e2e-cypress-screenshots-job-${{ matrix.containers }}
           path: apps/playnite-web/cypress/screenshots
       - uses: codecov/codecov-action@v4
         if: always()

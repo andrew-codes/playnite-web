@@ -84,6 +84,7 @@ describe(`Game details remote control.
           .find('button img')
           .eq(0)
           .click({ force: true })
+        cy.wait(500)
 
         cy.get('[data-test="Actions"] button')
           .eq(0)
@@ -151,6 +152,7 @@ describe(`Game details remote control.
           .parents('[data-test=GameFigure]')
           .find('button img')
           .click({ force: true })
+        cy.wait(500)
 
         cy.get('[data-test="Actions"] button')
           .eq(0)
@@ -201,7 +203,7 @@ describe(`Game details remote control.
         })
       })
 
-      it.only(`Restart button.
+      it(`Restart button.
           - Is visible for a starting or started game.
           - Graph mutation posts to webhook.
           - All controls remain visible.`, () => {
@@ -209,6 +211,7 @@ describe(`Game details remote control.
           .parents('[data-test=GameFigure]')
           .find('button img')
           .click({ force: true })
+        cy.wait(500)
 
         cy.get('[data-test="Actions"] button')
           .eq(0)
@@ -234,8 +237,8 @@ describe(`Game details remote control.
           .click()
         cy.wait('@graphql')
         cy.wait('@graphql')
+        cy.wait(2000)
 
-        cy.wait(400)
         cy.request({
           method: 'GET',
           url: '/echo',
