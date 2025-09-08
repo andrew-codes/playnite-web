@@ -216,7 +216,6 @@ describe('User Library', () => {
             })
           })
 
-          cy.pause()
           cy.compareSnapshot({
             name: `library-${name}`,
             cypressScreenshotOptions: {
