@@ -201,7 +201,7 @@ describe(`Game details remote control.
         })
       })
 
-      it.only(`Restart button.
+      it(`Restart button.
           - Is visible for a starting or started game.
           - Graph mutation posts to webhook.
           - All controls remain visible.`, () => {
