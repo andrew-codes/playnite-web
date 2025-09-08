@@ -198,17 +198,7 @@
         "commands": [
           "yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma",
           "yarn tsx scripts/e2e.ts"
-        ],
-        "env": {
-          "CMD": "run",
-          "CI": "true",
-          "LOG_LEVEL": "verbose",
-          "TEST": "e2e",
-          "START_SERVER_AND_TEST_INSECURE": "1",
-          "NODE_ENV": "production",
-          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
-          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
-        }
+        ]
       },
       "defaultConfiguration": "ci",
       "configurations": {
@@ -218,11 +208,12 @@
             "LOCAL": "true",
             "CI": "true",
             "TEST": "e2e",
-            "LOG_LEVEL": "silly",
+            "LOG_LEVEL": "error",
             "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
-            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
+            "SPLIT_FILE": "cypress-timings.json"
           }
         },
         "dev": {
@@ -236,6 +227,22 @@
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+          }
+        },
+        "timings": {
+          "env": {
+            "CMD": "run",
+            "LOCAL": "true",
+            "CI": "true",
+            "LOG_LEVEL": "error",
+            "TEST": "e2e",
+            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
+            "START_SERVER_AND_TEST_INSECURE": "1",
+            "NODE_ENV": "production",
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
+            "SPLIT": "1",
+            "SPLIT_INDEX": "0",
+            "SPLIT_FILE": "cypress-timings.json"
           }
         }
       }

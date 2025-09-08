@@ -95,6 +95,10 @@ jobs:
     env:
       REGISTRY: ghcr.io
       OWNER: andrew-codes
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -124,23 +128,25 @@ jobs:
           NODE_ENV: production
           LOG_LEVEL: info
           PLATFORM: linux/amd64
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
       - name: Upload visual regression artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-visual-regression
+          name: e2e-visual-regression-${{ strategy.job-index }}
           path: apps/playnite-web/visual-regression-tests
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-cypress-videos
+          name: e2e-cypress-videos-${{ strategy.job-index }}
           path: apps/playnite-web/cypress/videos
       - name: Upload test screenshot artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-cypress-screenshots
+          name: e2e-cypress-screenshots-${{ strategy.job-index }}
           path: apps/playnite-web/cypress/screenshots
       - uses: codecov/codecov-action@v4
         if: always()

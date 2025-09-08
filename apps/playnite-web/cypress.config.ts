@@ -84,7 +84,9 @@ const config = defineConfig({
       tasks(on, config)
       codeCoverage(on, config)
 
-      return cypressSplit(on, imageDiff(on, config))
+      cypressSplit(on, imageDiff(on, config))
+
+      return config
     },
   },
   component: {
