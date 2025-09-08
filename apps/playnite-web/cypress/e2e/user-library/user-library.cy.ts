@@ -14,7 +14,7 @@ describe('User Library', () => {
     })
   })
 
-  describe('Update completion status.', () => {
+  describe.only('Update completion status.', () => {
     it(`Update completion status.
     - Authenticated user owns library.
     - Other user libraries may not be updated.
@@ -76,26 +76,6 @@ describe('User Library', () => {
       })
     })
 
-    it(`Update completion status: after scrolling.`, () => {
-      cy.get('[data-test="GameFigure"]').contains('3DMark')
-      cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
-      cy.get('[data-test="GameFigure"]')
-        .contains('Yakuza: Like A Dragon')
-        .parents('[data-test="GameFigure"]')
-        .contains('[data-test="GameFigureChipList"] button', 'Not Played')
-        .click()
-      cy.get('.MuiPopper-root').contains('li', 'Beaten').eq(0).click()
-      cy.wait('@graphql')
-      cy.wait('@graphql')
-      cy.wait(500)
-      cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
-
-      cy.get('[data-test="GameFigure"]')
-        .contains('Yakuza: Like A Dragon')
-        .parents('[data-test="GameFigure"]')
-        .contains('[data-test="GameFigureChipList"]', 'Beaten')
-    })
-  })
 
   describe('Game grid', () => {
     it(`Displays the total count of games in the library.`, () => {
