@@ -1,8 +1,0 @@
-{
-  "name": "hass-playnite-web",
-  "sourceRoot": "hass-playnite-web/src",
-  "projectType": "application",
-  "targets": {},
-  "tags": ["linux"],
-  "implicitDependencies": []
-}
