@@ -12,85 +12,86 @@ const tasks = (on, config) => {
   on('task', {
     async clearDatabase() {
       const prisma = new PrismaClient()
+      const maxRetries = 3
+      let retryCount = 0
 
-      let e: any = null
-      try {
-        await prisma.$connect()
-
-        await prisma.$executeRawUnsafe(
-          'SET session_replication_role = replica;',
-        )
-
-        const tables = await prisma.$queryRawUnsafe<{ tablename: string }[]>(
-          `SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename != '_prisma_migrations'`,
-        )
-
-        for (const table of tables) {
-          const maxRetries = 3
-          let retryCount = 0
-
-          while (retryCount < maxRetries) {
-            try {
-              await prisma.$executeRawUnsafe(
-                `TRUNCATE TABLE "${table.tablename}" RESTART IDENTITY CASCADE;`,
-              )
-              break
-            } catch (error: any) {
-              retryCount++
-              if (error.code === '40P01' && retryCount < maxRetries) {
-                // Deadlock detected, wait and retry
-                logger.warn(
-                  `Deadlock detected on table ${table.tablename}, retrying... (${retryCount}/${maxRetries})`,
-                )
-                await new Promise((resolve) =>
-                  setTimeout(resolve, 1000 * Math.pow(2, retryCount)),
-                )
-              } else {
-                throw error
-              }
-            }
-          }
-        }
-
-        await prisma.$executeRawUnsafe(
-          'SET session_replication_role = DEFAULT;',
-        )
-
-        logger.info('Database cleared successfully!')
-        logger.info('Ensuring default site settings...')
-        await Promise.all(
-          Object.entries(defaultSettings).map(async ([id, setting]) => {
-            const storedSetting = await prisma.siteSettings.upsert({
-              where: { id },
-              create: {
-                id,
-                name: setting.name,
-                value: setting.value,
-                dataType: setting.dataType,
-              },
-              update: {},
-            })
-            logger.info(
-              ` - ${storedSetting.name}: ${storedSetting.value} (${storedSetting.dataType})`,
-            )
-          }),
-        )
-      } catch (error) {
-        e = error
-        logger.error('Error clearing database:', error)
-      } finally {
-        // Ensure foreign key checks are re-enabled even if there's an error
+      while (retryCount < maxRetries) {
+        let e: any = null
         try {
+          await prisma.$connect()
+
+          await prisma.$executeRawUnsafe(
+            'SET session_replication_role = replica;',
+          )
+
+          const tables = await prisma.$queryRawUnsafe<{ tablename: string }[]>(
+            `SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename != '_prisma_migrations'`,
+          )
+
+          for (const table of tables) {
+            await prisma.$executeRawUnsafe(
+              `TRUNCATE TABLE "${table.tablename}" RESTART IDENTITY CASCADE;`,
+            )
+          }
+
           await prisma.$executeRawUnsafe(
             'SET session_replication_role = DEFAULT;',
           )
-        } catch (cleanupError) {
-          logger.warn('Failed to reset session_replication_role:', cleanupError)
+
+          logger.info('Database cleared successfully!')
+          logger.info('Ensuring default site settings...')
+          await Promise.all(
+            Object.entries(defaultSettings).map(async ([id, setting]) => {
+              const storedSetting = await prisma.siteSettings.upsert({
+                where: { id },
+                create: {
+                  id,
+                  name: setting.name,
+                  value: setting.value,
+                  dataType: setting.dataType,
+                },
+                update: {},
+              })
+              logger.info(
+                ` - ${storedSetting.name}: ${storedSetting.value} (${storedSetting.dataType})`,
+              )
+            }),
+          )
+
+          return true
+        } catch (error) {
+          e = error
+          logger.error(
+            `Error clearing database (attempt ${retryCount + 1}/${maxRetries}):`,
+            error,
+          )
+          retryCount++
+
+          if (retryCount < maxRetries) {
+            const delay = 1000 * Math.pow(2, retryCount - 1)
+            logger.warn(`Retrying in ${delay}ms...`)
+            await new Promise((resolve) => setTimeout(resolve, delay))
+          }
+        } finally {
+          // Ensure foreign key checks are re-enabled even if there's an error
+          try {
+            await prisma.$executeRawUnsafe(
+              'SET session_replication_role = DEFAULT;',
+            )
+          } catch (cleanupError) {
+            logger.warn(
+              'Failed to reset session_replication_role:',
+              cleanupError,
+            )
+          }
+          await prisma.$disconnect()
         }
-        await prisma.$disconnect()
-      }
-      if (e) {
-        throw new Error('Error clearing database:', e)
+
+        if (retryCount >= maxRetries && e) {
+          throw new Error(
+            'Error clearing database after all retries: ' + e.message,
+          )
+        }
       }
 
       return true
