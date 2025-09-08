@@ -2,6 +2,7 @@ import { lighthouse, prepareAudit } from '@cypress-audit/lighthouse'
 import codeCoverage from '@cypress/code-coverage/task.js'
 import { defineConfig } from 'cypress'
 import imageDiff from 'cypress-image-diff-js/plugin'
+import cypressSplit from 'cypress-split'
 import fs from 'fs'
 
 const config = defineConfig({
@@ -83,7 +84,7 @@ const config = defineConfig({
       tasks(on, config)
       codeCoverage(on, config)
 
-      return imageDiff(on, config)
+      return cypressSplit(on, imageDiff(on, config))
     },
   },
   component: {
