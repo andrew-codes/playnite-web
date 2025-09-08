@@ -8717,13 +8717,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.17.20":
-  version: 4.17.20
-  resolution: "@types/lodash@npm:4.17.20"
-  checksum: 10c0/98cdd0faae22cbb8079a01a3bb65aa8f8c41143367486c1cbf5adc83f16c9272a2a5d2c1f541f61d0d73da543c16ee1d21cf2ef86cb93cd0cc0ac3bced6dd88f
-  languageName: node
-  linkType: hard
-
 "@types/mdast@npm:^3.0.0":
   version: 3.0.15
   resolution: "@types/mdast@npm:3.0.15"
@@ -24296,23 +24289,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playnite-web-app-hass-addon@workspace:hass-playnite-web":
-  version: 0.0.0-use.local
-  resolution: "playnite-web-app-hass-addon@workspace:hass-playnite-web"
-  dependencies:
-    "@types/lodash": "npm:^4.17.20"
-    "@types/shelljs": "npm:^0.8.17"
-    esbuild: "npm:^0.25.9"
-    esbuild-register: "npm:^3.6.0"
-    lodash: "npm:^4.17.21"
-    nx: "npm:^21.4.1"
-    playnite-web-app: "workspace:*"
-    shelljs: "npm:^0.10.0"
-    versioning: "workspace:*"
-  languageName: unknown
-  linkType: soft
-
-"playnite-web-app@workspace:*, playnite-web-app@workspace:apps/playnite-web":
+"playnite-web-app@workspace:apps/playnite-web":
   version: 0.0.0-use.local
   resolution: "playnite-web-app@workspace:apps/playnite-web"
   dependencies:
