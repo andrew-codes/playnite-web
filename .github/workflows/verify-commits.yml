@@ -134,19 +134,19 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-visual-regression-${{ strategy.job-index }}
+          name: e2e-visual-regression-job-${{ matrix.containers }}
           path: apps/playnite-web/visual-regression-tests
       - name: Upload test video artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-cypress-videos-${{ strategy.job-index }}
+          name: e2e-cypress-videos-job-${{ matrix.containers }}
           path: apps/playnite-web/cypress/videos
       - name: Upload test screenshot artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-cypress-screenshots-${{ strategy.job-index }}
+          name: e2e-cypress-screenshots-job-${{ matrix.containers }}
           path: apps/playnite-web/cypress/screenshots
       - uses: codecov/codecov-action@v4
         if: always()
