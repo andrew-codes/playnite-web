@@ -77,7 +77,6 @@ describe('User Library', () => {
     })
   })
 
-
   describe('Game grid', () => {
     it(`Displays the total count of games in the library.`, () => {
       cy.contains('h1', 'My Games')
@@ -195,6 +194,10 @@ describe('User Library', () => {
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
+                Cypress.$('[data-test="GameGrid"] > div').css(
+                  'overflow-y',
+                  'hidden',
+                )
               },
             },
           })
@@ -215,6 +218,10 @@ describe('User Library', () => {
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
+                Cypress.$('[data-test="GameGrid"] > div').css(
+                  'overflow-y',
+                  'hidden',
+                )
               },
             },
           })
