@@ -27,10 +27,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/playnite-web"\
     },\
     {\
-      "name": "playnite-web-app-hass-addon",\
-      "reference": "workspace:hass-playnite-web"\
-    },\
-    {\
       "name": "dev-logger",\
       "reference": "workspace:libs/dev-logger"\
     },\
@@ -52,7 +48,6 @@ const RAW_RUNTIME_STATE =
     ["devenv", ["workspace:.devcontainer"]],\
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
-    ["playnite-web-app-hass-addon", ["workspace:hass-playnite-web"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]],\
     ["versioning", ["workspace:libs/versioning"]]\
   ],\
@@ -12973,13 +12968,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-lodash-npm-4.17.13-ec44e3530a-c3d0b7efe7.zip/node_modules/@types/lodash/",\
         "packageDependencies": [\
           ["@types/lodash", "npm:4.17.13"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:4.17.20", {\
-        "packageLocation": "./.yarn/cache/@types-lodash-npm-4.17.20-d7ed6ac7af-98cdd0faae.zip/node_modules/@types/lodash/",\
-        "packageDependencies": [\
-          ["@types/lodash", "npm:4.17.20"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -30645,24 +30633,6 @@ const RAW_RUNTIME_STATE =
           ["winston-daily-rotate-file", "virtual:d9911a896e7aff42f36e408eb4eb7a689c603ed9c3e9ee451136901b8eed391591535d3dcd1656ea3b9e84e3ac39a4a57f3e575821db46b075027dbc7d6713ef#npm:5.0.0"],\
           ["ws", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:8.18.3"],\
           ["zod", "npm:4.0.17"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["playnite-web-app-hass-addon", [\
-      ["workspace:hass-playnite-web", {\
-        "packageLocation": "./hass-playnite-web/",\
-        "packageDependencies": [\
-          ["@types/lodash", "npm:4.17.20"],\
-          ["@types/shelljs", "npm:0.8.17"],\
-          ["esbuild", "npm:0.25.9"],\
-          ["esbuild-register", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:3.6.0"],\
-          ["lodash", "npm:4.17.21"],\
-          ["nx", "virtual:d9911a896e7aff42f36e408eb4eb7a689c603ed9c3e9ee451136901b8eed391591535d3dcd1656ea3b9e84e3ac39a4a57f3e575821db46b075027dbc7d6713ef#npm:21.4.1"],\
-          ["playnite-web-app", "workspace:apps/playnite-web"],\
-          ["playnite-web-app-hass-addon", "workspace:hass-playnite-web"],\
-          ["shelljs", "npm:0.10.0"],\
-          ["versioning", "workspace:libs/versioning"]\
         ],\
         "linkType": "SOFT"\
       }]\
