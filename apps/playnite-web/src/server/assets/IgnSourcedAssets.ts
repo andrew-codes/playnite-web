@@ -76,6 +76,7 @@ class IgnSourcedAssets implements ISourceAssets {
       if (!mimeType) {
         return null
       }
+
       return [mimeType, Buffer.from(await imageResponse.arrayBuffer())]
     } catch (error) {
       logger.error(`Error fetching image: ${ignId}`, error)
