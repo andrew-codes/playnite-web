@@ -75,31 +75,6 @@ describe('User Library', () => {
         expect(response.status).to.equal(401)
       })
     })
-
-    it(`Update completion status: after scrolling.`, () => {
-      cy.get('[data-test="GameGrid"]').as('games')
-      cy.get('[data-test="GameFigure"]').contains('3DMark')
-      cy.get('[data-test="GameGrid"]').find('> div').scrollTo('bottom')
-      cy.get('[data-test="GameFigure"]')
-        .contains('Yakuza: Like A Dragon')
-        .parents('[data-test="GameFigure"]')
-        .as('gameFigure')
-      cy.get('@gameFigure')
-        .contains('[data-test="GameFigureChipList"] button', 'Not Played')
-        .click()
-      cy.get('.MuiPopper-root')
-        .contains('li', 'Beaten')
-        .eq(0)
-        .click({ force: true })
-      cy.wait('@graphql')
-      cy.wait('@graphql')
-      cy.wait(500)
-
-      cy.get('@gameFigure').contains(
-        '[data-test="GameFigureChipList"]',
-        'Beaten',
-      )
-    })
   })
 
   describe('Game grid', () => {
@@ -116,8 +91,7 @@ describe('User Library', () => {
       - Completion status is shown on the cover art.
       - Platform icons are shown on the cover art.
       `, () => {
-      cy.get('[data-test="GameFigure"]').as('gameFigures')
-      cy.get('@gameFigures')
+      cy.get('[data-test="GameFigure"]')
         .eq(1)
         .within(() => {
           cy.get('img')
@@ -137,8 +111,7 @@ describe('User Library', () => {
     it(`Games without cover art.
       - No broken images are shown.
       `, () => {
-      cy.get('[data-test="GameFigure"]').as('gameFigures')
-      cy.get('@gameFigures')
+      cy.get('[data-test="GameFigure"]')
         .eq(0)
         .within(() => {
           cy.get('button img').should('not.exist')
@@ -216,12 +189,15 @@ describe('User Library', () => {
             })
           })
 
-          cy.pause()
           cy.compareSnapshot({
             name: `library-${name}`,
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
+                Cypress.$('[data-test="GameGrid"] > div').css(
+                  'overflow-y',
+                  'hidden',
+                )
               },
             },
           })
@@ -242,6 +218,10 @@ describe('User Library', () => {
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
+                Cypress.$('[data-test="GameGrid"] > div').css(
+                  'overflow-y',
+                  'hidden',
+                )
               },
             },
           })

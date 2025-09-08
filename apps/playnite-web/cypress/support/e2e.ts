@@ -79,7 +79,7 @@ Cypress.on('window:before:load', (win) => {
 
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   originalFn(url, options)
-  cy.wait(100)
+  cy.wait(1200)
 })
 
 Cypress.Commands.add('signIn', (username: string, password: string) => {

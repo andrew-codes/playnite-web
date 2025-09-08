@@ -96,6 +96,7 @@
     "cypress-cdp": "^1.6.84",
     "cypress-image-diff-html-report": "^2.2.0",
     "cypress-image-diff-js": "^2.4.0",
+    "cypress-split": "^1.24.21",
     "dev-logger": "workspace:*",
     "esbuild": "^0.25.9",
     "esbuild-plugin-istanbul": "^0.3.0",
