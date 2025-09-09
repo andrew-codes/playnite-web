@@ -49,33 +49,10 @@ if (process.env.LOCAL !== 'true') {
 }
 logger.debug(`Using docker tag: ${tag}`)
 sh.exec(`docker container rm playnite-web-assets --force || true`)
-runCp = sh.exec(
-  `docker run --name playnite-web-assets --network host -e PORT=3001 -e DATABASE_URL="postgresql://local:dev@localhost:5432/games?schema=public" ghcr.io/andrew-codes/${pkg.name}:${tag}`,
-  {
-    env: {
-      ...process.env,
-    },
-    async: true,
-  },
-)
-runCp.stdout?.on('data', (data) => {
-  logger.info(data.toString())
-})
-runCp.stderr?.on('data', (data) => {
-  logger.warn(data.toString())
-})
-runCp.on('close', (code) => {
-  logger.info('Server closing.')
-  if (code !== 0) {
-    logger.error(`Server exited with code ${code}`)
-    process.exit(code)
-  }
-})
 
-logger.info('Waiting for server to start')
 waitOn(
   {
-    resources: ['http://localhost:3001/health', 'http://localhost:3000'],
+    resources: ['http://localhost:3000'],
     timeout: 30000,
   },
   (err) => {
@@ -84,19 +61,56 @@ waitOn(
       process.exit(1)
     }
 
-    const [, , specFilter] = process.argv
-    logger.info('Running integration tests')
-    testCp = sh.exec(`yarn jest --config jest.config.integration.js`, {
-      env: {
-        ...process.env,
-        CI: 'true',
-        NODE_ENV: 'production',
+    runCp = sh.exec(
+      `docker run --name playnite-web-assets --network host -e PORT=3001 -e DATABASE_URL="postgresql://local:dev@localhost:5432/games?schema=public" ghcr.io/andrew-codes/${pkg.name}:${tag}`,
+      {
+        env: {
+          ...process.env,
+        },
+        async: true,
       },
-      async: true,
+    )
+    runCp.stdout?.on('data', (data) => {
+      logger.info(data.toString())
     })
-    testCp.on('close', (code) => {
-      logger.info('Tests closing.')
-      process.exit(code)
+    runCp.stderr?.on('data', (data) => {
+      logger.warn(data.toString())
     })
+    runCp.on('close', (code) => {
+      logger.info('Server closing.')
+      if (code !== 0) {
+        logger.error(`Server exited with code ${code}`)
+        process.exit(code)
+      }
+    })
+
+    logger.info('Waiting for server to start')
+    waitOn(
+      {
+        resources: ['http://localhost:3001/health'],
+        timeout: 30000,
+      },
+      (err) => {
+        if (err) {
+          logger.error(err)
+          process.exit(1)
+        }
+
+        const [, , specFilter] = process.argv
+        logger.info('Running integration tests')
+        testCp = sh.exec(`yarn jest --config jest.config.integration.js`, {
+          env: {
+            ...process.env,
+            CI: 'true',
+            NODE_ENV: 'production',
+          },
+          async: true,
+        })
+        testCp.on('close', (code) => {
+          logger.info('Tests closing.')
+          process.exit(code)
+        })
+      },
+    )
   },
 )
