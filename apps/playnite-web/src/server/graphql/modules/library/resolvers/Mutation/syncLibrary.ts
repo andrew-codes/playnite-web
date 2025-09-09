@@ -307,7 +307,7 @@ export const syncLibrary: NonNullable<
       })
       .map(async (release) => {
         return _ctx.mqtt.publish(
-          `playnite/cover/update`,
+          `playnite-web/cover/update`,
           JSON.stringify(release),
           { qos: 1 },
         )

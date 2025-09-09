@@ -30729,7 +30729,6 @@ const RAW_RUNTIME_STATE =
           ["@mui/material", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.3.1"],\
           ["@mui/utils", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:7.3.1"],\
           ["@nx/devkit", "virtual:157bb4cf968c927c4adf5743c88b0dd713f0cc321d31b1eef2aa0e7acd3f9f5b5d96217c900d270510daa22020964d691d1d6539cda27314e90cb7adb8c18de4#npm:21.4.1"],\
-          ["@prisma/client", "virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:6.14.0"],\
           ["@reduxjs/toolkit", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.8.2"],\
           ["@remix-run/dev", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.17.0"],\
           ["@remix-run/express", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.17.0"],\
@@ -30796,7 +30795,6 @@ const RAW_RUNTIME_STATE =
           ["nyc", "npm:17.1.0"],\
           ["playnite-web-app", "workspace:apps/playnite-web"],\
           ["prettier", "npm:3.6.2"],\
-          ["prisma", "virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:6.14.0"],\
           ["react", "npm:18.3.1"],\
           ["react-devtools", "npm:6.1.5"],\
           ["react-dom", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:18.3.1"],\

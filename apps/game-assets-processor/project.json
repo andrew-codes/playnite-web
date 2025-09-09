@@ -32,31 +32,18 @@
         "cwd": "{projectRoot}"
       }
     },
-    "start/services": {
-      "executor": "nx:run-commands",
-      "options": {
-        "parallel": false,
-        "commands": ["bash -c 'scripts/manually-start-services.sh'"],
-        "cwd": "{projectRoot}"
-      }
-    },
-    "db/data": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn tsx scripts/seedTestData.ts",
-        "cwd": "{projectRoot}"
-      }
-    },
     "start": {
       "executor": "nx:run-commands",
       "inputs": [],
       "options": {
         "cwd": "{projectRoot}",
         "parallel": false,
-        "commands": [],
+        "commands": ["yarn tsx scripts/start.ts"],
         "env": {
           "NODE_ENV": "development",
-          "LOG_LEVEL": "silly"
+          "LOG_LEVEL": "silly",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
+          "ASSET_PATH": "../.game-assets"
         }
       }
     },

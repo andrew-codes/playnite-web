@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "logs/dev/.9b3cba3b1b9f3237ae1db834bf41e9800eff15ff-audit.json",
+    "files": [
+        {
+            "date": 1757438043386,
+            "name": "logs/dev/verbose-2025-09-09.log",
+            "hash": "7109fe40c77e0a228400ebba7e130f8957c644bd611d6fedd388dbf707fb45c7"
+        }
+    ],
+    "hashType": "sha256"
+}
