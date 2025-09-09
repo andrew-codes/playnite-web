@@ -5,6 +5,7 @@ import {
 } from 'esbuild-plugin-istanbul'
 import fs from 'fs/promises'
 import sh from 'shelljs'
+import pkg from '../package.json' with { type: 'json' }
 
 async function run() {
   const buildRemix = new Promise((resolve, reject) => {
@@ -80,7 +81,9 @@ async function run() {
         server: 'src/server/server.ts',
       },
       tsconfig: 'tsconfig.server.json',
-      packages: 'external',
+      external: Object.entries(pkg.dependencies)
+        .filter(([name, version]) => !version.startsWith('workspace:'))
+        .map(([name, version]) => name),
       bundle: true,
       minify: false,
       outdir: '_build-output/src/server',
