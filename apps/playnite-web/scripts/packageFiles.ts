@@ -25,6 +25,10 @@ async function run() {
       },
     ),
   )
+  await fs.cp(
+    path.join('../../libs/db-client/src/schema.prisma'),
+    '_packaged/schema.prisma',
+  )
 
   console.log('Modifying imports of generated files')
   await Promise.all(
