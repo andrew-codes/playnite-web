@@ -31,6 +31,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:apps/playnite-web"\
     },\
     {\
+      "name": "dev-services",\
+      "reference": "workspace:dev-services"\
+    },\
+    {\
       "name": "db-client",\
       "reference": "workspace:libs/db-client"\
     },\
@@ -54,6 +58,7 @@ const RAW_RUNTIME_STATE =
     ["@andrew-codes/playnite-plugin-installer-manifest", ["workspace:libs/playnite-plugin-installer-manifest"]],\
     ["db-client", ["workspace:libs/db-client"]],\
     ["dev-logger", ["workspace:libs/dev-logger"]],\
+    ["dev-services", ["workspace:dev-services"]],\
     ["devenv", ["workspace:.devcontainer"]],\
     ["game-assets-processor", ["workspace:apps/game-assets-processor"]],\
     ["playnite-web", ["workspace:."]],\
@@ -18523,7 +18528,6 @@ const RAW_RUNTIME_STATE =
           ["rimraf", "npm:6.0.1"],\
           ["shelljs", "npm:0.10.0"],\
           ["ts-jest", "virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:29.4.1"],\
-          ["ts-loader", "virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:9.5.2"],\
           ["tslib", "npm:2.8.1"],\
           ["tsx", "npm:4.20.4"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
@@ -19290,8 +19294,26 @@ const RAW_RUNTIME_STATE =
           ["@types/node", "npm:22.16.5"],\
           ["dev-logger", "workspace:libs/dev-logger"],\
           ["nx", "virtual:d9911a896e7aff42f36e408eb4eb7a689c603ed9c3e9ee451136901b8eed391591535d3dcd1656ea3b9e84e3ac39a4a57f3e575821db46b075027dbc7d6713ef#npm:21.4.1"],\
+          ["rimraf", "npm:6.0.1"],\
           ["winston", "npm:3.17.0"],\
           ["winston-daily-rotate-file", "virtual:d9911a896e7aff42f36e408eb4eb7a689c603ed9c3e9ee451136901b8eed391591535d3dcd1656ea3b9e84e3ac39a4a57f3e575821db46b075027dbc7d6713ef#npm:5.0.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["dev-services", [\
+      ["workspace:dev-services", {\
+        "packageLocation": "./dev-services/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:22.16.5"],\
+          ["dev-logger", "workspace:libs/dev-logger"],\
+          ["dev-services", "workspace:dev-services"],\
+          ["nx", "virtual:d9911a896e7aff42f36e408eb4eb7a689c603ed9c3e9ee451136901b8eed391591535d3dcd1656ea3b9e84e3ac39a4a57f3e575821db46b075027dbc7d6713ef#npm:21.4.1"],\
+          ["prettier", "npm:3.6.2"],\
+          ["shelljs", "npm:0.10.0"],\
+          ["tslib", "npm:2.8.1"],\
+          ["tsx", "npm:4.20.4"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -21786,7 +21808,9 @@ const RAW_RUNTIME_STATE =
           ["cross-env", "npm:10.0.0"],\
           ["db-client", "workspace:libs/db-client"],\
           ["dev-logger", "workspace:libs/dev-logger"],\
+          ["dev-services", "workspace:dev-services"],\
           ["esbuild", "npm:0.25.9"],\
+          ["esbuild-plugin-istanbul", "npm:0.3.0"],\
           ["express", "npm:4.21.1"],\
           ["game-assets-processor", "workspace:apps/game-assets-processor"],\
           ["glob", "npm:11.0.3"],\
@@ -21799,12 +21823,12 @@ const RAW_RUNTIME_STATE =
           ["sharp", "npm:0.34.3"],\
           ["shelljs", "npm:0.10.0"],\
           ["ts-jest", "virtual:157bb4cf968c927c4adf5743c88b0dd713f0cc321d31b1eef2aa0e7acd3f9f5b5d96217c900d270510daa22020964d691d1d6539cda27314e90cb7adb8c18de4#npm:29.4.1"],\
-          ["ts-loader", "virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:9.5.2"],\
           ["tslib", "npm:2.8.1"],\
           ["tsx", "npm:4.20.4"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["uuid", "npm:11.1.0"],\
           ["versioning", "workspace:libs/versioning"],\
+          ["wait-on", "npm:8.0.4"],\
           ["winston", "npm:3.17.0"],\
           ["winston-daily-rotate-file", "virtual:d9911a896e7aff42f36e408eb4eb7a689c603ed9c3e9ee451136901b8eed391591535d3dcd1656ea3b9e84e3ac39a4a57f3e575821db46b075027dbc7d6713ef#npm:5.0.0"]\
         ],\
@@ -30765,6 +30789,7 @@ const RAW_RUNTIME_STATE =
           ["dataloader", "npm:2.2.3"],\
           ["db-client", "workspace:libs/db-client"],\
           ["dev-logger", "workspace:libs/dev-logger"],\
+          ["dev-services", "workspace:dev-services"],\
           ["dotenv", "npm:17.2.1"],\
           ["esbuild", "npm:0.25.9"],\
           ["esbuild-plugin-istanbul", "npm:0.3.0"],\
@@ -35682,28 +35707,6 @@ const RAW_RUNTIME_STATE =
           ["ts-loader", "npm:9.5.2"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:9.5.2", {\
-        "packageLocation": "./.yarn/__virtual__/ts-loader-virtual-627dd724e5/0/cache/ts-loader-npm-9.5.2-15fe2fd8a6-d4f4e67f13.zip/node_modules/ts-loader/",\
-        "packageDependencies": [\
-          ["@types/typescript", null],\
-          ["@types/webpack", null],\
-          ["chalk", "npm:4.1.2"],\
-          ["enhanced-resolve", "npm:5.17.0"],\
-          ["micromatch", "npm:4.0.8"],\
-          ["semver", "npm:7.5.4"],\
-          ["source-map", "npm:0.7.4"],\
-          ["ts-loader", "virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:9.5.2"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
-          ["webpack", null]\
-        ],\
-        "packagePeers": [\
-          "@types/typescript",\
-          "@types/webpack",\
-          "typescript",\
-          "webpack"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:9.5.2", {\
         "packageLocation": "./.yarn/__virtual__/ts-loader-virtual-d88844df30/0/cache/ts-loader-npm-9.5.2-15fe2fd8a6-d4f4e67f13.zip/node_modules/ts-loader/",\

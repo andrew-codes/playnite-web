@@ -10,7 +10,7 @@ node_modules
 .test-runs
 .nuget
 *.log
-logs/*
+**/logs/**/*.*
 .vs
 *.user
 *.env

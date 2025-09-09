@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.16.5",
-    "nx": "^21.4.1"
+    "nx": "^21.4.1",
+    "rimraf": "^6.0.1"
   }
 }

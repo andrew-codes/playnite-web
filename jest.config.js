@@ -16,6 +16,7 @@ const defaultConfig = {
   testEnvironment: 'node',
   testMatch: [
     '<rootDir>/apps/**/__tests__/**/*.(test).((j|t)s)',
+    '<rootDir>/apps/*/__integration_tests__/**/*.(test).((j|t)s)',
     '<rootDir>/libs/**/__tests__/**/*.(test).((j|t)s)',
   ],
   resetMocks: true,
@@ -29,6 +30,7 @@ const defaultConfig = {
     '/__tests__/',
     '/__mocks__/',
     '/__component_tests__/',
+    '/__integration_tests__/',
   ],
   setupFiles: setupFiles,
 }

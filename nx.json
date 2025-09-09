@@ -19,7 +19,7 @@
       "cache": true
     },
     "start": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["prepare", "^start"],
       "cache": false
     },
     "package": {
@@ -38,19 +38,19 @@
       "cache": true
     },
     "test/components": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["clean/test", "prepare"],
       "cache": false
     },
     "test/components/update": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["clean/test", "prepare"],
       "cache": false
     },
     "test/e2e": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["clean/build", "clean/package", "clean/test", "prepare"],
       "cache": false
     },
     "test/e2e/update": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["clean/build", "clean/package", "clean/test", "prepare"],
       "cache": false
     }
   },

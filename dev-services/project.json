@@ -1,0 +1,20 @@
+{
+  "name": "dev-services",
+  "sourceRoot": "libs/dev-services/src",
+  "projectType": "library",
+  "targets": {
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn tsx scripts/start.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "DB_USER": "local",
+          "DB_PASSWORD": "dev"
+        }
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}

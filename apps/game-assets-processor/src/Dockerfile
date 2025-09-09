@@ -9,7 +9,7 @@ RUN apk add --no-cache \
   g++ \
   libc6-compat
 
-WORKDIR /opt/playnite-web-app
+WORKDIR /opt/playnite-web
 COPY _packaged/ .
 RUN npm install --force --omit=dev
 
@@ -21,12 +21,11 @@ RUN apk add --no-cache \
   bash \
   vips
 
-WORKDIR /opt/playnite-web-app
+WORKDIR /opt/playnite-web
 
 # Copy the built application from the builder stage
-COPY --from=builder /opt/playnite-web-app .
+COPY --from=builder /opt/playnite-web .
 
-WORKDIR /opt/playnite-web-app/src/server
 ENV NODE_ENV=production
 
 ENTRYPOINT ["node", "server.js"]

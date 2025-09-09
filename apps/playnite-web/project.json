@@ -32,14 +32,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "start/services": {
-      "executor": "nx:run-commands",
-      "options": {
-        "parallel": false,
-        "commands": ["bash -c 'scripts/manually-start-services.sh'"],
-        "cwd": "{projectRoot}"
-      }
-    },
     "demo-data": {
       "executor": "nx:run-commands",
       "options": {
@@ -166,7 +158,7 @@
     },
     "test/e2e/dev": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "start/services"],
+      "dependsOn": ["clean/test", "^start"],
       "options": {
         "parallel": true,
         "commands": [
@@ -185,7 +177,7 @@
     },
     "test/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/e2e/local", "start/services"],
+      "dependsOn": ["clean/test", "package/e2e/local", "^start"],
       "inputs": ["{projectRoot}/_packaged"],
       "options": {
         "parallel": false,
@@ -241,7 +233,7 @@
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/files/e2e", "start/services"],
+      "dependsOn": ["clean/test", "package/files/e2e", "^start"],
       "options": {
         "parallel": false,
         "command": "yarn tsx scripts/e2e.ts",
@@ -334,7 +326,6 @@
     },
     "package/prune": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build"],
       "options": {
         "parallel": false,
         "commands": ["yarn tsx scripts/packagePrune.ts"],

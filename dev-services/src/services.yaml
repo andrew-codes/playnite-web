@@ -14,5 +14,5 @@ services:
       - '1883:1883'
       - '9001:9001'
     volumes:
-      - ../../../.data/mqtt:/mosquitto/config
+      - ./mqtt:/mosquitto/config
     restart: unless-stopped

@@ -98,6 +98,7 @@
     "cypress-image-diff-js": "^2.4.0",
     "cypress-split": "^1.24.21",
     "dev-logger": "workspace:*",
+    "dev-services": "workspace:*",
     "esbuild": "^0.25.9",
     "esbuild-plugin-istanbul": "^0.3.0",
     "glob": "^11.0.3",

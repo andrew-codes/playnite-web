@@ -9,6 +9,7 @@
   "workspaces": [
     "apps/*",
     "libs/**/*",
+    "dev-services",
     ".devcontainer"
   ],
   "devDependencies": {

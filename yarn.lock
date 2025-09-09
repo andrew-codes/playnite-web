@@ -13459,7 +13459,6 @@ __metadata:
     rimraf: "npm:^6.0.1"
     shelljs: "npm:^0.10.0"
     ts-jest: "npm:^29.4.1"
-    ts-loader: "npm:^9.5.2"
     tslib: "npm:^2.8.1"
     tsx: "npm:^4.20.4"
     typescript: "npm:^5.9.2"
@@ -14034,8 +14033,24 @@ __metadata:
   dependencies:
     "@types/node": "npm:^22.16.5"
     nx: "npm:^21.4.1"
+    rimraf: "npm:^6.0.1"
     winston: "npm:^3.17.0"
     winston-daily-rotate-file: "npm:^5.0.0"
+  languageName: unknown
+  linkType: soft
+
+"dev-services@workspace:*, dev-services@workspace:dev-services":
+  version: 0.0.0-use.local
+  resolution: "dev-services@workspace:dev-services"
+  dependencies:
+    "@types/node": "npm:^22.16.5"
+    dev-logger: "workspace:*"
+    nx: "npm:^21.4.1"
+    prettier: "npm:^3.6.2"
+    shelljs: "npm:^0.10.0"
+    tslib: "npm:^2.8.1"
+    tsx: "npm:^4.20.4"
+    typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
 
@@ -16459,7 +16474,9 @@ __metadata:
     cross-env: "npm:^10.0.0"
     db-client: "workspace:*"
     dev-logger: "workspace:*"
+    dev-services: "workspace:*"
     esbuild: "npm:^0.25.9"
+    esbuild-plugin-istanbul: "npm:^0.3.0"
     express: "npm:^4.21.2"
     glob: "npm:^11.0.3"
     jest: "npm:^30.0.5"
@@ -16471,12 +16488,12 @@ __metadata:
     sharp: "npm:^0.34.3"
     shelljs: "npm:^0.10.0"
     ts-jest: "npm:^29.4.1"
-    ts-loader: "npm:^9.5.2"
     tslib: "npm:^2.8.1"
     tsx: "npm:^4.20.4"
     typescript: "npm:^5.9.2"
     uuid: "npm:^11.1.0"
     versioning: "workspace:*"
+    wait-on: "npm:^8.0.4"
     winston: "npm:^3.17.0"
     winston-daily-rotate-file: "npm:^5.0.0"
   languageName: unknown
@@ -24532,6 +24549,7 @@ __metadata:
     dataloader: "npm:^2.2.3"
     db-client: "workspace:*"
     dev-logger: "workspace:*"
+    dev-services: "workspace:*"
     dotenv: "npm:^17.2.1"
     esbuild: "npm:^0.25.9"
     esbuild-plugin-istanbul: "npm:^0.3.0"

@@ -15,6 +15,17 @@ async function run() {
   await fs.cp('_build-output', '_packaged', { recursive: true })
   await fs.cp('build/client', '_packaged/src/client', { recursive: true })
 
+  await Promise.all(
+    globSync('../../libs/db-client/.generated/prisma/*.node').map(
+      async (file: string) => {
+        await fs.cp(
+          file,
+          path.join('_packaged/src/server', path.basename(file)),
+        )
+      },
+    ),
+  )
+
   console.log('Modifying imports of generated files')
   await Promise.all(
     globSync('_packaged/.generated/*.js').map(async (file: string) => {
