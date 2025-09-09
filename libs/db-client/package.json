@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/node": "^22.16.5",
     "@yarnpkg/pnpify": "^4.1.5",
+    "jest": "^30.0.5",
     "nx": "^21.4.1",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",

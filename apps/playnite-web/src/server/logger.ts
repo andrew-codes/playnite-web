@@ -1,1 +1,3 @@
-export * from 'dev-logger'
+import logger from 'dev-logger'
+
+export default logger

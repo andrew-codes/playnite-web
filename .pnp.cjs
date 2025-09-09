@@ -18516,6 +18516,7 @@ const RAW_RUNTIME_STATE =
           ["@yarnpkg/pnpify", "npm:4.1.5"],\
           ["db-client", "workspace:libs/db-client"],\
           ["dev-logger", "workspace:libs/dev-logger"],\
+          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:30.0.5"],\
           ["nx", "virtual:d9911a896e7aff42f36e408eb4eb7a689c603ed9c3e9ee451136901b8eed391591535d3dcd1656ea3b9e84e3ac39a4a57f3e575821db46b075027dbc7d6713ef#npm:21.4.1"],\
           ["prettier", "npm:3.6.2"],\
           ["prisma", "virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:6.14.0"],\
@@ -21785,7 +21786,6 @@ const RAW_RUNTIME_STATE =
           ["cross-env", "npm:10.0.0"],\
           ["db-client", "workspace:libs/db-client"],\
           ["dev-logger", "workspace:libs/dev-logger"],\
-          ["dotenv", "npm:17.2.1"],\
           ["esbuild", "npm:0.25.9"],\
           ["express", "npm:4.21.1"],\
           ["game-assets-processor", "workspace:apps/game-assets-processor"],\
@@ -35546,7 +35546,7 @@ const RAW_RUNTIME_STATE =
           ["esbuild", null],\
           ["fast-json-stable-stringify", "npm:2.1.0"],\
           ["handlebars", "npm:4.7.8"],\
-          ["jest", null],\
+          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:30.0.5"],\
           ["jest-util", "npm:30.0.5"],\
           ["json5", "npm:2.2.3"],\
           ["lodash.memoize", "npm:4.1.2"],\

@@ -49,7 +49,7 @@
     },
     "prepare": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/build"],
+      "dependsOn": ["clean/build", "^prepare"],
       "cache": false,
       "options": {
         "command": "yarn graphql-codegen --config codegen.ts",
