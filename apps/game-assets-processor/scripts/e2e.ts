@@ -35,6 +35,7 @@ appCp = sh.exec(`yarn nx start playnite-web-app`, {
     ...process.env,
     NODE_ENV: 'production',
   },
+  silent: false,
 })
 
 logger.info(
