@@ -1,6 +1,5 @@
 import { groupBy } from 'lodash-es'
 import { runState } from '../../../../../../api/client/runStates.js'
-import { ignSlug } from '../../../../../assets/ignSlug.js'
 import logger from '../../../../../logger.js'
 import { create, domains, hasIdentity } from '../../../../../oid.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
@@ -299,7 +298,7 @@ export const syncLibrary: NonNullable<
     select: { id: true, playniteId: true },
   })
 
-  const persistedCovers = await Promise.all(
+  await Promise.all(
     _arg.libraryData.update.releases
       .filter((release) => {
         return [sources.some((s) => s.playniteId === release.source)].every(
@@ -307,7 +306,11 @@ export const syncLibrary: NonNullable<
         )
       })
       .map(async (release) => {
-        return _ctx.assets.persist(release)
+        return _ctx.mqtt.publish(
+          `playnite/cover/update`,
+          JSON.stringify(release),
+          { qos: 1 },
+        )
       }),
   )
 
@@ -349,7 +352,6 @@ export const syncLibrary: NonNullable<
               Cover: {
                 create: {
                   type: 'cover',
-                  ignId: persistedCovers[i] ? ignSlug(release) : null,
                 },
               },
               hidden: release.hidden ?? false,
@@ -401,7 +403,6 @@ export const syncLibrary: NonNullable<
               Cover: {
                 update: {
                   type: 'cover',
-                  ignId: persistedCovers[i] ? ignSlug(release) : null,
                 },
               },
               ...(release.features && {

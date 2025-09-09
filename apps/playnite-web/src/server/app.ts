@@ -43,7 +43,7 @@ async function run() {
   )
 
   const signingKey = process.env.SECRET ?? 'secret'
-  const yoga = createYoga('/api', signingKey)
+  const yoga = await createYoga('/api', signingKey)
 
   if (process.env.TEST !== 'e2e' && process.env.DISABLE_CSP !== 'true') {
     const cspOrigins = (process.env.CSP_ORIGINS ?? '')

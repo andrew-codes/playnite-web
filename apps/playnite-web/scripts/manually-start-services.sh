@@ -6,14 +6,11 @@ echo "Starting dependent services..."
 
 REPO_ROOT=$PWD/../..
 
-docker container rm db --force || true
+docker-compose -f scripts/services.yaml down || true
 
-docker run --name db -d \
-  -p 5432:5432 \
-  -e POSTGRES_USER=local \
-  -e POSTGRES_PASSWORD=dev \
-  --network host \
-  postgres:latest
+export DB_USER=local
+export DB_PASSWORD=dev
+docker-compose -p playnite-web-services -f scripts/services.yaml up -d
 
 echo "Waiting for PostgreSQL to be ready..."
 
@@ -22,7 +19,7 @@ max_attempts=30
 attempt=1
 
 while [ $attempt -le $max_attempts ]; do
-  if docker exec db pg_isready -h localhost -p 5432 -U local > /dev/null 2>&1; then
+  if docker run --rm --network playnite-web-services_default postgres:latest pg_isready -h db -p 5432 -U local > /dev/null 2>&1; then
     echo "PostgreSQL is ready!"
     break
   fi
