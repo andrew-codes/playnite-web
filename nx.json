@@ -42,15 +42,15 @@
       "cache": false
     },
     "test/components/update": {
-      "dependsOn": [],
+      "dependsOn": ["prepare"],
       "cache": false
     },
     "test/e2e": {
-      "dependsOn": [],
+      "dependsOn": ["prepare"],
       "cache": false
     },
     "test/e2e/update": {
-      "dependsOn": [],
+      "dependsOn": ["prepare"],
       "cache": false
     }
   },

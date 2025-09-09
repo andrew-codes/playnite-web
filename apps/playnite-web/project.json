@@ -32,20 +32,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "db/migrate": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn pnpify prisma migrate dev --create-only --schema=src/server/data/providers/postgres/schema.prisma",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "db/migrate/reset": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn pnpify prisma migrate reset --force --schema=src/server/data/providers/postgres/schema.prisma",
-        "cwd": "{projectRoot}"
-      }
-    },
     "start/services": {
       "executor": "nx:run-commands",
       "options": {
@@ -54,10 +40,19 @@
         "cwd": "{projectRoot}"
       }
     },
-    "db/data": {
+    "demo-data": {
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn tsx scripts/seedTestData.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/build"],
+      "cache": false,
+      "options": {
+        "command": "yarn graphql-codegen --config codegen.ts",
         "cwd": "{projectRoot}"
       }
     },
@@ -195,10 +190,7 @@
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
-        "commands": [
-          "yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma",
-          "yarn tsx scripts/e2e.ts"
-        ]
+        "commands": ["yarn tsx scripts/e2e.ts"]
       },
       "defaultConfiguration": "ci",
       "configurations": {
@@ -266,7 +258,7 @@
     "build": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "production",
-      "dependsOn": ["clean/build"],
+      "dependsOn": ["clean/build", "prepare"],
       "options": {
         "cwd": "{projectRoot}",
         "commands": ["yarn tsx scripts/build.ts"]
@@ -291,7 +283,6 @@
         "{projectRoot}/build/**",
         "{projectRoot}/_build-output/**",
         "{projectRoot}/scripts/packageFiles.ts",
-        "{projectRoot}/scripts/utils/packageFiles.ts",
         "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
@@ -321,7 +312,6 @@
         "{projectRoot}/build/**",
         "{projectRoot}/_build-output/**",
         "{projectRoot}/scripts/packageFiles.ts",
-        "{projectRoot}/scripts/utils/packageFiles.ts",
         "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
@@ -357,7 +347,6 @@
         "{projectRoot}/build/**",
         "{projectRoot}/_build-output/**",
         "{projectRoot}/scripts/packageFiles.ts",
-        "{projectRoot}/scripts/utils/packageFiles.ts",
         "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],

@@ -27,6 +27,7 @@
     "crypto-js": "^4.2.0",
     "css-mediaquery": "^0.1.2",
     "dataloader": "^2.2.3",
+    "db-client": "workspace:*",
     "dotenv": "^17.2.1",
     "express": "^4.21.2",
     "framer-motion": "^12.23.12",

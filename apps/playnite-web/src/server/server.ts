@@ -1,4 +1,4 @@
-import { spawnSync } from 'child_process'
+import { migrate } from 'db-client/migrate'
 import dotenv from 'dotenv'
 import path from 'path'
 import app from './app.js'
@@ -18,26 +18,7 @@ dotenv.config({
 
 async function run() {
   const logger = (await import('./logger.js')).default
-  logger.info('Migrating database...')
-  if (process.env.NODE_ENV === 'production') {
-    logger.info('Applying database migrations...')
-    const schemaPath = path.join(__dirname, 'db', 'schema.prisma')
-    const migrate = spawnSync(
-      'npx',
-      ['prisma', 'migrate', 'deploy', '--schema', schemaPath],
-      {
-        stdio: 'inherit',
-      },
-    )
-    if (migrate.error) {
-      logger.error('Failed to run database migrations:', migrate.error)
-      process.exit(1)
-    }
-    if (migrate.status !== 0) {
-      logger.error('Database migrations failed with exit code', migrate.status)
-      process.exit(migrate.status ?? 1)
-    }
-  }
+  await migrate()
 
   logger.info('Starting Playnite Web...')
   try {

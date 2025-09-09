@@ -11,7 +11,6 @@ docker-compose -f scripts/services.yaml down || true
 export DB_USER=local
 export DB_PASSWORD=dev
 docker-compose -p playnite-web-services -f scripts/services.yaml up -d
-
 echo "Waiting for PostgreSQL to be ready..."
 
 # Wait for PostgreSQL to be accessible

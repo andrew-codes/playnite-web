@@ -13444,6 +13444,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"db-client@workspace:*, db-client@workspace:libs/db-client":
+  version: 0.0.0-use.local
+  resolution: "db-client@workspace:libs/db-client"
+  dependencies:
+    "@prisma/client": "npm:6.14.0"
+    "@types/node": "npm:^22.16.5"
+    "@yarnpkg/pnpify": "npm:^4.1.5"
+    dev-logger: "workspace:*"
+    nx: "npm:^21.4.1"
+    prettier: "npm:^3.6.2"
+    prisma: "npm:6.14.0"
+    rimraf: "npm:^6.0.1"
+    shelljs: "npm:^0.10.0"
+    ts-jest: "npm:^29.4.1"
+    ts-loader: "npm:^9.5.2"
+    tslib: "npm:^2.8.1"
+    tsx: "npm:^4.20.4"
+    typescript: "npm:^5.9.2"
+  languageName: unknown
+  linkType: soft
+
 "debounce@npm:^1.2.0":
   version: 1.2.1
   resolution: "debounce@npm:1.2.1"
@@ -16420,6 +16441,46 @@ __metadata:
   checksum: 10c0/33e77fd29bddc2d9bb78ab3eb854c165909201f88c75faa8272e35899e2d35a8a642a15e7420ef945e1f64a9670d6aa3ec744106b2aa42be68ca5114025954ca
   languageName: node
   linkType: hard
+
+"game-assets-processor@workspace:apps/game-assets-processor":
+  version: 0.0.0-use.local
+  resolution: "game-assets-processor@workspace:apps/game-assets-processor"
+  dependencies:
+    "@jest/globals": "npm:^30.0.5"
+    "@nx/devkit": "npm:^21.4.1"
+    "@types/express": "npm:^4.17.23"
+    "@types/lodash-es": "npm:^4.17.12"
+    "@types/node": "npm:^22.16.5"
+    "@types/shelljs": "npm:^0.8.17"
+    "@yarnpkg/pnpify": "npm:^4.1.5"
+    async-mqtt: "npm:^2.6.3"
+    concurrently: "npm:^9.2.0"
+    cross-env: "npm:^10.0.0"
+    db-client: "workspace:*"
+    dev-logger: "workspace:*"
+    dotenv: "npm:^17.2.1"
+    esbuild: "npm:^0.25.9"
+    express: "npm:^4.21.2"
+    glob: "npm:^11.0.3"
+    jest: "npm:^30.0.5"
+    lodash-es: "npm:^4.17.21"
+    nodemon: "npm:^3.1.10"
+    nx: "npm:^21.4.1"
+    prettier: "npm:^3.6.2"
+    rimraf: "npm:^6.0.1"
+    sharp: "npm:^0.34.3"
+    shelljs: "npm:^0.10.0"
+    ts-jest: "npm:^29.4.1"
+    ts-loader: "npm:^9.5.2"
+    tslib: "npm:^2.8.1"
+    tsx: "npm:^4.20.4"
+    typescript: "npm:^5.9.2"
+    uuid: "npm:^11.1.0"
+    versioning: "workspace:*"
+    winston: "npm:^3.17.0"
+    winston-daily-rotate-file: "npm:^5.0.0"
+  languageName: unknown
+  linkType: soft
 
 "generic-names@npm:^4.0.0":
   version: 4.0.0
@@ -24470,6 +24531,7 @@ __metadata:
     cypress-image-diff-js: "npm:^2.4.0"
     cypress-split: "npm:^1.24.21"
     dataloader: "npm:^2.2.3"
+    db-client: "workspace:*"
     dev-logger: "workspace:*"
     dotenv: "npm:^17.2.1"
     esbuild: "npm:^0.25.9"

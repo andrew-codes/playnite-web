@@ -7,20 +7,6 @@ import fs from 'fs/promises'
 import sh from 'shelljs'
 
 async function run() {
-  const generateDb = new Promise((resolve, reject) => {
-    const prismaCp = sh.exec(
-      `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma`,
-      { async: true },
-    )
-    prismaCp.on('exit', (code) => {
-      if (code === 0) {
-        resolve(code)
-      } else {
-        reject(new Error('Prisma generate failed'))
-      }
-    })
-  })
-
   const buildRemix = new Promise((resolve, reject) => {
     const remixBuild = sh.exec(`yarn remix vite:build`, {
       async: true,
@@ -33,22 +19,6 @@ async function run() {
         resolve(code)
       } else {
         reject(new Error('Remix build failed'))
-      }
-    })
-  })
-
-  const buildGraphql = new Promise((resolve, reject) => {
-    const graphqlBuild = sh.exec(`yarn graphql-codegen --config codegen.ts`, {
-      async: true,
-      env: {
-        ...process.env,
-      },
-    })
-    graphqlBuild.on('exit', (code) => {
-      if (code === 0) {
-        resolve(code)
-      } else {
-        reject(new Error('GraphQL build failed'))
       }
     })
   })
@@ -97,7 +67,7 @@ async function run() {
     )
   }
 
-  const codes = await Promise.all([generateDb, buildRemix, buildGraphql])
+  const codes = await Promise.all([buildRemix])
   console.debug(
     `Prisma generate, Remix build, and GraphQL codegen completed with codes: ${codes}`,
   )

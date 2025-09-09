@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": false,
+    "allowJs": true,
+    "module": "ESNext",
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "testUtils/**/*.ts", "*.ts"],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./tsconfig.server.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    }
+  ]
+}

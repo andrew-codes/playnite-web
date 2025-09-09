@@ -15,20 +15,6 @@ async function run() {
   await fs.cp('_build-output', '_packaged', { recursive: true })
   await fs.cp('build/client', '_packaged/src/client', { recursive: true })
 
-  console.log(`Copying database migrations.`)
-  await fs.mkdir(path.join('_packaged', 'src', 'server', 'db'), {
-    recursive: true,
-  })
-  await fs.cp(
-    path.join('src/server/data/providers/postgres/schema.prisma'),
-    path.join('_packaged/src/server/db/schema.prisma'),
-  )
-  await fs.cp(
-    path.join('src/server/data/providers/postgres/migrations'),
-    path.join('_packaged/src/server/db/migrations'),
-    { recursive: true },
-  )
-
   console.log('Modifying imports of generated files')
   await Promise.all(
     globSync('_packaged/.generated/*.js').map(async (file: string) => {

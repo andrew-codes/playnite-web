@@ -1,5 +1,5 @@
+import { Prisma, client } from 'db-client'
 import logger from 'dev-logger'
-import { Prisma, PrismaClient } from '../../.generated/prisma/client.js'
 import Permission from '../../src/auth/permissions.js'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
 import { codes, defaultSettings } from '../../src/server/siteSettings.js'
@@ -11,30 +11,29 @@ import {
 const tasks = (on, config) => {
   on('task', {
     async clearDatabase() {
-      const prisma = new PrismaClient()
       const maxRetries = 3
       let retryCount = 0
 
       while (retryCount < maxRetries) {
         let e: any = null
         try {
-          await prisma.$connect()
+          await client.$connect()
 
-          await prisma.$executeRawUnsafe(
+          await client.$executeRawUnsafe(
             'SET session_replication_role = replica;',
           )
 
-          const tables = await prisma.$queryRawUnsafe<{ tablename: string }[]>(
+          const tables = await client.$queryRawUnsafe<{ tablename: string }[]>(
             `SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename != '_prisma_migrations'`,
           )
 
           for (const table of tables) {
-            await prisma.$executeRawUnsafe(
+            await client.$executeRawUnsafe(
               `TRUNCATE TABLE "${table.tablename}" RESTART IDENTITY CASCADE;`,
             )
           }
 
-          await prisma.$executeRawUnsafe(
+          await client.$executeRawUnsafe(
             'SET session_replication_role = DEFAULT;',
           )
 
@@ -42,7 +41,7 @@ const tasks = (on, config) => {
           logger.info('Ensuring default site settings...')
           await Promise.all(
             Object.entries(defaultSettings).map(async ([id, setting]) => {
-              const storedSetting = await prisma.siteSettings.upsert({
+              const storedSetting = await client.siteSettings.upsert({
                 where: { id },
                 create: {
                   id,
@@ -75,7 +74,7 @@ const tasks = (on, config) => {
         } finally {
           // Ensure foreign key checks are re-enabled even if there's an error
           try {
-            await prisma.$executeRawUnsafe(
+            await client.$executeRawUnsafe(
               'SET session_replication_role = DEFAULT;',
             )
           } catch (cleanupError) {
@@ -84,7 +83,7 @@ const tasks = (on, config) => {
               cleanupError,
             )
           }
-          await prisma.$disconnect()
+          await client.$disconnect()
         }
 
         if (retryCount >= maxRetries && e) {
@@ -98,13 +97,11 @@ const tasks = (on, config) => {
     },
 
     async seedUsers() {
-      const prisma = new PrismaClient()
-
       let e: any = null
       try {
-        await prisma.$connect()
+        await client.$connect()
 
-        await prisma.user.create({
+        await client.user.create({
           data: {
             username: 'test',
             name: 'Test',
@@ -123,7 +120,7 @@ const tasks = (on, config) => {
           },
         })
 
-        await prisma.user.create({
+        await client.user.create({
           data: {
             username: 'jane',
             name: 'Jane Smith',
@@ -147,7 +144,7 @@ const tasks = (on, config) => {
         e = error
         logger.error('Error seeding database:', error)
       } finally {
-        await prisma.$disconnect()
+        await client.$disconnect()
       }
 
       if (e) {
@@ -157,13 +154,12 @@ const tasks = (on, config) => {
     },
 
     async setSiteSettings(settings: Record<(typeof codes)[number], string>) {
-      const prisma = new PrismaClient()
       let e: any = null
       try {
-        await prisma.$connect()
+        await client.$connect()
         await Promise.all(
           Object.entries(settings).map(async ([key, value]) => {
-            await prisma.siteSettings.update({
+            await client.siteSettings.update({
               where: { id: key },
               data: { value },
             })
@@ -175,7 +171,7 @@ const tasks = (on, config) => {
         e = error
         logger.error('Error updating site settings:', error)
       } finally {
-        await prisma.$disconnect()
+        await client.$disconnect()
       }
       if (e) {
         throw new Error('Error updating site settings:', e)
@@ -191,13 +187,12 @@ const tasks = (on, config) => {
       username: string
       settings: Record<(typeof userCodes)[number], string>
     }) {
-      const prisma = new PrismaClient()
       let e: any = null
       let results: Array<Prisma.UserSettingGetPayload<{}>> = []
       try {
-        await prisma.$connect()
+        await client.$connect()
 
-        const user = await prisma.user.findUniqueOrThrow({
+        const user = await client.user.findUniqueOrThrow({
           where: { username },
           select: { id: true },
         })
@@ -206,7 +201,7 @@ const tasks = (on, config) => {
           Object.entries(settings).map(async ([code, value]) => {
             const name = defaultUserSettings[code]?.name || code
 
-            return await prisma.userSetting.update({
+            return await client.userSetting.update({
               where: {
                 userId_name: {
                   userId: user.id,
@@ -223,7 +218,7 @@ const tasks = (on, config) => {
         e = error
         logger.error('Error updating site settings:', error)
       } finally {
-        await prisma.$disconnect()
+        await client.$disconnect()
       }
       if (e) {
         throw new Error('Error updating site settings:', e)

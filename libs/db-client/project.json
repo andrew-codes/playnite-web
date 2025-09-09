@@ -1,0 +1,61 @@
+{
+  "name": "db-client",
+  "sourceRoot": "libs/db-client/src",
+  "projectType": "library",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/test", "clean/build"],
+      "options": {
+        "parallel": true,
+        "commands": []
+      }
+    },
+    "clean/build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf build .generated",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "clean/test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.generated"],
+      "options": {
+        "parallel": false,
+        "commands": ["yarn pnpify prisma generate --schema=src/schema.prisma"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "reset-db": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn pnpify prisma migrate reset --force --schema=src/schema.prisma",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test/unit": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/test"],
+      "inputs": ["src", "generated", "{projectRoot}/jest.config.js"],
+      "outputs": ["{projectRoot}/.test-runs/unit"],
+      "options": {
+        "command": "yarn jest --config jest.config.js",
+        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "ci": {}
+      }
+    },
+    "publish": {}
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}
