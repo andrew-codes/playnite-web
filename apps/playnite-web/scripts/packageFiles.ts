@@ -28,7 +28,7 @@ async function run() {
   )
   await fs.cp(
     path.join('../../libs/db-client/src/schema.prisma'),
-    '_packaged/schema.prisma',
+    '_packaged/src/server/schema.prisma',
   )
 
   logger.info('Modifying imports of generated files')
