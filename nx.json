@@ -46,11 +46,23 @@
       "cache": false
     },
     "test/e2e": {
-      "dependsOn": ["clean/build", "clean/package", "clean/test", "prepare"],
+      "dependsOn": [
+        "clean/build",
+        "clean/package",
+        "clean/test",
+        "prepare",
+        "^start"
+      ],
       "cache": false
     },
     "test/e2e/update": {
-      "dependsOn": ["clean/build", "clean/package", "clean/test", "prepare"],
+      "dependsOn": [
+        "clean/build",
+        "clean/package",
+        "clean/test",
+        "prepare",
+        "^start"
+      ],
       "cache": false
     }
   },
