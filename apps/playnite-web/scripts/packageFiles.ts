@@ -49,6 +49,11 @@ async function run() {
   const pkg = JSON.parse(await fs.readFile('package.json', 'utf8'))
   pkg.name = `packaged-${pkg.name}`
   pkg.devDependencies = {}
+  pkg.dependencies = Object.fromEntries(
+    Object.entries<string>(pkg.dependencies).filter(
+      ([key, value]) => !value.startsWith('workspace:'),
+    ),
+  )
   await fs.writeFile(
     '_packaged/package.json',
     JSON.stringify(pkg, null, 2),
