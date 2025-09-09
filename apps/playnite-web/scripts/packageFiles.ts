@@ -1,3 +1,4 @@
+import logger from 'dev-logger'
 import { existsSync } from 'fs'
 import fs from 'fs/promises'
 import { globSync } from 'glob'
@@ -5,11 +6,11 @@ import path from 'path'
 
 async function run() {
   if (!existsSync('build') || !existsSync('_build-output')) {
-    console.error('Build files not found. Please build the project first.')
+    logger.error('Build files not found. Please build the project first.')
     process.exit(1)
   }
 
-  console.log('Copying built files to _packaged')
+  logger.info('Copying built files to _packaged')
   await fs.mkdir(path.join('_packaged', 'src', 'server'), { recursive: true })
   await fs.mkdir(path.join('_packaged', 'src', 'client'), { recursive: true })
   await fs.cp('_build-output', '_packaged', { recursive: true })
@@ -30,7 +31,7 @@ async function run() {
     '_packaged/schema.prisma',
   )
 
-  console.log('Modifying imports of generated files')
+  logger.info('Modifying imports of generated files')
   await Promise.all(
     globSync('_packaged/.generated/*.js').map(async (file: string) => {
       let contents: string = await fs.readFile(file, 'utf8')
@@ -49,7 +50,7 @@ async function run() {
     }),
   )
 
-  console.log('Copying and modifying package.json')
+  logger.info('Copying and modifying package.json')
   const pkg = JSON.parse(await fs.readFile('package.json', 'utf8'))
   pkg.name = `packaged-${pkg.name}`
   pkg.devDependencies = {}
@@ -67,13 +68,13 @@ async function run() {
   await fs.mkdir(path.join('_packaged', 'src', 'public', 'assets'), {
     recursive: true,
   })
-  console.log('Copying assets')
+  logger.info('Copying assets')
   await fs.cp('src/public/assets', '_packaged/src/public/assets', {
     recursive: true,
   })
 }
 
 run().catch((error) => {
-  console.error('FAILURE', error)
+  logger.error('FAILURE', error)
   process.exit(1)
 })
