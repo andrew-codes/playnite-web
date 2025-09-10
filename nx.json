@@ -71,14 +71,7 @@
       "cache": false
     },
     "test/e2e/update": {
-      "dependsOn": [
-        "clean/build",
-        "clean/package",
-        "clean/test",
-        "prepare",
-        "^build",
-        "^start"
-      ],
+      "dependsOn": ["clean/test", "package/e2e", "^start"],
       "cache": false
     }
   },

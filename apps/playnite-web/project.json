@@ -158,18 +158,15 @@
     },
     "test/e2e/dev": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "^start"],
+      "dependsOn": ["clean/test", "^start", "prepare", "^prepare"],
       "options": {
         "parallel": true,
-        "commands": [
-          "yarn react-devtools",
-          "yarn start-server-and-test 'cross-env NODE_ENV=development TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env NODE_ENV=development TEST=e2e CI=true yarn cypress open --e2e --browser chrome'"
-        ],
+        "commands": ["yarn react-devtools", "yarn tsx scripts/e2e-dev.ts"],
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
-          "LOG_LEVEL": "silly",
-          "NODE_ENV": "development",
+          "LOG_LEVEL": "verbose",
+          "NODE_ENV": "production",
           "TEST": "e2e",
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222"
         }
@@ -177,7 +174,6 @@
     },
     "test/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/e2e/local", "^start"],
       "inputs": ["{projectRoot}/_packaged"],
       "options": {
         "parallel": false,
@@ -233,7 +229,6 @@
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/files/e2e", "^start"],
       "options": {
         "parallel": false,
         "command": "yarn tsx scripts/e2e.ts",
@@ -250,7 +245,6 @@
     "build": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "production",
-      "dependsOn": ["clean/build", "prepare"],
       "options": {
         "cwd": "{projectRoot}",
         "commands": ["yarn tsx scripts/build.ts"]
@@ -260,12 +254,17 @@
           "env": {
             "NODE_ENV": "production"
           }
-        },
-        "e2e": {
-          "env": {
-            "NODE_ENV": "production",
-            "INSTRUMENT": "true"
-          }
+        }
+      }
+    },
+    "build/e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "commands": ["yarn tsx scripts/build.ts"],
+        "env": {
+          "NODE_ENV": "production",
+          "INSTRUMENT": "true"
         }
       }
     },
@@ -279,7 +278,6 @@
       ],
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build"],
       "options": {
         "parallel": false,
         "commands": [],
@@ -298,7 +296,7 @@
         }
       }
     },
-    "package/e2e/local": {
+    "package/e2e": {
       "inputs": [
         "{projectRoot}/package.json",
         "{projectRoot}/build/**",
@@ -309,11 +307,9 @@
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
       "cache": true,
-      "dependsOn": ["clean/package"],
       "options": {
         "parallel": false,
         "commands": [
-          "yarn nx run playnite-web-app:build:e2e",
           "yarn tsx scripts/packageFiles.ts",
           "yarn tsx scripts/packageDemoCoverArt.ts",
           "yarn tsx scripts/package.ts"
@@ -341,12 +337,11 @@
         "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
+      "dependsOn": ["build/e2e"],
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package"],
       "options": {
         "parallel": false,
         "commands": [
-          "yarn nx run playnite-web-app:build:e2e --skip-nx-cache",
           "yarn tsx scripts/packageFiles.ts",
           "yarn tsx scripts/packageDemoCoverArt.ts"
         ],

@@ -4,19 +4,6 @@ import sh from 'shelljs'
 
 async function setup() {
   return Promise.all([
-    new Promise((resolve, reject) => {
-      sh.exec(
-        `yarn graphql-codegen --config codegen.ts`,
-        { async: true },
-        (code, stdout, stderr) => {
-          if (code !== 0) {
-            reject(new Error(`Failed to run graphql codegen: ${stderr}`))
-          } else {
-            resolve(stdout)
-          }
-        },
-      )
-    }),
     new Promise((resolve) => {
       sh.exec(
         `kill -9 $(lsof -t -i:24678)`,
