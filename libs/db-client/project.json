@@ -33,6 +33,13 @@
         "command": "yarn pnpify prisma migrate reset --force --schema=src/schema.prisma",
         "cwd": "{projectRoot}"
       }
+    },
+    "create-migration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn pnpify prisma migrate dev --create-only --name migration --schema=src/schema.prisma",
+        "cwd": "{projectRoot}"
+      }
     }
   },
   "tags": ["linux"],

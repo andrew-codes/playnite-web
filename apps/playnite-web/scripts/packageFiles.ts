@@ -10,12 +10,13 @@ async function run() {
     process.exit(1)
   }
 
-  logger.info('Copying built files to _packaged')
+  logger.info('Copying built files to _packaged.')
   await fs.mkdir(path.join('_packaged', 'src', 'server'), { recursive: true })
   await fs.mkdir(path.join('_packaged', 'src', 'client'), { recursive: true })
   await fs.cp('_build-output', '_packaged', { recursive: true })
   await fs.cp('build/client', '_packaged/src/client', { recursive: true })
 
+  logger.info('Copying db client related files.')
   await Promise.all(
     globSync('../../libs/db-client/.generated/prisma/*.node').map(
       async (file: string) => {
@@ -28,7 +29,12 @@ async function run() {
   )
   await fs.cp(
     path.join('../../libs/db-client/src/schema.prisma'),
-    '_packaged/src/server/schema.prisma',
+    path.join('_packaged/src/server/schema.prisma'),
+  )
+  await fs.cp(
+    path.join('../../libs/db-client/src/migrations'),
+    path.join('_packaged/src/server/migrations'),
+    { recursive: true },
   )
 
   logger.info('Modifying imports of generated files')
