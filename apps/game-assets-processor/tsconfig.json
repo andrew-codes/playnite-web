@@ -10,7 +10,7 @@
     "module": "ESNext",
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts", "testUtils/**/*.ts", "*.ts"],
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "*.ts"],
   "exclude": ["node_modules"],
   "references": [
     {

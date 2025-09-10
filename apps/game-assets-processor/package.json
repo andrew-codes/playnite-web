@@ -18,6 +18,7 @@
     "@jest/globals": "^30.0.5",
     "@nx/devkit": "^21.4.1",
     "@types/express": "^4.17.23",
+    "@types/jest": "^30.0.0",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.16.5",
     "@types/shelljs": "^0.8.17",

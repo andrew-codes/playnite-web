@@ -1,13 +1,14 @@
 const defaultConfig = {
   testEnvironment: 'node',
   transform: {
-    '^.+\\.(j|t)s$': ['ts-jest', { useEsm: true }],
+    '^.+\\.(j|t)s$': ['<rootDir>/testUtils/db-client-transformer.cjs'],
   },
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
-    '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^(\\.{1,2}/.*)\\.ts$': '$1',
+    '^db-client$': '<rootDir>/../../libs/db-client/src/client.ts',
   },
-  extensionsToTreatAsEsm: ['.ts'],
+  extensionsToTreatAsEsm: ['.ts', '.mts'],
   testMatch: ['<rootDir>/__integration_tests__/**/*.(test).((j|t)s)'],
   resetMocks: true,
   modulePathIgnorePatterns: ['<rootDir>/\\.dist/'],

@@ -6,8 +6,6 @@ import path from 'path'
 import { AssetFileHandler } from './assets/AssetFileHandler'
 import { IgnSourcedAssets } from './assets/IgnSourcedAssets'
 
-const __dirname = import.meta.dirname
-
 async function run() {
   logger.info('Starting Playnite Web Game Assets Processor...')
   const app = express()
@@ -16,7 +14,7 @@ async function run() {
   try {
     await client.$connect()
     const assetHandler = new AssetFileHandler(
-      process.env.ASSET_PATH ?? path.join(__dirname),
+      process.env.ASSET_PATH ?? path.join('./'),
       new IgnSourcedAssets(),
     )
 

@@ -1,5 +1,6 @@
 import { ChildProcess } from 'child_process'
 import logger from 'dev-logger'
+import fs from 'fs'
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
 import waitOn from 'wait-on'
@@ -61,8 +62,9 @@ waitOn(
       process.exit(1)
     }
 
+    fs.mkdirSync('.game-assets', { recursive: true })
     runCp = sh.exec(
-      `docker run --name playnite-web-assets --network host -e PORT=3001 -e DATABASE_URL="postgresql://local:dev@localhost:5432/games?schema=public" ghcr.io/andrew-codes/${pkg.name}:${tag}`,
+      `docker run --name playnite-web-assets -v ./.game-assets:/opt/playnite-web/game-assets --network host -e PORT=3001 -e DATABASE_URL="postgresql://local:dev@localhost:5432/games?schema=public" ghcr.io/andrew-codes/${pkg.name}:${tag}`,
       {
         env: {
           ...process.env,
@@ -96,16 +98,28 @@ waitOn(
           process.exit(1)
         }
 
-        const [, , specFilter] = process.argv
+        const [, , ...args] = process.argv
+        let jestArgs: Array<string> = []
+        if (args.find((a) => a === '--watch' || a === '-w')) {
+          jestArgs.push('--watch')
+        }
+        let specFilter = args.filter((a) => a !== '--watch' && a !== '-w')
+        if (specFilter.length > 0) {
+          jestArgs.push('--testNamePattern')
+          jestArgs.push(`(${specFilter.join('|')})`)
+        }
         logger.info('Running integration tests')
-        testCp = sh.exec(`yarn jest --config jest.config.integration.js`, {
-          env: {
-            ...process.env,
-            CI: 'true',
-            NODE_ENV: 'production',
+        testCp = sh.exec(
+          `yarn jest --config jest.config.integration.js ${jestArgs.join(' ')}`,
+          {
+            env: {
+              ...process.env,
+              CI: 'true',
+              NODE_ENV: 'production',
+            },
+            async: true,
           },
-          async: true,
-        })
+        )
         testCp.on('close', (code) => {
           logger.info('Tests closing.')
           process.exit(code)

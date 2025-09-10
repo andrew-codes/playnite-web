@@ -9,6 +9,12 @@
     "allowJs": true,
     "types": ["node", "jest"]
   },
-  "include": ["src/**/*.ts", "testUtils/**/*.ts", "*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "testUtils/**/*.ts",
+    "*.ts",
+    "__integration_tests__/**/*.ts",
+    "jest.config.integration.js"
+  ],
   "exclude": ["node_modules"]
 }

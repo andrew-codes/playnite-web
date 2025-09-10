@@ -12,11 +12,13 @@
   "exports": {
     ".": {
       "import": "./src/client.ts",
-      "types": "./src/client.ts"
+      "types": "./src/client.ts",
+      "default": "./src/client.ts"
     },
     "./migrate": {
       "import": "./src/migrate.ts",
-      "types": "./src/migrate.ts"
+      "types": "./src/migrate.ts",
+      "default": "./src/migrate.ts"
     }
   },
   "dependencies": {
