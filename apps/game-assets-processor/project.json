@@ -73,12 +73,7 @@
       "outputs": ["{projectRoot}/.test-runs/e2e"],
       "options": {
         "parallel": false,
-        "commands": [
-          "yarn nx run game-assets-processor:build:e2e",
-          "yarn tsx scripts/packageFiles.ts",
-          "yarn tsx scripts/package.ts",
-          "yarn tsx scripts/e2e.ts"
-        ],
+        "commands": ["yarn tsx scripts/e2e.ts"],
         "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "ci",
@@ -89,9 +84,10 @@
             "ASSET_PATH": "./.game-assets",
             "INSTRUMENT": "true",
             "LOCAL": "true",
-            "CI": "true",
+            "CI": "false",
             "LOG_LEVEL": "error",
-            "NODE_ENV": "production"
+            "NODE_ENV": "production",
+            "PORT": "3001"
           }
         }
       }
@@ -99,22 +95,23 @@
     "build": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "production",
-      "dependsOn": ["clean/build"],
       "options": {
         "cwd": "{projectRoot}",
-        "commands": ["yarn tsx scripts/build.ts"]
-      },
-      "configurations": {
-        "production": {
-          "env": {
-            "NODE_ENV": "production"
-          }
-        },
-        "e2e": {
-          "env": {
-            "NODE_ENV": "production",
-            "INSTRUMENT": "true"
-          }
+        "commands": ["yarn tsx scripts/build.ts"],
+        "env": {
+          "NODE_ENV": "production"
+        }
+      }
+    },
+    "build/e2e": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "production",
+      "options": {
+        "cwd": "{projectRoot}",
+        "commands": ["yarn tsx scripts/build.ts"],
+        "env": {
+          "NODE_ENV": "production",
+          "INSTRUMENT": "true"
         }
       }
     },
@@ -127,7 +124,6 @@
       ],
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build"],
       "options": {
         "parallel": false,
         "commands": [],
@@ -141,6 +137,21 @@
             "yarn tsx scripts/package.ts"
           ]
         }
+      }
+    },
+    "package/e2e": {
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{projectRoot}/build/**",
+        "{projectRoot}/scripts/packageFiles.ts",
+        "{projectRoot}/scripts/package.ts"
+      ],
+      "outputs": ["{projectRoot}/_packaged"],
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": ["yarn tsx scripts/packageFiles.ts"],
+        "cwd": "{projectRoot}"
       }
     },
     "package/prune": {

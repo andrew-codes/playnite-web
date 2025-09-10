@@ -5,7 +5,7 @@
   "targets": {
     "clean": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "clean/build"],
+      "dependsOn": ["clean/build"],
       "options": {
         "parallel": true,
         "commands": []
@@ -24,6 +24,14 @@
       "options": {
         "parallel": false,
         "commands": ["yarn pnpify prisma generate --schema=src/schema.prisma"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build"],
+      "options": {
+        "command": "yarn tsx scripts/build.ts",
         "cwd": "{projectRoot}"
       }
     },

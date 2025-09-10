@@ -1,5 +1,5 @@
 import MQTT from 'async-mqtt'
-import { client } from 'db-client'
+// import { client } from 'db-client'
 import { existsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
@@ -7,7 +7,10 @@ import { rimraf } from 'rimraf'
 
 describe('Persisting assets.', () => {
   let mqtt: MQTT.AsyncMqttClient
-  let testAssetPath: string = path.join(__dirname, '../.game-assets')
+  let testAssetPath: string = path.join(
+    __dirname,
+    '../_packaged/.game-assets/game-assets',
+  )
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -15,7 +18,7 @@ describe('Persisting assets.', () => {
 
   beforeAll(async () => {
     await rimraf(path.join(testAssetPath, '*.*'))
-    await client.$connect()
+    // await client.$connect()
     mqtt = await MQTT.connectAsync(`tcp://localhost:1883`, {})
   })
 
@@ -23,7 +26,7 @@ describe('Persisting assets.', () => {
     if (mqtt) {
       await mqtt.end()
     }
-    await client.$disconnect()
+    // await client.$disconnect()
   })
 
   test(`Saving to disk.

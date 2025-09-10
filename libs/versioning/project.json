@@ -9,6 +9,15 @@
         "command": "yarn rimraf .test-runs",
         "cwd": "{projectRoot}"
       }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.generated"],
+      "options": {
+        "parallel": false,
+        "commands": ["echo 'Preparing versioning...'"],
+        "cwd": "{projectRoot}"
+      }
     }
   },
   "tags": ["linux"],

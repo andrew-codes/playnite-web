@@ -14,7 +14,7 @@
     "testUtils/**/*.ts",
     "*.ts",
     "__integration_tests__/**/*.ts",
-    "jest.config.integration.js"
+    "jest.config.e2e.js"
   ],
   "exclude": ["node_modules"]
 }

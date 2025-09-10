@@ -2,7 +2,6 @@
   "name": "game-assets-processor",
   "version": "0.0.1",
   "sideEffects": false,
-  "type": "module",
   "dependencies": {
     "async-mqtt": "^2.6.3",
     "db-client": "workspace:*",
@@ -32,6 +31,7 @@
     "jest": "^30.0.5",
     "nodemon": "^3.1.10",
     "nx": "^21.4.1",
+    "nyc": "^17.1.0",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "shelljs": "^0.10.0",

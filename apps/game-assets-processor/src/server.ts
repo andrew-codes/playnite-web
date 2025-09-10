@@ -1,12 +1,15 @@
 import MQTT from 'async-mqtt'
-import { client } from 'db-client'
-import logger from 'dev-logger'
+import * as dbClient from 'db-client'
+import * as devLogger from 'dev-logger'
 import express from 'express'
 import path from 'path'
 import { AssetFileHandler } from './assets/AssetFileHandler'
 import { IgnSourcedAssets } from './assets/IgnSourcedAssets'
 
 async function run() {
+  const logger = devLogger.default
+
+  const client = dbClient.client
   logger.info('Starting Playnite Web Game Assets Processor...')
   const app = express()
   const port = process.env.PORT ?? 3000

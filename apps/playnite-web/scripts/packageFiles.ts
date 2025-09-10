@@ -37,25 +37,6 @@ async function run() {
     { recursive: true },
   )
 
-  logger.info('Modifying imports of generated files')
-  await Promise.all(
-    globSync('_packaged/.generated/*.js').map(async (file: string) => {
-      let contents: string = await fs.readFile(file, 'utf8')
-
-      const writeContents = contents
-        .split('\n')
-        .map((line) => {
-          const matched =
-            /import\s+(.*)\s+from\s+['"](\.\.?\/)(.+)['"];/gm.exec(line)
-          return matched
-            ? `import ${matched[1]} from '${matched[2]}${matched[3]}.js';`
-            : line
-        })
-        .join('\n')
-      await fs.writeFile(file, writeContents, 'utf8')
-    }),
-  )
-
   logger.info('Copying and modifying package.json')
   const pkg = JSON.parse(await fs.readFile('package.json', 'utf8'))
   pkg.name = `packaged-${pkg.name}`

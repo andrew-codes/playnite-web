@@ -3,6 +3,15 @@
   "sourceRoot": "libs/dev-services/src",
   "projectType": "library",
   "targets": {
+    "prepare": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.generated"],
+      "options": {
+        "parallel": false,
+        "commands": ["echo 'Preparing dev-services...'"],
+        "cwd": "{projectRoot}"
+      }
+    },
     "start": {
       "executor": "nx:run-commands",
       "options": {

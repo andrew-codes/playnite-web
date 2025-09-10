@@ -1,89 +1,79 @@
 import { ChildProcess } from 'child_process'
 import logger from 'dev-logger'
 import fs from 'fs'
+import path from 'path'
 import sh from 'shelljs'
-import { getDockerTags } from 'versioning'
 import waitOn from 'wait-on'
-import pkg from '../package.json' with { type: 'json' }
 
 let testCp: ChildProcess | null = null
 let runCp: ChildProcess | null = null
 let appCp: ChildProcess | null = null
 process.on('exit', () => {
   logger.info('Exiting')
-  runCp?.kill('SIGINT')
-  testCp?.kill('SIGINT')
-  appCp?.kill('SIGINT')
+  ;[runCp, testCp, appCp].forEach((cp) => {
+    try {
+      cp?.kill('SIGINT')
+    } catch {}
+  })
 })
 process.on('SIGTERM', () => {
   logger.info('SIGTERM')
-  runCp?.kill('SIGINT')
-  testCp?.kill('SIGINT')
-  appCp?.kill('SIGINT')
+  ;[runCp, testCp, appCp].forEach((cp) => {
+    try {
+      cp?.kill('SIGINT')
+    } catch {}
+  })
   process.exit()
 })
 process.on('SIGINT', () => {
   logger.info('SIGINT')
-  runCp?.kill('SIGINT')
-  testCp?.kill('SIGINT')
-  appCp?.kill('SIGINT')
+  ;[runCp, testCp, appCp].forEach((cp) => {
+    try {
+      cp?.kill('SIGINT')
+    } catch {}
+  })
   process.exit()
 })
 
-appCp = sh.exec(`yarn nx start playnite-web-app`, {
+try {
+  fs.unlinkSync(path.join('../playnite-web/_packaged/package.json'))
+} catch (error) {}
+appCp = sh.exec(`yarn node server.js`, {
   async: true,
+  cwd: path.join('../playnite-web/_packaged/src/server'),
   env: {
     ...process.env,
+    INSTRUMENT: 'false',
     NODE_ENV: 'production',
+    PORT: '3000',
+    SECRET: 'test-secret',
   },
   silent: false,
 })
 
-logger.info(
-  'Running from docker image. Please ensure you have built a local docker image.',
-)
-let tag = 'local'
-if (process.env.LOCAL !== 'true') {
-  const { GITHUB_REF, VERSION } = process.env
-  const tags = await getDockerTags(VERSION ?? null, GITHUB_REF)
-  tag = tags[0]
-}
-logger.debug(`Using docker tag: ${tag}`)
-sh.exec(`docker container rm playnite-web-assets --force || true`)
-
 waitOn(
   {
     resources: ['http://localhost:3000'],
-    timeout: 30000,
+    timeout: 60000,
   },
-  (err) => {
+  async (err) => {
     if (err) {
       logger.error(err)
       process.exit(1)
     }
 
     fs.mkdirSync('.game-assets', { recursive: true })
-    runCp = sh.exec(
-      `docker run --name playnite-web-assets -v ./.game-assets:/opt/playnite-web/game-assets --network host -e PORT=3001 -e DATABASE_URL="postgresql://local:dev@localhost:5432/games?schema=public" ghcr.io/andrew-codes/${pkg.name}:${tag}`,
-      {
-        env: {
-          ...process.env,
-        },
-        async: true,
+
+    sh.exec('rm _packaged/package.json')
+    runCp = sh.exec(`yarn nyc node server.js`, {
+      cwd: '_packaged',
+      env: {
+        ...process.env,
+        TEST: 'e2e',
+        NODE_ENV: 'production',
       },
-    )
-    runCp.stdout?.on('data', (data) => {
-      logger.info(data.toString())
-    })
-    runCp.stderr?.on('data', (data) => {
-      logger.warn(data.toString())
-    })
-    runCp.on('close', (code) => {
-      logger.info('Server closing.')
-      if (code !== 0) {
-        logger.error(`Server exited with code ${code}`)
-        process.exit(code)
-      }
+      async: true,
+      silent: false,
     })
 
     logger.info('Waiting for server to start')
@@ -110,7 +100,7 @@ waitOn(
         }
         logger.info('Running integration tests')
         testCp = sh.exec(
-          `yarn jest --config jest.config.integration.js ${jestArgs.join(' ')}`,
+          `yarn jest --config jest.config.e2e.js ${jestArgs.join(' ')}`,
           {
             env: {
               ...process.env,

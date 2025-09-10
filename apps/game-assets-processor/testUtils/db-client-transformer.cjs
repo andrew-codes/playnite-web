@@ -1,14 +1,12 @@
 module.exports = {
   process(src, filename) {
-    console.debug(`Transforming file: ${filename}`)
-    const isClientFile = /.*\/\.generated\/.*client\.(ts|js)$/.test(filename)
+    const isDbClientFile = /.*\/db-client\/.*$/.test(filename)
+    console.debug(`Transforming file: ${filename}`, isDbClientFile)
 
-    if (isClientFile) {
-      // Remove problematic __dirname assignments for Jest ESM compatibility
-      src = src.replace(
-        /const __dirname ?=.+/g,
-        '// __dirname assignment removed for Jest ESM compatibility',
-      )
+    if (isDbClientFile) {
+      // Remove problematic assignments for Jest ESM compatibility
+      src = src.replace(/var __dirname ?=.+/g, '')
+      src = src.replace(/var __filename ?=.+/g, '')
     }
 
     try {
