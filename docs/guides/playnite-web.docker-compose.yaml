@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
 
   playnite-web-game-asssets-processor:
-    image: ghcr.io/andrew-codes/playnite-web-game-assets-processor:latest
+    image: ghcr.io/andrew-codes/game-assets-processor:latest
     ports:
       - '${PROCESSOR_PORT:-3001}:3000'
     environment:
