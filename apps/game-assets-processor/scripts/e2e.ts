@@ -49,7 +49,7 @@ appCp = sh.exec(`yarn nx start playnite-web-app`, {
 waitOn(
   {
     resources: ['http://localhost:3000'],
-    timeout: 60000,
+    timeout: 600000,
   },
   async (err) => {
     if (err) {
