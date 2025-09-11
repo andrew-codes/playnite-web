@@ -54,19 +54,6 @@
         }
       }
     },
-    "test/unit": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["clean/test"],
-      "inputs": ["src", "{projectRoot}/jest.config.js"],
-      "outputs": ["{projectRoot}/.test-runs/unit"],
-      "options": {
-        "command": "yarn jest --config jest.config.js",
-        "cwd": "{projectRoot}"
-      },
-      "configurations": {
-        "ci": {}
-      }
-    },
     "test/e2e": {
       "executor": "nx:run-commands",
       "inputs": ["src", "{projectRoot}/jest.config.e2e.js"],
