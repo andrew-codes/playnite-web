@@ -16,7 +16,7 @@ async function run() {
               server: path.join('src/server.ts'),
             },
       tsconfig: 'tsconfig.server.json',
-      bundle: false,
+      bundle: process.env.INSTRUMENT !== 'true',
       minify: false,
       outdir: 'build',
       platform: 'node',
