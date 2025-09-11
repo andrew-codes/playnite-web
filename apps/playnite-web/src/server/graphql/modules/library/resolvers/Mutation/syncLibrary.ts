@@ -298,22 +298,6 @@ export const syncLibrary: NonNullable<
     select: { id: true, playniteId: true },
   })
 
-  await Promise.all(
-    _arg.libraryData.update.releases
-      .filter((release) => {
-        return [sources.some((s) => s.playniteId === release.source)].every(
-          Boolean,
-        )
-      })
-      .map(async (release) => {
-        return _ctx.mqtt.publish(
-          `playnite-web/cover/update`,
-          JSON.stringify({ libraryId, release }),
-          { qos: 1 },
-        )
-      }),
-  )
-
   const updatedReleases = await Promise.all(
     _arg.libraryData.update.releases
       .filter((release) => {
@@ -332,7 +316,7 @@ export const syncLibrary: NonNullable<
           release,
         )
         try {
-          return await _ctx.db.release.upsert({
+          const upserted = await _ctx.db.release.upsert({
             where: {
               playniteId_libraryId: { playniteId: release.id, libraryId },
             },
@@ -447,6 +431,14 @@ export const syncLibrary: NonNullable<
               }),
             },
           })
+
+          await _ctx.mqtt.publish(
+            `playnite-web/cover/update`,
+            JSON.stringify({ libraryId, release }),
+            { qos: 1 },
+          )
+
+          return upserted
         } catch (error) {
           logger.error(
             `Error updating release ${release.id}, ${release.title} for library ${libraryId}`,
