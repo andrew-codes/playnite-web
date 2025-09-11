@@ -2,6 +2,19 @@
 
 This guide explains how to run Playnite Web using the `playnite-web.docker-compose.yaml` file. This setup includes the main web application, database, MQTT broker, and game assets processor.
 
+## First Time Setup Overview
+
+1. **Create your `.env` file** with the required variables (see examples below)
+2. **Set up MQTT configuration** (see MQTT section below)
+3. **Start the services:**
+   ```bash
+   docker-compose -f playnite-web.docker-compose.yaml up -d
+   ```
+4. **Check that all services are running:**
+   ```bash
+   docker-compose -f playnite-web.docker-compose.yaml ps
+   ```
+
 ## Required Environment Variables
 
 The following environment variables **must be set** before running docker-compose:
@@ -22,6 +35,50 @@ The following environment variables have default values but can be overridden:
 - `DISABLE_CSP` - Disable Content Security Policy (default: `false`)
 - `CSP_ORIGINS` - Additional origins for Content Security Policy
 - `ADDITIONAL_ORIGINS` - Additional allowed origins
+
+## Important Setup Requirements
+
+### MQTT Configuration (Critical!)
+
+The MQTT broker requires configuration files to work properly. **You must create these files before starting the services:**
+
+1. **Create the MQTT config volume first:**
+
+   ```bash
+   docker volume create playnite-web_mqtt_config
+   ```
+
+2. **Create basic MQTT configuration:**
+
+   ```bash
+   # Create a temporary container to add config files
+   docker run --rm -v playnite-web_mqtt_config:/config eclipse-mosquitto:2.0.18 sh -c "
+   echo 'listener 1883' > /config/mosquitto.conf
+   echo 'allow_anonymous true' >> /config/mosquitto.conf
+   echo 'listener 9001' >> /config/mosquitto.conf
+   echo 'protocol websockets' >> /config/mosquitto.conf
+   "
+   ```
+
+3. **For better security (optional, but recommended), set up MQTT authentication:**
+
+   ```bash
+   # Create password file
+   docker run --rm -v playnite-web_mqtt_config:/config eclipse-mosquitto:2.0.18 sh -c "
+   mosquitto_passwd -c -b /config/passwd MQTT_USERNAME MQTT_PASSWORD
+   "
+
+   # Update config to require authentication
+   docker run --rm -v playnite-web_mqtt_config:/config eclipse-mosquitto:2.0.18 sh -c "
+   echo 'listener 1883' > /config/mosquitto.conf
+   echo 'allow_anonymous false' >> /config/mosquitto.conf
+   echo 'password_file /mosquitto/config/passwd' >> /config/mosquitto.conf
+   echo 'listener 9001' >> /config/mosquitto.conf
+   echo 'protocol websockets' >> /config/mosquitto.conf
+   "
+   ```
+
+   **Important:** If you set up MQTT authentication, you **must** set the `MQTT_USERNAME` and `MQTT_PASSWORD` environment variables to match what you created above.
 
 ## Usage
 
@@ -78,63 +135,6 @@ This docker-compose setup runs four services:
 2. **MQTT Broker** (`mqtt`) - Handles real-time communication between services
 3. **Playnite Web App** (`playnite-web`) - The main web interface (accessible at `http://localhost:3000`)
 4. **Game Assets Processor** (`playnite-web-game-asssets-processor`) - Processes game cover art and assets
-
-## Important Setup Requirements
-
-### MQTT Configuration (Critical!)
-
-The MQTT broker requires configuration files to work properly. **You must create these files before starting the services:**
-
-1. **Create the MQTT config volume first:**
-
-   ```bash
-   docker volume create playnite-web_mqtt_config
-   ```
-
-2. **Create basic MQTT configuration:**
-
-   ```bash
-   # Create a temporary container to add config files
-   docker run --rm -v playnite-web_mqtt_config:/config eclipse-mosquitto:2.0.18 sh -c "
-   echo 'listener 1883' > /config/mosquitto.conf
-   echo 'allow_anonymous true' >> /config/mosquitto.conf
-   echo 'listener 9001' >> /config/mosquitto.conf
-   echo 'protocol websockets' >> /config/mosquitto.conf
-   "
-   ```
-
-3. **For better security (optional, but recommended), set up MQTT authentication:**
-
-   ```bash
-   # Create password file
-   docker run --rm -v playnite-web_mqtt_config:/config eclipse-mosquitto:2.0.18 sh -c "
-   mosquitto_passwd -c -b /config/passwd MQTT_USERNAME MQTT_PASSWORD
-   "
-
-   # Update config to require authentication
-   docker run --rm -v playnite-web_mqtt_config:/config eclipse-mosquitto:2.0.18 sh -c "
-   echo 'listener 1883' > /config/mosquitto.conf
-   echo 'allow_anonymous false' >> /config/mosquitto.conf
-   echo 'password_file /mosquitto/config/passwd' >> /config/mosquitto.conf
-   echo 'listener 9001' >> /config/mosquitto.conf
-   echo 'protocol websockets' >> /config/mosquitto.conf
-   "
-   ```
-
-   **Important:** If you set up MQTT authentication, you **must** set the `MQTT_USERNAME` and `MQTT_PASSWORD` environment variables to match what you created above.
-
-### First Time Setup
-
-1. **Create your `.env` file** with the required variables (see examples above)
-2. **Set up MQTT configuration** (see MQTT section above)
-3. **Start the services:**
-   ```bash
-   docker-compose -f playnite-web.docker-compose.yaml up -d
-   ```
-4. **Check that all services are running:**
-   ```bash
-   docker-compose -f playnite-web.docker-compose.yaml ps
-   ```
 
 ## Common Issues & Troubleshooting
 
