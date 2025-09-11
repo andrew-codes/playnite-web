@@ -37,6 +37,9 @@ describe('Game details.', () => {
               cy.compareSnapshot({
                 name: `${locationName}-${breakpointName}`,
                 cypressScreenshotOptions: {
+                  onBeforeScreenshot: () => {
+                    cy.get('[data-test="GameFigure"]').hideElement(true)
+                  },
                   blackout: ['[data-test="Description"]'],
                 },
               })
