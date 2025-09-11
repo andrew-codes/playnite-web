@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "moduleDetection": "force",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": false,
+    "allowJs": true,
+    "rootDir": ".",
+    "types": ["node", "jest"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "testUtils/**/*.ts",
+    "*.ts",
+    "__integration_tests__/**/*.ts",
+    "jest.config.e2e.mjs"
+  ],
+  "exclude": ["node_modules"]
+}

@@ -5,10 +5,8 @@ import {
   useJWT,
 } from '@graphql-yoga/plugin-jwt'
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
+import asyncMqtt from 'async-mqtt'
 import { createYoga, Plugin, YogaServerOptions } from 'graphql-yoga'
-import path from 'path'
-import { AssetFileHandler } from '../assets/AssetFileHandler.js'
-import { IgnSourcedAssets } from '../assets/IgnSourcedAssets.js'
 import { IdentityService } from '../auth/index.js'
 import { prisma } from '../data/providers/postgres/client.js'
 import logger from '../logger.js'
@@ -16,8 +14,16 @@ import type { PlayniteContext } from './context.js'
 import schema from './schema.js'
 import { subscriptionPublisher } from './subscriptionPublisher.js'
 
-const graphql = (endpoint: string, signingKey: string) => {
+const graphql = async (endpoint: string, signingKey: string) => {
   const domain = process.env.HOST ?? 'localhost'
+
+  const mqtt = await asyncMqtt.connectAsync(
+    `tcp://${process.env.MQTT_HOST ?? 'localhost'}:${process.env.MQTT_PORT ?? 1883}`,
+    {
+      username: process.env.MQTT_USERNAME,
+      password: process.env.MQTT_PASSWORD,
+    },
+  )
 
   const config: YogaServerOptions<any, PlayniteContext> & {
     plugins: Array<Plugin>
@@ -49,12 +55,7 @@ const graphql = (endpoint: string, signingKey: string) => {
         signingKey,
         subscriptionPublisher,
         db: prisma,
-        assets: new AssetFileHandler(
-          process.env.NODE_ENV === 'development'
-            ? path.join('src/public')
-            : path.join('../public'),
-          new IgnSourcedAssets(),
-        ),
+        mqtt,
       }
 
       return ctx

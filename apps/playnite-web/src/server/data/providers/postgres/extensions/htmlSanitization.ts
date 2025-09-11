@@ -1,5 +1,5 @@
+import { Prisma } from 'db-client'
 import DOMPurify from 'isomorphic-dompurify'
-import { Prisma } from '../../../../../../.generated/prisma/client.js'
 
 const SANITIZE_CONFIG = {
   FORBID_TAGS: ['script', 'link', 'style', 'meta', 'title', 'base'],

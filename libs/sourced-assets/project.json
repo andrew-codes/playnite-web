@@ -1,0 +1,40 @@
+{
+  "name": "sourced-assets",
+  "sourceRoot": "libs/sourced-assets/src",
+  "projectType": "library",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/build"],
+      "options": {
+        "parallel": true,
+        "commands": []
+      }
+    },
+    "clean/build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf build",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": ["echo 'No prepare step defined'"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build"],
+      "options": {
+        "command": "yarn tsx scripts/build.ts",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}

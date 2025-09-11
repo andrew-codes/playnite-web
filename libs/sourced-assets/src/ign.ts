@@ -1,6 +1,6 @@
-import logger from '../logger'
+import logger from 'dev-logger'
 import { ignSlug } from './ignSlug.js'
-import { ISourceAssets } from './interfaces'
+import type { ISourceAssets } from './types'
 
 class IgnSourcedAssets implements ISourceAssets {
   async source(release: { title: string }): Promise<[string, Buffer] | null> {
@@ -33,9 +33,15 @@ class IgnSourcedAssets implements ISourceAssets {
             'Content-Type': 'application/json',
           },
         },
-      ).then((response) => {
+      ).then(async (response) => {
         if (!response.ok) {
-          logger.warn(`Failed to fetch from IGN API: ${ignId}`)
+          const body = await response.text()
+          logger.warn(
+            `Failed to fetch from IGN API: ${ignId}`,
+            response.status,
+            response.statusText,
+            body,
+          )
           return null
         }
         return response.json()
@@ -54,8 +60,12 @@ class IgnSourcedAssets implements ISourceAssets {
         ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url,
       )
       if (!imageResponse.ok) {
+        const body = await imageResponse.text()
         logger.warn(
           `Failed to fetch image from IGN URL: ${ignId}, URL: ${ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url}`,
+          imageResponse.status,
+          imageResponse.statusText,
+          body,
         )
         return null
       }

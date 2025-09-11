@@ -113,24 +113,33 @@ Cypress.Commands.add('signIn', (username: string, password: string) => {
 Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
   cy.signIn(username, password)
 
-  return cy.request({
-    method: 'POST',
-    url: 'http://localhost:3000/api',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      variables: {
-        libraryData,
+  return cy
+    .request({
+      method: 'POST',
+      url: 'http://localhost:3000/api',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
-      query: `mutation syncLibrary($libraryData: LibraryInput!) {
+      body: JSON.stringify({
+        variables: {
+          libraryData,
+        },
+        query: `mutation syncLibrary($libraryData: LibraryInput!) {
         syncLibrary(libraryData: $libraryData) {
           id
         }
       }`,
-    }),
-  })
+      }),
+    })
+    .then((request) => {
+      return cy
+        .task('syncLibrary', {
+          libraryId: request.body.data.syncLibrary.id,
+          libraryData,
+        })
+        .then(() => request)
+    })
 })
 
 Cypress.Commands.add('signOut', () => {
