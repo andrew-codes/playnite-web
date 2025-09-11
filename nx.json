@@ -35,7 +35,7 @@
       "cache": true
     },
     "start": {
-      "dependsOn": ["prepare", "^start"],
+      "dependsOn": ["prepare", "^build", "^start"],
       "cache": false
     },
     "package": {

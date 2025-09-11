@@ -2,6 +2,7 @@
   "name": "game-assets-processor",
   "version": "0.0.1",
   "sideEffects": false,
+  "type": "module",
   "dependencies": {
     "async-mqtt": "^2.6.3",
     "db-client": "workspace:*",

@@ -1,7 +1,6 @@
 import { ChildProcess } from 'child_process'
 import logger from 'dev-logger'
 import fs from 'fs'
-import path from 'path'
 import sh from 'shelljs'
 import waitOn from 'wait-on'
 
@@ -35,12 +34,8 @@ process.on('SIGINT', () => {
   process.exit()
 })
 
-try {
-  fs.unlinkSync(path.join('../playnite-web/_packaged/package.json'))
-} catch (error) {}
-appCp = sh.exec(`yarn node server.js`, {
+appCp = sh.exec(`yarn nx start playnite-web-app`, {
   async: true,
-  cwd: path.join('../playnite-web/_packaged/src/server'),
   env: {
     ...process.env,
     INSTRUMENT: 'false',

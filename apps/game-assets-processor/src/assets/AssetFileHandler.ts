@@ -4,7 +4,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
 import { slug } from 'sourced-assets'
-import { IPersistAssets, ISourceAssets } from './interfaces'
+import { IPersistAssets, ISourceAssets } from './interfaces.js'
 
 class AssetFileHandler implements IPersistAssets {
   constructor(

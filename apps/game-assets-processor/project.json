@@ -74,21 +74,16 @@
       "options": {
         "parallel": false,
         "commands": ["yarn tsx scripts/e2e.ts"],
-        "cwd": "{projectRoot}"
-      },
-      "defaultConfiguration": "ci",
-      "configurations": {
-        "ci": {
-          "env": {
-            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
-            "ASSET_PATH": "./.game-assets",
-            "INSTRUMENT": "true",
-            "LOCAL": "true",
-            "CI": "false",
-            "LOG_LEVEL": "error",
-            "NODE_ENV": "production",
-            "PORT": "3001"
-          }
+        "cwd": "{projectRoot}",
+        "env": {
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
+          "ASSET_PATH": "./.game-assets",
+          "INSTRUMENT": "true",
+          "LOCAL": "true",
+          "CI": "true",
+          "LOG_LEVEL": "error",
+          "NODE_ENV": "production",
+          "PORT": "3001"
         }
       }
     },

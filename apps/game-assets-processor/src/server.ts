@@ -4,7 +4,7 @@ import * as devLogger from 'dev-logger'
 import express from 'express'
 import path from 'path'
 import { IgnSourcedAssets } from 'sourced-assets/ign'
-import { AssetFileHandler } from './assets/AssetFileHandler'
+import { AssetFileHandler } from './assets/AssetFileHandler.js'
 
 async function run() {
   const logger = devLogger.default
