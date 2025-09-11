@@ -132,13 +132,13 @@ Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
       }`,
       }),
     })
-    .then((library) => {
-      cy.task('syncLibrary', {
-        libraryDbId: library.body.data.syncLibrary.id,
-        libraryData,
-      })
-
-      return library
+    .then((request) => {
+      return cy
+        .task('syncLibrary', {
+          libraryId: request.body.data.syncLibrary.id,
+          libraryData,
+        })
+        .then(() => request)
     })
 })
 

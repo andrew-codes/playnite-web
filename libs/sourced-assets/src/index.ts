@@ -1,3 +1,3 @@
-import { ignSlug as slug } from './ign.js'
+import { ignSlug as slug } from './ignSlug.js'
 
 export { slug }

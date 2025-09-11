@@ -158,7 +158,7 @@
     },
     "test/e2e/dev": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "^start", "prepare", "^prepare"],
+      "dependsOn": ["clean/test", "^start", "prepare", "^prepare", "^build"],
       "options": {
         "parallel": true,
         "commands": ["yarn react-devtools", "yarn tsx scripts/e2e-dev.ts"],

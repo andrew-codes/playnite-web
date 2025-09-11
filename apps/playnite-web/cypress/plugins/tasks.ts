@@ -3,6 +3,7 @@ import logger from 'dev-logger'
 import { slug } from 'sourced-assets'
 import Permission from '../../src/auth/permissions.js'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
+import { tryParseOid } from '../../src/server/oid.js'
 import { codes, defaultSettings } from '../../src/server/siteSettings.js'
 import {
   defaultSettings as defaultUserSettings,
@@ -228,19 +229,19 @@ const tasks = (on, config) => {
       return results
     },
 
-    async syncLibrary({ libraryDbId, libraryData }) {
+    async syncLibrary({ libraryId, libraryData }) {
       let e: any = null
-      let result: any = null
       try {
         await client.$connect()
 
+        const oid = tryParseOid(libraryId)
         await Promise.all(
           libraryData.update.releases.map(async (release) => {
             return client.release.update({
               where: {
                 playniteId_libraryId: {
                   playniteId: release.id,
-                  libraryId: libraryDbId,
+                  libraryId: oid.id,
                 },
               },
               data: {
@@ -263,7 +264,7 @@ const tasks = (on, config) => {
         throw new Error('Error syncing library:', e)
       }
 
-      return result
+      return true
     },
   })
 

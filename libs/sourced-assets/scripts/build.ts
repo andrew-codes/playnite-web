@@ -11,7 +11,8 @@ async function run() {
       index: path.join('src/index.ts'),
     },
     tsconfig: 'tsconfig.json',
-    bundle: false,
+    bundle: true,
+    packages: 'external',
     minify: false,
     outdir: 'build',
     platform: 'node',
@@ -25,12 +26,31 @@ async function run() {
     force: true,
   })
   await build({
+    format: 'esm',
+    entryPoints: {
+      index: path.join('src/index.ts'),
+    },
+    tsconfig: 'tsconfig.json',
+    bundle: true,
+    packages: 'external',
+    minify: false,
+    outdir: 'build',
+    platform: 'node',
+    sourcemap: process.env.NODE_ENV !== 'production',
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? ''),
+    },
+    plugins,
+  })
+
+  await build({
     format: 'cjs',
     entryPoints: {
       ign: path.join('src/ign.ts'),
     },
     tsconfig: 'tsconfig.json',
-    bundle: false,
+    bundle: true,
+    packages: 'external',
     minify: false,
     outdir: 'build',
     platform: 'node',
@@ -43,30 +63,14 @@ async function run() {
   fs.cpSync(path.join('build/ign.js'), path.join('build/ign.cjs'), {
     force: true,
   })
-
-  await build({
-    format: 'esm',
-    entryPoints: {
-      index: path.join('src/index.ts'),
-    },
-    tsconfig: 'tsconfig.json',
-    bundle: false,
-    minify: false,
-    outdir: 'build',
-    platform: 'node',
-    sourcemap: process.env.NODE_ENV !== 'production',
-    define: {
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? ''),
-    },
-    plugins,
-  })
   await build({
     format: 'esm',
     entryPoints: {
       ign: path.join('src/ign.ts'),
     },
     tsconfig: 'tsconfig.json',
-    bundle: false,
+    bundle: true,
+    packages: 'external',
     minify: false,
     outdir: 'build',
     platform: 'node',
