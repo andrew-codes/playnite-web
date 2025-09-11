@@ -61,7 +61,11 @@ export const startRelease: NonNullable<
           id: create('Release', release.id),
           title: release.title,
           playniteId: release.playniteId,
-          coverUrl: `https://${domain}:${port}/public/game-assets/${release.Cover.ignId}.webp`,
+          coverUrl:
+            release.Cover.url &&
+            (/http:\/\//.test(release.Cover.url)
+              ? release.Cover.url
+              : `https://${domain}:${port}${release.Cover.url}`),
           library: {
             id: create('Library', release.Library.id),
             name: release.Library.name,
