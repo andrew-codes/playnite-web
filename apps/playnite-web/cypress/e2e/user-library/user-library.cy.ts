@@ -118,6 +118,10 @@ describe('User Library', () => {
           cy.get('button > div').should('be.visible')
 
           cy.contains('figcaption', '3DMark').should('be.visible')
+          cy.get('[data-test="GameFigureChipList"]').within(() => {
+            cy.contains('Played').should('be.visible')
+            cy.get('img').should('have.length.greaterThan', 0)
+          })
         })
     })
   })
