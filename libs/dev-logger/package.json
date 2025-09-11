@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./build/index.js",
   "types": "./src/index.ts",
   "exports": {
     ".": {
-      "import": "./src/index.ts",
-      "require": "./src/index.ts"
+      "import": "./build/index.js",
+      "require": "./build/index.cjs",
+      "default": "./build/index.js"
     }
   },
   "dependencies": {
@@ -17,6 +18,11 @@
   },
   "devDependencies": {
     "@types/node": "^22.16.5",
-    "nx": "^21.4.1"
+    "esbuild": "^0.25.9",
+    "glob": "^11.0.3",
+    "nx": "^21.4.1",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
   }
 }

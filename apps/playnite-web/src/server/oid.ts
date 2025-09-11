@@ -114,32 +114,26 @@ function hasIdentity(obj: any): obj is IIdentify {
   return obj && typeof obj.id === 'number'
 }
 
-function tryParseOid(value: any): Identity | null {
+function tryParseOid(value: any): IIdentify {
   if (typeof value !== 'string') {
-    return null
+    throw new Error(`Value must be a string to parse OID: ${value}.`)
   }
   const parts = value.split(':')
   if (parts.length < 2) {
-    return null
+    throw new Error(`Invalid OID format: ${value}.`)
   }
 
   if (!domainTypes.includes(parts[0] as DomainType)) {
-    return null
+    throw new Error(`Invalid OID domain type: ${value}.`)
   }
 
   if (parts[0] === 'NULL') {
-    return createNull(parts[1] as DomainType)
+    throw new Error(`Cannot parse NULL OID to IIdentify.`)
   }
 
-  try {
-    const id = parseInt(parts[1], 10)
+  const id = parseInt(parts[1], 10)
 
-    return create(parts[0] as DomainType, id)
-  } catch (e) {
-    // If parsing fails, return null
-  }
-
-  return null
+  return create(parts[0] as DomainType, id)
 }
 
 export {

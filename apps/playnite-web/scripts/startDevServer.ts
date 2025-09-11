@@ -4,32 +4,6 @@ import sh from 'shelljs'
 
 async function setup() {
   return Promise.all([
-    new Promise((resolve, reject) => {
-      sh.exec(
-        `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma`,
-        { async: true },
-        (code, stdout, stderr) => {
-          if (code !== 0) {
-            reject(new Error(`Failed to generate prisma client: ${stderr}`))
-          } else {
-            resolve(stdout)
-          }
-        },
-      )
-    }),
-    new Promise((resolve, reject) => {
-      sh.exec(
-        `yarn graphql-codegen --config codegen.ts`,
-        { async: true },
-        (code, stdout, stderr) => {
-          if (code !== 0) {
-            reject(new Error(`Failed to run graphql codegen: ${stderr}`))
-          } else {
-            resolve(stdout)
-          }
-        },
-      )
-    }),
     new Promise((resolve) => {
       sh.exec(
         `kill -9 $(lsof -t -i:24678)`,
@@ -52,19 +26,6 @@ async function setup() {
 }
 async function run() {
   await setup()
-  await new Promise((resolve, reject) => {
-    sh.exec(
-      `yarn pnpify prisma migrate deploy --schema=src/server/data/providers/postgres/schema.prisma`,
-      { async: true },
-      (code, stdout, stderr) => {
-        if (code !== 0) {
-          reject(new Error(`Failed to push database: ${stderr}`))
-        } else {
-          resolve(stdout)
-        }
-      },
-    )
-  })
 
   nodemon({
     script: path.join('src/server/server.ts'),

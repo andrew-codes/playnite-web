@@ -32,13 +32,16 @@ export const Release: ReleaseResolvers = {
       where: {
         id: _parent.coverId,
       },
+      select: {
+        url: true,
+      },
     })
 
-    if (!asset || !asset.ignId) {
+    if (!asset?.url) {
       return null
     }
 
-    return `/public/game-assets/${asset.ignId}.webp`
+    return asset.url
   },
   features: async (_parent, _arg, _ctx) => {
     return _ctx.db.feature.findMany({

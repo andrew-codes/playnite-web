@@ -8,19 +8,28 @@ let testCp: ChildProcess | null = null
 let runCp: ChildProcess | null = null
 process.on('exit', () => {
   logger.info('Exiting')
-  runCp?.kill('SIGINT')
-  testCp?.kill('SIGINT')
+  ;[runCp, testCp].forEach((cp) => {
+    try {
+      cp?.kill('SIGINT')
+    } catch {}
+  })
 })
 process.on('SIGTERM', () => {
   logger.info('SIGTERM')
-  runCp?.kill('SIGINT')
-  testCp?.kill('SIGINT')
+  ;[runCp, testCp].forEach((cp) => {
+    try {
+      cp?.kill('SIGTERM')
+    } catch {}
+  })
   process.exit()
 })
 process.on('SIGINT', () => {
   logger.info('SIGINT')
-  runCp?.kill('SIGINT')
-  testCp?.kill('SIGINT')
+  ;[runCp, testCp].forEach((cp) => {
+    try {
+      cp?.kill('SIGINT')
+    } catch {}
+  })
   process.exit()
 })
 

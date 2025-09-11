@@ -32,32 +32,19 @@
         "cwd": "{projectRoot}"
       }
     },
-    "db/migrate": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn pnpify prisma migrate dev --create-only --schema=src/server/data/providers/postgres/schema.prisma",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "db/migrate/reset": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "yarn pnpify prisma migrate reset --force --schema=src/server/data/providers/postgres/schema.prisma",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "start/services": {
-      "executor": "nx:run-commands",
-      "options": {
-        "parallel": false,
-        "commands": ["bash -c 'scripts/manually-start-services.sh'"],
-        "cwd": "{projectRoot}"
-      }
-    },
-    "db/data": {
+    "demo-data": {
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn tsx scripts/seedTestData.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/build", "^prepare"],
+      "cache": false,
+      "options": {
+        "command": "yarn graphql-codegen --config codegen.ts",
         "cwd": "{projectRoot}"
       }
     },
@@ -171,18 +158,15 @@
     },
     "test/e2e/dev": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "start/services"],
+      "dependsOn": ["clean/test", "^start", "prepare", "^prepare", "^build"],
       "options": {
         "parallel": true,
-        "commands": [
-          "yarn react-devtools",
-          "yarn start-server-and-test 'cross-env NODE_ENV=development TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env NODE_ENV=development TEST=e2e CI=true yarn cypress open --e2e --browser chrome'"
-        ],
+        "commands": ["yarn react-devtools", "yarn tsx scripts/e2e-dev.ts"],
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
-          "LOG_LEVEL": "silly",
-          "NODE_ENV": "development",
+          "LOG_LEVEL": "verbose",
+          "NODE_ENV": "production",
           "TEST": "e2e",
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222"
         }
@@ -190,15 +174,11 @@
     },
     "test/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/e2e/local", "start/services"],
       "inputs": ["{projectRoot}/_packaged"],
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
-        "commands": [
-          "yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma",
-          "yarn tsx scripts/e2e.ts"
-        ]
+        "commands": ["yarn tsx scripts/e2e.ts"]
       },
       "defaultConfiguration": "ci",
       "configurations": {
@@ -249,7 +229,6 @@
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/files/e2e", "start/services"],
       "options": {
         "parallel": false,
         "command": "yarn tsx scripts/e2e.ts",
@@ -266,7 +245,6 @@
     "build": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "production",
-      "dependsOn": ["clean/build"],
       "options": {
         "cwd": "{projectRoot}",
         "commands": ["yarn tsx scripts/build.ts"]
@@ -276,12 +254,17 @@
           "env": {
             "NODE_ENV": "production"
           }
-        },
-        "e2e": {
-          "env": {
-            "NODE_ENV": "production",
-            "INSTRUMENT": "true"
-          }
+        }
+      }
+    },
+    "build/e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "{projectRoot}",
+        "commands": ["yarn tsx scripts/build.ts"],
+        "env": {
+          "NODE_ENV": "production",
+          "INSTRUMENT": "true"
         }
       }
     },
@@ -291,12 +274,10 @@
         "{projectRoot}/build/**",
         "{projectRoot}/_build-output/**",
         "{projectRoot}/scripts/packageFiles.ts",
-        "{projectRoot}/scripts/utils/packageFiles.ts",
         "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build"],
       "options": {
         "parallel": false,
         "commands": [],
@@ -315,23 +296,20 @@
         }
       }
     },
-    "package/e2e/local": {
+    "package/e2e": {
       "inputs": [
         "{projectRoot}/package.json",
         "{projectRoot}/build/**",
         "{projectRoot}/_build-output/**",
         "{projectRoot}/scripts/packageFiles.ts",
-        "{projectRoot}/scripts/utils/packageFiles.ts",
         "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
       "cache": true,
-      "dependsOn": ["clean/package"],
       "options": {
         "parallel": false,
         "commands": [
-          "yarn nx run playnite-web-app:build:e2e",
           "yarn tsx scripts/packageFiles.ts",
           "yarn tsx scripts/packageDemoCoverArt.ts",
           "yarn tsx scripts/package.ts"
@@ -344,7 +322,6 @@
     },
     "package/prune": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build"],
       "options": {
         "parallel": false,
         "commands": ["yarn tsx scripts/packagePrune.ts"],
@@ -357,16 +334,14 @@
         "{projectRoot}/build/**",
         "{projectRoot}/_build-output/**",
         "{projectRoot}/scripts/packageFiles.ts",
-        "{projectRoot}/scripts/utils/packageFiles.ts",
         "{projectRoot}/scripts/package.ts"
       ],
       "outputs": ["{projectRoot}/_packaged"],
+      "dependsOn": ["build/e2e"],
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package"],
       "options": {
         "parallel": false,
         "commands": [
-          "yarn nx run playnite-web-app:build:e2e --skip-nx-cache",
           "yarn tsx scripts/packageFiles.ts",
           "yarn tsx scripts/packageDemoCoverArt.ts"
         ],

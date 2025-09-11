@@ -1,26 +1,15 @@
+import logger from 'dev-logger'
 import { build, transform, type Plugin } from 'esbuild'
 import {
   esbuildPluginIstanbul,
   IstanbulPluginPreloader,
 } from 'esbuild-plugin-istanbul'
 import fs from 'fs/promises'
+import { globSync } from 'glob'
 import sh from 'shelljs'
+import pkg from '../package.json' with { type: 'json' }
 
 async function run() {
-  const generateDb = new Promise((resolve, reject) => {
-    const prismaCp = sh.exec(
-      `yarn pnpify prisma generate --schema=src/server/data/providers/postgres/schema.prisma`,
-      { async: true },
-    )
-    prismaCp.on('exit', (code) => {
-      if (code === 0) {
-        resolve(code)
-      } else {
-        reject(new Error('Prisma generate failed'))
-      }
-    })
-  })
-
   const buildRemix = new Promise((resolve, reject) => {
     const remixBuild = sh.exec(`yarn remix vite:build`, {
       async: true,
@@ -33,22 +22,6 @@ async function run() {
         resolve(code)
       } else {
         reject(new Error('Remix build failed'))
-      }
-    })
-  })
-
-  const buildGraphql = new Promise((resolve, reject) => {
-    const graphqlBuild = sh.exec(`yarn graphql-codegen --config codegen.ts`, {
-      async: true,
-      env: {
-        ...process.env,
-      },
-    })
-    graphqlBuild.on('exit', (code) => {
-      if (code === 0) {
-        resolve(code)
-      } else {
-        reject(new Error('GraphQL build failed'))
       }
     })
   })
@@ -97,7 +70,7 @@ async function run() {
     )
   }
 
-  const codes = await Promise.all([generateDb, buildRemix, buildGraphql])
+  const codes = await Promise.all([buildRemix])
   console.debug(
     `Prisma generate, Remix build, and GraphQL codegen completed with codes: ${codes}`,
   )
@@ -110,7 +83,9 @@ async function run() {
         server: 'src/server/server.ts',
       },
       tsconfig: 'tsconfig.server.json',
-      packages: 'external',
+      external: Object.entries(pkg.dependencies)
+        .filter(([name, version]) => !version.startsWith('workspace:'))
+        .map(([name, version]) => name),
       bundle: true,
       minify: false,
       outdir: '_build-output/src/server',
@@ -152,6 +127,28 @@ async function run() {
       plugins,
     }),
   ])
+
+  logger.info('Modifying imports of generated files')
+  await Promise.all(
+    globSync('_build-output/.generated/*.js').map(async (file: string) => {
+      let contents: string = await fs.readFile(file, 'utf8')
+
+      const writeContents = contents
+        .split('\n')
+        .map((line) => {
+          const matched =
+            /import\s+(.*)\s+from\s+['"](\.\.?\/)(.+)['"];/gm.exec(line)
+          if (matched?.[3].endsWith('.js')) {
+            return line
+          }
+          return matched
+            ? `import ${matched[1]} from '${matched[2]}${matched[3]}.js';`
+            : line
+        })
+        .join('\n')
+      await fs.writeFile(file, writeContents, 'utf8')
+    }),
+  )
 
   console.debug(`Build complete`)
 }

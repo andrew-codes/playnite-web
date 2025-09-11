@@ -1,6 +1,6 @@
 import { User } from 'apps/playnite-web/.generated/types.generated.js'
+import { AsyncMqttClient } from 'async-mqtt'
 import { YogaInitialContext } from 'graphql-yoga'
-import { IPersistAssets } from '../assets/interfaces.js'
 import { IdentityService } from '../auth/index.js'
 import { PrismaClient } from '../data/providers/postgres/client.js'
 import { subscriptionPublisher } from './subscriptionPublisher.js'
@@ -12,7 +12,7 @@ type PlayniteContext = {
   jwt?: { payload: Omit<User, 'libraries'> }
   subscriptionPublisher: typeof subscriptionPublisher
   db: PrismaClient
-  assets: IPersistAssets
+  mqtt: AsyncMqttClient
 } & YogaInitialContext
 
 export type { PlayniteContext }

@@ -1,5 +1,5 @@
 import { Box, Button, Stack, styled } from '@mui/material'
-import { createContext, FC, PropsWithChildren } from 'react'
+import { createContext, FC, PropsWithChildren, useState } from 'react'
 import { Game } from '../../.generated/types.generated'
 import GameFigureChipList from './GameFigureChipList'
 
@@ -41,6 +41,8 @@ const GameFigure: FC<
     onSelect?: (evt, game: Game) => void
   }>
 > = ({ children, game, style, onSelect, width, height }) => {
+  const [imageHasError, setImageHasError] = useState(false)
+
   return (
     <Context.Provider value={game}>
       <Figure
@@ -60,18 +62,20 @@ const GameFigure: FC<
               boxShadow: theme.shadows[3],
             })}
           >
-            {game.primaryRelease?.cover && (
+            {game.primaryRelease?.cover && !imageHasError && (
               <Image
                 data-test="GameCoverImage"
                 src={`${game.primaryRelease?.cover}`}
                 alt={game.primaryRelease?.title}
                 width={width}
                 loading="eager"
+                onError={() => setImageHasError(true)}
               />
             )}
-            {game.primaryRelease?.cover === null && (
-              <ImagePlaceholder data-test="GameCoverImage" width={width} />
-            )}
+            {!game.primaryRelease?.cover ||
+              (imageHasError && (
+                <ImagePlaceholder data-test="GameCoverImage" width={width} />
+              ))}
           </Button>
           <Box
             sx={(theme) => ({
