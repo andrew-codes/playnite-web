@@ -1,5 +1,5 @@
 import MQTT from 'async-mqtt'
-// import { client } from 'db-client'
+import { client } from 'db-client'
 import { existsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
@@ -18,7 +18,7 @@ describe('Persisting assets.', () => {
 
   beforeAll(async () => {
     await rimraf(path.join(testAssetPath, '*.*'))
-    // await client.$connect()
+    await client.$connect()
     mqtt = await MQTT.connectAsync(`tcp://localhost:1883`, {})
   })
 
@@ -26,7 +26,7 @@ describe('Persisting assets.', () => {
     if (mqtt) {
       await mqtt.end()
     }
-    // await client.$disconnect()
+    await client.$disconnect()
   })
 
   test(`Saving to disk.
@@ -39,7 +39,7 @@ describe('Persisting assets.', () => {
     }
     await mqtt.publish(
       'playnite-web/cover/update',
-      JSON.stringify(testRelease),
+      JSON.stringify({ release: testRelease, libraryId: 1 }),
       { qos: 1 },
     )
     await new Promise((resolve) => setTimeout(resolve, 5000))

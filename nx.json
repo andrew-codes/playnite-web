@@ -43,7 +43,7 @@
       "cache": true
     },
     "package/e2e": {
-      "cache": true,
+      "cache": false,
       "dependsOn": ["clean/package", "build/e2e"]
     },
     "publish": {

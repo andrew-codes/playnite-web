@@ -16,6 +16,7 @@ module.exports = {
         loader: 'ts',
         format: 'cjs',
         target: 'node22',
+        platform: 'node',
         sourcemap: 'inline',
       })
 

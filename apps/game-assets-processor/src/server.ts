@@ -32,9 +32,32 @@ async function run() {
     mqtt.on('message', async (topic, message) => {
       try {
         if (topic === 'playnite-web/cover/update') {
-          const release = JSON.parse(message.toString())
-          await assetHandler.persist(release)
-          logger.info(`Processing cover update for game ID ${release.id}...`)
+          const { libraryId, release } = JSON.parse(message.toString())
+          const paths = await assetHandler.persist(release)
+
+          if (!paths) {
+            logger.info(
+              `Cover for ${release.title} already exists, skipping update.`,
+            )
+            return
+          }
+
+          const [urlPath] = paths
+          logger.info(
+            `Updating release ${release.title} with new cover in database.`,
+          )
+          client.release.update({
+            where: {
+              playniteId_libraryId: { playniteId: release.id, libraryId },
+            },
+            data: {
+              Cover: {
+                update: {
+                  url: urlPath,
+                },
+              },
+            },
+          })
         }
       } catch (e) {
         logger.error('Error processing MQTT message:', e)

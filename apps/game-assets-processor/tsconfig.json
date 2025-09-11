@@ -9,7 +9,9 @@
     "noEmit": false,
     "allowJs": true,
     "module": "NodeNext",
-    "types": ["node"]
+    "types": ["node"],
+    "rootDir": "./src",
+    "baseUrl": "."
   },
   "include": ["src/**/*.ts", "scripts/**/*.ts", "*.ts"],
   "exclude": ["node_modules"],

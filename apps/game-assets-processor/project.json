@@ -50,7 +50,7 @@
           "NODE_ENV": "development",
           "LOG_LEVEL": "silly",
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
-          "ASSET_PATH": "../.game-assets"
+          "ASSET_PATH": "./.game-assets"
         }
       }
     },

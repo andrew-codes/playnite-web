@@ -11,14 +11,7 @@
     "module": "ESNext",
     "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts",
-    "*.ts",
-    ".generated/**/*.*",
-    ".generated/resolvers.generated.ts",
-    ".generated/typeDefs.generated.ts",
-    ".generated/types.generated.ts"
-  ],
+  "include": ["src/**/*.ts", "*.ts", ".generated/**/*.*"],
   "exclude": ["node_modules"],
   "references": []
 }

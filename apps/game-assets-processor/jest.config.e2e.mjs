@@ -1,4 +1,5 @@
 const defaultConfig = {
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   transform: {
     '^.+\\.(j|t)s$': ['<rootDir>/testUtils/db-client-transformer.cjs'],
@@ -11,21 +12,8 @@ const defaultConfig = {
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   testMatch: ['<rootDir>/__integration_tests__/**/*.(test).((j|t)s)'],
   resetMocks: true,
-  // modulePathIgnorePatterns: ['<rootDir>/\\.dist/'],
   passWithNoTests: false,
   collectCoverage: false,
-  // coveragePathIgnorePatterns: [
-  //   '/node_modules/',
-  //   '/__tests__/',
-  //   '/testUtils/',
-  //   'jest.config.js',
-  //   '.config.js',
-  //   '/scripts/',
-  //   '/db-client/',
-  //   '/.*db-client.*/',
-  // ],
-  // coverageDirectory: '<rootDir>/.test-runs/coverage/game-assets-processor-e2e',
-  // coverageReporters: ['text', 'lcov', 'html'],
   moduleFileExtensions: ['json', 'js', 'ts'],
 }
 

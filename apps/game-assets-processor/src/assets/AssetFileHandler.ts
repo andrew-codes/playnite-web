@@ -12,7 +12,7 @@ class AssetFileHandler implements IPersistAssets {
     private sourceAssets: ISourceAssets,
   ) {}
 
-  async persist(release: { title: string }): Promise<boolean> {
+  async persist(release: { title: string }): Promise<[string, string] | void> {
     await fs.mkdir(path.join(this.rootAssetPath, 'game-assets'), {
       recursive: true,
     })
@@ -21,30 +21,30 @@ class AssetFileHandler implements IPersistAssets {
     if (
       existsSync(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
     ) {
-      return true
+      return
     }
-    logger.debug(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
 
     const imageSource = await this.sourceAssets.source(release)
     if (!imageSource) {
-      return false
+      throw new Error(`No image source found for ${release.title}`)
     }
 
     const [mimeType, imageData] = imageSource
-    try {
-      const webp = await sharp(imageData)
-        .resize(325, 325)
-        .toFormat('webp')
-        .toBuffer()
-      await fs.writeFile(
-        path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`),
-        webp,
-      )
-      return true
-    } catch (err) {
-      logger.error(`Failed to process image for ${release.title}: ${err}`)
-      return false
-    }
+    logger.debug(`MimeType for ${release.title}: ${mimeType}`)
+    const webp = await sharp(imageData)
+      .resize(325, 325)
+      .toFormat('webp')
+      .toBuffer()
+    const savePath = path.join(
+      this.rootAssetPath,
+      'game-assets',
+      `${ignId}.webp`,
+    )
+
+    logger.debug(`Writing image for ${release.title} to disk`, savePath)
+    await fs.writeFile(savePath, webp)
+
+    return [`/public/game-assets/${ignId}.webp`, savePath]
   }
 }
 

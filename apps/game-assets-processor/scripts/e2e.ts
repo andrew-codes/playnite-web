@@ -95,7 +95,7 @@ waitOn(
         }
         logger.info('Running integration tests')
         testCp = sh.exec(
-          `yarn jest --config jest.config.e2e.js ${jestArgs.join(' ')}`,
+          `yarn jest --config jest.config.e2e.mjs ${jestArgs.join(' ')}`,
           {
             env: {
               ...process.env,
