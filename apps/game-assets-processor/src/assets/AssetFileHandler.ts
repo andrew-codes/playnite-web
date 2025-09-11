@@ -3,7 +3,7 @@ import { existsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 import sharp from 'sharp'
-import { ignSlug } from './ignSlug.js'
+import { slug } from 'sourced-assets'
 import { IPersistAssets, ISourceAssets } from './interfaces'
 
 class AssetFileHandler implements IPersistAssets {
@@ -17,7 +17,7 @@ class AssetFileHandler implements IPersistAssets {
       recursive: true,
     })
 
-    const ignId = ignSlug(release)
+    const ignId = slug(release)
     if (
       existsSync(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
     ) {

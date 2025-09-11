@@ -1,5 +1,6 @@
 import { Prisma, client } from 'db-client'
 import logger from 'dev-logger'
+import { slug } from 'sourced-assets'
 import Permission from '../../src/auth/permissions.js'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
 import { codes, defaultSettings } from '../../src/server/siteSettings.js'
@@ -225,6 +226,44 @@ const tasks = (on, config) => {
       }
 
       return results
+    },
+
+    async syncLibrary({ libraryDbId, libraryData }) {
+      let e: any = null
+      let result: any = null
+      try {
+        await client.$connect()
+
+        await Promise.all(
+          libraryData.update.releases.map(async (release) => {
+            return client.release.update({
+              where: {
+                playniteId_libraryId: {
+                  playniteId: release.id,
+                  libraryId: libraryDbId,
+                },
+              },
+              data: {
+                Cover: {
+                  update: {
+                    url: `/public/game-assets/${slug(release)}.webp`,
+                  },
+                },
+              },
+            })
+          }),
+        )
+      } catch (error) {
+        e = error
+        logger.error('Error syncing library:', error)
+      } finally {
+        await client.$disconnect()
+      }
+      if (e) {
+        throw new Error('Error syncing library:', e)
+      }
+
+      return result
     },
   })
 

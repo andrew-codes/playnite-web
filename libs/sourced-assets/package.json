@@ -1,37 +1,31 @@
 {
-  "name": "db-client",
+  "name": "sourced-assets",
   "version": "0.0.1",
   "private": true,
   "sideEffects": false,
   "type": "module",
-  "main": "build/client.js",
-  "types": "build/client.ts",
+  "main": "./build/index.js",
   "files": [
     "src",
-    "build",
-    ".generated"
+    "build"
   ],
   "exports": {
     ".": {
-      "import": "./build/client.js",
-      "types": "./src/client.ts",
-      "require": "./build/client.cjs",
-      "default": "./build/client.js"
+      "import": "./build/index.js",
+      "require": "./build/index.cjs",
+      "default": "./build/index.js"
     },
-    "./migrate": {
-      "import": "./src/migrate.ts",
-      "types": "./src/migrate.ts",
-      "default": "./src/migrate.ts"
+    "./ign": {
+      "import": "./build/ign.js",
+      "require": "./build/ign.cjs",
+      "default": "./build/ign.js"
     }
   },
   "dependencies": {
-    "@prisma/client": "6.14.0",
-    "dev-logger": "workspace:*",
-    "prisma": "6.14.0"
+    "dev-logger": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.16.5",
-    "@yarnpkg/pnpify": "^4.1.5",
     "esbuild": "^0.25.9",
     "glob": "^11.0.3",
     "jest": "^30.0.5",

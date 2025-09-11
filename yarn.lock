@@ -16556,6 +16556,7 @@ __metadata:
     rimraf: "npm:^6.0.1"
     sharp: "npm:^0.34.3"
     shelljs: "npm:^0.10.0"
+    sourced-assets: "workspace:*"
     ts-jest: "npm:^29.4.1"
     tslib: "npm:^2.8.1"
     tsx: "npm:^4.20.4"
@@ -24661,6 +24662,7 @@ __metadata:
     rxjs: "npm:^7.8.2"
     sharp: "npm:^0.34.3"
     shelljs: "npm:^0.10.0"
+    sourced-assets: "workspace:*"
     start-server-and-test: "npm:^2.0.13"
     ts-jest: "npm:^29.4.1"
     ts-loader: "npm:^9.5.2"
@@ -27483,6 +27485,26 @@ __metadata:
   checksum: 10c0/fb4d9bde9a9fdb2c29b10e5eae6c71d10e09ef467e1afb75fdec2eb7e11fa5b343a2af553f74f18b695dbc0b81f9da2e9fa3d7a317d5985e9939499ec6087835
   languageName: node
   linkType: hard
+
+"sourced-assets@workspace:*, sourced-assets@workspace:libs/sourced-assets":
+  version: 0.0.0-use.local
+  resolution: "sourced-assets@workspace:libs/sourced-assets"
+  dependencies:
+    "@types/node": "npm:^22.16.5"
+    dev-logger: "workspace:*"
+    esbuild: "npm:^0.25.9"
+    glob: "npm:^11.0.3"
+    jest: "npm:^30.0.5"
+    nx: "npm:^21.4.1"
+    prettier: "npm:^3.6.2"
+    rimraf: "npm:^6.0.1"
+    shelljs: "npm:^0.10.0"
+    ts-jest: "npm:^29.4.1"
+    tslib: "npm:^2.8.1"
+    tsx: "npm:^4.20.4"
+    typescript: "npm:^5.9.2"
+  languageName: unknown
+  linkType: soft
 
 "sourcemap-codec@npm:^1.4.8":
   version: 1.4.8

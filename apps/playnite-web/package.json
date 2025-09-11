@@ -116,6 +116,7 @@
     "react-devtools": "^6.1.5",
     "rimraf": "^6.0.1",
     "shelljs": "^0.10.0",
+    "sourced-assets": "workspace:*",
     "start-server-and-test": "^2.0.13",
     "ts-jest": "^29.4.1",
     "ts-loader": "^9.5.2",

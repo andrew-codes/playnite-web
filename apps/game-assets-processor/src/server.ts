@@ -3,8 +3,8 @@ import * as dbClient from 'db-client'
 import * as devLogger from 'dev-logger'
 import express from 'express'
 import path from 'path'
+import { IgnSourcedAssets } from 'sourced-assets/ign'
 import { AssetFileHandler } from './assets/AssetFileHandler'
-import { IgnSourcedAssets } from './assets/IgnSourcedAssets'
 
 async function run() {
   const logger = devLogger.default

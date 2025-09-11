@@ -2,12 +2,13 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "moduleDetection": "force",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "noEmit": false,
     "allowJs": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "types": ["node"]
   },
   "include": ["src/**/*.ts", "scripts/**/*.ts", "*.ts"],

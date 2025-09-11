@@ -1,6 +1,12 @@
 import logger from 'dev-logger'
-import { ignSlug } from './ignSlug.js'
-import { ISourceAssets } from './interfaces'
+import type { ISourceAssets } from './types'
+
+function ignSlug(release: { title: string }): string {
+  return release.title
+    .toLowerCase()
+    .replace(/[.,!?<>/|\\:$\^&*(){}\[\]"';@#`~]|--+/g, '')
+    .replace(/ /g, '-')
+}
 
 class IgnSourcedAssets implements ISourceAssets {
   async source(release: { title: string }): Promise<[string, Buffer] | null> {

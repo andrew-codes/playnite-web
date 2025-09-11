@@ -47,6 +47,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:libs/playnite-plugin-installer-manifest"\
     },\
     {\
+      "name": "sourced-assets",\
+      "reference": "workspace:libs/sourced-assets"\
+    },\
+    {\
       "name": "versioning",\
       "reference": "workspace:libs/versioning"\
     }\
@@ -64,6 +68,7 @@ const RAW_RUNTIME_STATE =
     ["playnite-web", ["workspace:."]],\
     ["playnite-web-app", ["workspace:apps/playnite-web"]],\
     ["playnite-web-plugin", ["workspace:apps/PlayniteWebPlugin"]],\
+    ["sourced-assets", ["workspace:libs/sourced-assets"]],\
     ["versioning", ["workspace:libs/versioning"]]\
   ],\
   "fallbackPool": [\
@@ -21900,6 +21905,7 @@ const RAW_RUNTIME_STATE =
           ["rimraf", "npm:6.0.1"],\
           ["sharp", "npm:0.34.3"],\
           ["shelljs", "npm:0.10.0"],\
+          ["sourced-assets", "workspace:libs/sourced-assets"],\
           ["ts-jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:29.4.1"],\
           ["tslib", "npm:2.8.1"],\
           ["tsx", "npm:4.20.4"],\
@@ -30910,6 +30916,7 @@ const RAW_RUNTIME_STATE =
           ["rxjs", "npm:7.8.2"],\
           ["sharp", "npm:0.34.3"],\
           ["shelljs", "npm:0.10.0"],\
+          ["sourced-assets", "workspace:libs/sourced-assets"],\
           ["start-server-and-test", "npm:2.0.13"],\
           ["ts-jest", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:29.4.1"],\
           ["ts-loader", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:9.5.2"],\
@@ -33993,6 +34000,28 @@ const RAW_RUNTIME_STATE =
           ["source-map-support", "npm:0.5.21"]\
         ],\
         "linkType": "HARD"\
+      }]\
+    ]],\
+    ["sourced-assets", [\
+      ["workspace:libs/sourced-assets", {\
+        "packageLocation": "./libs/sourced-assets/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:22.16.5"],\
+          ["dev-logger", "workspace:libs/dev-logger"],\
+          ["esbuild", "npm:0.25.9"],\
+          ["glob", "npm:11.0.3"],\
+          ["jest", "virtual:93ec3e0c90a0f2b1b356454dffdf00a3b612a4be4e9dcd20c989fcaf09851ad9dd8a48c40c5be361bd69837a631dce28bf5fdb296f636722dc69caa95cdccc8f#npm:30.0.5"],\
+          ["nx", "virtual:d9911a896e7aff42f36e408eb4eb7a689c603ed9c3e9ee451136901b8eed391591535d3dcd1656ea3b9e84e3ac39a4a57f3e575821db46b075027dbc7d6713ef#npm:21.4.1"],\
+          ["prettier", "npm:3.6.2"],\
+          ["rimraf", "npm:6.0.1"],\
+          ["shelljs", "npm:0.10.0"],\
+          ["sourced-assets", "workspace:libs/sourced-assets"],\
+          ["ts-jest", "virtual:6408c0fc5c668d431817723224f937d54ce4ccd200066ebd13d75ce83743091bb93c89a27a10de56b43b536a39d76af0f71290a5fe233d8f8fff282e098a3c00#npm:29.4.1"],\
+          ["tslib", "npm:2.8.1"],\
+          ["tsx", "npm:4.20.4"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
       }]\
     ]],\
     ["sourcemap-codec", [\
