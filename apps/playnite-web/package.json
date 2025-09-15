@@ -69,7 +69,7 @@
     "@cypress/webpack-preprocessor": "^7.0.1",
     "@eddeee888/gcg-typescript-resolver-files": "^0.12.1",
     "@graphql-codegen/cli": "^5.0.7",
-    "@graphql-codegen/graphql-modules-preset": "^4.0.17",
+    "@graphql-codegen/graphql-modules-preset": "^5.0.0",
     "@graphql-codegen/typescript": "^4.1.6",
     "@graphql-codegen/typescript-resolvers": "^4.5.1",
     "@jest/globals": "^30.0.5",
