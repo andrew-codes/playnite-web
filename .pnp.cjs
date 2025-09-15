@@ -11274,7 +11274,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@remix-run/express", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.17.0"],\
           ["@remix-run/node", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.17.0"],\
-          ["@types/express", "npm:4.17.23"],\
+          ["@types/express", "npm:5.0.3"],\
           ["@types/typescript", null],\
           ["express", "npm:4.21.1"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
@@ -12831,13 +12831,12 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:4.17.23", {\
-        "packageLocation": "./.yarn/cache/@types-express-npm-4.17.23-63c8c95a13-60490cd4f7.zip/node_modules/@types/express/",\
+      ["npm:5.0.3", {\
+        "packageLocation": "./.yarn/cache/@types-express-npm-5.0.3-78da63908b-f0fbc8daa7.zip/node_modules/@types/express/",\
         "packageDependencies": [\
           ["@types/body-parser", "npm:1.19.5"],\
-          ["@types/express", "npm:4.17.23"],\
-          ["@types/express-serve-static-core", "npm:4.17.41"],\
-          ["@types/qs", "npm:6.9.10"],\
+          ["@types/express", "npm:5.0.3"],\
+          ["@types/express-serve-static-core", "npm:5.0.7"],\
           ["@types/serve-static", "npm:1.15.5"]\
         ],\
         "linkType": "HARD"\
@@ -12870,6 +12869,17 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/@types-express-serve-static-core-npm-4.19.6-cc0017aaf4-4281f4ead7.zip/node_modules/@types/express-serve-static-core/",\
         "packageDependencies": [\
           ["@types/express-serve-static-core", "npm:4.19.6"],\
+          ["@types/node", "npm:20.10.0"],\
+          ["@types/qs", "npm:6.9.10"],\
+          ["@types/range-parser", "npm:1.2.7"],\
+          ["@types/send", "npm:0.17.4"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:5.0.7", {\
+        "packageLocation": "./.yarn/cache/@types-express-serve-static-core-npm-5.0.7-4a816a369e-28666f6a07.zip/node_modules/@types/express-serve-static-core/",\
+        "packageDependencies": [\
+          ["@types/express-serve-static-core", "npm:5.0.7"],\
           ["@types/node", "npm:20.10.0"],\
           ["@types/qs", "npm:6.9.10"],\
           ["@types/range-parser", "npm:1.2.7"],\
@@ -21867,7 +21877,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@jest/globals", "npm:30.0.5"],\
           ["@nx/devkit", "virtual:157bb4cf968c927c4adf5743c88b0dd713f0cc321d31b1eef2aa0e7acd3f9f5b5d96217c900d270510daa22020964d691d1d6539cda27314e90cb7adb8c18de4#npm:21.4.1"],\
-          ["@types/express", "npm:4.17.23"],\
+          ["@types/express", "npm:5.0.3"],\
           ["@types/jest", "npm:30.0.0"],\
           ["@types/lodash-es", "npm:4.17.12"],\
           ["@types/node", "npm:22.16.5"],\
@@ -30848,7 +30858,7 @@ const RAW_RUNTIME_STATE =
           ["@remix-run/react", "virtual:ad23fe81aeb29bcce40d0c7ffeeb6e1168c962d4abd3a3f04b44f484e41813b6b7bd80d8d24c46d62328ececd2479698afaa9e56b6a360aa6ae58f8edfd92e19#npm:2.17.0"],\
           ["@types/crypto-js", "npm:4.2.2"],\
           ["@types/cypress", "npm:1.1.6"],\
-          ["@types/express", "npm:4.17.23"],\
+          ["@types/express", "npm:5.0.3"],\
           ["@types/lodash-es", "npm:4.17.12"],\
           ["@types/node", "npm:22.16.5"],\
           ["@types/react", "npm:19.1.11"],\
