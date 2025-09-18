@@ -1,47 +1,60 @@
 {
   "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "moduleDetection": "force",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
-    "noEmit": false,
-    "allowJs": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "types": [
-      "cypress",
-      "node",
-      "react",
-      "vite/client",
-      "@vite-pwa/remix/remix-sw"
-    ]
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.jsx",
-    "scripts/**/*.ts",
-    "testUtils/**/*.ts",
-    "testUtils/**/*.tsx",
-    "cypress/support/*.ts",
-    "cypress/plugins/*.ts",
-    "*.ts",
-    "../../graphql.config.ts",
-    ".generated/**/*.*",
-    ".generated/resolvers.generated.ts",
-    ".generated/typeDefs.generated.ts",
-    ".generated/types.generated.ts",
-    "cypress.config.ts"
-  ],
-  "exclude": ["node_modules"],
   "references": [
     {
-      "path": "./tsconfig.server.json"
+      "path": "./tsconfig.cypress.json"
     },
     {
-      "path": "./tsconfig.test.json"
+      "path": "../../libs/db-client/tsconfig.json"
     }
+  ],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["node"],
+    "outDir": "dist",
+    "rootDir": "src",
+    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
+    "target": "esnext",
+    "skipLibCheck": true
+  },
+  "include": [
+    "../../apps/web/.next/types/**/*.ts",
+    "../../dist/apps/web/.next/types/**/*.ts",
+    "next-env.d.ts",
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "out-tsc",
+    "dist",
+    "node_modules",
+    "jest.config.ts",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    ".next",
+    "eslint.config.mjs",
+    "eslint.config.cjs",
+    "eslint.config.mjs"
   ]
 }

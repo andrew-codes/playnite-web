@@ -44,24 +44,21 @@
       "dependsOn": ["clean/build", "^prepare"],
       "cache": false,
       "options": {
-        "command": "yarn graphql-codegen --config codegen.ts",
+        "commands": ["yarn graphql-codegen --config codegen.ts"],
         "cwd": "{projectRoot}"
       }
     },
     "start": {
       "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/codegen.ts",
-        "{projectRoot}/src/server/graphql/resolverTypes.ts",
-        "{projectRoot}/src/server/graphql/modules/**/*.graphql"
-      ],
       "options": {
+        "commands": ["yarn nodemon"],
         "cwd": "{projectRoot}",
-        "parallel": false,
-        "commands": ["yarn tsx scripts/startDevServer.ts"],
         "env": {
           "NODE_ENV": "development",
-          "LOG_LEVEL": "silly"
+          "LOG_LEVEL": "info",
+          "SECRET": "dev-secret",
+          "PORT": "3000",
+          "HOST": "localhost"
         }
       }
     },

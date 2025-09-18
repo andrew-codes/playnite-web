@@ -6,7 +6,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
+    "noEmit": false,
     "allowJs": true,
     "module": "ESNext",
     "types": ["node"]

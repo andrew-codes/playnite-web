@@ -3,24 +3,18 @@
   "version": "0.0.1",
   "private": true,
   "sideEffects": false,
-  "type": "module",
-  "main": "build/client.js",
-  "types": "build/client.ts",
+  "main": "src/client.ts",
   "files": [
     "src",
-    "build",
     ".generated"
   ],
   "exports": {
     ".": {
-      "import": "./build/client.js",
-      "types": "./src/client.ts",
-      "require": "./build/client.cjs",
-      "default": "./build/client.js"
+      "import": "./src/client.ts",
+      "default": "./src/client.ts"
     },
     "./migrate": {
       "import": "./src/migrate.ts",
-      "types": "./src/migrate.ts",
       "default": "./src/migrate.ts"
     }
   },
@@ -32,10 +26,9 @@
   "devDependencies": {
     "@types/node": "^22.16.5",
     "@yarnpkg/pnpify": "^4.1.5",
-    "esbuild": "^0.25.9",
     "glob": "^11.0.3",
     "jest": "^30.0.5",
-    "nx": "^21.4.1",
+    "nx": "^21.5.2",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "shelljs": "^0.10.0",

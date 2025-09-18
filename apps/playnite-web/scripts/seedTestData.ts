@@ -56,7 +56,7 @@ async function run() {
 
   const libraryData = JSON.parse(
     await fs.readFile(
-      path.join(import.meta.dirname, '../cypress/fixtures/librarySync.json'),
+      path.join(__dirname, '../cypress/fixtures/librarySync.json'),
       'utf-8',
     ),
   )

@@ -10,6 +10,8 @@ const config: CodegenConfig = {
     './.generated': defineConfig({
       typesPluginsConfig: {
         mappers: {
+          AccountSetupStatus:
+            '../src/server/graphql/resolverTypes#GraphAccountSetupStatus',
           CompletionStatus:
             '../src/server/graphql/resolverTypes#GraphCompletionStatus',
           EntityUpdateDetails:

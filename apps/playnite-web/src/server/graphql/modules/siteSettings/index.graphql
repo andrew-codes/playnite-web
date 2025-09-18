@@ -6,8 +6,14 @@ type SiteSetting {
   description: String!
 }
 
+type AccountSetupStatus {
+  isSetup: Boolean!
+  allowAnonymousAccountCreation: Boolean!
+}
+
 extend type Query {
   siteSettings: [SiteSetting!]!
+  accountSetupStatus: AccountSetupStatus!
 }
 
 extend type Mutation {

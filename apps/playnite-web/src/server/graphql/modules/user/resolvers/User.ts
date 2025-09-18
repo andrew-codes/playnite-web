@@ -1,5 +1,5 @@
 import type { UserResolvers } from '../../../../../../.generated/types.generated.js'
-import Permission from '../../../../../auth/permissions.js'
+import Permission from '../../../../../feature/authorization/permissions.js'
 import { create, createNull } from '../../../../oid.js'
 
 export const User: UserResolvers = {

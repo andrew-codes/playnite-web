@@ -1,3 +1,5 @@
+'use client'
+
 import {
   List,
   ListItem,
@@ -7,7 +9,7 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { useNavigate } from '@remix-run/react'
+import { useRouter } from 'next/navigation'
 import { EventHandler, FC, ReactNode, useEffect, useState } from 'react'
 
 const NavigationList = styled(List, {
@@ -23,9 +25,9 @@ type NavItemProps = {
 }
 
 const NavItem: FC<{ item: NavItemProps; open: boolean }> = ({ item, open }) => {
-  const navigate = useNavigate()
+  const router = useRouter()
   const handleNavigation = (href: string) => {
-    navigate(href)
+    router.push(href)
   }
 
   const [disableRipple, setDisableRipple] = useState(false)

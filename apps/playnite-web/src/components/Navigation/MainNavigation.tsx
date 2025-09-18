@@ -1,9 +1,11 @@
+'use client'
+
 import { AccountCircle, Home } from '@mui/icons-material'
-import { useLocation } from '@remix-run/react'
 import { merge } from 'lodash-es'
+import { usePathname } from 'next/navigation'
 import { FC } from 'react'
-import { useMe } from '../../hooks/me'
-import { useSignOut } from '../../hooks/signOut'
+import { useMe } from '../../feature/account/hooks/me'
+import { useSignOut } from '../../feature/account/hooks/signOut'
 import NavMenu from './NavMenu'
 
 const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
@@ -11,14 +13,15 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
   const [signOut] = useSignOut()
   const handleSignOut = () => {
     signOut()
-    me.updateQuery((result, opts) => {
+    me.updateQuery((result) => {
       return merge({}, result, {
-        isAuthenticated: false,
+        me: { isAuthenticated: false },
       })
     })
   }
 
-  const location = useLocation()
+  // const location = useLocation()x
+  const pathname = usePathname()
 
   return (
     <NavMenu
@@ -32,11 +35,11 @@ const MainNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
           text: 'Playnite Web Libraries',
         },
         {
-          to: !me.data?.me.isAuthenticated
-            ? `/login?returnTo=${location.pathname}`
+          to: !me.data?.me?.isAuthenticated
+            ? `/login?returnTo=${pathname}`
             : handleSignOut,
           icon: <AccountCircle />,
-          text: !me.data?.me.isAuthenticated ? 'Sign In' : 'Sign Out',
+          text: !me.data?.me?.isAuthenticated ? 'Sign In' : 'Sign Out',
         },
       ]}
     />

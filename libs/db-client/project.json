@@ -24,22 +24,20 @@
       "options": {
         "parallel": false,
         "commands": ["yarn pnpify prisma generate --schema=src/schema.prisma"],
-        "cwd": "{projectRoot}"
-      }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/build"],
-      "options": {
-        "command": "yarn tsx scripts/build.ts",
-        "cwd": "{projectRoot}"
+        "cwd": "{projectRoot}",
+        "env": {
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+        }
       }
     },
     "reset-db": {
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn pnpify prisma migrate reset --force --schema=src/schema.prisma",
-        "cwd": "{projectRoot}"
+        "cwd": "{projectRoot}",
+        "env": {
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+        }
       }
     },
     "create-migration": {
@@ -47,7 +45,10 @@
       "dependsOn": ["build"],
       "options": {
         "command": "yarn pnpify prisma migrate dev --create-only --name migration --schema=src/schema.prisma",
-        "cwd": "{projectRoot}"
+        "cwd": "{projectRoot}",
+        "env": {
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+        }
       }
     }
   },

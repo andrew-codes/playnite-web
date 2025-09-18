@@ -1,7 +1,7 @@
 import { Prisma, client } from 'db-client'
 import logger from 'dev-logger'
 import { slug } from 'sourced-assets'
-import Permission from '../../src/auth/permissions.js'
+import Permission from '../../src/feature/authorization/permissions.js'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
 import { tryParseOid } from '../../src/server/oid.js'
 import { codes, defaultSettings } from '../../src/server/siteSettings.js'

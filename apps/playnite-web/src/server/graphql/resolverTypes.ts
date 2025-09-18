@@ -1,4 +1,4 @@
-import { RunState } from '../../api/client/runStates.js'
+import { RunState } from '../../feature/game/runStates.js'
 import { DomainType } from '../oid.js'
 import { Prisma } from './../data/providers/postgres/client.js'
 
@@ -52,9 +52,15 @@ type GraphEntityCollectionUpdateDetails = {
   type: DomainType
 }
 
+type GraphAccountSetupStatus = {
+  isSetup: boolean
+  allowAnonymousAccountCreation: boolean
+}
+
 export type {
   ClaimUser,
   GameReleaseStateSubscriptionPayload,
+  GraphAccountSetupStatus,
   GraphCompletionStatus,
   GraphEntityCollectionUpdateDetails,
   GraphEntityUpdateDetails,

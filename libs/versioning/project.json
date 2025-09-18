@@ -12,7 +12,6 @@
     },
     "prepare": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/.generated"],
       "options": {
         "parallel": false,
         "commands": ["echo 'Preparing versioning...'"],

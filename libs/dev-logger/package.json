@@ -2,14 +2,12 @@
   "name": "dev-logger",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
-  "main": "./build/index.js",
+  "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
     ".": {
-      "import": "./build/index.js",
-      "require": "./build/index.cjs",
-      "default": "./build/index.js"
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
     }
   },
   "dependencies": {
@@ -18,9 +16,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.16.5",
-    "esbuild": "^0.25.9",
     "glob": "^11.0.3",
-    "nx": "^21.4.1",
+    "nx": "^21.5.2",
     "rimraf": "^6.0.1",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2"

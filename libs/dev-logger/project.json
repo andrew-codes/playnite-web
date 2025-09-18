@@ -17,16 +17,6 @@
         "command": "yarn rimraf build .generated",
         "cwd": "{projectRoot}"
       }
-    },
-    "prepare": {
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/build"],
-      "dependsOn": ["clean/build"],
-      "cache": true,
-      "options": {
-        "command": "yarn tsx scripts/build.ts",
-        "cwd": "{projectRoot}"
-      }
     }
   },
   "tags": ["linux"],

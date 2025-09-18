@@ -3,22 +3,19 @@
   "version": "0.0.1",
   "private": true,
   "sideEffects": false,
-  "type": "module",
-  "main": "./build/index.js",
+  "main": "./src/index.ts",
   "files": [
     "src",
     "build"
   ],
   "exports": {
     ".": {
-      "import": "./build/index.js",
-      "require": "./build/index.cjs",
-      "default": "./build/index.js"
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
     },
     "./ign": {
-      "import": "./build/ign.js",
-      "require": "./build/ign.cjs",
-      "default": "./build/ign.js"
+      "import": "./src/ign.ts",
+      "default": "./src/ign.ts"
     }
   },
   "dependencies": {
@@ -26,10 +23,9 @@
   },
   "devDependencies": {
     "@types/node": "^22.16.5",
-    "esbuild": "^0.25.9",
     "glob": "^11.0.3",
     "jest": "^30.0.5",
-    "nx": "^21.4.1",
+    "nx": "^21.5.2",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "shelljs": "^0.10.0",

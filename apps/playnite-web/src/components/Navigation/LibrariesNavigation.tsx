@@ -1,5 +1,7 @@
+'use client'
+
 import { LocalLibrary, Settings, Sync } from '@mui/icons-material'
-import { useParams } from '@remix-run/react'
+import { useParams } from 'next/navigation'
 import { FC } from 'react'
 import NavMenu from './NavMenu'
 

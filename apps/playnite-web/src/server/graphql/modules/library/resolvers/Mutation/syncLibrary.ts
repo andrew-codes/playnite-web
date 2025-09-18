@@ -1,5 +1,6 @@
+import { getClient } from 'apps/playnite-web/src/server/mqtt.js'
 import { groupBy } from 'lodash-es'
-import { runState } from '../../../../../../api/client/runStates.js'
+import { runState } from '../../../../../../feature/game/runStates.js'
 import logger from '../../../../../logger.js'
 import { create, domains, hasIdentity } from '../../../../../oid.js'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated.js'
@@ -298,6 +299,8 @@ export const syncLibrary: NonNullable<
     select: { id: true, playniteId: true },
   })
 
+  const mqtt = await getClient()
+
   const updatedReleases = await Promise.all(
     _arg.libraryData.update.releases
       .filter((release) => {
@@ -432,7 +435,7 @@ export const syncLibrary: NonNullable<
             },
           })
 
-          await _ctx.mqtt.publish(
+          await mqtt.publish(
             `playnite-web/cover/update`,
             JSON.stringify({ libraryId, release }),
             { qos: 1 },

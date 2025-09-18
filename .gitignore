@@ -16,6 +16,7 @@ node_modules
 *.env
 !local.env
 !e2e.env
+.envrc
 
 **/cypress/downloads
 
@@ -37,6 +38,8 @@ apps/playnite-web/logs
 
 .devcontainer/.devpod-internal/
 
+.yarn/cache
+.yarn/install-state.gz
 .yarn/**/*darwin*
 .yarn/**/*linux*
 
@@ -50,3 +53,4 @@ apps/playnite-web/logs
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
 
+.next

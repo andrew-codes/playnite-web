@@ -25,14 +25,6 @@
         "commands": ["echo 'No prepare step defined'"],
         "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/build"],
-      "options": {
-        "command": "yarn tsx scripts/build.ts",
-        "cwd": "{projectRoot}"
-      }
     }
   },
   "tags": ["linux"],

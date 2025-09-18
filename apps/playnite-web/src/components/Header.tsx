@@ -1,3 +1,5 @@
+'use client'
+
 import { Box, Divider, styled } from '@mui/material'
 import { FC, PropsWithChildren } from 'react'
 
