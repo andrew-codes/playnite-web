@@ -16,7 +16,16 @@ const Image = styled('img', {
   shouldForwardProp: (prop) => prop !== 'width',
 })<{ width: string }>(({ width, theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[3],
+  height: `${width}`,
+  objectFit: 'cover',
+  width,
+  display: 'block',
+}))
+
+const ImagePlaceholder = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'width',
+})<{ width: string }>(({ width, theme }) => ({
+  borderRadius: theme.shape.borderRadius,
   height: `${width}`,
   objectFit: 'cover',
   width,
@@ -43,25 +52,30 @@ const GameFigure: FC<
         width={width}
       >
         <Box sx={{ position: 'relative' }} key={`${game.id}-image`}>
-          <Button onClick={(evt) => onSelect?.(evt, game)} sx={{ padding: 0 }}>
-            {!imageHasError && game.cover?.id ? (
+          <Button
+            onClick={(evt) => onSelect?.(evt, game)}
+            sx={(theme) => ({
+              padding: 0,
+              height: width,
+              width,
+              borderRadius: `${theme.shape.borderRadius}px`,
+              boxShadow: theme.shadows[3],
+            })}
+          >
+            {game.primaryRelease?.cover && !imageHasError && (
               <Image
-                src={`/asset-by-id/${game.cover?.id}`}
-                alt={game.name}
+                data-test="GameCoverImage"
+                src={`${game.primaryRelease?.cover}`}
+                alt={game.primaryRelease?.title}
                 width={width}
                 loading="eager"
-                onError={(e) => {
-                  setImageHasError(true)
-                }}
-              />
-            ) : (
-              <Box
-                sx={{
-                  height: `${width}`,
-                  width: `${width}`,
-                }}
+                onError={() => setImageHasError(true)}
               />
             )}
+            {!game.primaryRelease?.cover ||
+              (imageHasError && (
+                <ImagePlaceholder data-test="GameCoverImage" width={width} />
+              ))}
           </Button>
           <Box
             sx={(theme) => ({
@@ -73,7 +87,9 @@ const GameFigure: FC<
             })}
           >
             <GameFigureChipList
-              completionStatus={game.completionStatus?.name}
+              completionStatus={
+                game.primaryRelease?.completionStatus?.name ?? 'Unknown'
+              }
               platforms={game.releases.map((release) => release.platform)}
             />
           </Box>

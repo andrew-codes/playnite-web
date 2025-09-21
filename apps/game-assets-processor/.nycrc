@@ -1,0 +1,16 @@
+{
+  "report-dir": ".test-runs/e2e",
+  "all": true,
+  "sourceMap": true,
+  "exclude": [
+    "*.js",
+    ".test-runs/**/*.*",
+    "scripts/**/*.*",
+    "node_modules/**/*.*",
+    "testUtils/**/*.*",
+    "**/interfaces.ts"
+  ],
+  "reporter": ["lcov", "text", "html"],
+  "instrument": true,
+  "cache": false
+}

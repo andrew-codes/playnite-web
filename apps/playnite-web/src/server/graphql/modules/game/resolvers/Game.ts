@@ -1,124 +1,88 @@
-import { first, isEmpty } from 'lodash-es'
+import { GraphQLError } from 'graphql'
 import type { GameResolvers } from '../../../../../../.generated/types.generated.js'
-import {
-  CompletionStatus,
-  GameAsset,
-  Release,
-} from '../../../../data/types.entities.js'
-import { create, createNull } from '../../../../oid.js'
-import { completionStatusSortOrder } from '../../completionStatus/resolvers/CompletionStatus.js'
+import { Release } from '../../../../data/providers/postgres/client.js'
+import { create, domains } from '../../../../oid.js'
 
 export const Game: GameResolvers = {
   id: async (_parent, _arg, _ctx) => {
     return create('Game', _parent.id).toString()
   },
-  name: async (_parent, _arg, _ctx) => {
-    return _parent.name
-  },
-  description: async (_parent, _arg, _ctx) => {
-    const results = await Promise.all(
-      _parent.releaseIds.map((releaseId) =>
-        _ctx.queryApi.execute<Release>({
-          entityType: 'Release',
-          type: 'ExactMatch',
-          field: 'id',
-          value: releaseId,
-        }),
-      ),
-    )
-
-    return (
-      first(
-        results
-          .filter((result) => !isEmpty(result))
-          .map((result) => result?.[0])
-          .filter((result): result is Release => result !== null),
-      )?.description ?? ''
-    )
-  },
   releases: async (_parent, _arg, _ctx) => {
-    const results = await Promise.all(
-      _parent.releaseIds.map((releaseId) =>
-        _ctx.queryApi.execute<Release>({
-          entityType: 'Release',
-          type: 'ExactMatch',
-          field: 'id',
-          value: releaseId,
-        }),
-      ),
-    )
-
-    return results
-      .filter((result) => !isEmpty(result))
-      .map((result) => result?.[0])
-      .filter((result): result is Release => result !== null)
+    return _ctx.db.release.findMany({
+      where: {
+        Games: {
+          some: {
+            id: _parent.id,
+          },
+        },
+      },
+      orderBy: {
+        title: 'asc',
+      },
+    })
   },
-  cover: async (_parent, _arg, _ctx) => {
-    if (!_parent.cover) {
-      return null
-    }
-
-    const results = await _ctx.queryApi.execute<GameAsset>({
-      entityType: 'GameAsset',
-      type: 'ExactMatch',
-      field: 'id',
-      value: `${_parent.cover.split('\\')[1].split('.')[0]}.webp`,
+  primaryRelease: async (_parent, _arg, _ctx) => {
+    const library = await _ctx.db.library.findUnique({
+      where: {
+        id: _parent.libraryId,
+      },
     })
 
-    return results?.[0] ?? null
-  },
-
-  completionStatus: async (_parent, _arg, _ctx) => {
-    const releases = (
-      await Promise.all(
-        _parent.releaseIds.map((releaseId) =>
-          _ctx.queryApi.execute<Release>({
-            entityType: 'Release',
-            type: 'ExactMatch',
-            field: 'id',
-            value: releaseId,
-          }),
-        ),
-      )
-    )
-      .filter((result) => result !== null)
-      .map((result) => result[0])
-
-    const completionStatusIds = releases
-      .map((release) => release.completionStatusId)
-      .filter((id) => id !== null)
-      .filter((id) => id !== '00000000-0000-0000-0000-000000000000') as string[]
-
-    const results = (
-      await Promise.all(
-        completionStatusIds.map((id) =>
-          _ctx.queryApi.execute<CompletionStatus>({
-            entityType: 'CompletionStatus',
-            type: 'ExactMatch',
-            field: 'id',
-            value: id,
-          }),
-        ),
-      )
-    )
-      .filter((result) => result !== null)
-      .map((result) => result[0])
-      .sort((a, b) => {
-        const aSort = completionStatusSortOrder.findIndex((p) => p.test(a.name))
-        const bSort = completionStatusSortOrder.findIndex((p) => p.test(b.name))
-        if (aSort > bSort) {
-          return 1
-        }
-        if (aSort < bSort) {
-          return -1
-        }
-        return 0
-      })?.[0] ?? {
-      _type: 'CompletionStatus',
-      id: createNull('CompletionStatus').toString(),
-      name: 'Backlog',
+    if (!library) {
+      throw new GraphQLError('Library not found', {
+        extensions: {
+          code: 'NOT_FOUND',
+          entity: create('Library', _parent.libraryId).toString(),
+        },
+      })
     }
 
-    return results
+    const releases = await _ctx.db.release.findMany({
+      where: {
+        Games: {
+          some: {
+            id: _parent.id,
+          },
+        },
+      },
+      include: {
+        Source: {
+          include: {
+            Platform: true,
+          },
+        },
+      },
+    })
+
+    let primaryRelease: undefined | null | Release = null
+    for (const platformId of library.platformPriority) {
+      primaryRelease = releases?.find(
+        (r) => r.Source.Platform?.id === platformId,
+      )
+      if (primaryRelease) {
+        break
+      }
+    }
+
+    if (!primaryRelease) {
+      throw new GraphQLError('No primary release found for game', {
+        extensions: {
+          code: 'NOT_FOUND',
+          entity: create('Game', _parent.id).toString(),
+          type: domains.Release,
+          library: create('Library', _parent.libraryId).toString(),
+        },
+      })
+    }
+
+    return primaryRelease
+  },
+
+  library: async (_parent, _arg, _ctx) => {
+    return _ctx.db.library.findUniqueOrThrow({
+      where: {
+        id: _parent.libraryId,
+      },
+    })
   },
 }

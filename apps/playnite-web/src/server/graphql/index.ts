@@ -5,30 +5,36 @@ import {
   useJWT,
 } from '@graphql-yoga/plugin-jwt'
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
-import type { AsyncMqttClient } from 'async-mqtt'
-import { createYoga, YogaServerOptions } from 'graphql-yoga'
+import asyncMqtt from 'async-mqtt'
+import { createYoga, Plugin, YogaServerOptions } from 'graphql-yoga'
 import { IdentityService } from '../auth/index.js'
-import { updater } from '../updater.js'
-import data from './../data/data.js'
+import { prisma } from '../data/providers/postgres/client.js'
+import logger from '../logger.js'
 import type { PlayniteContext } from './context.js'
 import schema from './schema.js'
 import { subscriptionPublisher } from './subscriptionPublisher.js'
 
-const graphql = (
-  endpoint: string,
-  signingKey: string,
-  mqttClient: AsyncMqttClient,
-) => {
+const graphql = async (endpoint: string, signingKey: string) => {
   const domain = process.env.HOST ?? 'localhost'
 
-  const config: YogaServerOptions<any, PlayniteContext> = {
+  const mqtt = await asyncMqtt.connectAsync(
+    `tcp://${process.env.MQTT_HOST ?? 'localhost'}:${process.env.MQTT_PORT ?? 1883}`,
+    {
+      username: process.env.MQTT_USERNAME,
+      password: process.env.MQTT_PASSWORD,
+    },
+  )
+
+  const config: YogaServerOptions<any, PlayniteContext> & {
+    plugins: Array<Plugin>
+  } = {
     schema,
     graphqlEndpoint: endpoint,
     graphiql: {
       subscriptionsProtocol: 'WS',
     },
     plugins: [
-      useCookies(),
+      useCookies<{}>(),
       useJWT({
         signingKeyProviders: [() => signingKey],
         tokenLookupLocations: [
@@ -42,24 +48,22 @@ const graphql = (
       }),
     ],
     context: async (req): Promise<PlayniteContext> => {
-      const dataApi = await data()
-
-      return {
+      const ctx: PlayniteContext = {
         ...req,
         domain,
-        identityService: new IdentityService(dataApi.query, signingKey, domain),
-        mqttClient,
-        queryApi: dataApi.query,
+        identityService: new IdentityService(signingKey, domain),
         signingKey,
         subscriptionPublisher,
-        updateQueryApi: dataApi.update,
-        update: updater(mqttClient, dataApi.query),
+        db: prisma,
+        mqtt,
       }
+
+      return ctx
     },
   }
 
   if (process.env.TEST !== 'e2e') {
-    config.plugins?.push(
+    config.plugins.push(
       useCSRFPrevention({ requestHeaders: ['x-graphql-yoga-csrf'] }),
     )
     config.cors = {
@@ -69,6 +73,12 @@ const graphql = (
       methods: ['GET', 'POST'],
     }
   }
+
+  config.plugins.push({
+    onError({ error, context }) {
+      logger.error('GraphQL Error:', error)
+    },
+  })
 
   return createYoga(config)
 }
