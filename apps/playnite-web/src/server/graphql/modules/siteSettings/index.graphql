@@ -1,0 +1,15 @@
+type SiteSetting {
+  id: String!
+  name: String!
+  value: String!
+  dataType: String!
+  description: String!
+}
+
+extend type Query {
+  siteSettings: [SiteSetting!]!
+}
+
+extend type Mutation {
+  updateSiteSetting(id: String!, value: String!): SiteSetting!
+}
