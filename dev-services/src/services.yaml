@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=${DB_USER:-playnite}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    restart: unless-stopped
+
+  mqtt:
+    image: eclipse-mosquitto:2.0.18
+    ports:
+      - '1883:1883'
+      - '9001:9001'
+    volumes:
+      - ./mqtt:/mosquitto/config
+    restart: unless-stopped

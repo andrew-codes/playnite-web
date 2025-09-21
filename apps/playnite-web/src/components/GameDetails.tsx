@@ -13,11 +13,12 @@ import {
   styled,
 } from '@mui/material'
 import { FC, useMemo, useRef, useState } from 'react'
-import { Game, GameRelease } from '../../.generated/types.generated'
-import { useMe } from '../queryHooks'
-import { useRestartRelease } from '../queryHooks/restartRelease'
-import { useStartRelease } from '../queryHooks/startRelease'
-import { useStopRelease } from '../queryHooks/stopRelease'
+import { Game, Release } from '../../.generated/types.generated'
+import { useMe } from '../hooks/me'
+import { useRestartRelease } from '../hooks/restartRelease'
+import { useStartRelease } from '../hooks/startRelease'
+import { useStopRelease } from '../hooks/stopRelease'
+import { defaultSettings as defaultUserSettings } from '../server/userSettings'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -67,8 +68,8 @@ const Description = styled('div')(({ theme }) => ({
 }))
 
 const sortReleasesByPreferredPlatform = (
-  releases: Array<GameRelease>,
-): Array<GameRelease> => {
+  releases: Array<Release>,
+): Array<Release> => {
   const sortedReleases = releases.slice()
   const platformDisplays = {
     pc: { matcher: /PC/ },
@@ -93,7 +94,7 @@ const sortReleasesByPreferredPlatform = (
   ]
 
   sortedReleases.sort((a, b) => {
-    const aSort = sortOrder.findIndex((p) => p.matcher.test(a.platform.name))
+    const aSort = sortOrder.findIndex((p) => p.matcher.test(a?.platform.name))
     const bSort = sortOrder.findIndex((p) => p.matcher.test(b.platform.name))
     if (aSort > bSort) {
       return 1
@@ -108,7 +109,10 @@ const sortReleasesByPreferredPlatform = (
 }
 
 const GameDetails: FC<{ game: Game }> = ({ game }) => {
-  const { data } = useMe()
+  const [{ data }] = useMe()
+  const hasWebhookSetting = !!data?.me?.settings?.find(
+    (s) => s?.name === defaultUserSettings.webhook.name,
+  )?.value
 
   const releases = useMemo(
     () => sortReleasesByPreferredPlatform(game.releases),
@@ -131,7 +135,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen)
   }
-  const platformsAnchorEl = useRef<HTMLDivElement>(null)
+  const platformsAnchorEl = useRef<HTMLOListElement>(null)
   const handleClose = (event: Event) => {
     if (
       platformsAnchorEl.current &&
@@ -144,13 +148,13 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
   }
 
   return (
-    <Details data-test="GameDetails">
-      <Typography variant="h4" data-test="Name">
-        {game.name}
+    <Details data-test="GameDetails" data-release-id={game.primaryRelease?.id}>
+      <Typography variant="h3" data-test="Name">
+        {game.primaryRelease?.title}
       </Typography>
 
-      <Actions ref={platformsAnchorEl}>
-        {data?.me.isAuthenticated && (
+      <Actions ref={platformsAnchorEl} data-test="Actions">
+        {data?.me?.isAuthenticated && hasWebhookSetting && (
           <>
             <Action>
               <ButtonGroup
@@ -164,7 +168,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                   onClick={(evt) => {
                     startRelease({
                       variables: {
-                        releaseId: releases[selectedIndex].id,
+                        id: releases[selectedIndex].id,
                       },
                     })
                   }}
@@ -205,7 +209,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                       <ClickAwayListener onClickAway={handleClose}>
                         <MenuList id="split-button-menu" autoFocusItem>
                           {releases
-                            .filter((r) => r.playniteWebRunState === 'stopped')
+                            .filter((r) => true)
                             .map((option, index) => (
                               <MenuItem
                                 key={option.id}
@@ -225,10 +229,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
               </Popper>
             </Action>
             {releases.some(
-              (r) =>
-                r.playniteWebRunState === 'running' ||
-                r.playniteWebRunState === 'launching' ||
-                r.playniteWebRunState === 'restarting',
+              (r) => r.runState === 'starting' || r.runState === 'started',
             ) && (
               <>
                 <Action>
@@ -237,7 +238,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                     color="secondary"
                     onClick={(evt) =>
                       restartRelease({
-                        variables: { releaseId: releases[selectedIndex].id },
+                        variables: { id: releases[selectedIndex].id },
                       })
                     }
                   >{`Restart game`}</Button>
@@ -248,7 +249,7 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
                     color="secondary"
                     onClick={(evt) =>
                       stopRelease({
-                        variables: { releaseId: releases[selectedIndex].id },
+                        variables: { id: releases[selectedIndex].id },
                       })
                     }
                   >{`Stop game`}</Button>
@@ -260,7 +261,11 @@ const GameDetails: FC<{ game: Game }> = ({ game }) => {
       </Actions>
       <Divider />
       <Description data-test="Description">
-        <div dangerouslySetInnerHTML={{ __html: game.description }}></div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: game.primaryRelease?.description ?? '',
+          }}
+        ></div>
       </Description>
     </Details>
   )

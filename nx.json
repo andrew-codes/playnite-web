@@ -6,7 +6,23 @@
   "targetDefaults": {
     "build": {
       "inputs": ["src", "generated"],
-      "dependsOn": ["prepare", "^build", "build/restore"],
+      "dependsOn": [
+        "clean/build",
+        "prepare",
+        "^prepare",
+        "^build",
+        "build/restore"
+      ],
+      "cache": true
+    },
+    "build/e2e": {
+      "dependsOn": [
+        "clean/build",
+        "prepare",
+        "^prepare",
+        "^build",
+        "build/restore"
+      ],
       "cache": true
     },
     "build/restore": {
@@ -19,11 +35,16 @@
       "cache": true
     },
     "start": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["prepare", "^build", "^start"],
       "cache": false
     },
     "package": {
+      "dependsOn": ["clean/package", "build"],
       "cache": true
+    },
+    "package/e2e": {
+      "cache": false,
+      "dependsOn": ["clean/package", "build/e2e"]
     },
     "publish": {
       "dependsOn": ["package"],
@@ -38,19 +59,19 @@
       "cache": true
     },
     "test/components": {
-      "dependsOn": ["prepare"],
+      "dependsOn": ["clean/test", "prepare"],
       "cache": false
     },
     "test/components/update": {
-      "dependsOn": [],
+      "dependsOn": ["clean/test", "prepare"],
       "cache": false
     },
     "test/e2e": {
-      "dependsOn": [],
+      "dependsOn": ["clean/test", "package/e2e", "^start"],
       "cache": false
     },
     "test/e2e/update": {
-      "dependsOn": [],
+      "dependsOn": ["clean/test", "package/e2e", "^start"],
       "cache": false
     }
   },

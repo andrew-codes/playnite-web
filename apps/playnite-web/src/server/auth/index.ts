@@ -1,51 +1,55 @@
+import { Claim, User } from 'apps/playnite-web/.generated/types.generated.js'
 import bcrypt from 'bcrypt'
+import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
-import { isEmpty, omit } from 'lodash-es'
-import { IQuery } from '../data/types.api.js'
-import { User } from '../data/types.entities.js'
+import { merge, omit } from 'lodash-es'
+import { prisma } from '../data/providers/postgres/client.js'
+import logger from '../logger.js'
+import { create, fromString, hasIdentity, IIdentify } from '../oid.js'
 
-type Claim = {
-  user: Omit<User, 'password'> & { isAuthenticated: boolean }
-  credential: string
-}
 class IdentityService {
   constructor(
-    private _queryApi: IQuery,
     private readonly _secret?: string,
     private readonly _issuer?: string,
   ) {}
   async authenticate(credential: UsernamePasswordCredential): Promise<Claim> {
     if (!this._secret) {
-      throw new Error('Authentication failed')
+      logger.info('No secret provided for authentication.')
+      throw new Error('Authentication failed.')
     }
 
     if (credential instanceof UsernamePasswordCredential) {
-      const matchedUsers = await this._queryApi.execute<User>({
-        type: 'AndMatch',
-        entityType: 'User',
-        filterItems: [
-          {
-            type: 'ExactMatch',
-            entityType: 'User',
-            field: 'username',
-            value: credential.username,
-          },
-        ],
+      const matchedUser = await prisma.user.findUnique({
+        where: {
+          username: credential.username,
+        },
       })
 
-      if (!matchedUsers || isEmpty(matchedUsers)) {
+      if (!matchedUser) {
+        logger.error(
+          `Authentication failed for user ${credential.username}: User not found.`,
+        )
         throw new Error(
           `Authentication failed for user ${credential.username}.`,
         )
       }
 
-      const [user] = matchedUsers
-      if (!bcrypt.compareSync(credential.password, user.password)) {
+      if (!bcrypt.compareSync(credential.password, matchedUser.password)) {
+        logger.error(
+          `Authentication failed for user ${credential.username}: Invalid password.`,
+          matchedUser.password,
+        )
         throw new Error(`Authentication failed.`)
       }
 
-      user.isAuthenticated = true
-      const scrubbedUser = omit(user, 'password')
+      const scrubbedUser: Omit<User, 'libraries' | 'settings'> = merge(
+        {},
+        omit(matchedUser, 'password'),
+        {
+          isAuthenticated: true,
+          id: create('User', matchedUser.id).toString(),
+        },
+      )
 
       return {
         user: scrubbedUser,
@@ -55,13 +59,40 @@ class IdentityService {
         }),
       } as Claim
     }
+
+    logger.error('Invalid credential type provided for authentication.')
     throw new Error('Authentication failed.')
   }
 
-  async authorize(user?: User): Promise<void> {
+  async authorize(
+    user?: Omit<User, 'libraries'>,
+  ): Promise<Omit<User, 'libraries' | 'id'> & { id: IIdentify }> {
     if (!user || !user.isAuthenticated) {
-      throw new Error(`Authorization failed for user ${user?.username}`)
+      throw new GraphQLError(
+        `Authorization failed for user ${user?.username}`,
+        {
+          extensions: {
+            code: 'UNAUTHORIZED',
+            http: { status: 401 },
+          },
+        },
+      )
     }
+
+    const userId = fromString(user.id)
+    if (!hasIdentity(userId)) {
+      throw new GraphQLError(
+        `Authorization failed for user ${user?.username}: Invalid user ID.`,
+        {
+          extensions: {
+            code: 'UNAUTHORIZED',
+            http: { status: 401 },
+          },
+        },
+      )
+    }
+
+    return merge({}, user, { id: userId })
   }
 }
 
