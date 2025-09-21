@@ -13,18 +13,18 @@
     <TabControl ClipToBounds="True"
     MaxHeight="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Panel}},
 Path=ActualHeight, Mode=OneWay}">
-      <TabItem Header="MQTT Connection">
+      <TabItem Header="Connection">
         <ScrollViewer HorizontalScrollBarVisibility="Disabled">
           <StackPanel Margin="10">
-            <TextBlock Text="Client Name" />
-            <TextBox Text="{Binding Settings.ClientId}" />
-            <TextBlock Text="MQTT Server Address" />
+            <TextBlock Text="Device Name" />
+            <TextBox Text="{Binding Settings.DeviceName}" />
+            <TextBlock Text="Playnite Web Server Address" />
             <TextBox Text="{Binding Settings.ServerAddress}" />
             <StackPanel Orientation="Horizontal">
               <CheckBox IsChecked="{Binding Settings.UseSecureConnection}" Margin="5" />
-              <TextBlock VerticalAlignment="Center" Text="Secure TCP Connection" />
+              <TextBlock VerticalAlignment="Center" Text="HTTPS Connection" />
             </StackPanel>
-            <TextBlock Text="MQTT Server Port" />
+            <TextBlock Text="Server Port" />
             <TextBox PreviewTextInput="NumberValidationTextBox">
               <TextBox.Text>
                 <Binding Path="Settings.Port"
@@ -42,34 +42,25 @@ Path=ActualHeight, Mode=OneWay}">
           </StackPanel>
         </ScrollViewer>
       </TabItem>
-      <TabItem Header="Topics">
+      <TabItem Header="Library Management">
         <ScrollViewer HorizontalScrollBarVisibility="Disabled">
           <StackPanel Margin="10">
-            <TextBlock Text="Device Id"
-            ToolTip="This will be used in the entity name. If this is left empty MQTT publishing will be
-disabled." />
-            <TextBox Text="{Binding Settings.DeviceId}" />
-            <TextBlock Text="Device Name"
-            ToolTip="This is the name that will be given in home assistant as display name." />
-            <TextBox Text="{Binding Settings.DeviceName}" />
-          </StackPanel>
-        </ScrollViewer>
-      </TabItem>
-      <TabItem Header="Other">
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled">
-          <StackPanel Margin="10">
-            <TextBlock Text="Publishing Throttle (seconds)"
-            ToolTip="The number of seconds with no new publish updates that must pass until publishing topics." />
-            <TextBox PreviewTextInput="NumberValidationTextBox">
-              <TextBox.Text>
-                <Binding Path="Settings.PublishingThrottle"
-                  UpdateSourceTrigger="PropertyChanged"
-                  ValidatesOnDataErrors="True"
-                  NotifyOnValidationError="True"
-                  Converter="{StaticResource IntToString}"
-                  />
-              </TextBox.Text>
-            </TextBox>
+            <TextBlock Text="Platform Selection for Each Source" Margin="0,10,0,5"/>
+            <ItemsControl ItemsSource="{Binding Sources}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <TextBlock Text="{Binding Name}" Width="150" VerticalAlignment="Center"/>
+                    <ComboBox
+                      Width="200"
+                      ItemsSource="{Binding DataContext.Platforms, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                      SelectedValue="{Binding SelectedPlatformId, Mode=TwoWay}"
+                      SelectedValuePath="Id"
+                      DisplayMemberPath="Name"/>
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
           </StackPanel>
         </ScrollViewer>
       </TabItem>

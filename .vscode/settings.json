@@ -40,5 +40,6 @@
     "type": "on-demand",
     "deferred": true
   },
-  "dotnet.preferCSharpExtension": true
+  "dotnet.preferCSharpExtension": true,
+  "nxConsole.generateAiAgentRules": true
 }
