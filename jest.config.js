@@ -29,6 +29,7 @@ const defaultConfig = {
     '/__tests__/',
     '/__mocks__/',
     '/__component_tests__/',
+    '/__integration_tests__/',
   ],
   setupFiles: setupFiles,
 }

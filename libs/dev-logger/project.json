@@ -1,0 +1,34 @@
+{
+  "name": "dev-logger",
+  "sourceRoot": "libs/dev-logger/src",
+  "projectType": "library",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/build"],
+      "options": {
+        "parallel": true,
+        "commands": []
+      }
+    },
+    "clean/build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf build .generated",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build"],
+      "dependsOn": ["clean/build"],
+      "cache": true,
+      "options": {
+        "command": "yarn tsx scripts/build.ts",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}

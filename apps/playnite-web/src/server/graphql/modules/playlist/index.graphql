@@ -5,5 +5,5 @@ type Playlist {
 }
 
 extend type Query {
-  playlists: [Playlist!]!
+  playlists(libraryId: String!): [Playlist!]!
 }
