@@ -1,0 +1,56 @@
+{
+  "name": "db-client",
+  "sourceRoot": "libs/db-client/src",
+  "projectType": "library",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/build"],
+      "options": {
+        "parallel": true,
+        "commands": []
+      }
+    },
+    "clean/build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf build .generated",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.generated"],
+      "options": {
+        "parallel": false,
+        "commands": ["yarn pnpify prisma generate --schema=src/schema.prisma"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build"],
+      "options": {
+        "command": "yarn tsx scripts/build.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "reset-db": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn pnpify prisma migrate reset --force --schema=src/schema.prisma",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "create-migration": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "yarn pnpify prisma migrate dev --create-only --name migration --schema=src/schema.prisma",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}
