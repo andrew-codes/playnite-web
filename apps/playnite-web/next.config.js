@@ -1,6 +1,5 @@
 //@ts-check
 
- 
 const { composePlugins, withNx } = require('@nx/next')
 
 /**
@@ -22,6 +21,7 @@ const nextConfig = {
 
   experimental: {
     ppr: false,
+    forceSwcTransforms: true,
   },
 
   // output: 'standalone',
