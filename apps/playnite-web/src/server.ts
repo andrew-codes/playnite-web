@@ -46,7 +46,7 @@ async function run() {
 
     // create express app
     const app = express()
-    app.use(compression)
+    app.use(compression())
 
     if (process.env.TEST !== 'e2e' && process.env.DISABLE_CSP !== 'true') {
       const cspOrigins = (process.env.CSP_ORIGINS ?? '')
@@ -77,6 +77,7 @@ async function run() {
                 `${domain}:${port}`,
                 `${domain}:*`,
                 "'unsafe-inline'",
+                "'unsafe-eval'",
                 'unpkg.com',
               ].concat(cspOrigins),
               'img-src': [
