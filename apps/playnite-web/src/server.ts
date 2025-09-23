@@ -14,6 +14,7 @@ import createYoga from './server/graphql/index'
 import schema from './server/graphql/schema'
 import { subscriptionPublisher } from './server/graphql/subscriptionPublisher'
 import logger from './server/logger'
+import { setupApp } from './server/setupApp'
 
 const dev = process.env.NODE_ENV !== 'production'
 const domain = process.env.HOST || 'localhost'
@@ -35,6 +36,7 @@ const nextApp = next(nextServerOptions)
 
 async function run() {
   await migrate()
+  await setupApp()
 
   try {
     await prisma.$connect()

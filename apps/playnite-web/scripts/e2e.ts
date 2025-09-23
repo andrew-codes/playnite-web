@@ -91,14 +91,9 @@ async function run() {
           ...process.env,
         },
         async: true,
+        silent: false,
       },
     )
-    runCp.stdout?.on('data', (data) => {
-      logger.info(data.toString())
-    })
-    runCp.stderr?.on('data', (data) => {
-      logger.warn(data.toString())
-    })
     runCp.on('close', (code) => {
       logger.info('Server closing.')
       if (code !== 0) {
@@ -109,12 +104,7 @@ async function run() {
   }
 
   logger.info('Waiting for server to start')
-  waitOn({ resources: ['http://localhost:3000'], timeout: 30000 }, (err) => {
-    if (err) {
-      logger.error(err)
-      process.exit(1)
-    }
-
+  waitOn({ resources: ['http://localhost:3000'], timeout: 30000 }, () => {
     const [, , specFilter] = process.argv
     logger.info('Running Cypress tests')
     testCp = sh.exec(
