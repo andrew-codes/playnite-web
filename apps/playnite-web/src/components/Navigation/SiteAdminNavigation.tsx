@@ -1,3 +1,5 @@
+'use client'
+
 import { Settings } from '@mui/icons-material'
 import { FC } from 'react'
 import NavMenu from './NavMenu'

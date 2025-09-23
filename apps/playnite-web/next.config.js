@@ -20,8 +20,9 @@ const nextConfig = {
   },
 
   experimental: {
-    ppr: false,
+    authInterrupts: true,
     forceSwcTransforms: true,
+    ppr: false,
   },
 
   // output: 'standalone',

@@ -41,23 +41,23 @@ beforeEach(() => {
 })
 
 beforeEach(() => {
-  cy.intercept('POST', '/api').as('finish')
+  cy.intercept('POST', '/api').as('api')
 })
 
-afterEach(() => {
-  cy.get('@finish.all', { log: false }).then((recs) => {
-    if (recs?.length) {
-      cy.wait('@finish', { requestTimeout: 10000 })
-    }
-  })
-})
+// afterEach(() => {
+//   cy.get('@api.all', { log: false }).then((recs) => {
+//     if (recs?.length) {
+//       cy.wait('@api', { requestTimeout: 10000 })
+//     }
+//   })
+// })
 
 beforeEach(() => {
-  cy.get('@finish.all', { log: false }).then((recs) => {
-    if (recs?.length) {
-      cy.wait('@finish', { requestTimeout: 10000 })
-    }
-  })
+  // cy.get('@api.all', { log: false }).then((recs) => {
+  //   if (recs?.length) {
+  //     cy.wait('@api', { requestTimeout: 10000 })
+  //   }
+  // })
   cy.task('clearDatabase')
 })
 
@@ -79,9 +79,9 @@ Cypress.on('window:before:load', (win) => {
 
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   originalFn(url, options)
-  /* eslint-disable cypress/no-unnecessary-waiting */
+
   // Wait for MUI to be ready
-  cy.wait(1200)
+  // cy.wait(1200)
 })
 
 Cypress.Commands.add('signIn', (username: string, password: string) => {

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
+import { forbidden, redirect } from 'next/navigation'
 import { User } from '../../../.generated/types.generated'
-import { redirect } from 'next/navigation'
 import { HigherOrderRSC } from '../../types'
 import { getClient } from '../shared/gql/client'
 import { PermissionValue, userHasPermission } from './permissions'
@@ -14,7 +14,7 @@ const requiresPermission = (
         await getClient()
       ).query<{ me: User }>({
         query: gql`
-          query {
+          query me {
             me {
               username
               isAuthenticated
@@ -29,7 +29,7 @@ const requiresPermission = (
       }
 
       if (!userHasPermission(meResult.data.me, requiredPermission)) {
-        throw new Error('Unauthorized')
+        forbidden()
       }
 
       return await Page(props)

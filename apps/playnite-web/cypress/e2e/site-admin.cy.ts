@@ -16,7 +16,10 @@ describe('Site-wide Administration', () => {
 
     it(`Unauthenticated user.`, () => {
       cy.visit('/admin', { failOnStatusCode: false })
-      cy.location('pathname').should('equal', '/login')
+      cy.wait('@adminRoute').then((interception) => {
+        expect(interception?.response?.statusCode).to.equal(307)
+        expect(interception?.response?.headers?.location).to.include('/login')
+      })
     })
 
     it(`User must have the site admin permission.`, () => {
@@ -42,7 +45,6 @@ describe('Site-wide Administration', () => {
         - Failure to save will reset the setting to its previous value.`, () => {
         cy.signIn('test', 'test')
         cy.visit('/admin')
-        cy.wait('@graphql')
 
         cy.get(`[aria-label="${setting.name}"]`)
           .parents('[data-test=Setting]')
