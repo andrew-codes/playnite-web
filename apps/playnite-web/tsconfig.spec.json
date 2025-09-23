@@ -4,7 +4,10 @@
     "outDir": "./out-tsc/jest",
     "types": ["jest", "node"],
     "module": "esnext",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": [
     "jest.config.ts",

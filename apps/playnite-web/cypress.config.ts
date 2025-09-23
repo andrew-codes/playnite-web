@@ -42,7 +42,9 @@ const config = defineConfig({
           case 'chrome':
             launchOptions.args.push(`--remote-debugging-port=9222`)
             prepareAudit(launchOptions)
+            break
           case 'edge':
+            launchOptions.args.push(`--remote-debugging-port=9222`)
             launchOptions.args.push(
               `--window-size=${viewportWidth},${viewportHeight}`,
             )

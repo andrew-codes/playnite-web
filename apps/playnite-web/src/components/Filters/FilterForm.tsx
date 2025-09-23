@@ -99,9 +99,11 @@ const filterFormReducer = (
     case 'selectedFilterBy':
       return merge({}, state, { filterBy: action.payload })
     case 'setFilterValue':
-      if (state.filterBy === null) {
+      {
+         if (state.filterBy === null) {
         return state
       }
+
       const newFilterValueState = merge({}, state)
       newFilterValueState.filterItems[state.filterBy] = {
         field: state.filterBy,
@@ -110,12 +112,13 @@ const filterFormReducer = (
       }
 
       return newFilterValueState
+     }
     case 'setNameFilterValue':
       return {
         ...state,
         ['nameFilter']: action.payload,
       }
-    case 'removeFilter':
+    case 'removeFilter': {
       const newState = merge({}, state)
       newState.filterItems = Object.fromEntries(
         Object.entries(newState.filterItems).map(([field, filterItem]) => {
@@ -126,6 +129,7 @@ const filterFormReducer = (
         }),
       )
       return newState
+    }
     case 'reset':
       return {
         filterBy: null,
@@ -304,7 +308,7 @@ const FilterForm: FC<{
           onChange={handleFilterByChange}
         >
           {possibleFilterItems.map((filterItem) => (
-            <MenuItem value={filterItem.field}>{filterItem.name}</MenuItem>
+            <MenuItem key={filterItem.field} value={filterItem.field}>{filterItem.name}</MenuItem>
           ))}
         </Select>
       </FormControl>
@@ -378,6 +382,7 @@ const FilterForm: FC<{
           {allFilterItemRelatedTypes.map((filterItem) => {
             return (
               <input
+              key={filterItem.field}
                 type="hidden"
                 name={`${filterItem.field}RelatedType`}
                 value={filterItem.relatedType}

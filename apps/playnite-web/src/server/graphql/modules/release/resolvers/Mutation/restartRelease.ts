@@ -45,7 +45,7 @@ export const restartRelease: NonNullable<
     },
   })
 
-  if (!!webhookSetting.value) {
+  if (webhookSetting.value) {
     const { PORT, HOST } = process.env
     const port = PORT ? parseInt(PORT, 10) : 3000
     const domain = HOST ?? 'localhost'

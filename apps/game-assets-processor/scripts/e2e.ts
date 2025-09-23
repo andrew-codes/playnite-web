@@ -12,7 +12,9 @@ process.on('exit', () => {
   ;[runCp, testCp, appCp].forEach((cp) => {
     try {
       cp?.kill('SIGINT')
-    } catch {}
+    } catch {
+      logger.error('Failed to kill child process')
+    }
   })
 })
 process.on('SIGTERM', () => {
@@ -20,7 +22,9 @@ process.on('SIGTERM', () => {
   ;[runCp, testCp, appCp].forEach((cp) => {
     try {
       cp?.kill('SIGINT')
-    } catch {}
+    } catch {
+      logger.error('Failed to kill child process')
+    }
   })
   process.exit()
 })
@@ -29,7 +33,9 @@ process.on('SIGINT', () => {
   ;[runCp, testCp, appCp].forEach((cp) => {
     try {
       cp?.kill('SIGINT')
-    } catch {}
+    } catch {
+      logger.error('Failed to kill child process')
+    }
   })
   process.exit()
 })
@@ -84,11 +90,11 @@ waitOn(
         }
 
         const [, , ...args] = process.argv
-        let jestArgs: Array<string> = []
+        const jestArgs: Array<string> = []
         if (args.find((a) => a === '--watch' || a === '-w')) {
           jestArgs.push('--watch')
         }
-        let specFilter = args.filter((a) => a !== '--watch' && a !== '-w')
+        const specFilter = args.filter((a) => a !== '--watch' && a !== '-w')
         if (specFilter.length > 0) {
           jestArgs.push('--testNamePattern')
           jestArgs.push(`(${specFilter.join('|')})`)

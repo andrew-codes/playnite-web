@@ -1,7 +1,7 @@
-import { ensureAccountSetup } from 'apps/playnite-web/src/feature/account/ensureAccountSetup'
-import { GameDetails } from 'apps/playnite-web/src/feature/game/components/GameDetails'
-import { GameByIdQuery } from 'apps/playnite-web/src/feature/game/hooks/gameById'
-import { PreloadQuery } from 'apps/playnite-web/src/feature/shared/gql/client'
+import { ensureAccountSetup } from '../../../../../feature/account/ensureAccountSetup'
+import { GameDetails } from '../../../../../feature/game/components/GameDetails'
+import { GameByIdQuery } from '../../../../../feature/game/hooks/gameById'
+import { PreloadQuery } from '../../../../../feature/shared/gql/client'
 
 interface GameDetailsPageProps {
   params: { username: string; libraryId: string; gameId: string }

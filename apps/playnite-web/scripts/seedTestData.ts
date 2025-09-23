@@ -1,3 +1,4 @@
+import logger from 'dev-logger'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -26,7 +27,9 @@ async function run() {
       `,
       }),
     })
-  } catch (error) {}
+  } catch (error) {
+    logger.error('User sign up failed, assuming user already exists')
+  }
 
   const signInResponse = await fetch('http://localhost:3000/api', {
     method: 'POST',

@@ -1,10 +1,8 @@
+import logger from 'dev-logger'
 import nodemon from 'nodemon'
 import path from 'path'
 
-async function setup() {}
 async function run() {
-  await setup()
-
   nodemon({
     script: path.join('src/server.ts'),
     ext: 'ts js json env',
@@ -29,18 +27,18 @@ async function run() {
 
   nodemon
     .on('start', function () {
-      console.log('App is building...')
+      logger.log('App is building...')
     })
     .on('quit', function () {
-      console.log('App has quit')
+      logger.log('App has quit')
       process.exit()
     })
     .on('restart', function (files) {
-      setup()
+      logger.info('App restarted due to: ', files)
     })
 }
 
 run().catch((error) => {
-  console.error('FAILURE', error)
+  logger.error('FAILURE', error)
   process.exit(1)
 })

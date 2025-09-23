@@ -18,7 +18,7 @@ const useRegisterAccount = () =>
   useMutation<{ signUp: Claim }>(signUp, {
     errorPolicy: 'all',
     onError: (error) => {
-      let e = error as ErrorLike & {
+      const e = error as ErrorLike & {
         cause: { result: { errors: Array<{ message: string }> } }
       }
       e.message =

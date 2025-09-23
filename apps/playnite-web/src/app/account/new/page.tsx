@@ -1,16 +1,16 @@
 import { Typography } from '@mui/material'
+import { redirect } from 'next/navigation'
 import {
   AccountSetupStatus,
   User,
-} from 'apps/playnite-web/.generated/types.generated'
-import MainNavigation from 'apps/playnite-web/src/components/Navigation/MainNavigation'
-import { RegistrationForm } from 'apps/playnite-web/src/feature/account/components/RegistrationForm'
-import { MeQuery } from 'apps/playnite-web/src/feature/account/hooks/me'
-import { getClient } from 'apps/playnite-web/src/feature/shared/gql/client'
-import { redirect } from 'next/navigation'
+} from '../../../../.generated/types.generated'
+import MainNavigation from '../../../components/Navigation/MainNavigation'
+import { RegistrationForm } from '../../../feature/account/components/RegistrationForm'
+import { MeQuery } from '../../../feature/account/hooks/me'
 import { AccountSetupStatusQuery } from '../../../feature/account/hooks/useAccountSetupStatus'
 import Header from '../../../feature/shared/components/Header'
 import { Layout } from '../../../feature/shared/components/Layout'
+import { getClient } from '../../../feature/shared/gql/client'
 
 async function Registration() {
   const accountSetupResult = await (

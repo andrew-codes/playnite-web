@@ -1,4 +1,4 @@
-import { AccountSetupStatus } from 'apps/playnite-web/.generated/types.generated'
+import { AccountSetupStatus } from '../../../.generated/types.generated'
 import { redirect } from 'next/navigation'
 import { HigherOrderRSC } from '../../types'
 import { getClient } from '../shared/gql/client'

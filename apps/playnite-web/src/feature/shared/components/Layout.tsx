@@ -1,13 +1,13 @@
 'use client'
 
 import { Box, ThemeProvider, useMediaQuery } from '@mui/material'
-import Drawer from 'apps/playnite-web/src/components/Navigation/Drawer'
-import NonMobileDrawerNavigation from 'apps/playnite-web/src/components/Navigation/NonMobileDrawerNavigation'
-import OuterContainer from 'apps/playnite-web/src/components/OuterContainer'
-import { Reset } from 'apps/playnite-web/src/feature/shared/components/Reset'
-import muiTheme from 'apps/playnite-web/src/muiTheme'
 import { AnimatePresence } from 'framer-motion'
 import { ComponentType, FC, PropsWithChildren, ReactNode } from 'react'
+import Drawer from '../../../components/Navigation/Drawer'
+import NonMobileDrawerNavigation from '../../../components/Navigation/NonMobileDrawerNavigation'
+import OuterContainer from '../../../components/OuterContainer'
+import muiTheme from '../../../muiTheme'
+import { Reset } from './Reset'
 
 const Layout: FC<
   PropsWithChildren<{

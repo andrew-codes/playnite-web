@@ -4,7 +4,7 @@ import type { EntityCollectionUpdateDetailsResolvers } from './../../../../../..
 export const EntityCollectionUpdateDetails: EntityCollectionUpdateDetailsResolvers =
   {
     id: (parent) => {
-      let type: DomainType | null =
+      const type: DomainType | null =
         domainTypes.find((t) => toLower(t) === toLower(parent.type)) || null
       if (type === null) {
         throw new Error(`Unknown entity type: ${parent.type}`)
@@ -13,7 +13,7 @@ export const EntityCollectionUpdateDetails: EntityCollectionUpdateDetailsResolve
       return create(type, parent.id).toString()
     },
     type: (parent) => {
-      let type: DomainType | null =
+      const type: DomainType | null =
         domainTypes.find((t) => toLower(t) === toLower(parent.type)) || null
       if (type === null) {
         throw new Error(`Unknown entity type: ${parent.type}`)

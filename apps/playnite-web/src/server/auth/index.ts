@@ -1,4 +1,4 @@
-import { Claim, User } from 'apps/playnite-web/.generated/types.generated'
+import { Claim, User } from '../../../.generated/types.generated'
 import bcrypt from 'bcrypt'
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'

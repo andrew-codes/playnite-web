@@ -1,11 +1,11 @@
 'use client'
 
 import { Button, Divider, Stack, useMediaQuery, useTheme } from '@mui/material'
-import { Form } from 'apps/playnite-web/src/components/Form'
-import { Setting } from 'apps/playnite-web/src/components/Setting'
-import { useMe } from 'apps/playnite-web/src/feature/account/hooks/me'
-import { updateUserSettings } from 'apps/playnite-web/src/feature/account/hooks/updateUserSettings'
 import { FC, Fragment } from 'react'
+import { Form } from '../../../components/Form'
+import { Setting } from '../../../components/Setting'
+import { useMe } from '../hooks/me'
+import { useUpdateUserSettings } from '../hooks/updateUserSettings'
 
 const UserSettings: FC = () => {
   const theme = useTheme()
@@ -13,7 +13,7 @@ const UserSettings: FC = () => {
   const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
   const [{ data }] = useMe()
-  const [saveSettings] = updateUserSettings()
+  const [saveSettings] = useUpdateUserSettings()
 
   return (
     <Form

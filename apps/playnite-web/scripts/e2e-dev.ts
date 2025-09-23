@@ -10,7 +10,9 @@ process.on('exit', () => {
   ;[runCp, testCp].forEach((cp) => {
     try {
       cp?.kill('SIGINT')
-    } catch {}
+    } catch {
+      logger.error('Failed to kill process')
+    }
   })
 })
 process.on('SIGTERM', () => {
@@ -18,7 +20,9 @@ process.on('SIGTERM', () => {
   ;[runCp, testCp].forEach((cp) => {
     try {
       cp?.kill('SIGTERM')
-    } catch {}
+    } catch {
+      logger.error('Failed to kill process')
+    }
   })
   process.exit()
 })
@@ -27,7 +31,9 @@ process.on('SIGINT', () => {
   ;[runCp, testCp].forEach((cp) => {
     try {
       cp?.kill('SIGINT')
-    } catch {}
+    } catch {
+      logger.error('Failed to kill process')
+    }
   })
   process.exit()
 })

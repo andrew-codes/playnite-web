@@ -5,7 +5,10 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "types": ["cypress", "node", "react", "react-dom", "lodash"],
-    "sourceMap": false
+    "sourceMap": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": [
     "src/**/*.ts",

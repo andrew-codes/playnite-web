@@ -1,8 +1,8 @@
 'use client'
 
 import { Alert, Button, Snackbar, TextField } from '@mui/material'
-import { Form } from 'apps/playnite-web/src/components/Form'
-import { useRegisterAccount } from 'apps/playnite-web/src/feature/account/hooks/register'
+import { Form } from '../../../components/Form'
+import { useRegisterAccount } from '../hooks/register'
 import { useRouter } from 'next/navigation'
 import { FC, FormEventHandler, useEffect } from 'react'
 

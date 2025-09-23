@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useCSRFPrevention } from '@graphql-yoga/plugin-csrf-prevention'
 import {
   extractFromCookie,

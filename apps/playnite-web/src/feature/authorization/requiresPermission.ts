@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { User } from 'apps/playnite-web/.generated/types.generated'
+import { User } from '../../../.generated/types.generated'
 import { redirect } from 'next/navigation'
 import { HigherOrderRSC } from '../../types'
 import { getClient } from '../shared/gql/client'

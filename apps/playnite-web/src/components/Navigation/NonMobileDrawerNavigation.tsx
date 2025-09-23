@@ -19,7 +19,7 @@ import IconButton from '../IconButton'
 import { NavigationContainer } from './NavigationContainer'
 
 const drawerWidth = 320
-const openedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
+const openedMixin = (theme: Theme, additionalWidth = 0): CSSObject => ({
   width: `calc(${drawerWidth}px + ${additionalWidth}px)`,
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
@@ -28,7 +28,7 @@ const openedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
   overflowX: 'hidden',
 })
 
-const closedMixin = (theme: Theme, additionalWidth: number = 0): CSSObject => ({
+const closedMixin = (theme: Theme, additionalWidth = 0): CSSObject => ({
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,

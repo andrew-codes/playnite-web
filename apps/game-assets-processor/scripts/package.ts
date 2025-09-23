@@ -1,7 +1,7 @@
 import logger from 'dev-logger'
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
-import pkg from '../package.json' with { type: 'json' }
+import pkg from '../package.json'
 
 async function run() {
   const { LOCAL, GITHUB_REF, PLATFORM, VERSION } = process.env
@@ -12,7 +12,7 @@ async function run() {
     throw new Error('Missing environment variables.')
   }
   let tags: Array<string> = []
-  let platform = PLATFORM ?? 'linux/amd64,linux/arm64'
+  const platform = PLATFORM ?? 'linux/amd64,linux/arm64'
   if (LOCAL === 'true') {
     tags = ['local']
   } else {

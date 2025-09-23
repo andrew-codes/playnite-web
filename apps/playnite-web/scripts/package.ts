@@ -10,7 +10,7 @@ async function run() {
     throw new Error('Missing environment variables.')
   }
   let tags: Array<string> = []
-  let platform = PLATFORM ?? 'linux/amd64,linux/arm64'
+  const platform = PLATFORM ?? 'linux/amd64,linux/arm64'
   if (LOCAL === 'true') {
     tags = ['local']
   } else {

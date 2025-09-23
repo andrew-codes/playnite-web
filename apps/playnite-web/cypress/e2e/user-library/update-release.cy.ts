@@ -108,7 +108,7 @@ describe('Update a release.', () => {
           ).id
           const features: Array<string> = []
           const tags: Array<string> = []
-          const completionStatus: string = ''
+          const completionStatus = ''
           cy.log('Verifying release Oid')
           cy.request({
             failOnStatusCode: false,

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
-import { ReleaseInput } from 'apps/playnite-web/.generated/types.generated'
 import { merge } from 'lodash'
+import { ReleaseInput } from '../../../../.generated/types.generated'
 import { AllGamesQuery } from '../../libraries/hooks/allGames'
 import { GameByIdQuery } from './gameById'
 

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
-import { UserSetting } from 'apps/playnite-web/.generated/types.generated'
 import { keyBy, merge, mergeWith } from 'lodash'
+import { UserSetting } from '../../../../.generated/types.generated'
 import { MeQuery } from './me'
 
 const UpdateUserSettings = gql`
@@ -13,7 +13,7 @@ const UpdateUserSettings = gql`
   }
 `
 
-const updateUserSettings = () => {
+const useUpdateUserSettings = () => {
   const mutation = useMutation<{
     userSettings: Array<UserSetting>
   }>(UpdateUserSettings, {
@@ -47,4 +47,5 @@ const updateUserSettings = () => {
   return mutation
 }
 
-export { updateUserSettings, UpdateUserSettings }
+export { UpdateUserSettings, useUpdateUserSettings }
+

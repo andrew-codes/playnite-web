@@ -1,19 +1,19 @@
 import { Typography } from '@mui/material'
-import { User } from 'apps/playnite-web/.generated/types.generated'
-import { requiresAuthorization } from 'apps/playnite-web/src/feature/account/auth'
-import { UserSettings } from 'apps/playnite-web/src/feature/account/components/UserSettings'
-import { ensureAccountSetup } from 'apps/playnite-web/src/feature/account/ensureAccountSetup'
-import { MeQuery } from 'apps/playnite-web/src/feature/account/hooks/me'
-import Permission, {
-  userHasPermission,
-} from 'apps/playnite-web/src/feature/authorization/permissions'
-import { PreloadQuery } from 'apps/playnite-web/src/feature/shared/gql/client'
 import { ComponentType } from 'react'
+import { User } from '../../../../../.generated/types.generated'
 import LibrariesNavigation from '../../../../components/Navigation/LibrariesNavigation'
 import MainNavigation from '../../../../components/Navigation/MainNavigation'
 import SiteAdminNavigation from '../../../../components/Navigation/SiteAdminNavigation'
+import { requiresAuthorization } from '../../../../feature/account/auth'
+import { UserSettings } from '../../../../feature/account/components/UserSettings'
+import { ensureAccountSetup } from '../../../../feature/account/ensureAccountSetup'
+import { MeQuery } from '../../../../feature/account/hooks/me'
+import Permission, {
+  userHasPermission,
+} from '../../../../feature/authorization/permissions'
 import Header from '../../../../feature/shared/components/Header'
 import { Layout } from '../../../../feature/shared/components/Layout'
+import { PreloadQuery } from '../../../../feature/shared/gql/client'
 
 async function Account(props: { params: { username: string }; me: User }) {
   const navs: Array<ComponentType<{ open: boolean }>> = [

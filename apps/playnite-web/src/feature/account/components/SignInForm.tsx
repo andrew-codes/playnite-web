@@ -8,7 +8,7 @@ import {
   Snackbar,
   TextField,
 } from '@mui/material'
-import { Form } from 'apps/playnite-web/src/components/Form'
+import { Form } from '../../../components/Form'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FC, FormEventHandler, useEffect } from 'react'
 import { useSignIn } from '../hooks/signIn'

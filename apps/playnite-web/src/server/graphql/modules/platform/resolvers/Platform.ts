@@ -12,7 +12,7 @@ export const Platform: PlatformResolvers = {
     return `/public/assets/platforms/${_parent.name
       .toLowerCase()
       .replace(/\s+/g, '-')
-      .replace(/[.,!?<>/|\\:$\^&*(){}\[\]"';@#`~]|--+/g, '')}.webp`
+      .replace(/[.,!?<>/|\\:$&*(){}[\]"';@#`~]|--+/g, '')}.webp`
   },
   games: async (_parent, _arg, _ctx) => {
     return _ctx.db.game.findMany({

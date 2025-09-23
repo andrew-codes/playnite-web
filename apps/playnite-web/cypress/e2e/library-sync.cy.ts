@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
 describe('Library Sync', () => {
   beforeEach(() => {
     cy.task('seedUsers')

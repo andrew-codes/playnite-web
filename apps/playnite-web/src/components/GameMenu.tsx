@@ -1,6 +1,6 @@
 import { Menu as MenuIcon } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem } from '@mui/material'
-import { Game } from 'apps/playnite-web/.generated/types.generated'
+import { Game } from '../../.generated/types.generated'
 import { FC, SyntheticEvent, useState } from 'react'
 import { useMe } from '../feature/account/hooks/me'
 

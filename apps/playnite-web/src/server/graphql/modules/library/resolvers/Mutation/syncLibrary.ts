@@ -1,7 +1,7 @@
-import { getClient } from 'apps/playnite-web/src/server/mqtt'
 import { groupBy } from 'lodash'
 import { runState } from '../../../../../../feature/game/runStates'
 import logger from '../../../../../logger'
+import { getClient } from '../../../../../mqtt'
 import { create, domains, hasIdentity } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
@@ -21,7 +21,7 @@ export const syncLibrary: NonNullable<
     `Syncing library ${_arg.libraryData.libraryId} for user ${userId.id}`,
   )
 
-  let library = await _ctx.db.library.upsert({
+  const library = await _ctx.db.library.upsert({
     where: {
       playniteId_userId: {
         playniteId: _arg.libraryData.libraryId,
@@ -319,6 +319,18 @@ export const syncLibrary: NonNullable<
           release,
         )
         try {
+          let releaseDate: Date | null = null
+          if (release.releaseDate) {
+            const date = new Date(release.releaseDate)
+            if (isNaN(date.getTime())) {
+              logger.warn(
+                `Invalid release date for release ${release.id}, ${release.title}: ${release.releaseDate}`,
+              )
+              releaseDate = null
+            } else {
+              releaseDate = date
+            }
+          }
           const upserted = await _ctx.db.release.upsert({
             where: {
               playniteId_libraryId: { playniteId: release.id, libraryId },
@@ -327,8 +339,8 @@ export const syncLibrary: NonNullable<
               playniteId: release.id,
               title: release.title,
               description: release.description,
-              releaseDate: release.releaseDate,
-              releaseYear: release.releaseDate?.getFullYear(),
+              releaseDate: releaseDate,
+              releaseYear: releaseDate?.getFullYear() ?? null,
               criticScore: release.criticScore,
               playtime: BigInt(release.playtime ?? '0'),
               communityScore: release.communityScore,
@@ -382,8 +394,8 @@ export const syncLibrary: NonNullable<
             update: {
               title: release.title,
               description: release.description,
-              releaseDate: release.releaseDate,
-              releaseYear: release.releaseDate?.getFullYear(),
+              releaseDate: releaseDate,
+              releaseYear: releaseDate?.getFullYear() ?? null,
               criticScore: release.criticScore,
               communityScore: release.communityScore,
               hidden: release.hidden ?? false,

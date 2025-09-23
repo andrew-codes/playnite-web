@@ -11,6 +11,7 @@ export default [
       '**/.next',
       '**/.nx',
       '**/_packaged',
+      '**/*-build',
       '**/.generated',
       '**/.nyc_output',
       '**/.test-runs',

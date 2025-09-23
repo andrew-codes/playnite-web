@@ -79,6 +79,8 @@ Cypress.on('window:before:load', (win) => {
 
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   originalFn(url, options)
+  /* eslint-disable cypress/no-unnecessary-waiting */
+  // Wait for MUI to be ready
   cy.wait(1200)
 })
 

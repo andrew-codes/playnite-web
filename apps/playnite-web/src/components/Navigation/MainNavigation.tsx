@@ -1,7 +1,7 @@
 'use client'
 
 import { AccountCircle, Home } from '@mui/icons-material'
-import { User } from 'apps/playnite-web/.generated/types.generated'
+import { User } from '../../../.generated/types.generated'
 import { merge } from 'lodash'
 import { usePathname } from 'next/navigation'
 import { FC } from 'react'

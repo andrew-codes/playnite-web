@@ -47,7 +47,7 @@ const GameGrid: FC<{
     subscribe((rowIndex, columnIndex) => {
       gridRef.current?.scrollToItem({ rowIndex: 0, columnIndex: 0 })
     })
-  }, [])
+  }, [gridRef, subscribe])
 
   const Cell = ({ columnIndex, rowIndex, style }) => {
     const game = games[rowIndex * columns + columnIndex]

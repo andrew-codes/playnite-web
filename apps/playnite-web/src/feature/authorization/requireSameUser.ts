@@ -1,4 +1,4 @@
-import { User } from 'apps/playnite-web/.generated/types.generated'
+import { User } from '../../../.generated/types.generated'
 import { merge } from 'lodash'
 import { HigherOrderRSC } from '../../types'
 import { MeQuery } from '../account/hooks/me'

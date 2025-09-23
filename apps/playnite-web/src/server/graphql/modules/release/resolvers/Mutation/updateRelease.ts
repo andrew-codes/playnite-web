@@ -75,14 +75,27 @@ export const updateRelease: NonNullable<
       }
     }
 
+    let releaseDate : Date | null = null
+    if (_arg.release.releaseDate) {
+      const date = new Date(_arg.release.releaseDate)
+      if (isNaN(date.getTime())) {
+        logger.warn(
+          `Invalid release date for release ${_arg.release.id}, ${_arg.release.title}: ${_arg.release.releaseDate}`,
+        )
+        releaseDate = null
+      } else {
+        releaseDate = date
+      }
+    }
+
     const release = await _ctx.db.release.update({
       where: {
         id: releaseId.id,
       },
       data: {
         description: _arg.release.description,
-        releaseDate: _arg.release.releaseDate,
-        releaseYear: _arg.release.releaseDate?.getFullYear(),
+        releaseDate: releaseDate,
+        releaseYear: releaseDate?.getFullYear(),
         playtime: BigInt(_arg.release.playtime ?? '0'),
         criticScore: _arg.release.criticScore,
         ...(_arg.release.runState ? { runState: _arg.release.runState } : {}),

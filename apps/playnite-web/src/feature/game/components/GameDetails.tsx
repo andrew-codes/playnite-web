@@ -125,17 +125,15 @@ const GameDetails: FC<GameDetailsProps> = ({ gameId }) => {
 
   const game = gameData?.game
 
-  if (!game) {
-    return null
-  }
+
 
   const hasWebhookSetting = !!data?.me?.settings?.find(
     (s) => s?.name === defaultUserSettings.webhook.name,
   )?.value
 
   const releases = useMemo(
-    () => sortReleasesByPreferredPlatform(game.releases as Release[]),
-    [game.releases],
+    () => sortReleasesByPreferredPlatform((game?.releases ?? []) as Release[]),
+    [game?.releases],
   )
 
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -164,6 +162,10 @@ const GameDetails: FC<GameDetailsProps> = ({ gameId }) => {
     }
 
     setOpen(false)
+  }
+
+    if (!game) {
+    return null
   }
 
   return (

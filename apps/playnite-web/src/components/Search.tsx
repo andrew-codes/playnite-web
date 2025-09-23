@@ -23,4 +23,6 @@ const Search = forwardRef<
   )
 })
 
+Search.displayName = 'Search'
+
 export default Search

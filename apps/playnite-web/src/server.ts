@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import compression from 'compression'
 import { migrate } from 'db-client/migrate'
 import express from 'express'

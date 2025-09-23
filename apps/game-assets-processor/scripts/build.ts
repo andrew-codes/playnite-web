@@ -30,7 +30,7 @@ async function run() {
   logger.info('Modifying imports of generated files')
   await Promise.all(
     globSync('build/**/*.js').map(async (file: string) => {
-      let contents: string = await fs.readFile(file, 'utf8')
+      const contents: string = await fs.readFile(file, 'utf8')
 
       const writeContents = contents
         .split('\n')

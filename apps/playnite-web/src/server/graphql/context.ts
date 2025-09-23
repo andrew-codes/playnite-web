@@ -1,4 +1,4 @@
-import { User } from 'apps/playnite-web/.generated/types.generated'
+import { User } from '../../../.generated/types.generated'
 import { YogaInitialContext } from 'graphql-yoga'
 import { IdentityService } from '../auth/index'
 import { PrismaClient } from '../data/providers/postgres/client'
