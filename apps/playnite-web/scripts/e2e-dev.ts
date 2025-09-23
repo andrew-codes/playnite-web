@@ -43,7 +43,7 @@ sh.exec('rm _packaged/package.json')
 sh.exec('cp e2e.env _packaged/local.env')
 
 logger.info('Starting server')
-runCp = sh.exec(`yarn tsx scripts/startDevServer.ts`, {
+runCp = sh.exec(`yarn nx start playnite-web-app`, {
   env: {
     ...process.env,
     TEST: 'e2e',
@@ -61,12 +61,11 @@ waitOn({ resources: ['http://localhost:3000'], timeout: 30000 }, (err) => {
   }
 
   logger.info('Running Cypress tests')
-  testCp = sh.exec(`yarn cypress open --e2e --browser chrome`, {
+  testCp = sh.exec(`yarn nx test/open playnite-web-app`, {
     env: {
       ...process.env,
       TEST: 'e2e',
-      CI: 'true',
-      NODE_ENV: 'production',
+      NODE_ENV: 'development',
     },
     async: true,
   })
