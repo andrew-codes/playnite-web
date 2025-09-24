@@ -7,12 +7,6 @@ import { ApolloLink } from '@apollo/client/link'
 import { SchemaLink } from '@apollo/client/link/schema'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
-import { User } from '../../../../.generated/types.generated'
-import { prisma } from '../../../server/data/providers/postgres/client'
-import { PlayniteContext } from '../../../server/graphql/context'
-import schema from '../../../server/graphql/schema'
-import logger from '../../../server/logger'
-import { createNull } from '../../../server/oid'
 import { createClient } from 'graphql-ws'
 import {
   FragmentDefinitionNode,
@@ -20,6 +14,12 @@ import {
 } from 'graphql/language/ast'
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
+import { User } from '../../../../.generated/types.generated'
+import { getClient as getDbClient } from '../../../server/data/providers/postgres/client'
+import { PlayniteContext } from '../../../server/graphql/context'
+import schema from '../../../server/graphql/schema'
+import logger from '../../../server/logger'
+import { createNull } from '../../../server/oid'
 
 const { getClient, query, PreloadQuery } = registerApolloClient(async () => {
   const domain = process.env.HOST ?? 'localhost'
@@ -69,7 +69,7 @@ const { getClient, query, PreloadQuery } = registerApolloClient(async () => {
       signingKey: secret,
       domain: domain,
       jwt: { payload: user },
-      db: prisma,
+      db: getDbClient(),
     } as unknown as Partial<PlayniteContext>,
   })
 

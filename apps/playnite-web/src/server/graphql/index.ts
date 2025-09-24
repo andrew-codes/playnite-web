@@ -8,7 +8,7 @@ import {
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
 import { createYoga, Plugin, YogaServerOptions } from 'graphql-yoga'
 import { IdentityService } from '../auth/index'
-import { prisma } from '../data/providers/postgres/client'
+import { getClient } from '../data/providers/postgres/client'
 import logger from '../logger'
 import type { PlayniteContext } from './context'
 import schema from './schema'
@@ -25,7 +25,6 @@ const graphql = (endpoint: string, signingKey: string) => {
     graphiql: {
       subscriptionsProtocol: 'WS',
     },
-    bodyLimit: '50mb',
     plugins: [
       useCookies<{}>(),
       useJWT({
@@ -47,7 +46,7 @@ const graphql = (endpoint: string, signingKey: string) => {
         identityService: new IdentityService(signingKey, domain),
         signingKey,
         subscriptionPublisher,
-        db: prisma,
+        db: getClient(),
       }
 
       return ctx

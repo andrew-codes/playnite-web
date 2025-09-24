@@ -1,4 +1,4 @@
-import { Prisma, client } from 'db-client'
+import { Prisma, getClient } from 'db-client'
 import logger from 'dev-logger'
 import { slug } from 'sourced-assets'
 import Permission from '../../src/feature/authorization/permissions.js'
@@ -15,6 +15,7 @@ const tasks = (on, config) => {
     async clearDatabase() {
       const maxRetries = 3
       let retryCount = 0
+      const client = getClient()
 
       while (retryCount < maxRetries) {
         let e: any = null
@@ -100,6 +101,8 @@ const tasks = (on, config) => {
 
     async seedUsers() {
       let e: any = null
+      const client = getClient()
+
       try {
         await client.$connect()
 
@@ -157,6 +160,8 @@ const tasks = (on, config) => {
 
     async setSiteSettings(settings: Record<(typeof codes)[number], string>) {
       let e: any = null
+      const client = getClient()
+
       try {
         await client.$connect()
         await Promise.all(
@@ -191,6 +196,8 @@ const tasks = (on, config) => {
     }) {
       let e: any = null
       let results: Array<Prisma.UserSettingGetPayload<{}>> = []
+      const client = getClient()
+
       try {
         await client.$connect()
 
@@ -231,6 +238,8 @@ const tasks = (on, config) => {
 
     async syncLibrary({ libraryId, libraryData }) {
       let e: any = null
+      const client = getClient()
+
       try {
         await client.$connect()
 

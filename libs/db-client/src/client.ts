@@ -1,7 +1,14 @@
 import { PrismaClient } from '../.generated/prisma/client'
 
-const client = new PrismaClient()
+let client: PrismaClient | null = null
+const getClient = () => {
+  if (!client) {
+    client = new PrismaClient()
+  }
+
+  return client
+}
 
 export * from '../.generated/prisma/client'
-export { client }
+export { getClient }
 export type { PrismaClient }

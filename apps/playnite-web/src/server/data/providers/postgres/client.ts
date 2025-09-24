@@ -1,8 +1,16 @@
-import { Prisma, PrismaClient, client } from 'db-client'
+import { Prisma, PrismaClient, getClient as getDbClient } from 'db-client'
 import { htmlSanitizationExtension } from './extensions/htmlSanitization'
 
-const prisma = client.$extends(htmlSanitizationExtension)
+let client: PrismaClient | null = null
+const getClient = () => {
+  if (!client) {
+    client = getDbClient()
+  }
+
+  const prisma = client.$extends(htmlSanitizationExtension)
+  return prisma
+}
 
 export * from 'db-client'
-export { prisma }
+export { getClient }
 export type { Prisma, PrismaClient }

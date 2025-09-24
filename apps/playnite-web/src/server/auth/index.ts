@@ -1,9 +1,9 @@
-import { Claim, User } from '../../../.generated/types.generated'
 import bcrypt from 'bcrypt'
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
 import { merge, omit } from 'lodash'
-import { prisma } from '../data/providers/postgres/client'
+import { Claim, User } from '../../../.generated/types.generated'
+import { getClient } from '../data/providers/postgres/client'
 import logger from '../logger'
 import { create, fromString, hasIdentity, IIdentify } from '../oid'
 
@@ -19,7 +19,7 @@ class IdentityService {
     }
 
     if (credential instanceof UsernamePasswordCredential) {
-      const matchedUser = await prisma.user.findUnique({
+      const matchedUser = await getClient().user.findUnique({
         where: {
           username: credential.username,
         },

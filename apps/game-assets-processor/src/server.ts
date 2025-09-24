@@ -9,7 +9,7 @@ import { AssetFileHandler } from './assets/AssetFileHandler.js'
 async function run() {
   const logger = devLogger.default
 
-  const client = dbClient.client
+  const client = dbClient.getClient()
   logger.info('Starting Playnite Web Game Assets Processor...')
   const app = express()
   const port = process.env.PORT ?? 3000

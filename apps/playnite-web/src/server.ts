@@ -9,7 +9,7 @@ import next from 'next'
 import { NextServerOptions } from 'next/dist/server/next'
 import { parse } from 'url'
 import { WebSocketServer } from 'ws'
-import { prisma } from './server/data/providers/postgres/client'
+import { getClient } from './server/data/providers/postgres/client'
 import createYoga from './server/graphql/index'
 import schema from './server/graphql/schema'
 import { subscriptionPublisher } from './server/graphql/subscriptionPublisher'
@@ -37,6 +37,8 @@ const nextApp = next(nextServerOptions)
 async function run() {
   await migrate()
   await setupApp()
+
+  const prisma = getClient()
 
   try {
     await prisma.$connect()
