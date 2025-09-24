@@ -1,39 +1,14 @@
-import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
 import { merge } from 'lodash'
 import { ReleaseInput } from '../../../../.generated/types.generated'
-import { AllGamesQuery } from '../../libraries/hooks/allGames'
-import { GameByIdQuery } from './gameById'
-
-const UpdateRelease = gql`
-  mutation updateRelease($release: ReleaseInput!) {
-    updateRelease(release: $release) {
-      id
-      game {
-        id
-        library {
-          id
-        }
-      }
-      title
-      cover
-      completionStatus {
-        name
-      }
-      platform {
-        id
-        name
-        icon
-      }
-    }
-  }
-`
+import { AllGamesQuery } from '../../libraries/queries'
+import { GameByIdQuery, UpdateReleaseMutation } from '../queries'
 
 const useUpdateRelease = () => {
   return useMutation<
     { id: string; game: { id: string; library: { id: string } } },
     { release: ReleaseInput }
-  >(UpdateRelease, {
+  >(UpdateReleaseMutation, {
     update(cache, mutationResult) {
       cache.updateQuery(
         {
@@ -87,4 +62,4 @@ const useUpdateRelease = () => {
     },
   })
 }
-export { UpdateRelease, useUpdateRelease }
+export { useUpdateRelease }

@@ -64,6 +64,7 @@ const { getClient, query, PreloadQuery } = registerApolloClient(async () => {
 
   const schemaLink = new SchemaLink({
     schema,
+    validate: false,
     context: {
       signingKey: secret,
       domain: domain,

@@ -118,7 +118,7 @@ function tryParseOid(value: any): IIdentify {
   if (typeof value !== 'string') {
     throw new Error(`Value must be a string to parse OID: ${value}.`)
   }
-  const parts = value.split(':')
+  const parts = decodeURIComponent(value).split(':')
   if (parts.length < 2) {
     throw new Error(`Invalid OID format: ${value}.`)
   }

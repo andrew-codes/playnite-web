@@ -1,21 +1,9 @@
-import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
 import { merge } from 'lodash'
 import { Claim } from '../../../../.generated/types.generated'
-import { MeQuery } from './me'
-
-const signIn = gql`
-  mutation signIn($input: SignInInput) {
-    signIn(input: $input) {
-      user {
-        isAuthenticated
-        username
-      }
-    }
-  }
-`
+import { MeQuery, SignInMutation } from '../queries'
 const useSignIn = () =>
-  useMutation<{ signIn: Claim }>(signIn, {
+  useMutation<{ signIn: Claim }>(SignInMutation, {
     update: (cache, mutationResult) => {
       cache.updateQuery({ query: MeQuery }, (data: any) =>
         merge({}, data ?? {}, {
@@ -25,4 +13,4 @@ const useSignIn = () =>
     },
   })
 
-export { signIn, useSignIn }
+export { useSignIn }

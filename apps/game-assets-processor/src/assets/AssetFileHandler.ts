@@ -44,7 +44,7 @@ class AssetFileHandler implements IPersistAssets {
     logger.debug(`Writing image for ${release.title} to disk`, savePath)
     await fs.writeFile(savePath, webp)
 
-    return [`/public/game-assets/${ignId}.webp`, savePath]
+    return [`/game-assets/${ignId}.webp`, savePath]
   }
 }
 

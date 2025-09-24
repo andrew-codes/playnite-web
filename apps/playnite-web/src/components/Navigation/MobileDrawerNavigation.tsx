@@ -189,7 +189,7 @@ const MobileDrawerNavigation: FC<
 
   return (
     <>
-      <AppBar position="sticky" open={open}>
+      <AppBar position="fixed" open={open}>
         <Toolbar>
           <AppBarHeader open={open}>
             <IconButton

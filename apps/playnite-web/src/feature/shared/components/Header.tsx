@@ -11,7 +11,14 @@ const HeaderContainer = styled('section')(({ theme }) => ({
 
 const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
   return (
-    <>
+    <Box
+      sx={(theme) => ({
+        marginBottom: `calc(${theme.spacing(11)} + 97px)`,
+        [theme.breakpoints.down('lg')]: {
+          marginBottom: `calc(${theme.spacing(8)} + 97px)`,
+        },
+      })}
+    >
       <Box
         sx={(theme) => ({
           display: 'flex',
@@ -19,8 +26,13 @@ const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
           top: 0,
           zIndex: 1000,
           backgroundColor: theme.palette.background.default,
+          position: 'fixed',
+          width: '100%',
+          [theme.breakpoints.down('lg')]: {
+            padding: `${theme.spacing(12)} ${theme.spacing(2)} ${theme.spacing(3)} ${theme.spacing(2)}`,
+          },
           [theme.breakpoints.up('lg')]: {
-            position: 'sticky',
+            padding: `${theme.spacing(7)} ${theme.spacing(5)} ${theme.spacing(3)} ${theme.spacing(16)}`,
           },
         })}
       >
@@ -29,7 +41,7 @@ const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
           sx={(theme) => ({ margin: 0, marginTop: 2, marginBottom: 2 })}
         />
       </Box>
-    </>
+    </Box>
   )
 }
 

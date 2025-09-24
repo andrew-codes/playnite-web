@@ -17,9 +17,6 @@ const OuterContainer: FC<PropsWithChildren<{}>> = ({ children }) => {
         [theme.breakpoints.only('md')]: {
           padding: `0 ${theme.spacing(3)} 0 ${theme.spacing(5)}`,
         },
-        [theme.breakpoints.down('lg')]: {
-          overflowY: 'auto',
-        },
       })}
     >
       {children}

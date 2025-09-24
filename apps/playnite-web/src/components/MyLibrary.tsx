@@ -8,7 +8,7 @@ const MyLibrary: FC<{
   onSelect?: (evt, game: Game) => void
 }> = ({ games, onSelect }) => {
   const ref = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState<null | number>(null)
+  const [width, setWidth] = useState<number>(1336)
 
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
@@ -50,7 +50,7 @@ const MyLibrary: FC<{
         margin: '0 auto',
       })}
     >
-      {width && <GameGrid games={games} onSelect={onSelect} width={width} />}
+      <GameGrid games={games} onSelect={onSelect} width={width} />
     </Box>
   )
 }

@@ -1,23 +1,11 @@
-import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
 import { merge } from 'lodash'
 import { Release } from '../../../../.generated/types.generated'
 import { runState } from '../runStates'
-import { GameByIdQuery } from './gameById'
-
-const StartReleaseQuery = gql`
-  mutation startRelease($id: String!) {
-    startRelease(id: $id) {
-      id
-      game {
-        id
-      }
-    }
-  }
-`
+import { GameByIdQuery, StartReleaseMutation } from '../queries'
 
 const useStartRelease = () => {
-  return useMutation<{ startRelease: Release }>(StartReleaseQuery, {
+  return useMutation<{ startRelease: Release }>(StartReleaseMutation, {
     update(cache, mutationResult) {
       cache.updateQuery(
         {
@@ -43,4 +31,4 @@ const useStartRelease = () => {
   })
 }
 
-export { StartReleaseQuery, useStartRelease }
+export { useStartRelease }

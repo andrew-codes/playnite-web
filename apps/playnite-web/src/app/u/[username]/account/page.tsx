@@ -7,7 +7,7 @@ import SiteAdminNavigation from '../../../../components/Navigation/SiteAdminNavi
 import { requiresAuthorization } from '../../../../feature/account/auth'
 import { UserSettings } from '../../../../feature/account/components/UserSettings'
 import { ensureAccountSetup } from '../../../../feature/account/ensureAccountSetup'
-import { MeQuery } from '../../../../feature/account/hooks/me'
+import { MeQuery } from '../../../../feature/account/queries'
 import Permission, {
   userHasPermission,
 } from '../../../../feature/authorization/permissions'

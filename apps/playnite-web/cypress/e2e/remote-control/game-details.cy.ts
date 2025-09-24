@@ -125,7 +125,7 @@ describe(`Game details remote control.
             expect(event.type).to.equal('StartReleaseRequested')
             expect(event.payload).to.nested.include({
               coverUrl:
-                'https://localhost:3000/public/game-assets/assassins-creed-odyssey.webp',
+                'https://localhost:3000/game-assets/assassins-creed-odyssey.webp',
               id: $btn.data('release-id'),
               title: "Assassin's Creed Odyssey",
               'library.name': 'Game Room',
@@ -189,7 +189,7 @@ describe(`Game details remote control.
             expect(event.type).to.equal('StopReleaseRequested')
             expect(event.payload).to.nested.include({
               coverUrl:
-                'https://localhost:3000/public/game-assets/assassins-creed-odyssey.webp',
+                'https://localhost:3000/game-assets/assassins-creed-odyssey.webp',
               id: $btn.data('release-id'),
               title: "Assassin's Creed Odyssey",
               'library.name': 'Game Room',
@@ -248,7 +248,7 @@ describe(`Game details remote control.
             expect(event.type).to.equal('RestartReleaseRequested')
             expect(event.payload).to.nested.include({
               coverUrl:
-                'https://localhost:3000/public/game-assets/assassins-creed-odyssey.webp',
+                'https://localhost:3000/game-assets/assassins-creed-odyssey.webp',
               id: $btn.data('release-id'),
               title: "Assassin's Creed Odyssey",
               'library.name': 'Game Room',

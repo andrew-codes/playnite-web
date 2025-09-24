@@ -13,9 +13,8 @@ const Layout: FC<
   PropsWithChildren<{
     navs: Array<ComponentType<{ open: boolean }>>
     title?: ReactNode
-    secondaryMenu?: ReactNode
   }>
-> = ({ children, navs, title, secondaryMenu }) => {
+> = ({ children, navs, title }) => {
   const theme = muiTheme('desktop')
 
   const shouldUseNonMobileDrawer = useMediaQuery(theme.breakpoints.up('lg'))
@@ -36,11 +35,7 @@ const Layout: FC<
                     height: '100vh',
                   }}
                 >
-                  <Drawer
-                    navs={navs}
-                    title={title}
-                    secondaryMenu={secondaryMenu}
-                  >
+                  <Drawer navs={navs} title={title}>
                     <OuterContainer>{children}</OuterContainer>
                   </Drawer>
                 </Box>
@@ -54,7 +49,7 @@ const Layout: FC<
                   height: '100vh',
                 }}
               >
-                <Drawer navs={navs} title={title} secondaryMenu={secondaryMenu}>
+                <Drawer navs={navs} title={title}>
                   <OuterContainer>{children}</OuterContainer>
                 </Drawer>
               </Box>

@@ -1,21 +1,9 @@
-import { ErrorLike, gql } from '@apollo/client/core'
+import { ErrorLike } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
 import { Claim } from '../../../server/auth'
-import { MeQuery } from './me'
-
-const signUp = gql`
-  mutation signUp($input: SignUpInput!) {
-    signUp(input: $input) {
-      user {
-        id
-        username
-        isAuthenticated
-      }
-    }
-  }
-`
+import { MeQuery, SignUpMutation } from '../queries'
 const useRegisterAccount = () =>
-  useMutation<{ signUp: Claim }>(signUp, {
+  useMutation<{ signUp: Claim }>(SignUpMutation, {
     errorPolicy: 'all',
     onError: (error) => {
       const e = error as ErrorLike & {
@@ -41,4 +29,4 @@ const useRegisterAccount = () =>
     },
   })
 
-export { signUp, useRegisterAccount }
+export { useRegisterAccount }

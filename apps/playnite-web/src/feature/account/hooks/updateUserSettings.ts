@@ -1,22 +1,12 @@
-import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
 import { keyBy, merge, mergeWith } from 'lodash'
 import { UserSetting } from '../../../../.generated/types.generated'
-import { MeQuery } from './me'
-
-const UpdateUserSettings = gql`
-  mutation UpdateUserSettings($settings: [UserSettingInput!]!) {
-    updateUserSettings(input: { settings: $settings }) {
-      id
-      value
-    }
-  }
-`
+import { MeQuery, UpdateUserSettingsMutation } from '../queries'
 
 const useUpdateUserSettings = () => {
   const mutation = useMutation<{
     userSettings: Array<UserSetting>
-  }>(UpdateUserSettings, {
+  }>(UpdateUserSettingsMutation, {
     update: (cache, mutationResult) => {
       cache.updateQuery({ query: MeQuery }, (data) =>
         mergeWith(
@@ -47,5 +37,5 @@ const useUpdateUserSettings = () => {
   return mutation
 }
 
-export { UpdateUserSettings, useUpdateUserSettings }
+export { useUpdateUserSettings }
 

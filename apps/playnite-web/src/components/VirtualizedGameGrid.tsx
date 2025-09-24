@@ -1,14 +1,11 @@
 import { styled, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { createRef, FC, useEffect, useMemo } from 'react'
+import { Grid } from 'react-window'
 import { Game } from '../../.generated/types.generated'
 import GameFigure from './GameFigure'
 import { useNavigateInGrid } from './NavigateInGrid/context'
 
-const GridRoot = styled('div')<{ columns: number }>(({ columns }) => ({
-  display: 'grid',
-  gridTemplateColumns: `repeat(${columns}, 1fr)`,
-  gap: '8px',
-}))
+const GridRoot = styled('div')``
 
 const GameGrid: FC<{
   games: Array<Game>
@@ -52,14 +49,25 @@ const GameGrid: FC<{
     })
   }, [gridRef, subscribe])
 
-  return (
-    <GridRoot data-test="GameGrid" columns={columns}>
-      {games.map((game, index) => (
+  const Cell = ({ columnIndex, rowIndex, style }) => {
+    const game = games[rowIndex * columns + columnIndex]
+    if (!game) {
+      return null
+    }
+
+    return (
+      <div
+        style={{
+          ...style,
+          left: style.left,
+          width: style.width,
+          ...(style.height && { height: style?.height }),
+        }}
+      >
         <GameFigure
-          key={game.id}
           game={game}
           height={`${rowHeight}px`}
-          width={`${columnWidth - horizontalGap}px`}
+          width={`${style.width - horizontalGap}px`}
           onSelect={(evt) => {
             onSelect?.(evt, game)
           }}
@@ -84,7 +92,21 @@ const GameGrid: FC<{
             {game.primaryRelease?.title || 'Unknown Game'}
           </Typography>
         </GameFigure>
-      ))}
+      </div>
+    )
+  }
+
+  console.debug('Rendering grid', { columns, columnWidth, rowCount, rowHeight })
+  return (
+    <GridRoot data-test="GameGrid">
+      <Grid<{ games: Array<Game> }>
+        cellProps={{ games }}
+        cellComponent={Cell}
+        columnCount={columns}
+        columnWidth={columnWidth}
+        rowCount={rowCount}
+        rowHeight={rowHeight}
+      />
     </GridRoot>
   )
 }

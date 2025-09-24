@@ -25,6 +25,7 @@ const graphql = (endpoint: string, signingKey: string) => {
     graphiql: {
       subscriptionsProtocol: 'WS',
     },
+    bodyLimit: '50mb',
     plugins: [
       useCookies<{}>(),
       useJWT({

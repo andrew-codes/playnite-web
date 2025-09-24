@@ -1,20 +1,11 @@
-import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
 import { SiteSetting } from '../../../../.generated/types.generated'
-
-const UpdateSiteSettingQuery = gql`
-  mutation UpdateSiteSetting($id: String!, $value: String!) {
-    updateSiteSetting(id: $id, value: $value) {
-      id
-      value
-    }
-  }
-`
+import { UpdateSiteSettingMutation } from '../queries'
 
 const useUpdateSiteSetting = () => {
   return useMutation<{
     updateSiteSetting: SiteSetting
-  }>(UpdateSiteSettingQuery)
+  }>(UpdateSiteSettingMutation)
 }
 
-export { UpdateSiteSettingQuery, useUpdateSiteSetting }
+export { useUpdateSiteSetting }

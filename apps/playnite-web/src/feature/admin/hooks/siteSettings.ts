@@ -1,18 +1,6 @@
-import { gql } from '@apollo/client/core'
 import { useQuery } from '@apollo/client/react'
 import { SiteSetting } from '../../../../.generated/types.generated'
-
-const SiteSettingsQuery = gql`
-  query GetSiteSettings {
-    siteSettings {
-      id
-      name
-      value
-      description
-      dataType
-    }
-  }
-`
+import { SiteSettingsQuery } from '../queries'
 
 const useSiteSettings = () => {
   return useQuery<{
@@ -20,4 +8,4 @@ const useSiteSettings = () => {
   }>(SiteSettingsQuery)
 }
 
-export { SiteSettingsQuery, useSiteSettings }
+export { useSiteSettings }

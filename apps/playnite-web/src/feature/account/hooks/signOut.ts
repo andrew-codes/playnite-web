@@ -1,19 +1,9 @@
-import { gql } from '@apollo/client/core'
 import { useMutation } from '@apollo/client/react'
 import { merge } from 'lodash'
 import { User } from '../../../../.generated/types.generated'
-import { MeQuery } from './me'
-
-const signOut = gql`
-  mutation signOut {
-    signOut {
-      isAuthenticated
-      username
-    }
-  }
-`
+import { MeQuery, SignOutMutation } from '../queries'
 const useSignOut = () =>
-  useMutation<{ signOut: User }>(signOut, {
+  useMutation<{ signOut: User }>(SignOutMutation, {
     update: (cache, mutationResult) => {
       cache.updateQuery({ query: MeQuery }, (data: any) =>
         merge({}, data ?? {}, {
@@ -26,4 +16,4 @@ const useSignOut = () =>
     },
   })
 
-export { signOut, useSignOut }
+export { useSignOut }

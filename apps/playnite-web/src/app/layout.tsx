@@ -2,14 +2,15 @@ import { Metadata, Viewport } from 'next'
 import { FC, PropsWithChildren } from 'react'
 import { Apollo } from '../feature/shared/components/Apollo'
 import { Emotion } from '../feature/shared/components/Emotion'
+import { Redux } from '../feature/shared/components/Redux'
 
 const metadata: Metadata = {
   title: 'Playnite Web',
   description: 'Share your Playnite library with your friends!',
   icons: {
-    icon: '/public/assets/icons/favicon.ico',
-    shortcut: '/public/assets/icons/favicon-32x32.png',
-    apple: '/public/assets/icons/favicon-16x16.png',
+    icon: '/assets/icons/favicon.ico',
+    shortcut: '/assets/icons/favicon-32x32.png',
+    apple: '/assets/icons/favicon-16x16.png',
   },
   openGraph: {
     title: 'Playnite Web',
@@ -41,7 +42,9 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
       </head>
       <body>
         <Emotion>
-          <Apollo>{children}</Apollo>
+          <Redux>
+            <Apollo>{children}</Apollo>
+          </Redux>
         </Emotion>
       </body>
     </html>

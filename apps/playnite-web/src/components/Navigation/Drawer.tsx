@@ -35,10 +35,6 @@ const Drawer: FC<
           width: '100%',
           height: '100%',
           margin: '0 auto',
-          overflow: 'hidden',
-          [theme.breakpoints.down('lg')]: {
-            padding: `${theme.spacing(3)} ${theme.spacing(2)}`,
-          },
         })}
       >
         {title}
@@ -55,10 +51,6 @@ const Drawer: FC<
         display: 'flex',
         flexDirection: 'column',
         margin: '0 auto',
-        overflow: 'hidden',
-        [theme.breakpoints.up('lg')]: {
-          padding: `${theme.spacing(11)} ${theme.spacing(5)} ${theme.spacing(6)} ${theme.spacing(16)}`,
-        },
       })}
     >
       <Box

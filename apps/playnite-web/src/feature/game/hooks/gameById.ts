@@ -1,44 +1,12 @@
 'use client'
 
-import { gql } from '@apollo/client/core'
 import { useQuery } from '@apollo/client/react'
 import { merge } from 'lodash'
 import { useEffect } from 'react'
 import { Game } from '../../../../.generated/types.generated'
 import { useSubscribeLibrarySync } from '../../libraries/hooks/subscribeLibrarySync'
+import { GameByIdQuery } from '../queries'
 import { useSubscribeEntityUpdates } from './subscribeEntityUpdates'
-
-const GameByIdQuery = gql`
-  query game($id: String!) {
-    game(id: $id) {
-      id
-      library {
-        id
-      }
-      primaryRelease {
-        id
-        title
-        description
-        cover
-        completionStatus {
-          name
-        }
-      }
-      releases {
-        id
-        runState
-        platform {
-          id
-          name
-          icon
-        }
-        source {
-          name
-        }
-      }
-    }
-  }
-`
 
 const useGameById = (id?: string, opts?: any) => {
   const q = useQuery<{ game: Game }>(
@@ -81,4 +49,4 @@ const useGameById = (id?: string, opts?: any) => {
   return q
 }
 
-export { GameByIdQuery, useGameById }
+export { useGameById }

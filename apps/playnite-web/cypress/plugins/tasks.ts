@@ -247,7 +247,7 @@ const tasks = (on, config) => {
               data: {
                 Cover: {
                   update: {
-                    url: `/public/game-assets/${slug(release)}.webp`,
+                    url: `/game-assets/${slug(release)}.webp`,
                   },
                 },
               },

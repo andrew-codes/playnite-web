@@ -1,6 +1,6 @@
 import { ensureAccountSetup } from '../../../../../feature/account/ensureAccountSetup'
 import { GameDetails } from '../../../../../feature/game/components/GameDetails'
-import { GameByIdQuery } from '../../../../../feature/game/hooks/gameById'
+import { GameByIdQuery } from '../../../../../feature/game/queries'
 import { PreloadQuery } from '../../../../../feature/shared/gql/client'
 
 interface GameDetailsPageProps {

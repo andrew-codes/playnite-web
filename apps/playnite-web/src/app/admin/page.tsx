@@ -5,7 +5,7 @@ import SiteAdminNavigation from '../../components/Navigation/SiteAdminNavigation
 import { ensureAccountSetup } from '../../feature/account/ensureAccountSetup'
 import { requiresAuthorization } from '../../feature/admin/auth'
 import { AdminPanel } from '../../feature/admin/components/AdminPanel'
-import { SiteSettingsQuery } from '../../feature/admin/hooks/siteSettings'
+import { SiteSettingsQuery } from '../../feature/admin/queries'
 import Header from '../../feature/shared/components/Header'
 import { Layout } from '../../feature/shared/components/Layout'
 import { PreloadQuery } from '../../feature/shared/gql/client'
