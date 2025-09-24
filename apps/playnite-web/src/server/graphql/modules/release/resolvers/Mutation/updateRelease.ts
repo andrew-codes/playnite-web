@@ -3,10 +3,10 @@ import { Source } from '../../../../../data/providers/postgres/client'
 import logger from '../../../../../logger'
 import {
   domains,
-  fromString,
   hasIdentity,
   Identity,
   IIdentify,
+  tryParseOid,
 } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
@@ -17,10 +17,7 @@ export const updateRelease: NonNullable<
   const userId = user.id
 
   try {
-    const releaseId = fromString(_arg.release.id)
-    if (!hasIdentity(releaseId)) {
-      throw new Error('Invalid OID format.')
-    }
+    const releaseId = tryParseOid(_arg.release.id)
 
     await _ctx.db.release.findUniqueOrThrow({
       where: {
@@ -35,10 +32,7 @@ export const updateRelease: NonNullable<
 
     let source: null | Source = null
     if (_arg.release.source) {
-      const sourceId = fromString(_arg.release.source || '')
-      if (!hasIdentity(sourceId)) {
-        throw new Error('Invalid OID format.')
-      }
+      const sourceId = tryParseOid(_arg.release.source)
       source = await _ctx.db.source.findUniqueOrThrow({
         where: {
           id: sourceId.id,
@@ -53,15 +47,12 @@ export const updateRelease: NonNullable<
 
     let completionStatusId: null | Identity | IIdentify = null
     if (_arg.release.completionStatus) {
-      completionStatusId = fromString(_arg.release.completionStatus || '')
-      if (!hasIdentity(completionStatusId)) {
-        throw new Error('Invalid OID format.')
-      }
+      completionStatusId = tryParseOid(_arg.release.completionStatus)
     }
 
     let featureIds: null | Array<IIdentify> | Array<Identity> = null
     if (_arg.release.features) {
-      featureIds = _arg.release.features.map((feature) => fromString(feature))
+      featureIds = _arg.release.features.map((feature) => tryParseOid(feature))
       if (!featureIds.every(hasIdentity)) {
         throw new Error('Invalid OID format.')
       }
@@ -69,13 +60,13 @@ export const updateRelease: NonNullable<
 
     let tagIds: null | Array<IIdentify> | Array<Identity> = null
     if (_arg.release.tags) {
-      tagIds = _arg.release.tags.map((tag) => fromString(tag))
+      tagIds = _arg.release.tags.map((tag) => tryParseOid(tag))
       if (!tagIds.every(hasIdentity)) {
         throw new Error('Invalid OID format.')
       }
     }
 
-    let releaseDate : Date | null = null
+    let releaseDate: Date | null = null
     if (_arg.release.releaseDate) {
       const date = new Date(_arg.release.releaseDate)
       if (isNaN(date.getTime())) {

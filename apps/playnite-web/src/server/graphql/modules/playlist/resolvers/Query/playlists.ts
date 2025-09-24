@@ -1,23 +1,12 @@
-import { GraphQLError } from 'graphql'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
-import { fromString, hasIdentity } from '../../../../../oid'
+import { tryParseOid } from '../../../../../oid'
 
 export const playlists: NonNullable<QueryResolvers['playlists']> = async (
   _parent,
   _arg,
   _ctx,
 ) => {
-  const libraryOid = fromString(_arg.libraryId)
-  if (!hasIdentity(libraryOid)) {
-    throw new GraphQLError(`Invalid library ID: ${_arg.libraryId}`, {
-      extensions: {
-        code: 'INVALID_ID',
-        argumentName: 'libraryId',
-        id: _arg.libraryId,
-      },
-    })
-  }
-
+  const libraryOid = tryParseOid(_arg.libraryId)
   const playlists = await _ctx.db.playlist.findMany({
     where: {
       libraryId: libraryOid.id,

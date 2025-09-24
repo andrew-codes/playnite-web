@@ -27970,6 +27970,7 @@ __metadata:
     "@nx/js": "npm:^21.5.2"
     "@nx/next": "npm:21.5.2"
     "@nx/react": "npm:^21.5.2"
+    "@prisma/client": "npm:^6.16.2"
     "@reduxjs/toolkit": "npm:^2.8.2"
     "@swc-node/register": "npm:~1.9.2"
     "@swc/cli": "npm:~0.6.0"

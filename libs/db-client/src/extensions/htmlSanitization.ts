@@ -1,4 +1,4 @@
-import { Prisma } from 'db-client'
+import { Prisma } from '@prisma/client'
 import DOMPurify from 'isomorphic-dompurify'
 
 const SANITIZE_CONFIG = {
@@ -39,7 +39,7 @@ function sanitizeObject(obj: any): any {
   return sanitized
 }
 
-const htmlSanitizationExtension = Prisma.defineExtension({
+export const htmlSanitizationExtension = Prisma.defineExtension({
   name: 'htmlSanitization',
   query: {
     $allModels: {
@@ -84,5 +84,3 @@ const htmlSanitizationExtension = Prisma.defineExtension({
     },
   },
 })
-
-export { htmlSanitizationExtension }

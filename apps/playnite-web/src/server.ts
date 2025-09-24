@@ -9,7 +9,7 @@ import next from 'next'
 import { NextServerOptions } from 'next/dist/server/next'
 import { parse } from 'url'
 import { WebSocketServer } from 'ws'
-import { getClient } from './server/data/providers/postgres/client'
+import prisma from './server/data/providers/postgres/client'
 import createYoga from './server/graphql/index'
 import schema from './server/graphql/schema'
 import { subscriptionPublisher } from './server/graphql/subscriptionPublisher'
@@ -38,11 +38,7 @@ async function run() {
   await migrate()
   await setupApp()
 
-  const prisma = getClient()
-
   try {
-    await prisma.$connect()
-
     await nextApp.prepare()
     const handle = nextApp.getRequestHandler()
 
@@ -203,10 +199,6 @@ async function run() {
 `)
   } catch (error) {
     logger.error('Error starting Playnite Web:', error)
-    logger.info('Disconnecting from Prisma client.')
-    await prisma.$disconnect()
-    logger.debug('Database connection closed.')
-    process.exit(1)
   }
 }
 

@@ -1,5 +1,4 @@
-import { GraphQLError } from 'graphql'
-import { create, createNull, fromString, hasIdentity } from '../../../../../oid'
+import { create, createNull, tryParseOid } from '../../../../../oid'
 import { defaultSettings as defaultUserSettings } from '../../../../../userSettings'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
@@ -8,15 +7,7 @@ export const stopRelease: NonNullable<
 > = async (_parent, _arg, _ctx) => {
   const user = await _ctx.identityService.authorize(_ctx.jwt?.payload)
 
-  const releaseId = fromString(_arg.id)
-  if (!hasIdentity(releaseId)) {
-    throw new GraphQLError('Invalid OID format.', {
-      extensions: {
-        code: 'BAD_USER_INPUT',
-        argument: _arg.id,
-      },
-    })
-  }
+  const releaseId = tryParseOid(_arg.id)
 
   const release = await _ctx.db.release.findUniqueOrThrow({
     where: {

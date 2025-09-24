@@ -1,5 +1,5 @@
-import { AccountSetupStatus } from '../../../.generated/types.generated'
 import { redirect } from 'next/navigation'
+import { AccountSetupStatus } from '../../../.generated/types.generated'
 import { HigherOrderRSC } from '../../types'
 import { getClient } from '../shared/gql/client'
 import { AccountSetupStatusQuery } from './hooks/useAccountSetupStatus'

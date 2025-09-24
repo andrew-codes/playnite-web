@@ -15,7 +15,7 @@ import {
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
 import { User } from '../../../../.generated/types.generated'
-import { getClient as getDbClient } from '../../../server/data/providers/postgres/client'
+import prisma from '../../../server/data/providers/postgres/client'
 import { PlayniteContext } from '../../../server/graphql/context'
 import schema from '../../../server/graphql/schema'
 import logger from '../../../server/logger'
@@ -69,7 +69,7 @@ const { getClient, query, PreloadQuery } = registerApolloClient(async () => {
       signingKey: secret,
       domain: domain,
       jwt: { payload: user },
-      db: getDbClient(),
+      db: prisma,
     } as unknown as Partial<PlayniteContext>,
   })
 

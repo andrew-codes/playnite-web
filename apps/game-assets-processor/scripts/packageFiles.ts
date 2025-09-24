@@ -1,5 +1,5 @@
 import logger from 'dev-logger'
-import { existsSync, globSync } from 'fs'
+import { existsSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -12,15 +12,6 @@ async function run() {
   logger.info('Copying built files to _packaged')
   await fs.mkdir(path.join('_packaged'), { recursive: true })
   await fs.cp('build', '_packaged', { recursive: true })
-
-  logger.info('Copying prisma query engine runtimes.')
-  await Promise.all(
-    globSync('../../libs/db-client/.generated/prisma/*.node').map(
-      async (file: string) => {
-        await fs.cp(file, path.join('_packaged/', path.basename(file)))
-      },
-    ),
-  )
 
   logger.info('Copying and modifying package.json')
   const pkg = JSON.parse(await fs.readFile('package.json', 'utf8'))

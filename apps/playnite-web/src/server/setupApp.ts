@@ -1,4 +1,4 @@
-import { getClient } from './data/providers/postgres/client'
+import prisma from './data/providers/postgres/client'
 import logger from './logger'
 import { defaultSettings } from './siteSettings'
 
@@ -8,7 +8,7 @@ const setupApp = async (): Promise<void> => {
   logger.info('Ensuring site settings are initialized....')
   await Promise.all(
     Object.entries(defaultSettings).map(async ([id, setting]) => {
-      const storedSetting = await getClient().siteSettings.upsert({
+      const storedSetting = await prisma.siteSettings.upsert({
         where: { id },
         create: {
           id,

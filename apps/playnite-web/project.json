@@ -5,6 +5,7 @@
   "targets": {
     "clean": {
       "executor": "nx:run-commands",
+      "cache": true,
       "dependsOn": ["clean/package", "clean/test", "clean/build"],
       "options": {
         "parallel": true,
@@ -13,12 +14,14 @@
     },
     "clean/build": {
       "executor": "nx:run-commands",
+      "cache": true,
       "options": {
         "command": "yarn rimraf _custom-server-build .next .generated",
         "cwd": "{projectRoot}"
       }
     },
     "clean/package": {
+      "cache": true,
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn rimraf _packaged",
@@ -26,6 +29,7 @@
       }
     },
     "clean/test": {
+      "cache": true,
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn rimraf .test-runs .nyc_output visual-regression-tests/*report cypress/screenshots/* cypress/videos/* visual-regression-tests/**/comparison visual-regression-tests/**/diff",

@@ -24,6 +24,7 @@ const nextConfig = {
     forceSwcTransforms: true,
     ppr: false,
   },
+  transpilePackages: ['db-client', '@prisma/client'],
 
   // output: 'standalone',
 }

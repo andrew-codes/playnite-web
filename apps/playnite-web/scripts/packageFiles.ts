@@ -1,7 +1,6 @@
 import logger from 'dev-logger'
 import { existsSync } from 'fs'
 import fs from 'fs/promises'
-import { globSync } from 'glob'
 import path from 'path'
 
 async function run() {
@@ -15,24 +14,6 @@ async function run() {
   await fs.cp('_custom-server-build', '_packaged', { recursive: true })
   await fs.cp('.next', '_packaged/.next', { recursive: true })
 
-  logger.info('Copying db client related files.')
-  await Promise.all(
-    globSync('../../libs/db-client/.generated/prisma/*.node').map(
-      async (file: string) => {
-        await fs.cp(file, path.join('_packaged', path.basename(file)))
-      },
-    ),
-  )
-  await Promise.all(
-    globSync('../../libs/db-client/.generated/prisma/*.node').map(
-      async (file: string) => {
-        await fs.cp(
-          file,
-          path.join('_packaged/.next/server/chunks', path.basename(file)),
-        )
-      },
-    ),
-  )
   await fs.cp(
     path.join('../../libs/db-client/src/schema.prisma'),
     path.join('_packaged/schema.prisma'),

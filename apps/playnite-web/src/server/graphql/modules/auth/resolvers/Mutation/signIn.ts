@@ -2,7 +2,7 @@ import { GraphQLError } from 'graphql'
 import { merge, omit } from 'lodash'
 import type { MutationResolvers } from '../../../../../../../.generated/types.generated'
 import { UsernamePasswordCredential } from '../../../../../auth/index'
-import { fromString, hasIdentity } from '../../../../../oid'
+import { tryParseOid } from '../../../../../oid'
 
 export const signIn: NonNullable<MutationResolvers['signIn']> = async (
   _parent,
@@ -36,12 +36,7 @@ export const signIn: NonNullable<MutationResolvers['signIn']> = async (
     httpOnly: true,
   })
 
-  const userId = fromString(claim.user.id)
-  if (!hasIdentity(userId)) {
-    throw new GraphQLError('Invalid OID format.', {
-      extensions: { code: 'NOT_FOUND', http: { status: 404 } },
-    })
-  }
+  const userId = tryParseOid(claim.user.id)
   const user = await _ctx.db.user.findUniqueOrThrow({
     where: { id: userId.id },
   })

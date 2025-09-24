@@ -3,9 +3,9 @@ import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
 import { merge, omit } from 'lodash'
 import { Claim, User } from '../../../.generated/types.generated'
-import { getClient } from '../data/providers/postgres/client'
+import prisma from '../data/providers/postgres/client'
 import logger from '../logger'
-import { create, fromString, hasIdentity, IIdentify } from '../oid'
+import { create, IIdentify, tryParseOid } from '../oid'
 
 class IdentityService {
   constructor(
@@ -19,7 +19,7 @@ class IdentityService {
     }
 
     if (credential instanceof UsernamePasswordCredential) {
-      const matchedUser = await getClient().user.findUnique({
+      const matchedUser = await prisma.user.findUnique({
         where: {
           username: credential.username,
         },
@@ -79,18 +79,7 @@ class IdentityService {
       )
     }
 
-    const userId = fromString(user.id)
-    if (!hasIdentity(userId)) {
-      throw new GraphQLError(
-        `Authorization failed for user ${user?.username}: Invalid user ID.`,
-        {
-          extensions: {
-            code: 'UNAUTHORIZED',
-            http: { status: 401 },
-          },
-        },
-      )
-    }
+    const userId = tryParseOid(user.id)
 
     return merge({}, user, { id: userId })
   }

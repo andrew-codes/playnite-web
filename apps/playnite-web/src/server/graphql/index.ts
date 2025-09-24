@@ -8,7 +8,7 @@ import {
 import { useCookies } from '@whatwg-node/server-plugin-cookies'
 import { createYoga, Plugin, YogaServerOptions } from 'graphql-yoga'
 import { IdentityService } from '../auth/index'
-import { getClient } from '../data/providers/postgres/client'
+import prisma from '../data/providers/postgres/client'
 import logger from '../logger'
 import type { PlayniteContext } from './context'
 import schema from './schema'
@@ -46,7 +46,7 @@ const graphql = (endpoint: string, signingKey: string) => {
         identityService: new IdentityService(signingKey, domain),
         signingKey,
         subscriptionPublisher,
-        db: getClient(),
+        db: prisma,
       }
 
       return ctx

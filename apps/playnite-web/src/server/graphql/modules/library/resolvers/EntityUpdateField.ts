@@ -1,14 +1,12 @@
-import { fromString, hasIdentity } from '../../../../oid'
+import { tryParseOid } from '../../../../oid'
 import type { EntityUpdateFieldResolvers } from './../../../../../../.generated/types.generated'
 export const EntityUpdateField: EntityUpdateFieldResolvers = {
   playniteId: async (parent, _, ctx) => {
     if (!parent.value) {
       return null
     }
-    const id = fromString(parent.value)
-    if (!hasIdentity(id)) {
-      return null
-    }
+    const id = tryParseOid(parent.value)
+
     switch (parent.key) {
       case 'completionStatus':
         return (
@@ -52,10 +50,8 @@ export const EntityUpdateField: EntityUpdateFieldResolvers = {
       await Promise.all(
         parent.values
           ? parent.values.map(async (value) => {
-              const id = fromString(value)
-              if (!hasIdentity(id)) {
-                return null
-              }
+              const id = tryParseOid(value)
+
               switch (parent.key) {
                 case 'completionStatus':
                   return (

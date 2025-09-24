@@ -1,5 +1,5 @@
 import MQTT from 'async-mqtt'
-import * as dbClient from 'db-client'
+import prisma from 'db-client'
 import * as devLogger from 'dev-logger'
 import express from 'express'
 import path from 'path'
@@ -9,13 +9,11 @@ import { AssetFileHandler } from './assets/AssetFileHandler.js'
 async function run() {
   const logger = devLogger.default
 
-  const client = dbClient.getClient()
   logger.info('Starting Playnite Web Game Assets Processor...')
   const app = express()
   const port = process.env.PORT ?? 3000
 
   try {
-    await client.$connect()
     const assetHandler = new AssetFileHandler(
       process.env.ASSET_PATH ?? path.join('./'),
       new IgnSourcedAssets(),
@@ -46,7 +44,7 @@ async function run() {
           logger.info(
             `Updating release ${release.title} with new cover in database.`,
           )
-          client.release.update({
+          prisma.release.update({
             where: {
               playniteId_libraryId: { playniteId: release.id, libraryId },
             },
@@ -74,9 +72,6 @@ async function run() {
     })
   } catch (error) {
     logger.error('Error starting Playnite Web Game Assets Processor:', error)
-    logger.info('Disconnecting from Prisma client.')
-    await client.$disconnect()
-    logger.debug('Database connection closed.')
     process.exit(1)
   }
 }

@@ -1,5 +1,4 @@
-import { GraphQLError } from 'graphql'
-import { fromString, hasIdentity } from '../../../../../oid'
+import { tryParseOid } from '../../../../../oid'
 import type { QueryResolvers } from './../../../../../../../.generated/types.generated'
 
 export const feature: NonNullable<QueryResolvers['feature']> = async (
@@ -7,16 +6,7 @@ export const feature: NonNullable<QueryResolvers['feature']> = async (
   _arg,
   _ctx,
 ) => {
-  const oid = fromString(_arg.id)
-  if (!hasIdentity(oid)) {
-    throw new GraphQLError(`Invalid feature ID: ${_arg.id}`, {
-      extensions: {
-        code: 'INVALID_ID',
-        argumentName: 'id',
-        id: _arg.id,
-      },
-    })
-  }
+  const oid = tryParseOid(_arg.id)
 
   return _ctx.db.feature.findUnique({
     where: {

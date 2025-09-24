@@ -1,4 +1,4 @@
-import { fromString, hasIdentity, IIdentify } from '../../../../../oid'
+import { IIdentify, tryParseOid } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const updateUserSettings: NonNullable<
@@ -10,11 +10,10 @@ export const updateUserSettings: NonNullable<
     _arg.input.settings
       .map((setting) => {
         return {
-          id: fromString(setting.id),
+          id: tryParseOid(setting.id),
           value: setting.value,
         }
       })
-      .filter((setting) => hasIdentity(setting.id))
       .map((setting) => {
         return _ctx.db.userSetting.update({
           where: {

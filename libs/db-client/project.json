@@ -14,7 +14,7 @@
     "clean/build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn rimraf build .generated",
+        "command": "yarn rimraf build",
         "cwd": "{projectRoot}"
       }
     },
