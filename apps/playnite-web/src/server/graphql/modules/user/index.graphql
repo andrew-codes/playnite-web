@@ -18,9 +18,15 @@ type UserSetting {
   description: String!
 }
 
+type Users {
+  userCount: Int!
+  users: [User!]!
+}
+
 extend type Query {
   me: User
   lookupUser(username: String!): User
+  users(page: Int, perPage: Int): Users!
 }
 
 input SignUpInput {

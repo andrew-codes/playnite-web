@@ -52,6 +52,11 @@ type GraphEntityCollectionUpdateDetails = {
   type: DomainType
 }
 
+type GraphUsers = {
+  userCount: number
+  users: GraphUser[]
+}
+
 type GraphAccountSetupStatus = {
   isSetup: boolean
   allowAnonymousAccountCreation: boolean
@@ -64,6 +69,7 @@ export type {
   GraphCompletionStatus,
   GraphEntityCollectionUpdateDetails,
   GraphEntityUpdateDetails,
+  GraphUsers,
   GraphFeature,
   GraphGame,
   GraphLibrary,

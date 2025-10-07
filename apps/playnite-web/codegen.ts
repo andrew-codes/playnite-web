@@ -25,6 +25,7 @@ const config: CodegenConfig = {
           Playlist: '../src/server/graphql/resolverTypes#GraphPlaylist',
           Source: '../src/server/graphql/resolverTypes#GraphSource',
           User: '../src/server/graphql/resolverTypes#GraphUser',
+          Users: '../src/server/graphql/resolverTypes#GraphUsers',
           Library: '../src/server/graphql/resolverTypes#GraphLibrary',
           Tag: '../src/server/graphql/resolverTypes#GraphTag',
           SiteSetting: '../src/server/graphql/resolverTypes#GraphSiteSetting',
