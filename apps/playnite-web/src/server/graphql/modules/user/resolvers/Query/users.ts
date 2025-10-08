@@ -1,5 +1,5 @@
 import { QueryResolvers } from '../../../../../../../.generated/types.generated'
-import { GraphUser } from '../../../../resolverTypes'
+import { GraphPublicUser } from '../../../../resolverTypes'
 
 export const users: NonNullable<QueryResolvers['users']> = async (
   _parent,
@@ -13,9 +13,10 @@ export const users: NonNullable<QueryResolvers['users']> = async (
   const skip = (page - 1) * perPage
 
   const allUsers = await db.user.findMany({
-    include: {
+    select: {
+      id: true,
+      username: true,
       Libraries: true,
-      Settings: true,
     },
     skip,
     take: perPage,
@@ -24,10 +25,7 @@ export const users: NonNullable<QueryResolvers['users']> = async (
     },
   })
 
-  const users: GraphUser[] = allUsers.map((user) => ({
-    ...user,
-    credential: null,
-  }))
+  const users: GraphPublicUser[] = allUsers
 
   return {
     userCount,

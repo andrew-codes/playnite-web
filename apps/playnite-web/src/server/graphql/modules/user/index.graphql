@@ -8,6 +8,13 @@ type User {
   libraries: [Library!]!
   settings: [UserSetting!]!
 }
+
+type PublicUser {
+  id: String!
+  username: String!
+  libraries: [Library!]!
+}
+
 type UserSetting {
   id: String!
   code: String!
@@ -20,12 +27,12 @@ type UserSetting {
 
 type Users {
   userCount: Int!
-  users: [User!]!
+  users: [PublicUser!]!
 }
 
 extend type Query {
   me: User
-  lookupUser(username: String!): User
+  lookupUser(username: String!): PublicUser
   users(page: Int, perPage: Int): Users!
 }
 

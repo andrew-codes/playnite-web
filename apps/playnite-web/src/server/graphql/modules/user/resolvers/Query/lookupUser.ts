@@ -1,4 +1,3 @@
-import { omit } from 'lodash'
 import type { QueryResolvers } from './../../../../../../../.generated/types.generated'
 export const lookupUser: NonNullable<QueryResolvers['lookupUser']> = async (
   _parent,
@@ -9,11 +8,16 @@ export const lookupUser: NonNullable<QueryResolvers['lookupUser']> = async (
     where: {
       username: _arg.username,
     },
+    select: {
+      id: true,
+      username: true,
+      Libraries: true,
+    },
   })
 
   if (!user) {
     return null
   }
 
-  return omit(user, 'password')
+  return user
 }
