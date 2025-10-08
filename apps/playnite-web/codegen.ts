@@ -30,6 +30,7 @@ const config: CodegenConfig = {
           Tag: '../src/server/graphql/resolverTypes#GraphTag',
           SiteSetting: '../src/server/graphql/resolverTypes#GraphSiteSetting',
           UserSetting: '../src/server/graphql/resolverTypes#GraphUserSetting',
+          PublicUser: '../src/server/graphql/resolverTypes#GraphPublicUser',
         },
         contextType: '../src/server/graphql/context#PlayniteContext',
       },
