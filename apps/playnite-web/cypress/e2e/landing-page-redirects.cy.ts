@@ -4,7 +4,7 @@ describe('Landing Page Redirects', () => {
   const username = 'test'
   const password = 'test'
 
-  describe('Single user instance with allowAnonymousAccountCreation disabled', () => {
+  describe('Single user instance with allowAnonymousAccountCreation disabled.', () => {
     beforeEach(() => {
       cy.task('setSiteSettings', {
         allowAnonymousAccountCreation: 'false',
@@ -31,7 +31,7 @@ describe('Landing Page Redirects', () => {
       })
     })
 
-    it('redirects to user libraries page when user has multiple libraries', () => {
+    it('Redirects to user libraries page when user has multiple libraries.', () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         cy.syncLibrary(username, password, libraryData)
         cy.syncLibrary(
@@ -58,7 +58,7 @@ describe('Landing Page Redirects', () => {
     })
   })
 
-  describe('Single user instance with allowAnonymousAccountCreation enabled', () => {
+  describe('Single user instance with allowAnonymousAccountCreation enabled.', () => {
     beforeEach(() => {
       cy.task('setSiteSettings', {
         allowAnonymousAccountCreation: 'true',
@@ -85,7 +85,7 @@ describe('Landing Page Redirects', () => {
       })
     })
 
-    it('does not redirect and shows landing page', () => {
+    it('Does not redirect and shows landing page.', () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         cy.syncLibrary(username, password, libraryData)
       })
