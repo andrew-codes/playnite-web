@@ -1,23 +1,27 @@
 {
   "name": "playnite-web-app",
-  "sourceRoot": "apps/playnite-web-app/src",
+  "sourceRoot": "{projectRoot}/src",
   "projectType": "application",
   "targets": {
-    "clean/client": {
+    "clean": {
       "executor": "nx:run-commands",
+      "cache": true,
+      "dependsOn": ["clean/package", "clean/test", "clean/build"],
       "options": {
-        "command": "yarn rimraf build",
-        "cwd": "{projectRoot}"
+        "parallel": true,
+        "commands": []
       }
     },
-    "clean/server": {
+    "clean/build": {
       "executor": "nx:run-commands",
+      "cache": true,
       "options": {
-        "command": "yarn rimraf .build-server",
+        "command": "yarn rimraf _custom-server-build .next .generated",
         "cwd": "{projectRoot}"
       }
     },
     "clean/package": {
+      "cache": true,
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn rimraf _packaged",
@@ -25,90 +29,53 @@
       }
     },
     "clean/test": {
+      "cache": true,
       "executor": "nx:run-commands",
       "options": {
         "command": "yarn rimraf .test-runs .nyc_output visual-regression-tests/*report cypress/screenshots/* cypress/videos/* visual-regression-tests/**/comparison visual-regression-tests/**/diff",
         "cwd": "{projectRoot}"
       }
     },
+    "demo-data": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn tsx scripts/seedTestData.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
     "prepare": {
       "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/codegen.ts",
-        "{projectRoot}/src/server/graphql/resolverTypes.ts",
-        "{projectRoot}/src/server/graphql/modules/**/*.graphql"
-      ],
+      "dependsOn": ["clean/build", "^prepare"],
+      "cache": false,
       "options": {
-        "command": "yarn graphql-codegen --config codegen.ts",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "dump-database": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "bash -c 'scripts/dump-database.sh'",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "start/services": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "bash -c 'scripts/manually-start-services.sh'",
+        "commands": ["yarn graphql-codegen --config codegen.ts"],
         "cwd": "{projectRoot}"
       }
     },
     "start": {
       "executor": "nx:run-commands",
       "options": {
+        "commands": ["yarn nodemon"],
         "cwd": "{projectRoot}",
-        "parallel": false,
-        "commands": [
-          "yarn nx run playnite-web-app:start/services",
-          "yarn tsx scripts/utils/startDevServer.js"
-        ],
         "env": {
           "NODE_ENV": "development",
-          "DEBUG": "playnite*"
+          "LOG_LEVEL": "debug",
+          "SECRET": "dev-secret",
+          "PORT": "3000",
+          "HOST": "localhost",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
         }
-      }
-    },
-    "test/unit": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["clean/test"],
-      "inputs": ["src", "generated", "{projectRoot}/jest.config.js"],
-      "outputs": ["{projectRoot}/.test-runs/unit"],
-      "options": {
-        "command": "yarn jest --config jest.config.js",
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_OPTIONS": "--no-experimental-require-module"
-        }
-      },
-      "configurations": {
-        "ci": {}
       }
     },
     "test/components": {
       "executor": "nx:run-commands",
       "dependsOn": ["clean/test"],
-      "inputs": [
-        "src",
-        "generated",
-        "{projectRoot}/cypress.config.js",
-        "{projectRoot}/cypress-image-diff.config.js",
-        "{projectRoot}/.nycrc",
-        "{projectRoot}/cypress/support/component*",
-        "{projectRoot}/cypress/fixtures/**",
-        "{projectRoot}/cypress/tsconfig.json"
-      ],
-      "outputs": [
-        "{projectRoot}/.test-runs/cypress",
-        "{projectRoot}/visual-regression-tests/component-report",
-        "{projectRoot}/visual-regression-tests/component-screenshots/comparison",
-        "{projectRoot}/visual-regression-tests/component-screenshots/diff"
-      ],
       "options": {
-        "command": "yarn cypress open --component --browser electron",
+        "parallel": true,
+        "commands": [
+          "yarn cypress open --component --browser chrome",
+          "yarn react-devtools"
+        ],
         "cwd": "{projectRoot}"
       },
       "defaultConfiguration": "dev",
@@ -116,23 +83,23 @@
         "dev": {
           "env": {
             "TEST": "component",
-            "NODE_OPTIONS": "--no-experimental-require-module",
+            "NODE_ENV": "development",
             "CMD": "run"
           }
         },
         "ci": {
-          "command": "yarn cypress run --component --browser electron",
+          "commands": ["yarn cypress run --component --browser chrome"],
           "env": {
             "CI": "true",
             "TEST": "component",
-            "NODE_OPTIONS": "--no-experimental-require-module"
+            "NODE_ENV": "production"
           }
         },
         "ci/local": {
-          "command": "yarn cypress run --component --browser electron",
+          "commands": ["yarn cypress run --component --browser chrome"],
           "env": {
             "CI": "true",
-            "NODE_OPTIONS": "--no-experimental-require-module",
+            "NODE_ENV": "production",
             "TEST": "component",
             "CMD": "run"
           }
@@ -140,16 +107,6 @@
       }
     },
     "test/components/update": {
-      "inputs": [
-        "src",
-        "generated",
-        "{projectRoot}/cypress.config.js",
-        "{projectRoot}/cypress-image-diff.config.js",
-        "{projectRoot}/.nycrc",
-        "{projectRoot}/cypress/support/component*",
-        "{projectRoot}/cypress/fixtures/**",
-        "{projectRoot}/cypress/tsconfig.json"
-      ],
       "executor": "nx:run-commands",
       "dependsOn": ["clean/test"],
       "options": {
@@ -157,178 +114,125 @@
         "command": "yarn tsx scripts/component-for-update.ts",
         "cwd": "{projectRoot}",
         "env": {
-          "NODE_OPTIONS": "--no-experimental-require-module",
+          "NODE_ENV": "production",
           "TEST": "component"
         }
       }
     },
     "test/e2e/dev": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test"],
+      "dependsOn": ["clean/test", "^start", "prepare", "^prepare", "^build"],
       "options": {
-        "parallel": false,
-        "command": "yarn start-server-and-test 'cross-env NODE_ENV=production DEBUG=\"playnite*\" TEST=e2e yarn nx run playnite-web-app:start' http://localhost:3000 'yarn cross-env TEST=e2e CI=true yarn cypress open --e2e --browser electron'",
+        "parallel": true,
+        "commands": ["yarn react-devtools", "yarn tsx scripts/e2e-dev.ts"],
         "cwd": "{projectRoot}",
         "env": {
           "START_SERVER_AND_TEST_INSECURE": "1",
-          "NODE_ENV": "development",
-          "NODE_OPTIONS": "--no-experimental-require-module",
-          "INSTRUMENT": "true"
+          "LOG_LEVEL": "verbose",
+          "NODE_ENV": "production",
+          "TEST": "e2e",
+          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
+          "SECRET": "dev-secret",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
         }
       }
     },
     "test/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/files/e2e", "start/services"],
       "options": {
         "parallel": false,
         "cwd": "{projectRoot}",
-        "command": "yarn tsx scripts/e2e.ts",
-        "env": {
-          "CMD": "run",
-          "CI": "true",
-          "DEBUG": "playnite*",
-          "TEST": "e2e",
-          "START_SERVER_AND_TEST_INSECURE": "1",
-          "NODE_ENV": "development",
-          "NODE_OPTIONS": "--no-experimental-require-module",
-          "INSTRUMENT": "true"
-        }
+        "commands": ["yarn tsx scripts/e2e.ts"]
       },
-      "defaultConfiguration": "ci/local",
+      "defaultConfiguration": "ci",
       "configurations": {
         "ci": {
           "env": {
             "CMD": "run",
+            "LOCAL": "true",
             "CI": "true",
             "TEST": "e2e",
+            "LOG_LEVEL": "info",
+            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
             "START_SERVER_AND_TEST_INSECURE": "1",
-            "NODE_ENV": "development",
-            "NODE_OPTIONS": "--no-experimental-require-module",
-            "INSTRUMENT": "true"
+            "SECRET": "dev-secret",
+            "NODE_ENV": "production",
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
+            "SPLIT_FILE": "cypress-timings.json"
           }
         },
-        "ci/local": {
+        "dev": {
           "env": {
-            "CI": "true",
             "CMD": "open",
-            "DEBUG": "playnite*",
+            "LOCAL": "true",
+            "CI": "true",
+            "LOG_LEVEL": "verbose",
+            "SECRET": "dev-secret",
             "TEST": "e2e",
+            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
             "START_SERVER_AND_TEST_INSECURE": "1",
-            "NODE_ENV": "development",
-            "NODE_OPTIONS": "--no-experimental-require-module",
-            "INSTRUMENT": "true"
+            "NODE_ENV": "production",
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+          }
+        },
+        "timings": {
+          "env": {
+            "CMD": "run",
+            "LOCAL": "true",
+            "CI": "true",
+            "SECRET": "dev-secret",
+            "LOG_LEVEL": "error",
+            "TEST": "e2e",
+            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
+            "START_SERVER_AND_TEST_INSECURE": "1",
+            "NODE_ENV": "production",
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
+            "SPLIT": "1",
+            "SPLIT_INDEX": "0",
+            "SPLIT_FILE": "cypress-timings.json"
           }
         }
       }
     },
     "test/e2e/update": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/test", "package/files/e2e", "start/services"],
       "options": {
         "parallel": false,
         "command": "yarn tsx scripts/e2e.ts",
         "cwd": "{projectRoot}",
         "env": {
           "CMD": "run",
-          "INSTRUMENT": "true",
-          "NODE_OPTIONS": "--no-experimental-require-module",
+          "CI": "true",
+          "SECRET": "dev-secret",
+          "LOCAL": "true",
+          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
+          "NODE_ENV": "production",
           "UPDATE": "true",
-          "DEBUG": "playnite-web/nx/*"
+          "LOG_LEVEL": "info"
         }
       }
     },
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": ["build/client", "build/server"],
+      "defaultConfiguration": "production",
       "options": {
         "cwd": "{projectRoot}",
-        "commands": [],
-        "env": {
-          "NODE_ENV": "production"
-        }
-      }
-    },
-    "build/instrument": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["build/client/instrument", "build/server/instrument"],
-      "options": {
-        "cwd": "{projectRoot}",
-        "commands": ["bash -c \"echo 'Instrumented build'\""]
-      }
-    },
-    "build/client": {
-      "cache": true,
-      "executor": "nx:run-commands",
-      "inputs": [
-        "src",
-        "{projectRoot}/vite.config.js",
-        "{projectRoot}/tsconfig.json"
-      ],
-      "dependsOn": ["clean/client"],
-      "outputs": ["{projectRoot}/build"],
-      "options": {
-        "command": "yarn remix vite:build",
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production"
-        }
-      }
-    },
-    "build/client/instrument": {
-      "cache": true,
-      "executor": "nx:run-commands",
-      "inputs": [
-        "src",
-        "{projectRoot}/vite.config.js",
-        "{projectRoot}/tsconfig.json"
-      ],
-      "dependsOn": ["clean/client"],
-      "outputs": ["{projectRoot}/build"],
-      "options": {
-        "command": "yarn remix vite:build",
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production",
-          "INSTRUMENT": "true"
-        }
-      }
-    },
-    "build/server": {
-      "cache": true,
-      "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/src/server/**",
-        "generated",
-        "{projectRoot}/scripts/utils/buildServer.ts",
-        "{projectRoot}/tsconfig.server.json"
-      ],
-      "outputs": ["{projectRoot}/.build-server"],
-      "dependsOn": ["prepare", "clean/server"],
-      "options": {
         "parallel": false,
-        "commands": ["yarn tsx scripts/utils/buildServer.ts"],
-        "cwd": "{projectRoot}",
-        "env": {
-          "NODE_ENV": "production"
+        "commands": ["yarn nx start dev-services", "yarn tsx scripts/build.ts"]
+      },
+      "configurations": {
+        "production": {
+          "env": {
+            "NODE_ENV": "production"
+          }
         }
       }
     },
-    "build/server/instrument": {
-      "cache": true,
+    "build/e2e": {
       "executor": "nx:run-commands",
-      "inputs": [
-        "{projectRoot}/src/server/**",
-        "generated",
-        "{projectRoot}/scripts/utils/buildServer.ts",
-        "{projectRoot}/tsconfig.server.json"
-      ],
-      "outputs": ["{projectRoot}/.build-server"],
-      "dependsOn": ["prepare", "clean/server"],
       "options": {
-        "parallel": false,
-        "commands": ["yarn tsx scripts/utils/buildServer.ts"],
         "cwd": "{projectRoot}",
+        "commands": ["yarn tsx scripts/build.ts"],
         "env": {
           "NODE_ENV": "production",
           "INSTRUMENT": "true"
@@ -336,17 +240,7 @@
       }
     },
     "package": {
-      "inputs": [
-        "{projectRoot}/package.json",
-        "{projectRoot}/build/**",
-        "{projectRoot}/.build-server/**",
-        "{projectRoot}/scripts/packageFiles.ts",
-        "{projectRoot}/scripts/utils/packageFiles.ts",
-        "{projectRoot}/scripts/package.ts"
-      ],
-      "outputs": ["{projectRoot}/_packaged"],
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build"],
       "options": {
         "parallel": false,
         "commands": [],
@@ -359,36 +253,33 @@
         },
         "production": {
           "commands": [
-            "yarn nx run playnite-web-app:package:files",
+            "yarn tsx scripts/packageFiles.ts",
             "yarn tsx scripts/package.ts"
           ]
         }
       }
     },
-    "package/prune": {
+    "package/e2e": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build"],
+      "cache": true,
       "options": {
         "parallel": false,
-        "commands": ["yarn tsx scripts/packagePrune.ts"],
+        "commands": [
+          "yarn tsx scripts/packageFiles.ts",
+          "yarn tsx scripts/packageDemoCoverArt.ts",
+          "yarn tsx scripts/package.ts"
+        ],
+        "env": {
+          "LOCAL": "true"
+        },
         "cwd": "{projectRoot}"
       }
     },
-    "package/files/e2e": {
-      "inputs": [
-        "{projectRoot}/package.json",
-        "{projectRoot}/build/**",
-        "{projectRoot}/.build-server/**",
-        "{projectRoot}/scripts/packageFiles.ts",
-        "{projectRoot}/scripts/utils/packageFiles.ts",
-        "{projectRoot}/scripts/package.ts"
-      ],
-      "outputs": ["{projectRoot}/_packaged"],
+    "package/prune": {
       "executor": "nx:run-commands",
-      "dependsOn": ["clean/package", "build/instrument"],
       "options": {
         "parallel": false,
-        "command": "yarn tsx scripts/packageFiles.ts",
+        "commands": ["yarn tsx scripts/packagePrune.ts"],
         "cwd": "{projectRoot}"
       }
     },

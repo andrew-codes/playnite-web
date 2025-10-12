@@ -21,13 +21,13 @@ const useThemeWidth = () => {
       return theme.breakpoints.values.md - 16 - 40 - 24
     }
     if (isSm) {
-      theme.breakpoints.values.sm - 24 - 20
+      return theme.breakpoints.values.sm - 24 - 20
     }
     if (isXs) {
       return theme.breakpoints.values.xs - 24 - 20
     }
     return 342
-  }, [isXl, isLg, isMd, isSm, isXs])
+  }, [isXl, isLg, isMd, isSm, isXs, theme.breakpoints.values.xl, theme.breakpoints.values.lg, theme.breakpoints.values.md, theme.breakpoints.values.sm, theme.breakpoints.values.xs])
 
   return width
 }

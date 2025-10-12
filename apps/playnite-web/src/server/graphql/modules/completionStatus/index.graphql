@@ -1,5 +1,6 @@
 type CompletionStatus {
   id: String!
   name: String!
-  releases: [GameRelease]!
+  releases: [Release]!
+  playniteId: String
 }

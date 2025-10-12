@@ -1,38 +1,61 @@
 {
   "extends": "../../tsconfig.base.json",
+  "references": [
+    {
+      "path": "./tsconfig.cypress.json"
+    },
+    {
+      "path": "../../libs/db-client/tsconfig.json"
+    }
+  ],
   "compilerOptions": {
-    "moduleDetection": "force",
+    "jsx": "preserve",
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
-    "noEmit": false,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "types": [
-      "cypress",
-      "node",
-      "react",
-      "vite/client",
-      "@vite-pwa/remix/remix-sw"
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
     ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["node"],
+    "outDir": "dist",
+    "rootDir": ".",
+    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo",
+    "target": "esnext",
+    "skipLibCheck": true
   },
   "include": [
+    "../../apps/web/.next/types/**/*.ts",
+    "../../dist/apps/web/.next/types/**/*.ts",
+    "next-env.d.ts",
+    "src/**/*.js",
+    "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/**/*.jsx",
-    "testUtils/**/*.ts",
-    "testUtils/**/*.tsx",
-    "cypress/support/*.ts",
-    "*.ts",
-    "../../graphql.config.ts",
-    ".generated/resolvers.generated.ts",
-    ".generated/typeDefs.generated.ts",
-    ".generated/types.generated.ts",
-    "cypress.config.mjs",
+    ".next/types/**/*.ts",
+    ".generated/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "src/server.ts",
+    "out-tsc",
+    "dist",
+    "node_modules",
+    "jest.config.ts",
+    "src/**/*.test.ts",
+    ".next",
+    "eslint.config.mjs",
+    "eslint.config.cjs",
+    "eslint.config.mjs"
   ]
 }

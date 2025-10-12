@@ -1,7 +1,5 @@
 .DS_Store
-.data/mongodb
-.data/mongodb-e2e
-.data/mqtt/data
+.data/postgres
 node_modules
 
 .nx
@@ -10,34 +8,45 @@ node_modules
 
 .dist
 .test-runs
-.packaged
-_packaged
 .nuget
 *.log
+**/logs/**/*.*
 .vs
 *.user
 *.env
 !local.env
 !e2e.env
+.envrc
 
-.build*
+**/cypress/downloads
+
+
+**/*.generated.*
+**/.generated
+build
+_build*
+_*-build
+_instrumented
+_packaged
+.packaged
+.game-assets
 
 apps/playnite-web/.cache
-apps/playnite-web/build
-apps/playnite-web/src/public/build
 apps/playnite-web/src/public/entry.worker.js
 apps/playnite-web/vite.config.js*
 !apps/playnite-web/vite.config.js
-apps/playnite-web/src/public/assets/asset-by-id/*
-
-apps/playnite-web/public/assets/asset-by-id/*
-
-apps/playnite-web/**/*.generated.*
+apps/playnite-web/logs
 
 .devcontainer/.devpod-internal/
 
-.yarn/**/*darwin*
-.yarn/**/*linux*
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.yarn/install-state.gz
 
 **/cypress/videos/
 **/cypress/screenshots/
@@ -45,3 +54,8 @@ apps/playnite-web/**/*.generated.*
 **/visual-regression-tests/**/diff/
 **/visual-regression-tests/*report/
 .nyc_output
+
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
+.next

@@ -1,30 +1,84 @@
 const domainTypes = [
+  'Asset',
   'CompletionStatus',
   'Feature',
   'Game',
-  'GameRelease',
+  'Library',
   'Platform',
-  'User',
-  'GameAsset',
   'Playlist',
+  'Release',
+  'Source',
+  'Tag',
+  'User',
+  'UserSetting',
 ] as const
+const domains: Record<DomainType, DomainType> = {
+  Asset: 'Asset',
+  CompletionStatus: 'CompletionStatus',
+  Feature: 'Feature',
+  Game: 'Game',
+  Library: 'Library',
+  Platform: 'Platform',
+  Playlist: 'Playlist',
+  Release: 'Release',
+  Source: 'Source',
+  Tag: 'Tag',
+  User: 'User',
+  UserSetting: 'UserSetting',
+}
 type DomainType = (typeof domainTypes)[number]
 
-interface IIdentify {
-  get id(): string
-  get type(): DomainType
-  get moment(): Date
-  isEqual(other: IIdentify | string): boolean
+interface IHaveNoIdentity {
+  type: DomainType
+  moment: Date
+  isEqual(other: IHaveNoIdentity | string): boolean
   toString(): string
-  toJSON()
+  toJSON(): string
 }
 
-function fromString(oidString: string): IIdentify {
+interface IIdentify {
+  get id(): number
+  type: DomainType
+  moment: Date
+  isEqual(other: IHaveNoIdentity | string): boolean
+  toString(): string
+  toJSON(): string
+}
+
+type Identity = IIdentify | IHaveNoIdentity
+
+function fromString(oidString: string): Identity {
   const [type, id, moment] = oidString.split(':')
+
+  if (!id || !type) {
+    throw new Error('Invalid OID format.')
+  }
+
+  if (id === 'NULL') {
+    return {
+      type: type as DomainType,
+      moment: moment ? new Date(moment) : new Date(),
+      isEqual(other: IHaveNoIdentity | string) {
+        if (typeof other === 'string') {
+          return fromString(other).isEqual(this)
+        }
+
+        return other.type === this.type
+      },
+      toString() {
+        return `${type}:NULL`
+      },
+      toJSON() {
+        return this.toString()
+      },
+    }
+  }
+
+  const numericId = parseInt(id, 10)
 
   return {
     get id() {
-      return id
+      return numericId
     },
     get type() {
       return type as DomainType
@@ -37,10 +91,10 @@ function fromString(oidString: string): IIdentify {
         return fromString(other).isEqual(this)
       }
 
-      return other.id === id && other.type === type
+      return other.id === numericId && other.type === type
     },
     toString() {
-      return `${type}:${id}`
+      return `${type}:${numericId}`
     },
     toJSON() {
       return this.toString()
@@ -48,41 +102,47 @@ function fromString(oidString: string): IIdentify {
   }
 }
 
-function create(assetType: DomainType, id: string): IIdentify {
-  return fromString(`${assetType}:${id}`)
+function create(assetType: DomainType, id: number): IIdentify {
+  return fromString(`${assetType}:${id}`) as IIdentify
 }
 
-function createNull(assetType: DomainType): IIdentify {
+function createNull(assetType: DomainType): Identity {
   return fromString(`${assetType}:NULL`)
 }
 
-function tryParseOid(value: any): IIdentify | null {
+function hasIdentity(obj: any): obj is IIdentify {
+  return obj && typeof obj.id === 'number'
+}
+
+function tryParseOid(value: any): IIdentify {
   if (typeof value !== 'string') {
-    return null
+    throw new Error(`Value must be a string to parse OID: ${value}.`)
   }
-  const parts = value.split(':')
+  const parts = decodeURIComponent(value).split(':')
   if (parts.length < 2) {
-    return null
+    throw new Error(`Invalid OID format: ${value}.`)
   }
 
   if (!domainTypes.includes(parts[0] as DomainType)) {
-    return null
+    throw new Error(`Invalid OID domain type: ${value}.`)
   }
 
   if (parts[0] === 'NULL') {
-    return createNull(parts[1] as DomainType)
+    throw new Error(`Cannot parse NULL OID to IIdentify.`)
   }
 
-  if (
-    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
-      parts[1],
-    )
-  ) {
-    return create(parts[0] as DomainType, parts[1])
-  }
+  const id = parseInt(parts[1], 10)
 
-  return null
+  return create(parts[0] as DomainType, id)
 }
 
-export { create, createNull, domainTypes, fromString, tryParseOid }
-export type { DomainType, IIdentify }
+export {
+  create,
+  createNull,
+  domains,
+  domainTypes,
+  fromString,
+  hasIdentity,
+  tryParseOid,
+}
+export type { DomainType, Identity, IIdentify }

@@ -1,5 +1,10 @@
 type Tag {
   id: String!
   name: String!
+  playniteId: String
   games: [Game]!
+}
+
+extend type Query {
+  tag(id: String!): Tag
 }

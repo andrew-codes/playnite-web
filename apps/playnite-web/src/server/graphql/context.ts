@@ -1,21 +1,16 @@
-import type { AsyncMqttClient } from 'async-mqtt'
+import { User } from '../../../.generated/types.generated'
 import { YogaInitialContext } from 'graphql-yoga'
-import { IdentityService } from '../auth/index.js'
-import { IQuery, IUpdateQuery } from '../data/types.api.js'
-import { User } from '../data/types.entities.js'
-import type { UpdateEntity } from '../updater.js'
-import { subscriptionPublisher } from './subscriptionPublisher.js'
+import { IdentityService } from '../auth/index'
+import { PrismaClient } from '../data/providers/postgres/client'
+import { subscriptionPublisher } from './subscriptionPublisher'
 
 type PlayniteContext = {
   identityService: IdentityService
   signingKey: string
   domain: string
-  jwt?: { payload: User }
-  queryApi: IQuery
-  updateQueryApi: IUpdateQuery
-  mqttClient: AsyncMqttClient
+  jwt?: { payload: Omit<User, 'libraries'> }
   subscriptionPublisher: typeof subscriptionPublisher
-  update: UpdateEntity
+  db: PrismaClient
 } & YogaInitialContext
 
 export type { PlayniteContext }

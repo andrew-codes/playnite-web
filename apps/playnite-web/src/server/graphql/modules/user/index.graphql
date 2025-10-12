@@ -1,10 +1,59 @@
 type User {
   id: String!
+  email: String!
   username: String!
   isAuthenticated: Boolean!
   credential: String
+  permission: Int!
+  libraries: [Library!]!
+  settings: [UserSetting!]!
+}
+
+type PublicUser {
+  id: String!
+  username: String!
+  libraries: [Library!]!
+}
+
+type UserSetting {
+  id: String!
+  code: String!
+  name: String!
+  value: String
+  dataType: String!
+  helperText: String!
+  description: String!
+}
+
+type Users {
+  userCount: Int!
+  users: [PublicUser!]!
 }
 
 extend type Query {
   me: User
+  lookupUser(username: String!): PublicUser
+  users(page: Int, perPage: Int): Users!
+}
+
+input SignUpInput {
+  email: String!
+  username: String!
+  name: String!
+  password: String!
+  passwordConfirmation: String!
+}
+
+input SaveSettingsInput {
+  settings: [UserSettingInput!]!
+}
+
+input UserSettingInput {
+  id: String!
+  value: String
+}
+
+extend type Mutation {
+  signUp(input: SignUpInput): Claim!
+  updateUserSettings(input: SaveSettingsInput!): [UserSetting!]!
 }

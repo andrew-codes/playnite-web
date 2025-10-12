@@ -2,13 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "moduleResolution": "Bundler",
-    "plugins": [
-      {
-        "name": "typescript-remix-routes-plugin",
-        "tag": "route",
-      }
-    ]
+    "moduleResolution": "Bundler"
   },
   "include": [
     "**/src/**/*.ts",
@@ -18,10 +12,10 @@
     "**/testUtils/**/*.tsx",
     "*.ts",
     "**/cypress/*.ts",
-    "**/scripts/*.ts"
+    "**/scripts/*.ts",
+    "libs/playnite-plugin-installer-manifest/src/index.js",
+    "apps/playnite-web/cypress/e2e/errors.cy.ts",
+    "apps/playnite-web/src/server/app.ts.old"
   ],
-  "exclude": [
-    "node_modules",
-    ".yarn"
-  ]
+  "exclude": ["node_modules", ".yarn"]
 }

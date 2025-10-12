@@ -1,4 +1,4 @@
-# Playnite Web <img alt="Playnite Web logo" src="./_docs/assets/images/logo.png" style="margin-bottom:-10px;" />
+# Playnite Web <img alt="Playnite Web logo" src="./docs/assets/images/logo.png" style="margin-bottom:-10px;" />
 
 [![Build Status](https://github.com/andrew-codes/playnite-web/actions/workflows/verify-commits.yml/badge.svg)](https://github.com/andrew-codes/playnite-web/actions/workflows/verify-commits.yml)
 [![Latest Release](https://img.shields.io/github/v/release/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web/releases/latest)
@@ -14,10 +14,10 @@ Playnite Web offers:
 - remote control of staring and stopping games with home automation; locked behind a username/password login screen
 - a graph API to help you build your own, unique experiences
 
-![Browse screenshot](_docs/assets/images/browse-screenshot.png)
+![Browse screenshot](./docs/assets/images/browse-screenshot.png)
 
 ## Getting Started
 
-1. [Install and run Playnite Web](./docs/documents/guides/setup.md)
-2. [Playnite Web API and other documentation](./docs/README.md)
-3. [Contributions](./docs/documents/CONTRIBUTING.md) and [local development environment](./docs/documents/contributing/development-environment)
+1. [Install and run Playnite Web](./docs/guides/setup.md)
+2. [Playnite Web API](./docs/api/data-model.md) and other documentation lives in the [docs](./docs/) directory of this repo.
+3. [Contributions](./docs/CONTRIBUTING.md) and [local development environment](./docs/contributing/development-environment/index.md)

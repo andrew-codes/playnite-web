@@ -1,199 +1,251 @@
-import breakpoints from '../../fixtures/devices.json'
-
-const locations = [
-  ['On Deck', '/'],
-  ['Browse', '/browse'],
-]
-describe('Remote control.', () => {
+describe(`Game details remote control.
+              - Requires user to be signed in.
+              - Only visible in libraries the authenticated user owns.`, () => {
   beforeEach(() => {
-    cy.intercept('POST', '/api').as('api')
+    cy.task('seedUsers')
   })
 
-  Cypress._.each(locations, ([locationName, locationPath]) => {
-    describe(`${locationName}`, () => {
-      describe('Signed In.', () => {
-        beforeEach(() => {
-          cy.signIn()
+  beforeEach(() => {
+    cy.request({
+      method: 'DELETE',
+      url: '/echo',
+    })
+  })
+
+  describe('Unauthenticated users.', () => {
+    it(`No action controls.`, () => {
+      cy.fixture('librarySync.json')
+        .then((libraryData) => {
+          return cy.syncLibrary('test', 'test', libraryData)
+        })
+        .then((library) => {
+          cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+          cy.wait(200)
+        })
+      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+
+      cy.get('[data-test="Actions"]').children().should('have.length', 0)
+    })
+  })
+
+  describe('Authenticated users.', () => {
+    it(`Non-owned library.
+            - No action controls.`, () => {
+      cy.fixture('librarySync.json')
+        .then((libraryData) => {
+          cy.syncLibrary('test', 'test', libraryData)
+          cy.syncLibrary('jane', 'jane', libraryData)
+        })
+        .then((library) => {
+          cy.signIn('test', 'test')
+          cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
+        })
+      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+
+      cy.get('[data-test="Actions"]').children().should('have.length', 0)
+    })
+
+    describe('With Webhook setting.', () => {
+      beforeEach(() => {
+        cy.task('setUserSettings', {
+          username: 'test',
+          settings: {
+            webhook: 'http://localhost:3000/echo',
+          },
+        })
+      })
+
+      beforeEach(() => {
+        cy.fixture('librarySync.json')
+          .then((libraryData) => {
+            return cy.syncLibrary('test', 'test', libraryData)
+          })
+          .then((library) => {
+            cy.signIn('test', 'test')
+            cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+          })
+      })
+
+      it(`Play button.
+          - Is visible.
+          - Buttons to play on each source of the game.
+          - Graph mutation posts to webhook.
+          - Playing triggers restart and stop buttons to appear.`, () => {
+        cy.contains("Assassin's Creed Odyssey")
+          .parents('[data-test=GameFigure]')
+          .find('button img')
+          .eq(0)
+          .click({ force: true })
+
+        cy.get('[data-test="Actions"] button')
+          .eq(0)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] button').last().click()
+
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+
+        cy.intercept('POST', '/api', (req) => {
+          if (req.body.operationName !== 'startRelease') {
+            return
+          }
+          cy.get('[data-test="Actions"] button').then(($btn) => {
+            expect(req.body.query).to.include('startRelease')
+            expect(req.body.variables.id).to.equal($btn.data('release-id'))
+          })
+        })
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+          .click()
+
+        cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.wait('@api')
+
+        cy.request({
+          method: 'GET',
+          url: '/echo',
+        }).then((response) => {
+          cy.get('[data-test="Actions"] button').then(($btn) => {
+            const event = response.body
+            expect(event.type).to.equal('StartReleaseRequested')
+            expect(event.payload).to.nested.include({
+              id: $btn.data('release-id'),
+              title: "Assassin's Creed Odyssey",
+              'library.name': 'Game Room',
+              'platform.name': 'Sony PlayStation 5',
+              'source.name': 'PlayStation',
+            })
+            expect(event.payload.coverUrl).to.match(
+              /\/assassins-creed-odyssey\.webp$/,
+            )
+            expect(event.payload.library.id).to.match(/Library:\d+/)
+            expect(event.payload.platform.id).to.match(/Platform:\d+/)
+            expect(event.payload.source.id).to.match(/Source:\d+/)
+          })
         })
 
-        describe('Game details', () => {
-          describe('Remote controls.', () => {
-            Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
-              describe(`Screen size: ${breakpointName}.`, () => {
-                beforeEach(() => {
-                  cy.task('updateDatabase', {
-                    collection: 'release',
-                    filter: {},
-                    update: { $set: { playniteWebRunState: 'stopped' } },
-                  })
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('button', 'Restart game')
+        cy.get('[data-test="Actions"] li').eq(2).contains('button', 'Stop game')
+      })
 
-                  cy.viewport(x, y)
-                  cy.visit(locationPath)
-                  cy.wait(300)
-                })
+      it(`Stop button.
+          - Is visible for a starting or started game.
+          - Graph mutation posts to webhook.
+          - Stop and restart buttons disappear.`, () => {
+        cy.contains("Assassin's Creed Odyssey")
+          .parents('[data-test=GameFigure]')
+          .find('button img')
+          .click({ force: true })
 
-                it(`Play visible.`, () => {
-                  cy.get('[data-test="GameFigure"]', { timeout: 5000 })
-                    .first()
-                    .find('button img', { timeout: 5000 })
-                    .parent()
-                    .click({ force: true })
+        cy.get('[data-test="Actions"] button')
+          .eq(0)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] button').last().click()
 
-                  cy.get('[data-test="GameDetails"]')
-                    .parent()
-                    .compareSnapshot({
-                      name: `${locationName}_play-button-visible_${breakpointName}`,
-                      cypressScreenshotOptions: {
-                        onBeforeScreenshot($el) {
-                          Cypress.$('[data-test="GameFigure"]').css(
-                            'color',
-                            'transparent',
-                          )
-                          $el
-                            .find('[data-test="Name"]')
-                            .css('color', 'transparent')
-                          $el
-                            .find('[data-test="Description"]')
-                            .css('color', 'transparent')
-                          $el.find('img').css('visibility', 'hidden')
-                        },
-                      },
-                    })
-                })
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
 
-                it.skip(`Restart/stop visible.
-- Persists across page refreshes and navigation.
-- Manually stopping a game does not impact visibility.`, () => {
-                  cy.get('[data-test="GameFigure"]', { timeout: 5000 })
-                    .first()
-                    .find('button span', { timeout: 5000 })
-                    .click({ force: true })
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+          .click()
 
-                  cy.get('[data-test="GameDetails"]').as('gameDetails')
-                  cy.get('@gameDetails').contains('button', 'via').click()
-                  cy.get('@gameDetails')
-                    .parent()
-                    .compareSnapshot({
-                      name: `${locationName}_restart-stop-buttons-visible_${breakpointName}`,
-                      cypressScreenshotOptions: {
-                        onBeforeScreenshot($el) {
-                          Cypress.$('[data-test="GameFigure"]').css(
-                            'color',
-                            'transparent',
-                          )
-                          $el
-                            .find('[data-test="Name"]')
-                            .css('color', 'transparent')
-                          $el
-                            .find('[data-test="Description"]')
-                            .css('color', 'transparent')
-                          $el.find('img').css('visibility', 'hidden')
-                        },
-                      },
-                    })
+        cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('button', 'Stop game')
+          .click()
+        cy.get('[data-test="Actions"] li').should('have.length', 1)
+        cy.wait('@api')
 
-                  cy.reload()
-                  cy.get('[data-test="GameFigure"]', { timeout: 5000 })
-                    .first()
-                    .as('game')
-                  cy.get('@game')
-                    .find('button img', { timeout: 5000 })
-                    .parent()
-                    .click({ force: true })
-                  cy.wait('@api', { timeout: 5000 })
-
-                  cy.get('[data-test="GameDetails"]').as('gameDetails')
-                  cy.get('@gameDetails')
-                    .parent()
-                    .compareSnapshot({
-                      name: `${locationName}_restart-stop-buttons-visible-persist-page-refreshes_${breakpointName}`,
-                      cypressScreenshotOptions: {
-                        onBeforeScreenshot($el) {
-                          Cypress.$('[data-test="GameFigure"]').css(
-                            'color',
-                            'transparent',
-                          )
-                          $el
-                            .find('[data-test="Name"]')
-                            .css('color', 'transparent')
-                          $el
-                            .find('[data-test="Description"]')
-                            .css('color', 'transparent')
-                          $el.find('img').css('visibility', 'hidden')
-                        },
-                      },
-                    })
-
-                  let gameId: string | undefined
-                  cy.get('@game').then(($el) => {
-                    gameId = $el.attr('data-test-game-id')?.split(':')[1]
-                    cy.task('mqttPublish', {
-                      topic: 'playnite/deviceId/response/game/state',
-                      payload: JSON.stringify({
-                        state: 'installed',
-                        release: { id: gameId },
-                      }),
-                    })
-                  })
-                  cy.wait(3000)
-
-                  cy.get('@gameDetails')
-                    .parent()
-                    .compareSnapshot({
-                      name: `${locationName}_restart-stop-buttons-visible-when-manually-stopping-game_${breakpointName}`,
-                      cypressScreenshotOptions: {
-                        onBeforeScreenshot($el) {
-                          Cypress.$('[data-test="GameFigure"]').css(
-                            'color',
-                            'transparent',
-                          )
-                          $el
-                            .find('[data-test="Name"]')
-                            .css('color', 'transparent')
-                          $el
-                            .find('[data-test="Description"]')
-                            .css('color', 'transparent')
-                          $el.find('img').css('visibility', 'hidden')
-                        },
-                      },
-                    })
-                })
-
-                it(`Restart/stop stopping game.
-- Once a game is stopped via Playnite Web.`, () => {
-                  cy.get('[data-test="GameFigure"]', { timeout: 5000 })
-                    .first()
-                    .find('button img', { timeout: 5000 })
-                    .parent()
-                    .click({ force: true })
-
-                  cy.get('[data-test="GameDetails"]').as('gameDetails')
-                  cy.get('@gameDetails').contains('button', 'via').click()
-                  cy.get('@gameDetails').contains('button', 'Stop').click()
-
-                  cy.get('@gameDetails')
-                    .parent()
-                    .compareSnapshot({
-                      name: `${locationName}_restart-stop-stopping-game_${breakpointName}`,
-                      cypressScreenshotOptions: {
-                        onBeforeScreenshot($el) {
-                          Cypress.$('[data-test="GameFigure"]').css(
-                            'color',
-                            'transparent',
-                          )
-                          $el
-                            .find('[data-test="Name"]')
-                            .css('color', 'transparent')
-                          $el
-                            .find('[data-test="Description"]')
-                            .css('color', 'transparent')
-                          $el.find('img').css('visibility', 'hidden')
-                        },
-                      },
-                    })
-                })
-              })
+        cy.request({
+          method: 'GET',
+          url: '/echo',
+        }).then((response) => {
+          cy.get('[data-test="Actions"] button').then(($btn) => {
+            const event = response.body
+            expect(event.type).to.equal('StopReleaseRequested')
+            expect(event.payload).to.nested.include({
+              id: $btn.data('release-id'),
+              title: "Assassin's Creed Odyssey",
+              'library.name': 'Game Room',
+              'platform.name': 'Sony PlayStation 5',
+              'source.name': 'PlayStation',
             })
+            expect(event.payload.coverUrl).to.match(
+              /\/assassins-creed-odyssey\.webp$/,
+            )
+            expect(event.payload.library.id).to.match(/Library:\d+/)
+            expect(event.payload.platform.id).to.match(/Platform:\d+/)
+            expect(event.payload.source.id).to.match(/Source:\d+/)
+          })
+        })
+      })
+
+      it(`Restart button.
+          - Is visible for a starting or started game.
+          - Graph mutation posts to webhook.
+          - All controls remain visible.`, () => {
+        cy.contains("Assassin's Creed Odyssey")
+          .parents('[data-test=GameFigure]')
+          .find('button img')
+          .click({ force: true })
+
+        cy.get('[data-test="Actions"] button')
+          .eq(0)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] button').last().click()
+
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('PC (Windows) via Steam')
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+
+        cy.get('[data-test="Actions"] li')
+          .eq(2)
+          .contains('Sony PlayStation 5 via PlayStation')
+          .click()
+
+        cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('button', 'Restart game')
+          .click()
+        cy.wait('@api')
+
+        cy.request({
+          method: 'GET',
+          url: '/echo',
+        }).then((response) => {
+          cy.get('[data-test="Actions"] button').then(($btn) => {
+            const event = response.body
+            expect(event.type).to.equal('RestartReleaseRequested')
+            expect(event.payload).to.nested.include({
+              id: $btn.data('release-id'),
+              title: "Assassin's Creed Odyssey",
+              'library.name': 'Game Room',
+              'platform.name': 'Sony PlayStation 5',
+              'source.name': 'PlayStation',
+            })
+            expect(event.payload.coverUrl).to.match(
+              /\/assassins-creed-odyssey\.webp$/,
+            )
+            expect(event.payload.library.id).to.match(/Library:\d+/)
+            expect(event.payload.platform.id).to.match(/Platform:\d+/)
+            expect(event.payload.source.id).to.match(/Source:\d+/)
           })
         })
       })

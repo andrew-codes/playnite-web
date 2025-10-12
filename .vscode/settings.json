@@ -4,31 +4,24 @@
     "**/.pnp.*": true
   },
   "dotnet.defaultSolution": "PlayniteWebPlugin.sln",
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
   "jest.jestCommandLine": "yarn jest",
   "githubIssues.queries": [
     {
       "label": "My Issues",
       "query": "is:open assignee:${user} repo:${owner}/${repository}",
-      "groupBy": [
-        "milestone"
-      ]
+      "groupBy": ["milestone"]
     },
     {
       "label": "Created Issues",
       "query": "author:${user} state:open repo:${owner}/${repository} sort:created-desc",
-      "groupBy": [
-        "milestone"
-      ]
+      "groupBy": ["milestone"]
     },
     {
       "label": "Recent Issues",
       "query": "state:open repo:${owner}/${repository} sort:updated-desc",
-      "groupBy": [
-        "milestone"
-      ]
+      "groupBy": ["milestone"]
     }
   ],
   "jest.outputConfig": {
@@ -40,5 +33,6 @@
     "type": "on-demand",
     "deferred": true
   },
-  "dotnet.preferCSharpExtension": true
+  "dotnet.preferCSharpExtension": true,
+  "nxConsole.generateAiAgentRules": true
 }

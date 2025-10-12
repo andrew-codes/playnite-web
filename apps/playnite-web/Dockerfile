@@ -1,15 +1,37 @@
+# Build stage
+FROM node:22-alpine3.20 AS builder
+RUN apk add --no-cache \
+  vips-dev \
+  pkgconfig \
+  build-base \
+  python3 \
+  make \
+  g++ \
+  libc6-compat
+
+WORKDIR /opt/playnite-web-app
+COPY _packaged/package.json ./
+COPY _packaged/.prisma/ ./.prisma
+COPY _packaged/migrations/ ./migrations
+COPY _packaged/schema.prisma .
+RUN npm install --force --omit=dev
+
+
+# Runtime stage
 FROM node:22-alpine3.20
 LABEL org.opencontainers.image.source=https://github.com/andrew-codes/playnite-web
 
-RUN apk add \
-  bash
+RUN apk add --no-cache \
+  bash \
+  vips
 
 WORKDIR /opt/playnite-web-app
 
+# Copy node_modules from the builder stage and the rest of the app files
+COPY --from=builder /opt/playnite-web-app/node_modules ./node_modules
 COPY _packaged/ .
 
-RUN npm install --force --omit=dev
-
-WORKDIR /opt/playnite-web-app/src/server
+WORKDIR /opt/playnite-web-app
+ENV NODE_ENV=production
 
 ENTRYPOINT ["node", "server.js"]

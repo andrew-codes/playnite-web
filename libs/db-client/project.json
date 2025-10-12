@@ -1,0 +1,57 @@
+{
+  "name": "db-client",
+  "sourceRoot": "libs/db-client/src",
+  "projectType": "library",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["clean/build"],
+      "options": {
+        "parallel": true,
+        "commands": []
+      }
+    },
+    "clean/build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf build",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.generated"],
+      "options": {
+        "parallel": false,
+        "commands": ["yarn pnpify prisma generate --schema=src/schema.prisma"],
+        "cwd": "{projectRoot}",
+        "env": {
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+        }
+      }
+    },
+    "reset-db": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn pnpify prisma migrate reset --force --schema=src/schema.prisma",
+        "cwd": "{projectRoot}",
+        "env": {
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+        }
+      }
+    },
+    "create-migration": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": {
+        "command": "yarn pnpify prisma migrate dev --create-only --name migration --schema=src/schema.prisma",
+        "cwd": "{projectRoot}",
+        "env": {
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public"
+        }
+      }
+    }
+  },
+  "tags": ["linux"],
+  "implicitDependencies": []
+}
