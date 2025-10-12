@@ -20,7 +20,7 @@ services:
     environment:
       - PORT=${APP_PORT:-3000}
       - HOST=${APP_HOST:-localhost}
-      - DATABASE_URL=postgres://${DB_USER:-playnite}:${DB_PASSWORD}@localhost:5432?schema=public&pgbouncer=true
+      - DATABASE_URL=postgres://${DB_USER:-playnite}:${DB_PASSWORD}@localhost:5432/games?schema=public&pgbouncer=true
       - SECRET=${APP_SECRET}
       - DISABLE_CSP=${DISABLE_CSP:-false}
       - CSP_ORIGINS=${CSP_ORIGINS}
@@ -44,7 +44,7 @@ services:
       - MQTT_PORT=1883
       - MQTT_USERNAME=${MQTT_USERNAME}
       - MQTT_PASSWORD=${MQTT_PASSWORD}
-      - DATABASE_URL=postgres://${DB_USER:-playnite}:${DB_PASSWORD}@localhost:5432?schema=public
+      - DATABASE_URL=postgres://${DB_USER:-playnite}:${DB_PASSWORD}@localhost:5432/games?schema=public
       - PORT=${PROCESSOR_PORT:-3001}
     volumes:
       - games_assets:/opt/playnite-web/game-assets

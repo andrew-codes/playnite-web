@@ -39,7 +39,7 @@ You can provide environment variables to docker-compose in a few different ways.
 
 The following environment variables **must be set** before running docker-compose:
 
-- `DB_PASSWORD` - Password for the PostgreSQL database
+- `DB_PASSWORD` - Password for the PostgreSQL database (no spaces)
 - `APP_SECRET` - Random string used for application secrets (sessions, JWT, etc.)
 
 ### Optional Environment Variables
