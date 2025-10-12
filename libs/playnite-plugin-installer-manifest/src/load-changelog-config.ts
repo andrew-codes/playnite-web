@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url'
  *
  * @return {Promise<Object>} a `Promise` that resolve to the `conventional-changelog-core` config.
  */
-export default async (
+export const loadChangelogConfig = async (
   { preset, config, parserOpts, writerOpts, presetConfig },
   { cwd },
 ) => {
@@ -26,15 +26,33 @@ export default async (
 
   if (preset) {
     const presetPackage = `conventional-changelog-${preset.toLowerCase()}`
-    loadedConfig = await (
-      (await importFrom.silent(__dirname, presetPackage)) ||
-      (await importFrom(cwd, presetPackage))
-    )(presetConfig)
+    const loader: (
+      config?: unknown,
+    ) => Promise<
+      | { parser: unknown; writer: unknown }
+      | ((config?: unknown) => Promise<{ parser: unknown; writer: unknown }>)
+    > = ((await importFrom.silent(__dirname, presetPackage)) ||
+      (await importFrom(cwd, presetPackage))) as (
+      config?: unknown,
+    ) => Promise<
+      | { parser: unknown; writer: unknown }
+      | ((config?: unknown) => Promise<{ parser: unknown; writer: unknown }>)
+    >
+    loadedConfig = await loader(presetConfig)
   } else if (config) {
-    loadedConfig = await (
-      (await importFrom.silent(__dirname, config)) ||
-      (await importFrom(cwd, config))
-    )()
+    const loader: (
+      config?: unknown,
+    ) => Promise<
+      | { parser: unknown; writer: unknown }
+      | ((config?: unknown) => Promise<{ parser: unknown; writer: unknown }>)
+    > = ((await importFrom.silent(__dirname, config)) ||
+      (await importFrom(cwd, config))) as (
+      config?: unknown,
+    ) => Promise<
+      | { parser: unknown; writer: unknown }
+      | ((config?: unknown) => Promise<{ parser: unknown; writer: unknown }>)
+    >
+    loadedConfig = await loader()
   } else {
     loadedConfig = await conventionalChangelogAngular()
   }

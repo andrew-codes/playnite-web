@@ -6,6 +6,7 @@ node_modules
 
 .nx/cache
 
+dist
 .dist
 .test-runs
 .nuget
@@ -59,3 +60,5 @@ apps/playnite-web/logs
 .github/instructions/nx.instructions.md
 
 .next
+
+default.profraw

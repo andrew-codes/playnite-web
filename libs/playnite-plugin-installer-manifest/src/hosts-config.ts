@@ -53,6 +53,7 @@ export default {
     issuePrefixes: ['#'],
   },
   default: {
+    hostname: null,
     issue: 'issues',
     commit: 'commit',
     referenceActions: [

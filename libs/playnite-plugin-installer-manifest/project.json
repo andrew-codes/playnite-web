@@ -2,7 +2,18 @@
   "name": "playnite-plugin-installer-manifest",
   "sourceRoot": "libs/playnite-plugin-installer-manifest/src",
   "projectType": "library",
-  "targets": {},
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "libs/playnite-plugin-installer-manifest/.dist",
+        "main": "libs/playnite-plugin-installer-manifest/src/index.ts",
+        "tsConfig": "libs/playnite-plugin-installer-manifest/tsconfig.lib.json",
+        "assets": []
+      }
+    }
+  },
   "tags": ["linux"],
   "implicitDependencies": []
 }

@@ -43,7 +43,7 @@
     "cypress": "^15.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^17.2.1",
-    "esbuild": "^0.25.9",
+    "esbuild": "^0.25.10",
     "esbuild-register": "^3.6.0",
     "eslint": "^9.35.0",
     "eslint-config-next": "^15.5.3",
@@ -93,6 +93,7 @@
   },
   "packageManager": "yarn@4.10.3",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "release": "nx build playnite-plugin-installer-manifest && semantic-release"
   }
 }

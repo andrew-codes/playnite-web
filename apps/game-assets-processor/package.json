@@ -29,7 +29,7 @@
     "concurrently": "^9.2.0",
     "cross-env": "^10.0.0",
     "dev-services": "workspace:*",
-    "esbuild": "^0.25.9",
+    "esbuild": "^0.25.10",
     "esbuild-plugin-istanbul": "^0.3.0",
     "glob": "^11.0.3",
     "jest": "^30.0.5",

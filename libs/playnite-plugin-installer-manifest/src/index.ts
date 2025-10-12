@@ -1,6 +1,5 @@
 import { filterRevertedCommitsSync } from 'conventional-commits-filter'
 import { Commit, CommitParser } from 'conventional-commits-parser'
-import logger from 'dev-logger'
 import fs from 'fs'
 import { find, merge } from 'lodash-es'
 import { join } from 'path'
@@ -9,7 +8,7 @@ import { pipeline } from 'stream/promises'
 import { format } from 'url'
 import { parse, stringify } from 'yaml'
 import HOSTS_CONFIG from './hosts-config.js'
-import loadChangelogConfig from './load-changelog-config.js'
+import { loadChangelogConfig } from './load-changelog-config.js'
 
 const verifyRelease = async (pluginConfig, context) => {
   const { commits, lastRelease, nextRelease, options, cwd } = context
@@ -22,7 +21,10 @@ const verifyRelease = async (pluginConfig, context) => {
     /^(?!.+:\/\/)(?:(?<auth>.*)@)?(?<host>.*?):(?<path>.*)$/.exec(
       repositoryUrl,
     ) || []
-  let { hostname, port, pathname, protocol } = new URL(
+  const { hostname, pathname } = new URL(
+    match ? `ssh://${auth ? `${auth}@` : ''}${host}/${path}` : repositoryUrl,
+  )
+  let { port, protocol } = new URL(
     match ? `ssh://${auth ? `${auth}@` : ''}${host}/${path}` : repositoryUrl,
   )
   port = protocol.includes('ssh') ? '' : port
@@ -48,7 +50,7 @@ const verifyRelease = async (pluginConfig, context) => {
     commits
       .filter(({ message, hash }) => {
         if (!message.trim()) {
-          debug('Skip commit %s with empty message', hash)
+          console.debug('Skip commit %s with empty message', hash)
           return false
         }
 
@@ -91,16 +93,15 @@ const verifyRelease = async (pluginConfig, context) => {
     },
   )
 
-  logger.info('version: %o', changelogContext.version)
-  logger.info('host: %o', changelogContext.hostname)
-  logger.info('owner: %o', changelogContext.owner)
-  logger.info('repository: %o', changelogContext.repository)
-  logger.info('previousTag: %o', changelogContext.previousTag)
-  logger.info('currentTag: %o', changelogContext.currentTag)
-  logger.info('host: %o', changelogContext.host)
-  logger.info('linkReferences: %o', changelogContext.linkReferences)
-  logger.info('issue: %o', changelogContext.issue)
-  logger.info('commit: %o', changelogContext.commit)
+  console.info('version: %o', changelogContext.version)
+  console.info('owner: %o', changelogContext.owner)
+  console.info('repository: %o', changelogContext.repository)
+  console.info('previousTag: %o', changelogContext.previousTag)
+  console.info('currentTag: %o', changelogContext.currentTag)
+  console.info('host: %o', changelogContext.host)
+  console.info('linkReferences: %o', changelogContext.linkReferences)
+  console.info('issue: %o', changelogContext.issue)
+  console.info('commit: %o', changelogContext.commit)
 
   const { manifestFilePath, extensionFilePath, requiredApiVersion } =
     pluginConfig
@@ -119,7 +120,7 @@ const verifyRelease = async (pluginConfig, context) => {
   }
   await pipeline(parsedCommits, async function* (changelog) {
     for await (const chunk of changelog) {
-      logger.debug('Processing commit: %o', chunk)
+      console.debug('Processing commit: %o', chunk)
       const item = chunk as unknown as Commit
       if (!item.type) {
         continue
@@ -138,7 +139,7 @@ const verifyRelease = async (pluginConfig, context) => {
   )
   manifest.Packages.push(nextPackage)
   const newManifest = stringify(manifest)
-  logger.debug(newManifest)
+  console.debug(newManifest)
   if (options.dryRun) {
     return
   }

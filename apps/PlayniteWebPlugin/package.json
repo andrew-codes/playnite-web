@@ -6,7 +6,7 @@
     "@types/shelljs": "^0.8.17",
     "cpy": "^12.0.1",
     "cpy-cli": "^6.0.0",
-    "esbuild": "^0.25.9",
+    "esbuild": "^0.25.10",
     "esbuild-register": "^3.6.0",
     "nx": "^21.5.2",
     "prettier": "^3.6.2",

@@ -5,7 +5,7 @@
     "@types/shelljs": "^0.8.17",
     "debug": "^4.4.1",
     "dev-logger": "workspace:*",
-    "esbuild": "^0.25.9",
+    "esbuild": "^0.25.10",
     "esbuild-register": "^3.6.0",
     "shelljs": "^0.10.0"
   }
