@@ -95,14 +95,14 @@ describe('Account Creation.', () => {
         expect(response.body.data.signUp.user.username).to.equal('new-user')
       })
 
+      cy.signIn('new-user', 'test')
       cy.request('POST', '/api', {
         query: `
           query {
-            lookupUser(username: "new-user") {
+            me {
               id
               username
               settings {
-                id
                 name
                 value
                 dataType
@@ -112,10 +112,9 @@ describe('Account Creation.', () => {
         `,
       }).then((response) => {
         expect(response.status).to.equal(200)
-        expect(response.body.data.lookupUser.username).to.equal('new-user')
-
+        expect(response.body.data.me.username).to.equal('new-user')
         Object.values(defaultUserSettings).forEach((setting, i) => {
-          expect(response.body.data.lookupUser.settings[i]).to.include({
+          expect(response.body.data.me.settings[i]).to.include({
             name: setting.name,
             value: setting.value,
             dataType: setting.dataType,

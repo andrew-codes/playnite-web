@@ -27,6 +27,12 @@ type GraphUser = Omit<Prisma.UserGetPayload<{}>, 'password'> & {
   isAuthenticated?: boolean
 }
 
+type GraphPublicUser = {
+  id: number
+  username: string
+  Libraries: Prisma.LibraryGetPayload<{}>[]
+}
+
 type ClaimUser = Omit<GraphUser, 'id'> & {
   id: string
 }
@@ -52,6 +58,11 @@ type GraphEntityCollectionUpdateDetails = {
   type: DomainType
 }
 
+type GraphUsers = {
+  userCount: number
+  users: GraphPublicUser[]
+}
+
 type GraphAccountSetupStatus = {
   isSetup: boolean
   allowAnonymousAccountCreation: boolean
@@ -64,11 +75,13 @@ export type {
   GraphCompletionStatus,
   GraphEntityCollectionUpdateDetails,
   GraphEntityUpdateDetails,
+  GraphUsers,
   GraphFeature,
   GraphGame,
   GraphLibrary,
   GraphPlatform,
   GraphPlaylist,
+  GraphPublicUser,
   GraphRelease,
   GraphSiteSetting,
   GraphSource,

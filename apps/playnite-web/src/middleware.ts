@@ -100,6 +100,55 @@ async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/account/new', request.url))
   }
 
+  if (pathname === '/') {
+    const setupStatus = siteSettingsResult.data.accountSetupStatus
+
+    if (setupStatus.isSetup && !setupStatus.allowAnonymousAccountCreation) {
+      const usersResponse = await fetch(new URL('/api', request.url), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          query: `query Users($page: Int, $perPage: Int) {
+            users(page: $page, perPage: $perPage) {
+              userCount
+              users {
+                username
+                libraries {
+                  id
+                }
+              }
+            }
+          }`,
+          variables: {
+            page: 1,
+            perPage: 1,
+          },
+        }),
+      })
+
+      const usersResult = await usersResponse.json()
+      const { userCount, users } = usersResult.data.users
+
+      if (userCount === 1 && users.length === 1) {
+        const user = users[0]
+        const libraryCount = user.libraries?.length || 0
+
+        if (libraryCount === 1) {
+          return NextResponse.rewrite(
+            new URL(`/u/${user.username}/${user.libraries[0].id}`, request.url),
+          )
+        } else if (libraryCount > 1) {
+          return NextResponse.rewrite(
+            new URL(`/u/${user.username}`, request.url),
+          )
+        }
+      }
+    }
+  }
+
   return NextResponse.next()
 }
 
