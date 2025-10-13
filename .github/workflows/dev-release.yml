@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - next
 
 permissions:
   contents: read
@@ -294,12 +294,12 @@ jobs:
         run: yarn nx run-many --target=version --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
-          VERSION: "${{ steps.nextVersion.outputs.value }}"
+          VERSION: "dev-${{ steps.nextVersion.outputs.value }}"
       - name: Package projects
         run: yarn nx run-many --target=package --configuration=production --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
-          VERSION: "${{ steps.nextVersion.outputs.value }}"
+          VERSION: "dev-${{ steps.nextVersion.outputs.value }}"
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -361,80 +361,4 @@ jobs:
           NODE_ENV: production
           LOG_LEVEL: info
           PLATFORM: linux/amd64,linux/arm64
-          PUBLISH: "true"
-          GITHUB_SHA: ${{ github.sha }}
-
-  publish_release:
-    name: Publish release
-    needs:
-      - unit_tests_linux
-      - unit_tests_windows
-      - component_tests_linux
-      - e2e_tests_app
-      - e2e_tests_processor
-      - package_windows
-      - package_linux
-    env:
-      REGISTRY: ghcr.io
-      OWNER: andrew-codes
-      PUBLISH: "true"
-    permissions:
-      packages: write
-      contents: write
-      issues: write
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      - name: Download plugin artifact
-        uses: actions/download-artifact@v4
-        with:
-          path: _packaged
-          name: playnite-web-extension
-      - name: Extract node version from package.json
-        uses: sergeysova/jq-action@v2
-        id: node_version
-        with:
-          cmd: jq .engines.node package.json -r | sed -e 's/"//g' | sed -e 's/>=//g'
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "${{ steps.node_version.outputs.value }}"
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "${{ steps.node_version.outputs.value }}"
-      - name: Use Yarn
-        run: corepack enable
-      - run: corepack prepare --activate yarn
-      - name: Install deps
-        run: yarn
-        env:
-          YARN_ENABLE_HARDENED_MODE: "0"
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY}}
-          username: ${{ env.OWNER }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Install docker-compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
-      - name: Semantic Release
-        run: yarn release
-        env:
-          NODE_ENV: production
-          LOG_LEVEL: info
-          PLATFORM: linux/amd64,linux/arm64
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EXCLUDE: "*,!tag:linux"
-          INCLUDE_GH_RELEASE: "true"
+          GITHUB_REF: dev
