@@ -16,6 +16,7 @@ async function run() {
   tags = await getDockerTags(VERSION)
 
   const sourceImage = `${REGISTRY}/${OWNER}/${pkg.name}:${GITHUB_SHA}`
+  sh.exec(`docker pull ${sourceImage}`, { silent: false })
 
   // Tag the existing image with all version tags
   await Promise.all(

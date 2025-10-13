@@ -93,7 +93,7 @@
       "dependsOn": ["clean/package", "build/e2e"]
     },
     "publish": {
-      "dependsOn": ["package"],
+      "dependsOn": ["prepare", "^prepare"],
       "cache": false
     },
     "test/unit": {
