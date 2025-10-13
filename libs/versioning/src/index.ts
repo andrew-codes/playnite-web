@@ -3,33 +3,15 @@ import { isEmpty } from 'lodash-es'
 import semver from 'semver'
 import sh from 'shelljs'
 
-const getDockerTags = async (version, ref) => {
+const getDockerTags = async (version: string, ref?: string) => {
   logger.info(`version: ${version}`)
   logger.info(`ref: ${ref}`)
 
-  let tags = [] as Array<string>
+  const tags = [] as Array<string>
 
-  if (/^refs\/pull\//.test(ref)) {
-    const prNumber = ref.replace(/^refs\/pull\//, '').replace(/\/merge$/, '')
-
-    if (prNumber) {
-      tags.push(`PR-${prNumber}`)
-    }
-  } else if (/^refs\/heads\/main$/.test(ref)) {
+  if (!!ref && /^refs\/heads\/next$/.test(ref)) {
     tags.push(`dev`)
-  } else if (/^refs\/heads\/next$/.test(ref)) {
-    tags.push(`dev-next`)
-  } else if (/^refs\/head\/release-.*/.test(ref)) {
-    const nextVersion = ref.replace(/^refs\/heads\/release-/, '')
-    tags.push(nextVersion)
-    const major = semver.major(nextVersion)
-    tags.push(`${major}-latest`)
-
-    const minor = semver.minor(nextVersion)
-    tags.push(`${major}.${minor}-latest`)
-  }
-
-  if (!isEmpty(version)) {
+  } else if (!isEmpty(version)) {
     const nextVersion = version.replace(/^v/, '')
     tags.push(nextVersion)
 

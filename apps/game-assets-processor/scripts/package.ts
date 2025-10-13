@@ -1,6 +1,5 @@
 import logger from 'dev-logger'
 import sh from 'shelljs'
-import { getDockerTags } from 'versioning'
 import pkg from '../package.json'
 
 async function run() {
@@ -8,7 +7,7 @@ async function run() {
   const REGISTRY = 'ghcr.io'
   const OWNER = 'andrew-codes'
   logger.info(LOCAL)
-  if (LOCAL !== 'true' && (!REGISTRY || !OWNER || !GITHUB_REF)) {
+  if (LOCAL !== 'true') {
     throw new Error('Missing environment variables.')
   }
   let tags: Array<string> = []
@@ -16,7 +15,10 @@ async function run() {
   if (LOCAL === 'true') {
     tags = ['local']
   } else {
-    tags = await getDockerTags(VERSION ?? null, GITHUB_REF)
+    if (!GITHUB_REF) {
+      throw new Error('Missing environment variables.')
+    }
+    tags = [GITHUB_REF]
   }
 
   await Promise.all(

@@ -74,7 +74,7 @@ const config = {
       '@semantic-release/exec',
       {
         verifyReleaseCmd: `yarn cross-env VERSION='\${nextRelease.version}' yarn nx run-many --target=version ${exclude}`,
-        publishCmd: `yarn cross-env VERSION='\${nextRelease.version}' PUBLISH='true' yarn nx run-many --target=publish ${exclude}`,
+        publishCmd: `yarn cross-env VERSION='\${nextRelease.version}' yarn nx run-many --target=publish ${exclude}`,
       },
     ],
     [

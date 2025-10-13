@@ -283,7 +283,14 @@
         "cwd": "{projectRoot}"
       }
     },
-    "publish": {}
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "parallel": false,
+        "commands": ["yarn tsx scripts/publish.ts"],
+        "cwd": "{projectRoot}"
+      }
+    }
   },
   "tags": ["linux"],
   "implicitDependencies": []
