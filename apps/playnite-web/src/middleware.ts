@@ -159,6 +159,7 @@ async function middleware(request: NextRequest) {
     }
   } catch (error) {
     console.error('Middleware error:', error)
+    return new NextResponse('Internal Server Error', { status: 500 })
   }
 
   return NextResponse.next()
