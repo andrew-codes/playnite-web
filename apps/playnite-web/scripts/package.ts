@@ -1,8 +1,9 @@
 import sh from 'shelljs'
+import { getDockerTags } from 'versioning'
 import pkg from '../package.json' with { type: 'json' }
 
 async function run() {
-  const { LOCAL, GITHUB_SHA, PLATFORM } = process.env
+  const { LOCAL, PLATFORM, VERSION, GITHUB_REF } = process.env
   const REGISTRY = 'ghcr.io'
   const OWNER = 'andrew-codes'
   let tags: Array<string> = []
@@ -10,10 +11,7 @@ async function run() {
   if (LOCAL === 'true') {
     tags = ['local']
   } else {
-    if (!GITHUB_SHA) {
-      throw new Error('Missing environment variables.')
-    }
-    tags = [GITHUB_SHA]
+    tags = await getDockerTags(VERSION, GITHUB_REF)
   }
 
   await Promise.all(

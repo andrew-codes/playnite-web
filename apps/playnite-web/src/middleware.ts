@@ -41,8 +41,13 @@ async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Use localhost for internal API calls to avoid issues with external URLs in K8s
+  const baseUrl =
+    process.env.NEXT_PUBLIC_INTERNAL_API_URL ||
+    `http://localhost:${process.env.PORT || 3000}`
+
   try {
-    const siteSettingsResponse = await fetch(new URL('/api', request.url), {
+    const siteSettingsResponse = await fetch(new URL('/api', baseUrl), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -110,7 +115,7 @@ async function middleware(request: NextRequest) {
       const setupStatus = siteSettingsResult.data.accountSetupStatus
 
       if (setupStatus.isSetup && !setupStatus.allowAnonymousAccountCreation) {
-        const usersResponse = await fetch(new URL('/api', request.url), {
+        const usersResponse = await fetch(new URL('/api', baseUrl), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

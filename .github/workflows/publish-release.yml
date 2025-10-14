@@ -434,3 +434,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXCLUDE: "*,!tag:linux"
           INCLUDE_GH_RELEASE: "true"
+          GITHUB_SHA: ${{ github.sha }}
