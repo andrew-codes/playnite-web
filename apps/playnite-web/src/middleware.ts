@@ -5,11 +5,11 @@ import protectedRoutes from './protectedRoutes'
 import { createNull, fromString, hasIdentity, Identity } from './server/oid'
 
 // Simulated user session (in practice, fetch from auth provider)
-const getSession = async (
+const getSession = (
   request: NextRequest,
-): Promise<{
+): {
   user: { id: Identity; username: string | null; permission: PermissionValue }
-}> => {
+} => {
   const authCookie = request.cookies.get('authorization')?.value ?? null
   if (authCookie) {
     const cookieUser = jwt.decode(authCookie)
@@ -36,82 +36,88 @@ const getSession = async (
 async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Skip middleware for static files
   if (/\.[^/]+$/.test(pathname)) {
     return NextResponse.next()
   }
 
-  const session = await getSession(request)
+  try {
+    const siteSettingsResponse = await fetch(new URL('/api', request.url), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        query: `query AccountSetupStatus {
+        accountSetupStatus {
+          isSetup
+          allowAnonymousAccountCreation
+          }
+          }`,
+      }),
+    })
+    const siteSettingsResult = await siteSettingsResponse.json()
 
-  const siteSettingsResponse = await fetch(new URL('/api', request.url), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({
-      query: `query AccountSetupStatus {
-                accountSetupStatus {
-                  isSetup
-                  allowAnonymousAccountCreation
-                }
-              }`,
-    }),
-  })
-  const siteSettingsResult = await siteSettingsResponse.json()
-  const userAuthenticated = hasIdentity(session.user.id)
+    const session = getSession(request)
+    const userAuthenticated = hasIdentity(session.user.id)
 
-  if (pathname === '/account/new') {
-    if (userAuthenticated) {
-      return NextResponse.redirect(new URL('/', request.url))
-    }
-
-    if (
-      siteSettingsResult.data.accountSetupStatus.isSetup &&
-      !siteSettingsResult.data.accountSetupStatus.allowAnonymousAccountCreation
-    ) {
-      return NextResponse.rewrite(new URL('/forbidden', request.url), {
-        status: 403,
-      })
-    }
-
-    return NextResponse.next()
-  }
-
-  for (const [match, hasPermission] of protectedRoutes) {
-    if (match(request)) {
-      if (!userAuthenticated) {
-        const loginUrl = new URL('/login', request.url)
-        loginUrl.searchParams.set('returnTo', request.nextUrl.pathname)
-        return NextResponse.redirect(loginUrl)
+    if (pathname === '/account/new') {
+      if (userAuthenticated) {
+        return NextResponse.redirect(new URL('/', request.url))
       }
 
-      if (!hasPermission(session.user, request)) {
+      if (
+        siteSettingsResult.data.accountSetupStatus.isSetup &&
+        !siteSettingsResult.data.accountSetupStatus
+          .allowAnonymousAccountCreation
+      ) {
         return NextResponse.rewrite(new URL('/forbidden', request.url), {
           status: 403,
         })
       }
+
+      return NextResponse.next()
     }
-  }
 
-  if (pathname === '/login' && userAuthenticated) {
-    return NextResponse.redirect(
-      new URL(`/u/${session.user.username}`, request.url),
-    )
-  }
+    for (const [match, hasPermission] of protectedRoutes) {
+      if (match(request)) {
+        if (!userAuthenticated) {
+          const loginUrl = new URL('/login', request.url)
+          loginUrl.searchParams.set('returnTo', request.nextUrl.pathname)
+          return NextResponse.redirect(loginUrl)
+        }
 
-  if (!siteSettingsResult.data.accountSetupStatus.isSetup) {
-    return NextResponse.redirect(new URL('/account/new', request.url))
-  }
+        if (!hasPermission(session.user, request)) {
+          return NextResponse.rewrite(new URL('/forbidden', request.url), {
+            status: 403,
+          })
+        }
+      }
+    }
 
-  if (pathname === '/') {
-    const setupStatus = siteSettingsResult.data.accountSetupStatus
+    if (pathname === '/login' && userAuthenticated) {
+      return NextResponse.redirect(
+        new URL(`/u/${session.user.username}`, request.url),
+      )
+    }
 
-    if (setupStatus.isSetup && !setupStatus.allowAnonymousAccountCreation) {
-      const usersResponse = await fetch(new URL('/api', request.url), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          query: `query Users($page: Int, $perPage: Int) {
+    if (!siteSettingsResult.data.accountSetupStatus.isSetup) {
+      return NextResponse.redirect(new URL('/account/new', request.url))
+    }
+
+    if (pathname === '/') {
+      const setupStatus = siteSettingsResult.data.accountSetupStatus
+
+      if (setupStatus.isSetup && !setupStatus.allowAnonymousAccountCreation) {
+        const usersResponse = await fetch(new URL('/api', request.url), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            query: `query Users($page: Int, $perPage: Int) {
             users(page: $page, perPage: $perPage) {
               userCount
               users {
@@ -122,38 +128,46 @@ async function middleware(request: NextRequest) {
               }
             }
           }`,
-          variables: {
-            page: 1,
-            perPage: 1,
-          },
-        }),
-      })
+            variables: {
+              page: 1,
+              perPage: 1,
+            },
+          }),
+        })
 
-      const usersResult = await usersResponse.json()
-      const { userCount, users } = usersResult.data.users
+        const usersResult = await usersResponse.json()
+        const { userCount, users } = usersResult.data.users
 
-      if (userCount === 1 && users.length === 1) {
-        const user = users[0]
-        const libraryCount = user.libraries?.length || 0
+        if (userCount === 1 && users.length === 1) {
+          const user = users[0]
+          const libraryCount = user.libraries?.length || 0
 
-        if (libraryCount === 1) {
-          return NextResponse.rewrite(
-            new URL(`/u/${user.username}/${user.libraries[0].id}`, request.url),
-          )
-        } else if (libraryCount > 1) {
-          return NextResponse.rewrite(
-            new URL(`/u/${user.username}`, request.url),
-          )
+          if (libraryCount === 1) {
+            return NextResponse.rewrite(
+              new URL(
+                `/u/${user.username}/${user.libraries[0].id}`,
+                request.url,
+              ),
+            )
+          } else if (libraryCount > 1) {
+            return NextResponse.rewrite(
+              new URL(`/u/${user.username}`, request.url),
+            )
+          }
         }
       }
     }
+  } catch (error) {
+    console.error('Middleware error:', error)
+    return new NextResponse('Internal Server Error', { status: 500 })
   }
 
   return NextResponse.next()
 }
 
 const config = {
-  matcher: ['/((?!_next|favicon.ico|sitemap.xml|robots.txt).*)'],
+  matcher: ['/((?!_next|api|favicon.ico|sitemap.xml|robots.txt).*)'],
+  runtime: 'nodejs', // Use Node.js runtime instead of Edge Runtime for custom server compatibility
 }
 
 export { config, middleware }

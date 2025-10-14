@@ -295,7 +295,6 @@ jobs:
         id: yarn_version
       - name: Enable yarn
         run: corepack enable
-      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
         env:
@@ -333,7 +332,6 @@ jobs:
         id: yarn_version
       - name: Enable yarn
         run: corepack enable
-      - run: corepack prepare --activate yarn@${{ steps.yarn_version.outputs.value }}
       - name: Install deps
         run: yarn
         env:
