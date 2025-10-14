@@ -185,3 +185,10 @@ Packages:
       - "feat: single user instance rewrites of landing pages (#807)"
       - "feat: landing page shows library in single user instances"
       - "feat: migrate to GraphQL API with Postgres, multi-tenant architecture"
+  - Version: 12.0.1
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.0.1/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_0_1.pext
+    ReleaseDate: 2025-10-14
+    RequiredApiVersion: 6.12.0
+    Changelog:
+      - "fix: middleware uses node.js runtime (#821)"
+      - "fix: middleware uses node.js runtime"
