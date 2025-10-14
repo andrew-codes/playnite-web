@@ -24,15 +24,12 @@ async function run() {
     `Removing package ${packageToRemove.id} with tags ${packageToRemove.metadata.container.tags.join(', ')}`,
   )
 
-  await fetch(
-    `https://api.github.com/user/packages/container/${OWNER}/playnite-web-app/versions/${packageToRemove.id}`,
-    {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-      },
+  await fetch(packageToRemove.url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
     },
-  )
+  })
 }
 
 run().catch((error) => {
