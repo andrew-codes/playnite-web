@@ -205,3 +205,10 @@ Packages:
       - "fix: release additional platforms (#826)"
       - "fix: release additional supported platform images"
       - "chore: allow sha published images"
+  - Version: 12.0.3
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.0.3/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_0_3.pext
+    ReleaseDate: 2025-10-15
+    RequiredApiVersion: 6.12.0
+    Changelog:
+      - "fix: clearing sign in token when changing username/password (#831)"
+      - "fix: reset token when username/password changes"
