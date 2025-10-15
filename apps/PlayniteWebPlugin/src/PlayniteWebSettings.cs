@@ -40,13 +40,21 @@ namespace PlayniteWeb
     public string Username
     {
       get => username;
-      set => SetValue(ref username, value);
+      set
+      {
+        SetValue(ref username, value);
+        token = null;
+      }
     }
 
     public byte[] Password
     {
       get => password;
-      set => SetValue(ref password, value);
+      set
+      {
+        SetValue(ref password, value);
+        token = null;
+      }
     }
 
     public int? Port
