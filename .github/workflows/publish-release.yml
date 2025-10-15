@@ -359,7 +359,7 @@ jobs:
           LOG_LEVEL: info
           PLATFORM: linux/amd64,linux/arm64
           PUBLISH: "true"
-          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF: ${{ github.sha }}
 
   publish_release:
     name: Publish release
