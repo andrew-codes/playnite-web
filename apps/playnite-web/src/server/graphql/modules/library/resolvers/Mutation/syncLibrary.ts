@@ -4,6 +4,7 @@ import { runState } from '../../../../../../feature/game/runStates'
 import logger from '../../../../../logger'
 import { getClient } from '../../../../../mqtt'
 import { create, domains, hasIdentity } from '../../../../../oid'
+import { dbOperationSemaphore } from '../../../../../utils/semaphore'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const syncLibrary: NonNullable<
@@ -302,14 +303,20 @@ export const syncLibrary: NonNullable<
 
   const mqtt = await getClient()
 
+  // Process all releases concurrently
+  // The semaphore limits concurrent DB operations globally across all users
+  const releasesToUpdate = _arg.libraryData.update.releases.filter((release) => {
+    return [sources.some((s) => s.playniteId === release.source)].every(
+      Boolean,
+    )
+  })
+
+  logger.debug(
+    `Processing ${releasesToUpdate.length} releases for library ${libraryId}`,
+  )
+
   const updatedReleases = await Promise.all(
-    _arg.libraryData.update.releases
-      .filter((release) => {
-        return [sources.some((s) => s.playniteId === release.source)].every(
-          Boolean,
-        )
-      })
-      .map(async (release, i) => {
+    releasesToUpdate.map(async (release) => {
         const source = sources.find((s) => s.playniteId === release.source) as {
           id: number
           platformId: number
@@ -334,7 +341,9 @@ export const syncLibrary: NonNullable<
           }
           const coverSlug = `${slug(release)}.webp`
 
-          const upserted = await _ctx.db.release.upsert({
+          // Use semaphore to limit concurrent database operations globally
+          const upserted = await dbOperationSemaphore.execute(() =>
+            _ctx.db.release.upsert({
             where: {
               playniteId_libraryId: { playniteId: release.id, libraryId },
             },
@@ -450,7 +459,8 @@ export const syncLibrary: NonNullable<
                 },
               }),
             },
-          })
+          }),
+          )
 
           await mqtt.publish(
             `playnite-web/cover/update`,
