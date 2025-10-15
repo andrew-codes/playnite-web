@@ -46,6 +46,7 @@ The following environment variables **must be set** before running docker-compos
 
 The following environment variables have default values but can be overridden:
 
+- `DB_CONNECTION_LIMIT` - set the number of allowed simultaneous database connections; defaults to 12.
 - `DB_USER` - PostgreSQL database username (default: `playnite`)
 - `APP_PORT` - Port to expose the main web application on (default: `3000`)
 - `APP_HOST` - Hostname for the application (default: `localhost`)
