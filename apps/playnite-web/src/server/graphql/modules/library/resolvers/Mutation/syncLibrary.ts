@@ -4,7 +4,6 @@ import { runState } from '../../../../../../feature/game/runStates'
 import logger from '../../../../../logger'
 import { getClient } from '../../../../../mqtt'
 import { create, domains, hasIdentity } from '../../../../../oid'
-import { dbOperationSemaphore } from '../../../../../utils/semaphore'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const syncLibrary: NonNullable<
@@ -141,57 +140,43 @@ export const syncLibrary: NonNullable<
     `Updating library ${libraryId} with new features`,
     _arg.libraryData.update.features,
   )
-  // Features
-  const updatedFeatures = await Promise.all(
-    _arg.libraryData.update.features.map(async (feature) =>
-      _ctx.db.feature.upsert({
-        where: {
-          playniteId_libraryId: { playniteId: feature.id, libraryId },
-        },
-        create: {
-          playniteId: feature.id,
-          name: feature.name,
-          Library: {
-            connect: { id: libraryId },
-          },
-        },
-        update: {
-          name: feature.name,
-        },
-      }),
-    ),
-  )
+  // Features - batch upsert
+  if (_arg.libraryData.update.features.length > 0) {
+    await _ctx.db.$executeRaw`
+      INSERT INTO "Feature" ("playniteId", "name", "libraryId")
+      SELECT * FROM UNNEST(
+        ${_arg.libraryData.update.features.map((f) => f.id)}::uuid[],
+        ${_arg.libraryData.update.features.map((f) => f.name)}::text[],
+        ${Array(_arg.libraryData.update.features.length).fill(libraryId)}::integer[]
+      )
+      ON CONFLICT ("playniteId", "libraryId")
+      DO UPDATE SET "name" = EXCLUDED."name"
+    `
+  }
 
   logger.debug(
     `Updating library ${libraryId} with new platforms`,
     _arg.libraryData.update.platforms,
   )
-  // Platforms
-  const updatedPlatforms = await Promise.all(
-    _arg.libraryData.update.platforms.map(async (platform) =>
-      _ctx.db.platform.upsert({
-        where: {
-          playniteId_libraryId: { playniteId: platform.id, libraryId },
-        },
-        create: {
-          playniteId: platform.id,
-          name: platform.name,
-          Library: {
-            connect: { id: libraryId },
-          },
-        },
-        update: {
-          name: platform.name,
-        },
-      }),
-    ),
-  )
+  // Platforms - batch upsert
+  if (_arg.libraryData.update.platforms.length > 0) {
+    await _ctx.db.$executeRaw`
+      INSERT INTO "Platform" ("playniteId", "name", "libraryId")
+      SELECT * FROM UNNEST(
+        ${_arg.libraryData.update.platforms.map((p) => p.id)}::uuid[],
+        ${_arg.libraryData.update.platforms.map((p) => p.name)}::text[],
+        ${Array(_arg.libraryData.update.platforms.length).fill(libraryId)}::integer[]
+      )
+      ON CONFLICT ("playniteId", "libraryId")
+      DO UPDATE SET "name" = EXCLUDED."name"
+    `
+  }
 
   logger.debug(
     `Updating library ${libraryId} with new sources`,
     _arg.libraryData.update.sources,
   )
-  // Sources
+  // Sources - batch upsert
   const platforms = await _ctx.db.platform.findMany({
     where: { libraryId },
     select: { id: true, playniteId: true },
@@ -199,93 +184,63 @@ export const syncLibrary: NonNullable<
       name: 'asc',
     },
   })
-  const updatedSources = await Promise.all(
-    _arg.libraryData.update.sources
-      .filter((source) => {
-        return platforms.some((p) => p.playniteId === source.platform)
-      })
-      .map(async (source) =>
-        _ctx.db.source.upsert({
-          where: {
-            playniteId_libraryId: { playniteId: source.id, libraryId },
-          },
-          create: {
-            playniteId: source.id,
-            name: source.name,
-            Library: {
-              connect: {
-                id: libraryId,
-              },
-            },
-            Platform: {
-              connect: {
-                playniteId_libraryId: {
-                  playniteId: source.platform,
-                  libraryId,
-                },
-              },
-            },
-          },
-          update: {
-            name: source.name,
-            Platform: {
-              connect: {
-                playniteId_libraryId: {
-                  playniteId: source.platform,
-                  libraryId,
-                },
-              },
-            },
-          },
-        }),
-      ),
-  )
+  const platformMap = new Map(platforms.map((p) => [p.playniteId, p.id]))
+
+  const validSources = _arg.libraryData.update.sources.filter((source) => {
+    return platformMap.has(source.platform)
+  })
+
+  if (validSources.length > 0) {
+    await _ctx.db.$executeRaw`
+      INSERT INTO "Source" ("playniteId", "name", "libraryId", "platformId")
+      SELECT * FROM UNNEST(
+        ${validSources.map((s) => s.id)}::uuid[],
+        ${validSources.map((s) => s.name)}::text[],
+        ${Array(validSources.length).fill(libraryId)}::integer[],
+        ${validSources.map((s) => platformMap.get(s.platform))}::integer[]
+      )
+      ON CONFLICT ("playniteId", "libraryId")
+      DO UPDATE SET
+        "name" = EXCLUDED."name",
+        "platformId" = EXCLUDED."platformId"
+    `
+  }
 
   logger.debug(
     `Updating library ${libraryId} with new tags`,
     _arg.libraryData.update.tags,
   )
-  // Tags
-  const updatedTags = await Promise.all(
-    _arg.libraryData.update.tags.map(async (tag) => {
-      return _ctx.db.tag.upsert({
-        where: { playniteId_libraryId: { playniteId: tag.id, libraryId } },
-        create: {
-          playniteId: tag.id,
-          name: tag.name,
-          Library: {
-            connect: { id: libraryId },
-          },
-        },
-        update: {
-          name: tag.name,
-        },
-      })
-    }),
-  )
+  // Tags - batch upsert
+  if (_arg.libraryData.update.tags.length > 0) {
+    await _ctx.db.$executeRaw`
+      INSERT INTO "Tag" ("playniteId", "name", "libraryId")
+      SELECT * FROM UNNEST(
+        ${_arg.libraryData.update.tags.map((t) => t.id)}::uuid[],
+        ${_arg.libraryData.update.tags.map((t) => t.name)}::text[],
+        ${Array(_arg.libraryData.update.tags.length).fill(libraryId)}::integer[]
+      )
+      ON CONFLICT ("playniteId", "libraryId")
+      DO UPDATE SET "name" = EXCLUDED."name"
+    `
+  }
 
   logger.debug(
     `Updating library ${libraryId} with new completion states`,
     _arg.libraryData.update.completionStates,
   )
-  // CompletionStates
-  const updatedCompletionStates = await Promise.all(
-    _arg.libraryData.update.completionStates.map(async (status) =>
-      _ctx.db.completionStatus.upsert({
-        where: { playniteId_libraryId: { playniteId: status.id, libraryId } },
-        create: {
-          playniteId: status.id,
-          name: status.name,
-          Library: {
-            connect: { id: libraryId },
-          },
-        },
-        update: {
-          name: status.name,
-        },
-      }),
-    ),
-  )
+  // CompletionStates - batch upsert
+  if (_arg.libraryData.update.completionStates.length > 0) {
+    await _ctx.db.$executeRaw`
+      INSERT INTO "CompletionStatus" ("playniteId", "name", "libraryId")
+      SELECT * FROM UNNEST(
+        ${_arg.libraryData.update.completionStates.map((s) => s.id)}::uuid[],
+        ${_arg.libraryData.update.completionStates.map((s) => s.name)}::text[],
+        ${Array(_arg.libraryData.update.completionStates.length).fill(libraryId)}::integer[]
+      )
+      ON CONFLICT ("playniteId", "libraryId")
+      DO UPDATE SET "name" = EXCLUDED."name"
+    `
+  }
 
   logger.debug(
     `Persisting ${_arg.libraryData.update.releases.length} release assets for library ${libraryId}`,
@@ -315,198 +270,293 @@ export const syncLibrary: NonNullable<
     `Processing ${releasesToUpdate.length} releases for library ${libraryId}`,
   )
 
-  const updatedReleases = await Promise.all(
-    releasesToUpdate.map(async (release) => {
-        const source = sources.find((s) => s.playniteId === release.source) as {
-          id: number
-          platformId: number
-        }
+  const sourceMap = new Map(sources.map((s) => [s.playniteId, s.id]))
+  const completionStatusMap = new Map(
+    completionStates.map((cs) => [cs.playniteId, cs.id]),
+  )
 
-        logger.silly(
-          `Updating release ${release.id} for library ${libraryId}`,
-          release,
+  // Prepare release data for batch insert
+  const releaseData = releasesToUpdate.map((release) => {
+    let releaseDate: Date | null = null
+    if (release.releaseDate) {
+      const date = new Date(release.releaseDate)
+      if (isNaN(date.getTime())) {
+        logger.warn(
+          `Invalid release date for release ${release.id}, ${release.title}: ${release.releaseDate}`,
         )
-        try {
-          let releaseDate: Date | null = null
-          if (release.releaseDate) {
-            const date = new Date(release.releaseDate)
-            if (isNaN(date.getTime())) {
-              logger.warn(
-                `Invalid release date for release ${release.id}, ${release.title}: ${release.releaseDate}`,
-              )
-              releaseDate = null
-            } else {
-              releaseDate = date
-            }
+        releaseDate = null
+      } else {
+        releaseDate = date
+      }
+    }
+
+    return {
+      playniteId: release.id,
+      title: release.title,
+      description: release.description,
+      releaseDate,
+      releaseYear: releaseDate?.getFullYear() ?? null,
+      criticScore: release.criticScore,
+      playtime: BigInt(release.playtime ?? '0'),
+      communityScore: release.communityScore,
+      hidden: release.hidden ?? false,
+      sourceId: sourceMap.get(release.source),
+      completionStatusId:
+        release.completionStatus &&
+        release.completionStatus !== '00000000-0000-0000-0000-000000000000'
+          ? completionStatusMap.get(release.completionStatus)
+          : null,
+      coverSlug: `${slug(release)}.webp`,
+      features: release.features ?? [],
+      tags: release.tags ?? [],
+    }
+  })
+
+  // Batch upsert releases using raw SQL
+  if (releaseData.length > 0) {
+    // First, upsert releases without relationships
+    await _ctx.db.$executeRaw`
+      INSERT INTO "Release" (
+        "playniteId", "title", "description", "releaseDate", "releaseYear",
+        "criticScore", "playtime", "communityScore", "hidden", "sourceId",
+        "completionStatusId", "libraryId", "runState"
+      )
+      SELECT * FROM UNNEST(
+        ${releaseData.map((r) => r.playniteId)}::uuid[],
+        ${releaseData.map((r) => r.title)}::text[],
+        ${releaseData.map((r) => r.description)}::text[],
+        ${releaseData.map((r) => r.releaseDate)}::timestamp[],
+        ${releaseData.map((r) => r.releaseYear)}::integer[],
+        ${releaseData.map((r) => r.criticScore)}::integer[],
+        ${releaseData.map((r) => r.playtime.toString())}::bigint[],
+        ${releaseData.map((r) => r.communityScore)}::integer[],
+        ${releaseData.map((r) => r.hidden)}::boolean[],
+        ${releaseData.map((r) => r.sourceId)}::integer[],
+        ${releaseData.map((r) => r.completionStatusId)}::integer[],
+        ${Array(releaseData.length).fill(libraryId)}::integer[],
+        ${Array(releaseData.length).fill(runState.stopped)}::text[]
+      )
+      ON CONFLICT ("playniteId", "libraryId")
+      DO UPDATE SET
+        "title" = EXCLUDED."title",
+        "description" = EXCLUDED."description",
+        "releaseDate" = EXCLUDED."releaseDate",
+        "releaseYear" = EXCLUDED."releaseYear",
+        "criticScore" = EXCLUDED."criticScore",
+        "communityScore" = EXCLUDED."communityScore",
+        "hidden" = EXCLUDED."hidden",
+        "sourceId" = EXCLUDED."sourceId",
+        "completionStatusId" = EXCLUDED."completionStatusId"
+    `
+
+    // Upsert covers for all releases
+    await _ctx.db.$executeRaw`
+      INSERT INTO "Asset" ("type", "slug", "releaseId")
+      SELECT 'cover', cover_data.slug, r.id
+      FROM UNNEST(
+        ${releaseData.map((r) => r.playniteId)}::uuid[],
+        ${releaseData.map((r) => r.coverSlug)}::text[]
+      ) AS cover_data(playnite_id, slug)
+      JOIN "Release" r ON r."playniteId" = cover_data.playnite_id AND r."libraryId" = ${libraryId}
+      ON CONFLICT ("releaseId", "type")
+      DO UPDATE SET "slug" = EXCLUDED."slug"
+    `
+
+    // Handle many-to-many relationships (Features and Tags) separately
+    // Get all release IDs
+    const insertedReleases = await _ctx.db.release.findMany({
+      where: {
+        libraryId,
+        playniteId: { in: releaseData.map((r) => r.playniteId) },
+      },
+      select: { id: true, playniteId: true },
+    })
+
+    const releaseIdMap = new Map(
+      insertedReleases.map((r) => [r.playniteId, r.id]),
+    )
+
+    // Prepare Features relationships
+    const featureRelations: Array<{ releaseId: number; featureId: number }> = []
+    const tagRelations: Array<{ releaseId: number; tagId: number }> = []
+
+    const features = await _ctx.db.feature.findMany({
+      where: { libraryId },
+      select: { id: true, playniteId: true },
+    })
+    const featureIdMap = new Map(features.map((f) => [f.playniteId, f.id]))
+
+    const tags = await _ctx.db.tag.findMany({
+      where: { libraryId },
+      select: { id: true, playniteId: true },
+    })
+    const tagIdMap = new Map(tags.map((t) => [t.playniteId, t.id]))
+
+    for (let i = 0; i < releasesToUpdate.length; i++) {
+      const release = releasesToUpdate[i]
+      const releaseId = releaseIdMap.get(release.id)
+      if (!releaseId) continue
+
+      // Features
+      if (release.features) {
+        for (const featurePlayniteId of release.features.filter(
+          (f) => f !== null,
+        )) {
+          const featureId = featureIdMap.get(featurePlayniteId)
+          if (featureId) {
+            featureRelations.push({ releaseId, featureId })
           }
-          const coverSlug = `${slug(release)}.webp`
-
-          // Use semaphore to limit concurrent database operations globally
-          const upserted = await dbOperationSemaphore.execute(() =>
-            _ctx.db.release.upsert({
-            where: {
-              playniteId_libraryId: { playniteId: release.id, libraryId },
-            },
-            create: {
-              playniteId: release.id,
-              title: release.title,
-              description: release.description,
-              releaseDate: releaseDate,
-              releaseYear: releaseDate?.getFullYear() ?? null,
-              criticScore: release.criticScore,
-              playtime: BigInt(release.playtime ?? '0'),
-              communityScore: release.communityScore,
-              runState: runState.stopped,
-              Library: {
-                connect: { id: libraryId },
-              },
-              Cover: {
-                create: {
-                  type: 'cover',
-                  slug: coverSlug,
-                },
-              },
-              hidden: release.hidden ?? false,
-              Source: {
-                connect: {
-                  id: source.id,
-                },
-              },
-              Features: {
-                connect: (release.features ?? [])
-                  .filter((f) => f !== null)
-                  .map((f) => {
-                    return {
-                      playniteId_libraryId: {
-                        playniteId: f,
-                        libraryId,
-                      },
-                    }
-                  }),
-              },
-              ...(release?.completionStatus &&
-                release.completionStatus !==
-                  '00000000-0000-0000-0000-000000000000' && {
-                  CompletionStatus: {
-                    connect: {
-                      playniteId_libraryId: {
-                        playniteId: release.completionStatus,
-                        libraryId,
-                      },
-                    },
-                  },
-                }),
-              Tags: {
-                connect: (release.tags ?? [])
-                  .filter((t) => t !== null)
-                  .map((t) => ({
-                    playniteId_libraryId: { playniteId: t, libraryId },
-                  })),
-              },
-            },
-            update: {
-              title: release.title,
-              description: release.description,
-              releaseDate: releaseDate,
-              releaseYear: releaseDate?.getFullYear() ?? null,
-              criticScore: release.criticScore,
-              communityScore: release.communityScore,
-              hidden: release.hidden ?? false,
-              Cover: {
-                update: {
-                  type: 'cover',
-                  slug: coverSlug,
-                },
-              },
-              ...(release.features && {
-                Features: {
-                  set: release.features
-                    .filter((f) => f !== null)
-                    .map((f) => {
-                      return {
-                        playniteId_libraryId: {
-                          playniteId: f,
-                          libraryId,
-                        },
-                      }
-                    }),
-                },
-              }),
-              Source: {
-                connect: {
-                  id: source.id,
-                },
-              },
-              ...(release.completionStatus &&
-                release.completionStatus !==
-                  '00000000-0000-0000-0000-000000000000' && {
-                  CompletionStatus: {
-                    connect: {
-                      playniteId_libraryId: {
-                        playniteId: release.completionStatus,
-                        libraryId,
-                      },
-                    },
-                  },
-                }),
-              ...(release.tags && {
-                Tags: {
-                  set: release.tags
-                    .filter((t) => t !== null)
-                    .map((t) => ({
-                      playniteId_libraryId: { playniteId: t, libraryId },
-                    })),
-                },
-              }),
-            },
-          }),
-          )
-
-          await mqtt.publish(
-            `playnite-web/cover/update`,
-            JSON.stringify({ libraryId, release }),
-            { qos: 1 },
-          )
-
-          return upserted
-        } catch (error) {
-          logger.error(
-            `Error updating release ${release.id}, ${release.title} for library ${libraryId}`,
-            error,
-          )
         }
-      }),
+      }
+
+      // Tags
+      if (release.tags) {
+        for (const tagPlayniteId of release.tags.filter((t) => t !== null)) {
+          const tagId = tagIdMap.get(tagPlayniteId)
+          if (tagId) {
+            tagRelations.push({ releaseId, tagId })
+          }
+        }
+      }
+    }
+
+    // Clear and rebuild relationships
+    if (insertedReleases.length > 0) {
+      // Clear existing relationships
+      await _ctx.db.$executeRaw`
+        DELETE FROM "_FeatureToRelease"
+        WHERE "B" IN (${insertedReleases.map((r) => r.id)})
+      `
+      await _ctx.db.$executeRaw`
+        DELETE FROM "_ReleaseToTag"
+        WHERE "A" IN (${insertedReleases.map((r) => r.id)})
+      `
+
+      // Insert new feature relationships
+      if (featureRelations.length > 0) {
+        await _ctx.db.$executeRaw`
+          INSERT INTO "_FeatureToRelease" ("A", "B")
+          SELECT * FROM UNNEST(
+            ${featureRelations.map((r) => r.featureId)}::integer[],
+            ${featureRelations.map((r) => r.releaseId)}::integer[]
+          )
+          ON CONFLICT DO NOTHING
+        `
+      }
+
+      // Insert new tag relationships
+      if (tagRelations.length > 0) {
+        await _ctx.db.$executeRaw`
+          INSERT INTO "_ReleaseToTag" ("A", "B")
+          SELECT * FROM UNNEST(
+            ${tagRelations.map((r) => r.releaseId)}::integer[],
+            ${tagRelations.map((r) => r.tagId)}::integer[]
+          )
+          ON CONFLICT DO NOTHING
+        `
+      }
+    }
+  }
+
+  // Publish MQTT messages for all releases
+  await Promise.all(
+    releasesToUpdate.map(async (release) => {
+      try {
+        await mqtt.publish(
+          `playnite-web/cover/update`,
+          JSON.stringify({ libraryId, release }),
+          { qos: 1 },
+        )
+      } catch (error) {
+        logger.error(
+          `Error publishing MQTT message for release ${release.id}, ${release.title}`,
+          error,
+        )
+      }
+    }),
   )
 
   const games = groupBy(_arg.libraryData.update.releases, 'title')
   logger.info(
     `Updating library ${libraryId} with ${Object.keys(games).length} games`,
   )
-  const updatedGames = await Promise.all(
-    Object.entries(games).map(async ([title, releases]) => {
-      return await _ctx.db.game.upsert({
-        where: { title_libraryId: { title, libraryId } },
-        create: {
-          title,
-          Library: {
-            connect: { id: libraryId },
-          },
-          Releases: {
-            connect: releases.map((r) => ({
-              playniteId_libraryId: { playniteId: r.id, libraryId },
-            })),
-          },
-        },
-        update: {
-          Releases: {
-            set: releases.map((r) => ({
-              playniteId_libraryId: { playniteId: r.id, libraryId },
-            })),
-          },
-        },
-      })
-    }),
-  )
+
+  // Batch upsert games
+  const gameEntries = Object.entries(games)
+  if (gameEntries.length > 0) {
+    // First, upsert all games
+    await _ctx.db.$executeRaw`
+      INSERT INTO "Game" ("title", "libraryId")
+      SELECT * FROM UNNEST(
+        ${gameEntries.map(([title]) => title)}::text[],
+        ${Array(gameEntries.length).fill(libraryId)}::integer[]
+      )
+      ON CONFLICT ("title", "libraryId")
+      DO NOTHING
+    `
+
+    // Get all game IDs
+    const insertedGames = await _ctx.db.game.findMany({
+      where: {
+        libraryId,
+        title: { in: gameEntries.map(([title]) => title) },
+      },
+      select: { id: true, title: true },
+    })
+
+    const gameIdMap = new Map(insertedGames.map((g) => [g.title, g.id]))
+
+    // Get all release IDs for the games
+    const allReleasePlayniteIds = gameEntries.flatMap(([, releases]) =>
+      releases.map((r) => r.id),
+    )
+    const releasesForGames = await _ctx.db.release.findMany({
+      where: {
+        libraryId,
+        playniteId: { in: allReleasePlayniteIds },
+      },
+      select: { id: true, playniteId: true, title: true },
+    })
+
+    const releaseIdMap = new Map(
+      releasesForGames.map((r) => [r.playniteId, r.id]),
+    )
+
+    // Build game-release relationships
+    const gameReleaseRelations: Array<{ gameId: number; releaseId: number }> =
+      []
+    for (const [title, releases] of gameEntries) {
+      const gameId = gameIdMap.get(title)
+      if (!gameId) continue
+
+      for (const release of releases) {
+        const releaseId = releaseIdMap.get(release.id)
+        if (releaseId) {
+          gameReleaseRelations.push({ gameId, releaseId })
+        }
+      }
+    }
+
+    // Clear existing relationships for these games
+    if (insertedGames.length > 0) {
+      await _ctx.db.$executeRaw`
+        DELETE FROM "_GameToRelease"
+        WHERE "A" IN (${insertedGames.map((g) => g.id)})
+      `
+
+      // Insert new relationships
+      if (gameReleaseRelations.length > 0) {
+        await _ctx.db.$executeRaw`
+          INSERT INTO "_GameToRelease" ("A", "B")
+          SELECT * FROM UNNEST(
+            ${gameReleaseRelations.map((r) => r.gameId)}::integer[],
+            ${gameReleaseRelations.map((r) => r.releaseId)}::integer[]
+          )
+          ON CONFLICT DO NOTHING
+        `
+      }
+    }
+  }
 
   // Clean up games without releases
   logger.info(`Removing games without releases from library ${libraryId}`)
