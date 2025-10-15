@@ -1,3 +1,5 @@
+import logger from 'dev-logger'
+
 async function run() {
   const { REGISTRY, OWNER, PR_NUMBER, GITHUB_TOKEN } = process.env
 
@@ -12,6 +14,10 @@ async function run() {
     )
   ).json()
 
+  logger.info(
+    `Found ${packages.length} packages in the registry, checking for PR #${PR_NUMBER}`,
+  )
+
   const packageToRemove = packages.find((pkg) =>
     pkg.metadata.container.tags.some((tag) => tag.includes(PR_NUMBER)),
   )
@@ -20,22 +26,19 @@ async function run() {
     return
   }
 
-  console.info(
+  logger.info(
     `Removing package ${packageToRemove.id} with tags ${packageToRemove.metadata.container.tags.join(', ')}`,
   )
 
-  await fetch(
-    `https://api.github.com/user/packages/container/${OWNER}/playnite-web-app/versions/${packageToRemove.id}`,
-    {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`,
-      },
+  await fetch(packageToRemove.url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
     },
-  )
+  })
 }
 
 run().catch((error) => {
-  console.error('FAILURE', error)
+  logger.error('FAILURE', error)
   process.exit(1)
 })
