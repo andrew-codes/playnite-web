@@ -3,7 +3,7 @@ import { getDockerTags } from 'versioning'
 import pkg from '../package.json'
 
 async function run() {
-  const { LOCAL, VERSION, GITHUB_REF, PLATFORM } = process.env
+  const { LOCAL, VERSION, GITHUB_REF, GITHUB_SHA, PLATFORM } = process.env
   const REGISTRY = 'ghcr.io'
   const OWNER = 'andrew-codes'
   let tags: Array<string> = []
@@ -11,7 +11,7 @@ async function run() {
   if (LOCAL === 'true') {
     tags = ['local']
   } else {
-    tags = await getDockerTags(VERSION, GITHUB_REF)
+    tags = await getDockerTags(VERSION, GITHUB_REF, GITHUB_SHA)
   }
 
   await Promise.all(

@@ -3,11 +3,16 @@ import { isEmpty } from 'lodash-es'
 import semver from 'semver'
 import sh from 'shelljs'
 
-const getDockerTags = async (version?: string, ref?: string) => {
+const getDockerTags = async (version?: string, ref?: string, sha?: string) => {
   logger.info(`version: ${version}`)
   logger.info(`ref: ${ref}`)
+  logger.info(`sha: ${sha}`)
 
   const tags = [] as Array<string>
+  if (!!sha && /^[0-9a-f]{7,40}$/.test(sha)) {
+    tags.push(sha)
+  }
+
   if (!!ref && /^refs\/pull\//.test(ref)) {
     const prNumber = ref.replace(/^refs\/pull\//, '').replace(/\/merge$/, '')
 
