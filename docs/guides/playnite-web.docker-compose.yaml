@@ -20,7 +20,7 @@ services:
     environment:
       - PORT=${APP_PORT:-3000}
       - HOST=${APP_HOST:-localhost}
-      - DATABASE_URL=postgres://${DB_USER:-playnite}:${DB_PASSWORD}@localhost:5432/games?schema=public&pgbouncer=true
+      - DATABASE_URL=postgres://${DB_USER:-playnite}:${DB_PASSWORD}@localhost:5432/games?schema=public&pgbouncer=true&connection_limit=${DB_CONNECTION_LIMIT:-12}
       - SECRET=${APP_SECRET}
       - DISABLE_CSP=${DISABLE_CSP:-false}
       - CSP_ORIGINS=${CSP_ORIGINS}
