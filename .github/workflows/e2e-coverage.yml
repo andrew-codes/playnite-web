@@ -1,0 +1,75 @@
+name: "E2E Coverage"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      - release-*
+      - next
+
+permissions:
+  contents: read
+
+jobs:
+  e2e_coverage:
+    name: E2E Coverage (Playnite Web App)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Extract node version from package.json
+        uses: sergeysova/jq-action@v2
+        id: node_version
+        with:
+          cmd: jq .engines.node package.json -r | sed -e 's/\"//g' | sed -e 's/>=//g'
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "${{ steps.node_version.outputs.value }}"
+      - name: Install docker-compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+      - name: Use Yarn
+        run: corepack enable
+      - name: Install dependencies
+        run: yarn
+        env:
+          YARN_ENABLE_HARDENED_MODE: "0"
+      - name: Clean previous test artifacts
+        run: yarn nx run playnite-web-app:clean/test --verbose
+      - name: Prepare application
+        run: yarn nx run playnite-web-app:prepare --verbose
+      - name: Build instrumented application
+        run: yarn nx run playnite-web-app:build/e2e --verbose
+      - name: Package instrumented application
+        run: yarn nx run playnite-web-app:package/e2e --verbose
+      - name: Start dev services
+        run: yarn nx run dev-services:start --verbose
+      - name: Run E2E coverage tests
+        run: yarn nx run playnite-web-app:test/e2e:coverage --verbose
+      - name: Generate coverage report
+        if: always()
+        run: |
+          if [ -d .nyc_output ]; then
+            yarn nyc report --reporter=lcov --report-dir .test-runs/cypress
+          else
+            echo "No coverage artifacts produced"
+          fi
+        working-directory: apps/playnite-web
+      - uses: codecov/codecov-action@v5
+        if: always()
+        with:
+          files: "apps/playnite-web/.test-runs/cypress/lcov.info"
+          flags: e2e-tests
+          name: e2e-coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Clean up dev services
+        if: always()
+        run: docker-compose -f dev-services/src/services.yaml down

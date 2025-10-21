@@ -161,6 +161,23 @@
             "SPLIT_FILE": "cypress-timings.json"
           }
         },
+        "coverage": {
+          "env": {
+            "CMD": "run",
+            "LOCAL": "true",
+            "CI": "false",
+            "SECRET": "dev-secret",
+            "LOG_LEVEL": "info",
+            "TEST": "e2e",
+            "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
+            "START_SERVER_AND_TEST_INSECURE": "1",
+            "NODE_ENV": "production",
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
+            "SPLIT": "1",
+            "SPLIT_INDEX": "0",
+            "SPLIT_FILE": "cypress-timings.json"
+          }
+        },
         "dev": {
           "env": {
             "CMD": "open",
