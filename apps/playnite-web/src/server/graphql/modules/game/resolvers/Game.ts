@@ -8,11 +8,15 @@ export const Game: GameResolvers = {
     return create('Game', _parent.id).toString()
   },
   releases: async (_parent, _arg, _ctx) => {
-    const releases = await _ctx.loaders.releasesByGameLoader.load(Number(_parent.id))
+    const releases = await _ctx.loaders.releasesByGameLoader.load(
+      Number(_parent.id),
+    )
     return releases.sort((a, b) => a.title.localeCompare(b.title))
   },
   primaryRelease: async (_parent, _arg, _ctx) => {
-    const library = await _ctx.loaders.libraryLoader.load(Number(_parent.libraryId))
+    const library = await _ctx.loaders.libraryLoader.load(
+      Number(_parent.libraryId),
+    )
 
     if (!library) {
       throw new GraphQLError('Library not found', {
@@ -23,7 +27,9 @@ export const Game: GameResolvers = {
       })
     }
 
-    const releases = await _ctx.loaders.releasesByGameLoader.load(Number(_parent.id))
+    const releases = await _ctx.loaders.releasesByGameLoader.load(
+      Number(_parent.id),
+    )
 
     // Load sources and platforms for all releases in parallel
     const sourcesPromises = releases.map((r) =>
@@ -67,7 +73,9 @@ export const Game: GameResolvers = {
   },
 
   library: async (_parent, _arg, _ctx) => {
-    const library = await _ctx.loaders.libraryLoader.load(Number(_parent.libraryId))
+    const library = await _ctx.loaders.libraryLoader.load(
+      Number(_parent.libraryId),
+    )
     if (!library) {
       throw new GraphQLError('Library not found', {
         extensions: {
