@@ -47,27 +47,8 @@ namespace PlayniteWeb.Services
     {
       try
       {
-        return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(request, _options));
-      }
-      catch (NotSupportedException nse)
-            {
-        // Specific catch for NotSupportedException to handle serialization issues more specifically
-        LogManager.GetLogger().Error($"Unsupported serialization attempt for {request.GetType()}: {nse.Message}");
-        throw;
-      }
-            catch (Exception error)
-            {
-        // General exception handling
-        LogManager.GetLogger().Error($"Error serializing object: {error}");
-        throw;
-      }
-    }
-
-    public string SerializeToString(GraphQLRequest request)
-    {
-      try
-      {
-       return  JsonSerializer.Serialize(request, _options);
+        var json = JsonSerializer.Serialize(request, _options);
+        return Encoding.UTF8.GetBytes(json);
       }
       catch (NotSupportedException nse)
       {
@@ -82,13 +63,33 @@ namespace PlayniteWeb.Services
         throw;
       }
     }
+
+    public string SerializeToString(GraphQLRequest request)
+    {
+      try
+      {
+        return JsonSerializer.Serialize(request, _options);
+      }
+      catch (NotSupportedException nse)
+      {
+        // Specific catch for NotSupportedException to handle serialization issues more specifically
+        LogManager.GetLogger().Error($"Unsupported serialization attempt for {request.GetType()}: {nse.Message}");
+        throw;
+      }
+      catch (Exception error)
+      {
+        // General exception handling
+        LogManager.GetLogger().Error($"Error serializing object: {error}");
+        throw;
+      }
+    }
+
     private Task<T> DeserializeFromUtf8Stream<T>(Stream stream)
     {
       using (var sr = new StreamReader(stream))
       {
         var json = sr.ReadToEnd();
-
-        return Task.FromResult(JsonSerializer.Deserialize<T>(Encoding.UTF8.GetBytes(json), _options));
+        return Task.FromResult(JsonSerializer.Deserialize<T>(json, _options));
       }
     }
 
@@ -109,6 +110,12 @@ namespace PlayniteWeb.Services
 
       public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
       {
+        if (value == null)
+        {
+          writer.WriteNullValue();
+          return;
+        }
+
         JsonSerializer.Serialize(writer, value, value.GetType(), options);
       }
 
