@@ -404,7 +404,8 @@ describe('Library Sync', () => {
       })
     })
 
-    it(`Release updates without relations.`, () => {
+    it(`Release updates without relations.
+      - Resets relations to empty values.`, () => {
       cy.fixture('librarySync.json').then((libraryData) => {
         const completionStatus = libraryData.update.completionStates.find(
           (state) => state.id !== '5546b6df-a6fb-404e-bcb9-82c78fd32745',
@@ -493,20 +494,13 @@ describe('Library Sync', () => {
             completionStatus.id,
           )
           expect(release.description).to.equal('description')
-          expect(
-            release.features.map((f) => f.playniteId),
-          ).to.contain.all.members([
-            'c9a30422-b583-4c09-ae17-6face78a88f7',
-            'a6eae5e7-975b-45ba-9945-2719bbfbdd8c',
-            '769e9c6c-bfe3-4f16-aa6e-2357cafb09f7',
-            '0d300dc8-78a6-4d92-af6f-68918269c852',
-          ])
+          expect(release.features).to.have.length(0)
           expect(release.hidden).to.equal(true)
           expect(release.releaseDate).to.equal('2025-08-25')
           expect(release.source.playniteId).to.equal(
             '52ff97c9-14a6-490a-a1c6-fc4443edd918',
           )
-          expect(release.tags.map((t) => t.playniteId)).to.be.empty
+          expect(release.tags).to.be.empty
           expect(release.title).to.equal('7 Days to Die')
         })
       })

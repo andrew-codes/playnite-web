@@ -145,12 +145,13 @@ export const syncLibrary: NonNullable<
     const now = new Date()
     await _ctx.db.$executeRaw`
       INSERT INTO "Feature" ("playniteId", "name", "libraryId", "createdAt", "updatedAt")
-      SELECT * FROM UNNEST(
-        ${_arg.libraryData.update.features.map((f) => f.id)}::text[],
-        ${_arg.libraryData.update.features.map((f) => f.name)}::text[],
-        ${Array(_arg.libraryData.update.features.length).fill(libraryId)}::integer[],
-        ${Array(_arg.libraryData.update.features.length).fill(now)}::timestamp[],
-        ${Array(_arg.libraryData.update.features.length).fill(now)}::timestamp[]
+      SELECT *
+      FROM ROWS FROM (
+        UNNEST(${_arg.libraryData.update.features.map((f) => f.id)}::text[]),
+        UNNEST(${_arg.libraryData.update.features.map((f) => f.name)}::text[]),
+        UNNEST(${Array(_arg.libraryData.update.features.length).fill(libraryId)}::integer[]),
+        UNNEST(${Array(_arg.libraryData.update.features.length).fill(now)}::timestamp[]),
+        UNNEST(${Array(_arg.libraryData.update.features.length).fill(now)}::timestamp[])
       ) AS t("playniteId", "name", "libraryId", "createdAt", "updatedAt")
       ON CONFLICT ("playniteId", "libraryId")
       DO UPDATE SET
@@ -168,12 +169,13 @@ export const syncLibrary: NonNullable<
     const now = new Date()
     await _ctx.db.$executeRaw`
       INSERT INTO "Platform" ("playniteId", "name", "libraryId", "createdAt", "updatedAt")
-      SELECT * FROM UNNEST(
-        ${_arg.libraryData.update.platforms.map((p) => p.id)}::text[],
-        ${_arg.libraryData.update.platforms.map((p) => p.name)}::text[],
-        ${Array(_arg.libraryData.update.platforms.length).fill(libraryId)}::integer[],
-        ${Array(_arg.libraryData.update.platforms.length).fill(now)}::timestamp[],
-        ${Array(_arg.libraryData.update.platforms.length).fill(now)}::timestamp[]
+      SELECT *
+      FROM ROWS FROM (
+        UNNEST(${_arg.libraryData.update.platforms.map((p) => p.id)}::text[]),
+        UNNEST(${_arg.libraryData.update.platforms.map((p) => p.name)}::text[]),
+        UNNEST(${Array(_arg.libraryData.update.platforms.length).fill(libraryId)}::integer[]),
+        UNNEST(${Array(_arg.libraryData.update.platforms.length).fill(now)}::timestamp[]),
+        UNNEST(${Array(_arg.libraryData.update.platforms.length).fill(now)}::timestamp[])
       ) AS t("playniteId", "name", "libraryId", "createdAt", "updatedAt")
       ON CONFLICT ("playniteId", "libraryId")
       DO UPDATE SET
@@ -204,13 +206,14 @@ export const syncLibrary: NonNullable<
     const now = new Date()
     await _ctx.db.$executeRaw`
       INSERT INTO "Source" ("playniteId", "name", "libraryId", "platformId", "createdAt", "updatedAt")
-      SELECT * FROM UNNEST(
-        ${validSources.map((s) => s.id)}::text[],
-        ${validSources.map((s) => s.name)}::text[],
-        ${Array(validSources.length).fill(libraryId)}::integer[],
-        ${validSources.map((s) => platformMap.get(s.platform))}::integer[],
-        ${Array(validSources.length).fill(now)}::timestamp[],
-        ${Array(validSources.length).fill(now)}::timestamp[]
+      SELECT *
+      FROM ROWS FROM (
+        UNNEST(${validSources.map((s) => s.id)}::text[]),
+        UNNEST(${validSources.map((s) => s.name)}::text[]),
+        UNNEST(${Array(validSources.length).fill(libraryId)}::integer[]),
+        UNNEST(${validSources.map((s) => platformMap.get(s.platform))}::integer[]),
+        UNNEST(${Array(validSources.length).fill(now)}::timestamp[]),
+        UNNEST(${Array(validSources.length).fill(now)}::timestamp[])
       ) AS t("playniteId", "name", "libraryId", "platformId", "createdAt", "updatedAt")
       ON CONFLICT ("playniteId", "libraryId")
       DO UPDATE SET
@@ -229,12 +232,13 @@ export const syncLibrary: NonNullable<
     const now = new Date()
     await _ctx.db.$executeRaw`
       INSERT INTO "Tag" ("playniteId", "name", "libraryId", "createdAt", "updatedAt")
-      SELECT * FROM UNNEST(
-        ${_arg.libraryData.update.tags.map((t) => t.id)}::text[],
-        ${_arg.libraryData.update.tags.map((t) => t.name)}::text[],
-        ${Array(_arg.libraryData.update.tags.length).fill(libraryId)}::integer[],
-        ${Array(_arg.libraryData.update.tags.length).fill(now)}::timestamp[],
-        ${Array(_arg.libraryData.update.tags.length).fill(now)}::timestamp[]
+      SELECT *
+      FROM ROWS FROM (
+        UNNEST(${_arg.libraryData.update.tags.map((t) => t.id)}::text[]),
+        UNNEST(${_arg.libraryData.update.tags.map((t) => t.name)}::text[]),
+        UNNEST(${Array(_arg.libraryData.update.tags.length).fill(libraryId)}::integer[]),
+        UNNEST(${Array(_arg.libraryData.update.tags.length).fill(now)}::timestamp[]),
+        UNNEST(${Array(_arg.libraryData.update.tags.length).fill(now)}::timestamp[])
       ) AS t("playniteId", "name", "libraryId", "createdAt", "updatedAt")
       ON CONFLICT ("playniteId", "libraryId")
       DO UPDATE SET
@@ -252,12 +256,13 @@ export const syncLibrary: NonNullable<
     const now = new Date()
     await _ctx.db.$executeRaw`
       INSERT INTO "CompletionStatus" ("playniteId", "name", "libraryId", "createdAt", "updatedAt")
-      SELECT * FROM UNNEST(
-        ${_arg.libraryData.update.completionStates.map((s) => s.id)}::text[],
-        ${_arg.libraryData.update.completionStates.map((s) => s.name)}::text[],
-        ${Array(_arg.libraryData.update.completionStates.length).fill(libraryId)}::integer[],
-        ${Array(_arg.libraryData.update.completionStates.length).fill(now)}::timestamp[],
-        ${Array(_arg.libraryData.update.completionStates.length).fill(now)}::timestamp[]
+      SELECT *
+      FROM ROWS FROM (
+        UNNEST(${_arg.libraryData.update.completionStates.map((s) => s.id)}::text[]),
+        UNNEST(${_arg.libraryData.update.completionStates.map((s) => s.name)}::text[]),
+        UNNEST(${Array(_arg.libraryData.update.completionStates.length).fill(libraryId)}::integer[]),
+        UNNEST(${Array(_arg.libraryData.update.completionStates.length).fill(now)}::timestamp[]),
+        UNNEST(${Array(_arg.libraryData.update.completionStates.length).fill(now)}::timestamp[])
       ) AS t("playniteId", "name", "libraryId", "createdAt", "updatedAt")
       ON CONFLICT ("playniteId", "libraryId")
       DO UPDATE SET
@@ -284,11 +289,13 @@ export const syncLibrary: NonNullable<
 
   // Process all releases concurrently
   // The semaphore limits concurrent DB operations globally across all users
-  const releasesToUpdate = _arg.libraryData.update.releases.filter((release) => {
-    return [sources.some((s) => s.playniteId === release.source)].every(
-      Boolean,
-    )
-  })
+  const releasesToUpdate = _arg.libraryData.update.releases.filter(
+    (release) => {
+      return [sources.some((s) => s.playniteId === release.source)].every(
+        Boolean,
+      )
+    },
+  )
 
   logger.debug(
     `Processing ${releasesToUpdate.length} releases for library ${libraryId}`,
@@ -340,40 +347,20 @@ export const syncLibrary: NonNullable<
   if (releaseData.length > 0) {
     const now = new Date()
 
-    // Complex upsert for releases with covers using a CTE
-    // We need to handle the coverId foreign key, so we create/update assets first, then releases
+    // First, ensure all covers exist as assets
     await _ctx.db.$executeRaw`
-      WITH release_data AS (
-        SELECT * FROM UNNEST(
-          ${releaseData.map((r) => r.playniteId)}::text[],
-          ${releaseData.map((r) => r.title)}::text[],
-          ${releaseData.map((r) => r.description)}::text[],
-          ${releaseData.map((r) => r.releaseDate)}::timestamp[],
-          ${releaseData.map((r) => r.releaseYear)}::integer[],
-          ${releaseData.map((r) => r.criticScore)}::float[],
-          ${releaseData.map((r) => r.playtime.toString())}::bigint[],
-          ${releaseData.map((r) => r.communityScore)}::float[],
-          ${releaseData.map((r) => r.hidden)}::boolean[],
-          ${releaseData.map((r) => r.sourceId)}::integer[],
-          ${releaseData.map((r) => r.completionStatusId)}::integer[],
-          ${releaseData.map((r) => r.coverSlug)}::text[]
-        ) AS t(
-          playnite_id text, title text, description text, release_date timestamp, release_year integer,
-          critic_score float, playtime bigint, community_score float, hidden boolean, source_id integer,
-          completion_status_id integer, cover_slug text
-        )
-      ),
-      upserted_assets AS (
-        INSERT INTO "Asset" ("type", "slug", "createdAt", "updatedAt")
-        SELECT 'cover', rd.cover_slug, ${now}::timestamp, ${now}::timestamp
-        FROM release_data rd
-        LEFT JOIN "Release" r ON r."playniteId" = rd.playnite_id AND r."libraryId" = ${libraryId}
-        WHERE r.id IS NULL OR NOT EXISTS (
-          SELECT 1 FROM "Asset" a WHERE a.id = r."coverId"
-        )
-        ON CONFLICT DO NOTHING
-        RETURNING id, slug
+      INSERT INTO "Asset" ("type", "slug", "createdAt", "updatedAt")
+      SELECT DISTINCT 'cover', cover_slug, ${now}::timestamp, ${now}::timestamp
+      FROM ROWS FROM (
+        UNNEST(${releaseData.map((r) => r.coverSlug)}::text[])
+      ) AS t(cover_slug)
+      WHERE NOT EXISTS (
+        SELECT 1 FROM "Asset" WHERE "slug" = cover_slug AND "type" = 'cover'
       )
+    `
+
+    // Now upsert releases with their cover references
+    await _ctx.db.$executeRaw`
       INSERT INTO "Release" (
         "playniteId", "title", "description", "releaseDate", "releaseYear",
         "criticScore", "playtime", "communityScore", "hidden", "sourceId",
@@ -383,13 +370,26 @@ export const syncLibrary: NonNullable<
         rd.playnite_id, rd.title, rd.description, rd.release_date, rd.release_year,
         rd.critic_score, rd.playtime, rd.community_score, rd.hidden, rd.source_id,
         rd.completion_status_id, ${libraryId}, ${runState.stopped},
-        COALESCE(
-          (SELECT id FROM upserted_assets WHERE slug = rd.cover_slug),
-          (SELECT "coverId" FROM "Release" WHERE "playniteId" = rd.playnite_id AND "libraryId" = ${libraryId}),
-          (SELECT id FROM "Asset" WHERE slug = rd.cover_slug AND type = 'cover' LIMIT 1)
-        ),
+        (SELECT id FROM "Asset" WHERE slug = rd.cover_slug AND type = 'cover' LIMIT 1),
         ${now}::timestamp, ${now}::timestamp
-      FROM release_data rd
+      FROM ROWS FROM (
+        UNNEST(${releaseData.map((r) => r.playniteId)}::text[]),
+        UNNEST(${releaseData.map((r) => r.title)}::text[]),
+        UNNEST(${releaseData.map((r) => r.description)}::text[]),
+        UNNEST(${releaseData.map((r) => r.releaseDate)}::timestamp[]),
+        UNNEST(${releaseData.map((r) => r.releaseYear)}::integer[]),
+        UNNEST(${releaseData.map((r) => r.criticScore)}::float[]),
+        UNNEST(${releaseData.map((r) => r.playtime.toString())}::bigint[]),
+        UNNEST(${releaseData.map((r) => r.communityScore)}::float[]),
+        UNNEST(${releaseData.map((r) => r.hidden)}::boolean[]),
+        UNNEST(${releaseData.map((r) => r.sourceId)}::integer[]),
+        UNNEST(${releaseData.map((r) => r.completionStatusId)}::integer[]),
+        UNNEST(${releaseData.map((r) => r.coverSlug)}::text[])
+      ) AS rd(
+        playnite_id, title, description, release_date, release_year,
+        critic_score, playtime, community_score, hidden, source_id,
+        completion_status_id, cover_slug
+      )
       ON CONFLICT ("playniteId", "libraryId")
       DO UPDATE SET
         "title" = EXCLUDED."title",
@@ -409,10 +409,11 @@ export const syncLibrary: NonNullable<
       UPDATE "Asset" a
       SET "slug" = rd.cover_slug, "updatedAt" = ${now}::timestamp
       FROM (
-        SELECT * FROM UNNEST(
-          ${releaseData.map((r) => r.playniteId)}::text[],
-          ${releaseData.map((r) => r.coverSlug)}::text[]
-        ) AS t(playnite_id text, cover_slug text)
+        SELECT *
+        FROM ROWS FROM (
+          UNNEST(${releaseData.map((r) => r.playniteId)}::text[]),
+          UNNEST(${releaseData.map((r) => r.coverSlug)}::text[])
+        ) AS t(playnite_id, cover_slug)
       ) rd
       JOIN "Release" r ON r."playniteId" = rd.playnite_id AND r."libraryId" = ${libraryId}
       WHERE a.id = r."coverId" AND a.slug != rd.cover_slug
@@ -478,23 +479,26 @@ export const syncLibrary: NonNullable<
 
     // Clear and rebuild relationships
     if (insertedReleases.length > 0) {
+      const releaseIds = insertedReleases.map((r) => r.id)
+
       // Clear existing relationships
       await _ctx.db.$executeRaw`
         DELETE FROM "_FeatureToRelease"
-        WHERE "B" IN (${insertedReleases.map((r) => r.id)})
+        WHERE "B" = ANY(${releaseIds}::integer[])
       `
       await _ctx.db.$executeRaw`
         DELETE FROM "_ReleaseToTag"
-        WHERE "A" IN (${insertedReleases.map((r) => r.id)})
+        WHERE "A" = ANY(${releaseIds}::integer[])
       `
 
       // Insert new feature relationships
       if (featureRelations.length > 0) {
         await _ctx.db.$executeRaw`
           INSERT INTO "_FeatureToRelease" ("A", "B")
-          SELECT * FROM UNNEST(
-            ${featureRelations.map((r) => r.featureId)}::integer[],
-            ${featureRelations.map((r) => r.releaseId)}::integer[]
+          SELECT *
+          FROM ROWS FROM (
+            UNNEST(${featureRelations.map((r) => r.featureId)}::integer[]),
+            UNNEST(${featureRelations.map((r) => r.releaseId)}::integer[])
           ) AS t("A", "B")
           ON CONFLICT DO NOTHING
         `
@@ -504,9 +508,10 @@ export const syncLibrary: NonNullable<
       if (tagRelations.length > 0) {
         await _ctx.db.$executeRaw`
           INSERT INTO "_ReleaseToTag" ("A", "B")
-          SELECT * FROM UNNEST(
-            ${tagRelations.map((r) => r.releaseId)}::integer[],
-            ${tagRelations.map((r) => r.tagId)}::integer[]
+          SELECT *
+          FROM ROWS FROM (
+            UNNEST(${tagRelations.map((r) => r.releaseId)}::integer[]),
+            UNNEST(${tagRelations.map((r) => r.tagId)}::integer[])
           ) AS t("A", "B")
           ON CONFLICT DO NOTHING
         `
@@ -543,9 +548,10 @@ export const syncLibrary: NonNullable<
     // First, upsert all games
     await _ctx.db.$executeRaw`
       INSERT INTO "Game" ("title", "libraryId")
-      SELECT * FROM UNNEST(
-        ${gameEntries.map(([title]) => title)}::text[],
-        ${Array(gameEntries.length).fill(libraryId)}::integer[]
+      SELECT *
+      FROM ROWS FROM (
+        UNNEST(${gameEntries.map(([title]) => title)}::text[]),
+        UNNEST(${Array(gameEntries.length).fill(libraryId)}::integer[])
       ) AS t("title", "libraryId")
       ON CONFLICT ("title", "libraryId")
       DO NOTHING
@@ -595,18 +601,21 @@ export const syncLibrary: NonNullable<
 
     // Clear existing relationships for these games
     if (insertedGames.length > 0) {
+      const gameIds = insertedGames.map((g) => g.id)
+
       await _ctx.db.$executeRaw`
-        DELETE FROM "_GameToRelease"
-        WHERE "A" IN (${insertedGames.map((g) => g.id)})
+        DELETE FROM "_GameReleases"
+        WHERE "A" = ANY(${gameIds}::integer[])
       `
 
       // Insert new relationships
       if (gameReleaseRelations.length > 0) {
         await _ctx.db.$executeRaw`
-          INSERT INTO "_GameToRelease" ("A", "B")
-          SELECT * FROM UNNEST(
-            ${gameReleaseRelations.map((r) => r.gameId)}::integer[],
-            ${gameReleaseRelations.map((r) => r.releaseId)}::integer[]
+          INSERT INTO "_GameReleases" ("A", "B")
+          SELECT *
+          FROM ROWS FROM (
+            UNNEST(${gameReleaseRelations.map((r) => r.gameId)}::integer[]),
+            UNNEST(${gameReleaseRelations.map((r) => r.releaseId)}::integer[])
           ) AS t("A", "B")
           ON CONFLICT DO NOTHING
         `
