@@ -99,10 +99,12 @@ namespace PlayniteWeb.Services
         return typeToConvert == typeof(object);
       }
 
-      public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+      public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
       {
-        using var document = JsonDocument.ParseValue(ref reader);
-        return ToDynamic(document.RootElement);
+        using (var document = JsonDocument.ParseValue(ref reader))
+        {
+          return ToDynamic(document.RootElement.Clone());
+        }
       }
 
       public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
@@ -110,12 +112,12 @@ namespace PlayniteWeb.Services
         JsonSerializer.Serialize(writer, value, value.GetType(), options);
       }
 
-      private static object? ToDynamic(JsonElement element)
+      private static object ToDynamic(JsonElement element)
       {
         switch (element.ValueKind)
         {
           case JsonValueKind.Object:
-            var expando = new ExpandoObject() as IDictionary<string, object?>;
+            var expando = new ExpandoObject() as IDictionary<string, object>;
             foreach (var property in element.EnumerateObject())
             {
               expando[property.Name] = ToDynamic(property.Value);
@@ -124,7 +126,7 @@ namespace PlayniteWeb.Services
             return expando;
 
           case JsonValueKind.Array:
-            var list = new List<object?>();
+            var list = new List<object>();
             foreach (var item in element.EnumerateArray())
             {
               list.Add(ToDynamic(item));
