@@ -1,6 +1,7 @@
 using GraphQL;
 using GraphQL.Client.Http;
 using Playnite.SDK;
+using Playnite.SDK.Data;
 using Playnite.SDK.Events;
 using Playnite.SDK.Models;
 using Playnite.SDK.Plugins;
@@ -14,6 +15,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
