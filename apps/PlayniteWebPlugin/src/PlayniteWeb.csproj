@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ANDREW~1\AppData\Local\Temp\vsD4DA.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\james\AppData\Local\Temp\vs4B40.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\ANDREW~1\AppData\Local\Temp\vsD4DA.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\james\AppData\Local\Temp\vs4B40.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GraphQL.Client, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -44,17 +44,11 @@
     <Reference Include="GraphQL.Client.Abstractions.Websocket, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\GraphQL.Client.Abstractions.Websocket.6.1.0\lib\netstandard2.0\GraphQL.Client.Abstractions.Websocket.dll</HintPath>
     </Reference>
-    <Reference Include="GraphQL.Client.Serializer.Newtonsoft, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\.nuget\GraphQL.Client.Serializer.Newtonsoft.6.1.0\lib\netstandard2.0\GraphQL.Client.Serializer.Newtonsoft.dll</HintPath>
-    </Reference>
     <Reference Include="GraphQL.Primitives, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\GraphQL.Primitives.6.1.0\lib\netstandard2.0\GraphQL.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\..\.nuget\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Playnite.SDK, Version=6.12.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\.nuget\PlayniteSDK.6.12.0\lib\net462\Playnite.SDK.dll</HintPath>
@@ -114,9 +108,11 @@
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Models\EntityUpdate.cs" />
     <Compile Include="Models\Release.cs" />
+    <Compile Include="Models\SignInMutation.cs" />
     <Compile Include="Models\UpdateEntity.cs" />
     <Compile Include="Models\PendingUpdate.cs" />
     <Compile Include="Services\GameState.cs" />
+    <Compile Include="Services\GraphSerializer.cs" />
     <Compile Include="Services\IDeserializeObjects.cs" />
     <Compile Include="Services\ObjectDeserializer.cs" />
     <Compile Include="Services\Publishers\EntityUpdatePayload.cs" />
