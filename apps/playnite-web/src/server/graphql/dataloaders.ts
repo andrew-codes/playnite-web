@@ -108,16 +108,48 @@ export function createDataLoaders(db: PrismaClient): DataLoaders {
 
     // Loads releases for multiple games
     releasesByGameLoader: new DataLoader(async (gameIds: readonly number[]) => {
-      const releases = await db.release.findMany({
-        where: { gameId: { in: [...gameIds] } },
+      const gamesWithReleaseIds = await db.game.findMany({
+        where: { id: { in: [...gameIds] } },
+        select: {
+          id: true,
+          Releases: {
+            select: { id: true },
+          },
+        },
       })
 
-      const releasesByGame = new Map<number, any[]>()
-      for (const release of releases) {
-        if (!releasesByGame.has(release.gameId!)) {
-          releasesByGame.set(release.gameId!, [])
+      const releaseIds = new Set<number>()
+      for (const game of gamesWithReleaseIds) {
+        for (const release of game.Releases) {
+          releaseIds.add(release.id)
         }
-        releasesByGame.get(release.gameId!)!.push(release)
+      }
+
+      const releases = await db.release.findMany({
+        where: { id: { in: [...releaseIds] } },
+      })
+
+      const releasesById = new Map(releases.map((release) => [release.id, release]))
+
+      const releasesByGame = new Map<number, any[]>()
+      for (const game of gamesWithReleaseIds) {
+        const releasesForGame = game.Releases.map(({ id }) => {
+          const release = releasesById.get(id)
+
+          if (!release) {
+            return null
+          }
+
+          return {
+            ...release,
+            gameId: release.gameId ?? game.id,
+          }
+        }).filter(
+          (release): release is (typeof releases)[number] & { gameId: number } =>
+            release !== null,
+        )
+
+        releasesByGame.set(game.id, releasesForGame)
       }
 
       return gameIds.map((id) => releasesByGame.get(id) ?? [])
