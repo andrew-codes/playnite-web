@@ -1,6 +1,5 @@
 using GraphQL;
 using GraphQL.Client.Http;
-using GraphQL.Client.Serializer.Newtonsoft;
 using Playnite.SDK;
 using Playnite.SDK.Data;
 using Playnite.SDK.Events;
@@ -15,8 +14,8 @@ using PlayniteWeb.UI;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.IO;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -464,13 +463,13 @@ namespace PlayniteWeb
         var password = Encoding.UTF8.GetString(ProtectedData.Unprotect(settings.Password, Id.ToByteArray(), DataProtectionScope.CurrentUser));
 
 
-        gql = new GraphQLHttpClient($"{(settings.UseSecureConnection ? "https" : "http")}://{settings.ServerAddress}:{settings.Port}/api", new NewtonsoftJsonSerializer());
+        gql = new GraphQLHttpClient($"{(settings.UseSecureConnection ? "https" : "http")}://{settings.ServerAddress}:{settings.Port}/api", new GraphSerializer());
         gql.HttpClient.DefaultRequestHeaders.Add("User-Agent", $"PlayniteWeb/{_version} ({RuntimeInformation.OSDescription})");
         gql.HttpClient.DefaultRequestHeaders.Add("Playnite-DeviceId", settings.DeviceId.ToString());
 
         if (settings.Token == null || settings.Token.Length == 0)
         {
-          var response = await gql.SendMutationAsync<dynamic>(new GraphQLRequest(query: @"
+          var response = await gql.SendMutationAsync<SignInMutation>(new GraphQLRequest(query: @"
             mutation MyMutation($input: SignInInput) {
               signIn(input: $input) {
                 credential
@@ -484,7 +483,7 @@ namespace PlayniteWeb
             return;
           }
 
-          var protectedToken = ProtectedData.Protect(Encoding.UTF8.GetBytes(response.Data.signIn.credential.ToString()), Id.ToByteArray(), DataProtectionScope.CurrentUser);
+          var protectedToken = ProtectedData.Protect(Encoding.UTF8.GetBytes(response.Data.SignIn.Credential.ToString()), Id.ToByteArray(), DataProtectionScope.CurrentUser);
           settings.Token = protectedToken;
         }
 
