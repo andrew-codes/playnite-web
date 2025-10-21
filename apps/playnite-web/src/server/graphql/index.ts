@@ -11,6 +11,7 @@ import { IdentityService } from '../auth/index'
 import prisma from '../data/providers/postgres/client'
 import logger from '../logger'
 import type { PlayniteContext } from './context'
+import { createDataLoaders } from './dataloaders'
 import schema from './schema'
 import { subscriptionPublisher } from './subscriptionPublisher'
 
@@ -47,6 +48,7 @@ const graphql = (endpoint: string, signingKey: string) => {
         signingKey,
         subscriptionPublisher,
         db: prisma,
+        loaders: createDataLoaders(prisma),
       }
 
       return ctx
