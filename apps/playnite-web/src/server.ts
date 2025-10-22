@@ -10,6 +10,7 @@ import { NextServerOptions } from 'next/dist/server/next'
 import { parse } from 'url'
 import { WebSocketServer } from 'ws'
 import prisma from './server/data/providers/postgres/client'
+import { createDataLoaders } from './server/graphql/dataloaders'
 import createYoga from './server/graphql/index'
 import schema from './server/graphql/schema'
 import { subscriptionPublisher } from './server/graphql/subscriptionPublisher'
@@ -161,6 +162,7 @@ async function run() {
           domain,
           subscriptionPublisher,
           db: prisma,
+          loaders: createDataLoaders(prisma),
         }),
       },
       wsServer,

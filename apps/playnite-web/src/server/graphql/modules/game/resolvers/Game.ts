@@ -8,25 +8,15 @@ export const Game: GameResolvers = {
     return create('Game', _parent.id).toString()
   },
   releases: async (_parent, _arg, _ctx) => {
-    return _ctx.db.release.findMany({
-      where: {
-        Games: {
-          some: {
-            id: _parent.id,
-          },
-        },
-      },
-      orderBy: {
-        title: 'asc',
-      },
-    })
+    const releases = await _ctx.loaders.releasesByGameLoader.load(
+      Number(_parent.id),
+    )
+    return releases.sort((a, b) => a.title.localeCompare(b.title))
   },
   primaryRelease: async (_parent, _arg, _ctx) => {
-    const library = await _ctx.db.library.findUnique({
-      where: {
-        id: _parent.libraryId,
-      },
-    })
+    const library = await _ctx.loaders.libraryLoader.load(
+      Number(_parent.libraryId),
+    )
 
     if (!library) {
       throw new GraphQLError('Library not found', {
@@ -37,27 +27,31 @@ export const Game: GameResolvers = {
       })
     }
 
-    const releases = await _ctx.db.release.findMany({
-      where: {
-        Games: {
-          some: {
-            id: _parent.id,
-          },
-        },
-      },
-      include: {
-        Source: {
-          include: {
-            Platform: true,
-          },
-        },
-      },
+    const releases = await _ctx.loaders.releasesByGameLoader.load(
+      Number(_parent.id),
+    )
+
+    // Load sources and platforms for all releases in parallel
+    const sourcesPromises = releases.map((r) =>
+      _ctx.loaders.sourceLoader.load(Number(r.sourceId)),
+    )
+    const sources = await Promise.all(sourcesPromises)
+
+    const platformsPromises = sources.map((s) =>
+      s ? _ctx.loaders.platformLoader.load(Number(s.platformId)) : null,
+    )
+    const platforms = await Promise.all(platformsPromises)
+
+    // Create a map of release to platform
+    const releasePlatformMap = new Map()
+    releases.forEach((release, index) => {
+      releasePlatformMap.set(release.id, platforms[index])
     })
 
     let primaryRelease: undefined | null | Release = null
     for (const platformId of library.platformPriority) {
       primaryRelease = releases?.find(
-        (r) => r.Source.Platform?.id === platformId,
+        (r) => releasePlatformMap.get(r.id)?.id === platformId,
       )
       if (primaryRelease) {
         break
@@ -79,10 +73,17 @@ export const Game: GameResolvers = {
   },
 
   library: async (_parent, _arg, _ctx) => {
-    return _ctx.db.library.findUniqueOrThrow({
-      where: {
-        id: _parent.libraryId,
-      },
-    })
+    const library = await _ctx.loaders.libraryLoader.load(
+      Number(_parent.libraryId),
+    )
+    if (!library) {
+      throw new GraphQLError('Library not found', {
+        extensions: {
+          code: 'NOT_FOUND',
+          entity: create('Library', _parent.libraryId).toString(),
+        },
+      })
+    }
+    return library
   },
 }

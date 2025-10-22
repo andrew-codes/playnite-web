@@ -619,6 +619,20 @@ export const syncLibrary: NonNullable<
           ) AS t("A", "B")
           ON CONFLICT DO NOTHING
         `
+
+        // Update the gameId foreign key on each release
+        await _ctx.db.$executeRaw`
+          UPDATE "Release"
+          SET "gameId" = gr.game_id
+          FROM (
+            SELECT *
+            FROM ROWS FROM (
+              UNNEST(${gameReleaseRelations.map((r) => r.gameId)}::integer[]),
+              UNNEST(${gameReleaseRelations.map((r) => r.releaseId)}::integer[])
+            ) AS t(game_id, release_id)
+          ) gr
+          WHERE "Release"."id" = gr.release_id
+        `
       }
     }
   }
