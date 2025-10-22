@@ -17,6 +17,10 @@ jobs:
   e2e_coverage:
     name: E2E Coverage (Playnite Web App)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,35 +45,18 @@ jobs:
         run: yarn
         env:
           YARN_ENABLE_HARDENED_MODE: "0"
-      - name: Clean previous test artifacts
-        run: yarn nx run playnite-web-app:clean/test --verbose
-      - name: Prepare application
-        run: yarn nx run playnite-web-app:prepare --verbose
-      - name: Build instrumented application
-        run: yarn nx run playnite-web-app:build/e2e --verbose
-      - name: Package instrumented application
-        run: yarn nx run playnite-web-app:package/e2e --verbose
-      - name: Start dev services
-        run: yarn nx run dev-services:start --verbose
-      - name: Run E2E coverage tests
-        run: yarn nx run playnite-web-app:test/e2e:coverage --verbose
-      - name: Generate coverage report
-        if: always()
-        run: |
-          if [ -d .nyc_output ]; then
-            yarn nyc report --reporter=lcov --report-dir .test-runs/cypress
-          else
-            echo "No coverage artifacts produced"
-          fi
-        working-directory: apps/playnite-web
+      - name: Run E2E tests with coverage
+        run: yarn nx run playnite-web-app:test/e2e/coverage
+        env:
+          NODE_ENV: production
+          LOG_LEVEL: info
+          PLATFORM: linux/amd64
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
       - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: "apps/playnite-web/.test-runs/cypress/lcov.info"
+          files: "**/.test-runs/**/lcov.info"
           flags: e2e-tests
-          name: e2e-coverage
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      - name: Clean up dev services
-        if: always()
-        run: docker-compose -f dev-services/src/services.yaml down

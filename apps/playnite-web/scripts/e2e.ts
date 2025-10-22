@@ -40,13 +40,13 @@ process.on('SIGINT', () => {
 })
 
 async function run() {
-  if (process.env.CI !== 'true') {
+  if (process.env.CI !== 'true' || process.env.COVERAGE === 'true') {
     logger.info('Removing package.json')
     sh.exec('rm _packaged/package.json')
 
     logger.info('Starting server')
     runCp = sh.exec(`yarn nyc node server.js`, {
-      cwd: '_packaged/src/server',
+      cwd: '_packaged',
       shell: '/bin/bash',
       env: {
         ...process.env,
@@ -81,7 +81,7 @@ async function run() {
     let tag = 'local'
     if (process.env.LOCAL !== 'true') {
       const { GITHUB_REF, VERSION } = process.env
-      const tags = await getDockerTags(VERSION ?? null, GITHUB_REF)
+      const tags = await getDockerTags(VERSION, GITHUB_REF)
       tag = tags[0]
     }
     logger.debug(`Using docker tag: ${tag}`)
