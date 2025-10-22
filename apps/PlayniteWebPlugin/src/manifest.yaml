@@ -218,3 +218,17 @@ Packages:
     RequiredApiVersion: 6.12.0
     Changelog:
       - "fix: control concurrent db connections (#833)"
+  - Version: 12.0.5
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.0.5/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_0_5.pext
+    ReleaseDate: 2025-10-22
+    RequiredApiVersion: 6.12.0
+    Changelog:
+      - "fix: graph retrieval does not exhaust database connections, newtonsoft
+        dll error"
+      - "fix: graph retrieval does not exhaust database connections (#839)"
+      - "fix: remove dependency on Newtonsoft dll (#838)"
+      - "fix: load releases via join table"
+      - "fix: add missing imports for plugin build"
+      - "fix: simplify stream deserialization"
+      - "fix: remove nullable reference usage in GraphSerializer"
+      - "fix: restore dynamic payload support in graph serializer"
