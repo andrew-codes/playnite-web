@@ -194,6 +194,33 @@
         }
       }
     },
+    "test/e2e/coverage": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build/e2e"],
+      "options": {
+        "parallel": false,
+        "cwd": "{projectRoot}",
+        "commands": [
+          "yarn tsx scripts/packageFiles.ts",
+          "yarn tsx scripts/packageDemoCoverArt.ts",
+          "yarn tsx scripts/e2e.ts"
+        ],
+        "env": {
+          "CMD": "run",
+          "LOCAL": "true",
+          "CI": "true",
+          "COVERAGE": "true",
+          "SECRET": "dev-secret",
+          "LOG_LEVEL": "info",
+          "TEST": "e2e",
+          "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
+          "START_SERVER_AND_TEST_INSECURE": "1",
+          "NODE_ENV": "production",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
+          "SPLIT_FILE": "cypress-timings.json"
+        }
+      }
+    },
     "test/e2e/update": {
       "executor": "nx:run-commands",
       "options": {

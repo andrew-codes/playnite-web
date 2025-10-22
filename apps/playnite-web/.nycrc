@@ -1,7 +1,11 @@
 {
   "report-dir": ".test-runs/cypress",
   "all": true,
-  "include": ["_instrumented/**/*.*"],
+  "include": [
+    "src/**/*.{ts,tsx,js,jsx}",
+    ".next/**/*.js",
+    "_custom-server-build/**/*.js"
+  ],
   "exclude": [
     "cypress/**",
     "**/testUtils/**",
@@ -10,6 +14,11 @@
     "../../.yarn/**",
     "**/public/**",
     "**/node_modules/**",
-    "**/*.graphql"
+    "**/*.graphql",
+    "**/*.d.ts",
+    "**/scripts/**",
+    "**/*.config.*",
+    "**/*.test.*",
+    "**/*.cy.*"
   ]
 }

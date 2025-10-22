@@ -165,13 +165,6 @@ jobs:
         with:
           name: e2e-cypress-screenshots-job-${{ matrix.containers }}
           path: apps/playnite-web/cypress/screenshots
-      - uses: codecov/codecov-action@v5
-        if: always()
-        with:
-          files: "**/.test-runs/**/lcov.info"
-          flags: e2e-tests
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   e2e_tests_processor:
     name: Verify PR - e2e Tests (Game Assets Processor - Linux)
