@@ -17,6 +17,7 @@ import { cookies } from 'next/headers'
 import { User } from '../../../../.generated/types.generated'
 import prisma from '../../../server/data/providers/postgres/client'
 import { PlayniteContext } from '../../../server/graphql/context'
+import { createDataLoaders } from '../../../server/graphql/dataloaders'
 import schema from '../../../server/graphql/schema'
 import logger from '../../../server/logger'
 import { createNull } from '../../../server/oid'
@@ -70,6 +71,7 @@ const { getClient, query, PreloadQuery } = registerApolloClient(async () => {
       domain: domain,
       jwt: { payload: user },
       db: prisma,
+      loaders: createDataLoaders(prisma),
     } as unknown as Partial<PlayniteContext>,
   })
 

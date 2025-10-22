@@ -14,11 +14,9 @@ export const Release: ReleaseResolvers = {
   completionStatus: async (_parent, _arg, _ctx) => {
     let output: null | GraphCompletionStatus = null
     if (_parent.completionStatusId) {
-      output = await _ctx.db.completionStatus.findUnique({
-        where: {
-          id: _parent.completionStatusId,
-        },
-      })
+      output = await _ctx.loaders.completionStatusLoader.load(
+        Number(_parent.completionStatusId),
+      )
     }
 
     return output
@@ -29,14 +27,7 @@ export const Release: ReleaseResolvers = {
       return null
     }
 
-    const asset = await _ctx.db.asset.findUnique({
-      where: {
-        id: _parent.coverId,
-      },
-      select: {
-        slug: true,
-      },
-    })
+    const asset = await _ctx.loaders.assetLoader.load(Number(_parent.coverId))
 
     if (!asset?.slug) {
       return null
@@ -45,26 +36,10 @@ export const Release: ReleaseResolvers = {
     return resolve(`/game-assets/${asset.slug}`)
   },
   features: async (_parent, _arg, _ctx) => {
-    return _ctx.db.feature.findMany({
-      where: {
-        Releases: {
-          some: {
-            id: _parent.id,
-          },
-        },
-      },
-    })
+    return _ctx.loaders.releaseFeatureLoader.load(Number(_parent.id))
   },
   game: async (_parent, _arg, _ctx) => {
-    const output = await _ctx.db.game.findFirst({
-      where: {
-        Releases: {
-          some: {
-            id: _parent.id,
-          },
-        },
-      },
-    })
+    const output = await _ctx.loaders.gameLoader.load(Number(_parent.gameId))
 
     if (!output) {
       throw new GraphQLError('Game not found', {
@@ -80,15 +55,9 @@ export const Release: ReleaseResolvers = {
     return output
   },
   platform: async (_parent, _arg, _ctx) => {
-    const output = await _ctx.db.platform.findFirst({
-      where: {
-        Sources: {
-          some: {
-            id: _parent.sourceId,
-          },
-        },
-      },
-    })
+    const output = await _ctx.loaders.platformBySourceLoader.load(
+      Number(_parent.sourceId),
+    )
     if (!output) {
       throw new GraphQLError('Platform not found', {
         extensions: {
@@ -103,15 +72,7 @@ export const Release: ReleaseResolvers = {
     return output
   },
   source: async (_parent, _arg, _ctx) => {
-    const output = await _ctx.db.source.findFirst({
-      where: {
-        Releases: {
-          some: {
-            id: _parent.id,
-          },
-        },
-      },
-    })
+    const output = await _ctx.loaders.sourceLoader.load(Number(_parent.sourceId))
     if (!output) {
       throw new GraphQLError('Source not found', {
         extensions: {
@@ -126,14 +87,6 @@ export const Release: ReleaseResolvers = {
     return output
   },
   tags: async (_parent, _arg, _ctx) => {
-    return _ctx.db.tag.findMany({
-      where: {
-        Releases: {
-          some: {
-            id: _parent.id,
-          },
-        },
-      },
-    })
+    return _ctx.loaders.releaseTagLoader.load(Number(_parent.id))
   },
 }
