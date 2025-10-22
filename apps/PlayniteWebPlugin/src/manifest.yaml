@@ -232,3 +232,12 @@ Packages:
       - "fix: simplify stream deserialization"
       - "fix: remove nullable reference usage in GraphSerializer"
       - "fix: restore dynamic payload support in graph serializer"
+  - Version: 12.0.6
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.0.6/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_0_6.pext
+    ReleaseDate: 2025-10-22
+    RequiredApiVersion: 6.12.0
+    Changelog:
+      - "fix: issue loading cover art, chores"
+      - "chore: workflow to publish instrumented e2e coverage (#840)"
+      - "chore: remove redundant dev release workflow (#844)"
+      - "chore: remove dev release workflow"
