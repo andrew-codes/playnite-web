@@ -22,18 +22,37 @@ const nextConfig = {
   reactStrictMode: process.env.TEST !== 'e2e',
   experimental: {
     authInterrupts: true,
-    forceSwcTransforms: true,
+    // Only force SWC transforms when not instrumenting (for better performance)
+    forceSwcTransforms: process.env.INSTRUMENT !== 'true',
     ppr: false,
   },
   transpilePackages: ['db-client', '@prisma/client'],
 
+  // Configure webpack for code coverage instrumentation
+  webpack: (config, { isServer }) => {
+    if (process.env.INSTRUMENT === 'true') {
+      // Instrument client-side code (React components, client code)
+      if (!isServer) {
+        config.module.rules.push({
+          test: /\.(tsx?|jsx?)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['next/babel'],
+              plugins: ['babel-plugin-istanbul'],
+            },
+          },
+        })
+      }
+    }
+    return config
+  },
+
   // output: 'standalone',
 }
 
-const plugins = [
-  // Add more Next.js plugins to this list if needed.
-  withNx,
-]
+const plugins = [withNx]
 
 const config = composePlugins(...plugins)(nextConfig)
 
