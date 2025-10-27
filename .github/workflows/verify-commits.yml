@@ -340,5 +340,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: playnite-web-extension
+          name: playnite-web-plugins
           path: apps/*/_packaged/**
