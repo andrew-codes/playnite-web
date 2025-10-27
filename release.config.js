@@ -82,8 +82,19 @@ const config = {
       {
         assets: [
           {
-            path: '_packaged/**/*.*',
+            path: '_packaged/PlayniteWebPlugin/*.*',
             label: 'Playnite Web Plugin',
+          },
+        ],
+      },
+    ],
+    [
+      '@semantic-release/github',
+      {
+        assets: [
+          {
+            path: '_packaged/PlayniteWebMqttPlugin/*.*',
+            label: 'Playnite Web MQTT Plugin',
           },
         ],
       },
@@ -94,6 +105,8 @@ const config = {
         assets: [
           'apps/PlayniteWebPlugin/src/manifest.yaml',
           'apps/PlayniteWebPlugin/src/extension.yaml',
+          'apps/PlayniteWebMqttPlugin/src/manifest.yaml',
+          'apps/PlayniteWebMqttPlugin/src/extension.yaml',
         ],
         message:
           'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
