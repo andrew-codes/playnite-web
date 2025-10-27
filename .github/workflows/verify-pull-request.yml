@@ -337,7 +337,7 @@ jobs:
         env:
           NODE_ENV: production
       - name: Package projects
-        run: yarn nx run-many --target=package --configuration=production --parallel --verbose --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=package --configuration=production --parallel=1 --verbose --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
       - name: Upload artifacts

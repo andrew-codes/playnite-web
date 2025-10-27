@@ -346,7 +346,7 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
       - name: Package projects
-        run: yarn nx run-many --target=package --configuration=production --verbose --exclude='*,!tag:linux'
+        run: yarn nx run-many --parallel=1 --target=package --configuration=production --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           LOG_LEVEL: info
