@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Playnite.SDK;
 
 namespace PlayniteWebMqtt
 {
@@ -73,7 +74,8 @@ namespace PlayniteWebMqtt
       set => SetValue(ref useSecureConnection, value);
     }
 
-    public DateTime LastPublish {
+    public DateTime LastPublish
+    {
       get => lastPublish;
       set => SetValue(ref lastPublish, value);
     }
