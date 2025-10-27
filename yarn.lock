@@ -27811,7 +27811,7 @@ __metadata:
     ua-parser-js: "npm:^2.0.4"
     uuid: "npm:^11.1.0"
     versioning: "workspace:*"
-    vite: "npm:^7.1.5"
+    vite: "npm:^7.1.12"
     vite-plugin-istanbul: "npm:^7.1.0"
     vite-plugin-node-polyfills: "npm:^0.24.0"
     vite-tsconfig-paths: "npm:^5.1.4"
@@ -27903,7 +27903,7 @@ __metadata:
     tsx: "npm:^4.20.4"
     typescript: "npm:^5.9.2"
     typescript-eslint: "npm:^8.40.0"
-    vite: "npm:^7.1.5"
+    vite: "npm:^7.1.12"
   languageName: unknown
   linkType: soft
 
@@ -34376,9 +34376,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^7.1.5":
-  version: 7.1.6
-  resolution: "vite@npm:7.1.6"
+"vite@npm:^7.1.12":
+  version: 7.1.12
+  resolution: "vite@npm:7.1.12"
   dependencies:
     esbuild: "npm:^0.25.0"
     fdir: "npm:^6.5.0"
@@ -34427,7 +34427,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/2cd8baec0054956dae61289dd1497109c762cfc27ec6f6b88f39a15d5ddc7e0cc4559b72fbdd701b296c739d2f734d051c28e365539462fb92f83b5e7908f9de
+  checksum: 10c0/cef4d4b4a84e663e09b858964af36e916892ac8540068df42a05ced637ceeae5e9ef71c72d54f3cfc1f3c254af16634230e221b6e2327c2a66d794bb49203262
   languageName: node
   linkType: hard
 
