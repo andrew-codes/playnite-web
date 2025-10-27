@@ -4,7 +4,7 @@
 [![Latest Release](https://img.shields.io/github/v/release/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web/releases/latest)
 [![License](https://img.shields.io/github/license/andrew-codes/playnite-web)](https://github.com/andrew-codes/playnite-web?tab=AGPL-3.0-1-ov-file#readme)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/andrew-codes)](https://github.com/sponsors/andrew-codes)
-[![Join Chat](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fmatrix.org%2F_matrix%2Fclient%2Funstable%2Fim.nheko.summary%2Fsummary%2F%2523playnite-web%3Agitter.im&query=num_joined_members&label=Chat%20Members)](https://matrix.to/#/#playnite-web:gitter.im)
+[![Discord](https://img.shields.io/discord/1432357177984684102?style=flat&label=Discord%20Community)](https://discord.gg/Dv8UrQ6mGb)
 
 Share, remote control, and automate your game library online with self-hosted Playnite Web.
 
