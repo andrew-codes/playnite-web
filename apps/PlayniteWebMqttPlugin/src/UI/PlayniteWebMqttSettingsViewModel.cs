@@ -85,7 +85,7 @@ namespace PlayniteWebMqtt.UI
       errors = new List<string>();
       try
       {
-        OnVerifySettings.Invoke(this, settings);
+        OnVerifySettings?.Invoke(this, settings);
       }
       catch (Exception e)
       {
