@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36603.0 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayniteWebMqtt", "PlayniteWebMqtt.csproj", "{960FFD37-AD49-4FDF-AAD7-312377E0137E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{960FFD37-AD49-4FDF-AAD7-312377E0137E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{960FFD37-AD49-4FDF-AAD7-312377E0137E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{960FFD37-AD49-4FDF-AAD7-312377E0137E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{960FFD37-AD49-4FDF-AAD7-312377E0137E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {620DAE38-0360-4A4F-A05E-7FE07CD0E592}
+	EndGlobalSection
+EndGlobal
