@@ -241,6 +241,28 @@ describe('Filtering.', () => {
         .contains('figcaption', 'Batman: Arkham Asylum')
     })
 
+    it(`Platform filter options.
+      - Only platforms with games are shown.`, () => {
+      const filterBy = 'Platform'
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      cy.get('[role="option"]').should('have.length', 2)
+      cy.contains('[role="option"]', /^Sony PlayStation 5$/)
+      cy.contains('[role="option"]', /^PC \(Windows\)$/)
+      cy.contains('[role="option"]', /Nintendo/).should('not.exist')
+
+      cy.get('h2 + button').click()
+    })
+
     it(`Mixing filters
       - Games must match at least one filter for each filter by.`, () => {
       const filterBy = ['Release Year', 'Feature']
