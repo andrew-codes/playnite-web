@@ -1,6 +1,6 @@
 import { styled, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { FC, useMemo } from 'react'
-import { Grid } from 'react-window'
+import { CellComponentProps, Grid } from 'react-window'
 import { Game } from '../../../../.generated/types.generated'
 import GameFigure from './GameFigure'
 
@@ -48,11 +48,8 @@ const GameGrid: FC<{
   //   })
   // }, [gridRef, subscribe])
 
-  const Cell = ({ columnIndex, rowIndex, style }) => {
+  const Cell = ({ columnIndex, rowIndex, style }: CellComponentProps) => {
     const game = games[rowIndex * columns + columnIndex]
-    if (!game) {
-      return null
-    }
 
     return (
       <div
@@ -65,7 +62,7 @@ const GameGrid: FC<{
       >
         <GameFigure
           game={game}
-          width={`${style.width - horizontalGap}px`}
+          width={`calc(${typeof style.width === 'string' ? `${style.width}px` : style?.width ? style.width : '150px'} - ${horizontalGap}px)`}
           onSelect={(evt) => {
             onSelect?.(evt, game)
           }}

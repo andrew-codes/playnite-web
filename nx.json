@@ -121,9 +121,6 @@
       "cache": false
     }
   },
-  "affected": {
-    "defaultBase": "main"
-  },
   "generators": {
     "@nx/next": {
       "application": {
