@@ -348,13 +348,13 @@ describe('Filtering.', () => {
             cy.compareSnapshot({
               name: `platform-filter-lookup-${breakpointName}`,
             })
-            cy.contains('PlayStation 3').click()
+            cy.contains('Sony PlayStation 5').click()
 
-            cy.get('@lookup').type('PlayStation')
-            cy.contains('PlayStation 4').click()
+            cy.get('@lookup').type('PC')
+            cy.contains('PC (Windows)').click()
 
-            cy.get('@filter').contains('Sony PlayStation 3')
-            cy.get('@filter').contains('Sony PlayStation 4')
+            cy.get('@filter').contains('Sony PlayStation 5')
+            cy.get('@filter').contains('PC (Windows)')
             cy.compareSnapshot({
               name: `platform-filter-multi-selection-${breakpointName}`,
             })
