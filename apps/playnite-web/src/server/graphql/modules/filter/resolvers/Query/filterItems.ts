@@ -85,6 +85,15 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
       id: true,
       name: true,
     },
+    where: {
+      Sources: {
+        some: {
+          Releases: {
+            some: {},
+          },
+        },
+      },
+    },
     orderBy: {
       name: 'asc',
     },
