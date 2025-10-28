@@ -1,0 +1,58 @@
+{
+  "name": "playnite-web-mqtt-plugin",
+  "sourceRoot": "apps/PlayniteWebMqttPlugin/src",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn rimraf .dist _packaged .test-runs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.dist"],
+      "options": {
+        "command": "yarn node --require esbuild-register ./scripts/build.ts",
+        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "production": {}
+      }
+    },
+    "build/restore": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuget restore",
+        "cwd": "{projectRoot}/src"
+      }
+    },
+    "package": {
+      "dependsOn": ["build"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "bash -c './scripts/package.sh'",
+        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "production": {}
+      }
+    },
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "gh release upload $VERSION '_packaged/**/*.pext'"
+      }
+    },
+    "version": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn node --require esbuild-register ./scripts/version.ts",
+        "cwd": "{projectRoot}"
+      }
+    }
+  },
+  "tags": ["windows"],
+  "implicitDependencies": []
+}
