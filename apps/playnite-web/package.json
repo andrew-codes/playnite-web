@@ -63,7 +63,7 @@
     "@cypress-audit/lighthouse": "patch:@cypress-audit/lighthouse@npm%3A1.4.2#~/.yarn/patches/@cypress-audit-lighthouse-npm-1.4.2-4dedf3cc3a.patch",
     "@cypress/code-coverage": "^3.14.6",
     "@cypress/webpack-preprocessor": "^7.0.1",
-    "@eddeee888/gcg-typescript-resolver-files": "^0.12.1",
+    "@eddeee888/gcg-typescript-resolver-files": "^0.14.0",
     "@eslint/compat": "^1.1.1",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.8.0",
