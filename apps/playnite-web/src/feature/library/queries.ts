@@ -25,9 +25,11 @@ const AllGamesQuery = gql`
           features {
             id
           }
+          hidden
         }
         releases {
           id
+          hidden
           platform {
             id
             name
