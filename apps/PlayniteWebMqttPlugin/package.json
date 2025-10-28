@@ -1,6 +1,6 @@
 {
-  "name": "playnite-web-plugin",
-  "description": "Playnite extension required for Playnite Web.",
+  "name": "playnite-web-mqtt-plugin",
+  "description": "Playnite extension to automate starting/stopping of games via MQTT.",
   "version": "4.0.2",
   "devDependencies": {
     "@types/shelljs": "^0.8.17",
