@@ -56,7 +56,26 @@ const config = {
       {
         manifestFilePath: 'apps/PlayniteWebPlugin/src/manifest.yaml',
         extensionFilePath: 'apps/PlayniteWebPlugin/src/extension.yaml',
-        requiredApiVersion: '6.12.0',
+        requiredApiVersion: '6.13.0',
+        presetConfig: {
+          types: [
+            { type: 'feat', section: 'Features', hidden: false },
+            { type: 'fix', section: 'Bug Fixes', hidden: false },
+            { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
+            { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
+          ],
+        },
+        parserOpts: {
+          noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING'],
+        },
+      },
+    ],
+    [
+      '@andrew-codes/playnite-plugin-installer-manifest',
+      {
+        manifestFilePath: 'apps/PlayniteWebMqttPlugin/src/manifest.yaml',
+        extensionFilePath: 'apps/PlayniteWebMqttPlugin/src/extension.yaml',
+        requiredApiVersion: '6.13.0',
         presetConfig: {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
@@ -82,18 +101,11 @@ const config = {
       {
         assets: [
           {
-            path: '_packaged/PlayniteWebPlugin/*.*',
+            path: '_packaged/**/PlayniteWebPlugin/**/*.*',
             label: 'Playnite Web Plugin',
           },
-        ],
-      },
-    ],
-    [
-      '@semantic-release/github',
-      {
-        assets: [
           {
-            path: '_packaged/PlayniteWebMqttPlugin/*.*',
+            path: '_packaged/**/PlayniteWebMqttPlugin/**/*.*',
             label: 'Playnite Web MQTT Plugin',
           },
         ],

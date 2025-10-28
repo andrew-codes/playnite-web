@@ -287,7 +287,7 @@ jobs:
           NODE_ENV: production
           VERSION: "${{ steps.nextVersion.outputs.value }}"
       - name: Package projects
-        run: yarn nx run-many --target=package --configuration=production --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=package --parallel=1 --configuration=production --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
           VERSION: "${{ steps.nextVersion.outputs.value }}"
@@ -346,7 +346,7 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
       - name: Package projects
-        run: yarn nx run-many --parallel=1 --target=package --configuration=production --verbose --exclude='*,!tag:linux'
+        run: yarn nx run-many --target=package --configuration=production --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           LOG_LEVEL: info
@@ -385,6 +385,10 @@ jobs:
         with:
           path: _packaged
           name: playnite-web-plugins
+      - name: Unzip artifacts
+        run: |
+          mkdir -p _packaged/playnite-web-plugins
+          find _packaged -name '*.zip' -exec bash -c 'unzip -o "{}" -d "_packaged/playnite-web-plugins/"' \;
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version
