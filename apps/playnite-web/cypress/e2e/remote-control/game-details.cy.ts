@@ -249,6 +249,64 @@ describe(`Game details remote control.
           })
         })
       })
+
+      it(`Running release keeps remote control actions visible.`, () => {
+        let releaseId: string
+
+        cy.contains("Assassin's Creed Odyssey")
+          .parents('[data-test=GameFigure]')
+          .find('button img')
+          .eq(0)
+          .click({ force: true })
+
+        cy.get('[data-test="Actions"] button').last().click()
+
+        cy.contains('li[role="menuitem"]', 'Sony PlayStation 5 via PlayStation')
+          .should('be.visible')
+          .click()
+
+        cy.get('[data-test="Actions"] button')
+          .eq(0)
+          .should('contain', 'Sony PlayStation 5 via PlayStation')
+          .then(($btn) => {
+            releaseId = $btn.data('release-id')
+
+            return cy.request({
+              method: 'POST',
+              url: '/api',
+              body: {
+                query: `mutation updateRelease($release: ReleaseInput!) {
+                  updateRelease(release: $release) {
+                    id
+                    runState
+                  }
+                }`,
+                variables: {
+                  release: { id: releaseId, runState: 'running' },
+                },
+              },
+            })
+          })
+          .its('status')
+          .should('eq', 200)
+
+        cy.reload()
+
+        cy.contains("Assassin's Creed Odyssey")
+          .parents('[data-test=GameFigure]')
+          .find('button img')
+          .eq(0)
+          .click({ force: true })
+
+        cy.get('[data-test="Actions"] button')
+          .eq(0)
+          .should('contain', 'Sony PlayStation 5 via PlayStation')
+
+        cy.get('[data-test="Actions"] li')
+          .eq(1)
+          .contains('button', 'Restart game')
+        cy.get('[data-test="Actions"] li').eq(2).contains('button', 'Stop game')
+      })
     })
   })
 })

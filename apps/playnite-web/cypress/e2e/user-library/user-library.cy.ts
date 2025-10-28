@@ -153,6 +153,75 @@ describe('User Library', () => {
   })
 })
 
+describe('User Library - Hidden releases', () => {
+  beforeEach(() => {
+    cy.task('seedUsers')
+    cy.fixture('librarySync.json').then((libraryData) => {
+      cy.syncLibrary('test', 'test', libraryData).then((library) => {
+        const libraryId = library.body.data.syncLibrary.id
+
+        cy.request({
+          method: 'POST',
+          url: '/api',
+          body: {
+            query: `query library($libraryId: String!) {
+              library(libraryId: $libraryId) {
+                games {
+                  primaryRelease {
+                    title
+                  }
+                  releases {
+                    id
+                  }
+                }
+              }
+            }`,
+            variables: {
+              libraryId,
+            },
+          },
+        }).then((response) => {
+          const hiddenGame = response.body.data.library.games.find(
+            (game) => game.primaryRelease?.title === '3DMark',
+          )
+
+          expect(hiddenGame, '3DMark release exists in library').to.exist
+
+          hiddenGame?.releases
+            ?.filter((release) => release?.id)
+            .forEach((release) => {
+              cy.request({
+                method: 'POST',
+                url: '/api',
+                body: {
+                  query: `mutation updateRelease($release: ReleaseInput!) {
+                    updateRelease(release: $release) {
+                      id
+                      hidden
+                    }
+                  }`,
+                  variables: {
+                    release: {
+                      id: release.id,
+                      hidden: true,
+                    },
+                  },
+                },
+              }).its('status').should('eq', 200)
+            })
+        })
+
+        cy.visit(`/u/test/${libraryId}`)
+      })
+    })
+  })
+
+  it(`Omits games when all releases are hidden.`, () => {
+    cy.get('[data-test="GameFigure"]').contains('7 Days to Die')
+    cy.get('[data-test="GameFigure"]').should('not.contain', '3DMark')
+  })
+})
+
 describe('User Library', () => {
   describe('UI.', () => {
     Cypress._.each(breakpoints, ([name, x, y]) => {
