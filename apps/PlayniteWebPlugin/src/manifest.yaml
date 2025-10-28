@@ -241,3 +241,13 @@ Packages:
       - "chore: workflow to publish instrumented e2e coverage (#840)"
       - "chore: remove redundant dev release workflow (#844)"
       - "chore: remove dev release workflow"
+  - Version: 12.1.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.1.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_1_0.pext
+    ReleaseDate: 2025-10-28
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat: release Playnite Web Mqtt plugin"
+      - "docs: add playnite web mqtt plugin guide"
+      - "chore: instruct agents to use claude.md files"
+      - "chore: automate release of MQTT plugin"
+      - "docs: community moved to Discord"
