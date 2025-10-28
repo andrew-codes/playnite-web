@@ -23,3 +23,7 @@ beforeEach(() => {
     mobile: false,
   })
 })
+
+beforeEach(() => {
+  cy.intercept('/api').as('api')
+})

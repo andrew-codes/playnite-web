@@ -1,32 +1,25 @@
-import { ApolloClient, ApolloLink, InMemoryCache } from '@apollo/client'
-import { HttpLink } from '@apollo/client/core'
+import {
+  ApolloClient,
+  ApolloLink,
+  HttpLink,
+  InMemoryCache,
+} from '@apollo/client'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { ApolloProvider } from '@apollo/client/react'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { Box, CssBaseline, ThemeProvider } from '@mui/material'
-import { configureStore, StateFromReducersMapObject } from '@reduxjs/toolkit'
+import { StateFromReducersMapObject } from '@reduxjs/toolkit'
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql'
 import { createClient } from 'graphql-ws'
 import { FC, PropsWithChildren } from 'react'
-import { Provider } from 'react-redux'
 import { reducer } from '../src/api/client/state'
+import { Redux } from '../src/feature/shared/components/Redux'
 import muiTheme from '../src/muiTheme'
 
-const TestWrapper: FC<
-  PropsWithChildren<{
-    preloadedState?: StateFromReducersMapObject<typeof reducer>
-  }>
-> = ({ children, preloadedState }) => {
-  const store = configureStore({
-    reducer,
-    preloadedState: preloadedState ?? {},
-  })
-
-  const host = location.host
-
+function makeClient() {
   const wsLink = new GraphQLWsLink(
     createClient({
-      url: `${location.protocol === 'https:' ? 'wss' : 'ws'}://${host}/api`,
+      url: `ws://localhost/api`,
       connectionParams: {
         'Access-Control-Allow-Origin': '*', // Required for CORS support to work
         credentials: true,
@@ -38,7 +31,7 @@ const TestWrapper: FC<
     }),
   )
   const httpLink = new HttpLink({
-    uri: `${location.protocol}//${host}/api`,
+    uri: `/api`,
     credentials: 'same-origin',
   })
 
@@ -54,20 +47,26 @@ const TestWrapper: FC<
     wsLink,
     httpLink,
   )
-  const client = new ApolloClient({
-    cache: new InMemoryCache().restore(window.__APOLLO_STATE__),
-    uri: `${location.protocol}//${host}/api`,
+
+  return new ApolloClient({
+    cache: new InMemoryCache(),
     link,
   })
+}
 
+const TestWrapper: FC<
+  PropsWithChildren<{
+    preloadedState?: StateFromReducersMapObject<typeof reducer>
+  }>
+> = ({ children, preloadedState }) => {
   return (
-    <ApolloProvider client={client}>
-      <Provider store={store}>
+    <ApolloProvider client={makeClient()}>
+      <Redux>
         <ThemeProvider theme={muiTheme('desktop')}>
           <CssBaseline />
           {children}
         </ThemeProvider>
-      </Provider>
+      </Redux>
     </ApolloProvider>
   )
 }

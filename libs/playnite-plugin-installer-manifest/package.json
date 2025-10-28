@@ -6,19 +6,19 @@
   "description": "Semantic-release plugin to generate an installer manifest for Playnite plugins.",
   "main": "./.dist/src/index.js",
   "dependencies": {
-    "conventional-changelog-angular": "^8.0.0",
+    "conventional-changelog-angular": "^8.1.0",
     "conventional-commits-filter": "^5.0.0",
-    "conventional-commits-parser": "^6.2.0",
-    "debug": "^4.4.1",
+    "conventional-commits-parser": "^6.2.1",
+    "debug": "^4.4.3",
     "dev-logger": "workspace:*",
     "get-stream": "^9.0.1",
     "import-from-esm": "^2.0.0",
-    "into-stream": "^8.0.1",
+    "into-stream": "^9.0.0",
     "lodash-es": "^4.17.21",
     "read-package-up": "^11.0.0",
     "yaml": "^2.8.1"
   },
   "devDependencies": {
-    "esbuild": "^0.25.10"
+    "esbuild": "^0.25.11"
   }
 }
