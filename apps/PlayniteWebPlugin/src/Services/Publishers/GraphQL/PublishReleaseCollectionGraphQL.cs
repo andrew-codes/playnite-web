@@ -44,7 +44,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               releases = added
                .Select(g =>
                {
-                 ReleaseDate? releaseDate = (ReleaseDate)g.GetValue("ReleaseDate");
+                 ReleaseDate? releaseDate = (ReleaseDate?)g.GetValue("ReleaseDate");
                  return new
                  {
                    id = g.Id,
