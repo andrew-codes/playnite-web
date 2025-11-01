@@ -42,21 +42,25 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
             update = new
             {
               releases = entities
-               .Select(g => new
-               {
-                 id = g.Id,
-                 title = g.GetValue("Name"),
-                 //criticScore = g.GetValue("CriticScore"),
-                 description = g.GetValue("Description"),
-                 source = g.GetValue("SourceId"),
-                 completionStatus = g.GetValue("CompletionStatusId"),
-                 hidden = g.GetValue("Hidden"),
-                 features = g.GetValue("FeatureIds"),
-                 tags = g.GetValue("TagIds"),
-                 //genres = g.Genres.Select(ge => ge.Id),
-                 //categories = g.Categories.Select(c => c.Id),
-                 releaseDate = g.GetValue("ReleaseDate"),
-                 playtime = g.GetValue("Playtime"),
+               .Select(g => {
+                 ReleaseDate? releaseDate = (ReleaseDate)g.GetValue("ReleaseDate");
+
+                 return new
+                 {
+                   id = g.Id,
+                   title = g.GetValue("Name"),
+                   //criticScore = g.GetValue("CriticScore"),
+                   description = g.GetValue("Description"),
+                   source = g.GetValue("SourceId"),
+                   completionStatus = g.GetValue("CompletionStatusId"),
+                   hidden = g.GetValue("Hidden"),
+                   features = g.GetValue("FeatureIds"),
+                   tags = g.GetValue("TagIds"),
+                   //genres = g.Genres.Select(ge => ge.Id),
+                   //categories = g.Categories.Select(c => c.Id),
+                   releaseDate = releaseDate.HasValue ? releaseDate.Value.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture) : (string)null,
+                   playtime = g.GetValue("Playtime"),
+                 };
                }),
               platforms = Enumerable.Empty<object>(),
               sources = Enumerable.Empty<object>(),
