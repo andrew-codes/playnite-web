@@ -22,11 +22,12 @@ describe('User Library', () => {
       cy.get('@gameFigure')
         .contains('[data-test="GameFigureChipList"] button', 'Played')
         .click()
+      cy.intercept('POST', '/api').as('updateCompletionStatus')
       cy.get('.MuiPopper-root')
         .contains('li', 'Beaten')
         .eq(0)
         .click({ force: true })
-      cy.wait('@api')
+      cy.wait('@updateCompletionStatus')
 
       cy.get('@gameFigure').contains(
         '[data-test="GameFigureChipList"]',
