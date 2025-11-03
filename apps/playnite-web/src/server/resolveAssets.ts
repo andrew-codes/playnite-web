@@ -1,8 +1,9 @@
 function resolve(assetPathFromRoot: string) {
   // Game assets are now served via Express static middleware at /game-assets
   // Regular assets continue to use /_next/static/media in production
-  const isGameAsset = assetPathFromRoot.startsWith('game-assets/')
-  
+  const normalizedPath = assetPathFromRoot.replace(/^\/+/, '')
+  const isGameAsset = normalizedPath.startsWith('game-assets/')
+
   let prefix = ''
   if (isGameAsset) {
     prefix = ''
@@ -13,7 +14,7 @@ function resolve(assetPathFromRoot: string) {
     prefix = '/_next/static/media'
   }
 
-  return `${prefix}/${assetPathFromRoot.replace(/^\/+/, '')}`
+  return `${prefix}/${normalizedPath}`
 }
 
 export { resolve }
