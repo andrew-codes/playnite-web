@@ -21,7 +21,7 @@ read_only: false
 
 # list of tool names to exclude. We recommend not excluding any tools, see the readme for more details.
 # Below is the complete list of tools for convenience.
-# To make sure you have the latest list of tools, and to view their descriptions, 
+# To make sure you have the latest list of tools, and to view their descriptions,
 # execute `uv run scripts/print_tool_overview.py`.
 #
 #  * `activate_project`: Activates a project by name.
@@ -62,6 +62,8 @@ excluded_tools: []
 
 # initial prompt for the project. It will always be given to the LLM upon activating the project
 # (contrary to the memories, which are loaded on demand).
-initial_prompt: ""
+initial_prompt: ''
 
-project_name: "playnite-web"
+project_name: 'playnite-web'
+web_dashboard: false
+web_dashboard_open_on_launch: false
