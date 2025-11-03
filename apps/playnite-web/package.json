@@ -81,7 +81,7 @@
     "@nx/js": "^21.5.2",
     "@nx/next": "21.5.2",
     "@nx/react": "^21.5.2",
-    "@swc-node/register": "~1.9.2",
+    "@swc-node/register": "~1.11.1",
     "@swc/cli": "~0.6.0",
     "@swc/core": "~1.5.29",
     "@swc/helpers": "~0.5.17",
