@@ -102,7 +102,7 @@
     "babel-loader": "^10.0.0",
     "babel-plugin-direct-import": "^1.0.0",
     "babel-plugin-istanbul": "^7.0.0",
-    "cypress": "^15.3.0",
+    "cypress": "^15.5.0",
     "cypress-cdp": "^1.6.84",
     "cypress-image-diff-html-report": "^2.2.0",
     "cypress-image-diff-js": "^2.4.0",
