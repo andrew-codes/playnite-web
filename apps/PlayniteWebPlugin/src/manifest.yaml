@@ -251,3 +251,12 @@ Packages:
       - "chore: instruct agents to use claude.md files"
       - "chore: automate release of MQTT plugin"
       - "docs: community moved to Discord"
+  - Version: 12.2.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.2.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_2_0.pext
+    ReleaseDate: 2025-11-03
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: sync errors throw by Plugin"
+      - "feat: limit platform filter to platforms with games (#873)"
+      - "chore: fix pipeline build"
+      - "fix: correct add-on ID for release"
