@@ -29,7 +29,7 @@ describe('Persisting assets.', () => {
   test(`Saving to disk.
     - Subscribed MQTT message contains release title.
     - IGN slug is computed from title and use to fetch from IGN graph to locate URL to asset.
-    - Found URL is downloaded, resized, and saved to disk as a WEBP file format.`, async () => {
+    - Found URL is downloaded, resized to multiple sizes, and saved to disk as WEBP file formats.`, async () => {
     const testRelease = {
       id: 'test-game-id',
       title: 'The Legend of Zelda: Breath of the Wild',
@@ -40,14 +40,21 @@ describe('Persisting assets.', () => {
       { qos: 1 },
     )
     await new Promise((resolve) => setTimeout(resolve, 5000))
-    const expectedAssetPath = path.join(
-      testAssetPath,
-      'the-legend-of-zelda-breath-of-the-wild.webp',
-    )
-    const assetExists = existsSync(expectedAssetPath)
-    expect(assetExists).toBe(true)
 
-    const stats = await fs.stat(expectedAssetPath)
-    expect(stats.size).toBeGreaterThan(0)
+    const baseSlug = 'the-legend-of-zelda-breath-of-the-wild'
+    const sizes = [175, 230, 280, 320]
+
+    // Verify all four sizes are created
+    for (const size of sizes) {
+      const expectedAssetPath = path.join(
+        testAssetPath,
+        `${baseSlug}-${size}.webp`,
+      )
+      const assetExists = existsSync(expectedAssetPath)
+      expect(assetExists).toBe(true)
+
+      const stats = await fs.stat(expectedAssetPath)
+      expect(stats.size).toBeGreaterThan(0)
+    }
   }, 30000)
 })

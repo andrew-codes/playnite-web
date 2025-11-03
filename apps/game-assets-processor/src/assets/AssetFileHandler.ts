@@ -12,15 +12,24 @@ class AssetFileHandler implements IPersistAssets {
     private sourceAssets: ISourceAssets,
   ) {}
 
-  async persist(release: { title: string }): Promise<[string, string] | void> {
+  async persist(release: {
+    title: string
+  }): Promise<Array<[string, string]> | void> {
     await fs.mkdir(path.join(this.rootAssetPath, 'game-assets'), {
       recursive: true,
     })
 
     const ignId = slug(release)
-    if (
-      existsSync(path.join(this.rootAssetPath, 'game-assets', `${ignId}.webp`))
-    ) {
+    const sizes = [175, 230, 280, 320]
+
+    // Check if all sizes exist on disk
+    const allSizesExist = sizes.every((size) =>
+      existsSync(
+        path.join(this.rootAssetPath, 'game-assets', `${ignId}-${size}.webp`),
+      ),
+    )
+
+    if (allSizesExist) {
       return
     }
 
@@ -31,20 +40,29 @@ class AssetFileHandler implements IPersistAssets {
 
     const [mimeType, imageData] = imageSource
     logger.debug(`MimeType for ${release.title}: ${mimeType}`)
-    const webp = await sharp(imageData)
-      .resize(325, 325)
-      .toFormat('webp')
-      .toBuffer()
-    const savePath = path.join(
-      this.rootAssetPath,
-      'game-assets',
-      `${ignId}.webp`,
-    )
 
-    logger.debug(`Writing image for ${release.title} to disk`, savePath)
-    await fs.writeFile(savePath, webp)
+    // Process and save all sizes
+    const savePromises = sizes.map(async (size) => {
+      const webp = await sharp(imageData)
+        .resize(size, size)
+        .toFormat('webp')
+        .toBuffer()
+      const savePath = path.join(
+        this.rootAssetPath,
+        'game-assets',
+        `${ignId}-${size}.webp`,
+      )
 
-    return [`${ignId}.webp`, savePath]
+      logger.debug(
+        `Writing ${size}x${size} image for ${release.title} to disk`,
+        savePath,
+      )
+      await fs.writeFile(savePath, webp)
+      return [`${ignId}-${size}.webp`, savePath] as [string, string]
+    })
+
+    const results = await Promise.all(savePromises)
+    return results
   }
 }
 

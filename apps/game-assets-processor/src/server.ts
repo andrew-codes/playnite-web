@@ -41,7 +41,8 @@ async function run() {
             return
           }
 
-          // const [filename] = paths
+          // Note: paths is now an array of [filename, path] tuples for each size
+          // const results = paths // Array of [[filename1, path1], [filename2, path2], ...]
           // logger.info(
           //   `Updating release ${release.title} with new cover in database.`,
           // )

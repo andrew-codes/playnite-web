@@ -337,7 +337,7 @@ export const syncLibrary: NonNullable<
         release.completionStatus !== '00000000-0000-0000-0000-000000000000'
           ? completionStatusMap.get(release.completionStatus)
           : null,
-      coverSlug: `${slug(release)}.webp`,
+      coverSlug: `${slug(release)}-320.webp`,
       features: release.features ?? [],
       tags: release.tags ?? [],
     }

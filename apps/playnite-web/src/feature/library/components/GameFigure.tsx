@@ -50,10 +50,12 @@ const GameFigure: FC<
               boxShadow: theme.shadows[3],
             })}
           >
-            {game.primaryRelease?.cover && (
+{game.primaryRelease?.cover && (
               <Image
                 data-test="GameCoverImage"
                 src={`${game.primaryRelease?.cover}`}
+srcSet={`${game.primaryRelease?.cover.replace('-320.webp', '-175.webp')} 175w, ${game.primaryRelease?.cover.replace('-320.webp', '-230.webp')} 230w, ${game.primaryRelease?.cover.replace('-320.webp', '-280.webp')} 280w, ${game.primaryRelease?.cover} 320w`}
+                sizes={width}
                 alt={game.primaryRelease?.title}
                 width={width}
                 loading={priority ? 'eager' : 'lazy'}
