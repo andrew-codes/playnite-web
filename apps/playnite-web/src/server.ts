@@ -45,6 +45,17 @@ async function run() {
 
     // create express app
     const app = express()
+    
+    // Serve game assets from dedicated directory
+    const gameAssetsPath = process.env.GAME_ASSETS_PATH || './game-assets'
+    app.use(
+      '/game-assets',
+      express.static(gameAssetsPath, {
+        maxAge: '1y',
+        immutable: true,
+      })
+    )
+    
     app.use(compression())
     app.use(express.json({ limit: '50mb' }))
     app.use(express.urlencoded({ extended: true, limit: '50mb' }))
