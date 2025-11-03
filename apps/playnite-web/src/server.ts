@@ -47,10 +47,10 @@ async function run() {
     const app = express()
 
     // Serve game assets from dedicated directory
-    const coverArtPath = process.env.COVER_ART_PATH || './game-assets'
+    const gameAssetsPath = process.env.GAME_ASSETS_PATH || './game-assets'
     app.use(
-      '/cover-art',
-      express.static(coverArtPath, {
+      '/game-assets',
+      express.static(gameAssetsPath, {
         maxAge: '1y',
         immutable: true,
       }),
