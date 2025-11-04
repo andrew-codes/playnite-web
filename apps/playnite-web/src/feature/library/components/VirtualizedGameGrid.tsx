@@ -65,10 +65,10 @@ const GameGrid: FC<{
       >
         <GameFigure
           game={game}
-          width={`${style.width - horizontalGap}px`}
           onSelect={(evt) => {
             onSelect?.(evt, game)
           }}
+          isHighFetchPriority={false}
           priority={true}
         >
           <Typography

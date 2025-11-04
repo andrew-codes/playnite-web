@@ -59,8 +59,8 @@ const HorizontalGameList: FC<{
             <GameFigure
               game={game}
               onSelect={onSelect}
-              width={`calc(${columnWidth}px)`}
               priority={true}
+              isHighFetchPriority={false}
             >
               <Typography
                 variant="caption"

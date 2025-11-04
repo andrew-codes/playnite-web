@@ -71,7 +71,6 @@ Cypress.on('window:before:load', (win) => {
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   originalFn(url, options)
   cy.get('[data-test=Navigation]', { timeout: 15000 })
-  cy.waitForImages()
   // Wait for MUI to be ready
   // cy.wait(2200)
 })
@@ -142,11 +141,3 @@ Cypress.Commands.add(
       .click({ force: true })
   },
 )
-
-Cypress.Commands.add('waitForImages', () => {
-  return cy.get('img', { timeout: 10000 }).should(($images) => {
-    $images.each((_, img) => {
-      expect(img.complete).to.equal(true)
-    })
-  })
-})
