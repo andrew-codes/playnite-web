@@ -15021,17 +15021,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^5.0.1":
-  version: 5.1.0
-  resolution: "cross-spawn@npm:5.1.0"
-  dependencies:
-    lru-cache: "npm:^4.0.1"
-    shebang-command: "npm:^1.2.0"
-    which: "npm:^1.2.9"
-  checksum: 10c0/1918621fddb9f8c61e02118b2dbf81f611ccd1544ceaca0d026525341832b8511ce2504c60f935dbc06b35e5ef156fe8c1e72708c27dd486f034e9c0e1e07201
-  languageName: node
-  linkType: hard
-
 "cross-spawn@npm:^6.0.6":
   version: 6.0.6
   resolution: "cross-spawn@npm:6.0.6"
@@ -24698,16 +24687,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^4.0.1":
-  version: 4.1.5
-  resolution: "lru-cache@npm:4.1.5"
-  dependencies:
-    pseudomap: "npm:^1.0.2"
-    yallist: "npm:^2.1.2"
-  checksum: 10c0/1ca5306814e5add9ec63556d6fd9b24a4ecdeaef8e9cea52cbf30301e6b88c8d8ddc7cab45b59b56eb763e6c45af911585dc89925a074ab65e1502e3fe8103cf
-  languageName: node
-  linkType: hard
-
 "lru-cache@npm:^5.1.1":
   version: 5.1.1
   resolution: "lru-cache@npm:5.1.1"
@@ -28019,7 +27998,7 @@ __metadata:
     prettier: "npm:^3.6.2"
     prisma: "npm:^6.16.2"
     react: "npm:^19.1.1"
-    react-devtools: "npm:^6.1.5"
+    react-devtools: "npm:^7.0.1"
     react-dom: "npm:^19.1.1"
     react-redux: "npm:^9.2.0"
     react-window: "npm:^2.2.0"
@@ -29305,13 +29284,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pseudomap@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "pseudomap@npm:1.0.2"
-  checksum: 10c0/5a91ce114c64ed3a6a553aa7d2943868811377388bb31447f9d8028271bae9b05b340fe0b6961a64e45b9c72946aeb0a4ab635e8f7cb3715ffd0ff2beeb6a679
-  languageName: node
-  linkType: hard
-
 "pstree.remy@npm:^1.1.8":
   version: 1.1.8
   resolution: "pstree.remy@npm:1.1.8"
@@ -29528,29 +29500,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-devtools-core@npm:6.1.5":
-  version: 6.1.5
-  resolution: "react-devtools-core@npm:6.1.5"
+"react-devtools-core@npm:7.0.1":
+  version: 7.0.1
+  resolution: "react-devtools-core@npm:7.0.1"
   dependencies:
     shell-quote: "npm:^1.6.1"
     ws: "npm:^7"
-  checksum: 10c0/7ef95213d06ad4b294f5dca73736641e2d8ff46861d3deacdc56a143b27de60ac6310898a52c7efd9fbd1bdef20c09305d05be80e6beb560f0f975aad6afbc5e
+  checksum: 10c0/a531bdb1203d1b903a50b8604c45cb53d09fb9654c4d558340d41569b1831746852f47b4698b04a102dd1b9a3861c2b9fa2d2af89a6e2e836026e0bea3d317ed
   languageName: node
   linkType: hard
 
-"react-devtools@npm:^6.1.5":
-  version: 6.1.5
-  resolution: "react-devtools@npm:6.1.5"
+"react-devtools@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "react-devtools@npm:7.0.1"
   dependencies:
     cross-spawn: "npm:^5.0.1"
     electron: "npm:^23.1.2"
     internal-ip: "npm:^6.2.0"
     minimist: "npm:^1.2.3"
-    react-devtools-core: "npm:6.1.5"
+    react-devtools-core: "npm:7.0.1"
     update-notifier: "npm:^2.1.0"
   bin:
     react-devtools: bin.js
-  checksum: 10c0/53cbf5d1636ff15bd2471b659f288e570d4eb803c585268955576536ff74fa7de671603dd75e4cb3c2c79e32bb7e555350805e89b08696ca81c2e87f025ba11e
+  checksum: 10c0/f2507f84c12f4921069cc250ae4b1711bf5c409dd3f65eb089f03ef4640e032392763b585088e2425775ef61a525cff0248e0a4ee918590e7fe1132e54fa3ce9
   languageName: node
   linkType: hard
 
@@ -35441,13 +35413,6 @@ __metadata:
   version: 5.0.8
   resolution: "y18n@npm:5.0.8"
   checksum: 10c0/4df2842c36e468590c3691c894bc9cdbac41f520566e76e24f59401ba7d8b4811eb1e34524d57e54bc6d864bcb66baab7ffd9ca42bf1eda596618f9162b91249
-  languageName: node
-  linkType: hard
-
-"yallist@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "yallist@npm:2.1.2"
-  checksum: 10c0/0b9e25aa00adf19e01d2bcd4b208aee2b0db643d9927131797b7af5ff69480fc80f1c3db738cbf3946f0bddf39d8f2d0a5709c644fd42d4aa3a4e6e786c087b5
   languageName: node
   linkType: hard
 
