@@ -129,7 +129,7 @@ describe(`Game details remote control.
               'source.name': 'PlayStation',
             })
             expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
+              /\/assassins-creed-odyssey-320\.webp$/,
             )
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
@@ -195,7 +195,7 @@ describe(`Game details remote control.
               'source.name': 'PlayStation',
             })
             expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
+              /\/assassins-creed-odyssey-320\.webp$/,
             )
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
@@ -255,7 +255,7 @@ describe(`Game details remote control.
               'source.name': 'PlayStation',
             })
             expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
+              /\/assassins-creed-odyssey-320\.webp$/,
             )
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
