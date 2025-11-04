@@ -49,6 +49,11 @@ const nextConfig = {
     return config
   },
 
+  images: {
+    imageSizes: [175, 230, 280, 320],
+    formats: ['image/webp'],
+  },
+
   // output: 'standalone',
 }
 
