@@ -10144,13 +10144,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.11.26":
-  version: 16.18.126
-  resolution: "@types/node@npm:16.18.126"
-  checksum: 10c0/5c137eb141d33de32b16ff26047ff6d449432b58d0d25f7cced2040c97727d81fe1099a7581eb336d14a6840f5b09e363bdd43d7a6995e8e81eb47aa51e413fc
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:^18.17.15":
   version: 18.19.120
   resolution: "@types/node@npm:18.19.120"
@@ -10175,6 +10168,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10c0/7ba190da2e64e56c59270661af8cd682c830a1375b6f965ab153be90baabfdaa867aa1d63f87b42de80956996d46dfe1cf93ecefe982d9a16e485b6756949f9a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^22.7.7":
+  version: 22.19.0
+  resolution: "@types/node@npm:22.19.0"
+  dependencies:
+    undici-types: "npm:~6.21.0"
+  checksum: 10c0/66b98fcd38efb4ae58c628d61fed2b8f17c830eb665d8bceabc4174cae1dd81b8e4caac4c70d7dc929f9f76a3dc46cb21f480e904d0b898297bd12c0a2d1571a
   languageName: node
   linkType: hard
 
@@ -15409,12 +15411,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress-cdp@npm:^1.6.84":
-  version: 1.6.84
-  resolution: "cypress-cdp@npm:1.6.84"
+"cypress-cdp@npm:^1.6.86":
+  version: 1.6.86
+  resolution: "cypress-cdp@npm:1.6.86"
   dependencies:
-    devtools-protocol: "npm:^0.0.1504847"
-  checksum: 10c0/782fc8515d2d4268c69b214eef02b262c800d841d8e75b8c07dce1396718810221fa2eca3fff4cffc8b6c7de1b343a7f3d5ce973a842bbda7572eeadfd2175ec
+    devtools-protocol: "npm:^0.0.1534754"
+  checksum: 10c0/4b714b0f903fef3d537a553d456699c2ca5f3d1b5b286a50530264f69ea56c690afe20bbb9f7727ee4f76b532a2292d51e3fcba734e29661278a96dc477b3d08
   languageName: node
   linkType: hard
 
@@ -15435,9 +15437,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress-image-diff-js@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "cypress-image-diff-js@npm:2.4.0"
+"cypress-image-diff-js@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "cypress-image-diff-js@npm:2.5.0"
   dependencies:
     "@babel/runtime": "npm:^7.12.5"
     "@colors/colors": "npm:^1.5.0"
@@ -15452,7 +15454,7 @@ __metadata:
     cypress: ">=9.6.1"
   bin:
     cypress-image-diff: bin/cypress-image-diff.js
-  checksum: 10c0/99bc63bc836db308da59de1dd3a8bc6d9570db2cbce89716b2b3d0c4ff437da5b213542db33a7d13f121711405eda506ea0b8f5612e6b30e59f5e2b537f89692
+  checksum: 10c0/96a75c42f7d2ad9e954fae27496b800c26b0f28640913eb18b64f1bff00e4f2209e26e4f0ce48307c8bde264b7517d0325b6f369a1ed45e3e34f6d2268453d1d
   languageName: node
   linkType: hard
 
@@ -15465,28 +15467,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress-split@npm:^1.24.21":
-  version: 1.24.21
-  resolution: "cypress-split@npm:1.24.21"
+"cypress-split@npm:^1.24.25":
+  version: 1.24.25
+  resolution: "cypress-split@npm:1.24.25"
   dependencies:
     "@actions/core": "npm:^1.10.0"
     arg: "npm:^5.0.2"
     console.table: "npm:^0.10.0"
     debug: "npm:^4.3.4"
     fast-shuffle: "npm:^6.1.0"
-    find-cypress-specs: "npm:1.54.6"
+    find-cypress-specs: "npm:1.54.8"
     globby: "npm:^11.1.0"
     humanize-duration: "npm:^3.28.0"
   bin:
     cypress-split-merge: bin/merge.js
     cypress-split-preview: bin/preview.js
-  checksum: 10c0/b97a9e0a1ee1880ee6dee866e22b368308397cce372db2c0b4f8a781589469c82370cbd95c6c3cac18ff8cb59522f58153f051cd7dd1ea5dd6d1b8f5a12ba93b
+  checksum: 10c0/053ed4aea096aa4e548c9308a6517bd5c207a65d2abb97e88fe5d48973909b2de4676a17bfa46e6251cbf8dbb4c99d533e8d943bc3465f00bddf4c8c057db210
   languageName: node
   linkType: hard
 
-"cypress@npm:^15.3.0":
-  version: 15.3.0
-  resolution: "cypress@npm:15.3.0"
+"cypress@npm:^15.5.0":
+  version: 15.5.0
+  resolution: "cypress@npm:15.5.0"
   dependencies:
     "@cypress/request": "npm:^3.0.9"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -15533,7 +15535,7 @@ __metadata:
     yauzl: "npm:^2.10.0"
   bin:
     cypress: bin/cypress
-  checksum: 10c0/41a422526ba851a68dbe0121d0897a1ce73ad85462d28432756e43b92d5e7df7335ba5c5d776e81a9a0b4730de316b69b9ab88f32d8c149a5ccb011eec8a4d2a
+  checksum: 10c0/0a7aabc9920a808f5257f111b9b4bb6602e9b7146dd945a49e16a0811c201d5f5837f9ae439756556b686e020155483542505bf8499b72307236047b85a1130b
   languageName: node
   linkType: hard
 
@@ -16366,10 +16368,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"devtools-protocol@npm:^0.0.1504847":
-  version: 0.0.1504847
-  resolution: "devtools-protocol@npm:0.0.1504847"
-  checksum: 10c0/dab1a610b8875bfc1578864539cfaab53200571430fd4a31717caf7641477282e0e7e69babb1e92b732686a300400266e3eb52fd7262cfce31a60920f92f78c6
+"devtools-protocol@npm:^0.0.1534754":
+  version: 0.0.1534754
+  resolution: "devtools-protocol@npm:0.0.1534754"
+  checksum: 10c0/2ee96f10c9833f7e6ad0f9f66e42242129547e96c8cfe816ce508c222f4ccf4431a4b787cd6ee8174c9b2c8cc9a3c7f3b3b0a1fff96dd3cc5a16eb314027c9f7
   languageName: node
   linkType: hard
 
@@ -16742,16 +16744,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^23.1.2":
-  version: 23.3.13
-  resolution: "electron@npm:23.3.13"
+"electron@npm:^35.7.5":
+  version: 35.7.5
+  resolution: "electron@npm:35.7.5"
   dependencies:
     "@electron/get": "npm:^2.0.0"
-    "@types/node": "npm:^16.11.26"
+    "@types/node": "npm:^22.7.7"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10c0/6fa13fd4177b7ca051f52ee2190ede9e2b269639cc7665568144caa46a46fe13009de9da3d60912b7c8e9a370825c0488f34860c8952b6f5b88283b91a4d4e00
+  checksum: 10c0/2c331e438b655b25a8b49ce038878cdc61a42481fcdf464ecb5648585a2c83f1edc5d8e0a8de582713f8e3dc8a3b35aaa136735ad68f8009ee2369f3b2e79c15
   languageName: node
   linkType: hard
 
@@ -18733,25 +18735,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-cypress-specs@npm:1.54.6":
-  version: 1.54.6
-  resolution: "find-cypress-specs@npm:1.54.6"
+"find-cypress-specs@npm:1.54.8":
+  version: 1.54.8
+  resolution: "find-cypress-specs@npm:1.54.8"
   dependencies:
     "@actions/core": "npm:^1.10.0"
     arg: "npm:^5.0.1"
     console.table: "npm:^0.10.0"
     debug: "npm:^4.3.3"
-    find-test-names: "npm:1.29.18"
-    globby: "npm:^11.1.0"
+    find-test-names: "npm:1.29.19"
     minimatch: "npm:^5.1.4"
     pluralize: "npm:^8.0.0"
     require-and-forget: "npm:^1.0.1"
     shelljs: "npm:^0.10.0"
     spec-change: "npm:^1.11.17"
+    tinyglobby: "npm:^0.2.15"
     tsx: "npm:^4.19.3"
   bin:
     find-cypress-specs: bin/find.js
-  checksum: 10c0/66d4e9c0db257c3c288af5767db868b139bf7aff47ff9b9043fc121ce7bce86140bc99cbd8811132b6fe2c7a81370fb1e65faa2ba2e68b3c2e0076b17e3c5283
+  checksum: 10c0/6f49b72ace7dddc74f219d96f16c7c0c02f08262aa21ac8564b0ba65687855a8b552cbb79151b6b29cba5ec9c1efd5e58b7745b3e5583ebcabd806dfe7f3cec6
   languageName: node
   linkType: hard
 
@@ -18790,21 +18792,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-test-names@npm:1.29.18":
-  version: 1.29.18
-  resolution: "find-test-names@npm:1.29.18"
+"find-test-names@npm:1.29.19":
+  version: 1.29.19
+  resolution: "find-test-names@npm:1.29.19"
   dependencies:
     "@babel/parser": "npm:^7.27.2"
     "@babel/plugin-syntax-jsx": "npm:^7.27.1"
     acorn-walk: "npm:^8.2.0"
     debug: "npm:^4.3.3"
-    globby: "npm:^11.0.4"
     simple-bin-help: "npm:^1.8.0"
+    tinyglobby: "npm:^0.2.13"
   bin:
     find-test-names: bin/find-test-names.js
     print-tests: bin/print-tests.js
     update-test-count: bin/update-test-count.js
-  checksum: 10c0/68cdb66ec55247e7d0c768bd00ef1d0cf6b7af005c880d57089da55083f5e168f25b64485346b1ded420bb6404a2cb232dd645f6d53677927e1a1420863058fb
+  checksum: 10c0/32d4f15f296a03bd5b783d6329b01abeec75965992e4d757caaa715b759d9d5cd16471228b7d4a8c603fd3a84e7a89e993a2bf060dff9c979381a8d55605b6a8
   languageName: node
   linkType: hard
 
@@ -19830,7 +19832,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globby@npm:11.1.0, globby@npm:^11.0.3, globby@npm:^11.0.4, globby@npm:^11.1.0":
+"globby@npm:11.1.0, globby@npm:^11.0.3, globby@npm:^11.1.0":
   version: 11.1.0
   resolution: "globby@npm:11.1.0"
   dependencies:
@@ -27951,11 +27953,11 @@ __metadata:
     compression: "npm:^1.8.1"
     crypto-js: "npm:^4.2.0"
     css-mediaquery: "npm:^0.1.2"
-    cypress: "npm:^15.3.0"
-    cypress-cdp: "npm:^1.6.84"
+    cypress: "npm:^15.5.0"
+    cypress-cdp: "npm:^1.6.86"
     cypress-image-diff-html-report: "npm:^2.2.0"
-    cypress-image-diff-js: "npm:^2.4.0"
-    cypress-split: "npm:^1.24.21"
+    cypress-image-diff-js: "npm:^2.5.0"
+    cypress-split: "npm:^1.24.25"
     dataloader: "npm:^2.2.3"
     db-client: "workspace:*"
     dev-logger: "workspace:*"
@@ -28100,7 +28102,7 @@ __metadata:
     "@types/react-dom": "npm:19.0.0"
     "@typescript-eslint/parser": "npm:^8.44.0"
     cross-env: "npm:^10.0.0"
-    cypress: "npm:^15.3.0"
+    cypress: "npm:^15.5.0"
     cz-conventional-changelog: "npm:^3.3.0"
     dotenv: "npm:^17.2.1"
     esbuild: "npm:^0.25.10"
