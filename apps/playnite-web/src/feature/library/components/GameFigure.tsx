@@ -12,14 +12,6 @@ const Figure = styled('figure', {
   margin: 0,
 }))
 
-// const Image = styled(NextImage, ({ theme }) => ({
-//   borderRadius: theme.shape.borderRadius,
-//   // objectFit: 'cover',
-//   width:'100%',
-//   height: 'auto',
-//   display: 'block',
-// }))
-
 const GameFigure: FC<
   PropsWithChildren<{
     game: Game
@@ -53,7 +45,7 @@ const GameFigure: FC<
                 width={230}
                 height={230}
                 data-test="GameCoverImage"
-                src={`${game.primaryRelease?.cover.replace('-320.webp', '-230.webp')}`}
+                src={game.primaryRelease?.cover}
                 sizes="(min-width: 3200px) 320px, (min-width: 2800px) 280px, (min-width: 2560px) 230px, (min-width: 1366px) 175px, (min-width: 1024px) 230px, (min-width: 992px) 320px, (min-width: 768px) 230px, (min-width: 576px) 230px, 175px"
                 alt={game.primaryRelease?.title}
                 loading={priority ? 'eager' : 'lazy'}

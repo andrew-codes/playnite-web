@@ -52,6 +52,13 @@ const nextConfig = {
   images: {
     imageSizes: [175, 230, 280, 320],
     formats: ['image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets-prd.ignimgs.com',
+        pathname: '/**',
+      },
+    ],
   },
 
   // output: 'standalone',
