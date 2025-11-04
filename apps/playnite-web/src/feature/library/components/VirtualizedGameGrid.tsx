@@ -61,36 +61,34 @@ const GameGrid: FC<{
           ...(style.height && { height: style?.height }),
         }}
       >
-        {game && (
-          <GameFigure
-            game={game}
-            width={`${style.width - horizontalGap}px`}
-            onSelect={(evt) => {
-              onSelect?.(evt, game)
+        <GameFigure
+          game={game}
+          onSelect={(evt) => {
+            onSelect?.(evt, game)
+          }}
+          isHighFetchPriority={false}
+          priority={true}
+        >
+          <Typography
+            variant="caption"
+            component="figcaption"
+            sx={{
+              fontWeight: 'bold',
+              textWrap: 'balance',
+              lineHeight: '1.5',
+              textOverflow: 'ellipsis',
+              overflowY: 'hidden',
+              maxHeight: '4rem',
+              lineClamp: '2',
+              fontSize: '15px',
+              display: '-webkit-box',
+              WebkitLineClamp: '2',
+              WebkitBoxOrient: 'vertical ',
             }}
-            priority={true}
           >
-            <Typography
-              variant="caption"
-              component="figcaption"
-              sx={{
-                fontWeight: 'bold',
-                textWrap: 'balance',
-                lineHeight: '1.5',
-                textOverflow: 'ellipsis',
-                overflowY: 'hidden',
-                maxHeight: '4rem',
-                lineClamp: '2',
-                fontSize: '15px',
-                display: '-webkit-box',
-                WebkitLineClamp: '2',
-                WebkitBoxOrient: 'vertical ',
-              }}
-            >
-              {game.primaryRelease?.title || 'Unknown Game'}
-            </Typography>
-          </GameFigure>
-        )}
+            {game.primaryRelease?.title || 'Unknown Game'}
+          </Typography>
+        </GameFigure>
       </div>
     )
   }
