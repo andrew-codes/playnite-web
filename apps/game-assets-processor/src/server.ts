@@ -8,7 +8,7 @@ import { AssetFileHandler } from './assets/AssetFileHandler.js'
 async function run() {
   logger.info('Starting Playnite Web Game Assets Processor...')
   const app = express()
-  const port = process.env.PORT ?? 3000
+  const port = process.env.PORT ?? 3001
 
   try {
     const rootAssetPath = path.resolve(
