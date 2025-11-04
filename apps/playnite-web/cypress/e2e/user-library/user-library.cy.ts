@@ -187,14 +187,16 @@ describe('User Library', () => {
 
         it(`Displays the library correctly`, () => {
           cy.get('[data-test="GameFigure"]').contains('3DMark')
-          cy.get('[data-test="GameCoverImage"]').hideElement(true)
 
           cy.compareSnapshot({
             name: `library-${name}`,
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
-                Cypress.$('[data-test="GameCoverImage"]').css('display', 'none')
+                Cypress.$('[data-test="GameCoverImage"]').css(
+                  'visibility',
+                  'hidden',
+                )
                 Cypress.$('[data-test="GameGrid"] > div').css(
                   'overflow-y',
                   'hidden',
