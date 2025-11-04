@@ -27,10 +27,10 @@ async function run() {
 
   nodemon
     .on('start', function () {
-      logger.log('App is building...')
+      logger.info('App is building...')
     })
     .on('quit', function () {
-      logger.log('App has quit')
+      logger.info('App has quit')
       process.exit()
     })
     .on('restart', function (files) {
