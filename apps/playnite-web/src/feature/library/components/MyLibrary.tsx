@@ -3,10 +3,10 @@
 import { QueryRef, useReadQuery } from '@apollo/client/react'
 import { Box } from '@mui/material'
 import { useRouter } from 'next/navigation'
-import { FC, useCallback, useEffect, useRef, useState } from 'react'
+import { FC, useCallback } from 'react'
 import { Game, Library } from '../../../../.generated/types.generated'
 import { useFilteredGames } from '../hooks/useFilteredGames'
-import GameGrid from './VirtualizedGameGrid'
+import GameGrid from './GameGrid'
 
 const MyLibrary: FC<{
   username: string
@@ -29,34 +29,8 @@ const MyLibrary: FC<{
     [router, username, libraryId],
   )
 
-  const ref = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState<number | null>(null)
-
-  useEffect(() => {
-    if (!ref.current) return
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width: elementWidth } = entry.contentRect
-        setWidth(Math.max(0, elementWidth - 15))
-      }
-    })
-
-    resizeObserver.observe(ref.current)
-
-    const rect = ref.current.getBoundingClientRect()
-    const initialWidth = rect.width
-
-    setWidth(Math.max(0, initialWidth))
-
-    return () => {
-      resizeObserver.disconnect()
-    }
-  }, [])
-
   return (
     <Box
-      ref={ref}
       sx={(theme) => ({
         flex: 1,
         flexGrow: 1,
@@ -67,9 +41,7 @@ const MyLibrary: FC<{
         margin: '0 auto',
       })}
     >
-      {width && (
-        <GameGrid width={width} games={games} onSelect={handleSelectGame} />
-      )}
+      <GameGrid games={games} onSelect={handleSelectGame} />
     </Box>
   )
 }

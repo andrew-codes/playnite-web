@@ -54,11 +54,11 @@ const GameGrid: FC<{
         <GameItem key={game.id}>
           <GameFigure
             game={game}
-            width="100%"
             onSelect={(evt) => {
               onSelect?.(evt, game)
             }}
             priority={index < 50}
+            isHighFetchPriority={index <= 1}
           >
             <Typography
               variant="caption"
