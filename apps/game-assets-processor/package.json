@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^30.0.5",
-    "@nx/devkit": "^21.4.1",
+    "@nx/devkit": "^21.6.8",
     "@types/express": "^4.17.23",
     "@types/jest": "^30.0.0",
     "@types/lodash-es": "^4.17.12",
@@ -34,7 +34,7 @@
     "glob": "^11.0.3",
     "jest": "^30.0.5",
     "nodemon": "^3.1.10",
-    "nx": "^21.5.2",
+    "nx": "^21.6.8",
     "nyc": "^17.1.0",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
