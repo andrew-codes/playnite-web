@@ -102,6 +102,20 @@ describe('User Library', () => {
           })
         })
     })
+
+    it(`Eager and lazy-loaded images.
+          - First 50 images are eagerly loaded.
+          - Remaining images are lazily loaded.`, () => {
+      cy.get('[data-test="GameFigure"] button > img').then((images) => {
+        cy.wrap(images.slice(0, 50)).each((img) => {
+          cy.wrap(img).should('have.attr', 'loading', 'eager')
+        })
+
+        cy.wrap(images.slice(50)).each((img) => {
+          cy.wrap(img).should('have.attr', 'loading', 'lazy')
+        })
+      })
+    })
   })
 
   describe('Navigation', () => {
