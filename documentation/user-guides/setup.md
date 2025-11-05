@@ -11,7 +11,7 @@
 
 ## Deployed Services Overview
 
-Playnite Web consists the following:
+Playnite Web consists of the following:
 
 > All components are required.
 

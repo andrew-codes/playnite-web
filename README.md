@@ -6,18 +6,24 @@
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/andrew-codes)](https://github.com/sponsors/andrew-codes)
 [![Discord](https://img.shields.io/discord/1432357177984684102?style=flat&label=Discord%20Community)](https://discord.gg/Dv8UrQ6mGb)
 
-Share, remote control, and automate your game library online with self-hosted Playnite Web.
+## About 
+
+Share, automate, and remotely control your entire game library online with self-hosted Playnite Web.
 
 Playnite Web offers:
 
-- a beautiful web UI for your Playnite library to share with friends
-- remote control of staring and stopping games with home automation; locked behind a username/password login screen
-- a graph API to help you build your own, unique experiences
+- A beautiful web UI for your Playnite library to share with friends.
+- The ability to remotely start and stop your games, secured behind a login screen.
+- A graph API to help you build your own unique experiences.
 
-![Browse screenshot](./docs/assets/images/browse-screenshot.png)
+![Browse screenshot](./documentation/assets/images/browse-screenshot.png)
 
 ## Getting Started
 
-1. [Install and run Playnite Web](./docs/guides/setup.md)
-2. [Playnite Web API](./docs/api/data-model.md) and other documentation lives in the [docs](./docs/) directory of this repo.
-3. [Contributions](./docs/CONTRIBUTING.md) and [local development environment](./docs/contributing/development-environment/index.md)
+1. For help deploying Playnite Web, read the [setup](./documentation/user-guides/setup.md) guide. 
+2. If you encounter a problem, check the [troubleshooting](./documentation/user-guides/troubleshooting.md) document for a solution before you open an issue. 
+3. If you discover a security vulnerability, **do not open an issue**, instead [submit a security advisory via GitHub](https://github.com/andrew-codes/playnite-web/security/advisories/new).
+4. To get started with the Playnite Web API, read about the [data model](./documentation/api-documentation/data-model.md).
+5. Before you contribute, read the [contribution guidelines](./documentation/CONTRIBUTING.md). 
+6. For help with the local development environment, see the [local development environment](./documentation/contributor-guides/development-environment/index.md) guide.
+
