@@ -197,7 +197,7 @@ jobs:
         env:
           YARN_ENABLE_HARDENED_MODE: "0"
       - name: Run e2e tests
-        run: yarn nx run game-assets-processor:test/e2e:ci --verbose --exclude='*,!tag:linux'
+        run: yarn nx run sync-library-processor:test/e2e:ci --verbose --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           LOG_LEVEL: info

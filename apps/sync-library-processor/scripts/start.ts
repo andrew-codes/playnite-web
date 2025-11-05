@@ -11,17 +11,12 @@ async function run() {
       ts: 'yarn tsx',
     },
     watch: [path.join('src/*.*'), path.join('src/**/*.*')],
-    ignore: [
-      path.join('**/*.webp'),
-      path.join('**/*.png'),
-      path.join('**/*.jpg'),
-      path.join('**/*.jpeg'),
-      path.join('**/*.gif'),
-    ],
+    ignore: [],
     env: {
+      ...process.env,
       NODE_ENV: 'development',
       LOG_LEVEL: process.env.LOG_LEVEL ?? '',
-      ...process.env,
+      PORT: '3001',
     },
   })
 

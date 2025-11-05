@@ -1,6 +1,5 @@
 import { GraphQLError } from 'graphql'
 import { create, domains } from '../../../../oid'
-import { resolve } from '../../../../resolveAssets'
 import { GraphCompletionStatus } from '../../../resolverTypes'
 import type { ReleaseResolvers } from './../../../../../../.generated/types.generated'
 
@@ -23,17 +22,17 @@ export const Release: ReleaseResolvers = {
   },
 
   cover: async (_parent, _arg, _ctx) => {
-    if (!_parent.coverId) {
+    if (!_parent.gameId) {
       return null
     }
 
-    const asset = await _ctx.loaders.assetLoader.load(Number(_parent.coverId))
+    const game = await _ctx.loaders.gameLoader.load(Number(_parent.gameId))
 
-    if (!asset?.slug) {
+    if (!game?.coverArt) {
       return null
     }
 
-    return resolve(`/game-assets/${asset.slug}`)
+    return game.coverArt
   },
   features: async (_parent, _arg, _ctx) => {
     return _ctx.loaders.releaseFeatureLoader.load(Number(_parent.id))
@@ -72,7 +71,9 @@ export const Release: ReleaseResolvers = {
     return output
   },
   source: async (_parent, _arg, _ctx) => {
-    const output = await _ctx.loaders.sourceLoader.load(Number(_parent.sourceId))
+    const output = await _ctx.loaders.sourceLoader.load(
+      Number(_parent.sourceId),
+    )
     if (!output) {
       throw new GraphQLError('Source not found', {
         extensions: {

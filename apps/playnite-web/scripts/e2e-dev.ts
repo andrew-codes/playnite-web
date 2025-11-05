@@ -41,7 +41,7 @@ process.on('SIGINT', () => {
 logger.info('Removing package.json')
 sh.exec('rm _packaged/package.json')
 
-logger.info('Starting server')
+logger.info('Processor server running. Starting server')
 runCp = sh.exec(`yarn nx start playnite-web-app`, {
   env: {
     ...process.env,

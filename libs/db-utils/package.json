@@ -1,0 +1,13 @@
+{
+  "name": "db-utils",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "dependencies": {
+    "db-client": "workspace:*",
+    "dev-logger": "workspace:*",
+    "tslib": "^2.3.0"
+  }
+}

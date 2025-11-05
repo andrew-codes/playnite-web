@@ -1,6 +1,6 @@
 {
-  "name": "game-assets-processor",
-  "sourceRoot": "apps/game-assets-processor/src",
+  "name": "sync-library-processor",
+  "sourceRoot": "apps/sync-library-processor/src",
   "projectType": "application",
   "targets": {
     "clean": {
@@ -49,8 +49,23 @@
           "NODE_ENV": "development",
           "LOG_LEVEL": "silly",
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
-          "ASSET_PATH": "./.game-assets",
           "PORT": "3001"
+        }
+      }
+    },
+    "start/e2e": {
+      "executor": "nx:run-commands",
+      "cache": false,
+      "options": {
+        "cwd": "{projectRoot}",
+        "parallel": false,
+        "commands": ["yarn tsx scripts/start.e2e.ts"],
+        "env": {
+          "NODE_ENV": "development",
+          "LOG_LEVEL": "silly",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
+          "PORT": "3001",
+          "INSTRUMENT": "true"
         }
       }
     },
@@ -62,7 +77,6 @@
         "cwd": "{projectRoot}",
         "env": {
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
-          "ASSET_PATH": "./.game-assets",
           "INSTRUMENT": "true",
           "LOCAL": "true",
           "CI": "true",

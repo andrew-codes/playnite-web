@@ -109,6 +109,7 @@
     "cypress-image-diff-html-report": "^2.2.0",
     "cypress-image-diff-js": "^2.5.0",
     "cypress-split": "^1.24.25",
+    "db-utils": "workspace:*",
     "dev-logger": "workspace:*",
     "dev-services": "workspace:*",
     "esbuild": "^0.25.10",

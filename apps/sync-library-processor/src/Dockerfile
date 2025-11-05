@@ -1,13 +1,5 @@
 # Build stage
 FROM node:22-alpine3.20 AS builder
-RUN apk add --no-cache \
-  vips-dev \
-  pkgconfig \
-  build-base \
-  python3 \
-  make \
-  g++ \
-  libc6-compat
 
 WORKDIR /opt/playnite-web
 COPY _packaged/ .
@@ -18,8 +10,7 @@ FROM node:22-alpine3.20
 LABEL org.opencontainers.image.source=https://github.com/andrew-codes/playnite-web
 
 RUN apk add --no-cache \
-  bash \
-  vips
+  bash
 
 WORKDIR /opt/playnite-web
 

@@ -1,7 +1,5 @@
 import { ChildProcess } from 'child_process'
-import { migrate } from 'db-client/migrate'
 import logger from 'dev-logger'
-import fs from 'fs'
 import sh from 'shelljs'
 import waitOn from 'wait-on'
 
@@ -41,15 +39,12 @@ process.on('SIGINT', () => {
 })
 
 async function run() {
-  await migrate()
-
-  fs.mkdirSync('.game-assets', { recursive: true })
-
   sh.exec('rm _packaged/package.json')
   runCp = sh.exec(`yarn nyc node server.js`, {
     cwd: '_packaged',
     env: {
       ...process.env,
+      TEST: 'E2E',
     },
     async: true,
     silent: false,
