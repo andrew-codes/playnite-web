@@ -42,7 +42,7 @@
     },
     "create-migration": {
       "executor": "nx:run-commands",
-      "dependsOn": ["build"],
+      "dependsOn": ["build", "dev-services:start"],
       "options": {
         "command": "yarn prisma migrate dev --create-only --name migration --schema=src/schema.prisma",
         "cwd": "{projectRoot}",

@@ -29,7 +29,7 @@ export const restartRelease: NonNullable<
       },
       include: {
         Library: true,
-        Cover: true,
+        Game: true,
         Source: {
           include: {
             Platform: true,
@@ -62,8 +62,8 @@ export const restartRelease: NonNullable<
             id: create('Release', release.id),
             title: release.title,
             playniteId: release.playniteId,
-            coverUrl: release.Cover.slug
-              ? resolveAssets(release.Cover.slug)
+            coverUrl: release.Game.coverArt
+              ? resolveAssets(release.Game.coverArt)
               : null,
             library: {
               id: create('Library', release.Library.id),
@@ -89,7 +89,8 @@ export const restartRelease: NonNullable<
 
     return release
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
     throw new GraphQLError(
       'Unauthorized: Release not found in your libraries',
       {

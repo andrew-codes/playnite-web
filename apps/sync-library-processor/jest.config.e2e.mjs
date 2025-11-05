@@ -1,4 +1,5 @@
 const defaultConfig = {
+  globalSetup: '<rootDir>/__integration_tests__/globalSetup.ts',
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   transform: {
@@ -7,7 +8,7 @@ const defaultConfig = {
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
     '^(\\.{1,2}/.*)\\.ts$': '$1',
-    '^db-client$': '<rootDir>/../../libs/db-client/build/client.js',
+    '^db-utils$': '<rootDir>/../../libs/db-utils/src/index.ts',
   },
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   testMatch: ['<rootDir>/__integration_tests__/**/*.(test).((j|t)s)'],

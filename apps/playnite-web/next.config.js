@@ -89,8 +89,13 @@ const nextConfig = {
     formats: ['image/webp'],
     remotePatterns: [
       {
+        protocol: 'http',
+        hostname: '**.ign**.com',
+        pathname: '/**',
+      },
+      {
         protocol: 'https',
-        hostname: 'assets-prd.ignimgs.com',
+        hostname: '**.ign**.com',
         pathname: '/**',
       },
     ],

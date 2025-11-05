@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   playnite-web:
-    image: ghcr.io/andrew-codes/playnite-web-app:12
+    image: ghcr.io/andrew-codes/playnite-web-app:13
     network_mode: host
     environment:
       - PORT=${APP_PORT:-3000}
@@ -37,8 +37,8 @@ services:
       - mqtt
     restart: unless-stopped
 
-  playnite-web-game-assets-processor:
-    image: ghcr.io/andrew-codes/game-assets-processor:12
+  playnite-web-sync-library-processor:
+    image: ghcr.io/andrew-codes/sync-library-processor:13
     network_mode: host
     environment:
       - MQTT_HOST=localhost

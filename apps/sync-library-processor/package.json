@@ -1,5 +1,5 @@
 {
-  "name": "game-assets-processor",
+  "name": "sync-library-processor",
   "version": "0.0.1",
   "sideEffects": false,
   "dependencies": {

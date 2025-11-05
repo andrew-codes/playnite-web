@@ -36,11 +36,45 @@
         "cwd": "{projectRoot}"
       }
     },
-    "demo-data": {
+    "db/prepare-snapshot": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^start", "prepare", "^prepare"],
+      "options": {
+        "command": "yarn tsx cypress/scripts/prepare-snapshot.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+        }
+      }
+    },
+    "db/create-snapshot": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn tsx scripts/seedTestData.ts",
+        "command": "yarn tsx cypress/scripts/create-snapshot.ts",
         "cwd": "{projectRoot}"
+      }
+    },
+    "db/finalize-snapshot": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn tsx cypress/scripts/finalize-snapshot.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+        }
+      }
+    },
+    "db/use-snapshot": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn tsx cypress/scripts/restore-snapshot.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+        }
       }
     },
     "prepare": {
@@ -55,7 +89,8 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["yarn nodemon"],
+        "parallel": true,
+        "commands": ["nodemon"],
         "cwd": "{projectRoot}",
         "env": {
           "NODE_ENV": "development",
@@ -140,7 +175,7 @@
     "test/e2e": {
       "executor": "nx:run-commands",
       "options": {
-        "parallel": false,
+        "parallel": true,
         "cwd": "{projectRoot}",
         "commands": ["yarn tsx scripts/e2e.ts"]
       },
@@ -202,8 +237,7 @@
         "cwd": "{projectRoot}",
         "commands": [
           "yarn tsx scripts/packageFiles.ts",
-          "yarn tsx scripts/packageDemoCoverArt.ts",
-          "yarn tsx scripts/e2e.ts"
+          "yarn tsx ../sync-library-processor/scripts/start.e2e.ts & yarn tsx scripts/e2e.ts"
         ],
         "env": {
           "CMD": "run",
@@ -224,8 +258,8 @@
     "test/e2e/update": {
       "executor": "nx:run-commands",
       "options": {
-        "parallel": false,
-        "command": "yarn tsx scripts/e2e.ts",
+        "parallel": true,
+        "commands": ["yarn tsx scripts/e2e.ts"],
         "cwd": "{projectRoot}",
         "env": {
           "CMD": "run",
@@ -293,7 +327,6 @@
         "parallel": false,
         "commands": [
           "yarn tsx scripts/packageFiles.ts",
-          "yarn tsx scripts/packageDemoCoverArt.ts",
           "yarn tsx scripts/package.ts"
         ],
         "env": {

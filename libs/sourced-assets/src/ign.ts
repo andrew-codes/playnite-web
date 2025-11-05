@@ -3,7 +3,7 @@ import { slug } from './slug.js'
 import type { ISourceAssets } from './types'
 
 class IgnSourcedAssets implements ISourceAssets {
-  async source(release: { title: string }): Promise<[string, Buffer] | null> {
+  async getImageUrl(release: { title: string }): Promise<string | null> {
     const ignId = slug(release)
     try {
       const params = new URLSearchParams({
@@ -52,44 +52,12 @@ class IgnSourcedAssets implements ISourceAssets {
           `No primary image found for asset: ${ignId}`,
           JSON.stringify(ignResponse),
         )
-        logger.warn(JSON.stringify(ignResponse))
         return null
       }
 
-      const imageResponse = await fetch(
-        ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url,
-      )
-      if (!imageResponse.ok) {
-        const body = await imageResponse.text()
-        logger.warn(
-          `Failed to fetch image from IGN URL: ${ignId}, URL: ${ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url}`,
-          imageResponse.status,
-          imageResponse.statusText,
-          body,
-        )
-        return null
-      }
-
-      const extension = new URL(
-        ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url,
-      ).pathname
-        .split('.')
-        .pop() as string
-      let mimeType: string | null = null
-      if (extension === 'jpg' || extension === 'jpeg') {
-        mimeType = 'image/jpeg'
-      } else if (extension === 'png') {
-        mimeType = 'image/png'
-      } else if (extension === 'webp') {
-        mimeType = 'image/webp'
-      }
-      if (!mimeType) {
-        return null
-      }
-
-      return [mimeType, Buffer.from(await imageResponse.arrayBuffer())]
+      return ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url
     } catch (error) {
-      logger.error(`Error fetching image: ${ignId}`, error)
+      logger.error(`Error fetching IGN image URL: ${ignId}`, error)
       return null
     }
   }
