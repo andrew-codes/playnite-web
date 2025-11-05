@@ -25,5 +25,5 @@ Playnite Web offers:
 3. If you discover a security vulnerability, **do not open an issue**, instead [submit a security advisory via GitHub](https://github.com/andrew-codes/playnite-web/security/advisories/new).
 4. To get started with the Playnite Web API, read about the [data model](./documentation/api-documentation/data-model.md).
 5. Before you contribute, read the [contribution guidelines](./documentation/CONTRIBUTING.md). 
-6. For help with the local development environment, see the [local development environment](./documentation/contributing/development-environment/index.md) guide.
+6. For help with the local development environment, see the [local development environment](./documentation/contributor-guides/development-environment/index.md) guide.
 
