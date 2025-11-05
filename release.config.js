@@ -45,7 +45,11 @@ const config = {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
             { type: 'fix', section: 'Bug Fixes', hidden: false },
-            { type: 'perf', section: 'Performance Improvements', hidden: false },
+            {
+              type: 'perf',
+              section: 'Performance Improvements',
+              hidden: false,
+            },
             { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
             { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
           ],
@@ -65,7 +69,11 @@ const config = {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
             { type: 'fix', section: 'Bug Fixes', hidden: false },
-            { type: 'perf', section: 'Performance Improvements', hidden: false },
+            {
+              type: 'perf',
+              section: 'Performance Improvements',
+              hidden: false,
+            },
             { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
             { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
           ],
@@ -85,7 +93,11 @@ const config = {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
             { type: 'fix', section: 'Bug Fixes', hidden: false },
-            { type: 'perf', section: 'Performance Improvements', hidden: false },
+            {
+              type: 'perf',
+              section: 'Performance Improvements',
+              hidden: false,
+            },
             { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
             { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
           ],
