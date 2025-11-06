@@ -48,10 +48,10 @@
         }
       }
     },
-    "db/create-snapshot": {
+    "db/sync-user-library": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn tsx cypress/scripts/create-snapshot.ts",
+        "command": "yarn tsx cypress/scripts/sync.ts",
         "cwd": "{projectRoot}"
       }
     },

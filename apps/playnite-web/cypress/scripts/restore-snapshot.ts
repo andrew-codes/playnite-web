@@ -23,11 +23,12 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
   try {
     logger.info(`Restoring database from snapshot: ${snapshotName}...`)
 
-    // Read snapshot file
+    // Read snapshot file from db-snapshot subdirectory
     const snapshotPath = join(
       process.cwd(),
       'cypress',
       'fixtures',
+      'db-snapshot',
       `${snapshotName}.json`,
     )
 

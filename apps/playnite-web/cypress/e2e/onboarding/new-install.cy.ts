@@ -1,4 +1,8 @@
 describe('Onboarding - New Install', () => {
+  beforeEach(() => {
+    cy.task('clearDatabase')
+  })
+
   describe('Blank database, no users.', () => {
     it(`Redirects.
 - All URLs redirect to create a new account.`, () => {

@@ -5,14 +5,32 @@
  * This script should be run after you've manually synced the library
  * using the steps from create-test-snapshot.ts
  *
+ * Usage:
+ *   yarn nx db/finalize-snapshot playnite-web-app
+ *   yarn nx db/finalize-snapshot playnite-web-app -- --name mySnapshot
+ *
+ * Options:
+ *   --name <name>  Snapshot filename (default: "librarySnapshot")
  */
 
 import prisma from 'db-client'
 import logger from 'dev-logger'
-import { writeFile } from 'fs/promises'
+import { mkdir, writeFile } from 'fs/promises'
 import { join } from 'path'
 
-const SNAPSHOT_NAME = 'librarySnapshot'
+function parseArgs() {
+  const args = process.argv.slice(2)
+  let snapshotName = 'librarySnapshot'
+
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--name' && i + 1 < args.length) {
+      snapshotName = args[i + 1]
+      i++
+    }
+  }
+
+  return { snapshotName }
+}
 
 async function createSnapshot(snapshotName: string) {
   logger.info(`Creating snapshot: ${snapshotName}...`)
@@ -75,14 +93,13 @@ async function createSnapshot(snapshotName: string) {
     gamePlaylists,
   }
 
-  // Write to fixture file
-  const snapshotPath = join(
-    process.cwd(),
-    'cypress',
-    'fixtures',
-    `${snapshotName}.json`,
-  )
-  
+  // Write to fixture file in db-snapshot subdirectory
+  const snapshotDir = join(process.cwd(), 'cypress', 'fixtures', 'db-snapshot')
+  const snapshotPath = join(snapshotDir, `${snapshotName}.json`)
+
+  // Ensure the db-snapshot directory exists
+  await mkdir(snapshotDir, { recursive: true })
+
   // Custom replacer to handle BigInt values
   const jsonReplacer = (_key: string, value: any) => {
     if (typeof value === 'bigint') {
@@ -90,7 +107,7 @@ async function createSnapshot(snapshotName: string) {
     }
     return value
   }
-  
+
   await writeFile(snapshotPath, JSON.stringify(snapshot, jsonReplacer, 2))
 
   logger.info(`Snapshot created: ${snapshotPath}`)
@@ -107,7 +124,8 @@ async function createSnapshot(snapshotName: string) {
 
 async function main() {
   try {
-    await createSnapshot(SNAPSHOT_NAME)
+    const { snapshotName } = parseArgs()
+    await createSnapshot(snapshotName)
     logger.info('✅ Snapshot created successfully!')
     logger.info('')
     logger.info('You can now use this snapshot in your Cypress tests.')

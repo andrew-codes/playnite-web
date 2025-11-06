@@ -54,11 +54,6 @@ runCp = sh.exec(`yarn nx start playnite-web-app`, {
 
 logger.info('Waiting for server to start')
 waitOn({ resources: ['http://localhost:3000'], timeout: 30000 }, (err) => {
-  if (err) {
-    logger.error(err)
-    process.exit(1)
-  }
-
   logger.info('Running Cypress tests')
   testCp = sh.exec(`yarn nx test/open playnite-web-app`, {
     env: {

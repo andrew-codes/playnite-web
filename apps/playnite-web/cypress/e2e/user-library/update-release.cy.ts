@@ -1,27 +1,19 @@
 describe('Update a release.', () => {
   beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
-  beforeEach(() => {
     cy.intercept('GET', /\/u\/test\/.*/).as('userLibrary')
   })
 
   it(`Authorization.
       - Must be authenticated.
       - Release must be in authenticated user's library.`, () => {
-    cy.fixture('librarySync.json').then((libraryData) => {
-      cy.syncLibrary('test', 'test', libraryData).then((library) => {
-        cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-      })
-    })
+    cy.task('restoreDatabaseSnapshot', 'multi-user')
+    cy.visit(`/u/test/Library:1`)
 
-    cy.fixture('librarySync.json').then((libraryData) => {
-      cy.syncLibrary('jane', 'jane', libraryData).then((library) => {
-        const libraryId = library.body.data.syncLibrary.id
+    cy.signIn('test', 'test')
 
-        cy.request('POST', '/api', {
-          query: `query library($id: String!) {
+    // Query to get a release ID from Jane's library
+    cy.request('POST', '/api', {
+      query: `query library($id: String!) {
                     library(libraryId: $id) {
                       games {
                         primaryRelease {
@@ -30,34 +22,31 @@ describe('Update a release.', () => {
                       }
                     }
                   }`,
-          variables: {
-            id: libraryId,
-          },
-        }).then((janeLibrary) => {
-          cy.signIn('test', 'test')
-          cy.request({
-            failOnStatusCode: false,
-            method: 'POST',
-            url: '/api',
-            body: {
-              query: `mutation MyMutation($release: ReleaseInput!) {
+      variables: {
+        id: 'Library:2', // Jane's library
+      },
+    }).then((janeLibrary) => {
+      cy.request({
+        failOnStatusCode: false,
+        method: 'POST',
+        url: '/api',
+        body: {
+          query: `mutation MyMutation($release: ReleaseInput!) {
                     updateRelease(release: $release) {
                       id
                     }
                   }`,
-              variables: {
-                release: {
-                  id: janeLibrary.body.data.library.games[1].primaryRelease.id,
-                  hidden: true,
-                  description: 'Updated Release description',
-                  releaseDate: '2023-07-25T00:00:00.000Z',
-                },
-              },
+          variables: {
+            release: {
+              id: janeLibrary.body.data.library.games[1].primaryRelease.id,
+              hidden: true,
+              description: 'Updated Release description',
+              releaseDate: '2023-07-25T00:00:00.000Z',
             },
-          }).then((response) => {
-            expect(response.body.errors[0].message).to.eq('Release not found.')
-          })
-        })
+          },
+        },
+      }).then((response) => {
+        expect(response.body.errors[0].message).to.eq('Release not found.')
       })
     })
   })
@@ -65,11 +54,9 @@ describe('Update a release.', () => {
   it(`Invalid Oid.
     - Release Oid must be a valid format.
     - All relational properties must have valid Oids.`, () => {
-    cy.fixture('librarySync.json').then((libraryData) => {
-      cy.syncLibrary('test', 'test', libraryData).then((library) => {
-        // cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-        cy.request('POST', '/api', {
-          query: `query library($id: String!) {
+    cy.signIn('test', 'test')
+    cy.request('POST', '/api', {
+      query: `query library($id: String!) {
                     library(libraryId: $id) {
                       completionStates {
                         id
@@ -96,158 +83,156 @@ describe('Update a release.', () => {
                       }
                     }
                   }`,
+      variables: {
+        id: 'Library:1',
+      },
+    }).then((response) => {
+      const source = response.body.data.library.sources.find(
+        (source) =>
+          source.id !==
+          response.body.data.library.games[1].primaryRelease.source.id,
+      ).id
+      const features: Array<string> = []
+      const tags: Array<string> = []
+      const completionStatus = ''
+      cy.log('Verifying release Oid')
+      cy.request({
+        failOnStatusCode: false,
+        method: 'POST',
+        url: '/api',
+        body: {
+          query: `mutation MyMutation($release: ReleaseInput!) {
+                    updateRelease(release: $release) {
+                      id
+                    }
+                  }`,
           variables: {
-            id: library.body.data.syncLibrary.id,
+            release: {
+              id: 'Release1',
+              hidden: true,
+              description: 'Updated Release description',
+              releaseDate: '2023-07-25T00:00:00.000Z',
+              source,
+              features,
+              tags,
+              completionStatus,
+            },
           },
-        }).then((response) => {
-          const source = response.body.data.library.sources.find(
-            (source) =>
-              source.id !==
-              response.body.data.library.games[1].primaryRelease.source.id,
-          ).id
-          const features: Array<string> = []
-          const tags: Array<string> = []
-          const completionStatus = ''
-          cy.log('Verifying release Oid')
-          cy.request({
-            failOnStatusCode: false,
-            method: 'POST',
-            url: '/api',
-            body: {
-              query: `mutation MyMutation($release: ReleaseInput!) {
-                    updateRelease(release: $release) {
-                      id
-                    }
-                  }`,
-              variables: {
-                release: {
-                  id: 'Release1',
-                  hidden: true,
-                  description: 'Updated Release description',
-                  releaseDate: '2023-07-25T00:00:00.000Z',
-                  source,
-                  features,
-                  tags,
-                  completionStatus,
-                },
-              },
-            },
-          }).then((response) => {
-            expect(response.body.errors[0].message).to.eq('Invalid OID format.')
-          })
+        },
+      }).then((response) => {
+        expect(response.body.errors[0].message).to.eq('Invalid OID format.')
+      })
 
-          cy.log('Verifying source Oid')
-          cy.request({
-            failOnStatusCode: false,
-            method: 'POST',
-            url: '/api',
-            body: {
-              query: `mutation MyMutation($release: ReleaseInput!) {
+      cy.log('Verifying source Oid')
+      cy.request({
+        failOnStatusCode: false,
+        method: 'POST',
+        url: '/api',
+        body: {
+          query: `mutation MyMutation($release: ReleaseInput!) {
                     updateRelease(release: $release) {
                       id
                     }
                   }`,
-              variables: {
-                release: {
-                  id: response.body.data.library.games[1].primaryRelease.id,
-                  hidden: true,
-                  description: 'Updated Release description',
-                  releaseDate: '2023-07-25T00:00:00.000Z',
-                  source: '1',
-                  features,
-                  tags,
-                  completionStatus,
-                },
-              },
+          variables: {
+            release: {
+              id: response.body.data.library.games[1].primaryRelease.id,
+              hidden: true,
+              description: 'Updated Release description',
+              releaseDate: '2023-07-25T00:00:00.000Z',
+              source: '1',
+              features,
+              tags,
+              completionStatus,
             },
-          }).then((response) => {
-            expect(response.body.errors[0].message).to.eq('Invalid OID format.')
-          })
+          },
+        },
+      }).then((response) => {
+        expect(response.body.errors[0].message).to.eq('Invalid OID format.')
+      })
 
-          cy.log('Verifying feature Oid')
-          cy.request({
-            failOnStatusCode: false,
-            method: 'POST',
-            url: '/api',
-            body: {
-              query: `mutation MyMutation($release: ReleaseInput!) {
+      cy.log('Verifying feature Oid')
+      cy.request({
+        failOnStatusCode: false,
+        method: 'POST',
+        url: '/api',
+        body: {
+          query: `mutation MyMutation($release: ReleaseInput!) {
                     updateRelease(release: $release) {
                       id
                     }
                   }`,
-              variables: {
-                release: {
-                  id: response.body.data.library.games[1].primaryRelease.id,
-                  hidden: true,
-                  description: 'Updated Release description',
-                  releaseDate: '2023-07-25T00:00:00.000Z',
-                  source: source,
-                  features: features.concat(['1']),
-                  tags,
-                  completionStatus,
-                },
-              },
+          variables: {
+            release: {
+              id: response.body.data.library.games[1].primaryRelease.id,
+              hidden: true,
+              description: 'Updated Release description',
+              releaseDate: '2023-07-25T00:00:00.000Z',
+              source: source,
+              features: features.concat(['1']),
+              tags,
+              completionStatus,
             },
-          }).then((response) => {
-            expect(response.body.errors[0].message).to.eq('Invalid OID format.')
-          })
+          },
+        },
+      }).then((response) => {
+        expect(response.body.errors[0].message).to.eq('Invalid OID format.')
+      })
 
-          cy.log('Verifying tag Oid')
-          cy.request({
-            failOnStatusCode: false,
-            method: 'POST',
-            url: '/api',
-            body: {
-              query: `mutation MyMutation($release: ReleaseInput!) {
+      cy.log('Verifying tag Oid')
+      cy.request({
+        failOnStatusCode: false,
+        method: 'POST',
+        url: '/api',
+        body: {
+          query: `mutation MyMutation($release: ReleaseInput!) {
                     updateRelease(release: $release) {
                       id
                     }
                   }`,
-              variables: {
-                release: {
-                  id: response.body.data.library.games[1].primaryRelease.id,
-                  hidden: true,
-                  description: 'Updated Release description',
-                  releaseDate: '2023-07-25T00:00:00.000Z',
-                  source: source,
-                  features: features,
-                  tags: tags.concat(['1']),
-                  completionStatus,
-                },
-              },
+          variables: {
+            release: {
+              id: response.body.data.library.games[1].primaryRelease.id,
+              hidden: true,
+              description: 'Updated Release description',
+              releaseDate: '2023-07-25T00:00:00.000Z',
+              source: source,
+              features: features,
+              tags: tags.concat(['1']),
+              completionStatus,
             },
-          }).then((response) => {
-            expect(response.body.errors[0].message).to.eq('Invalid OID format.')
-          })
+          },
+        },
+      }).then((response) => {
+        expect(response.body.errors[0].message).to.eq('Invalid OID format.')
+      })
 
-          cy.log('Verifying completionStatus Oid')
-          cy.request({
-            failOnStatusCode: false,
-            method: 'POST',
-            url: '/api',
-            body: {
-              query: `mutation MyMutation($release: ReleaseInput!) {
+      cy.log('Verifying completionStatus Oid')
+      cy.request({
+        failOnStatusCode: false,
+        method: 'POST',
+        url: '/api',
+        body: {
+          query: `mutation MyMutation($release: ReleaseInput!) {
                     updateRelease(release: $release) {
                       id
                     }
                   }`,
-              variables: {
-                release: {
-                  id: response.body.data.library.games[1].primaryRelease.id,
-                  hidden: true,
-                  description: 'Updated Release description',
-                  releaseDate: '2023-07-25T00:00:00.000Z',
-                  source: source,
-                  features: features,
-                  tags: tags,
-                  completionStatus: '1',
-                },
-              },
+          variables: {
+            release: {
+              id: response.body.data.library.games[1].primaryRelease.id,
+              hidden: true,
+              description: 'Updated Release description',
+              releaseDate: '2023-07-25T00:00:00.000Z',
+              source: source,
+              features: features,
+              tags: tags,
+              completionStatus: '1',
             },
-          }).then((response) => {
-            expect(response.body.errors[0].message).to.eq('Invalid OID format.')
-          })
-        })
+          },
+        },
+      }).then((response) => {
+        expect(response.body.errors[0].message).to.eq('Invalid OID format.')
       })
     })
   })
@@ -256,20 +241,15 @@ describe('Update a release.', () => {
     - Fields are updated.
     - Relational fields can be updated.
     - UI is notified and updates with latest changes.`, () => {
-    cy.fixture('librarySync.json').then((libraryData) => {
-      cy.syncLibrary('test', 'test', libraryData).then((library) => {
-        cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-        cy.get('[data-test=GameFigure]')
-          .eq(1)
-          .find('button img')
-          .parent()
-          .click()
-        cy.wait('@api')
+    cy.signIn('test', 'test')
+    cy.visit(`/u/test/Library:1`)
+    cy.get('[data-test=GameFigure]').eq(1).find('button img').parent().click()
+    cy.wait('@api')
 
-        cy.contains('h2', 'HOW LONG WILL YOU SURVIVE?').should('be.visible')
+    cy.contains('h2', 'HOW LONG WILL YOU SURVIVE?').should('be.visible')
 
-        cy.request('POST', '/api', {
-          query: `query library($id: String!) {
+    cy.request('POST', '/api', {
+      query: `query library($id: String!) {
                     library(libraryId: $id) {
                       features {
                         id
@@ -296,33 +276,31 @@ describe('Update a release.', () => {
                       }
                     }
                   }`,
-          variables: {
-            id: library.body.data.syncLibrary.id,
-          },
-        }).then((response) => {
-          const source = response.body.data.library.sources.find(
-            (s) =>
-              s.id !==
-              response.body.data.library.games[1].primaryRelease.source.id,
-          )
-          const completionStatus =
-            response.body.data.library.completionStates.find(
-              (cs) =>
-                cs.id !==
-                response.body.data.library.games[1].primaryRelease
-                  .completionStatus.id,
-            )
-          const features = response.body.data.library.features.filter(
-            (f) =>
-              !response.body.data.library.games[1].primaryRelease.features.includes(
-                f.id,
-              ),
-          )
-          cy.request({
-            method: 'POST',
-            url: '/api',
-            body: {
-              query: `mutation MyMutation($release: ReleaseInput!) {
+      variables: {
+        id: 'Library:1',
+      },
+    }).then((response) => {
+      const source = response.body.data.library.sources.find(
+        (s) =>
+          s.id !== response.body.data.library.games[1].primaryRelease.source.id,
+      )
+      const completionStatus = response.body.data.library.completionStates.find(
+        (cs) =>
+          cs.id !==
+          response.body.data.library.games[1].primaryRelease.completionStatus
+            .id,
+      )
+      const features = response.body.data.library.features.filter(
+        (f) =>
+          !response.body.data.library.games[1].primaryRelease.features.includes(
+            f.id,
+          ),
+      )
+      cy.request({
+        method: 'POST',
+        url: '/api',
+        body: {
+          query: `mutation MyMutation($release: ReleaseInput!) {
                         updateRelease(release: $release) {
                           id
                           hidden
@@ -342,34 +320,32 @@ describe('Update a release.', () => {
                           }
                         }
                       }`,
-              variables: {
-                release: {
-                  id: response.body.data.library.games[1].primaryRelease.id,
-                  hidden: true,
-                  description: 'Updated Release description',
-                  releaseDate: '2023-07-25T00:00:00.000Z',
-                  source: source.id,
-                  features: features.map((f) => f.id),
-                  tags: [],
-                  completionStatus: completionStatus.id,
-                },
-              },
+          variables: {
+            release: {
+              id: response.body.data.library.games[1].primaryRelease.id,
+              hidden: true,
+              description: 'Updated Release description',
+              releaseDate: '2023-07-25T00:00:00.000Z',
+              source: source.id,
+              features: features.map((f) => f.id),
+              tags: [],
+              completionStatus: completionStatus.id,
             },
-          }).then((response) => {
-            const release = response.body.data.updateRelease
-            expect(release.hidden).to.eq(true)
-            expect(release.description).to.eq('Updated Release description')
-            expect(release.releaseDate).to.eq('2023-07-25')
-            expect(release.source).to.deep.eq(source)
-            expect(
-              release.features.map((f) => f.id).sort(),
-            ).to.contain.all.members(features.map((f) => f.id).sort())
-            expect(release.tags).to.deep.eq([])
-            expect(release.completionStatus).to.deep.eq(completionStatus)
-          })
-          cy.contains('div', 'Updated Release description').should('be.visible')
-        })
+          },
+        },
+      }).then((response) => {
+        const release = response.body.data.updateRelease
+        expect(release.hidden).to.eq(true)
+        expect(release.description).to.eq('Updated Release description')
+        expect(release.releaseDate).to.eq('2023-07-25')
+        expect(release.source).to.deep.eq(source)
+        expect(release.features.map((f) => f.id).sort()).to.contain.all.members(
+          features.map((f) => f.id).sort(),
+        )
+        expect(release.tags).to.deep.eq([])
+        expect(release.completionStatus).to.deep.eq(completionStatus)
       })
+      cy.contains('div', 'Updated Release description').should('be.visible')
     })
   })
 })

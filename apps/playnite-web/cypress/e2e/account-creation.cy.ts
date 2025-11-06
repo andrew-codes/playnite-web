@@ -2,10 +2,6 @@ import { breakpoints } from 'support/breakpoints'
 import { defaultSettings as defaultUserSettings } from '../../src/server/userSettings'
 
 describe('Account Creation.', () => {
-  beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
   describe(`allowAnonymousAccountCreation setting is disabled.`, () => {
     beforeEach(() => {
       cy.task('setSiteSettings', {

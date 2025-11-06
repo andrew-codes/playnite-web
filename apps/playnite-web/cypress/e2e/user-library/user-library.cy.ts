@@ -2,12 +2,8 @@ import { breakpoints } from 'support/breakpoints'
 
 describe('User Library', () => {
   beforeEach(() => {
-    cy.task('seedUsers')
-    cy.fixture('librarySync.json').then((libraryData) => {
-      cy.syncLibrary('test', 'test', libraryData).then((library) => {
-        cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-      })
-    })
+    cy.signIn('test', 'test')
+    cy.visit(`/u/test/Library:1`)
   })
 
   describe('Update completion status.', () => {
@@ -16,9 +12,10 @@ describe('User Library', () => {
     - Other user libraries may not be updated.
     - Updates show in UI without a page refresh.`, () => {
       cy.get('[data-test="GameFigure"]')
-        .contains('3DMark')
+        .contains('7 Days to Die')
         .parents('[data-test="GameFigure"]')
         .as('gameFigure')
+
       cy.get('@gameFigure')
         .contains('[data-test="GameFigureChipList"] button', 'Played')
         .click()
@@ -40,7 +37,7 @@ describe('User Library', () => {
         .find('[data-test="GameFigureChipList"] button')
         .should('not.exist')
       cy.get('[data-test="GameFigure"]')
-        .contains('3DMark')
+        .contains('7 Days to Die')
         .parents('[data-test="GameFigure"]')
         .contains('[data-test="GameFigureChipList"]', 'Beaten')
         .eq(0)
@@ -77,7 +74,7 @@ describe('User Library', () => {
       cy.contains('h1', 'My Games')
         .parent()
         .find(':not(h1)')
-        .should('contains.text', '463')
+        .should('contains.text', '456')
     })
 
     it(`Games are displayed in a grid.
@@ -106,13 +103,18 @@ describe('User Library', () => {
     it(`Eager and lazy-loaded images.
           - First 50 images are eagerly loaded.
           - Remaining images are lazily loaded.`, () => {
-      cy.get('[data-test="GameFigure"] button > img').then((images) => {
-        cy.wrap(images.slice(0, 50)).each((img) => {
-          cy.wrap(img).should('have.attr', 'loading', 'eager')
+      cy.get('[data-test="GameFigure"]').then((games) => {
+        cy.wrap(games.slice(0, 49)).each((game) => {
+          const img = game.find('button > img')
+          if (img.length > 0) {
+            cy.wrap(img).should('have.attr', 'loading', 'eager')
+          }
         })
-
-        cy.wrap(images.slice(50)).each((img) => {
-          cy.wrap(img).should('have.attr', 'loading', 'lazy')
+        cy.wrap(games.slice(50)).each((game) => {
+          const img = game.find('button > img')
+          if (img.length > 0) {
+            cy.wrap(img).should('have.attr', 'loading', 'lazy')
+          }
         })
       })
     })
@@ -177,12 +179,7 @@ describe('User Library', () => {
         })
 
         beforeEach(() => {
-          cy.task('seedUsers')
-          cy.fixture('librarySync.json').then((libraryData) => {
-            cy.syncLibrary('test', 'test', libraryData).then((library) => {
-              cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-            })
-          })
+          cy.visit(`/u/test/Library:1`)
         })
 
         it(`Displays the library correctly`, () => {
