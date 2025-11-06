@@ -26,7 +26,9 @@ export const Release: ReleaseResolvers = {
       return null
     }
 
-    const game = await _ctx.loaders.gameLoader.load(Number(_parent.gameId))
+    const game = await _ctx.loaders.gameLoader.load(
+      Number(_parent.releaseGameId),
+    )
 
     if (!game?.coverArt) {
       return null
@@ -38,7 +40,9 @@ export const Release: ReleaseResolvers = {
     return _ctx.loaders.releaseFeatureLoader.load(Number(_parent.id))
   },
   game: async (_parent, _arg, _ctx) => {
-    const output = await _ctx.loaders.gameLoader.load(Number(_parent.gameId))
+    const output = await _ctx.loaders.gameLoader.load(
+      Number(_parent.releaseGameId),
+    )
 
     if (!output) {
       throw new GraphQLError('Game not found', {

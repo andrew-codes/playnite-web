@@ -1,4 +1,4 @@
-import { clearDatabase, deleteTestData, disconnectDatabase } from '../lib/db-utils'
+import { clearDatabase, disconnectDatabase } from '../lib/db-utils'
 
 // Mock dependencies
 jest.mock('db-client', () => ({
@@ -129,35 +129,6 @@ describe('db-utils', () => {
       await expect(
         clearDatabase({ verbose: false, maxRetries: 2 }),
       ).rejects.toThrow('Failed to clear database after 2 attempts')
-    })
-  })
-
-  describe('deleteTestData', () => {
-    it('should delete all test data in correct order', async () => {
-      ;(prisma.release.deleteMany as jest.Mock).mockResolvedValue({ count: 10 })
-      ;(prisma.game.deleteMany as jest.Mock).mockResolvedValue({ count: 5 })
-      ;(prisma.user.deleteMany as jest.Mock).mockResolvedValue({ count: 2 })
-
-      await deleteTestData()
-
-      // Verify deletion order
-      const deleteCalls = [
-        prisma.release.deleteMany,
-        prisma.game.deleteMany,
-        prisma.feature.deleteMany,
-        prisma.tag.deleteMany,
-        prisma.completionStatus.deleteMany,
-        prisma.source.deleteMany,
-        prisma.platform.deleteMany,
-        prisma.playlist.deleteMany,
-        prisma.library.deleteMany,
-        prisma.userSetting.deleteMany,
-        prisma.user.deleteMany,
-      ]
-
-      deleteCalls.forEach((fn) => {
-        expect(fn).toHaveBeenCalledWith({})
-      })
     })
   })
 

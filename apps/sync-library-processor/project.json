@@ -53,22 +53,6 @@
         }
       }
     },
-    "start/e2e": {
-      "executor": "nx:run-commands",
-      "cache": false,
-      "options": {
-        "cwd": "{projectRoot}",
-        "parallel": false,
-        "commands": ["yarn tsx scripts/start.e2e.ts"],
-        "env": {
-          "NODE_ENV": "development",
-          "LOG_LEVEL": "silly",
-          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
-          "PORT": "3001",
-          "INSTRUMENT": "true"
-        }
-      }
-    },
     "test/e2e": {
       "executor": "nx:run-commands",
       "options": {
@@ -81,7 +65,7 @@
           "LOCAL": "true",
           "CI": "true",
           "TEST": "E2E",
-          "LOG_LEVEL": "debug",
+          "LOG_LEVEL": "info",
           "NODE_ENV": "production",
           "PORT": "3001"
         }

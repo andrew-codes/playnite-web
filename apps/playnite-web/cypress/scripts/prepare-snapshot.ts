@@ -72,7 +72,7 @@ async function main() {
       '2. Start the sync-library-processor: yarn nx start sync-library-processor',
     )
     logger.info(
-      '3. Run this command to authenticate and sync: yarn nx db/create-snapshot playnite-web-app',
+      '3. Run this command to authenticate and sync: yarn nx db/sync-user-library playnite-web-app',
     )
     logger.info('4. Then run: yarn nx finalize-snapshot playnite-web-app')
     logger.info('Database has been cleared and users seeded.')

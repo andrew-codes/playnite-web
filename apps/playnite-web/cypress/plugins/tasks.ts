@@ -1,6 +1,6 @@
 import MQTT from 'async-mqtt'
-import { clearDatabase as clearDatabaseUtil } from 'db-utils'
 import prisma, { Prisma } from 'db-client'
+import { clearDatabase, clearDatabase as clearDatabaseUtil } from 'db-utils'
 import logger from 'dev-logger'
 import Permission from '../../src/feature/authorization/permissions.js'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
@@ -74,15 +74,19 @@ const tasks = (on, config) => {
           gamePlaylists,
         }
 
-        // Write to fixture file
+        // Write to fixture file in db-snapshot subdirectory
         const fs = await import('fs/promises')
         const path = await import('path')
-        const snapshotPath = path.join(
+        const snapshotDir = path.join(
           process.cwd(),
           'cypress',
           'fixtures',
-          `${snapshotName}.json`,
+          'db-snapshot',
         )
+        const snapshotPath = path.join(snapshotDir, `${snapshotName}.json`)
+
+        // Ensure the db-snapshot directory exists
+        await fs.mkdir(snapshotDir, { recursive: true })
 
         // Custom replacer to handle BigInt values
         const jsonReplacer = (_key: string, value: any) => {
@@ -115,33 +119,21 @@ const tasks = (on, config) => {
       let e: any = null
 
       try {
-        // Read snapshot file
+        // Read snapshot file from db-snapshot subdirectory
         const fs = await import('fs/promises')
         const path = await import('path')
         const snapshotPath = path.join(
           process.cwd(),
           'cypress',
           'fixtures',
+          'db-snapshot',
           `${snapshotName}.json`,
         )
         const snapshotData = JSON.parse(
           await fs.readFile(snapshotPath, 'utf-8'),
         )
 
-        // Clear database first
-        await prisma.$executeRawUnsafe(
-          'SET session_replication_role = replica;',
-        )
-
-        const tables = await prisma.$queryRawUnsafe<{ tablename: string }[]>(
-          `SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename != '_prisma_migrations'`,
-        )
-
-        for (const table of tables) {
-          await prisma.$executeRawUnsafe(
-            `TRUNCATE TABLE "${table.tablename}" RESTART IDENTITY CASCADE;`,
-          )
-        }
+        await clearDatabase()
 
         // Restore data in correct order (respecting foreign keys)
         // 1. Users (no dependencies)
@@ -400,7 +392,7 @@ const tasks = (on, config) => {
       }
     },
 
-    async seedUsers() {
+    async seedUsers({ single }: { single?: boolean } = {}) {
       let e: any = null
       try {
         await prisma.user.create({
@@ -422,24 +414,26 @@ const tasks = (on, config) => {
           },
         })
 
-        await prisma.user.create({
-          data: {
-            username: 'jane',
-            name: 'Jane Smith',
-            email: 'jane@example.com',
-            password: hashPassword('jane'),
-            permission: Permission.Write,
-            Settings: {
-              create: Object.entries(defaultUserSettings).map(
-                ([id, setting]) => ({
-                  name: setting.name,
-                  value: setting.value,
-                  dataType: setting.dataType,
-                }),
-              ),
+        if (!single) {
+          await prisma.user.create({
+            data: {
+              username: 'jane',
+              name: 'Jane Smith',
+              email: 'jane@example.com',
+              password: hashPassword('jane'),
+              permission: Permission.Write,
+              Settings: {
+                create: Object.entries(defaultUserSettings).map(
+                  ([id, setting]) => ({
+                    name: setting.name,
+                    value: setting.value,
+                    dataType: setting.dataType,
+                  }),
+                ),
+              },
             },
-          },
-        })
+          })
+        }
 
         logger.info('Database seeded successfully!')
       } catch (error) {
@@ -451,6 +445,19 @@ const tasks = (on, config) => {
         throw new Error('Error seeding database:', e)
       }
       return true
+    },
+
+    async getUserId(username: string) {
+      try {
+        const user = await prisma.user.findUniqueOrThrow({
+          where: { username },
+          select: { id: true },
+        })
+        return user.id
+      } catch (error) {
+        logger.error('Error getting user ID:', error)
+        throw new Error(`User not found: ${username}`)
+      }
     },
 
     async setSiteSettings(settings: Record<(typeof codes)[number], string>) {

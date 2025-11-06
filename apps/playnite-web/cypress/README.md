@@ -45,7 +45,12 @@ yarn nx start sync-library-processor
 Then create a snapshot, based on data found in `apps/playnite-web/cypress/fixtures/librarySync.json`:
 
 ```bash
-yarn nx create-snapshot playnite-web-app
+yarn nx db/sync-user-library playnite-web-app --username test
+# Optionally sync a second user
+# yarn nx db/sync-user-library playnite-web-app --username jane
+
+# Or sync a second library for an existing user
+# yarn nx db/sync-user-library --username test --file cypress/fixtures/librarySync2.json
 ```
 
 Wait for the sync to complete (check logs in sync-library-processor terminal).
