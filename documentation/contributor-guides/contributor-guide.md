@@ -48,6 +48,6 @@ You can ask questions and learn more about Playnite Web by joining our [Discord 
 
 Playnite Web is a volunteer effort and we encourage you to pitch in and join us!
 
-You can find us on [Discord]((https://discord.gg/Dv8UrQ6mGb))!
+You can find us on [Discord](https://discord.gg/Dv8UrQ6mGb)!
 
 Thanks! :heart: :heart: :heart:
