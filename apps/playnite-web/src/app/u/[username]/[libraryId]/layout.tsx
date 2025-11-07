@@ -1,8 +1,4 @@
-import { Library, User } from '../../../../../.generated/types.generated'
-import { MeQuery } from '../../../../feature/account/queries'
 import { LibraryLayout } from '../../../../feature/library/components/LibraryLayout'
-import { AllGamesQuery } from '../../../../feature/library/queries'
-import { PreloadQuery } from '../../../../feature/shared/gql/client'
 
 interface LibraryPageProps {
   children: React.ReactNode
@@ -20,27 +16,11 @@ async function LibraryPage({
   const { username, libraryId } = await params
 
   return (
-    <PreloadQuery<{ library: Library }, { libraryId: string }>
-      query={AllGamesQuery}
-      variables={{ libraryId }}
-    >
-      {(queryRef) => (
-        <PreloadQuery<{ me: User }, {}> query={MeQuery}>
-          {(meQueryRef) => (
-            <LibraryLayout
-              meQueryRef={meQueryRef}
-              username={username}
-              libraryId={libraryId}
-              queryRef={queryRef}
-            >
-              {children}
-              {gameDetails}
-              {filters}
-            </LibraryLayout>
-          )}
-        </PreloadQuery>
-      )}
-    </PreloadQuery>
+    <LibraryLayout username={username} libraryId={libraryId}>
+      {children}
+      {gameDetails}
+      {filters}
+    </LibraryLayout>
   )
 }
 

@@ -42,6 +42,7 @@ const GameFigure: FC<
           >
             {game.primaryRelease?.cover && (
               <NextImage
+                quality={50}
                 width={230}
                 height={230}
                 data-test="GameCoverImage"

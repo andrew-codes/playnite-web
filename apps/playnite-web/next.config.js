@@ -51,6 +51,7 @@ const nextConfig = {
 
   images: {
     imageSizes: [175, 230, 280, 320],
+    qualities: [50, 75, 100],
     formats: ['image/webp'],
     remotePatterns: [
       {
