@@ -91,12 +91,12 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'http',
-        hostname: '**.ign**.com',
-        pathname: '/**',
+        hostname: '**',
+        pathname: '/cover-art/**',
       },
       {
         protocol: 'https',
-        hostname: '**.ign**.com',
+        hostname: 'cover-art/**',
         pathname: '/**',
       },
     ],

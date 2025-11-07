@@ -21,13 +21,16 @@ The snapshot only needs to be created once, or when you need to update the test 
 Run the preparation script to clear the database and seed test users:
 
 ```bash
-yarn nx db/prepare-snapshot playnite-web-app
+yarn nx db/prepare-snapshot playnite-web-app test
+
+# Multiple users
+# yarn nx db/prepare-snapshot playnite-web-app test jane
 ```
 
 This will:
 
 - Clear the database
-- Create test users (`test`/`test` and `jane`/`jane`)
+- Create test users (password is the same as the username)
 - Display instructions for the next steps
 
 ### Step 2: Sync Library Data

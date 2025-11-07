@@ -6,70 +6,72 @@
  * 1. Clears the database
  * 2. Seeds test users
  *
- * Usage: yarn nx db/prepare-snapshot playnite-web-app
+ * Usage: yarn nx db/prepare-snapshot playnite-web-app -- [username1] [username2] [...]
+ * Example: yarn nx db/prepare-snapshot playnite-web-app -- test jane
  */
 
-import { clearDatabase as clearDatabaseUtil } from 'db-utils'
 import prisma from 'db-client'
+import { clearDatabase as clearDatabaseUtil } from 'db-utils'
 import logger from 'dev-logger'
 import Permission from '../../src/feature/authorization/permissions.js'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
 import { defaultSettings as defaultUserSettings } from '../../src/server/userSettings.js'
 
+async function seedUsers(usernames: string[]) {
+  logger.info(`Seeding ${usernames.length} test user(s)...`)
 
-
-async function seedUsers() {
-  logger.info('Seeding test users...')
-
-  await prisma.user.create({
-    data: {
-      username: 'test',
-      name: 'Test',
-      email: 'test@example.com',
-      password: hashPassword('test'),
-      permission: Permission.SiteAdmin,
-      Settings: {
-        create: Object.entries(defaultUserSettings).map(([id, setting]) => ({
-          name: setting.name,
-          value: setting.value,
-          dataType: setting.dataType,
-        })),
+  for (const username of usernames) {
+    await prisma.user.create({
+      data: {
+        username,
+        name: username.charAt(0).toUpperCase() + username.slice(1),
+        email: `${username}@example.com`,
+        password: hashPassword(username),
+        permission:
+          username === 'test' ? Permission.SiteAdmin : Permission.Write,
+        Settings: {
+          create: Object.entries(defaultUserSettings).map(([id, setting]) => ({
+            name: setting.name,
+            value: setting.value,
+            dataType: setting.dataType,
+          })),
+        },
       },
-    },
-  })
-
-  await prisma.user.create({
-    data: {
-      username: 'jane',
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      password: hashPassword('jane'),
-      permission: Permission.Write,
-      Settings: {
-        create: Object.entries(defaultUserSettings).map(([id, setting]) => ({
-          name: setting.name,
-          value: setting.value,
-          dataType: setting.dataType,
-        })),
-      },
-    },
-  })
+    })
+    logger.info(`  Created user: ${username}`)
+  }
 
   logger.info('Users seeded!')
 }
 
 async function main() {
   try {
+    // Get usernames from command line arguments
+    const usernames = process.argv.slice(2)
+
+    if (usernames.length === 0) {
+      logger.error('Error: No usernames provided')
+      logger.info(
+        'Usage: yarn nx db/prepare-snapshot playnite-web-app -- <username1> [username2] [...]',
+      )
+      logger.info(
+        'Example: yarn nx db/prepare-snapshot playnite-web-app -- test jane',
+      )
+      process.exit(1)
+    }
+
+    logger.info(`Preparing snapshot with users: ${usernames.join(', ')}`)
+
     // Step 1: Clear database
     await clearDatabaseUtil()
 
     // Step 2: Seed users
-    await seedUsers()
+    await seedUsers(usernames)
 
     logger.info('Note: To create the snapshot, you need to:')
     logger.info('1. Start the Playnite Web app: yarn nx start playnite-web-app')
     logger.info(
-      '2. Start the sync-library-processor: yarn nx start sync-library-processor',
+      '2. Start the sync-library-processor to persist images to local: COVER_ART_PATH="../playnite-web/.cover-art" yarn nx start sync-library-processor',
     )
     logger.info(
       '3. Run this command to authenticate and sync: yarn nx db/sync-user-library playnite-web-app',

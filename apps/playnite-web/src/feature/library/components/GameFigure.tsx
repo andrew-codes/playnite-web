@@ -22,6 +22,7 @@ const GameFigure: FC<
   }>
 > = ({ children, game, priority, style, onSelect, isHighFetchPriority }) => {
   const theme = useTheme()
+  const protocol = window.location.protocol
 
   return (
     <Context.Provider value={game}>
@@ -40,15 +41,15 @@ const GameFigure: FC<
               width: '100%',
             })}
           >
-            {game.primaryRelease?.cover && (
+            {game.coverArt && (
               <NextImage
                 quality={50}
                 width={230}
                 height={230}
                 data-test="GameCoverImage"
-                src={game.primaryRelease?.cover}
+                src={`${window.location.protocol}//${game.coverArt}`}
                 sizes="(min-width: 3200px) 320px, (min-width: 2800px) 280px, (min-width: 2560px) 230px, (min-width: 1366px) 175px, (min-width: 1024px) 230px, (min-width: 992px) 320px, (min-width: 768px) 230px, (min-width: 576px) 230px, 175px"
-                alt={game.primaryRelease?.title}
+                alt={game.primaryRelease?.title ?? 'Game Cover Art'}
                 loading={priority ? 'eager' : 'lazy'}
                 fetchPriority={isHighFetchPriority ? 'high' : 'auto'}
                 style={{
