@@ -1,21 +1,20 @@
 'use client'
 
-import { QueryRef, useReadQuery } from '@apollo/client/react'
+import { useQuery } from '@apollo/client/react'
 import { Button, Divider, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { FC, Fragment } from 'react'
 import { User } from '../../../../.generated/types.generated'
 import { Form } from '../../shared/components/forms/Form'
 import { useUpdateUserSettings } from '../hooks/updateUserSettings'
+import { MeQuery } from '../queries'
 import { Setting } from './Setting'
 
-const UserSettings: FC<{ queryRef: QueryRef<{ me: User }, {}> }> = ({
-  queryRef,
-}) => {
+const UserSettings: FC<{}> = ({}) => {
   const theme = useTheme()
   const isLgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'))
   const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
-  const { data } = useReadQuery(queryRef)
+  const { data } = useQuery<{ me: User }>(MeQuery)
   const [saveSettings] = useUpdateUserSettings()
 
   return (
