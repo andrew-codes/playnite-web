@@ -287,14 +287,14 @@ jobs:
           NODE_ENV: production
           VERSION: "${{ steps.nextVersion.outputs.value }}"
       - name: Package projects
-        run: yarn nx run-many --target=package --configuration=production --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=package --parallel=1 --configuration=production --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
           VERSION: "${{ steps.nextVersion.outputs.value }}"
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: playnite-web-extension
+          name: playnite-web-plugins
           path: apps/*/_packaged/**
 
   package_linux:
@@ -307,6 +307,30 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
+      - name: Free up disk space
+        run: |
+          echo "Disk space before cleanup:"
+          df -h
+
+          # Remove unnecessary packages
+          sudo apt-get remove -y '^aspnetcore-.*' '^dotnet-.*' '^llvm-.*' '^php.*' '^mongodb-.*' '^mysql-.*' '^powershell.*' azure-cli google-cloud-cli google-chrome-stable firefox microsoft-edge-stable
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+
+          # Remove large directories
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+          # Clean Docker
+          docker image prune -f
+          docker volume prune -f
+
+          echo "Disk space after cleanup:"
+          df -h
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -384,7 +408,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: _packaged
-          name: playnite-web-extension
+          name: playnite-web-plugins
+      - name: Unzip artifacts
+        run: |
+          mkdir -p _packaged/playnite-web-plugins
+          find _packaged -name '*.zip' -exec bash -c 'unzip -o "{}" -d "_packaged/playnite-web-plugins/"' \;
       - name: Extract node version from package.json
         uses: sergeysova/jq-action@v2
         id: node_version

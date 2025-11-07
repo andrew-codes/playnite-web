@@ -22,7 +22,10 @@ const config = {
           },
           {
             type: 'docs',
-            scope: 'README',
+            release: 'patch',
+          },
+          {
+            type: 'perf',
             release: 'patch',
           },
           {
@@ -42,6 +45,11 @@ const config = {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
             { type: 'fix', section: 'Bug Fixes', hidden: false },
+            {
+              type: 'perf',
+              section: 'Performance Improvements',
+              hidden: false,
+            },
             { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
             { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
           ],
@@ -56,11 +64,40 @@ const config = {
       {
         manifestFilePath: 'apps/PlayniteWebPlugin/src/manifest.yaml',
         extensionFilePath: 'apps/PlayniteWebPlugin/src/extension.yaml',
-        requiredApiVersion: '6.12.0',
+        requiredApiVersion: '6.13.0',
         presetConfig: {
           types: [
             { type: 'feat', section: 'Features', hidden: false },
             { type: 'fix', section: 'Bug Fixes', hidden: false },
+            {
+              type: 'perf',
+              section: 'Performance Improvements',
+              hidden: false,
+            },
+            { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
+            { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
+          ],
+        },
+        parserOpts: {
+          noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES', 'BREAKING'],
+        },
+      },
+    ],
+    [
+      '@andrew-codes/playnite-plugin-installer-manifest',
+      {
+        manifestFilePath: 'apps/PlayniteWebMqttPlugin/src/manifest.yaml',
+        extensionFilePath: 'apps/PlayniteWebMqttPlugin/src/extension.yaml',
+        requiredApiVersion: '6.13.0',
+        presetConfig: {
+          types: [
+            { type: 'feat', section: 'Features', hidden: false },
+            { type: 'fix', section: 'Bug Fixes', hidden: false },
+            {
+              type: 'perf',
+              section: 'Performance Improvements',
+              hidden: false,
+            },
             { type: 'docs', section: 'Miscellaneous Chores', hidden: false },
             { type: 'chore', section: 'Miscellaneous Chores', hidden: false },
           ],
@@ -82,8 +119,12 @@ const config = {
       {
         assets: [
           {
-            path: '_packaged/**/*.*',
+            path: '_packaged/**/PlayniteWebPlugin/**/*.*',
             label: 'Playnite Web Plugin',
+          },
+          {
+            path: '_packaged/**/PlayniteWebMqttPlugin/**/*.*',
+            label: 'Playnite Web MQTT Plugin',
           },
         ],
       },
@@ -94,6 +135,8 @@ const config = {
         assets: [
           'apps/PlayniteWebPlugin/src/manifest.yaml',
           'apps/PlayniteWebPlugin/src/extension.yaml',
+          'apps/PlayniteWebMqttPlugin/src/manifest.yaml',
+          'apps/PlayniteWebMqttPlugin/src/extension.yaml',
         ],
         message:
           'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',

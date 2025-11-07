@@ -241,3 +241,35 @@ Packages:
       - "chore: workflow to publish instrumented e2e coverage (#840)"
       - "chore: remove redundant dev release workflow (#844)"
       - "chore: remove dev release workflow"
+  - Version: 12.1.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.1.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_1_0.pext
+    ReleaseDate: 2025-10-28
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat: release Playnite Web Mqtt plugin"
+      - "docs: add playnite web mqtt plugin guide"
+      - "chore: instruct agents to use claude.md files"
+      - "chore: automate release of MQTT plugin"
+      - "docs: community moved to Discord"
+  - Version: 12.2.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.2.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_2_0.pext
+    ReleaseDate: 2025-11-03
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: sync errors throw by Plugin"
+      - "feat: limit platform filter to platforms with games (#873)"
+      - "chore: fix pipeline build"
+      - "fix: correct add-on ID for release"
+  - Version: 12.2.1
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.2.1/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_12_2_1.pext
+    ReleaseDate: 2025-11-05
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "chore: make docs and perf commits trigger patch releases regardless of
+        scope (#891)"
+      - "chore: format release config with prettier"
+      - "fix: update release rules for docs and perf commits"
+      - "docs: new troubleshooting topic, updated folders, updated README.
+        (#886)"
+      - "Documentation: New Troubleshooting topic, updated folders, updated
+        README."

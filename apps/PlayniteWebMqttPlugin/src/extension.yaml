@@ -1,0 +1,7 @@
+Id: PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a
+Name: Playnite Web MQTT
+Author: Andrew Smith
+Module: PlayniteWebMqtt.dll
+Type: GenericPlugin
+Icon: Resources\\icon.png
+Version: 4.0.2

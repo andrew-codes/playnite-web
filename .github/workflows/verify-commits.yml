@@ -220,6 +220,30 @@ jobs:
       OWNER: andrew-codes
       PUBLISH: true
     steps:
+      - name: Free up disk space
+        run: |
+          echo "Disk space before cleanup:"
+          df -h
+
+          # Remove unnecessary packages
+          sudo apt-get remove -y '^aspnetcore-.*' '^dotnet-.*' '^llvm-.*' '^php.*' '^mongodb-.*' '^mysql-.*' '^powershell.*' azure-cli google-cloud-cli google-chrome-stable firefox microsoft-edge-stable
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+
+          # Remove large directories
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
+          # Clean Docker
+          docker image prune -f
+          docker volume prune -f
+
+          echo "Disk space after cleanup:"
+          df -h
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
@@ -334,11 +358,11 @@ jobs:
         env:
           NODE_ENV: production
       - name: Package projects
-        run: yarn nx run-many --target=package --configuration=production --exclude='*,!tag:windows'
+        run: yarn nx run-many --target=package --parallel=1 --configuration=production --exclude='*,!tag:windows'
         env:
           NODE_ENV: production
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: playnite-web-extension
+          name: playnite-web-plugins
           path: apps/*/_packaged/**

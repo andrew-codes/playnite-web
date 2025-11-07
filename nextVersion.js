@@ -26,7 +26,10 @@ async function run() {
             },
             {
               type: 'docs',
-              scope: 'README',
+              release: 'patch',
+            },
+            {
+              type: 'perf',
               release: 'patch',
             },
             {

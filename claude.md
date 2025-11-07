@@ -13,35 +13,43 @@ Playnite Web is a suite of services that allows viewing video games from your Pl
 - Monorepo and packages: Nx, Yarn PnP zero install configuration
 - Release: semantic release, conventional commits, packaged Docker images
 
+## Repo Setup
+
+- Repo uses yarn v4 and yarn workspaces
+  - Do not use npm to install
+  - Use yarn at the repo root directory to install modules for all workspaces
+- Repo uses Nx to manage multi-workspace packages; all tasks are run via Nx commands.
+- Repo is a mix of TypeScript projects and C# projects
+
 ## Code Conventions
 
-- We use Prettier for formatting
+- Prettier for formatting
 - ESLint for linting
 - Functional components with hooks for React
 - 2-space indentation
-- camelCase for variables and functions
+- camelCase for variables and functions (TypeScript projects)
 - PascalCase for components and classes
+- Follow normal dotnet casing and conventions for C# projects
 - All module and type exports are at the bottom of files
 
 ## Monorepo Structure
 
 This describes the monorepo structure. See claude.md files within individual projects for additional information about the internal structure of each project.
 
-- apps - application level projects
-- dev-services - project of dependent services required to be running when developing locally
-- docs - project documentation files
-- libs - shared code libraries
+- apps: application level projects
+- dev-services: project of dependent services required to be running when developing locally
+- docs: project documentation files
+- libs: shared code libraries
 
 ## Environment Setup
 
 - Node.js@^22.17.0
 - Nx targets
-  - `yarn nx start web` - Start development Playnite Web application
-  - `yarn nx test/unit` - Run unit tests for Nx project
-  - `yarn nx test/component` - run component tests
-  - `yarn nx test/e2e` - run e2e tests
-  - `yarn nx lint` - run linter
-
+  - `yarn nx start web`: Start development Playnite Web application
+  - `yarn nx test/unit`: Run unit tests for Nx project
+  - `yarn nx test/component`: run component tests
+  - `yarn nx test/e2e`: run e2e tests
+  - `yarn nx lint`: run linter
 
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
@@ -54,6 +62,5 @@ This describes the monorepo structure. See claude.md files within individual pro
 - When working in individual projects, use the `nx_project_details` mcp tool to analyze and understand the specific project structure and dependencies
 - For questions around nx configuration, best practices or if you're unsure, use the `nx_docs` tool to get relevant, up-to-date docs. Always use this instead of assuming things about nx configuration
 - If the user needs help with an Nx configuration or project graph error, use the `nx_workspace` tool to get any errors
-
 
 <!-- nx configuration end-->
