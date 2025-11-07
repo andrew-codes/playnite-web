@@ -2,7 +2,7 @@ import MQTT from 'async-mqtt'
 import prisma from 'db-client'
 import { clearDatabase, disconnectDatabase } from 'db-utils'
 import logger from 'dev-logger'
-import { readFileSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import path from 'path'
 
 describe('Syncing library via MQTT.', () => {
@@ -51,7 +51,8 @@ describe('Syncing library via MQTT.', () => {
     - Subscribes to MQTT message with complete library data.
     - Persists all platforms, sources, features, tags, completion states to database.
     - Persists all releases and games to database.
-    - Fetches IGN cover art URLs and stores in Game.coverArt field.`, async () => {
+    - Fetches IGN cover art, downloads, resizes to 320x320 webp, and saves to disk.
+    - Stores cover art filename in Game.coverArt field.`, async () => {
     // Load the actual librarySync fixture
     const libraryData = JSON.parse(
       readFileSync(path.join(__dirname, 'fixtures/librarySync.json'), 'utf-8'),
@@ -213,30 +214,39 @@ describe('Syncing library via MQTT.', () => {
     expect(sevenDaysToDieGame).toBeTruthy()
     expect(sevenDaysToDieGame?.Releases.length).toBe(1)
 
-    // Verify IGN cover art URL is populated from mocked IGN API
-    expect(sevenDaysToDieGame?.coverArt).toBe(
-      'https://assets-prd.ignimgs.com/2022/06/14/test-game-cover.jpg',
+    // Verify cover art filename is populated (should be MD5 hash of title + .webp)
+    expect(sevenDaysToDieGame?.coverArt).toBeTruthy()
+    expect(sevenDaysToDieGame?.coverArt).toMatch(/^[a-f0-9]{32}\.webp$/)
+
+    // Verify the cover art file exists on disk
+    const coverArtDir = process.env.COVER_ART_PATH || './.game-assets/cover-art'
+    const sevenDaysCoverArtPath = path.join(
+      coverArtDir,
+      sevenDaysToDieGame!.coverArt!,
     )
+    expect(existsSync(sevenDaysCoverArtPath)).toBe(true)
 
     // Check a game with multiple releases - "Fallout 4"
     const fallout4Game = games.find((g) => g.title === 'Fallout 4')
     expect(fallout4Game).toBeTruthy()
     expect(fallout4Game?.Releases.length).toBeGreaterThan(1)
 
-    // Fallout 4 should also have the mocked IGN cover art URL
-    expect(fallout4Game?.coverArt).toBe(
-      'https://assets-prd.ignimgs.com/2022/06/14/test-game-cover.jpg',
-    )
+    // Fallout 4 should also have cover art downloaded
+    expect(fallout4Game?.coverArt).toBeTruthy()
+    expect(fallout4Game?.coverArt).toMatch(/^[a-f0-9]{32}\.webp$/)
 
-    // Verify that all games have the mocked IGN cover art URL
+    const fallout4CoverArtPath = path.join(coverArtDir, fallout4Game!.coverArt!)
+    expect(existsSync(fallout4CoverArtPath)).toBe(true)
+
+    // Verify that all games have cover art downloaded
     const gamesWithCoverArt = games.filter((g) => g.coverArt)
     expect(gamesWithCoverArt.length).toBe(games.length)
 
-    // Verify that all cover art URLs match the mocked IGN API response
+    // Verify that all cover art filenames are valid and files exist
     gamesWithCoverArt.forEach((game) => {
-      expect(game.coverArt).toBe(
-        'https://assets-prd.ignimgs.com/2022/06/14/test-game-cover.jpg',
-      )
+      expect(game.coverArt).toMatch(/^[a-f0-9]{32}\.webp$/)
+      const coverArtPath = path.join(coverArtDir, game.coverArt!)
+      expect(existsSync(coverArtPath)).toBe(true)
     })
 
     // Log summary for debugging

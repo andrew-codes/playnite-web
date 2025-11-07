@@ -9,6 +9,7 @@ import logger from 'dev-logger'
 import express from 'express'
 import { groupBy } from 'lodash-es'
 import { IgnSourcedAssets } from 'sourced-assets/ign'
+import { CoverArtService } from './services/coverArtService.js'
 
 async function run() {
   logger.info(
@@ -19,6 +20,8 @@ async function run() {
 
   try {
     const ignSourcedAssets = new IgnSourcedAssets()
+    const coverArtService = new CoverArtService(prisma)
+    await coverArtService.initialize()
 
     const mqtt = await MQTT.connectAsync(
       `tcp://${process.env.MQTT_HOST ?? 'localhost'}:${process.env.MQTT_PORT ?? '1883'}`,
@@ -352,7 +355,9 @@ async function run() {
           const gameEntries = Object.entries(games)
           if (gameEntries.length > 0) {
             // Use the first release's title from each group (preserves original casing)
-            const gameTitles = gameEntries.map(([_key, releases]) => releases[0].title)
+            const gameTitles = gameEntries.map(
+              ([_key, releases]) => releases[0].title,
+            )
             await prisma.$executeRaw`
               INSERT INTO "Game" ("title", "libraryId")
               SELECT *
@@ -371,11 +376,13 @@ async function run() {
               libraryId,
               title: { in: releasesToUpdate.map((r) => r.title) },
             },
-            select: { id: true, title: true },
+            select: { id: true, title: true, coverArt: true },
           })
 
           // Map with lowercase keys for case-insensitive lookups
-          const gameIdMap = new Map(insertedGames.map((g) => [g.title.toLowerCase(), g.id]))
+          const gameIdMap = new Map(
+            insertedGames.map((g) => [g.title.toLowerCase(), g.id]),
+          )
 
           // Batch upsert releases using raw SQL
           if (releaseData.length > 0) {
@@ -384,7 +391,9 @@ async function run() {
             // Add releaseGameId to releaseData
             const releaseDataWithGameId = releaseData.map((r, idx) => ({
               ...r,
-              releaseGameId: gameIdMap.get(releasesToUpdate[idx].title.toLowerCase()) ?? null,
+              releaseGameId:
+                gameIdMap.get(releasesToUpdate[idx].title.toLowerCase()) ??
+                null,
             }))
 
             // Upsert releases with releaseGameId and gameId
@@ -541,22 +550,20 @@ async function run() {
             }
           }
 
-          // Now fetch IGN cover art URLs for each game
-          logger.info(
-            `Fetching IGN cover art URLs for ${insertedGames.length} games`,
-          )
+          // Now fetch and process IGN cover art for each game
+          logger.info(`Processing cover art for ${insertedGames.length} games`)
           for (const game of insertedGames) {
             try {
+              // Get the IGN cover art URL
               const ignCoverArtUrl = await ignSourcedAssets.getImageUrl({
                 title: game.title,
               })
 
               if (ignCoverArtUrl) {
                 logger.debug(`Found IGN cover art URL for game: ${game.title}`)
-                await prisma.game.update({
-                  where: { id: game.id },
-                  data: { coverArt: ignCoverArtUrl },
-                })
+
+                // Process cover art (checks if exists, downloads if needed, updates DB)
+                await coverArtService.persistGameCoverArt(game, ignCoverArtUrl)
               } else {
                 logger.debug(
                   `No IGN cover art URL found for game: ${game.title}`,
@@ -564,7 +571,7 @@ async function run() {
               }
             } catch (error) {
               logger.warn(
-                `Failed to fetch IGN cover art for game: ${game.title}`,
+                `Failed to process cover art for game: ${game.title}`,
                 error,
               )
             }

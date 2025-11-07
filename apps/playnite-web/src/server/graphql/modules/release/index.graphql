@@ -2,7 +2,6 @@ type Release {
   id: String!
   communityScore: Int
   completionStatus: CompletionStatus
-  cover: String
   criticScore: Int
   description: String
   features: [Feature!]!

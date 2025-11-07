@@ -20,22 +20,6 @@ export const Release: ReleaseResolvers = {
 
     return output
   },
-
-  cover: async (_parent, _arg, _ctx) => {
-    if (!_parent.gameId) {
-      return null
-    }
-
-    const game = await _ctx.loaders.gameLoader.load(
-      Number(_parent.releaseGameId),
-    )
-
-    if (!game?.coverArt) {
-      return null
-    }
-
-    return game.coverArt
-  },
   features: async (_parent, _arg, _ctx) => {
     return _ctx.loaders.releaseFeatureLoader.load(Number(_parent.id))
   },
