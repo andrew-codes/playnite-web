@@ -47,12 +47,12 @@ The Playnite Web App has three dependencies required to run the server, included
 4. Configure the plugin by entering your Playnite Web App URL and credentials. 
 5. Sync your game library. 
 
-## Getting Started
+## Get Started
 
 1. For detailed instructions about setting up Playnite Web, read the [setup guide](./documentation/user-guides/setup-guide.md). 
 2. If you encounter a problem, check the [troubleshooting guide](./documentation/user-guides/troubleshooting-guide.md) for a solution before you open an issue on GitHub. 
 3. If you discover a security vulnerability, **do not open an issue**, instead [submit a security advisory via GitHub](https://github.com/andrew-codes/playnite-web/security/advisories/new).
 4. To get started with the Playnite Web API, read about the [data model](./documentation/api-documentation/data-model.md).
-5. Before you contribute, read the [contribution guidelines](./documentation/CONTRIBUTING.md). 
+5. Before you contribute, read the [contribution guidelines](./documentation/contributor-guides/contributor-guide.md). 
 6. For help with the local development environment, see the [local development environment](./documentation/contributor-guides/development-environment/index.md) guide.
 
