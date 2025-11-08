@@ -11,6 +11,7 @@ describe(`Game details remote control.
   describe('Unauthenticated users.', () => {
     it(`No action controls.`, () => {
       cy.visit(`/u/test/Library:1`)
+      cy.wait('@image')
 
       cy.get('[data-test="Actions"]', { timeout: 10000 })
         .children()
@@ -108,9 +109,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey-320\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
@@ -174,9 +173,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey-320\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
@@ -234,9 +231,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey-320\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)

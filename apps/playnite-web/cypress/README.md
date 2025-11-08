@@ -212,21 +212,3 @@ describe('Full library tests', () => {
   // ...
 })
 ```
-
-### Per-Test Snapshots
-
-If a specific test needs a different starting state, override the global hook:
-
-```typescript
-describe('Special tests', () => {
-  beforeEach(() => {
-    cy.task('clearDatabase')
-    cy.task('seedUsers')
-    // Custom setup...
-  })
-
-  it('runs with custom data', () => {
-    // Test code...
-  })
-})
-```

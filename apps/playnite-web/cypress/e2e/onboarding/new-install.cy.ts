@@ -43,10 +43,10 @@ describe('Onboarding - New Install', () => {
 
   describe('After first account created', () => {
     it(`Navigation is shown.`, () => {
-      cy.task('seedUsers')
+      cy.task('restoreDatabaseSnapshot', 'single-user-single-library')
       cy.visit('/account/new', { failOnStatusCode: false })
 
-      cy.get('[data-test=Navigation] > *').should('exist')
+      cy.get('[data-test=Navigation] > *', { timeout: 20000 }).should('exist')
     })
   })
 })

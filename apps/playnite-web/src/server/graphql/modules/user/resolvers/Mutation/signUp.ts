@@ -13,7 +13,7 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
   _ctx,
 ) => {
   if (
-    (await _ctx.db.user.count()) > 1 &&
+    (await _ctx.db.user.count()) > 0 &&
     (
       await _ctx.db.siteSettings.findUnique({
         where: { id: defaultSettings.allowAnonymousAccountCreation.id },

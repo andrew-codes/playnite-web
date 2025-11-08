@@ -127,15 +127,18 @@ describe('Account Creation.', () => {
     describe(`Account requirements.`, () => {
       it(`Duplicate usernames are not allowed.`, () => {
         cy.intercept('POST', 'http://localhost:3000/api', (req) => {
-          req.reply((response) => {
-            expect(response.statusCode).to.equal(400)
-            expect(response.body.errors.length).to.equal(1)
-            expect(response.body.errors?.[0].message).to.equal(
-              'Username is already taken.',
-            )
-          })
+          if (req.body.operationName === 'SignUp') {
+            req.reply((response) => {
+              expect(response.statusCode).to.equal(400)
+              expect(response.body.errors.length).to.equal(1)
+              expect(response.body.errors?.[0].message).to.equal(
+                'Username is already taken.',
+              )
+            })
+          }
         }).as('signUp')
         cy.visit('/account/new')
+        cy.wait('@api')
         cy.get('form[data-name="registration"]').as('registrationForm')
         cy.get('@registrationForm')
           .find('input[name="email"]')
@@ -155,11 +158,13 @@ describe('Account Creation.', () => {
       it(`Duplicate emails are not allowed.`, () => {
         cy.intercept('POST', 'http://localhost:3000/api', (req) => {
           req.reply((response) => {
-            expect(response.statusCode).to.equal(400)
-            expect(response.body.errors.length).to.equal(1)
-            expect(response.body.errors?.[0].message).to.equal(
-              'Email is already in use.',
-            )
+            if (req.body.operationName === 'SignUp') {
+              expect(response.statusCode).to.equal(400)
+              expect(response.body.errors.length).to.equal(1)
+              expect(response.body.errors?.[0].message).to.equal(
+                'Email is already in use.',
+              )
+            }
           })
         }).as('signUp')
         cy.visit('/account/new')

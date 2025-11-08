@@ -1,6 +1,5 @@
 import { GraphQLError } from 'graphql'
 import { create, createNull, tryParseOid } from '../../../../../oid'
-import { resolve as resolveAssets } from '../../../../../resolveAssets'
 import { defaultSettings as defaultUserSettings } from '../../../../../userSettings'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
@@ -62,9 +61,7 @@ export const startRelease: NonNullable<
             id: create('Release', release.id),
             title: release.title,
             playniteId: release.playniteId,
-            coverUrl: release.Game.coverArt
-              ? resolveAssets(release.Game.coverArt)
-              : null,
+            coverUrl: `/cover-art/${release.Game.coverArt}`,
             library: {
               id: create('Library', release.Library.id),
               name: release.Library.name,
