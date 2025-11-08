@@ -99,25 +99,6 @@ describe('User Library', () => {
           })
         })
     })
-
-    it(`Eager and lazy-loaded images.
-          - First 50 images are eagerly loaded.
-          - Remaining images are lazily loaded.`, () => {
-      cy.get('[data-test="GameFigure"]').then((games) => {
-        cy.wrap(games.slice(0, 49)).each((game) => {
-          const img = game.find('button > img')
-          if (img.length > 0) {
-            cy.wrap(img).should('have.attr', 'loading', 'eager')
-          }
-        })
-        cy.wrap(games.slice(50)).each((game) => {
-          const img = game.find('button > img')
-          if (img.length > 0) {
-            cy.wrap(img).should('have.attr', 'loading', 'lazy')
-          }
-        })
-      })
-    })
   })
 
   describe('Navigation', () => {

@@ -15,7 +15,28 @@ import { clearDatabase as clearDatabaseUtil } from 'db-utils'
 import logger from 'dev-logger'
 import Permission from '../../src/feature/authorization/permissions.js'
 import { hashPassword } from '../../src/server/auth/hashPassword.js'
+import { defaultSettings as defaultSiteSettings } from '../../src/server/siteSettings.js'
 import { defaultSettings as defaultUserSettings } from '../../src/server/userSettings.js'
+
+async function seedSiteSettings() {
+  logger.info('Seeding site settings...')
+
+  await Promise.all(
+    Object.entries(defaultSiteSettings).map(async ([id, setting]) => {
+      await prisma.siteSettings.create({
+        data: {
+          id,
+          name: setting.name,
+          value: setting.value,
+          dataType: setting.dataType,
+        },
+      })
+      logger.info(`  Created site setting: ${setting.name}`)
+    }),
+  )
+
+  logger.info('Site settings seeded!')
+}
 
 async function seedUsers(usernames: string[]) {
   logger.info(`Seeding ${usernames.length} test user(s)...`)
@@ -65,7 +86,10 @@ async function main() {
     // Step 1: Clear database
     await clearDatabaseUtil()
 
-    // Step 2: Seed users
+    // Step 2: Seed site settings
+    await seedSiteSettings()
+
+    // Step 3: Seed users
     await seedUsers(usernames)
 
     logger.info('Note: To create the snapshot, you need to:')

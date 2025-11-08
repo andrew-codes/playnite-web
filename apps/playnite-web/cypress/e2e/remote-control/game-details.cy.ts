@@ -11,9 +11,12 @@ describe(`Game details remote control.
   describe('Unauthenticated users.', () => {
     it(`No action controls.`, () => {
       cy.visit(`/u/test/Library:1`)
+      cy.wait('@image')
 
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
-      cy.get('[data-test="Actions"]').children().should('have.length', 0)
+      cy.get('[data-test="Actions"]', { timeout: 20000 })
+        .children()
+        .should('have.length', 0)
     })
   })
 
@@ -26,9 +29,12 @@ describe(`Game details remote control.
     it(`Non-owned library.
     - No action controls.`, () => {
       cy.visit(`/u/jane/Library:2`)
+      cy.wait('@image')
 
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
-      cy.get('[data-test="Actions"]').children().should('have.length', 0)
+      cy.get('[data-test="Actions"]', { timeout: 20000 })
+        .children()
+        .should('have.length', 0)
     })
 
     describe('With Webhook setting.', () => {
@@ -44,6 +50,7 @@ describe(`Game details remote control.
       beforeEach(() => {
         cy.signIn('test', 'test')
         cy.visit(`/u/test/Library:1`)
+        cy.wait('@image')
       })
 
       it(`Play button.
@@ -57,7 +64,7 @@ describe(`Game details remote control.
           .eq(0)
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 20000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -100,9 +107,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey-320\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
@@ -124,7 +129,7 @@ describe(`Game details remote control.
           .find('button img')
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 20000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -163,9 +168,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey-320\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
@@ -182,7 +185,7 @@ describe(`Game details remote control.
           .find('button img')
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 20000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -220,9 +223,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey-320\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)

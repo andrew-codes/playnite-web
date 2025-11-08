@@ -42,6 +42,7 @@ beforeEach(() => {
 
 beforeEach(() => {
   cy.intercept('POST', '/api').as('api')
+  cy.intercept('_next/image*').as('image')
 })
 
 beforeEach(() => {

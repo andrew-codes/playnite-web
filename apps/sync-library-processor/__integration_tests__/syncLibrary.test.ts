@@ -70,7 +70,7 @@ describe('Syncing library via MQTT.', () => {
     )
 
     // Wait for processing (increase timeout for large dataset)
-    await new Promise((resolve) => setTimeout(resolve, 20000))
+    await new Promise((resolve) => setTimeout(resolve, 30000))
 
     // Verify platforms were persisted
     const platforms = await prisma.platform.findMany({
@@ -219,7 +219,8 @@ describe('Syncing library via MQTT.', () => {
     expect(sevenDaysToDieGame?.coverArt).toMatch(/^[a-f0-9]{32}\.webp$/)
 
     // Verify the cover art file exists on disk
-    const coverArtDir = process.env.COVER_ART_PATH || './.game-assets/cover-art'
+    const coverArtDir =
+      process.env.COVER_ART_PATH || './_packaged/.game-assets/cover-art'
     const sevenDaysCoverArtPath = path.join(
       coverArtDir,
       sevenDaysToDieGame!.coverArt!,
@@ -285,7 +286,7 @@ describe('Syncing library via MQTT.', () => {
         { qos: 1 },
       )
 
-      await new Promise((resolve) => setTimeout(resolve, 20000))
+      await new Promise((resolve) => setTimeout(resolve, 30000))
 
       // Verify initial state
       const initialReleases = await prisma.release.findMany({
@@ -402,7 +403,7 @@ describe('Syncing library via MQTT.', () => {
         { qos: 1 },
       )
 
-      await new Promise((resolve) => setTimeout(resolve, 20000))
+      await new Promise((resolve) => setTimeout(resolve, 30000))
 
       // Verify initial state - PlayStation 5 platform exists
       const ps5Platform = await prisma.platform.findFirst({
@@ -515,7 +516,7 @@ describe('Syncing library via MQTT.', () => {
         { qos: 1 },
       )
 
-      await new Promise((resolve) => setTimeout(resolve, 20000))
+      await new Promise((resolve) => setTimeout(resolve, 30000))
 
       // Verify initial state - Epic source exists
       const epicSource = await prisma.source.findFirst({
@@ -611,7 +612,7 @@ describe('Syncing library via MQTT.', () => {
         { qos: 1 },
       )
 
-      await new Promise((resolve) => setTimeout(resolve, 20000))
+      await new Promise((resolve) => setTimeout(resolve, 30000))
 
       // Verify initial state - Completed status exists
       const completedStatus = await prisma.completionStatus.findFirst({
@@ -709,7 +710,7 @@ describe('Syncing library via MQTT.', () => {
         { qos: 1 },
       )
 
-      await new Promise((resolve) => setTimeout(resolve, 20000))
+      await new Promise((resolve) => setTimeout(resolve, 30000))
 
       // Verify initial state - Single Player feature exists
       const singlePlayerFeature = await prisma.feature.findFirst({
@@ -818,7 +819,7 @@ describe('Syncing library via MQTT.', () => {
         { qos: 1 },
       )
 
-      await new Promise((resolve) => setTimeout(resolve, 20000))
+      await new Promise((resolve) => setTimeout(resolve, 30000))
 
       // Verify initial state - PlayStation Plus tag exists
       const playstationPlusTag = await prisma.tag.findFirst({

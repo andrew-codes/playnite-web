@@ -1,7 +1,4 @@
 describe('Landing Page Redirects', () => {
-  const username = 'test'
-  const password = 'test'
-
   describe('Single user with single library instance.', () => {
     beforeEach(() => {
       cy.task('restoreDatabaseSnapshot', 'single-user-single-library')
@@ -47,8 +44,7 @@ describe('Landing Page Redirects', () => {
 
   describe('Multiple user instance', () => {
     beforeEach(() => {
-      cy.task('clearDatabase')
-      cy.task('seedUsers')
+      cy.task('restoreDatabaseSnapshot', 'multi-user')
       cy.task('setSiteSettings', {
         allowAnonymousAccountCreation: 'false',
       })

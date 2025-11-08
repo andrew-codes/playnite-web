@@ -1,4 +1,3 @@
-import MQTT from 'async-mqtt'
 import prisma, { Prisma } from 'db-client'
 import { clearDatabase, clearDatabase as clearDatabaseUtil } from 'db-utils'
 import logger from 'dev-logger'
@@ -567,83 +566,6 @@ const tasks = (on, config) => {
       throw new Error(
         `Library sync timed out after ${timeout}ms. Expected ${expectedReleaseCount} releases.`,
       )
-    },
-
-    async verifyMqttMessage({
-      topic,
-      expectedPayload,
-      timeout = 5000,
-    }: {
-      topic: string
-      expectedPayload: any
-      timeout?: number
-    }) {
-      let mqtt: MQTT.AsyncMqttClient | null = null
-      let messageReceived = false
-      let receivedPayload: any = null
-
-      try {
-        mqtt = await MQTT.connectAsync(
-          `tcp://${process.env.MQTT_HOST ?? 'localhost'}:${process.env.MQTT_PORT ?? '1883'}`,
-          {
-            username: process.env.MQTT_USERNAME,
-            password: process.env.MQTT_PASSWORD,
-          },
-        )
-
-        await mqtt.subscribe(topic, { qos: 1 })
-
-        const messagePromise = new Promise<boolean>((resolve, reject) => {
-          const timeoutId = setTimeout(() => {
-            reject(
-              new Error(
-                `Timeout: No MQTT message received on topic "${topic}" within ${timeout}ms`,
-              ),
-            )
-          }, timeout)
-
-          mqtt!.on('message', (receivedTopic, message) => {
-            if (receivedTopic === topic) {
-              try {
-                receivedPayload = JSON.parse(message.toString())
-                logger.info(
-                  `MQTT message received on topic "${topic}":`,
-                  receivedPayload,
-                )
-
-                // Verify libraryId and userId match
-                const payloadMatches =
-                  receivedPayload.libraryId === expectedPayload.libraryId &&
-                  receivedPayload.userId === expectedPayload.userId
-
-                if (payloadMatches) {
-                  messageReceived = true
-                  clearTimeout(timeoutId)
-                  resolve(true)
-                } else {
-                  logger.warn(
-                    'MQTT message received but payload does not match expected values',
-                  )
-                }
-              } catch (error) {
-                logger.error('Error parsing MQTT message:', error)
-                clearTimeout(timeoutId)
-                reject(error)
-              }
-            }
-          })
-        })
-
-        const result = await messagePromise
-        return result
-      } catch (error) {
-        logger.error('Error verifying MQTT message:', error)
-        throw error
-      } finally {
-        if (mqtt) {
-          await mqtt.end()
-        }
-      }
     },
   })
 

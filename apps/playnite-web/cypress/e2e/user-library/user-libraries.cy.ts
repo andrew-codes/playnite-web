@@ -22,7 +22,6 @@ describe('User Libraries', () => {
 - Unnamed libraries show default name.
 - Link to library home.`, () => {
     const username = 'test'
-    const password = 'test'
     cy.task('restoreDatabaseSnapshot', 'single-user-multi-library')
 
     cy.visit('/u/test')
@@ -31,22 +30,16 @@ describe('User Libraries', () => {
     cy.contains('Game Room')
     cy.contains('Default Library')
 
-    cy.get<Cypress.Response<any>>('@library1').then((response) => {
-      const libraryId = response.body.data.syncLibrary.id
-      cy.contains('a', 'Game Room').should(
-        'have.attr',
-        'href',
-        `/u/${username}/${libraryId}`,
-      )
-    })
-    cy.get<Cypress.Response<any>>('@library2').then((response) => {
-      const libraryId = response.body.data.syncLibrary.id
-      cy.contains('a', 'Default Library').should(
-        'have.attr',
-        'href',
-        `/u/${username}/${libraryId}`,
-      )
-    })
+    cy.contains('a', 'Game Room').should(
+      'have.attr',
+      'href',
+      `/u/${username}/Library:1`,
+    )
+    cy.contains('a', 'Default Library').should(
+      'have.attr',
+      'href',
+      `/u/${username}/Library:2`,
+    )
   })
 
   describe('Navigation', () => {
