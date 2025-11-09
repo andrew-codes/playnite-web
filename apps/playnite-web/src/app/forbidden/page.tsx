@@ -1,4 +1,5 @@
 import Typography from '@mui/material/Typography'
+import MainNavigation from '../../components/Navigation/MainNavigation'
 import Header from '../../feature/shared/components/Header'
 import { Layout } from '../../feature/shared/components/Layout'
 
@@ -10,7 +11,7 @@ async function Forbidden() {
           <Typography variant="h1">Forbidden...</Typography>
         </Header>
       }
-      navs={[]}
+      navs={[MainNavigation]}
     >
       <Typography variant="body1">
         You are not authorized to view this page.

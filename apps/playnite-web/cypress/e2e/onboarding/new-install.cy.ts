@@ -46,7 +46,7 @@ describe('Onboarding - New Install', () => {
       cy.task('restoreDatabaseSnapshot', 'single-user-single-library')
       cy.visit('/account/new', { failOnStatusCode: false })
 
-      cy.get('[data-test=Navigation] > *', { timeout: 20000 }).should('exist')
+      cy.get('[data-test=Navigation] > *').should('exist')
     })
   })
 })

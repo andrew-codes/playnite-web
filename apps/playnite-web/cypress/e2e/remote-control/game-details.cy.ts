@@ -93,6 +93,7 @@ describe(`Game details remote control.
         cy.get('[data-test="Actions"] button').eq(0).click()
         cy.wait('@api')
 
+        cy.wait(2000)
         cy.request({
           method: 'GET',
           url: '/echo',
@@ -154,6 +155,7 @@ describe(`Game details remote control.
         cy.get('[data-test="Actions"] li').should('have.length', 1)
         cy.wait('@api')
 
+        cy.wait(2000)
         cy.request({
           method: 'GET',
           url: '/echo',
@@ -209,6 +211,7 @@ describe(`Game details remote control.
           .click()
         cy.wait('@api')
 
+        cy.wait(2000)
         cy.request({
           method: 'GET',
           url: '/echo',
