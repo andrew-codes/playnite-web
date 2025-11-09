@@ -19,8 +19,9 @@ namespace PlayniteWebMqtt.Services.Mqtt
     private readonly byte[] password;
     private readonly byte[] entropy;
     private readonly ILogger logger = LogManager.GetLogger();
+    private readonly IPlayniteAPI playniteApi;
 
-    public MqttPublisherOptions(string clientId, string host, int? port, string username, byte[] password, byte[] entropy)
+    public MqttPublisherOptions(string clientId, string host, int? port, string username, byte[] password, byte[] entropy, IPlayniteAPI playniteApi = null)
     {
       this.clientId = clientId;
       this.host = host;
@@ -28,6 +29,7 @@ namespace PlayniteWebMqtt.Services.Mqtt
       this.username = username;
       this.password = password ?? new byte[] { };
       this.entropy = entropy;
+      this.playniteApi = playniteApi;
     }
 
     public IMqttClient ApplyOptions(IMqttClient client, CancellationToken cancelToken = default)
@@ -52,6 +54,14 @@ namespace PlayniteWebMqtt.Services.Mqtt
       catch (Exception e)
       {
         logger.Error(e.Message);
+        if (playniteApi != null)
+        {
+          playniteApi.Notifications.Add(new NotificationMessage(
+            "PlayniteWebMqttAuthError",
+            $"Playnite Web (MQTT): Authentication failed. {e.Message}",
+            NotificationType.Error
+          ));
+        }
       }
 
       return client;
