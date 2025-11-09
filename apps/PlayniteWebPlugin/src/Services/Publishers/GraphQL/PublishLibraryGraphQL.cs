@@ -16,14 +16,16 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
     private readonly string deviceId;
     private readonly PlayniteWebSettings settings;
     private readonly Plugin plugin;
+    private readonly IPlayniteAPI playniteApi;
 
-    public PublishLibraryGraphQL(GraphQLHttpClient gql, IGameDatabaseAPI db, string deviceId, PlayniteWebSettings settings, Plugin plugin)
+    public PublishLibraryGraphQL(GraphQLHttpClient gql, IGameDatabaseAPI db, string deviceId, PlayniteWebSettings settings, Plugin plugin, IPlayniteAPI playniteApi)
     {
       this.gql = gql;
       this.db = db;
       this.deviceId = deviceId;
       this.settings = settings;
       this.plugin = plugin;
+      this.playniteApi = playniteApi;
     }
 
     public Task Publish()
@@ -80,11 +82,28 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         }
       }).ContinueWith(r =>
       {
+        if (r.IsFaulted)
+        {
+          var errorMessage = r.Exception?.InnerException?.Message ?? r.Exception?.Message ?? "Unknown error occurred";
+          playniteApi.Notifications.Add(new NotificationMessage(
+            "PlayniteWebSyncError",
+            $"Playnite Web: Library sync failed. {errorMessage}",
+            NotificationType.Error
+          ));
+          return;
+        }
+
         var response = r.Result;
         if (response.Errors != null && response.Errors.Any())
         {
+          var errorMessage = string.Join(Environment.NewLine, response.Errors.Select(e => e.Message));
+          playniteApi.Notifications.Add(new NotificationMessage(
+            "PlayniteWebSyncError",
+            $"Playnite Web: Library sync failed. {errorMessage}",
+            NotificationType.Error
+          ));
           var graphResponse = response.AsGraphQLHttpResponse();
-          throw new HttpRequestException(string.Join(Environment.NewLine, response.Errors.Select(e => e.Message)));
+          throw new HttpRequestException(errorMessage);
         }
 
         settings.LastPublish = DateTime.UtcNow;
