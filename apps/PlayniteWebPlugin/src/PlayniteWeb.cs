@@ -273,11 +273,24 @@ namespace PlayniteWeb
 
     private void SyncLibraryFromMenu(MainMenuItemActionArgs args)
     {
-      logger.Info("Syncing library with Playnite Web.");
-      var tasks = SyncLibrary().ToArray();
-      Task.WhenAll(tasks).Wait();
-      logger.Debug($"Total published update messages: {tasks.Length}");
-      logger.Info("Finished syncing library with Playnite Web.");
+      try
+      {
+        logger.Info("Syncing library with Playnite Web.");
+        var tasks = SyncLibrary().ToArray();
+        Task.WhenAll(tasks).Wait();
+        logger.Debug($"Total published update messages: {tasks.Length}");
+        logger.Info("Finished syncing library with Playnite Web.");
+      }
+      catch (Exception e)
+      {
+        var errorMessage = e.InnerException?.Message ?? e.Message;
+        logger.Error($"Error occurred while syncing library: {errorMessage}");
+        PlayniteApi.Notifications.Add(new NotificationMessage(
+          "PlayniteWebSyncError",
+          $"Playnite Web: Library sync failed. {errorMessage}",
+          NotificationType.Error
+        ));
+      }
     }
 
     private IEnumerable<Task> SyncLibrary()
@@ -479,7 +492,13 @@ namespace PlayniteWeb
 
           if (response.Errors != null && response.Errors.Any())
           {
-            logger.Error($"Error occurred while signing in: {string.Join(", ", response.Errors.Select(e => e.Message))}");
+            var errorMessage = string.Join(", ", response.Errors.Select(e => e.Message));
+            logger.Error($"Error occurred while signing in: {errorMessage}");
+            PlayniteApi.Notifications.Add(new NotificationMessage(
+              "PlayniteWebAuthError",
+              $"Playnite Web: Authentication failed. {errorMessage}",
+              NotificationType.Error
+            ));
             return;
           }
 
@@ -490,7 +509,7 @@ namespace PlayniteWeb
         var token = ProtectedData.Unprotect(settings.Token, Id.ToByteArray(), DataProtectionScope.CurrentUser);
         gql.HttpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {Encoding.UTF8.GetString(token)}");
 
-        libraryPublisher = new PublishLibraryGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, this);
+        libraryPublisher = new PublishLibraryGraphQL(gql, PlayniteApi.Database, settings.DeviceId.ToString(), settings, this, PlayniteApi);
         releasePublisher = new OnlyPublishAfterSync(settings, new PublishReleaseGraphQL(gql, settings.DeviceId.ToString(), settings));
         platformPublisher = new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.platforms));
         sourcePublisher =  new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.sources));
@@ -528,6 +547,11 @@ namespace PlayniteWeb
       catch (Exception e)
       {
         logger.Error(e.Message);
+        PlayniteApi.Notifications.Add(new NotificationMessage(
+          "PlayniteWebConnectionError",
+          $"Playnite Web: Failed to establish connection. {e.Message}",
+          NotificationType.Error
+        ));
       }
     }
 
