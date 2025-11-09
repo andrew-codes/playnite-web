@@ -1,9 +1,9 @@
 import { Metadata, Viewport } from 'next'
 import { FC, PropsWithChildren } from 'react'
+import { PwaRegister } from '../components/PwaRegister'
 import { Apollo } from '../feature/shared/components/Apollo'
 import { Emotion } from '../feature/shared/components/Emotion'
 import { Redux } from '../feature/shared/components/Redux'
-import { PwaRegister } from '../components/PwaRegister'
 
 const metadata: Metadata = {
   title: 'Playnite Web',
@@ -41,7 +41,10 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Playnite" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png" />
+        <link
+          rel="apple-touch-icon"
+          href="/assets/icons/apple-touch-icon.png"
+        />
       </head>
       <body>
         <PwaRegister />
