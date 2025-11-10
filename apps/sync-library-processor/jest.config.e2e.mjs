@@ -22,8 +22,6 @@ const defaultConfig = {
     '__integration_tests__/globalSetup.ts',
     'jest.config.e2e.mjs',
   ],
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
-  coverageReporters: ['text', 'text-summary', 'lcov', 'json'],
   moduleFileExtensions: ['json', 'js', 'ts'],
 }
 
