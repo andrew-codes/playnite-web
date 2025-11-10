@@ -1,6 +1,6 @@
 'use client'
 
-import { QueryRef, useReadQuery } from '@apollo/client/react'
+import { useQuery } from '@apollo/client/react'
 import { ArrowDropDown } from '@mui/icons-material'
 import {
   Button,
@@ -23,6 +23,7 @@ import { useRestartRelease } from '../hooks/restartRelease'
 import { useStartRelease } from '../hooks/startRelease'
 import { useStopRelease } from '../hooks/stopRelease'
 import { useSubscribeGameUpdates } from '../hooks/useSubscribeGameUpdates'
+import { GameByIdQuery } from '../queries'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -114,11 +115,12 @@ const sortReleasesByPreferredPlatform = (
 
 interface GameDetailsProps {
   gameId: string
-  queryRef: QueryRef<{ game: Game }, { id: string }>
 }
 
-const GameDetails: FC<GameDetailsProps> = ({ gameId, queryRef }) => {
-  const { data: gameData, error } = useReadQuery(queryRef)
+const GameDetails: FC<GameDetailsProps> = ({ gameId }) => {
+  const { data: gameData, error } = useQuery<{ game: Game }>(GameByIdQuery, {
+    variables: { id: gameId },
+  })
   const [{ data }] = useMe()
 
   if (error) {

@@ -17,7 +17,7 @@ coverage:
         threshold: 10%
         base: auto
         branches:
-          - master
+          - main
           - release-*
           - next
         if_ci_failed: error

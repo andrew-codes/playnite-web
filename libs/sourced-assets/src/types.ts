@@ -1,5 +1,5 @@
 interface ISourceAssets {
-  source(asset: { title: string }): Promise<[string, Buffer] | null>
+  getImageUrl(release: { title: string }): Promise<string | null>
 }
 
 export type { ISourceAssets }

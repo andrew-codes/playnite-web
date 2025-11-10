@@ -12,10 +12,6 @@ describe('Authentication', () => {
     cy.intercept('POST', '/api').as('api')
   })
 
-  beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
   it(`Authentication flow
 - User can authenticate with a username and password.
 - Authenticated user is redirected back to original page.

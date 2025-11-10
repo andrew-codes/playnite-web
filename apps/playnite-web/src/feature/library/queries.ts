@@ -10,10 +10,10 @@ const AllGamesQuery = gql`
       }
       games {
         id
+        coverArt
         primaryRelease {
           id
           title
-          cover
           releaseYear
           platform {
             id

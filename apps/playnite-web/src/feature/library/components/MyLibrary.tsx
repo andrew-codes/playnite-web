@@ -1,19 +1,21 @@
 'use client'
 
-import { QueryRef, useReadQuery } from '@apollo/client/react'
-import { Box } from '@mui/material'
+import { useQuery } from '@apollo/client/react'
+import { Box, GlobalStyles } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Game, Library } from '../../../../.generated/types.generated'
 import { useFilteredGames } from '../hooks/useFilteredGames'
+import { AllGamesQuery } from '../queries'
 import GameGrid from './VirtualizedGameGrid'
 
 const MyLibrary: FC<{
   username: string
   libraryId: string
-  queryRef: QueryRef<{ library: Library }, { libraryId: string }>
-}> = ({ username, libraryId, queryRef }) => {
-  const { data, error } = useReadQuery(queryRef)
+}> = ({ username, libraryId }) => {
+  const { data, error } = useQuery<{ library: Library }>(AllGamesQuery, {
+    variables: { libraryId },
+  })
   const games = useFilteredGames(
     (data?.library?.games?.filter((g) => g) as Array<Game>) ?? [],
   )
@@ -31,23 +33,25 @@ const MyLibrary: FC<{
 
   const ref = useRef<HTMLDivElement>(null)
   const [width, setWidth] = useState<number | null>(null)
+  const [height, setHeight] = useState<number | null>(null)
 
   useEffect(() => {
     if (!ref.current) return
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        const { width: elementWidth } = entry.contentRect
-        setWidth(Math.max(0, elementWidth - 15))
+        // TODO: Remove magic numbers
+        setWidth(Math.max(0, entry.contentRect.width - 15))
+        setHeight(Math.min(window.innerHeight - 176, entry.contentRect.height))
       }
     })
 
     resizeObserver.observe(ref.current)
 
     const rect = ref.current.getBoundingClientRect()
-    const initialWidth = rect.width
 
-    setWidth(Math.max(0, initialWidth))
+    setWidth(Math.max(0, rect.width))
+    setHeight(Math.max(0, rect.height))
 
     return () => {
       resizeObserver.disconnect()
@@ -55,22 +59,30 @@ const MyLibrary: FC<{
   }, [])
 
   return (
-    <Box
-      ref={ref}
-      sx={(theme) => ({
-        flex: 1,
-        flexGrow: 1,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        margin: '0 auto',
-      })}
-    >
-      {width && (
-        <GameGrid width={width} games={games} onSelect={handleSelectGame} />
-      )}
-    </Box>
+    <>
+      <GlobalStyles styles={{ body: { overflowY: 'hidden' } }} />
+      <Box
+        ref={ref}
+        sx={(theme) => ({
+          flex: 1,
+          flexGrow: 1,
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          margin: '0 auto',
+        })}
+      >
+        {width && height && (
+          <GameGrid
+            height={height}
+            width={width}
+            games={games}
+            onSelect={handleSelectGame}
+          />
+        )}
+      </Box>
+    </>
   )
 }
 

@@ -80,7 +80,6 @@ model Release {
   libraryId          Int
   title              String
   description        String?
-  coverId            Int
   releaseDate        DateTime?
   releaseYear        Int?
   createdAt          DateTime  @default(now())
@@ -93,13 +92,13 @@ model Release {
   playniteId         String?
   playtime           BigInt?   @default(0)
   runState           String
+  releaseGameId      Int
 
   Library          Library           @relation(fields: [libraryId], references: [id])
-  Cover            Asset             @relation(fields: [coverId], references: [id])
   Source           Source            @relation(fields: [sourceId], references: [id])
   Features         Feature[]
   CompletionStatus CompletionStatus? @relation(fields: [completionStatusId], references: [id])
-  Games            Game[]            @relation("GameReleases")
+  Game             Game              @relation(fields: [releaseGameId], references: [id], name: "GameReleases")
   Tags             Tag[]
   gameId           Int?
 
@@ -135,31 +134,14 @@ model Platform {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   playniteId String?
-  iconId     Int?
 
   Library Library  @relation("LibraryPlatforms", fields: [libraryId], references: [id])
-  Icon    Asset?   @relation(fields: [iconId], references: [id])
   Sources Source[]
 
   @@unique([playniteId, libraryId])
   @@unique([name, libraryId])
   @@index([libraryId])
   @@index([name, libraryId])
-}
-
-model Asset {
-  id        Int      @id @default(autoincrement())
-  type      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deleted   Boolean  @default(false)
-  slug      String?
-  url       String?
-
-  Releases Release[]
-  Platform Platform[]
-
-  @@index([slug])
 }
 
 model Feature {
@@ -212,9 +194,10 @@ model Playlist {
 }
 
 model Game {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   title     String
   libraryId Int
+  coverArt  String?
 
   Releases  Release[]  @relation("GameReleases")
   Library   Library    @relation(fields: [libraryId], references: [id])

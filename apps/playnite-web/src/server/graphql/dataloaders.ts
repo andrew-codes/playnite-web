@@ -3,7 +3,6 @@ import { PrismaClient } from '../data/providers/postgres/client'
 
 export type DataLoaders = {
   completionStatusLoader: DataLoader<number, any>
-  assetLoader: DataLoader<number, any>
   releaseFeatureLoader: DataLoader<number, any[]>
   releaseTagLoader: DataLoader<number, any[]>
   gameLoader: DataLoader<number, any>
@@ -26,30 +25,22 @@ export function createDataLoaders(db: PrismaClient): DataLoaders {
       return ids.map((id) => statusMap.get(id) ?? null)
     }),
 
-    // Loads assets (covers, backgrounds, etc.) by ID
-    assetLoader: new DataLoader(async (ids: readonly number[]) => {
-      const assets = await db.asset.findMany({
-        where: { id: { in: [...ids] } },
-      })
-
-      const assetMap = new Map(assets.map((a) => [a.id, a]))
-      return ids.map((id) => assetMap.get(id) ?? null)
-    }),
-
     // Loads features for multiple releases
-    releaseFeatureLoader: new DataLoader(async (releaseIds: readonly number[]) => {
-      const releases = await db.release.findMany({
-        where: { id: { in: [...releaseIds] } },
-        include: { Features: true },
-      })
+    releaseFeatureLoader: new DataLoader(
+      async (releaseIds: readonly number[]) => {
+        const releases = await db.release.findMany({
+          where: { id: { in: [...releaseIds] } },
+          include: { Features: true },
+        })
 
-      const featuresByRelease = new Map<number, any[]>()
-      for (const release of releases) {
-        featuresByRelease.set(release.id, release.Features)
-      }
+        const featuresByRelease = new Map<number, any[]>()
+        for (const release of releases) {
+          featuresByRelease.set(release.id, release.Features)
+        }
 
-      return releaseIds.map((id) => featuresByRelease.get(id) ?? [])
-    }),
+        return releaseIds.map((id) => featuresByRelease.get(id) ?? [])
+      },
+    ),
 
     // Loads tags for multiple releases
     releaseTagLoader: new DataLoader(async (releaseIds: readonly number[]) => {
@@ -129,7 +120,9 @@ export function createDataLoaders(db: PrismaClient): DataLoaders {
         where: { id: { in: [...releaseIds] } },
       })
 
-      const releasesById = new Map(releases.map((release) => [release.id, release]))
+      const releasesById = new Map(
+        releases.map((release) => [release.id, release]),
+      )
 
       const releasesByGame = new Map<number, any[]>()
       for (const game of gamesWithReleaseIds) {
@@ -145,7 +138,9 @@ export function createDataLoaders(db: PrismaClient): DataLoaders {
             gameId: release.gameId ?? game.id,
           }
         }).filter(
-          (release): release is (typeof releases)[number] & { gameId: number } =>
+          (
+            release,
+          ): release is (typeof releases)[number] & { gameId: number } =>
             release !== null,
         )
 
@@ -156,16 +151,16 @@ export function createDataLoaders(db: PrismaClient): DataLoaders {
     }),
 
     // Loads platform by source ID
-    platformBySourceLoader: new DataLoader(async (sourceIds: readonly number[]) => {
-      const sources = await db.source.findMany({
-        where: { id: { in: [...sourceIds] } },
-        include: { Platform: true },
-      })
+    platformBySourceLoader: new DataLoader(
+      async (sourceIds: readonly number[]) => {
+        const sources = await db.source.findMany({
+          where: { id: { in: [...sourceIds] } },
+          include: { Platform: true },
+        })
 
-      const platformBySource = new Map(
-        sources.map((s) => [s.id, s.Platform]),
-      )
-      return sourceIds.map((id) => platformBySource.get(id) ?? null)
-    }),
+        const platformBySource = new Map(sources.map((s) => [s.id, s.Platform]))
+        return sourceIds.map((id) => platformBySource.get(id) ?? null)
+      },
+    ),
   }
 }

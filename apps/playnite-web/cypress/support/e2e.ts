@@ -9,11 +9,6 @@ declare global {
     interface Chainable {
       signIn: (username: string, password: string) => Chainable<Response<any>>
       signOut: () => Chainable<null>
-      syncLibrary: (
-        username: string,
-        password: string,
-        libraryData: any,
-      ) => Chainable<Response<any>>
       waitForImages: () => Chainable<JQuery<HTMLImageElement>>
       lighthouse: (
         thresholds?: any,
@@ -21,10 +16,14 @@ declare global {
         config?: any,
       ) => Chainable<any>
       clickMenuItem: (text: string) => Chainable<JQuery<HTMLElement>>
+      restoreSnapshot: (snapshotName: string) => Chainable<boolean>
     }
   }
 }
 
+Cypress.Commands.add('restoreSnapshot', (snapshotName: string) => {
+  return cy.task('restoreDatabaseSnapshot', snapshotName)
+})
 compareSnapshotCommand()
 
 beforeEach(() => {
@@ -43,10 +42,12 @@ beforeEach(() => {
 
 beforeEach(() => {
   cy.intercept('POST', '/api').as('api')
+  cy.intercept('_next/image*').as('image')
 })
 
 beforeEach(() => {
-  cy.task('clearDatabase')
+  // Restore from snapshot instead of clearing database
+  cy.task('restoreDatabaseSnapshot', 'single-user-single-library')
 })
 
 Cypress.on('window:before:load', (win) => {
@@ -71,7 +72,6 @@ Cypress.on('window:before:load', (win) => {
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   originalFn(url, options)
   cy.get('[data-test=Navigation]', { timeout: 15000 })
-  cy.waitForImages()
   // Wait for MUI to be ready
   // cy.wait(2200)
 })
@@ -104,29 +104,6 @@ Cypress.Commands.add('signIn', (username: string, password: string) => {
     })
 })
 
-Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
-  cy.signIn(username, password)
-
-  return cy.request({
-    method: 'POST',
-    url: 'http://localhost:3000/api',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      variables: {
-        libraryData,
-      },
-      query: `mutation syncLibrary($libraryData: LibraryInput!) {
-        syncLibrary(libraryData: $libraryData) {
-          id
-        }
-      }`,
-    }),
-  })
-})
-
 Cypress.Commands.add('signOut', () => {
   return cy.clearAllCookies()
 })
@@ -142,11 +119,3 @@ Cypress.Commands.add(
       .click({ force: true })
   },
 )
-
-Cypress.Commands.add('waitForImages', () => {
-  return cy.get('img', { timeout: 10000 }).should(($images) => {
-    $images.each((_, img) => {
-      expect(img.complete).to.equal(true)
-    })
-  })
-})

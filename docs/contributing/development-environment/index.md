@@ -4,7 +4,7 @@
   - [Setup](#setup)
   - [Running Application/Services](#running-applicationservices)
     - [Playnite Web App](#playnite-web-app)
-    - [Game Assets Processor](#game-assets-processor)
+    - [Sync Library Processor](#sync-library-processor)
     - [Database/schema Changes](#databaseschema-changes)
   - [Playnite Web Plugin Development](#playnite-web-plugin-development)
 
@@ -42,8 +42,8 @@ You can view all available projects and tasks via `yarn nx graph`. This will ope
 
 | Command                                  | Notes                                                                      |
 | :--------------------------------------- | :------------------------------------------------------------------------- |
-| `yarn nx start game-assets-processor`    | Starts service.                                                            |
-| `yarn nx test/e2e game-assets-processor` | Runs Jest-based e2e tests, found in the `__integration_tests__` directory. |
+| `yarn nx start sync-library-processor`    | Starts service.                                                            |
+| `yarn nx test/e2e sync-library-processor` | Runs Jest-based e2e tests, found in the `__integration_tests__` directory. |
 
 ### Database/schema Changes
 

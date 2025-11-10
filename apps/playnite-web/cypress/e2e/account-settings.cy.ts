@@ -2,10 +2,6 @@ import { breakpoints } from 'support/breakpoints'
 import { defaultSettings } from '../../src/server/userSettings'
 
 describe('Account Settings', () => {
-  beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
   describe('Authorization', () => {
     it(`Unauthenticated user.`, () => {
       cy.visit('/u/test/account')
@@ -13,6 +9,8 @@ describe('Account Settings', () => {
     })
 
     it(`Authenticated users cannot access another user's account settings.`, () => {
+      cy.task('restoreDatabaseSnapshot', 'multi-user')
+
       cy.intercept('GET', 'u/jane/account').as('janeAccount')
       cy.signIn('test', 'test')
       cy.visit('/u/jane/account', { failOnStatusCode: false })

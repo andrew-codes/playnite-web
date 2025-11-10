@@ -1,4 +1,8 @@
 describe('Onboarding - New Install', () => {
+  beforeEach(() => {
+    cy.task('clearDatabase')
+  })
+
   describe('Blank database, no users.', () => {
     it(`Redirects.
 - All URLs redirect to create a new account.`, () => {
@@ -39,7 +43,7 @@ describe('Onboarding - New Install', () => {
 
   describe('After first account created', () => {
     it(`Navigation is shown.`, () => {
-      cy.task('seedUsers')
+      cy.task('restoreDatabaseSnapshot', 'single-user-single-library')
       cy.visit('/account/new', { failOnStatusCode: false })
 
       cy.get('[data-test=Navigation] > *').should('exist')

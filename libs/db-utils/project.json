@@ -1,0 +1,15 @@
+{
+  "name": "db-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/db-utils/src",
+  "projectType": "library",
+  "tags": ["linux"],
+  "targets": {
+    "test/unit": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "libs/db-utils/jest.config.ts"
+      }
+    }
+  }
+}

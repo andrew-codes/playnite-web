@@ -1,9 +1,6 @@
 describe('Errors', () => {
-  beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
   it('403 Unauthorized', () => {
+    cy.task('restoreDatabaseSnapshot', 'multi-user')
     cy.signIn('test', 'test')
     cy.visit('/u/jane/account', { failOnStatusCode: false })
 

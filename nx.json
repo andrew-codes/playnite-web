@@ -98,6 +98,7 @@
     },
     "test/unit": {
       "dependsOn": ["prepare", "test/unit/restore", "test/unit/build"],
+      "outputs": ["{projectRoot}/.test-runs/unit"],
       "cache": true
     },
     "test/unit/restore": {
@@ -119,6 +120,11 @@
     "test/e2e/update": {
       "dependsOn": ["clean/test", "package/e2e", "^start"],
       "cache": false
+    },
+    "@nx/js:tsc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^default"]
     }
   },
   "affected": {

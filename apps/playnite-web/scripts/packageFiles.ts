@@ -24,6 +24,11 @@ async function run() {
     { recursive: true },
   )
 
+  await fs.cp(
+    path.join('next.config.js'),
+    path.join('_packaged/next.config.js'),
+  )
+
   logger.info('Copying and modifying package.json')
   const pkg = JSON.parse(await fs.readFile('package.json', 'utf8'))
   pkg.name = `packaged-${pkg.name}`

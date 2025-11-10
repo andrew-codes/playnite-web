@@ -5355,6 +5355,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jest/environment@npm:30.2.0":
+  version: 30.2.0
+  resolution: "@jest/environment@npm:30.2.0"
+  dependencies:
+    "@jest/fake-timers": "npm:30.2.0"
+    "@jest/types": "npm:30.2.0"
+    "@types/node": "npm:*"
+    jest-mock: "npm:30.2.0"
+  checksum: 10c0/56a9f1b82ee2623c13eece7d58188be35bd6e5c3c4ee3fbaedb1c4d7242c1b57d020f1a26ab127fa9496fdc11306c7ad1c4a2b7eba1fc726a27ae0873e907e47
+  languageName: node
+  linkType: hard
+
 "@jest/expect-utils@npm:30.0.5":
   version: 30.0.5
   resolution: "@jest/expect-utils@npm:30.0.5"
@@ -5418,6 +5430,20 @@ __metadata:
     jest-mock: "npm:30.0.5"
     jest-util: "npm:30.0.5"
   checksum: 10c0/043ac3b5d60041550d86be9f178caf6146a579fb7a6b10b497e9f8c46a9198c1c5f4a8a2177cd5a128e1fa4ba252dfcaa13b1975ef180fa941551efe126f4b61
+  languageName: node
+  linkType: hard
+
+"@jest/fake-timers@npm:30.2.0":
+  version: 30.2.0
+  resolution: "@jest/fake-timers@npm:30.2.0"
+  dependencies:
+    "@jest/types": "npm:30.2.0"
+    "@sinonjs/fake-timers": "npm:^13.0.0"
+    "@types/node": "npm:*"
+    jest-message-util: "npm:30.2.0"
+    jest-mock: "npm:30.2.0"
+    jest-util: "npm:30.2.0"
+  checksum: 10c0/b29505528e546f08489535814f7dfcd3a2318660b987d605f44d41672e91a0c8c0dfc01e3dd1302e66e511409c3012d41e2e16703b214502b54ccc023773e3dc
   languageName: node
   linkType: hard
 
@@ -5700,6 +5726,21 @@ __metadata:
     "@types/yargs": "npm:^17.0.33"
     chalk: "npm:^4.1.2"
   checksum: 10c0/fd097a390e36edacbd2c92a8378ec0cd67abec5e234bab7a80aec6eb8625568052b0c32acf472388d04c4cf384b8fa2871d0d12a56b4b06eaea93f2c6df0ec6c
+  languageName: node
+  linkType: hard
+
+"@jest/types@npm:30.2.0":
+  version: 30.2.0
+  resolution: "@jest/types@npm:30.2.0"
+  dependencies:
+    "@jest/pattern": "npm:30.0.1"
+    "@jest/schemas": "npm:30.0.5"
+    "@types/istanbul-lib-coverage": "npm:^2.0.6"
+    "@types/istanbul-reports": "npm:^3.0.4"
+    "@types/node": "npm:*"
+    "@types/yargs": "npm:^17.0.33"
+    chalk: "npm:^4.1.2"
+  checksum: 10c0/ae121f6963bd9ed1cd9651db7be91bf14c05bff0d0eec4fca9fecf586bea4005e8f1de8cc9b8ef72e424ea96a309d123bef510b55a6a17a3b4b91a39d775e5cd
   languageName: node
   linkType: hard
 
@@ -15626,6 +15667,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"db-utils@workspace:*, db-utils@workspace:libs/db-utils":
+  version: 0.0.0-use.local
+  resolution: "db-utils@workspace:libs/db-utils"
+  dependencies:
+    db-client: "workspace:*"
+    dev-logger: "workspace:*"
+    tslib: "npm:^2.3.0"
+  languageName: unknown
+  linkType: soft
+
 "debounce@npm:^1.2.0":
   version: 1.2.1
   resolution: "debounce@npm:1.2.1"
@@ -19176,53 +19227,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"game-assets-processor@workspace:apps/game-assets-processor":
-  version: 0.0.0-use.local
-  resolution: "game-assets-processor@workspace:apps/game-assets-processor"
-  dependencies:
-    "@jest/globals": "npm:^30.0.5"
-    "@nx/devkit": "npm:^21.6.8"
-    "@prisma/client": "npm:^6.16.2"
-    "@types/express": "npm:^4.17.23"
-    "@types/jest": "npm:^30.0.0"
-    "@types/lodash-es": "npm:^4.17.12"
-    "@types/node": "npm:^22.16.5"
-    "@types/shelljs": "npm:^0.8.17"
-    "@yarnpkg/pnpify": "npm:^4.1.5"
-    async-mqtt: "npm:^2.6.3"
-    concurrently: "npm:^9.2.0"
-    cross-env: "npm:^10.0.0"
-    db-client: "workspace:*"
-    dev-logger: "workspace:*"
-    dev-services: "workspace:*"
-    esbuild: "npm:^0.25.10"
-    esbuild-plugin-istanbul: "npm:^0.3.0"
-    express: "npm:^4.21.2"
-    glob: "npm:^11.0.3"
-    isomorphic-dompurify: "npm:^2.26.0"
-    jest: "npm:^30.0.5"
-    lodash-es: "npm:^4.17.21"
-    nodemon: "npm:^3.1.10"
-    nx: "npm:^21.6.8"
-    nyc: "npm:^17.1.0"
-    prettier: "npm:^3.6.2"
-    prisma: "npm:^6.16.2"
-    rimraf: "npm:^6.0.1"
-    sharp: "npm:^0.34.3"
-    shelljs: "npm:^0.10.0"
-    sourced-assets: "workspace:*"
-    ts-jest: "npm:^29.4.1"
-    tslib: "npm:^2.8.1"
-    tsx: "npm:^4.20.4"
-    typescript: "npm:^5.9.2"
-    uuid: "npm:^11.1.0"
-    versioning: "workspace:*"
-    wait-on: "npm:^8.0.4"
-    winston: "npm:^3.17.0"
-    winston-daily-rotate-file: "npm:^5.0.0"
-  languageName: unknown
-  linkType: soft
-
 "generic-names@npm:^4.0.0":
   version: 4.0.0
   resolution: "generic-names@npm:4.0.0"
@@ -22687,6 +22691,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-environment-node@npm:^30.0.2":
+  version: 30.2.0
+  resolution: "jest-environment-node@npm:30.2.0"
+  dependencies:
+    "@jest/environment": "npm:30.2.0"
+    "@jest/fake-timers": "npm:30.2.0"
+    "@jest/types": "npm:30.2.0"
+    "@types/node": "npm:*"
+    jest-mock: "npm:30.2.0"
+    jest-util: "npm:30.2.0"
+    jest-validate: "npm:30.2.0"
+  checksum: 10c0/866ba2c04ccf003845a8ca1f372081d76923849ae8e06e50cdfed792e41a976b5f953e15f3af17ff51b111b9540cf846f7f582530ca724c2a2abf15d15a99728
+  languageName: node
+  linkType: hard
+
 "jest-haste-map@npm:30.0.5":
   version: 30.0.5
   resolution: "jest-haste-map@npm:30.0.5"
@@ -22809,6 +22828,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-message-util@npm:30.2.0":
+  version: 30.2.0
+  resolution: "jest-message-util@npm:30.2.0"
+  dependencies:
+    "@babel/code-frame": "npm:^7.27.1"
+    "@jest/types": "npm:30.2.0"
+    "@types/stack-utils": "npm:^2.0.3"
+    chalk: "npm:^4.1.2"
+    graceful-fs: "npm:^4.2.11"
+    micromatch: "npm:^4.0.8"
+    pretty-format: "npm:30.2.0"
+    slash: "npm:^3.0.0"
+    stack-utils: "npm:^2.0.6"
+  checksum: 10c0/9c4aae95f9e73a754e5ecababa06e5c00cf549ff1651bbbf9aadc671ee57e688b01606ef0e9932d9dfe3d4b8f4511b6e8d01e131a49d2f82761c820ab93ae519
+  languageName: node
+  linkType: hard
+
 "jest-mock@npm:30.0.5":
   version: 30.0.5
   resolution: "jest-mock@npm:30.0.5"
@@ -22817,6 +22853,17 @@ __metadata:
     "@types/node": "npm:*"
     jest-util: "npm:30.0.5"
   checksum: 10c0/207fd79297f514a8e26ede9b4b5035e70212b8850a2f460b51d3cc58e8e7c9585bd2dbc5df2475a3321c4cd114b90e0b24190f00d6eeb88c8f088a8ed00416d5
+  languageName: node
+  linkType: hard
+
+"jest-mock@npm:30.2.0":
+  version: 30.2.0
+  resolution: "jest-mock@npm:30.2.0"
+  dependencies:
+    "@jest/types": "npm:30.2.0"
+    "@types/node": "npm:*"
+    jest-util: "npm:30.2.0"
+  checksum: 10c0/dfc8eb87f4075242f1b31d9dcac606f945c4f6a245d2bb67273738d266bea6345e10de3afa675076d545361bc96b754f764cffb0ccc2e99767484bece981b2f8
   languageName: node
   linkType: hard
 
@@ -23083,6 +23130,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jest-util@npm:30.2.0":
+  version: 30.2.0
+  resolution: "jest-util@npm:30.2.0"
+  dependencies:
+    "@jest/types": "npm:30.2.0"
+    "@types/node": "npm:*"
+    chalk: "npm:^4.1.2"
+    ci-info: "npm:^4.2.0"
+    graceful-fs: "npm:^4.2.11"
+    picomatch: "npm:^4.0.2"
+  checksum: 10c0/896d663554b35258a87ec1a0a0fdd8741fdf4f3239d09fc52fdd88fa5c411a5ece7903bbbbd7d5194743fcb69f62afc3287e90f57736a91e7df95ad421937936
+  languageName: node
+  linkType: hard
+
 "jest-util@npm:^29.7.0":
   version: 29.7.0
   resolution: "jest-util@npm:29.7.0"
@@ -23122,6 +23183,20 @@ __metadata:
     leven: "npm:^3.1.0"
     pretty-format: "npm:30.0.5"
   checksum: 10c0/6b8dd92e918496763827a9d440200657194b0158f70b42c9d4df373ff0504d063f342acdd12f692a8cb8610e7077c61289f934ae0c7878c9baff2d8be5efbc1f
+  languageName: node
+  linkType: hard
+
+"jest-validate@npm:30.2.0":
+  version: 30.2.0
+  resolution: "jest-validate@npm:30.2.0"
+  dependencies:
+    "@jest/get-type": "npm:30.1.0"
+    "@jest/types": "npm:30.2.0"
+    camelcase: "npm:^6.3.0"
+    chalk: "npm:^4.1.2"
+    leven: "npm:^3.1.0"
+    pretty-format: "npm:30.2.0"
+  checksum: 10c0/56566643d79ca07f021fa14cebb62c423ae405757cb8d742113ff0070f0761b80c77f665fac8d89622faaab71fc5452e1471939028187a88c8445303d7976255
   languageName: node
   linkType: hard
 
@@ -27736,6 +27811,7 @@ __metadata:
     cypress-split: "npm:^1.24.25"
     dataloader: "npm:^2.2.3"
     db-client: "workspace:*"
+    db-utils: "workspace:*"
     dev-logger: "workspace:*"
     dev-services: "workspace:*"
     dotenv: "npm:^17.2.1"
@@ -27895,6 +27971,9 @@ __metadata:
     husky: "npm:^9.1.7"
     jest: "npm:^30.1.3"
     jest-config: "npm:^30.0.5"
+    jest-environment-node: "npm:^30.0.2"
+    jest-util: "npm:^30.0.2"
+    jsonc-eslint-parser: "npm:^2.1.0"
     next: "npm:^15.5.4"
     nx: "npm:^21.6.8"
     prettier: "npm:^3.6.2"
@@ -28826,6 +28905,17 @@ __metadata:
     ansi-styles: "npm:^5.2.0"
     react-is: "npm:^18.3.1"
   checksum: 10c0/9f6cf1af5c3169093866c80adbfdad32f69c692b62f24ba3ca8cdec8519336123323f896396f9fa40346a41b197c5f6be15aec4d8620819f12496afaaca93f81
+  languageName: node
+  linkType: hard
+
+"pretty-format@npm:30.2.0":
+  version: 30.2.0
+  resolution: "pretty-format@npm:30.2.0"
+  dependencies:
+    "@jest/schemas": "npm:30.0.5"
+    ansi-styles: "npm:^5.2.0"
+    react-is: "npm:^18.3.1"
+  checksum: 10c0/8fdacfd281aa98124e5df80b2c17223fdcb84433876422b54863a6849381b3059eb42b9806d92d2853826bcb966bcb98d499bea5b1e912d869a3c3107fd38d35
   languageName: node
   linkType: hard
 
@@ -32584,6 +32674,54 @@ __metadata:
   checksum: 10c0/f73c87251346fba28da8ac5bc8ed4c9474504a5250ab4bd44582beae8e25c230e0a5b7b16076488fee1aed39a1865de5ed4cec19c6fa4efdbb1081c514615170
   languageName: node
   linkType: hard
+
+"sync-library-processor@workspace:apps/sync-library-processor":
+  version: 0.0.0-use.local
+  resolution: "sync-library-processor@workspace:apps/sync-library-processor"
+  dependencies:
+    "@jest/globals": "npm:^30.0.5"
+    "@nx/devkit": "npm:^21.6.8"
+    "@prisma/client": "npm:^6.16.2"
+    "@types/express": "npm:^4.17.23"
+    "@types/jest": "npm:^30.0.0"
+    "@types/lodash-es": "npm:^4.17.12"
+    "@types/node": "npm:^22.16.5"
+    "@types/shelljs": "npm:^0.8.17"
+    "@yarnpkg/pnpify": "npm:^4.1.5"
+    async-mqtt: "npm:^2.6.3"
+    concurrently: "npm:^9.2.0"
+    cross-env: "npm:^10.0.0"
+    db-client: "workspace:*"
+    db-utils: "workspace:*"
+    dev-logger: "workspace:*"
+    dev-services: "workspace:*"
+    esbuild: "npm:^0.25.10"
+    esbuild-plugin-istanbul: "npm:^0.3.0"
+    express: "npm:^4.21.2"
+    glob: "npm:^11.0.3"
+    isomorphic-dompurify: "npm:^2.26.0"
+    jest: "npm:^30.0.5"
+    lodash-es: "npm:^4.17.21"
+    nodemon: "npm:^3.1.10"
+    nx: "npm:^21.6.8"
+    nyc: "npm:^17.1.0"
+    prettier: "npm:^3.6.2"
+    prisma: "npm:^6.16.2"
+    rimraf: "npm:^6.0.1"
+    sharp: "npm:^0.34.3"
+    shelljs: "npm:^0.10.0"
+    sourced-assets: "workspace:*"
+    ts-jest: "npm:^29.4.1"
+    tslib: "npm:^2.8.1"
+    tsx: "npm:^4.20.4"
+    typescript: "npm:^5.9.2"
+    uuid: "npm:^11.1.0"
+    versioning: "workspace:*"
+    wait-on: "npm:^8.0.4"
+    winston: "npm:^3.17.0"
+    winston-daily-rotate-file: "npm:^5.0.0"
+  languageName: unknown
+  linkType: soft
 
 "sync-message-port@npm:^1.0.0":
   version: 1.1.3
