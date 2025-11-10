@@ -53,6 +53,6 @@ The Playnite Web App has three dependencies required to run the server, included
 2. If you encounter a problem, check the [troubleshooting guide](./docs/user-guides/troubleshooting-guide.md) for a solution before you open an issue on GitHub. 
 3. If you discover a security vulnerability, **do not open an issue**, instead [submit a security advisory via GitHub](https://github.com/andrew-codes/playnite-web/security/advisories/new).
 4. To get started with the Playnite Web API, read about the [data model](./docs/api-documentation/data-model.md).
-5. Before you contribute, read the [contribution guidelines](./docs/contributor-guides/contributor-guide.md). 
+5. Before you contribute, read the [contribution guidelines](./docs/CONTRIBUTING.md). 
 6. For help with the local development environment, see the [local development environment](./docs/contributor-guides/development-environment/index.md) guide.
 
