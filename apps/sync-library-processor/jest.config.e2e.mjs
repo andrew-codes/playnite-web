@@ -21,6 +21,7 @@ const defaultConfig = {
     'testUtils/**/*.ts',
   ],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  coverageReporters: ['text', 'text-summary', 'lcov', 'json'],
   moduleFileExtensions: ['json', 'js', 'ts'],
 }
 
