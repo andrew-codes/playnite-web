@@ -54,7 +54,7 @@ Request a new feature when you think Playnite Web is missing a capability or exp
 
 ## Contribute to the Documentation
 
-1. Read the [documentation style guide](#contributor-guides/documentation-style-guide).
+1. Read the [documentation style guide](#contributor-guides/documentation-style-guide.md).
 2. Open a new GitHub pull request with your doc updates.
 3. In your pull request include:
 	- A descriptive title with that begins with **docs:**
