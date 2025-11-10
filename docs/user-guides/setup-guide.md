@@ -1,4 +1,4 @@
-# Playnite Web Setup
+# How to Set Up Playnite Web
 
 - [Playnite Web Setup](#playnite-web-setup)
   - [Deployed Services Overview](#deployed-services-overview)

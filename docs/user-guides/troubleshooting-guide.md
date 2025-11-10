@@ -1,4 +1,4 @@
-# Troubleshooting
+# Troubleshooting Playnite Web
 
 This guide provides solutions to common problems that Playnite Web users encounter when using the plugin. If you're having trouble using the plugin, check here for a solution before opening an issue. 
 
