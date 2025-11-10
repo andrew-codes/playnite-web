@@ -10,7 +10,7 @@
     "testUtils/**/*.*",
     "**/interfaces.ts"
   ],
-  "reporter": ["lcov", "text", "html"],
+  "reporter": ["lcov", "json", "text", "html", "clover"],
   "instrument": true,
   "cache": false
 }
