@@ -8,7 +8,10 @@
     "scripts/**/*.*",
     "node_modules/**/*.*",
     "testUtils/**/*.*",
-    "**/interfaces.ts"
+    "**/interfaces.ts",
+    "src/testSetup.ts",
+    "jest.config.e2e.mjs",
+    "__integration_tests__/**/*.ts"
   ],
   "reporter": ["lcov", "json", "text", "html", "clover"],
   "instrument": true,
