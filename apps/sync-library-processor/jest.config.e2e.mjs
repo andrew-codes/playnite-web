@@ -13,7 +13,14 @@ const defaultConfig = {
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   testMatch: ['<rootDir>/__integration_tests__/**/*.(test).((j|t)s)'],
   resetMocks: true,
-  collectCoverage: false,
+  coverageDirectory: '<rootDir>/.test-runs/e2e',
+  coveragePathIgnorePatterns: [
+    '/__tests__/',
+    '/__mocks__/',
+    'src/testSetup.ts',
+    'testUtils/**/*.ts',
+  ],
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   moduleFileExtensions: ['json', 'js', 'ts'],
 }
 
