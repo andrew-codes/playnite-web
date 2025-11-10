@@ -32,7 +32,7 @@ async function run() {
       esbuildPluginIstanbul({
         filter: /src\/.*\.ts/,
         loader: 'ts',
-        // preloader,
+        preloader,
         name: 'istanbul-loader-src-ts',
       }),
     )
@@ -65,7 +65,7 @@ async function run() {
       define: {
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       },
-      // plugins,
+      plugins,
     }),
   ])
 
