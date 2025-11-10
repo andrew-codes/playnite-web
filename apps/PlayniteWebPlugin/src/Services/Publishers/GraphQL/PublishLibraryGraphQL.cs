@@ -90,18 +90,14 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
             $"Playnite Web: Library sync failed. {errorMessage}",
             NotificationType.Error
           ));
-          return;
+          throw r.Exception?.InnerException ?? r.Exception ?? new Exception(errorMessage);
         }
 
         var response = r.Result;
         if (response.Errors != null && response.Errors.Any())
         {
           var errorMessage = string.Join(Environment.NewLine, response.Errors.Select(e => e.Message));
-          playniteApi.Notifications.Add(new NotificationMessage(
-            "PlayniteWebSyncError",
-            $"Playnite Web: Library sync failed. {errorMessage}",
-            NotificationType.Error
-          ));
+          // Notification will be handled at the top level; do not notify here to avoid duplicates.
           var graphResponse = response.AsGraphQLHttpResponse();
           throw new HttpRequestException(errorMessage);
         }
