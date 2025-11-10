@@ -8,7 +8,7 @@
 
 - [Report a Bug](#report-a-bug)
 - [Contribute a Bug Fix](#contribute-a-bug-fix)
-- [Add or Update a Feature](#add-or-update-a-feature)
+- [Request or Add Feature](#request-or-add-a-feature)
 - [Contribute to the Documentation](#contribute-to-the-documentation)
 - [Learn More About the Source Code](#learn-more-about-the-source-code)
 - [Thank You](#thank-you)
@@ -17,28 +17,50 @@
 
 > **Note:** If you discover a security vulnerability, **do not open an issue**. To report a security bug, [submit a security advisory on GitHub](https://github.com/andrew-codes/playnite-web/security/advisories/new).
 
+Report bugs when Playnite Web behaves unexpectedly or a problem prevents you from using it. 
+
 1. **Make sure you're reporting a new bug** by searching any currently [open issues](https://github.com/andrew-codes/playnite-web/issues) on GitHub.
-2. If you don't find an open issue about the bug [open a new one](https://github.com/andrew-codes/playnite-web/issues/new). 
-3. Include a clear title and description, as much relevant information as possible, and any relevant screenshots that show the problem.
+2. [Open a new issue](https://github.com/andrew-codes/playnite-web/issues/new). 
+3. In your issue, include:
+	- A descriptive title that begins with **bug:** 
+	- A description of the bug, what you where doing, and what occured.
+	- Screenshots that show the problem, if possible.
 
 ## Contribute a Bug Fix
 
 1. Read the [Playnite Web Conventions](contributor-guides/conventions-guide.md) guide to learn more about coding conventions and general guidelines.
-2. Open a new GitHub pull request with the patch.
-3. Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
+2. Open a new GitHub pull request with your bug fix.
+3. In your pull request, include:
+	- A descriptive title that begins with **fix:**
+	- A description of the problem and how it affects users.
+	- An explanation of how you solved the problem. 
+	- The issue number your pull request fixes, if applicable.
 
-## Add or Update a Feature
+## Request or Add a Feature
 
 > **Note:** We may only accept changes that contribute to the stability, functionality, or testability of Playnite Web.
 
-1. [Create an ideas discussion](https://github.com/andrew-codes/playnite-web/discussions/new?category=ideas) using the pre-defined template.
-2. Do not open an issue on GitHub until you have collected positive feedback about the change. GitHub issues are primarily intended for bug reports and fixes.
-3. Learn more about the [RFC](contributor-guides/rfc.md) feature request process.
+Request a new feature when you think Playnite Web is missing a capability or experience that would benefit users. 
+
+1. **Don't open a Github issue.**
+2. Post in the [#feature-request](https://discord.com/channels/1432357177984684102/1432366650166083655) channel on the Discord. 
+3. In your request, explain the goal of the new feature and how it benefits users. Describe the problem that needs to be solved. 
+4. Wait to receive community feedback.
+5. If you developed the feature and want to add it to the main repository, open a pull request and include:
+	- A descriptive title that begins with **feat:** 
+	- A description of what you changed.
+	- An explanation of how your change benefits users.
+	- The issue number your pull request fixes, if applicable. 
 
 ## Contribute to the Documentation
 
-1. Open a new GitHub pull request with the changeset.
-2. Ensure the PR description clearly conveys how the documentation is improved from the changeset.
+1. Read the [documentation style guide](#contributor-guides/documentation-style-guide).
+2. Open a new GitHub pull request with your doc updates.
+3. In your pull request include:
+	- A descriptive title with that begins with **docs:**
+	- A description of what you changed.
+	- An explanation of how your change improves the documentation.
+	- The issue number your pull request fixes, if applicable. 
 
 ## Learn More About the Source Code
 
