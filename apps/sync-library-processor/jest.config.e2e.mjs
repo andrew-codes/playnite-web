@@ -19,6 +19,8 @@ const defaultConfig = {
     '/__mocks__/',
     'src/testSetup.ts',
     'testUtils/**/*.ts',
+    '__integration_tests__/globalSetup.ts',
+    'jest.config.e2e.mjs',
   ],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coverageReporters: ['text', 'text-summary', 'lcov', 'json'],
