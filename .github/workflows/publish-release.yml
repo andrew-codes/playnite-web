@@ -44,7 +44,6 @@ jobs:
       - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: "**/.test-runs/unit/lcov.info"
           flags: unit-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -94,7 +93,6 @@ jobs:
       - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: "**/.test-runs/**/lcov.info"
           flags: component-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -207,7 +205,6 @@ jobs:
       - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: "apps/sync-library-processor/.test-runs/e2e/lcov.info"
           flags: e2e-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

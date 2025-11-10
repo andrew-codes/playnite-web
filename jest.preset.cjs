@@ -14,4 +14,5 @@ module.exports = {
     '/__component_tests__/',
   ],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  coverageReporters: ['text', 'text-summary', 'lcov', 'json', 'clover'],
 }
