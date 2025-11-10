@@ -58,7 +58,7 @@ namespace PlayniteWebMqtt.Services.Mqtt
         {
           playniteApi.Notifications.Add(new NotificationMessage(
             "PlayniteWebMqttAuthError",
-            $"Playnite Web (MQTT): Authentication failed. {e.Message}",
+            $"Playnite Web (MQTT): Failed to connect to MQTT broker. {e.Message}",
             NotificationType.Error
           ));
         }
