@@ -81,8 +81,10 @@ async function run() {
       testCp.on('close', (code) => {
         logger.info('Tests closing.')
 
+        logger.info('Generating coverage reports')
+        sh.rm('-rf', '.test-runs/e2e')
         sh.exec(
-          'yarn nyc report --reporter=lcov --reporter=clover --reporter=json',
+          'yarn nyc report --reporter=text --reporter=lcov --reporter=clover --reporter=json',
         )
         process.exit(code)
       })
