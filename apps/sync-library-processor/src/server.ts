@@ -42,24 +42,54 @@ if (isE2E) {
     }
   }
   
-  // Save coverage on exit
+  // Save coverage on various exit signals
   console.log('[E2E] Registering exit handlers')
-  process.on('exit', () => {
-    console.log('[E2E] Exit handler called')
+
+  // The exit event fires when process is about to exit - synchronous only
+  process.on('exit', (code) => {
+    console.log(`[E2E] Exit event fired with code ${code}`)
     saveCoverage()
   })
+
+  // SIGINT (Ctrl+C)
   process.on('SIGINT', () => {
-    console.log('[E2E] SIGINT handler called')
+    console.log('[E2E] SIGINT received')
     saveCoverage()
     process.exit(130)
   })
+
+  // SIGTERM (graceful shutdown)
   process.on('SIGTERM', () => {
-    console.log('[E2E] SIGTERM handler called')
+    console.log('[E2E] SIGTERM received')
     saveCoverage()
     process.exit(143)
   })
-  
-  console.log('[E2E] Coverage collection enabled')
+
+  // Uncaught exceptions
+  process.on('uncaughtException', (err) => {
+    console.log('[E2E] Uncaught exception')
+    saveCoverage()
+    throw err
+  })
+
+  // Unhandled promise rejections
+  process.on('unhandledRejection', (reason) => {
+    console.log('[E2E] Unhandled rejection')
+    saveCoverage()
+    console.error('Unhandled rejection:', reason)
+    process.exit(1)
+  })
+
+  // Save coverage periodically as backup
+  const saveInterval = setInterval(() => {
+    console.log('[E2E] Periodic coverage save')
+    saveCoverage()
+  }, 5000)
+
+  // Don't let interval prevent exit
+  saveInterval.unref()
+
+  console.log('[E2E] Coverage collection enabled with periodic saves every 5s')
 }
 
 async function run() {
