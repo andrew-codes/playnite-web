@@ -80,6 +80,10 @@ async function run() {
       )
       testCp.on('close', (code) => {
         logger.info('Tests closing.')
+
+        sh.exec(
+          'yarn nyc report --reporter=text-summary --reporter=lcov --reporter=clover --reporter=json --reporter=html',
+        )
         process.exit(code)
       })
     },
