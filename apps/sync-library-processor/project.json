@@ -63,6 +63,7 @@
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public",
           "INSTRUMENT": "true",
           "LOCAL": "true",
+          "COVER_ART_PATH": "_packaged/.game-assets/cover-art",
           "CI": "true",
           "TEST": "E2E",
           "LOG_LEVEL": "info",
