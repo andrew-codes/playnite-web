@@ -45,17 +45,17 @@ async function run() {
 
     // create express app
     const app = express()
-    
+
     // Serve game assets from dedicated directory
-    const gameAssetsPath = process.env.GAME_ASSETS_PATH || './game-assets'
+    const coverArtPath = process.env.COVER_ART_PATH || './game-assets'
     app.use(
-      '/game-assets',
-      express.static(gameAssetsPath, {
+      '/cover-art',
+      express.static(coverArtPath, {
         maxAge: '1y',
         immutable: true,
-      })
+      }),
     )
-    
+
     app.use(compression())
     app.use(express.json({ limit: '50mb' }))
     app.use(express.urlencoded({ extended: true, limit: '50mb' }))
@@ -99,6 +99,8 @@ async function run() {
                 `${domain}:*`,
                 `${domain}:${port}`,
                 'raw.githubusercontent.com',
+                'data:',
+                'blob:',
               ].concat(cspOrigins),
               'font-src': [
                 "'self'",

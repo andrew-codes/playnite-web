@@ -1,16 +1,15 @@
-import { styled, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { FC, useMemo } from 'react'
 import { Grid } from 'react-window'
 import { Game } from '../../../../.generated/types.generated'
 import GameFigure from './GameFigure'
 
-const GridRoot = styled('div')``
-
 const GameGrid: FC<{
   games: Array<Game>
   onSelect?: (evt, game: Game) => void
+  height: number
   width: number
-}> = ({ games, onSelect, width }) => {
+}> = ({ games, onSelect, width, height }) => {
   const theme = useTheme()
   const isXxl = useMediaQuery(theme.breakpoints.up('xxl'))
   const isXl = useMediaQuery(theme.breakpoints.up('xl'))
@@ -59,16 +58,16 @@ const GameGrid: FC<{
         style={{
           ...style,
           left: style.left,
-          width: style.width,
+          width: `${style.width - horizontalGap}px`,
           ...(style.height && { height: style?.height }),
         }}
       >
         <GameFigure
           game={game}
-          width={`${style.width - horizontalGap}px`}
           onSelect={(evt) => {
             onSelect?.(evt, game)
           }}
+          isHighFetchPriority={false}
           priority={true}
         >
           <Typography
@@ -96,7 +95,7 @@ const GameGrid: FC<{
   }
 
   return (
-    <GridRoot data-test="GameGrid">
+    <Box data-test="GameGrid" sx={{ height: height, width: width }}>
       <Grid<{ games: Array<Game> }>
         style={{ overflowX: 'hidden' }}
         cellProps={{ games }}
@@ -105,9 +104,9 @@ const GameGrid: FC<{
         columnWidth={columnWidth}
         rowCount={rowCount}
         rowHeight={rowHeight}
-        overscanCount={4}
+        overscanCount={1}
       />
-    </GridRoot>
+    </Box>
   )
 }
 

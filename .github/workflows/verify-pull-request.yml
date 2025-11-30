@@ -46,7 +46,6 @@ jobs:
       - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: "**/.test-runs/unit/lcov.info"
           flags: unit-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -96,7 +95,6 @@ jobs:
       - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: "**/.test-runs/**/lcov.info"
           flags: component-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -167,7 +165,7 @@ jobs:
           path: apps/playnite-web/cypress/screenshots
 
   e2e_tests_processor:
-    name: Verify PR - e2e Tests (Game Assets Processor - Linux)
+    name: Verify PR - e2e Tests (Sync Library Processor - Linux)
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
@@ -200,8 +198,15 @@ jobs:
         run: yarn
         env:
           YARN_ENABLE_HARDENED_MODE: "0"
+      - name: Clean and rebuild sync-library-processor
+        run: |
+          yarn nx run sync-library-processor:clean/build --skip-nx-cache
+          yarn nx run sync-library-processor:build/e2e --skip-nx-cache
+          yarn nx run sync-library-processor:package/e2e --skip-nx-cache
+          echo "Verifying coverage code is in build..."
+          grep -q "saveCoverage" apps/sync-library-processor/_packaged/server.js && echo "✓ Coverage code found" || echo "✗ Coverage code NOT found"
       - name: Run e2e tests
-        run: yarn nx run game-assets-processor:test/e2e:ci --verbose --exclude='*,!tag:linux'
+        run: yarn nx run sync-library-processor:test/e2e --verbose --skip-nx-cache --exclude='*,!tag:linux'
         env:
           NODE_ENV: production
           LOG_LEVEL: info
@@ -209,7 +214,7 @@ jobs:
       - uses: codecov/codecov-action@v5
         if: always()
         with:
-          files: "**/.test-runs/**/lcov.info"
+          directory: ./apps/sync-library-processor/.test-runs/e2e
           flags: e2e-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

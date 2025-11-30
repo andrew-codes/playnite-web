@@ -1,12 +1,12 @@
 'use client'
 
-import { QueryRef, useReadQuery } from '@apollo/client/react'
+import { useQuery } from '@apollo/client/react'
 import { FilterAlt } from '@mui/icons-material'
 import { Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Game, Library, User } from '../../../../.generated/types.generated'
+import { Game, Library } from '../../../../.generated/types.generated'
 import { setCompletionStates } from '../../../api/client/state/completionStatesSlice'
 import LibrariesNavigation from '../../../components/Navigation/LibrariesNavigation'
 import LibraryNavigation from '../../../components/Navigation/LibraryNavigation'
@@ -14,25 +14,24 @@ import MainNavigation from '../../../components/Navigation/MainNavigation'
 import Header from '../../shared/components/Header'
 import IconButton from '../../shared/components/IconButton'
 import { Layout } from '../../shared/components/Layout'
+import { AllGamesQuery } from '../queries'
 
 interface LibraryGamesProps {
   username: string
   libraryId: string
-  queryRef: QueryRef<{ library: Library }, { libraryId: string }>
-  meQueryRef: QueryRef<{ me: User }, {}>
   children: React.ReactNode
 }
 
 const LibraryLayout = ({
   username,
   libraryId,
-  queryRef,
-  meQueryRef,
   children,
 }: LibraryGamesProps) => {
   const router = useRouter()
 
-  const { data, error } = useReadQuery(queryRef)
+  const { data, error } = useQuery<{ library: Library }>(AllGamesQuery, {
+    variables: { libraryId },
+  })
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -60,7 +59,6 @@ const LibraryLayout = ({
 
   return (
     <Layout
-      meQueryRef={meQueryRef}
       secondaryMenu={
         <IconButton
           aria-label="Open filter drawer"

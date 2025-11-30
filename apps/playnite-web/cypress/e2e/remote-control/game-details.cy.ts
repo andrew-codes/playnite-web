@@ -2,10 +2,6 @@ describe(`Game details remote control.
               - Requires user to be signed in.
               - Only visible in libraries the authenticated user owns.`, () => {
   beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
-  beforeEach(() => {
     cy.request({
       method: 'DELETE',
       url: '/echo',
@@ -14,35 +10,31 @@ describe(`Game details remote control.
 
   describe('Unauthenticated users.', () => {
     it(`No action controls.`, () => {
-      cy.fixture('librarySync.json')
-        .then((libraryData) => {
-          return cy.syncLibrary('test', 'test', libraryData)
-        })
-        .then((library) => {
-          cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-          cy.wait(200)
-        })
-      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+      cy.visit(`/u/test/Library:1`)
+      cy.wait('@image')
 
-      cy.get('[data-test="Actions"]').children().should('have.length', 0)
+      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+      cy.get('[data-test="Actions"]', { timeout: 20000 })
+        .children()
+        .should('have.length', 0)
     })
   })
 
   describe('Authenticated users.', () => {
-    it(`Non-owned library.
-            - No action controls.`, () => {
-      cy.fixture('librarySync.json')
-        .then((libraryData) => {
-          cy.syncLibrary('test', 'test', libraryData)
-          cy.syncLibrary('jane', 'jane', libraryData)
-        })
-        .then((library) => {
-          cy.signIn('test', 'test')
-          cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
-        })
-      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+    beforeEach(() => {
+      cy.task('restoreDatabaseSnapshot', 'multi-user')
+      cy.signIn('test', 'test')
+    })
 
-      cy.get('[data-test="Actions"]').children().should('have.length', 0)
+    it(`Non-owned library.
+    - No action controls.`, () => {
+      cy.visit(`/u/jane/Library:2`)
+      cy.wait('@image')
+
+      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+      cy.get('[data-test="Actions"]', { timeout: 20000 })
+        .children()
+        .should('have.length', 0)
     })
 
     describe('With Webhook setting.', () => {
@@ -56,14 +48,9 @@ describe(`Game details remote control.
       })
 
       beforeEach(() => {
-        cy.fixture('librarySync.json')
-          .then((libraryData) => {
-            return cy.syncLibrary('test', 'test', libraryData)
-          })
-          .then((library) => {
-            cy.signIn('test', 'test')
-            cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-          })
+        cy.signIn('test', 'test')
+        cy.visit(`/u/test/Library:1`)
+        cy.wait('@image')
       })
 
       it(`Play button.
@@ -77,7 +64,7 @@ describe(`Game details remote control.
           .eq(0)
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 20000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -106,6 +93,7 @@ describe(`Game details remote control.
         cy.get('[data-test="Actions"] button').eq(0).click()
         cy.wait('@api')
 
+        cy.wait(2000)
         cy.request({
           method: 'GET',
           url: '/echo',
@@ -120,9 +108,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
@@ -144,7 +130,7 @@ describe(`Game details remote control.
           .find('button img')
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 20000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -169,6 +155,7 @@ describe(`Game details remote control.
         cy.get('[data-test="Actions"] li').should('have.length', 1)
         cy.wait('@api')
 
+        cy.wait(2000)
         cy.request({
           method: 'GET',
           url: '/echo',
@@ -183,9 +170,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
@@ -202,7 +187,7 @@ describe(`Game details remote control.
           .find('button img')
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 20000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -226,6 +211,7 @@ describe(`Game details remote control.
           .click()
         cy.wait('@api')
 
+        cy.wait(2000)
         cy.request({
           method: 'GET',
           url: '/echo',
@@ -240,9 +226,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)

@@ -1,16 +1,9 @@
 import { Metadata, Viewport } from 'next'
-import { Roboto } from 'next/font/google'
 import { FC, PropsWithChildren } from 'react'
 import { Apollo } from '../feature/shared/components/Apollo'
 import { Emotion } from '../feature/shared/components/Emotion'
 import { Redux } from '../feature/shared/components/Redux'
 import { PwaRegister } from '../components/PwaRegister'
-
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-})
 
 const metadata: Metadata = {
   title: 'Playnite Web',
@@ -40,7 +33,7 @@ const viewport: Viewport = {
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <html lang="en" className={roboto.className}>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="application-name" content="Playnite Web" />

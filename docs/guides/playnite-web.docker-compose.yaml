@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   playnite-web:
-    image: ghcr.io/andrew-codes/playnite-web-app:12
+    image: ghcr.io/andrew-codes/playnite-web-app:local
     network_mode: host
     environment:
       - PORT=${APP_PORT:-3000}
@@ -29,29 +29,30 @@ services:
       - MQTT_PORT=1883
       - MQTT_USERNAME=${MQTT_USERNAME}
       - MQTT_PASSWORD=${MQTT_PASSWORD}
-      - GAME_ASSETS_PATH=/opt/playnite-web-app/game-assets
+      - COVER_ART_PATH=/opt/playnite-web-app/game-assets/cover-art
     volumes:
-      - games_assets:/opt/playnite-web-app/game-assets
+      - ../../apps/playnite-web/game-assets:/opt/playnite-web-app/game-assets
     depends_on:
       - db
       - mqtt
     restart: unless-stopped
 
-  playnite-web-game-assets-processor:
-    image: ghcr.io/andrew-codes/game-assets-processor:12
-    network_mode: host
-    environment:
-      - MQTT_HOST=localhost
-      - MQTT_PORT=1883
-      - MQTT_USERNAME=${MQTT_USERNAME}
-      - MQTT_PASSWORD=${MQTT_PASSWORD}
-      - DATABASE_URL=postgres://${DB_USER:-playnite}:${DB_PASSWORD}@localhost:5432/games?schema=public
-      - PORT=${PROCESSOR_PORT:-3001}
-    volumes:
-      - games_assets:/opt/playnite-web/game-assets
-    depends_on:
-      - playnite-web
-    restart: unless-stopped
+  # playnite-web-sync-library-processor:
+  #   image: ghcr.io/andrew-codes/sync-library-processor:local
+  #   network_mode: host
+  #   environment:
+  #     - MQTT_HOST=localhost
+  #     - MQTT_PORT=1883
+  #     - MQTT_USERNAME=${MQTT_USERNAME}
+  #     - MQTT_PASSWORD=${MQTT_PASSWORD}
+  #     - DATABASE_URL=postgres://${DB_USER:-playnite}:${DB_PASSWORD}@localhost:5432/games?schema=public
+  #     - PORT=${PROCESSOR_PORT:-3001}
+  #     - COVER_ART_PATH=/opt/playnite-web/game-assets/cover-art
+  #   volumes:
+  #     - games_assets:/opt/playnite-web/game-assets
+  #   depends_on:
+  #     - playnite-web
+  #   restart: unless-stopped
 
 volumes:
   games_assets:

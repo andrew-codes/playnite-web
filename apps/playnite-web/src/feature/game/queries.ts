@@ -4,6 +4,7 @@ const GameByIdQuery = gql`
   query game($id: String!) {
     game(id: $id) {
       id
+      coverArt
       library {
         id
       }
@@ -11,7 +12,6 @@ const GameByIdQuery = gql`
         id
         title
         description
-        cover
         completionStatus {
           name
         }
@@ -73,7 +73,6 @@ const UpdateReleaseMutation = gql`
         }
       }
       title
-      cover
       completionStatus {
         id
         name

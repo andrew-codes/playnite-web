@@ -36,11 +36,45 @@
         "cwd": "{projectRoot}"
       }
     },
-    "demo-data": {
+    "db/prepare-snapshot": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^start", "prepare", "^prepare"],
+      "options": {
+        "command": "yarn tsx cypress/scripts/prepare-snapshot.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+        }
+      }
+    },
+    "db/sync-user-library": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "yarn tsx scripts/seedTestData.ts",
+        "command": "yarn tsx cypress/scripts/sync.ts",
         "cwd": "{projectRoot}"
+      }
+    },
+    "db/finalize-snapshot": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn tsx cypress/scripts/finalize-snapshot.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+        }
+      }
+    },
+    "db/use-snapshot": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "yarn tsx cypress/scripts/restore-snapshot.ts",
+        "cwd": "{projectRoot}",
+        "env": {
+          "NODE_ENV": "production",
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+        }
       }
     },
     "prepare": {
@@ -55,7 +89,8 @@
     "start": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["yarn nodemon"],
+        "parallel": true,
+        "commands": ["nodemon"],
         "cwd": "{projectRoot}",
         "env": {
           "NODE_ENV": "development",
@@ -63,7 +98,8 @@
           "SECRET": "dev-secret",
           "PORT": "3000",
           "HOST": "localhost",
-          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
+          "COVER_ART_PATH": "game-assets/cover-art"
         }
       }
     },
@@ -115,7 +151,8 @@
         "cwd": "{projectRoot}",
         "env": {
           "NODE_ENV": "production",
-          "TEST": "component"
+          "TEST": "component",
+          "COVER_ART_PATH": "game-assets/cover-art"
         }
       }
     },
@@ -133,14 +170,15 @@
           "TEST": "e2e",
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
           "SECRET": "dev-secret",
-          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+          "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
+          "COVER_ART_PATH": "game-assets/cover-art"
         }
       }
     },
     "test/e2e": {
       "executor": "nx:run-commands",
       "options": {
-        "parallel": false,
+        "parallel": true,
         "cwd": "{projectRoot}",
         "commands": ["yarn tsx scripts/e2e.ts"]
       },
@@ -158,7 +196,8 @@
             "SECRET": "dev-secret",
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
-            "SPLIT_FILE": "cypress-timings.json"
+            "SPLIT_FILE": "cypress-timings.json",
+            "COVER_ART_PATH": "game-assets/cover-art"
           }
         },
         "dev": {
@@ -172,7 +211,8 @@
             "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
-            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true"
+            "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
+            "COVER_ART_PATH": "game-assets/cover-art"
           }
         },
         "timings": {
@@ -187,6 +227,7 @@
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
+            "COVER_ART_PATH": "game-assets/cover-art",
             "SPLIT": "1",
             "SPLIT_INDEX": "0",
             "SPLIT_FILE": "cypress-timings.json"
@@ -202,8 +243,7 @@
         "cwd": "{projectRoot}",
         "commands": [
           "yarn tsx scripts/packageFiles.ts",
-          "yarn tsx scripts/packageDemoCoverArt.ts",
-          "yarn tsx scripts/e2e.ts"
+          "yarn tsx ../sync-library-processor/scripts/start.e2e.ts & yarn tsx scripts/e2e.ts"
         ],
         "env": {
           "CMD": "run",
@@ -216,6 +256,7 @@
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
           "START_SERVER_AND_TEST_INSECURE": "1",
           "NODE_ENV": "production",
+          "COVER_ART_PATH": "game-assets/cover-art",
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
           "SPLIT_FILE": "cypress-timings.json"
         }
@@ -224,8 +265,8 @@
     "test/e2e/update": {
       "executor": "nx:run-commands",
       "options": {
-        "parallel": false,
-        "command": "yarn tsx scripts/e2e.ts",
+        "parallel": true,
+        "commands": ["yarn tsx scripts/e2e.ts"],
         "cwd": "{projectRoot}",
         "env": {
           "CMD": "run",
@@ -235,6 +276,7 @@
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
           "NODE_ENV": "production",
           "UPDATE": "true",
+          "COVER_ART_PATH": "game-assets/cover-art",
           "LOG_LEVEL": "info"
         }
       }
@@ -293,7 +335,6 @@
         "parallel": false,
         "commands": [
           "yarn tsx scripts/packageFiles.ts",
-          "yarn tsx scripts/packageDemoCoverArt.ts",
           "yarn tsx scripts/package.ts"
         ],
         "env": {

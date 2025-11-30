@@ -2,12 +2,8 @@ import { breakpoints } from 'support/breakpoints'
 
 describe('User Library', () => {
   beforeEach(() => {
-    cy.task('seedUsers')
-    cy.fixture('librarySync.json').then((libraryData) => {
-      cy.syncLibrary('test', 'test', libraryData).then((library) => {
-        cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-      })
-    })
+    cy.signIn('test', 'test')
+    cy.visit(`/u/test/Library:1`)
   })
 
   describe('Update completion status.', () => {
@@ -16,9 +12,10 @@ describe('User Library', () => {
     - Other user libraries may not be updated.
     - Updates show in UI without a page refresh.`, () => {
       cy.get('[data-test="GameFigure"]')
-        .contains('3DMark')
+        .contains('7 Days to Die')
         .parents('[data-test="GameFigure"]')
         .as('gameFigure')
+
       cy.get('@gameFigure')
         .contains('[data-test="GameFigureChipList"] button', 'Played')
         .click()
@@ -40,7 +37,7 @@ describe('User Library', () => {
         .find('[data-test="GameFigureChipList"] button')
         .should('not.exist')
       cy.get('[data-test="GameFigure"]')
-        .contains('3DMark')
+        .contains('7 Days to Die')
         .parents('[data-test="GameFigure"]')
         .contains('[data-test="GameFigureChipList"]', 'Beaten')
         .eq(0)
@@ -77,7 +74,7 @@ describe('User Library', () => {
       cy.contains('h1', 'My Games')
         .parent()
         .find(':not(h1)')
-        .should('contains.text', '463')
+        .should('contains.text', '456')
     })
 
     it(`Games are displayed in a grid.
@@ -163,24 +160,21 @@ describe('User Library', () => {
         })
 
         beforeEach(() => {
-          cy.task('seedUsers')
-          cy.fixture('librarySync.json').then((libraryData) => {
-            cy.syncLibrary('test', 'test', libraryData).then((library) => {
-              cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-            })
-          })
+          cy.visit(`/u/test/Library:1`)
         })
 
         it(`Displays the library correctly`, () => {
           cy.get('[data-test="GameFigure"]').contains('3DMark')
-          cy.get('[data-test="GameCoverImage"]').hideElement(true)
 
           cy.compareSnapshot({
             name: `library-${name}`,
             cypressScreenshotOptions: {
               onBeforeScreenshot($el) {
                 Cypress.$('body').css('overflow-y', 'hidden')
-                Cypress.$('[data-test="GameCoverImage"]').css('display', 'none')
+                Cypress.$('[data-test="GameCoverImage"]').css(
+                  'visibility',
+                  'hidden',
+                )
                 Cypress.$('[data-test="GameGrid"] > div').css(
                   'overflow-y',
                   'hidden',

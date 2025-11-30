@@ -3,10 +3,10 @@ const nxPreset = require('@nx/jest/preset').default
 module.exports = {
   ...nxPreset,
   testEnvironment: 'node',
-  collectCoverage: true,
   moduleFileExtensions: ['json', 'js', 'ts'],
   testMatch: ['<rootDir>/src/**/__tests__/**/*.test.ts'],
   passWithNoTests: true,
+  collectCoverage: true,
   coverageDirectory: '<rootDir>/.test-runs/unit',
   coveragePathIgnorePatterns: [
     '/__tests__/',
@@ -14,4 +14,5 @@ module.exports = {
     '/__component_tests__/',
   ],
   collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  coverageReporters: ['text', 'text-summary', 'lcov', 'json', 'clover'],
 }
