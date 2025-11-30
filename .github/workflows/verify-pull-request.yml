@@ -204,21 +204,6 @@ jobs:
           NODE_ENV: production
           LOG_LEVEL: info
           PLATFORM: linux/amd64
-      - name: Debug - List coverage files
-        if: always()
-        run: |
-          echo "=== Looking for coverage files in sync-library-processor ==="
-          find apps/sync-library-processor -type f \( -name "*.info" -o -name "coverage-*.json" -o -name "clover.xml" \) 2>/dev/null || echo "No coverage files found"
-          echo "=== Contents of .test-runs directory ==="
-          ls -laR apps/sync-library-processor/.test-runs/ 2>/dev/null || echo ".test-runs directory not found"
-          echo "=== Contents of _packaged directory ==="
-          ls -la apps/sync-library-processor/_packaged/.test-runs/ 2>/dev/null || echo "_packaged/.test-runs not found"
-          echo "=== NYC output directory ==="
-          ls -la apps/sync-library-processor/.nyc_output/ 2>/dev/null || echo ".nyc_output not found"
-          echo "=== _packaged NYC output ==="
-          ls -la apps/sync-library-processor/_packaged/.nyc_output/ 2>/dev/null || echo "_packaged/.nyc_output not found"
-          echo "=== Checking if .nycrc was copied ==="
-          cat apps/sync-library-processor/_packaged/.nycrc 2>/dev/null || echo ".nycrc not in _packaged"
       - uses: codecov/codecov-action@v5
         if: always()
         with:
