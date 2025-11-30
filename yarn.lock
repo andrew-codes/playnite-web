@@ -15435,9 +15435,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cypress@npm:^15.5.0":
-  version: 15.5.0
-  resolution: "cypress@npm:15.5.0"
+"cypress@npm:^15.7.0":
+  version: 15.7.0
+  resolution: "cypress@npm:15.7.0"
   dependencies:
     "@cypress/request": "npm:^3.0.9"
     "@cypress/xvfb": "npm:^1.2.4"
@@ -15475,7 +15475,6 @@ __metadata:
     process: "npm:^0.11.10"
     proxy-from-env: "npm:1.0.0"
     request-progress: "npm:^3.0.0"
-    semver: "npm:^7.7.1"
     supports-color: "npm:^8.1.1"
     systeminformation: "npm:5.27.7"
     tmp: "npm:~0.2.4"
@@ -15484,7 +15483,7 @@ __metadata:
     yauzl: "npm:^2.10.0"
   bin:
     cypress: bin/cypress
-  checksum: 10c0/0a7aabc9920a808f5257f111b9b4bb6602e9b7146dd945a49e16a0811c201d5f5837f9ae439756556b686e020155483542505bf8499b72307236047b85a1130b
+  checksum: 10c0/e0d25943862ae442c16320f1f5766fd1e38986a9a1b20592cec8247b7a6a5ec1066abecc283d8e5c7cbc4a447b20b55e5dbb662e86046ad846e0cff61c4b2056
   languageName: node
   linkType: hard
 
@@ -27804,7 +27803,7 @@ __metadata:
     compression: "npm:^1.8.1"
     crypto-js: "npm:^4.2.0"
     css-mediaquery: "npm:^0.1.2"
-    cypress: "npm:^15.5.0"
+    cypress: "npm:^15.7.0"
     cypress-cdp: "npm:^1.6.86"
     cypress-image-diff-html-report: "npm:^2.2.0"
     cypress-image-diff-js: "npm:^2.5.0"
@@ -27954,7 +27953,7 @@ __metadata:
     "@types/react-dom": "npm:19.0.0"
     "@typescript-eslint/parser": "npm:^8.44.0"
     cross-env: "npm:^10.0.0"
-    cypress: "npm:^15.5.0"
+    cypress: "npm:^15.7.0"
     cz-conventional-changelog: "npm:^3.3.0"
     dotenv: "npm:^17.2.1"
     esbuild: "npm:^0.25.10"
