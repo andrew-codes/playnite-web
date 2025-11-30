@@ -40,8 +40,7 @@ process.on('SIGINT', () => {
 
 async function run() {
   sh.exec('rm _packaged/package.json')
-  runCp = sh.exec(`yarn nyc node server.js`, {
-    cwd: '_packaged',
+  runCp = sh.exec(`yarn nyc node _packaged/server.js`, {
     env: {
       ...process.env,
       TEST: 'E2E',
