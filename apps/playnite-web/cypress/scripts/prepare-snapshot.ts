@@ -95,7 +95,7 @@ async function main() {
     logger.info('Note: To create the snapshot, you need to:')
     logger.info('1. Start the Playnite Web app: yarn nx start playnite-web-app')
     logger.info(
-      '2. Start the sync-library-processor to persist images to local: COVER_ART_PATH="../playnite-web/.cover-art" yarn nx start sync-library-processor',
+      '2. Start the sync-library-processor to persist images to local: COVER_ART_PATH="../playnite-web/game-assets/cover-art" yarn nx start sync-library-processor',
     )
     logger.info(
       '3. Run this command to authenticate and sync: yarn nx db/sync-user-library playnite-web-app',

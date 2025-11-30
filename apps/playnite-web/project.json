@@ -99,7 +99,7 @@
           "PORT": "3000",
           "HOST": "localhost",
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
-          "COVER_ART_PATH": ".cover-art"
+          "COVER_ART_PATH": "game-assets/cover-art"
         }
       }
     },
@@ -152,7 +152,7 @@
         "env": {
           "NODE_ENV": "production",
           "TEST": "component",
-          "COVER_ART_PATH": ".cover-art"
+          "COVER_ART_PATH": "game-assets/cover-art"
         }
       }
     },
@@ -171,7 +171,7 @@
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
           "SECRET": "dev-secret",
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
-          "COVER_ART_PATH": ".cover-art"
+          "COVER_ART_PATH": "game-assets/cover-art"
         }
       }
     },
@@ -197,7 +197,7 @@
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
             "SPLIT_FILE": "cypress-timings.json",
-            "COVER_ART_PATH": ".cover-art"
+            "COVER_ART_PATH": "game-assets/cover-art"
           }
         },
         "dev": {
@@ -212,7 +212,7 @@
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
-            "COVER_ART_PATH": ".cover-art"
+            "COVER_ART_PATH": "game-assets/cover-art"
           }
         },
         "timings": {
@@ -227,7 +227,7 @@
             "START_SERVER_AND_TEST_INSECURE": "1",
             "NODE_ENV": "production",
             "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
-            "COVER_ART_PATH": ".cover-art",
+            "COVER_ART_PATH": "game-assets/cover-art",
             "SPLIT": "1",
             "SPLIT_INDEX": "0",
             "SPLIT_FILE": "cypress-timings.json"
@@ -256,7 +256,7 @@
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
           "START_SERVER_AND_TEST_INSECURE": "1",
           "NODE_ENV": "production",
-          "COVER_ART_PATH": ".cover-art",
+          "COVER_ART_PATH": "game-assets/cover-art",
           "DATABASE_URL": "postgresql://local:dev@localhost:5432/games?schema=public&pgbouncer=true",
           "SPLIT_FILE": "cypress-timings.json"
         }
@@ -276,7 +276,7 @@
           "CYPRESS_REMOTE_DEBUGGING_PORT": "9222",
           "NODE_ENV": "production",
           "UPDATE": "true",
-          "COVER_ART_PATH": ".cover-art",
+          "COVER_ART_PATH": "game-assets/cover-art",
           "LOG_LEVEL": "info"
         }
       }
