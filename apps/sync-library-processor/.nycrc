@@ -12,7 +12,7 @@
     "**/interfaces.ts",
     "src/testSetup.ts",
     "jest.config.e2e.mjs",
-    "__integration_tests__/**/*.ts"
+    "__integration_tests__/**/*.*"
   ],
   "reporter": ["lcov", "json", "text", "html", "clover"],
   "instrument": false,

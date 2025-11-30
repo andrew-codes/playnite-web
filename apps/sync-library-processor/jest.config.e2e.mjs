@@ -21,7 +21,7 @@ const defaultConfig = {
     '/__tests__/',
     '/__mocks__/',
     'src/testSetup.ts',
-    'testUtils/**/*.ts',
+    '/testUtils/',
     '__integration_tests__/globalSetup.ts',
     'jest.config.e2e.mjs',
   ],
