@@ -1,8 +1,7 @@
 const defaultConfig = {
   globalSetup: '<rootDir>/__integration_tests__/globalSetup.ts',
-  preset: 'ts-jest/presets/default-esm',
+  preset: '../../jest.preset.cjs',
   testEnvironment: 'node',
-  resolver: '@nx/jest/plugins/resolver',
   transform: {
     '^.+\\.(j|t)s$': ['<rootDir>/testUtils/db-client-transformer.cjs'],
   },
@@ -14,9 +13,7 @@ const defaultConfig = {
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   testMatch: ['<rootDir>/__integration_tests__/**/*.(test).((j|t)s)'],
   resetMocks: true,
-  collectCoverage: true,
   coverageDirectory: '<rootDir>/.test-runs/e2e',
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coveragePathIgnorePatterns: [
     '/__tests__/',
     '/__mocks__/',
@@ -25,7 +22,6 @@ const defaultConfig = {
     '__integration_tests__/globalSetup.ts',
     'jest.config.e2e.mjs',
   ],
-  coverageReporters: ['text', 'text-summary', 'lcov', 'json', 'clover'],
   moduleFileExtensions: ['json', 'js', 'ts'],
 }
 
