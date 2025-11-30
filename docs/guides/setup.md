@@ -15,13 +15,13 @@ Playnite Web consists the following:
 
 > All components are required.
 
-| Component             | Deployment Mechanism              | Purpose                                                                                                        |
-| :-------------------- | :-------------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| Playnite Web Plugin   | Extension installed into Playnite | The plugin sends and receives messages via MQTT when data in Playnite is changed.                              |
-| Playnite Web App      | Docker image                      | Syncs Playnite games to game database, web UI, and GraphQL API that may be used to power your own experiences. |
-| Game assets processor | Docker image                      | Processes synced items' cover art; downloading from IGN and optimizing size and format (.webp images).         |
-| Postgres Database     | Docker image / bring your own     | Stores synced data from Playnite and other Playnite Web settings/data.                                         |
-| MQTT broker           | Docker image / bring your own     | Communication bus between Playnite Web App and the Game assets processor.                                      |
+| Component              | Deployment Mechanism              | Purpose                                                                                                        |
+| :--------------------- | :-------------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| Playnite Web Plugin    | Extension installed into Playnite | The plugin sends and receives messages via MQTT when data in Playnite is changed.                              |
+| Playnite Web App       | Docker image                      | Syncs Playnite games to game database, web UI, and GraphQL API that may be used to power your own experiences. |
+| Sync Library Processor | Docker image                      | Performs work to download asssets and update database for library syncs.                                       |
+| Postgres Database      | Docker image / bring your own     | Stores synced data from Playnite and other Playnite Web settings/data.                                         |
+| MQTT broker            | Docker image / bring your own     | Communication bus between Playnite Web App and the Sync Library processor.                                     |
 
 ## Services Deployment
 

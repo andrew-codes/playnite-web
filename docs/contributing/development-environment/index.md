@@ -38,10 +38,10 @@ You can view all available projects and tasks via `yarn nx graph`. This will ope
 | `yarn nx test/e2e playnite-web-app --configuration dev`            | Build and package to run end-to-end (e2e) tests, but for debugging CI failures. Note updates to the source application will not be reflected after running this command and will require re-running the command. Tests packaged docker image. |
 | `yarn nx test/unit playnite-web-app`                               | Run Jest-based unit tests.                                                                                                                                                                                                                    |
 
-### Game Assets Processor
+### Sync Library Processor
 
-| Command                                  | Notes                                                                      |
-| :--------------------------------------- | :------------------------------------------------------------------------- |
+| Command                                   | Notes                                                                      |
+| :---------------------------------------- | :------------------------------------------------------------------------- |
 | `yarn nx start sync-library-processor`    | Starts service.                                                            |
 | `yarn nx test/e2e sync-library-processor` | Runs Jest-based e2e tests, found in the `__integration_tests__` directory. |
 
