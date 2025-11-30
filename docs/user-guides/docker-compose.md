@@ -16,7 +16,7 @@
   - [Security Notes](#security-notes)
   - [Resume Setup Guide](#resume-setup-guide)
 
-This guide explains how to run Playnite Web using the [`playnite-web.docker-compose.yaml`](./playnite-web.docker-compose.yaml) file. This setup includes the main web application, database, MQTT broker, and game assets processor.
+This guide explains how to run Playnite Web using the [`playnite-web.docker-compose.yaml`](./playnite-web.docker-compose.yaml) file. This setup includes the main web application, database, MQTT broker, and sync library processor.
 
 ## First Time Setup Overview
 
@@ -50,7 +50,7 @@ The following environment variables have default values but can be overridden:
 - `DB_USER` - PostgreSQL database username (default: `playnite`)
 - `APP_PORT` - Port to expose the main web application on (default: `3000`)
 - `APP_HOST` - Hostname for the application (default: `localhost`)
-- `PROCESSOR_PORT` - Port for the game assets processor (default: `3001`)
+- `PROCESSOR_PORT` - Port for the sync library processor (default: `3001`)
 - `MQTT_USERNAME` - Username for MQTT broker authentication (optional but recommended)
 - `MQTT_PASSWORD` - Password for MQTT broker authentication (optional but recommended)
 - `DISABLE_CSP` - Disable Content Security Policy (default: `false`)
@@ -136,7 +136,7 @@ This docker-compose setup runs four services:
 1. **PostgreSQL Database** (`db`) - Stores your game library data
 2. **MQTT Broker** (`mqtt`) - Handles real-time communication between services
 3. **Playnite Web App** (`playnite-web`) - The main web interface (accessible at `http://localhost:3000`)
-4. **Game Assets Processor** (`playnite-web-game-asssets-processor`) - Processes game cover art and assets
+4. **Sync Library Processor** (`playnite-web-game-asssets-processor`) - Processes game cover art, assets, and updates database when syncing library
 
 ## Common Issues & Troubleshooting
 
