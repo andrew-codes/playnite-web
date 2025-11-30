@@ -84,16 +84,7 @@ async function run() {
         // Kill the server process to ensure coverage data is written
         logger.info('Stopping server to flush coverage data')
         runCp?.kill('SIGINT')
-        
-        // Wait a bit for the server to flush coverage data
-        setTimeout(() => {
-          logger.info('Generating coverage reports')
-          sh.rm('-rf', '.test-runs/e2e')
-          sh.exec(
-            'yarn nyc report --reporter=text --reporter=lcov --reporter=json',
-          )
-          process.exit(code)
-        }, 2000)
+        process.exit()
       })
     },
   )
