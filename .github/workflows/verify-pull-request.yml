@@ -204,6 +204,12 @@ jobs:
           NODE_ENV: production
           LOG_LEVEL: info
           PLATFORM: linux/amd64
+      - name: Generate coverage reports
+        run: |
+          cd apps/sync-library-processor
+          rm -rf .test-runs/e2e
+          mkdir -p .test-runs/e2e
+          yarn nyc report --reporter=lcov --reporter=json
       - uses: codecov/codecov-action@v5
         if: always()
         with:
