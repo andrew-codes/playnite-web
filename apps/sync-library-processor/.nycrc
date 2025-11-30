@@ -8,7 +8,6 @@
     ".test-runs/**/*.*",
     "scripts/**/*.*",
     "node_modules/**/*.*",
-    "testUtils/**/*.*",
     "**/interfaces.ts",
     "src/testSetup.ts",
     "jest.config.e2e.mjs",
