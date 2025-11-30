@@ -86,6 +86,7 @@
     "build/e2e": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "production",
+      "cache": false,
       "options": {
         "cwd": "{projectRoot}",
         "commands": ["yarn tsx scripts/build.ts"],
@@ -114,6 +115,7 @@
     },
     "package/e2e": {
       "executor": "nx:run-commands",
+      "cache": false,
       "options": {
         "parallel": false,
         "commands": ["yarn tsx scripts/packageFiles.ts"],

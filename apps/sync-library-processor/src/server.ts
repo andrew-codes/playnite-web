@@ -1,8 +1,4 @@
 // Load test mocks if running in test mode
-if (process.env.TEST === 'E2E') {
-  require('./testSetup.js')
-}
-
 import MQTT from 'async-mqtt'
 import prisma from 'db-client'
 import logger from 'dev-logger'
@@ -10,6 +6,61 @@ import express from 'express'
 import { groupBy } from 'lodash-es'
 import { IgnSourcedAssets } from 'sourced-assets/ign'
 import { CoverArtService } from './services/coverArtService.js'
+import fs from 'fs'
+import path from 'path'
+// Import test mocks - this file will setup mocks when TEST=E2E
+import './testSetup'
+
+// Setup coverage collection for E2E tests
+const isE2E = process.env.TEST === 'E2E'
+
+if (isE2E) {
+  const nycOutputDir = path.join(process.cwd(), '.nyc_output')
+  if (!fs.existsSync(nycOutputDir)) {
+    fs.mkdirSync(nycOutputDir, { recursive: true })
+  }
+  
+  const coverageFile = path.join(nycOutputDir, `coverage-${process.pid}.json`)
+  
+  function saveCoverage() {
+    console.log('[E2E] saveCoverage() called')
+    console.log(`[E2E] Coverage exists: ${typeof (global as any).__coverage__ !== 'undefined'}`)
+    if (typeof (global as any).__coverage__ !== 'undefined') {
+      const coverageData = (global as any).__coverage__
+      const fileCount = Object.keys(coverageData).length
+      console.log(`[E2E] Coverage data has ${fileCount} files`)
+      console.log(`[E2E] Writing to: ${coverageFile}`)
+      try {
+        fs.writeFileSync(coverageFile, JSON.stringify(coverageData))
+        const written = fs.readFileSync(coverageFile, 'utf-8')
+        console.log(`[E2E] Coverage data saved to ${coverageFile} (${written.length} bytes)`)
+      } catch (err) {
+        console.error('[E2E] Failed to write coverage data:', err)
+      }
+    } else {
+      console.warn('[E2E] No coverage data found in global.__coverage__')
+    }
+  }
+  
+  // Save coverage on exit
+  console.log('[E2E] Registering exit handlers')
+  process.on('exit', () => {
+    console.log('[E2E] Exit handler called')
+    saveCoverage()
+  })
+  process.on('SIGINT', () => {
+    console.log('[E2E] SIGINT handler called')
+    saveCoverage()
+    process.exit(130)
+  })
+  process.on('SIGTERM', () => {
+    console.log('[E2E] SIGTERM handler called')
+    saveCoverage()
+    process.exit(143)
+  })
+  
+  console.log('[E2E] Coverage collection enabled')
+}
 
 async function run() {
   logger.info(
@@ -618,6 +669,21 @@ async function run() {
       console.debug('Health check OK')
       res.status(200).send('OK')
     })
+
+    // Debug endpoint to check coverage status
+    if (process.env.TEST === 'E2E') {
+      app.get('/coverage-status', (req, res) => {
+        const hasCoverage = typeof global.__coverage__ !== 'undefined'
+        const coverageKeys = hasCoverage ? Object.keys(global.__coverage__).length : 0
+        res.json({
+          hasCoverage,
+          coverageKeys,
+          message: hasCoverage
+            ? `Coverage data exists with ${coverageKeys} files`
+            : 'No coverage data found',
+        })
+      })
+    }
 
     app.listen(port, () => {
       logger.info(
