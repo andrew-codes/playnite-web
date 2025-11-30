@@ -1,5 +1,5 @@
 {
-  "report-dir": "../.test-runs/e2e",
+  "report-dir": ".test-runs/e2e",
   "all": true,
   "sourceMap": true,
   "exclude": [
