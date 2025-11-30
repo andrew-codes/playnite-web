@@ -13,7 +13,9 @@ const defaultConfig = {
   extensionsToTreatAsEsm: ['.ts', '.mts'],
   testMatch: ['<rootDir>/__integration_tests__/**/*.(test).((j|t)s)'],
   resetMocks: true,
+  collectCoverage: true,
   coverageDirectory: '<rootDir>/.test-runs/e2e',
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
   coveragePathIgnorePatterns: [
     '/__tests__/',
     '/__mocks__/',
