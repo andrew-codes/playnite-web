@@ -82,7 +82,7 @@ async function run() {
         logger.info('Tests closing.')
 
         sh.exec(
-          'yarn nyc report --reporter=text-summary --reporter=lcov --reporter=clover --reporter=json --reporter=html',
+          'yarn nyc report --reporter=lcov --reporter=clover --reporter=json',
         )
         process.exit(code)
       })
