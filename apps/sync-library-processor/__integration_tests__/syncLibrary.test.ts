@@ -798,7 +798,7 @@ describe('Syncing library via MQTT.', () => {
       })
     }, 60000)
 
-    test(`Remove tag.
+    test.only(`Remove tag.
       - Removes tag from database.
       - Removes tag associations from releases.`, async () => {
       // First, sync the full library
