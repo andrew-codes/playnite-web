@@ -211,13 +211,6 @@ jobs:
           NODE_ENV: production
           LOG_LEVEL: info
           PLATFORM: linux/amd64
-      - name: Debug coverage files
-        run: |
-          echo "Contents of .test-runs/e2e:"
-          ls -la apps/sync-library-processor/.test-runs/e2e || echo "No coverage directory found."
-          cat apps/sync-library-processor/.test-runs/e2e/coverage-final.json || echo "No coverage-final.json file found."
-          cat apps/sync-library-processor/.test-runs/e2e/lcov.info || echo "No lcov.info file found."
-          echo "End of debug output."
       - uses: codecov/codecov-action@v5
         if: always()
         with:
