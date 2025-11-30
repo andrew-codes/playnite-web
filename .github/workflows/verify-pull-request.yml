@@ -207,7 +207,7 @@ jobs:
       - uses: codecov/codecov-action@v5
         if: always()
         with:
-          directory: ./apps/sync-library-processor
+          directory: ./apps/sync-library-processor/.test-runs/e2e
           flags: e2e-tests
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
