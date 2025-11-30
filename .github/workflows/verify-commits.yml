@@ -161,7 +161,7 @@ jobs:
           path: apps/playnite-web/cypress/screenshots
 
   e2e_tests_processor:
-    name: Verify e2e Tests (Game Assets Processor - Linux)
+    name: Verify e2e Tests (Sync Library Processor - Linux)
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
