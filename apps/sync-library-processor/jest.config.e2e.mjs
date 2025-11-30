@@ -2,6 +2,7 @@ const defaultConfig = {
   globalSetup: '<rootDir>/__integration_tests__/globalSetup.ts',
   preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
+  resolver: '@nx/jest/plugins/resolver',
   transform: {
     '^.+\\.(j|t)s$': ['<rootDir>/testUtils/db-client-transformer.cjs'],
   },
@@ -24,6 +25,7 @@ const defaultConfig = {
     '__integration_tests__/globalSetup.ts',
     'jest.config.e2e.mjs',
   ],
+  coverageReporters: ['text', 'text-summary', 'lcov', 'json', 'clover'],
   moduleFileExtensions: ['json', 'js', 'ts'],
 }
 
