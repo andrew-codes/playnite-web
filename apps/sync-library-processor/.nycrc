@@ -2,6 +2,7 @@
   "report-dir": ".test-runs/e2e",
   "all": true,
   "sourceMap": true,
+  "include": ["src/**/*.ts"],
   "exclude": [
     "*.js",
     ".test-runs/**/*.*",
