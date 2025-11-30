@@ -32681,6 +32681,7 @@ __metadata:
   dependencies:
     "@jest/globals": "npm:^30.0.5"
     "@nx/devkit": "npm:^21.6.8"
+    "@nx/jest": "npm:^21.6.8"
     "@prisma/client": "npm:^6.16.2"
     "@types/express": "npm:^4.17.23"
     "@types/jest": "npm:^30.0.0"

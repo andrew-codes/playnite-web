@@ -20,6 +20,7 @@
   "devDependencies": {
     "@jest/globals": "^30.0.5",
     "@nx/devkit": "^21.6.8",
+    "@nx/jest": "^21.6.8",
     "@types/express": "^4.17.23",
     "@types/jest": "^30.0.0",
     "@types/lodash-es": "^4.17.12",
