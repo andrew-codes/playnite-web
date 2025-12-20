@@ -3,17 +3,17 @@
   "version": "0.0.1",
   "sideEffects": false,
   "dependencies": {
-    "@prisma/client": "^6.19.1",
+    "@prisma/client": "^7.2.0",
     "async-mqtt": "^2.6.3",
     "db-client": "workspace:*",
     "dev-logger": "workspace:*",
     "express": "^4.22.1",
     "isomorphic-dompurify": "^2.34.0",
     "lodash-es": "^4.17.22",
-    "prisma": "^6.19.1",
+    "prisma": "^7.2.0",
     "sharp": "^0.34.5",
     "sourced-assets": "workspace:*",
-    "uuid": "^11.1.0",
+    "uuid": "^13.0.0",
     "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
@@ -31,7 +31,7 @@
     "dev-services": "workspace:*",
     "esbuild": "^0.27.2",
     "esbuild-plugin-istanbul": "^0.3.0",
-    "glob": "^11.1.0",
+    "glob": "^13.0.0",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
     "nx": "^22.3.3",
@@ -44,6 +44,6 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "versioning": "workspace:*",
-    "wait-on": "^8.0.5"
+    "wait-on": "^9.0.3"
   }
 }
