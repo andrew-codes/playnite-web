@@ -10,7 +10,7 @@ import pkg from '../package.json' with { type: 'json' }
 
 async function run() {
   const buildNext = new Promise((resolve, reject) => {
-    const nextBuild = sh.exec(`yarn next build`, {
+    const nextBuild = sh.exec(`yarn next build --webpack`, {
       async: true,
       env: {
         ...process.env,
@@ -80,6 +80,9 @@ async function run() {
       external: Object.entries(pkg.dependencies)
         .filter(([name, version]) => !version.startsWith('workspace:'))
         .map(([name, version]) => name),
+      logOverride: {
+        'empty-import-meta': 'silent',
+      },
       bundle: true,
       minify: false,
       outdir: '_custom-server-build',
@@ -103,7 +106,7 @@ async function run() {
   serverContents = serverContents
     .replace(/var __filename.*$/gm, '')
     .replace(/var __dirname.*;$/gm, '')
-    .replace(/import_meta\.url/g, '__dirname')
+    .replace(/import_meta\.url/g, 'require("url").pathToFileURL(__dirname).href')
 
   await fs.writeFile('_custom-server-build/server.js', serverContents, 'utf8')
 
