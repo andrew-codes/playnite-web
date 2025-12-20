@@ -1,13 +1,12 @@
-// Load test mocks if running in test mode
 import MQTT from 'async-mqtt'
 import prisma from 'db-client'
 import logger from 'dev-logger'
 import express from 'express'
+import fs from 'fs'
 import { groupBy } from 'lodash-es'
+import path from 'path'
 import { IgnSourcedAssets } from 'sourced-assets/ign'
 import { CoverArtService } from './services/coverArtService.js'
-import fs from 'fs'
-import path from 'path'
 // Import test mocks - this file will setup mocks when TEST=E2E
 import './testSetup'
 
@@ -19,12 +18,14 @@ if (isE2E) {
   if (!fs.existsSync(nycOutputDir)) {
     fs.mkdirSync(nycOutputDir, { recursive: true })
   }
-  
+
   const coverageFile = path.join(nycOutputDir, `coverage-${process.pid}.json`)
-  
+
   function saveCoverage() {
     console.log('[E2E] saveCoverage() called')
-    console.log(`[E2E] Coverage exists: ${typeof (global as any).__coverage__ !== 'undefined'}`)
+    console.log(
+      `[E2E] Coverage exists: ${typeof (global as any).__coverage__ !== 'undefined'}`,
+    )
     if (typeof (global as any).__coverage__ !== 'undefined') {
       const coverageData = (global as any).__coverage__
       const fileCount = Object.keys(coverageData).length
@@ -33,7 +34,9 @@ if (isE2E) {
       try {
         fs.writeFileSync(coverageFile, JSON.stringify(coverageData))
         const written = fs.readFileSync(coverageFile, 'utf-8')
-        console.log(`[E2E] Coverage data saved to ${coverageFile} (${written.length} bytes)`)
+        console.log(
+          `[E2E] Coverage data saved to ${coverageFile} (${written.length} bytes)`,
+        )
       } catch (err) {
         console.error('[E2E] Failed to write coverage data:', err)
       }
@@ -41,7 +44,7 @@ if (isE2E) {
       console.warn('[E2E] No coverage data found in global.__coverage__')
     }
   }
-  
+
   // Save coverage on various exit signals
   console.log('[E2E] Registering exit handlers')
 
@@ -704,7 +707,9 @@ async function run() {
     if (process.env.TEST === 'E2E') {
       app.get('/coverage-status', (req, res) => {
         const hasCoverage = typeof global.__coverage__ !== 'undefined'
-        const coverageKeys = hasCoverage ? Object.keys(global.__coverage__).length : 0
+        const coverageKeys = hasCoverage
+          ? Object.keys(global.__coverage__).length
+          : 0
         res.json({
           hasCoverage,
           coverageKeys,
