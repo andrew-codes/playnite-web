@@ -26,7 +26,7 @@
     "dev-logger": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^22.16.5",
+    "@types/node": "^24.10.4",
     "glob": "^11.1.0",
     "jest": "^30.0.5",
     "nx": "^21.6.10",

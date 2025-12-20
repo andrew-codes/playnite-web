@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "sideEffects": false,
   "devDependencies": {
-    "@types/node": "^22.16.5",
+    "@types/node": "^24.10.4",
     "db-client": "workspace:*",
     "dev-logger": "workspace:*",
     "nx": "^21.6.10",
