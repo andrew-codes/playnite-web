@@ -17,7 +17,7 @@
   "devDependencies": {
     "@types/node": "^24.10.4",
     "glob": "^11.1.0",
-    "nx": "^21.6.10",
+    "nx": "^22.3.3",
     "rimraf": "^6.1.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

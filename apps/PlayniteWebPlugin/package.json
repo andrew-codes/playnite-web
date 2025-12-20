@@ -8,7 +8,7 @@
     "cpy-cli": "^6.0.0",
     "esbuild": "^0.27.2",
     "esbuild-register": "^3.6.0",
-    "nx": "^21.6.10",
+    "nx": "^22.3.3",
     "prettier": "^3.7.4",
     "rimraf": "^6.1.2",
     "shelljs": "^0.10.0",
