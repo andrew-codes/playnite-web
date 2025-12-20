@@ -22,9 +22,9 @@
     "dev-logger": "workspace:*"
   },
   "peerDependencies": {
-    "@prisma/client": "^6.16.2",
+    "@prisma/client": "^7.2.0",
     "isomorphic-dompurify": "^2.26.0",
-    "prisma": "^6.16.2"
+    "prisma": "^7.2.0"
   },
   "devDependencies": {
     "@prisma/client": "^7.2.0",
