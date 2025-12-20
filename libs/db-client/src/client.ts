@@ -1,12 +1,15 @@
+import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 import logger from 'dev-logger'
 import { htmlSanitizationExtension } from './extensions/htmlSanitization'
+
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 
 declare global {
   var __prisma__: PrismaClient | undefined
 }
 
-export const prisma = global.__prisma__ ?? new PrismaClient()
+export const prisma = global.__prisma__ ?? new PrismaClient({ adapter })
 prisma.$extends(htmlSanitizationExtension)
 
 if (process.env.NODE_ENV !== 'production') {

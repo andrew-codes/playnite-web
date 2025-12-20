@@ -22,11 +22,13 @@
     "dev-logger": "workspace:*"
   },
   "peerDependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "isomorphic-dompurify": "^2.26.0",
     "prisma": "^7.2.0"
   },
   "devDependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@types/node": "^24.10.4",
     "@yarnpkg/pnpify": "^4.1.6",
