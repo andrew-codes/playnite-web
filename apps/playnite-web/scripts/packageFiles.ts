@@ -15,6 +15,15 @@ async function run() {
   await fs.cp('.next', '_packaged/.next', { recursive: true })
 
   await fs.cp(
+    path.join('../../libs/db-client/src/prisma.config.ts'),
+    path.join('_packaged/prisma.config.ts'),
+  )
+  await fs.cp(
+    path.join('../../libs/db-client/.generated'),
+    path.join('_packaged/.generated'),
+    { recursive: true },
+  )
+  await fs.cp(
     path.join('../../libs/db-client/src/schema.prisma'),
     path.join('_packaged/schema.prisma'),
   )
