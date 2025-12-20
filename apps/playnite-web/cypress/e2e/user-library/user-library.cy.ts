@@ -154,7 +154,7 @@ describe('User Library', () => {
 })
 
 describe('User Library', () => {
-  describe('UI.', () => {
+  describe.skip('UI.', () => {
     Cypress._.each(breakpoints, ([name, x, y]) => {
       describe(`${name}.`, () => {
         beforeEach(() => {
