@@ -2939,21 +2939,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cypress-audit/lighthouse@npm:1.4.2":
+"@cypress-audit/lighthouse@npm:^1.4.2":
   version: 1.4.2
   resolution: "@cypress-audit/lighthouse@npm:1.4.2"
   dependencies:
     lighthouse: "npm:^10.0.2"
   checksum: 10c0/e82294fefc2f0ff48d41593afec55da5471b41303b9731fffe075a90012b93a7adef1411ad4bfa0d2d8cb1e12408204a12220e1d78d1f7f0208eddc0ea723bc8
-  languageName: node
-  linkType: hard
-
-"@cypress-audit/lighthouse@patch:@cypress-audit/lighthouse@npm%3A1.4.2#~/.yarn/patches/@cypress-audit-lighthouse-npm-1.4.2-4dedf3cc3a.patch":
-  version: 1.4.2
-  resolution: "@cypress-audit/lighthouse@patch:@cypress-audit/lighthouse@npm%3A1.4.2#~/.yarn/patches/@cypress-audit-lighthouse-npm-1.4.2-4dedf3cc3a.patch::version=1.4.2&hash=afcd60"
-  dependencies:
-    lighthouse: "npm:^10.0.2"
-  checksum: 10c0/d4e11be18d4b36a0d68edd906fdf5dd67b391739ea54f2417e1e6dcf638071aeec880aad19151d870d21b839023229fb5ce319200dbaf85d54c7b34b8a52ac3e
   languageName: node
   linkType: hard
 
@@ -12793,6 +12784,78 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bare-events@npm:^2.5.4, bare-events@npm:^2.7.0":
+  version: 2.8.2
+  resolution: "bare-events@npm:2.8.2"
+  peerDependencies:
+    bare-abort-controller: "*"
+  peerDependenciesMeta:
+    bare-abort-controller:
+      optional: true
+  checksum: 10c0/53fef240cf2cdcca62f78b6eead90ddb5a59b0929f414b13a63764c2b4f9de98ea8a578d033b04d64bb7b86dfbc402e937984e69950855cc3754c7b63da7db21
+  languageName: node
+  linkType: hard
+
+"bare-fs@npm:^4.0.1":
+  version: 4.5.2
+  resolution: "bare-fs@npm:4.5.2"
+  dependencies:
+    bare-events: "npm:^2.5.4"
+    bare-path: "npm:^3.0.0"
+    bare-stream: "npm:^2.6.4"
+    bare-url: "npm:^2.2.2"
+    fast-fifo: "npm:^1.3.2"
+  peerDependencies:
+    bare-buffer: "*"
+  peerDependenciesMeta:
+    bare-buffer:
+      optional: true
+  checksum: 10c0/b623c76d264017491667618055fdcebd5d3efe87768c06817bf29f912b77ce7f03f851eb7dc56810f5266f03927efafceded6b0911042d48dd3013b86c6bb79b
+  languageName: node
+  linkType: hard
+
+"bare-os@npm:^3.0.1":
+  version: 3.6.2
+  resolution: "bare-os@npm:3.6.2"
+  checksum: 10c0/7d917bc202b7efbb6b78658403fac04ae4e91db98d38cbd24037f896a2b1b4f4571d8cd408d12bed6a4c406d6abaf8d03836eacbcc4c75a0b6974e268574fc5a
+  languageName: node
+  linkType: hard
+
+"bare-path@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "bare-path@npm:3.0.0"
+  dependencies:
+    bare-os: "npm:^3.0.1"
+  checksum: 10c0/56a3ca82a9f808f4976cb1188640ac206546ce0ddff582afafc7bd2a6a5b31c3bd16422653aec656eeada2830cfbaa433c6cbf6d6b4d9eba033d5e06d60d9a68
+  languageName: node
+  linkType: hard
+
+"bare-stream@npm:^2.6.4":
+  version: 2.7.0
+  resolution: "bare-stream@npm:2.7.0"
+  dependencies:
+    streamx: "npm:^2.21.0"
+  peerDependencies:
+    bare-buffer: "*"
+    bare-events: "*"
+  peerDependenciesMeta:
+    bare-buffer:
+      optional: true
+    bare-events:
+      optional: true
+  checksum: 10c0/3acd840b7b288dc066226c36446ff605fba2ecce98f1a0ce6aa611b81aabbcd204046a3209bce172373d17eaeaa5b7d35a85649c18ffcb9f2c783242854e99bd
+  languageName: node
+  linkType: hard
+
+"bare-url@npm:^2.2.2":
+  version: 2.3.2
+  resolution: "bare-url@npm:2.3.2"
+  dependencies:
+    bare-path: "npm:^3.0.0"
+  checksum: 10c0/4fd0046314390a54404519d9db20e130ab3a341ef638d040f9603ae3fa0a1d84f6970357d21c8fc64e6163d1f61fd212cb1cfa4cb537dfead99fb06e3c030b15
+  languageName: node
+  linkType: hard
+
 "base64-js@npm:^1.3.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
@@ -15784,13 +15847,13 @@ __metadata:
     "@types/node": "npm:^22.16.5"
     "@yarnpkg/pnpify": "npm:^4.1.5"
     dev-logger: "workspace:*"
-    glob: "npm:^11.0.3"
+    glob: "npm:^11.1.0"
     isomorphic-dompurify: "npm:^2.26.0"
     jest: "npm:^30.0.5"
     nx: "npm:^21.6.10"
     prettier: "npm:^3.6.2"
     prisma: "npm:^6.16.2"
-    rimraf: "npm:^6.0.1"
+    rimraf: "npm:^6.1.2"
     shelljs: "npm:^0.10.0"
     ts-jest: "npm:^29.4.1"
     tslib: "npm:^2.8.1"
@@ -16399,9 +16462,9 @@ __metadata:
   resolution: "dev-logger@workspace:libs/dev-logger"
   dependencies:
     "@types/node": "npm:^22.16.5"
-    glob: "npm:^11.0.3"
+    glob: "npm:^11.1.0"
     nx: "npm:^21.6.10"
-    rimraf: "npm:^6.0.1"
+    rimraf: "npm:^6.1.2"
     tsx: "npm:^4.20.4"
     typescript: "npm:^5.9.2"
     winston: "npm:^3.17.0"
@@ -18131,6 +18194,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"events-universal@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "events-universal@npm:1.0.1"
+  dependencies:
+    bare-events: "npm:^2.7.0"
+  checksum: 10c0/a1d9a5e9f95843650f8ec240dd1221454c110189a9813f32cdf7185759b43f1f964367ac7dca4ebc69150b59043f2d77c7e122b0d03abf7c25477ea5494785a5
+  languageName: node
+  linkType: hard
+
 "events@npm:^3.0.0, events@npm:^3.2.0":
   version: 3.3.0
   resolution: "events@npm:3.3.0"
@@ -19373,7 +19445,7 @@ __metadata:
     esbuild: "npm:^0.25.10"
     esbuild-plugin-istanbul: "npm:^0.3.0"
     express: "npm:^4.21.2"
-    glob: "npm:^11.0.3"
+    glob: "npm:^11.1.0"
     isomorphic-dompurify: "npm:^2.26.0"
     jest: "npm:^30.0.5"
     lodash-es: "npm:^4.17.21"
@@ -19382,7 +19454,7 @@ __metadata:
     nyc: "npm:^17.1.0"
     prettier: "npm:^3.6.2"
     prisma: "npm:^6.16.2"
-    rimraf: "npm:^6.0.1"
+    rimraf: "npm:^6.1.2"
     sharp: "npm:^0.34.3"
     shelljs: "npm:^0.10.0"
     sourced-assets: "workspace:*"
@@ -19733,22 +19805,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^11.0.0":
-  version: 11.0.0
-  resolution: "glob@npm:11.0.0"
-  dependencies:
-    foreground-child: "npm:^3.1.0"
-    jackspeak: "npm:^4.0.1"
-    minimatch: "npm:^10.0.0"
-    minipass: "npm:^7.1.2"
-    package-json-from-dist: "npm:^1.0.0"
-    path-scurry: "npm:^2.0.0"
-  bin:
-    glob: dist/esm/bin.mjs
-  checksum: 10c0/419866015d8795258a8ac51de5b9d1a99c72634fc3ead93338e4da388e89773ab21681e494eac0fbc4250b003451ca3110bb4f1c9393d15d14466270094fdb4e
-  languageName: node
-  linkType: hard
-
 "glob@npm:^11.0.3":
   version: 11.0.3
   resolution: "glob@npm:11.0.3"
@@ -19762,6 +19818,33 @@ __metadata:
   bin:
     glob: dist/esm/bin.mjs
   checksum: 10c0/7d24457549ec2903920dfa3d8e76850e7c02aa709122f0164b240c712f5455c0b457e6f2a1eee39344c6148e39895be8094ae8cfef7ccc3296ed30bce250c661
+  languageName: node
+  linkType: hard
+
+"glob@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "glob@npm:11.1.0"
+  dependencies:
+    foreground-child: "npm:^3.3.1"
+    jackspeak: "npm:^4.1.1"
+    minimatch: "npm:^10.1.1"
+    minipass: "npm:^7.1.2"
+    package-json-from-dist: "npm:^1.0.0"
+    path-scurry: "npm:^2.0.0"
+  bin:
+    glob: dist/esm/bin.mjs
+  checksum: 10c0/1ceae07f23e316a6fa74581d9a74be6e8c2e590d2f7205034dd5c0435c53f5f7b712c2be00c3b65bf0a49294a1c6f4b98cd84c7637e29453b5aa13b79f1763a2
+  languageName: node
+  linkType: hard
+
+"glob@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "glob@npm:13.0.0"
+  dependencies:
+    minimatch: "npm:^10.1.1"
+    minipass: "npm:^7.1.2"
+    path-scurry: "npm:^2.0.0"
+  checksum: 10c0/8e2f5821f3f7c312dd102e23a15b80c79e0837a9872784293ba2e15ec73b3f3749a49a42a31bfcb4e52c84820a474e92331c2eebf18819d20308f5c33876630a
   languageName: node
   linkType: hard
 
@@ -22541,15 +22624,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jackspeak@npm:^4.0.1":
-  version: 4.0.2
-  resolution: "jackspeak@npm:4.0.2"
-  dependencies:
-    "@isaacs/cliui": "npm:^8.0.2"
-  checksum: 10c0/b26039d11c0163a95b1e58851b9ac453cce64ad6d1eb98a00b303ad5eeb761b29d33c9419d1e16c016d3f7151c8edf7df223e6cf93a1907655fd95d6ce85c0de
-  languageName: node
-  linkType: hard
-
 "jackspeak@npm:^4.1.1":
   version: 4.1.1
   resolution: "jackspeak@npm:4.1.1"
@@ -25265,21 +25339,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^10.0.0":
-  version: 10.0.1
-  resolution: "minimatch@npm:10.0.1"
-  dependencies:
-    brace-expansion: "npm:^2.0.1"
-  checksum: 10c0/e6c29a81fe83e1877ad51348306be2e8aeca18c88fdee7a99df44322314279e15799e41d7cb274e4e8bb0b451a3bc622d6182e157dfa1717d6cda75e9cd8cd5d
-  languageName: node
-  linkType: hard
-
 "minimatch@npm:^10.0.3":
   version: 10.0.3
   resolution: "minimatch@npm:10.0.3"
   dependencies:
     "@isaacs/brace-expansion": "npm:^5.0.0"
   checksum: 10c0/e43e4a905c5d70ac4cec8530ceaeccb9c544b1ba8ac45238e2a78121a01c17ff0c373346472d221872563204eabe929ad02669bb575cb1f0cc30facab369f70f
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^10.1.1":
+  version: 10.1.1
+  resolution: "minimatch@npm:10.1.1"
+  dependencies:
+    "@isaacs/brace-expansion": "npm:^5.0.0"
+  checksum: 10c0/c85d44821c71973d636091fddbfbffe62370f5ee3caf0241c5b60c18cd289e916200acb2361b7e987558cd06896d153e25d505db9fc1e43e6b4b6752e2702902
   languageName: node
   linkType: hard
 
@@ -25461,13 +25535,6 @@ __metadata:
   version: 3.0.0
   resolution: "mitt@npm:3.0.0"
   checksum: 10c0/c530c7747d5de7c9976c83d7c2450d9dfddbfed45f7e8b55e5e197be68dbed80e509a8aae97807ae6945dc79f3922d49b2813f3c08fd20cf8aa6a6a47e454a36
-  languageName: node
-  linkType: hard
-
-"mkdirp-classic@npm:^0.5.2":
-  version: 0.5.3
-  resolution: "mkdirp-classic@npm:0.5.3"
-  checksum: 10c0/95371d831d196960ddc3833cc6907e6b8f67ac5501a6582f47dfae5eb0f092e9f8ce88e0d83afcae95d6e2b61a01741ba03714eeafb6f7a6e9dcc158ac85b168
   languageName: node
   linkType: hard
 
@@ -27318,6 +27385,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"package-json-from-dist@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "package-json-from-dist@npm:1.0.1"
+  checksum: 10c0/62ba2785eb655fec084a257af34dbe24292ab74516d6aecef97ef72d4897310bc6898f6c85b5cd22770eaa1ce60d55a0230e150fb6a966e3ecd6c511e23d164b
+  languageName: node
+  linkType: hard
+
 "package-json@npm:^4.0.0":
   version: 4.0.1
   resolution: "package-json@npm:4.0.1"
@@ -27947,7 +28021,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.28.3"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@cypress-audit/lighthouse": "patch:@cypress-audit/lighthouse@npm%3A1.4.2#~/.yarn/patches/@cypress-audit-lighthouse-npm-1.4.2-4dedf3cc3a.patch"
+    "@cypress-audit/lighthouse": "npm:^1.4.2"
     "@cypress/code-coverage": "npm:^3.14.6"
     "@cypress/webpack-preprocessor": "npm:^7.0.1"
     "@eddeee888/gcg-typescript-resolver-files": "npm:^0.12.1"
@@ -28029,7 +28103,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^5.2.0"
     express: "npm:^4.21.2"
     framer-motion: "npm:^12.23.12"
-    glob: "npm:^11.0.3"
+    glob: "npm:^11.1.0"
     graphql: "npm:^16.11.0"
     graphql-modules: "npm:^3.0.0"
     graphql-scalars: "npm:^1.24.2"
@@ -28054,11 +28128,11 @@ __metadata:
     prettier: "npm:^3.6.2"
     prisma: "npm:^6.16.2"
     react: "npm:^19.2.3"
-    react-devtools: "npm:^6.1.5"
+    react-devtools: "npm:^7.0.1"
     react-dom: "npm:^19.2.3"
     react-redux: "npm:^9.2.0"
     react-window: "npm:^2.2.0"
-    rimraf: "npm:^6.0.1"
+    rimraf: "npm:^6.1.2"
     rxjs: "npm:^7.8.2"
     shelljs: "npm:^0.10.0"
     sourced-assets: "workspace:*"
@@ -28098,7 +28172,7 @@ __metadata:
     esbuild-register: "npm:^3.6.0"
     nx: "npm:^21.6.10"
     prettier: "npm:^3.6.2"
-    rimraf: "npm:^6.0.1"
+    rimraf: "npm:^6.1.2"
     shelljs: "npm:^0.8.5"
     typescript: "npm:^5.9.2"
     versioning: "workspace:*"
@@ -28117,7 +28191,7 @@ __metadata:
     esbuild-register: "npm:^3.6.0"
     nx: "npm:^21.6.10"
     prettier: "npm:^3.6.2"
-    rimraf: "npm:^6.0.1"
+    rimraf: "npm:^6.1.2"
     shelljs: "npm:^0.10.0"
     typescript: "npm:^5.9.2"
     versioning: "workspace:*"
@@ -28169,7 +28243,7 @@ __metadata:
     eslint-plugin-jsx-a11y: "npm:^6.10.2"
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^5.2.0"
-    glob: "npm:^11.0.3"
+    glob: "npm:^11.1.0"
     husky: "npm:^9.1.7"
     jest: "npm:^30.1.3"
     jest-config: "npm:^30.0.5"
@@ -29563,29 +29637,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-devtools-core@npm:6.1.5":
-  version: 6.1.5
-  resolution: "react-devtools-core@npm:6.1.5"
+"react-devtools-core@npm:7.0.1":
+  version: 7.0.1
+  resolution: "react-devtools-core@npm:7.0.1"
   dependencies:
     shell-quote: "npm:^1.6.1"
     ws: "npm:^7"
-  checksum: 10c0/7ef95213d06ad4b294f5dca73736641e2d8ff46861d3deacdc56a143b27de60ac6310898a52c7efd9fbd1bdef20c09305d05be80e6beb560f0f975aad6afbc5e
+  checksum: 10c0/a531bdb1203d1b903a50b8604c45cb53d09fb9654c4d558340d41569b1831746852f47b4698b04a102dd1b9a3861c2b9fa2d2af89a6e2e836026e0bea3d317ed
   languageName: node
   linkType: hard
 
-"react-devtools@npm:^6.1.5":
-  version: 6.1.5
-  resolution: "react-devtools@npm:6.1.5"
+"react-devtools@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "react-devtools@npm:7.0.1"
   dependencies:
     cross-spawn: "npm:^5.0.1"
     electron: "npm:^23.1.2"
     internal-ip: "npm:^6.2.0"
     minimist: "npm:^1.2.3"
-    react-devtools-core: "npm:6.1.5"
+    react-devtools-core: "npm:7.0.1"
     update-notifier: "npm:^2.1.0"
   bin:
     react-devtools: bin.js
-  checksum: 10c0/53cbf5d1636ff15bd2471b659f288e570d4eb803c585268955576536ff74fa7de671603dd75e4cb3c2c79e32bb7e555350805e89b08696ca81c2e87f025ba11e
+  checksum: 10c0/f2507f84c12f4921069cc250ae4b1711bf5c409dd3f65eb089f03ef4640e032392763b585088e2425775ef61a525cff0248e0a4ee918590e7fe1132e54fa3ce9
   languageName: node
   linkType: hard
 
@@ -30344,15 +30418,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rimraf@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "rimraf@npm:6.0.1"
+"rimraf@npm:^6.1.2":
+  version: 6.1.2
+  resolution: "rimraf@npm:6.1.2"
   dependencies:
-    glob: "npm:^11.0.0"
-    package-json-from-dist: "npm:^1.0.0"
+    glob: "npm:^13.0.0"
+    package-json-from-dist: "npm:^1.0.1"
   bin:
     rimraf: dist/esm/bin.mjs
-  checksum: 10c0/b30b6b072771f0d1e73b4ca5f37bb2944ee09375be9db5f558fcd3310000d29dfcfa93cf7734d75295ad5a7486dc8e40f63089ced1722a664539ffc0c3ece8c6
+  checksum: 10c0/c11a6a6fad937ada03c12fe688860690df8296d7cd08dbe59e3cc087f44e43573ae26ecbe48e54cb7a6db745b8c81fe5a15b9359233cc21d52d9b5b3330fcc74
   languageName: node
   linkType: hard
 
@@ -31896,11 +31970,11 @@ __metadata:
   dependencies:
     "@types/node": "npm:^22.16.5"
     dev-logger: "workspace:*"
-    glob: "npm:^11.0.3"
+    glob: "npm:^11.1.0"
     jest: "npm:^30.0.5"
     nx: "npm:^21.6.10"
     prettier: "npm:^3.6.2"
-    rimraf: "npm:^6.0.1"
+    rimraf: "npm:^6.1.2"
     shelljs: "npm:^0.10.0"
     ts-jest: "npm:^29.4.1"
     tslib: "npm:^2.8.1"
@@ -32275,6 +32349,17 @@ __metadata:
     bare-events:
       optional: true
   checksum: 10c0/b5e489cca78ff23b910e7d58c3e0059e692f93ec401a5974689f2c50c33c9d94f64246a305566ad52cdb818ee583e02e4257b9066fd654cb9f576a9692fdb976
+  languageName: node
+  linkType: hard
+
+"streamx@npm:^2.21.0":
+  version: 2.23.0
+  resolution: "streamx@npm:2.23.0"
+  dependencies:
+    events-universal: "npm:^1.0.0"
+    fast-fifo: "npm:^1.3.2"
+    text-decoder: "npm:^1.1.0"
+  checksum: 10c0/15708ce37818d588632fe1104e8febde573e33e8c0868bf583fce0703f3faf8d2a063c278e30df2270206811b69997f64eb78792099933a1fe757e786fbcbd44
   languageName: node
   linkType: hard
 
@@ -32893,14 +32978,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar-fs@npm:3.0.4":
-  version: 3.0.4
-  resolution: "tar-fs@npm:3.0.4"
+"tar-fs@npm:3.1.1":
+  version: 3.1.1
+  resolution: "tar-fs@npm:3.1.1"
   dependencies:
-    mkdirp-classic: "npm:^0.5.2"
+    bare-fs: "npm:^4.0.1"
+    bare-path: "npm:^3.0.0"
     pump: "npm:^3.0.0"
     tar-stream: "npm:^3.1.5"
-  checksum: 10c0/120f026d891e5b4f7147a5ae5816e3a9b7f2c5b4ca61714dab3fe1244961607dccca40c11cafc584e625838c57d1308da5bb28b13d70b85ab566bc4c9f1c88b1
+  dependenciesMeta:
+    bare-fs:
+      optional: true
+    bare-path:
+      optional: true
+  checksum: 10c0/0c677d711c4aa41f94e1a712aa647022ba1910ff84430739e5d9e95a615e3ea1b7112dc93164fc8ce30dc715befcf9cfdc64da27d4e7958d73c59bda06aa0d8e
   languageName: node
   linkType: hard
 
@@ -34643,7 +34734,7 @@ __metadata:
     dev-logger: "workspace:*"
     lodash-es: "npm:^4.17.21"
     nx: "npm:^21.6.10"
-    rimraf: "npm:^6.0.1"
+    rimraf: "npm:^6.1.2"
     semver: "npm:^7.7.2"
     shelljs: "npm:^0.10.0"
   languageName: unknown
