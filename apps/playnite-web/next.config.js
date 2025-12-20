@@ -1,6 +1,11 @@
 //@ts-check
 
-const { composePlugins, withNx } = require('@nx/next')
+import { composePlugins, withNx } from '@nx/next'
+import pkg from './package.json' with { type: 'json' }
+
+const localPackages = Object.entries(pkg.dependencies || {})
+  .filter(([dep, v]) => v.startsWith('workspace:'))
+  .map(([dep]) => dep)
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -26,7 +31,7 @@ const nextConfig = {
     forceSwcTransforms: process.env.INSTRUMENT !== 'true',
     ppr: false,
   },
-  transpilePackages: ['db-client', '@prisma/client'],
+  transpilePackages: ['@prisma/client'].concat(localPackages),
 
   // Configure webpack for code coverage instrumentation
   webpack: (config, { isServer }) => {
@@ -56,4 +61,4 @@ const plugins = [withNx]
 
 const config = composePlugins(...plugins)(nextConfig)
 
-module.exports = config
+export default config
