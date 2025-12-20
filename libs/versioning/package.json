@@ -4,14 +4,14 @@
   "private": true,
   "main": "src/index.ts",
   "dependencies": {
-    "debug": "^4.4.1",
-    "lodash-es": "^4.17.21",
-    "semver": "^7.7.2",
+    "debug": "^4.4.3",
+    "lodash-es": "^4.17.22",
+    "semver": "^7.7.3",
     "shelljs": "^0.10.0"
   },
   "devDependencies": {
-    "@types/semver": "^7.7.0",
-    "@types/shelljs": "^0.8.17",
+    "@types/semver": "^7.7.1",
+    "@types/shelljs": "^0.10.0",
     "dev-logger": "workspace:*",
     "nx": "^21.6.10",
     "rimraf": "^6.1.2"
