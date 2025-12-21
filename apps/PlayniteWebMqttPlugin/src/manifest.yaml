@@ -52,3 +52,10 @@ Packages:
       - "docs: new README sections"
       - "docs: fixed typo in SECURITY.md"
       - "docs: fixed missing logo in README"
+  - Version: 12.2.3
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v12.2.3/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_12_2_3.pext
+    ReleaseDate: 2025-12-21
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "chore: dependency updates (#900)"
+      - "chore: dep updates (#899)"
