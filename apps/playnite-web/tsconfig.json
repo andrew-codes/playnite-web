@@ -51,7 +51,7 @@
     "out-tsc",
     "dist",
     "node_modules",
-    "jest.config.ts",
+    "jest.config.js",
     "src/**/*.test.ts",
     ".next",
     "eslint.config.js",

@@ -5,6 +5,7 @@ module.exports = {
   testEnvironment: 'node',
   moduleFileExtensions: ['json', 'js', 'ts'],
   testMatch: ['<rootDir>/src/**/__tests__/**/*.test.ts'],
+  resetMocks: true,
   passWithNoTests: true,
   collectCoverage: true,
   coverageDirectory: '<rootDir>/.test-runs/unit',

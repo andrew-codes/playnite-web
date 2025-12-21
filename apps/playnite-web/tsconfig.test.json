@@ -10,7 +10,7 @@
     }
   },
   "include": [
-    "jest.config.ts",
+    "jest.config.js",
     "src/**/__tests__/**/*.test.ts",
     "src/**/*.d.ts"
   ],
