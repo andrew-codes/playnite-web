@@ -88,8 +88,20 @@ if (isE2E) {
   global.fetch = (async (url: string | URL | Request, init?: RequestInit) => {
     const urlString = url.toString()
 
+    let parsedUrl: URL
+    let hostname = ''
+    let pathname = ''
+    try {
+      parsedUrl = new URL(urlString)
+      hostname = parsedUrl.hostname
+      pathname = parsedUrl.pathname
+    } catch {
+      // If the URL cannot be parsed, fall back to the original fetch implementation
+      return originalFetch(url, init)
+    }
+
     // Mock IGN GraphQL API responses
-    if (urlString.includes('mollusk.apis.ign.com/graphql')) {
+    if (hostname === 'mollusk.apis.ign.com' && pathname === '/graphql') {
       return Promise.resolve({
         ok: true,
         status: 200,
@@ -129,7 +141,7 @@ if (isE2E) {
     }
 
     // Mock image downloads from IGN assets
-    if (urlString.includes('assets-prd.ignimgs.com')) {
+    if (hostname === 'assets-prd.ignimgs.com') {
       const imageBuffer = createTestImageBuffer()
       return Promise.resolve({
         ok: true,
