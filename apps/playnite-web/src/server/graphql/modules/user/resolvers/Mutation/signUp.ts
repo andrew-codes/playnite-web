@@ -103,9 +103,10 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
 
     return merge({}, authenticatedUser, { user: omit(newUser, ['password']) })
   } catch (error: any) {
-    if (error?.meta?.target) {
-      const target = error.meta.target as string
-      if (target.includes('username')) {
+    if (error?.meta?.driverAdapterError?.cause?.constraint?.fields) {
+      const fields = error.meta.driverAdapterError.cause.constraint
+        .fields as Array<string>
+      if (fields.includes('username')) {
         throw new GraphQLError('Username is already taken.', {
           extensions: {
             code: 'BAD_USER_INPUT',
@@ -113,7 +114,7 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
           },
         })
       }
-      if (target.includes('email')) {
+      if (fields.includes('email')) {
         throw new GraphQLError('Email is already in use.', {
           extensions: {
             code: 'BAD_USER_INPUT',
