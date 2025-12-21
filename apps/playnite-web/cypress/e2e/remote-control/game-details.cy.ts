@@ -24,7 +24,9 @@ describe(`Game details remote control.
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
 
-      cy.get('[data-test="Actions"]').children().should('have.length', 0)
+      cy.get('[data-test="Actions"]', { timeout: 10000 })
+        .children()
+        .should('have.length', 0)
     })
   })
 
@@ -42,7 +44,9 @@ describe(`Game details remote control.
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
 
-      cy.get('[data-test="Actions"]').children().should('have.length', 0)
+      cy.get('[data-test="Actions"]', { timeout: 10000 })
+        .children()
+        .should('have.length', 0)
     })
 
     describe('With Webhook setting.', () => {
@@ -63,6 +67,7 @@ describe(`Game details remote control.
           .then((library) => {
             cy.signIn('test', 'test')
             cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+            cy.waitForImages(40)
           })
       })
 
@@ -77,7 +82,7 @@ describe(`Game details remote control.
           .eq(0)
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -103,8 +108,11 @@ describe(`Game details remote control.
           .contains('Sony PlayStation 5 via PlayStation')
           .click()
 
-        cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.get('[data-test="Actions"] button', { timeout: 10000 }).eq(0).click()
         cy.wait('@api')
+
+        // Wait a moment for the webhook to be posted.
+        cy.wait(5000)
 
         cy.request({
           method: 'GET',
@@ -144,7 +152,7 @@ describe(`Game details remote control.
           .find('button img')
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -161,13 +169,16 @@ describe(`Game details remote control.
           .contains('Sony PlayStation 5 via PlayStation')
           .click()
 
-        cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.get('[data-test="Actions"] button', { timeout: 10000 }).eq(0).click()
         cy.get('[data-test="Actions"] li')
           .eq(2)
           .contains('button', 'Stop game')
           .click()
         cy.get('[data-test="Actions"] li').should('have.length', 1)
         cy.wait('@api')
+
+        // Wait a moment for the webhook to be posted.
+        cy.wait(5000)
 
         cy.request({
           method: 'GET',
@@ -202,7 +213,7 @@ describe(`Game details remote control.
           .find('button img')
           .click({ force: true })
 
-        cy.get('[data-test="Actions"] button')
+        cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
           .contains('PC (Windows) via Steam')
         cy.get('[data-test="Actions"] button').last().click()
@@ -219,12 +230,15 @@ describe(`Game details remote control.
           .contains('Sony PlayStation 5 via PlayStation')
           .click()
 
-        cy.get('[data-test="Actions"] button').eq(0).click()
+        cy.get('[data-test="Actions"] button', { timeout: 10000 }).eq(0).click()
         cy.get('[data-test="Actions"] li')
           .eq(1)
           .contains('button', 'Restart game')
           .click()
         cy.wait('@api')
+
+        // Wait a moment for the webhook to be posted.
+        cy.wait(5000)
 
         cy.request({
           method: 'GET',

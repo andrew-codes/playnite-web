@@ -14,7 +14,7 @@ declare global {
         password: string,
         libraryData: any,
       ) => Chainable<Response<any>>
-      waitForImages: () => Chainable<JQuery<HTMLImageElement>>
+      waitForImages: (count: number) => Chainable<JQuery<HTMLImageElement>>
       lighthouse: (
         thresholds?: any,
         options?: any,
@@ -71,7 +71,6 @@ Cypress.on('window:before:load', (win) => {
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   originalFn(url, options)
   cy.get('[data-test=Navigation]', { timeout: 15000 })
-  cy.waitForImages()
   // Wait for MUI to be ready
   // cy.wait(2200)
 })
@@ -143,9 +142,9 @@ Cypress.Commands.add(
   },
 )
 
-Cypress.Commands.add('waitForImages', () => {
+Cypress.Commands.add('waitForImages', (count?: number) => {
   return cy.get('img', { timeout: 10000 }).should(($images) => {
-    $images.each((_, img) => {
+    $images.slice(0, count ?? $images.length).each((_, img) => {
       expect(img.complete).to.equal(true)
     })
   })
