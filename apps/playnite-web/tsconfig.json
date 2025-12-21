@@ -54,8 +54,8 @@
     "jest.config.ts",
     "src/**/*.test.ts",
     ".next",
-    "eslint.config.mjs",
+    "eslint.config.js",
     "eslint.config.cjs",
-    "eslint.config.mjs"
+    "eslint.config.js"
   ]
 }

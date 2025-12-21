@@ -11,7 +11,7 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { uniq } from 'lodash'
+import { uniq } from 'lodash-es'
 import NextImage from 'next/image'
 import { FC, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'

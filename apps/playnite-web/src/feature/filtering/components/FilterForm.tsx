@@ -16,7 +16,7 @@ import {
   TextField,
   styled,
 } from '@mui/material'
-import { keyBy, merge, uniqBy } from 'lodash'
+import { keyBy, merge, uniqBy } from 'lodash-es'
 import {
   FC,
   Fragment,

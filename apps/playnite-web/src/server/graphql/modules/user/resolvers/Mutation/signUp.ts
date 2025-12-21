@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { merge, omit } from 'lodash'
+import { merge, omit } from 'lodash-es'
 import Permission from '../../../../../../feature/authorization/permissions'
 import { hashPassword } from '../../../../../auth/hashPassword'
 import { UsernamePasswordCredential } from '../../../../../auth/index'

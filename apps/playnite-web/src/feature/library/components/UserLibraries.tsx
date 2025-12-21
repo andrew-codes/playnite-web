@@ -2,7 +2,7 @@
 
 import { useQuery } from '@apollo/client/react'
 import { Grid, Typography } from '@mui/material'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { User } from '../../../../.generated/types.generated'
 import { UserLookupQuery } from '../../account/queries'
 import { Link } from '../../shared/components/Link'

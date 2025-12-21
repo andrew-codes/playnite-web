@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@apollo/client/react'
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 import { useEffect } from 'react'
 import { Game } from '../../../../.generated/types.generated'
 import { useSubscribeLibrarySync } from '../../library/hooks/subscribeLibrarySync'
