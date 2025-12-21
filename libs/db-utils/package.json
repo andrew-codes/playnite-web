@@ -2,9 +2,9 @@
   "name": "db-utils",
   "version": "0.0.1",
   "private": true,
-  "type": "commonjs",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "dependencies": {
     "db-client": "workspace:*",
     "dev-logger": "workspace:*",

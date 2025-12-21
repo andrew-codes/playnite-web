@@ -1,7 +1,8 @@
 {
   "name": "sync-library-processor",
   "version": "0.0.1",
-  "sideEffects": false,
+  "sideEffects": true,
+  "type": "module",
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",

@@ -2,13 +2,13 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "moduleDetection": "force",
-    "moduleResolution": "bundler",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
     "noEmit": false,
     "allowJs": true,
-    "module": "esnext",
+    "module": "nodenext",
     "types": ["node"],
     "rootDir": "./src",
     "baseUrl": "."
@@ -24,6 +24,9 @@
     },
     {
       "path": "../../libs/db-client/tsconfig.json"
+    },
+    {
+      "path": "../../libs/dev-logger/tsconfig.json"
     }
   ]
 }

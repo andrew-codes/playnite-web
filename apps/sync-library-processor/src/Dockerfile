@@ -1,12 +1,12 @@
 # Build stage
-FROM node:22-alpine3.20 AS builder
+FROM node:24-alpine3.20 AS builder
 
 WORKDIR /opt/playnite-web
 COPY _packaged/ .
 RUN npm install --force --omit=dev
 
 # Runtime stage
-FROM node:22-alpine3.20
+FROM node:24-alpine3.20
 LABEL org.opencontainers.image.source=https://github.com/andrew-codes/playnite-web
 
 RUN apk add --no-cache \

@@ -4,6 +4,10 @@ import { clearDatabase, disconnectDatabase } from 'db-utils'
 import logger from 'dev-logger'
 import { existsSync, readFileSync } from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 describe('Syncing library via MQTT.', () => {
   let mqtt: MQTT.AsyncMqttClient
@@ -798,7 +802,7 @@ describe('Syncing library via MQTT.', () => {
       })
     }, 60000)
 
-    test.only(`Remove tag.
+    test(`Remove tag.
       - Removes tag from database.
       - Removes tag associations from releases.`, async () => {
       // First, sync the full library

@@ -36,6 +36,17 @@ process.on('SIGINT', () => {
 })
 
 async function run() {
+  // Run database migrations before tests (equivalent to globalSetup)
+  logger.info('Running database migrations before e2e tests...')
+  const migrateResult = sh.exec('yarn tsx ../../libs/db-client/src/migrate.ts', {
+    silent: false,
+  })
+  if (migrateResult.code !== 0) {
+    logger.error('Database migration failed')
+    process.exit(1)
+  }
+  logger.info('Database migrations completed successfully.')
+
   sh.exec('rm _packaged/package.json')
 
   // Verify the server code has our coverage changes
@@ -44,7 +55,9 @@ async function run() {
   if (serverCode.includes('saveCoverage()')) {
     logger.info('✓ Server has coverage collection code')
   } else {
-    logger.error('✗ Server is missing coverage collection code - rebuild needed!')
+    logger.error(
+      '✗ Server is missing coverage collection code - rebuild needed!',
+    )
   }
 
   // Start the server (coverage is handled by server.ts in E2E mode)
@@ -87,11 +100,12 @@ async function run() {
 
   logger.info('Running integration tests')
   const testResult = sh.exec(
-    `yarn jest --config jest.config.e2e.mjs ${jestArgs.join(' ')}`,
+    `node --experimental-vm-modules $(yarn bin jest) --config jest.config.e2e.mjs ${jestArgs.join(' ')}`,
     {
       env: {
         ...process.env,
         CI: 'true',
+        NODE_OPTIONS: '--experimental-vm-modules',
       },
       silent: false,
     },

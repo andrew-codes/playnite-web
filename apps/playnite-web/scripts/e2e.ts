@@ -134,4 +134,6 @@ async function run() {
   })
 }
 
-run()
+run().catch((error) => {
+  logger.error('FAIL', error)
+})

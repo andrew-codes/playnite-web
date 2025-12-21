@@ -15,11 +15,13 @@ async function run() {
       let contents = await fs.readFile(args.path, 'utf-8')
       contents = (
         await transform(contents, {
-          format: 'cjs',
+          format: 'esm',
           platform: 'node',
           loader: 'ts',
           define: {
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+            'process.env.NODE_ENV': JSON.stringify(
+              process.env.NODE_ENV || 'production',
+            ),
           },
         })
       ).code
@@ -45,25 +47,31 @@ async function run() {
       .map(([key]) => key),
   )
   logger.debug(`Building...`)
+  const externalDeps = Object.entries(pkg.dependencies)
+    .filter(([key, version]) => {
+      return !version.includes('workspace:')
+    })
+    .map(([key]) => key)
+
+  logger.info('External dependencies:', externalDeps)
+
   await Promise.all([
     build({
-      format: 'cjs',
+      format: 'esm',
       entryPoints: {
         server: path.join('src/server.ts'),
       },
-      // tsconfig: 'tsconfig.server.json',
-      external: Object.entries(pkg.dependencies)
-        .filter(([key, version]) => {
-          return !version.includes('workspace:')
-        })
-        .map(([key]) => key),
+      tsconfig: 'tsconfig.server.json',
+      external: externalDeps,
       bundle: true,
       minify: false,
       outdir: 'build',
       platform: 'node',
       sourcemap: 'inline',
       define: {
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        'process.env.NODE_ENV': JSON.stringify(
+          process.env.NODE_ENV || 'production',
+        ),
       },
       plugins,
     }),
