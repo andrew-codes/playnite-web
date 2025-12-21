@@ -1,6 +1,11 @@
 //@ts-check
 
-const { composePlugins, withNx } = require('@nx/next')
+import { composePlugins, withNx } from '@nx/next'
+import pkg from './package.json' with { type: 'json' }
+
+const localPackages = Object.entries(pkg.dependencies || {})
+  .filter(([dep, v]) => v.startsWith('workspace:'))
+  .map(([dep]) => dep)
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -26,7 +31,8 @@ const nextConfig = {
     forceSwcTransforms: process.env.INSTRUMENT !== 'true',
     ppr: false,
   },
-  transpilePackages: ['db-client', '@prisma/client'],
+  serverExternalPackages: ['@prisma/client', '@prisma/adapter-pg', 'pg'],
+  transpilePackages: localPackages,
 
   // Configure webpack for code coverage instrumentation
   webpack: (config, { isServer }) => {
@@ -34,7 +40,7 @@ const nextConfig = {
       // Instrument client-side code (React components, client code)
       if (!isServer) {
         config.module.rules.push({
-          test: /\.(tsx?|jsx?)$/,
+          test: /\\.(tsx?|jsx?)$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
@@ -46,6 +52,35 @@ const nextConfig = {
         })
       }
     }
+
+    // Mark Prisma packages as external to prevent bundling
+    if (isServer) {
+      config.externals = config.externals || []
+      // Handle both array and function externals
+      const prismaExternals = [
+        '@prisma/client',
+        '@prisma/adapter-pg',
+        'pg',
+        /^@prisma\/client\/.*/,
+      ]
+
+      if (Array.isArray(config.externals)) {
+        config.externals.push(...prismaExternals)
+      } else if (typeof config.externals === 'function') {
+        const originalExternals = config.externals
+        config.externals = async (context, request, callback) => {
+          if (
+            prismaExternals.some((ext) =>
+              ext instanceof RegExp ? ext.test(request) : ext === request,
+            )
+          ) {
+            return callback(null, `commonjs ${request}`)
+          }
+          return originalExternals(context, request, callback)
+        }
+      }
+    }
+
     return config
   },
 
@@ -56,4 +91,4 @@ const plugins = [withNx]
 
 const config = composePlugins(...plugins)(nextConfig)
 
-module.exports = config
+export default config

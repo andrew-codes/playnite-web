@@ -170,9 +170,4 @@ async function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
-const config = {
-  matcher: ['/((?!_next|api|favicon.ico|sitemap.xml|robots.txt).*)'],
-  runtime: 'nodejs', // Use Node.js runtime instead of Edge Runtime for custom server compatibility
-}
-
-export { config, middleware }
+export { middleware }

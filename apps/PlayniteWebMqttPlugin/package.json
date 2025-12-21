@@ -3,17 +3,17 @@
   "description": "Playnite extension to automate starting/stopping of games via MQTT.",
   "version": "4.0.2",
   "devDependencies": {
-    "@types/shelljs": "^0.8.15",
-    "cpy": "^11.1.0",
-    "cpy-cli": "^5.0.0",
-    "esbuild": "^0.25.10",
+    "@types/shelljs": "^0.10.0",
+    "cpy": "^12.1.0",
+    "cpy-cli": "^6.0.0",
+    "esbuild": "^0.27.2",
     "esbuild-register": "^3.6.0",
-    "nx": "^21.6.10",
-    "prettier": "^3.6.2",
+    "nx": "^22.3.3",
+    "prettier": "^3.7.4",
     "rimraf": "^6.1.2",
-    "shelljs": "^0.8.5",
-    "typescript": "^5.9.2",
+    "shelljs": "^0.10.0",
+    "typescript": "^5.9.3",
     "versioning": "workspace:*",
-    "yaml": "^2.7.0"
+    "yaml": "^2.8.2"
   }
 }

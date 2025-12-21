@@ -1,3 +1,3 @@
-import { slug } from './slug.js'
+import { slug } from './slug'
 
 export { slug }

@@ -35,7 +35,6 @@ const config = defineConfig({
     baseUrl: 'http://localhost:3000',
     video: process.env.CMD === 'run',
     videoCompression: 32,
-    experimentalStudio: false,
     experimentalSourceRewriting: false,
     modifyObstructiveCode: false,
     setupNodeEvents: async (on, config) => {

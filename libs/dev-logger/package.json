@@ -11,15 +11,15 @@
     }
   },
   "dependencies": {
-    "winston": "^3.17.0",
+    "winston": "^3.19.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.16.5",
-    "glob": "^11.1.0",
-    "nx": "^21.6.10",
+    "@types/node": "^24.10.4",
+    "glob": "^13.0.0",
+    "nx": "^22.3.3",
     "rimraf": "^6.1.2",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2"
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }

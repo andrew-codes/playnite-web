@@ -15,12 +15,21 @@ async function run() {
   await fs.cp('.next', '_packaged/.next', { recursive: true })
 
   await fs.cp(
+    path.join('../../libs/db-client/src/prisma.config.ts'),
+    path.join('_packaged/prisma.config.ts'),
+  )
+  await fs.cp(
     path.join('../../libs/db-client/src/schema.prisma'),
     path.join('_packaged/schema.prisma'),
   )
   await fs.cp(
     path.join('../../libs/db-client/src/migrations'),
     path.join('_packaged/migrations'),
+    { recursive: true },
+  )
+  await fs.cp(
+    path.join('../../libs/db-client/.generated'),
+    path.join('_packaged/.generated'),
     { recursive: true },
   )
 
@@ -37,6 +46,25 @@ async function run() {
     '_packaged/package.json',
     JSON.stringify(pkg, null, 2),
     'utf8',
+  )
+
+  logger.info('Copying generated Prisma client')
+  await fs.mkdir(path.join('_packaged/node_modules/db-client'), {
+    recursive: true,
+  })
+  await fs.cp(
+    path.join('../../libs/db-client/.generated'),
+    path.join('_packaged/node_modules/db-client/.generated'),
+    { recursive: true },
+  )
+  await fs.cp(
+    path.join('../../libs/db-client/src'),
+    path.join('_packaged/node_modules/db-client/src'),
+    { recursive: true },
+  )
+  await fs.cp(
+    path.join('../../libs/db-client/package.json'),
+    path.join('_packaged/node_modules/db-client/package.json'),
   )
 
   logger.info('Copying binaries for Prisma')

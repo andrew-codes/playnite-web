@@ -48,14 +48,12 @@ const GameGrid: FC<{
   //   })
   // }, [gridRef, subscribe])
 
-  const Cell = ({ columnIndex, rowIndex, style }) => {
+  const Cell = ({ ariaAttributes, columnIndex, rowIndex, style }) => {
     const game = games[rowIndex * columns + columnIndex]
-    if (!game) {
-      return null
-    }
 
     return (
       <div
+        {...ariaAttributes}
         style={{
           ...style,
           left: style.left,
@@ -63,34 +61,36 @@ const GameGrid: FC<{
           ...(style.height && { height: style?.height }),
         }}
       >
-        <GameFigure
-          game={game}
-          width={`${style.width - horizontalGap}px`}
-          onSelect={(evt) => {
-            onSelect?.(evt, game)
-          }}
-          priority={true}
-        >
-          <Typography
-            variant="caption"
-            component="figcaption"
-            sx={{
-              fontWeight: 'bold',
-              textWrap: 'balance',
-              lineHeight: '1.5',
-              textOverflow: 'ellipsis',
-              overflowY: 'hidden',
-              maxHeight: '4rem',
-              lineClamp: '2',
-              fontSize: '15px',
-              display: '-webkit-box',
-              WebkitLineClamp: '2',
-              WebkitBoxOrient: 'vertical ',
+        {game && (
+          <GameFigure
+            game={game}
+            width={`${style.width - horizontalGap}px`}
+            onSelect={(evt) => {
+              onSelect?.(evt, game)
             }}
+            priority={true}
           >
-            {game.primaryRelease?.title || 'Unknown Game'}
-          </Typography>
-        </GameFigure>
+            <Typography
+              variant="caption"
+              component="figcaption"
+              sx={{
+                fontWeight: 'bold',
+                textWrap: 'balance',
+                lineHeight: '1.5',
+                textOverflow: 'ellipsis',
+                overflowY: 'hidden',
+                maxHeight: '4rem',
+                lineClamp: '2',
+                fontSize: '15px',
+                display: '-webkit-box',
+                WebkitLineClamp: '2',
+                WebkitBoxOrient: 'vertical ',
+              }}
+            >
+              {game.primaryRelease?.title || 'Unknown Game'}
+            </Typography>
+          </GameFigure>
+        )}
       </div>
     )
   }
