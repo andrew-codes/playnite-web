@@ -3,9 +3,6 @@ FROM node:24-alpine3.20 AS builder
 
 WORKDIR /opt/playnite-web-app
 COPY _packaged/package.json ./
-COPY _packaged/.prisma/ ./.prisma
-COPY _packaged/migrations/ ./migrations
-COPY _packaged/schema.prisma .
 RUN npm install --force --omit=dev
 
 

@@ -61,7 +61,9 @@ export const stopRelease: NonNullable<
             id: create('Release', release.id),
             title: release.title,
             playniteId: release.playniteId,
-            coverUrl: `/cover-art/${release.Game.coverArt}`,
+            coverUrl: release.Game.coverArt
+              ? `/cover-art/${release.Game.coverArt}`
+              : null,
             library: {
               id: create('Library', release.Library.id),
               name: release.Library.name,

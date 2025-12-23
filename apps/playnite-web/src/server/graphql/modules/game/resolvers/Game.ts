@@ -8,7 +8,8 @@ export const Game: GameResolvers = {
     return create('Game', _parent.id).toString()
   },
   coverArt: async (_parent, _arg, _ctx) => {
-    return `localhost:3000/cover-art/${_parent.coverArt}`
+    if (!_parent.coverArt) return null
+    return `/cover-art/${_parent.coverArt}`
   },
   releases: async (_parent, _arg, _ctx) => {
     const releases = await _ctx.loaders.releasesByGameLoader.load(

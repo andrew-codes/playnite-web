@@ -29,9 +29,8 @@ services:
       - MQTT_PORT=1883
       - MQTT_USERNAME=${MQTT_USERNAME}
       - MQTT_PASSWORD=${MQTT_PASSWORD}
-      - COVER_ART_PATH=/opt/playnite-web-app/game-assets/cover-art
     volumes:
-      - ../../apps/playnite-web/game-assets:/opt/playnite-web-app/game-assets
+      - ../../apps/playnite-web/public/cover-art:/opt/playnite-web-app/public/cover-art
     depends_on:
       - db
       - mqtt

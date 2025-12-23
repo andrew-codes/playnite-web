@@ -335,6 +335,7 @@
         "parallel": false,
         "commands": [
           "yarn tsx scripts/packageFiles.ts",
+          "yarn tsx scripts/packageDemoCoverArt.ts",
           "yarn tsx scripts/package.ts"
         ],
         "env": {

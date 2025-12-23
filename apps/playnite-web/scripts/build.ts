@@ -97,22 +97,6 @@ async function run() {
     }),
   )
 
-  await buildNext
-  logger.info('Modifying prisma client')
-  // let serverContents = await fs.readFile(
-  //   '_custom-server-build/server.js',
-  //   'utf8',
-  // )
-  // serverContents = serverContents
-  //   .replace(/var __filename.*$/gm, '')
-  //   .replace(/var __dirname.*;$/gm, '')
-  //   .replace(
-  //     /import_meta\.url/g,
-  //     'require("url").pathToFileURL(__dirname).href',
-  //   )
-
-  // await fs.writeFile('_custom-server-build/server.js', serverContents, 'utf8')
-
   const codes = await Promise.all(tasks)
   logger.debug(`Build completed with codes: ${codes}`)
   logger.info(`Build complete`)
