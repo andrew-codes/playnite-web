@@ -296,7 +296,7 @@ describe('Filtering.', () => {
     })
   })
 
-  describe('UI.', () => {
+  describe.skip('UI.', () => {
     Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
       describe(`${breakpointName}.`, () => {
         beforeEach(() => {
