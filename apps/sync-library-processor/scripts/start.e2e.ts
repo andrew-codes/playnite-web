@@ -1,7 +1,12 @@
 import { ChildProcess } from 'child_process'
 import logger from 'dev-logger'
+import path, { dirname } from 'path'
 import sh from 'shelljs'
+import { fileURLToPath } from 'url'
 import waitOn from 'wait-on'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 let runCp: ChildProcess | null = null
 process.on('exit', () => {
@@ -38,9 +43,12 @@ process.on('SIGINT', () => {
 })
 
 async function run() {
-  sh.exec('rm _packaged/package.json')
+  sh.exec(`rm _packaged/package.json`, {
+    cwd: path.join(__dirname, '../'),
+    silent: true,
+  })
   runCp = sh.exec(`yarn nyc node server.js`, {
-    cwd: '_packaged',
+    cwd: path.join(__dirname, '../_packaged'),
     env: {
       ...process.env,
       PORT: '3001',

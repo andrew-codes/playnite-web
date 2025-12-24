@@ -243,6 +243,7 @@
         "cwd": "{projectRoot}",
         "commands": [
           "yarn tsx scripts/packageFiles.ts",
+          "yarn nx build sync-library-processor",
           "yarn tsx ../sync-library-processor/scripts/start.e2e.ts & yarn tsx scripts/e2e.ts"
         ],
         "env": {
