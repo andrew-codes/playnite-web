@@ -16,6 +16,7 @@ describe(`Game details remote control.
       cy.waitForImages(40)
 
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+      cy.wait('@rsc')
 
       cy.get('[data-test="Actions"]', { timeout: 10000 })
         .children()
@@ -44,6 +45,7 @@ describe(`Game details remote control.
           cy.waitForImages(40)
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+      cy.wait('@rsc')
 
       cy.get('[data-test="Actions"]', { timeout: 10000 })
         .children()

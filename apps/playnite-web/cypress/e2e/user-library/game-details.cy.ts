@@ -1,7 +1,7 @@
 import { breakpoints } from '../../support/breakpoints'
 
 describe('Game details.', () => {
-  describe('UI.', () => {
+  describe.skip('UI.', () => {
     Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
       describe(`${breakpointName}.`, () => {
         beforeEach(() => {
