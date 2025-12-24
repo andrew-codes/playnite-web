@@ -84,6 +84,7 @@ describe(`Game details remote control.
           .find('button img')
           .eq(0)
           .click({ force: true })
+        cy.wait('@rsc')
 
         cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
@@ -152,6 +153,7 @@ describe(`Game details remote control.
           .parents('[data-test=GameFigure]')
           .find('button img')
           .click({ force: true })
+        cy.wait('@rsc')
 
         cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
@@ -211,6 +213,7 @@ describe(`Game details remote control.
           .parents('[data-test=GameFigure]')
           .find('button img')
           .click({ force: true })
+        cy.wait('@rsc')
 
         cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
