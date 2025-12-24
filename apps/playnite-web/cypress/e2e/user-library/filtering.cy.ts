@@ -333,6 +333,7 @@ describe('Filtering.', () => {
             cy.compareSnapshot({
               name: `platform-filter-lookup-${breakpointName}`,
             })
+            cy.get('@lookup').type(' 5')
             cy.contains('Sony PlayStation 5').click()
 
             cy.get('@lookup').type('PC')

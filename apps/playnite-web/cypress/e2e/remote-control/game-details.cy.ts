@@ -11,7 +11,11 @@ describe(`Game details remote control.
   describe('Unauthenticated users.', () => {
     it(`No action controls.`, () => {
       cy.visit(`/u/test/Library:1`)
-      cy.wait('@image')
+      cy.wait('@api')
+      cy.wait('@api')
+      cy.waitForImages(40)
+
+      cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
 
       cy.get('[data-test="Actions"]', { timeout: 10000 })
         .children()
@@ -26,7 +30,7 @@ describe(`Game details remote control.
     })
 
     it(`Non-owned library.
-            - No action controls.`, () => {
+      - No action controls.`, () => {
       cy.fixture('librarySync.json')
         .then((libraryData) => {
           cy.syncLibrary('test', 'test', libraryData)
@@ -35,6 +39,9 @@ describe(`Game details remote control.
         .then((library) => {
           cy.signIn('test', 'test')
           cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
+          cy.wait('@api')
+          cy.wait('@api')
+          cy.waitForImages(40)
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
 
@@ -61,6 +68,8 @@ describe(`Game details remote control.
           .then((library) => {
             cy.signIn('test', 'test')
             cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+            cy.wait('@api')
+            cy.wait('@api')
             cy.waitForImages(40)
           })
       })

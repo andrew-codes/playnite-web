@@ -54,7 +54,7 @@ async function run() {
       '_packaged/next.config.js',
       nextConfigContents.replace(
         "import pkg from './package.json' with { type: 'json' }",
-        "import pkg from './deps.json'",
+        "import pkg from './deps.json' with { type: 'json' }",
       ),
     )
 

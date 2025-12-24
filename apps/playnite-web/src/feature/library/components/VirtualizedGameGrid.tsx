@@ -50,6 +50,10 @@ const GameGrid: FC<{
   const Cell = ({ ariaAttributes, columnIndex, rowIndex, style }) => {
     const game = games[rowIndex * columns + columnIndex]
 
+    if (!game) {
+      return <div style={style} />
+    }
+
     return (
       <div
         {...ariaAttributes}
