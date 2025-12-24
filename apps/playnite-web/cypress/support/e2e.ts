@@ -15,16 +15,24 @@ declare global {
         libraryData: any,
       ) => Chainable<Response<any>>
       waitForImages: (count: number) => Chainable<JQuery<HTMLImageElement>>
+      syncLibraryAndQuery: (
+        libraryData: any,
+        queryFields: string,
+      ) => Chainable<any>
       lighthouse: (
         thresholds?: any,
         options?: any,
         config?: any,
       ) => Chainable<any>
       clickMenuItem: (text: string) => Chainable<JQuery<HTMLElement>>
+      restoreSnapshot: (snapshotName: string) => Chainable<boolean>
     }
   }
 }
 
+Cypress.Commands.add('restoreSnapshot', (snapshotName: string) => {
+  return cy.task('restoreDatabaseSnapshot', snapshotName)
+})
 compareSnapshotCommand()
 
 beforeEach(() => {
@@ -43,10 +51,13 @@ beforeEach(() => {
 
 beforeEach(() => {
   cy.intercept('POST', '/api').as('api')
+  cy.intercept('_next/image*').as('image')
+  cy.intercept(/.*_rsc=.*/).as('rsc')
 })
 
 beforeEach(() => {
-  cy.task('clearDatabase')
+  // Restore from snapshot instead of clearing database
+  cy.task('restoreDatabaseSnapshot', 'single-user-single-library')
 })
 
 Cypress.on('window:before:load', (win) => {
@@ -103,29 +114,6 @@ Cypress.Commands.add('signIn', (username: string, password: string) => {
     })
 })
 
-Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
-  cy.signIn(username, password)
-
-  return cy.request({
-    method: 'POST',
-    url: 'http://localhost:3000/api',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      variables: {
-        libraryData,
-      },
-      query: `mutation syncLibrary($libraryData: LibraryInput!) {
-        syncLibrary(libraryData: $libraryData) {
-          id
-        }
-      }`,
-    }),
-  })
-})
-
 Cypress.Commands.add('signOut', () => {
   return cy.clearAllCookies()
 })
@@ -143,9 +131,114 @@ Cypress.Commands.add(
 )
 
 Cypress.Commands.add('waitForImages', (count?: number) => {
-  return cy.get('img', { timeout: 10000 }).should(($images) => {
+  return cy.get('img', { timeout: 30000 }).should(($images) => {
     $images.slice(0, count ?? $images.length).each((_, img) => {
       expect(img.complete).to.equal(true)
     })
   })
+})
+
+Cypress.Commands.add('syncLibrary', (username, password, libraryData) => {
+  cy.signIn(username, password)
+
+  return cy
+    .request({
+      method: 'POST',
+      url: 'http://localhost:3000/api',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        variables: {
+          libraryData,
+        },
+        query: `mutation syncLibrary($libraryData: LibraryInput!) {
+        syncLibrary(libraryData: $libraryData) {
+          id
+        }
+      }`,
+      }),
+    })
+    .then((response) => {
+      // Extract numeric ID from format "Library:1"
+      const libraryId = parseInt(
+        response.body.data.syncLibrary.id.split(':')[1],
+        10,
+      )
+
+      // Wait for the sync to complete by polling database
+      return cy
+        .task('waitForLibrarySync', {
+          libraryId,
+          expectedReleaseCount: libraryData.update.releases.length,
+          timeout: 30000,
+        })
+        .then(() => {
+          // Return the library ID for further queries
+          return cy.wrap(response)
+        })
+    })
+})
+
+Cypress.Commands.add('syncLibraryAndQuery', (libraryData, queryFields) => {
+  return cy
+    .request({
+      method: 'POST',
+      url: 'http://localhost:3000/api',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        variables: {
+          libraryData,
+        },
+        query: `mutation syncLibrary($libraryData: LibraryInput!) {
+        syncLibrary(libraryData: $libraryData) {
+          id
+        }
+      }`,
+      }),
+    })
+    .then((response) => {
+      // Extract numeric ID from format "Library:1"
+      const libraryId = parseInt(
+        response.body.data.syncLibrary.id.split(':')[1],
+        10,
+      )
+
+      // Wait for the sync to complete
+      return cy
+        .task('waitForLibrarySync', {
+          libraryId,
+          expectedReleaseCount: libraryData.update.releases.length,
+          timeout: 30000,
+        })
+        .then(() => {
+          // Query the library with the requested fields
+          return cy
+            .request({
+              method: 'POST',
+              url: 'http://localhost:3000/api',
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+              body: JSON.stringify({
+                variables: {
+                  libraryId: response.body.data.syncLibrary.id,
+                },
+                query: `query($libraryId: String!) {
+                  library(libraryId: $libraryId) {
+                    ${queryFields}
+                  }
+                }`,
+              }),
+            })
+            .then((queryResponse) => {
+              return cy.wrap(queryResponse.body.data.library)
+            })
+        })
+    })
 })

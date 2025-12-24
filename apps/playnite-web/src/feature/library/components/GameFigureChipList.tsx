@@ -11,7 +11,8 @@ import {
   styled,
   useTheme,
 } from '@mui/material'
-import { uniq } from 'lodash'
+import { uniq } from 'lodash-es'
+import NextImage from 'next/image'
 import { FC, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Platform } from '../../../../.generated/types.generated'
@@ -21,13 +22,11 @@ import { useMe } from '../../account/hooks/me'
 import { useUpdateRelease } from '../../game/hooks/updateRelease'
 import { GameFigureContext } from './GameFigure'
 
-const PlatformImage = styled('img')(({ theme }) => ({
-  borderRadius: `calc(${theme.shape.borderRadius} / 2)`,
-}))
-
 const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
   platform,
 }) => {
+  const theme = useTheme()
+
   if (Array.isArray(platform)) {
     if (platform.length === 0) {
       return null
@@ -42,10 +41,15 @@ const PlatformListItem: FC<{ platform: Platform | Array<Platform> }> = ({
 
   return (
     <li>
-      <PlatformImage
+      <NextImage
+        width={24}
+        height={24}
         data-test="PlatformListItem"
         alt={platform.name}
         src={platform.icon ?? ''}
+        style={{
+          borderRadius: `calc(${theme.shape.borderRadius} / 2)`,
+        }}
       />
     </li>
   )

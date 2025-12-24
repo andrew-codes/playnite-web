@@ -1,6 +1,7 @@
 import { migrate } from 'db-client/migrate'
 import logger from 'dev-logger'
 import sh from 'shelljs'
+import path from 'path'
 
 async function run() {
   logger.info('Shutting down any existing dev services...')
@@ -56,7 +57,9 @@ async function run() {
     process.exit(1)
   }
 
-  await migrate()
+  await migrate(
+    path.join(__dirname, '../../libs/db-client/src/prisma.config.js'),
+  )
 }
 
 run()

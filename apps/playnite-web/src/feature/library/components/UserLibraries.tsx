@@ -1,21 +1,23 @@
 'use client'
 
-import { QueryRef, useReadQuery } from '@apollo/client/react'
+import { useQuery } from '@apollo/client/react'
 import { Grid, Typography } from '@mui/material'
-import { isEmpty } from 'lodash'
+import { isEmpty } from 'lodash-es'
 import { User } from '../../../../.generated/types.generated'
+import { UserLookupQuery } from '../../account/queries'
 import { Link } from '../../shared/components/Link'
 
 interface UserLibrariesProps {
   username: string
-  queryRef: QueryRef<{ lookupUser: User }, { username: string }>
 }
 
-const UserLibraries = ({ username, queryRef }: UserLibrariesProps) => {
-  const { data } = useReadQuery(queryRef)
-  const user = data.lookupUser
+const UserLibraries = ({ username }: UserLibrariesProps) => {
+  const { data } = useQuery<{ lookupUser: User }>(UserLookupQuery, {
+    variables: { username },
+  })
+  const user = data?.lookupUser
 
-  if (isEmpty(user.libraries)) {
+  if (isEmpty(user?.libraries)) {
     return (
       <Typography>
         No libraries found for this user.
@@ -27,7 +29,7 @@ const UserLibraries = ({ username, queryRef }: UserLibrariesProps) => {
 
   return (
     <Grid container spacing={2}>
-      {user.libraries.map((library, i) => (
+      {user?.libraries.map((library, i) => (
         <Grid key={library.id} size={3}>
           <div>
             <Link href={`/u/${username}/${library.id}`}>

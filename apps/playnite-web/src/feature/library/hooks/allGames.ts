@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client/react'
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 import { useEffect } from 'react'
 import { Library } from '../../../../.generated/types.generated'
 import { AllGamesQuery } from '../queries'

@@ -1,5 +1,5 @@
 // import createDebugger from 'debug'
-// import { first } from 'lodash'
+// import { first } from 'lodash-es'
 // import { Game } from '../../../../../data/types.entities'
 // import { fromString } from '../../../../../oid'
 // import type { MutationResolvers } from './../../../../../../../.generated/types.generated'

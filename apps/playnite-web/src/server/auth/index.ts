@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import { GraphQLError } from 'graphql'
 import jwt from 'jsonwebtoken'
-import { merge, omit } from 'lodash'
+import { merge, omit } from 'lodash-es'
 import { Claim, User } from '../../../.generated/types.generated'
 import prisma from '../data/providers/postgres/client'
 import logger from '../logger'

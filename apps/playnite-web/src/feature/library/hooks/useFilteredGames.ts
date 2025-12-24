@@ -1,5 +1,5 @@
 import { DeepPartial } from '@apollo/client/utilities'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Game } from '../../../../.generated/types.generated'

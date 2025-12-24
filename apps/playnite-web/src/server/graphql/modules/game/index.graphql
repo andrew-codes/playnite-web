@@ -1,5 +1,6 @@
 type Game {
   id: String!
+  coverArt: String
   primaryRelease: Release
   releases: [Release!]!
   library: Library!

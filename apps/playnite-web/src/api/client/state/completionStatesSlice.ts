@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { keyBy, memoize, merge } from 'lodash'
+import { keyBy, memoize, merge } from 'lodash-es'
 
 const initialState: {
   completionStates: Record<string, { id: string; name: string }>

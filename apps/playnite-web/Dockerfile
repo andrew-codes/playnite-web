@@ -3,9 +3,6 @@ FROM node:24-alpine3.20 AS builder
 
 WORKDIR /opt/playnite-web-app
 COPY _packaged/package.json ./
-COPY _packaged/.prisma/ ./.prisma
-COPY _packaged/migrations/ ./migrations
-COPY _packaged/schema.prisma .
 RUN npm install --force --omit=dev
 
 
@@ -14,7 +11,8 @@ FROM node:24-alpine3.20
 LABEL org.opencontainers.image.source=https://github.com/andrew-codes/playnite-web
 
 RUN apk add --no-cache \
-  bash
+  bash \
+  libc6-compat
 
 WORKDIR /opt/playnite-web-app
 

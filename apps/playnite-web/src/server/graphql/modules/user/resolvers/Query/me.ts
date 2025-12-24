@@ -1,4 +1,4 @@
-import { merge, omit } from 'lodash'
+import { merge, omit } from 'lodash-es'
 import type { QueryResolvers } from '../../../../../../../.generated/types.generated'
 import { fromString, hasIdentity } from '../../../../../oid'
 import { GraphUser } from '../../../../resolverTypes'

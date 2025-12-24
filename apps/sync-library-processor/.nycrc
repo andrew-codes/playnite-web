@@ -1,0 +1,19 @@
+{
+  "report-dir": ".test-runs/e2e",
+  "all": true,
+  "sourceMap": true,
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "*.js",
+    ".test-runs/**/*.*",
+    "scripts/**/*.*",
+    "node_modules/**/*.*",
+    "**/interfaces.ts",
+    "src/testSetup.ts",
+    "jest.config.e2e.mjs",
+    "__integration_tests__/**/*.*"
+  ],
+  "reporter": ["lcov", "json", "text", "html", "clover"],
+  "instrument": false,
+  "cache": false
+}

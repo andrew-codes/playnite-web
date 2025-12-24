@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client/react'
-import { keyBy, merge } from 'lodash'
+import { keyBy, merge } from 'lodash-es'
 import { UserSetting } from '../../../../.generated/types.generated'
 import { UpdateUserSettingsMutation } from '../queries'
 

@@ -13,10 +13,11 @@ async function run() {
   await fs.mkdir(path.join('_packaged/.next'), { recursive: true })
   await fs.cp('_custom-server-build', '_packaged', { recursive: true })
   await fs.cp('.next', '_packaged/.next', { recursive: true })
+  await fs.mkdir(path.join('_packaged/public/cover-art'), { recursive: true })
 
   await fs.cp(
-    path.join('../../libs/db-client/src/prisma.config.ts'),
-    path.join('_packaged/prisma.config.ts'),
+    path.join('../../libs/db-client/src/prisma.config.js'),
+    path.join('_packaged/prisma.config.js'),
   )
   await fs.cp(
     path.join('../../libs/db-client/src/schema.prisma'),
@@ -31,6 +32,11 @@ async function run() {
     path.join('../../libs/db-client/.generated'),
     path.join('_packaged/.generated'),
     { recursive: true },
+  )
+
+  await fs.cp(
+    path.join('next.config.js'),
+    path.join('_packaged/next.config.js'),
   )
 
   logger.info('Copying and modifying package.json')

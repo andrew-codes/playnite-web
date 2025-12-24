@@ -1,5 +1,5 @@
 import { GraphQLError } from 'graphql'
-import { merge, omit } from 'lodash'
+import { merge, omit } from 'lodash-es'
 import Permission from '../../../../../../feature/authorization/permissions'
 import { hashPassword } from '../../../../../auth/hashPassword'
 import { UsernamePasswordCredential } from '../../../../../auth/index'
@@ -13,7 +13,7 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
   _ctx,
 ) => {
   if (
-    (await _ctx.db.user.count()) > 1 &&
+    (await _ctx.db.user.count()) > 0 &&
     (
       await _ctx.db.siteSettings.findUnique({
         where: { id: defaultSettings.allowAnonymousAccountCreation.id },

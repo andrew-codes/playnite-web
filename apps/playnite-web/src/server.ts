@@ -16,6 +16,8 @@ import schema from './server/graphql/schema'
 import { subscriptionPublisher } from './server/graphql/subscriptionPublisher'
 import logger from './server/logger'
 import { setupApp } from './server/setupApp'
+import path from 'path'
+import fs from 'fs'
 
 const dev = process.env.NODE_ENV !== 'production'
 const domain = process.env.HOST || 'localhost'
@@ -35,7 +37,11 @@ if (!dev) {
 }
 
 async function run() {
-  await migrate()
+  const configPath =
+    process.env.NODE_ENV !== 'development'
+      ? './prisma.config.js'
+      : path.join('../../libs/db-client/src/prisma.config.js')
+  await migrate(configPath)
   await setupApp()
 
   try {
@@ -45,6 +51,17 @@ async function run() {
 
     // create express app
     const app = express()
+
+    // Serve cover art via Express for direct access (fallback)
+    const coverArtPath = path.resolve('./public/cover-art')
+    app.use(
+      '/cover-art',
+      express.static(coverArtPath, {
+        maxAge: '1y',
+        immutable: true,
+      }),
+    )
+
     app.use(compression())
     app.use(express.json({ limit: '50mb' }))
     app.use(express.urlencoded({ extended: true, limit: '50mb' }))
@@ -88,6 +105,8 @@ async function run() {
                 `${domain}:*`,
                 `${domain}:${port}`,
                 'raw.githubusercontent.com',
+                'data:',
+                'blob:',
               ].concat(cspOrigins),
               'font-src': [
                 "'self'",

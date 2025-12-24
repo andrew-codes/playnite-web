@@ -1,4 +1,4 @@
-import { toLower } from 'lodash'
+import { toLower } from 'lodash-es'
 import { create, DomainType, domainTypes } from '../../../../oid'
 import type { EntityUpdateDetailsResolvers } from './../../../../../../.generated/types.generated'
 

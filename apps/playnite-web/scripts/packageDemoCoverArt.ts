@@ -2,17 +2,10 @@ import fs from 'fs/promises'
 import path from 'path'
 
 async function run() {
-  await fs.mkdir(path.join('_packaged/.next/static/media'), {
+  console.log('Copying demo game cover art assets')
+  await fs.cp('public/cover-art', '_packaged/public/cover-art', {
     recursive: true,
   })
-  console.log('Copying demo game cover art assets')
-  await fs.cp(
-    'public/game-assets',
-    '_packaged/.next/static/media/game-assets',
-    {
-      recursive: true,
-    },
-  )
 }
 
 run().catch((error) => {

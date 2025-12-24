@@ -1,6 +1,5 @@
 import { GraphQLError } from 'graphql'
 import { create, createNull, tryParseOid } from '../../../../../oid'
-import { resolve as resolveAssets } from '../../../../../resolveAssets'
 import { defaultSettings as defaultUserSettings } from '../../../../../userSettings'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
@@ -29,7 +28,7 @@ export const startRelease: NonNullable<
       },
       include: {
         Library: true,
-        Cover: true,
+        Game: true,
         Source: {
           include: {
             Platform: true,
@@ -62,8 +61,8 @@ export const startRelease: NonNullable<
             id: create('Release', release.id),
             title: release.title,
             playniteId: release.playniteId,
-            coverUrl: release.Cover.slug
-              ? resolveAssets(release.Cover.slug)
+            coverUrl: release.Game.coverArt
+              ? `/cover-art/${release.Game.coverArt}`
               : null,
             library: {
               id: create('Library', release.Library.id),
@@ -89,7 +88,8 @@ export const startRelease: NonNullable<
 
     return release
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorMessage =
+      error instanceof Error ? error.message : 'Unknown error'
     throw new GraphQLError(
       'Unauthorized: Release not found in your libraries',
       {

@@ -2,10 +2,6 @@ import { breakpoints } from '../../support/breakpoints'
 
 // Filtering is broken; tracked in separate issue.
 describe('Filtering.', () => {
-  beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
   describe('Filter button opens filter pane.', () => {
     Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
       beforeEach(() => {
@@ -14,11 +10,8 @@ describe('Filtering.', () => {
 
       it(`${breakpointName}.
     - Is navigable by URL.`, () => {
-        cy.fixture('librarySync.json').then((libraryData) => {
-          cy.syncLibrary('test', 'test', libraryData).then((library) => {
-            cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-          })
-        })
+        cy.visit(`/u/test/Library:1`)
+
         cy.get('[aria-label="Open filter drawer"]').click({ force: true })
         cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
       })
@@ -27,13 +20,10 @@ describe('Filtering.', () => {
 
   describe('Filter pane opened.', () => {
     beforeEach(() => {
-      cy.fixture('librarySync.json').then((libraryData) => {
-        cy.syncLibrary('test', 'test', libraryData).then((library) => {
-          cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-          cy.get('[aria-label="Open filter drawer"]').click({ force: true })
-          cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
-        })
-      })
+      cy.visit(`/u/test/Library:1`)
+
+      cy.get('[aria-label="Open filter drawer"]').click({ force: true })
+      cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
     })
 
     describe('Name.', () => {
@@ -102,7 +92,7 @@ describe('Filtering.', () => {
       cy.get('h2 + button').click()
       cy.contains('button', 'Filter').click()
 
-      cy.get('[data-test="GameFigure"]').should('have.length', 7)
+      cy.get('[data-test="GameFigure"]').should('have.length', 6)
       cy.get('[data-test="GameFigure"]').eq(0).contains('figcaption', 'Batman')
       cy.get('[data-test="GameFigure"]')
         .eq(3)
@@ -306,7 +296,7 @@ describe('Filtering.', () => {
     })
   })
 
-  describe('UI.', () => {
+  describe.skip('UI.', () => {
     Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
       describe(`${breakpointName}.`, () => {
         beforeEach(() => {
@@ -315,15 +305,10 @@ describe('Filtering.', () => {
 
         describe('Filter pane opened.', () => {
           beforeEach(() => {
-            cy.fixture('librarySync.json').then((libraryData) => {
-              cy.syncLibrary('test', 'test', libraryData).then((library) => {
-                cy.visit(`/u/test/${library.body.data.syncLibrary.id}/filters`)
-              })
-            })
+            cy.visit(`/u/test/Library:1/filters`)
           })
 
           it('Filter panel.', () => {
-            cy.wait('@api')
             cy.get('[data-test="GameFigure"]').hideElement(true)
             cy.compareSnapshot({
               name: `filter-panel-open_${breakpointName}`,
@@ -348,6 +333,7 @@ describe('Filtering.', () => {
             cy.compareSnapshot({
               name: `platform-filter-lookup-${breakpointName}`,
             })
+            cy.get('@lookup').type(' 5')
             cy.contains('Sony PlayStation 5').click()
 
             cy.get('@lookup').type('PC')

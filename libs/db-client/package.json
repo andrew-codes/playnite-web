@@ -1,6 +1,7 @@
 {
   "name": "db-client",
   "version": "0.0.1",
+  "type": "module",
   "private": true,
   "sideEffects": false,
   "main": "src/client.ts",

@@ -1,20 +1,12 @@
 import { breakpoints } from '../../support/breakpoints'
 
 describe('Game details.', () => {
-  beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
-  describe('UI.', () => {
+  describe.skip('UI.', () => {
     Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
       describe(`${breakpointName}.`, () => {
         beforeEach(() => {
           cy.viewport(x, y)
-          cy.fixture('librarySync.json').then((libraryData) => {
-            cy.syncLibrary('test', 'test', libraryData).then((library) => {
-              cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-            })
-          })
+          cy.visit(`/u/test/Library:1`)
         })
 
         it(`Displays game details

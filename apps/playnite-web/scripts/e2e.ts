@@ -1,5 +1,6 @@
 import { ChildProcess } from 'child_process'
 import logger from 'dev-logger'
+import fs from 'fs/promises'
 import sh from 'shelljs'
 import { getDockerTags } from 'versioning'
 import waitOn from 'wait-on'
@@ -42,7 +43,20 @@ process.on('SIGINT', () => {
 async function run() {
   if (process.env.CI !== 'true' || process.env.COVERAGE === 'true') {
     logger.info('Removing package.json')
-    sh.exec('rm _packaged/package.json')
+    sh.exec('mv _packaged/package.json _packaged/deps.json')
+
+    const nextConfigContents = await fs.readFile(
+      '_packaged/next.config.js',
+      'utf-8',
+    )
+    logger.info('Modifying next.config.js for E2E tests')
+    await fs.writeFile(
+      '_packaged/next.config.js',
+      nextConfigContents.replace(
+        "import pkg from './package.json' with { type: 'json' }",
+        "import pkg from './deps.json' with { type: 'json' }",
+      ),
+    )
 
     logger.info('Starting server')
     runCp = sh.exec(`yarn nyc node server.js`, {
@@ -134,4 +148,6 @@ async function run() {
   })
 }
 
-run()
+run().catch((error) => {
+  logger.error('FAIL', error)
+})

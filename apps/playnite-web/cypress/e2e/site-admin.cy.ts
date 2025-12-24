@@ -1,10 +1,6 @@
 import { defaultSettings } from '../../src/server/siteSettings'
 
 describe('Site-wide Administration', () => {
-  beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
   describe('Authorization.', () => {
     beforeEach(() => {
       cy.intercept('GET', '/admin').as('adminRoute')
@@ -16,6 +12,7 @@ describe('Site-wide Administration', () => {
     })
 
     it(`User must have the site admin permission.`, () => {
+      cy.task('restoreDatabaseSnapshot', 'multi-user')
       cy.signIn('jane', 'jane')
       cy.visit('/admin', { failOnStatusCode: false })
       cy.contains('You are not authorized to view this page.').should(

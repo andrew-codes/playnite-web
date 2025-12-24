@@ -2,10 +2,6 @@ describe(`Game details remote control.
               - Requires user to be signed in.
               - Only visible in libraries the authenticated user owns.`, () => {
   beforeEach(() => {
-    cy.task('seedUsers')
-  })
-
-  beforeEach(() => {
     cy.request({
       method: 'DELETE',
       url: '/echo',
@@ -14,15 +10,13 @@ describe(`Game details remote control.
 
   describe('Unauthenticated users.', () => {
     it(`No action controls.`, () => {
-      cy.fixture('librarySync.json')
-        .then((libraryData) => {
-          return cy.syncLibrary('test', 'test', libraryData)
-        })
-        .then((library) => {
-          cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-          cy.wait(200)
-        })
+      cy.visit(`/u/test/Library:1`)
+      cy.wait('@api')
+      cy.wait('@api')
+      cy.waitForImages(40)
+
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+      cy.wait('@rsc')
 
       cy.get('[data-test="Actions"]', { timeout: 10000 })
         .children()
@@ -31,8 +25,13 @@ describe(`Game details remote control.
   })
 
   describe('Authenticated users.', () => {
+    beforeEach(() => {
+      cy.task('restoreDatabaseSnapshot', 'multi-user')
+      cy.signIn('test', 'test')
+    })
+
     it(`Non-owned library.
-            - No action controls.`, () => {
+      - No action controls.`, () => {
       cy.fixture('librarySync.json')
         .then((libraryData) => {
           cy.syncLibrary('test', 'test', libraryData)
@@ -41,8 +40,12 @@ describe(`Game details remote control.
         .then((library) => {
           cy.signIn('test', 'test')
           cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
+          cy.wait('@api')
+          cy.wait('@api')
+          cy.waitForImages(40)
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
+      cy.wait('@rsc')
 
       cy.get('[data-test="Actions"]', { timeout: 10000 })
         .children()
@@ -67,6 +70,8 @@ describe(`Game details remote control.
           .then((library) => {
             cy.signIn('test', 'test')
             cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
+            cy.wait('@api')
+            cy.wait('@api')
             cy.waitForImages(40)
           })
       })
@@ -81,6 +86,7 @@ describe(`Game details remote control.
           .find('button img')
           .eq(0)
           .click({ force: true })
+        cy.wait('@rsc')
 
         cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
@@ -128,9 +134,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
@@ -151,6 +155,7 @@ describe(`Game details remote control.
           .parents('[data-test=GameFigure]')
           .find('button img')
           .click({ force: true })
+        cy.wait('@rsc')
 
         cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
@@ -194,9 +199,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)
@@ -212,6 +215,7 @@ describe(`Game details remote control.
           .parents('[data-test=GameFigure]')
           .find('button img')
           .click({ force: true })
+        cy.wait('@rsc')
 
         cy.get('[data-test="Actions"] button', { timeout: 10000 })
           .eq(0)
@@ -254,9 +258,7 @@ describe(`Game details remote control.
               'platform.name': 'Sony PlayStation 5',
               'source.name': 'PlayStation',
             })
-            expect(event.payload.coverUrl).to.match(
-              /\/assassins-creed-odyssey\.webp$/,
-            )
+            expect(event.payload.coverUrl).to.match(/^\/cover-art\/.*\.webp$/)
             expect(event.payload.library.id).to.match(/Library:\d+/)
             expect(event.payload.platform.id).to.match(/Platform:\d+/)
             expect(event.payload.source.id).to.match(/Source:\d+/)

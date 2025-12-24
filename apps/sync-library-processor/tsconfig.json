@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "moduleDetection": "force",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": false,
+    "allowJs": true,
+    "module": "nodenext",
+    "types": ["node"],
+    "rootDir": "./src",
+    "baseUrl": "."
+  },
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "*.ts"],
+  "exclude": ["node_modules"],
+  "references": [
+    {
+      "path": "./tsconfig.server.json"
+    },
+    {
+      "path": "./tsconfig.test.json"
+    },
+    {
+      "path": "../../libs/db-client/tsconfig.json"
+    },
+    {
+      "path": "../../libs/dev-logger/tsconfig.json"
+    }
+  ]
+}

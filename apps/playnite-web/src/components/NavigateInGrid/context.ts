@@ -1,6 +1,6 @@
 'use client'
 
-import { noop } from 'lodash'
+import { noop } from 'lodash-es'
 import { createContext, useContext } from 'react'
 
 const configure = () => {
