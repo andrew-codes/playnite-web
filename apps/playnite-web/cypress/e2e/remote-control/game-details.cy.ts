@@ -13,7 +13,7 @@ describe(`Game details remote control.
       cy.visit(`/u/test/Library:1`)
       cy.wait('@api')
       cy.wait('@api')
-      cy.waitForImages(40)
+      cy.waitForImages(40, 30000)
 
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
       cy.wait('@rsc')
@@ -42,7 +42,7 @@ describe(`Game details remote control.
           cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
           cy.wait('@api')
           cy.wait('@api')
-          cy.waitForImages(40)
+          cy.waitForImages(40, 30000)
         })
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
       cy.wait('@rsc')
@@ -72,7 +72,7 @@ describe(`Game details remote control.
             cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
             cy.wait('@api')
             cy.wait('@api')
-            cy.waitForImages(40)
+            cy.waitForImages(40, 30000)
           })
       })
 

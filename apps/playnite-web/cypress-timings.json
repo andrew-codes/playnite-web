@@ -2,55 +2,59 @@
   "durations": [
     {
       "spec": "cypress/e2e/account-creation.cy.ts",
-      "duration": 23660
+      "duration": 21702
     },
     {
       "spec": "cypress/e2e/account-settings.cy.ts",
-      "duration": 16063
+      "duration": 21083
     },
     {
       "spec": "cypress/e2e/authentication.cy.ts",
-      "duration": 11080
+      "duration": 12304
     },
     {
       "spec": "cypress/e2e/errors.cy.ts",
-      "duration": 2227
+      "duration": 3857
+    },
+    {
+      "spec": "cypress/e2e/landing-page-redirects.cy.ts",
+      "duration": 10382
     },
     {
       "spec": "cypress/e2e/library-sync.cy.ts",
-      "duration": 120481
-    },
-    {
-      "spec": "cypress/e2e/performance.cy.ts",
-      "duration": 788
-    },
-    {
-      "spec": "cypress/e2e/site-admin.cy.ts",
-      "duration": 3949
+      "duration": 1312
     },
     {
       "spec": "cypress/e2e/onboarding/new-install.cy.ts",
-      "duration": 7115
+      "duration": 5907
+    },
+    {
+      "spec": "cypress/e2e/performance.cy.ts",
+      "duration": 221
+    },
+    {
+      "spec": "cypress/e2e/site-admin.cy.ts",
+      "duration": 6457
     },
     {
       "spec": "cypress/e2e/user-library/filtering.cy.ts",
-      "duration": 278966
+      "duration": 27213
     },
     {
       "spec": "cypress/e2e/user-library/game-details.cy.ts",
-      "duration": 73756
+      "duration": 242
     },
     {
       "spec": "cypress/e2e/user-library/update-release.cy.ts",
-      "duration": 30612
+      "duration": 5991
     },
     {
       "spec": "cypress/e2e/user-library/user-libraries.cy.ts",
-      "duration": 11870
+      "duration": 5252
     },
     {
       "spec": "cypress/e2e/user-library/user-library.cy.ts",
-      "duration": 184004
+      "duration": 5850
     }
   ]
 }

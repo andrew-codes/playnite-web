@@ -14,7 +14,7 @@ declare global {
         password: string,
         libraryData: any,
       ) => Chainable<Response<any>>
-      waitForImages: (count: number) => Chainable<JQuery<HTMLImageElement>>
+      waitForImages: (count?: number, timeout?: number) => void
       syncLibraryAndQuery: (
         libraryData: any,
         queryFields: string,
@@ -130,11 +130,23 @@ Cypress.Commands.add(
   },
 )
 
-Cypress.Commands.add('waitForImages', (count?: number) => {
-  return cy.get('img', { timeout: 30000 }).should(($images) => {
-    $images.slice(0, count ?? $images.length).each((_, img) => {
-      expect(img.complete).to.equal(true)
-    })
+Cypress.Commands.add('waitForImages', (count?: number, timeout?: number) => {
+  cy.get('img').then(($imgs) => {
+    const promises = $imgs
+      .toArray()
+      .slice(0, count ?? $imgs.length)
+      .map((img) => {
+        return new Promise((resolve) => {
+          if (img.complete) {
+            resolve(true)
+          } else {
+            img.addEventListener('load', () => resolve(true))
+            img.addEventListener('error', () => resolve(true))
+          }
+        })
+      })
+
+    return cy.wrap(Promise.all(promises), { timeout: timeout ?? 10000 })
   })
 })
 
