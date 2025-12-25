@@ -67,3 +67,9 @@ Packages:
       - "docs: update docker compose file"
       - "feat: move library sync to processor, optimize cover art retrieval
         (#903)"
+  - Version: 13.0.1
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.0.1/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_0_1.pext
+    ReleaseDate: 2025-12-25
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: inability to sign out (#911)"
