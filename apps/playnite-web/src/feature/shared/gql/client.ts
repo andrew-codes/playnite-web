@@ -1,6 +1,5 @@
 import {
   ApolloClient,
-  InMemoryCache,
   registerApolloClient,
 } from '@apollo/client-integration-nextjs'
 import { ApolloLink } from '@apollo/client/link'
@@ -21,6 +20,7 @@ import { createDataLoaders } from '../../../server/graphql/dataloaders'
 import schema from '../../../server/graphql/schema'
 import logger from '../../../server/logger'
 import { createNull } from '../../../server/oid'
+import { inMemoryCache } from './inMemoryCache'
 
 const { getClient, query, PreloadQuery } = registerApolloClient(async () => {
   const domain = process.env.HOST ?? 'localhost'
@@ -89,7 +89,7 @@ const { getClient, query, PreloadQuery } = registerApolloClient(async () => {
   )
 
   return new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: inMemoryCache,
     link,
   })
 })
