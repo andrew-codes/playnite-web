@@ -12,7 +12,10 @@ export const signOut: NonNullable<MutationResolvers['signOut']> = async (
     throw new GraphQLError('Not authenticated')
   }
 
-  _ctx.request.cookieStore?.delete('authorization')
+  _ctx.request.cookieStore?.delete({
+    name: 'authorization',
+    domain: _ctx.domain,
+  })
   claim.isAuthenticated = false
 
   const userId = tryParseOid(claim.id)
