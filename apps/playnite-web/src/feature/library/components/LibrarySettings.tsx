@@ -2,20 +2,24 @@
 
 import { useQuery } from '@apollo/client/react'
 import { Button, Divider, Stack, useMediaQuery, useTheme } from '@mui/material'
+import { LibrarySetting } from 'apps/playnite-web/.generated/types.generated'
 import { FC, Fragment } from 'react'
-import { User } from '../../../../.generated/types.generated'
 import { Setting } from '../../settings/components/Setting'
 import { Form } from '../../shared/components/forms/Form'
-import { useUpdateUserSettings } from '../hooks/updateUserSettings'
-import { MeQuery } from '../queries'
+import { LibrarySettingsQuery } from '../queries'
 
-const UserSettings: FC<{}> = ({}) => {
+const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
   const theme = useTheme()
   const isLgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'))
   const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
-  const { data } = useQuery<{ me: User }>(MeQuery)
-  const [saveSettings] = useUpdateUserSettings()
+  const { data } = useQuery<{
+    library: {
+      settings: Array<LibrarySetting>
+    }
+  }>(LibrarySettingsQuery, {
+    variables: { libraryId },
+  })
 
   return (
     <Form
@@ -26,10 +30,9 @@ const UserSettings: FC<{}> = ({}) => {
         for (const [key, value] of formData.entries()) {
           settings.push({ id: key, value: value.toString() })
         }
-        saveSettings({ variables: { settings } })
       }}
     >
-      {data?.me?.settings?.map((setting) => (
+      {data?.library?.settings?.map((setting) => (
         <Fragment key={setting.id}>
           <Setting key={setting.id} setting={setting} />
           <Divider />
@@ -56,4 +59,4 @@ const UserSettings: FC<{}> = ({}) => {
   )
 }
 
-export { UserSettings }
+export { LibrarySettings }

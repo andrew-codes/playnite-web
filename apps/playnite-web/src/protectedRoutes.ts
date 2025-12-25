@@ -31,4 +31,25 @@ const userAccount: ProtectedRoute = [
     request.nextUrl.pathname.startsWith(`/u/${user.username}`),
 ]
 
-export default [siteAdmin, userAccount] as Array<ProtectedRoute>
+const matchesSettings = /\/u\/[a-zA-Z0-9-_]+\/Library:[1-9][0-9]*\/settings/
+const LibrarySettings: ProtectedRoute = [
+  (request) => matchesSettings.test(request.nextUrl.pathname),
+  (user, request) => {
+    if (!hasIdentity(user.id)) {
+      return false
+    }
+
+    const pathParts = request.nextUrl.pathname.split('/')
+    const username = pathParts[2]
+    return request.nextUrl.pathname.startsWith(`/u/${username}`) &&
+      username === user.username
+      ? true
+      : false
+  },
+]
+
+export default [
+  siteAdmin,
+  userAccount,
+  LibrarySettings,
+] as Array<ProtectedRoute>

@@ -73,4 +73,24 @@ export const Library: LibraryResolvers = {
       },
     })
   },
+  settings: async (library, _args, ctx) => {
+    const user = await ctx.identityService.authorize(ctx.jwt?.payload)
+
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
+
+    if (library.userId !== user.id.id) {
+      throw new Error('Forbidden')
+    }
+
+    return ctx.db.librarySetting.findMany({
+      where: {
+        libraryId: library.id,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  },
 }

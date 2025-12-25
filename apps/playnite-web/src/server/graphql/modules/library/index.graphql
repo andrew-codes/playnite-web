@@ -8,6 +8,7 @@ type Library {
   features: [Feature!]!
   completionStates: [CompletionStatus!]!
   tags: [Tag!]!
+  settings: [LibrarySetting!]!
 }
 
 extend type Query {
@@ -112,6 +113,16 @@ type EntityUpdateDetails {
   id: String!
   playniteId: String
   fields: [EntityUpdateField!]!
+}
+
+type LibrarySetting {
+  id: String!
+  code: String!
+  name: String!
+  value: String
+  dataType: String!
+  helperText: String!
+  description: String!
 }
 
 extend type Subscription {

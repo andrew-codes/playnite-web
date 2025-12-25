@@ -4,6 +4,7 @@ const AllGamesQuery = gql`
   query library($libraryId: String!) {
     library(libraryId: $libraryId) {
       id
+      name
       completionStates {
         id
         name
@@ -42,6 +43,20 @@ const AllGamesQuery = gql`
   }
 `
 
+const LibrarySettingsQuery = gql`
+  query librarySettings($libraryId: String!) {
+    library(libraryId: $libraryId) {
+      id
+      settings {
+        id
+        name
+        value
+        dataType
+      }
+    }
+  }
+`
+
 const LibrarySubscriptionQuery = gql`
   subscription syncedLibrary {
     librarySynced {
@@ -50,4 +65,4 @@ const LibrarySubscriptionQuery = gql`
   }
 `
 
-export { AllGamesQuery, LibrarySubscriptionQuery }
+export { AllGamesQuery, LibrarySettingsQuery, LibrarySubscriptionQuery }

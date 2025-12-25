@@ -18,19 +18,28 @@ datasource db {
 model SiteSettings {
   id       String @id @unique
   name     String @unique
-  value    String
+  value    Json
   dataType String
 }
 
 model UserSetting {
-  id       Int     @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   name     String
-  value    String?
+  value    Json?
   dataType String
-  User     User    @relation(fields: [userId], references: [id])
+  User     User   @relation(fields: [userId], references: [id])
   userId   Int
 
   @@unique([userId, name])
+}
+
+model LibrarySetting {
+  id        Int     @id @default(autoincrement())
+  name      String
+  value     Json?
+  dataType  String
+  Library   Library @relation(fields: [libraryId], references: [id])
+  libraryId Int
 }
 
 model User {
@@ -69,6 +78,7 @@ model Library {
   Playlists        Playlist[]
   Games            Game[]
   Tags             Tag[]
+  librarySettings  LibrarySetting[]
 
   @@unique([playniteId, userId])
   @@index([userId])

@@ -70,7 +70,7 @@ const LibraryLayout = ({
       }
       title={
         <Header>
-          <Typography variant="h1">My Games</Typography>
+          <Typography variant="h1">My Games - {data?.library?.name}</Typography>
           <Typography variant="subtitle1">
             <span>{games.length}</span>&nbsp;games in library
           </Typography>
