@@ -39,6 +39,12 @@ async function run() {
     path.join('_packaged/next.config.js'),
   )
 
+  await fs.mkdir(path.join('_packaged/src'), { recursive: true })
+  await fs.cp(
+    path.join('src/imageLoader.js'),
+    path.join('_packaged/src/imageLoader.js'),
+  )
+
   logger.info('Copying and modifying package.json')
   const pkg = JSON.parse(await fs.readFile('package.json', 'utf8'))
   pkg.name = `packaged-${pkg.name}`
