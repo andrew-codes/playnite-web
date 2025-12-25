@@ -5,7 +5,6 @@ import { ApolloLink, HttpLink } from '@apollo/client'
 import {
   ApolloClient,
   ApolloNextAppProvider,
-  InMemoryCache,
 } from '@apollo/client-integration-nextjs'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { getMainDefinition } from '@apollo/client/utilities'
@@ -14,6 +13,7 @@ import {
   FragmentDefinitionNode,
   OperationDefinitionNode,
 } from 'graphql/language/ast'
+import { inMemoryCache } from '../gql/inMemoryCache'
 
 function makeClient() {
   const domain = process.env.DOMAIN ?? 'localhost'
@@ -53,7 +53,7 @@ function makeClient() {
   )
 
   return new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: inMemoryCache,
     link,
   })
 }

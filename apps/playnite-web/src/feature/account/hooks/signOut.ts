@@ -22,6 +22,8 @@ const useSignOut = () =>
           isAuthenticated: false,
           username: 'Unknown',
           permission: 0,
+          libraries: [],
+          settings: [],
         },
       }))
     },
