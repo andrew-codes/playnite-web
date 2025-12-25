@@ -48,7 +48,7 @@ services:
       - PORT=${PROCESSOR_PORT:-3001}
       - COVER_ART_PATH=/opt/playnite-web/game-assets/cover-art
     volumes:
-      - games_assets:/opt/playnite-web/game-assets
+      - games_assets:/opt/playnite-web/game-assets/cover-art
     depends_on:
       - playnite-web
     restart: unless-stopped
