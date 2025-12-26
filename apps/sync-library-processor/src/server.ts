@@ -6,7 +6,6 @@ import fs from 'fs'
 import { groupBy } from 'lodash-es'
 import path from 'path'
 import { IgnSourcedAssets } from 'sourced-assets/ign'
-import { isRateLimitError } from 'sourced-assets/errors'
 import { CoverArtService } from './services/coverArtService.js'
 // Import test mocks - this file will setup mocks when TEST=E2E
 import './testSetup'
@@ -121,8 +120,12 @@ async function run() {
     mqtt.on('message', async (topic, message) => {
       try {
         if (topic === 'playnite-web/library/cover-art-retry') {
-          const { libraryId, userId, retryGames, attemptNumber = 1 } =
-            JSON.parse(message.toString())
+          const {
+            libraryId,
+            userId,
+            retryGames,
+            attemptNumber = 1,
+          } = JSON.parse(message.toString())
 
           logger.info(
             `Processing cover art retry (attempt ${attemptNumber}) for ${retryGames.length} games in library ${libraryId}`,
@@ -161,10 +164,7 @@ async function run() {
 
           // If we still have rate-limited games and haven't exceeded max retries, schedule another retry
           const maxRetries = 5
-          if (
-            stillRateLimitedGames.length > 0 &&
-            attemptNumber < maxRetries
-          ) {
+          if (stillRateLimitedGames.length > 0 && attemptNumber < maxRetries) {
             // Exponential backoff: 5s, 10s, 20s, 40s, 80s
             const retryDelay = 5000 * Math.pow(2, attemptNumber - 1)
 
