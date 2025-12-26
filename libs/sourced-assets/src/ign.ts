@@ -1,4 +1,5 @@
 import logger from 'dev-logger'
+import { RateLimitError } from './errors.js'
 import { slug } from './slug.js'
 import type { ISourceAssets } from './types'
 
@@ -57,6 +58,26 @@ class IgnSourcedAssets implements ISourceAssets {
 
       return ignResponse.data.objectSelectByTypeAndSlug.primaryImage.url
     } catch (error) {
+      // Check if this is a rate limit / timeout error
+      if (
+        error &&
+        typeof error === 'object' &&
+        'cause' in error &&
+        error.cause &&
+        typeof error.cause === 'object' &&
+        'code' in error.cause &&
+        error.cause.code === 'UND_ERR_CONNECT_TIMEOUT'
+      ) {
+        logger.warn(
+          `Rate limit timeout for IGN image URL: ${ignId}`,
+          error.cause,
+        )
+        throw new RateLimitError(
+          `IGN API rate limit timeout for ${ignId}`,
+          release.title,
+        )
+      }
+
       logger.error(`Error fetching IGN image URL: ${ignId}`, error)
       return null
     }

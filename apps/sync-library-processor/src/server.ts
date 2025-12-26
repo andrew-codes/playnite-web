@@ -6,6 +6,7 @@ import fs from 'fs'
 import { groupBy } from 'lodash-es'
 import path from 'path'
 import { IgnSourcedAssets } from 'sourced-assets/ign'
+import { isRateLimitError } from 'sourced-assets/errors'
 import { CoverArtService } from './services/coverArtService.js'
 // Import test mocks - this file will setup mocks when TEST=E2E
 import './testSetup'
@@ -115,10 +116,86 @@ async function run() {
       },
     )
     await mqtt.subscribe('playnite-web/library/sync', { qos: 1 })
+    await mqtt.subscribe('playnite-web/library/cover-art-retry', { qos: 1 })
 
     mqtt.on('message', async (topic, message) => {
       try {
-        if (topic === 'playnite-web/library/sync') {
+        if (topic === 'playnite-web/library/cover-art-retry') {
+          const { libraryId, userId, retryGames, attemptNumber = 1 } =
+            JSON.parse(message.toString())
+
+          logger.info(
+            `Processing cover art retry (attempt ${attemptNumber}) for ${retryGames.length} games in library ${libraryId}`,
+          )
+
+          const stillRateLimitedGames: typeof retryGames = []
+
+          for (const game of retryGames) {
+            try {
+              const ignCoverArtUrl = await ignSourcedAssets.getImageUrl({
+                title: game.title,
+              })
+
+              if (ignCoverArtUrl) {
+                logger.debug(`Found IGN cover art URL for game: ${game.title}`)
+                await coverArtService.persistGameCoverArt(game, ignCoverArtUrl)
+              } else {
+                logger.debug(
+                  `No IGN cover art URL found for game: ${game.title}`,
+                )
+              }
+            } catch (error) {
+              if (isRateLimitError(error)) {
+                logger.info(
+                  `Still rate limited for game: ${game.title} on attempt ${attemptNumber}`,
+                )
+                stillRateLimitedGames.push(game)
+              } else {
+                logger.warn(
+                  `Failed to process cover art for game: ${game.title}`,
+                  error,
+                )
+              }
+            }
+          }
+
+          // If we still have rate-limited games and haven't exceeded max retries, schedule another retry
+          const maxRetries = 5
+          if (
+            stillRateLimitedGames.length > 0 &&
+            attemptNumber < maxRetries
+          ) {
+            // Exponential backoff: 5s, 10s, 20s, 40s, 80s
+            const retryDelay = 5000 * Math.pow(2, attemptNumber - 1)
+
+            logger.info(
+              `${stillRateLimitedGames.length} games still rate-limited. Scheduling retry ${attemptNumber + 1} in ${retryDelay}ms`,
+            )
+
+            setTimeout(async () => {
+              const retryMessage = {
+                libraryId,
+                userId,
+                retryGames: stillRateLimitedGames,
+                attemptNumber: attemptNumber + 1,
+              }
+
+              await mqtt.publish(
+                'playnite-web/library/cover-art-retry',
+                JSON.stringify(retryMessage),
+                { qos: 1 },
+              )
+            }, retryDelay)
+          } else if (stillRateLimitedGames.length > 0) {
+            logger.warn(
+              `Max retries (${maxRetries}) reached for ${stillRateLimitedGames.length} games. Giving up on: ${stillRateLimitedGames.map((g) => g.title).join(', ')}`,
+            )
+          } else {
+            logger.info(
+              `All games successfully processed after ${attemptNumber} attempt(s)`,
+            )
+          }
+        } else if (topic === 'playnite-web/library/sync') {
           const { libraryId, userId, libraryData } = JSON.parse(
             message.toString(),
           )
@@ -636,6 +713,12 @@ async function run() {
 
           // Now fetch and process IGN cover art for each game
           logger.info(`Processing cover art for ${insertedGames.length} games`)
+          const rateLimitedGames: Array<{
+            id: number
+            title: string
+            coverArt: string | null
+          }> = []
+
           for (const game of insertedGames) {
             try {
               // Get the IGN cover art URL
@@ -654,11 +737,51 @@ async function run() {
                 )
               }
             } catch (error) {
-              logger.warn(
-                `Failed to process cover art for game: ${game.title}`,
-                error,
-              )
+              if (isRateLimitError(error)) {
+                logger.info(
+                  `Rate limited while fetching cover art for game: ${game.title}. Will retry later.`,
+                )
+                rateLimitedGames.push(game)
+              } else {
+                logger.warn(
+                  `Failed to process cover art for game: ${game.title}`,
+                  error,
+                )
+              }
             }
+          }
+
+          // If we have rate-limited games, schedule a retry with exponential backoff
+          if (rateLimitedGames.length > 0) {
+            logger.info(
+              `${rateLimitedGames.length} games were rate-limited. Scheduling retry...`,
+            )
+
+            // Calculate exponential backoff delay (start with 5 seconds)
+            const retryDelay = 5000
+
+            setTimeout(async () => {
+              logger.info(
+                `Retrying cover art fetch for ${rateLimitedGames.length} rate-limited games`,
+              )
+
+              // Publish a retry message for these specific games
+              const retryMessage = {
+                libraryId,
+                userId,
+                retryGames: rateLimitedGames.map((g) => ({
+                  id: g.id,
+                  title: g.title,
+                  coverArt: g.coverArt,
+                })),
+              }
+
+              await mqtt.publish(
+                'playnite-web/library/cover-art-retry',
+                JSON.stringify(retryMessage),
+                { qos: 1 },
+              )
+            }, retryDelay)
           }
 
           // Clean up games without releases
