@@ -40,6 +40,8 @@ model LibrarySetting {
   dataType  String
   Library   Library @relation(fields: [libraryId], references: [id])
   libraryId Int
+
+  @@unique([libraryId, name])
 }
 
 model User {

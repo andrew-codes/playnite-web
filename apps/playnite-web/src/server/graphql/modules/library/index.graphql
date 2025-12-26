@@ -84,8 +84,19 @@ input LibraryInput {
   remove: LibraryRemovalInput!
 }
 
+input LibrarySettingUpdateInput {
+  id: String!
+  value: String
+}
+
+input LibrarySettingsInput {
+  libraryId: String!
+  settings: [LibrarySettingUpdateInput!]!
+}
+
 extend type Mutation {
   syncLibrary(libraryData: LibraryInput!): Library
+  updateLibrarySettings(input: LibrarySettingsInput!): [LibrarySetting!]!
 }
 
 type EntityCollectionUpdate {

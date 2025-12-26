@@ -70,4 +70,18 @@ const LibrarySubscriptionQuery = gql`
   }
 `
 
-export { AllGamesQuery, LibrarySettingsQuery, LibrarySubscriptionQuery }
+const UpdateLibrarySettingsMutation = gql`
+  mutation UpdateLibrarySettings($settings: [UserSettingInput!]!) {
+    updateLibrarySettings(input: { settings: $settings }) {
+      id
+      value
+    }
+  }
+`
+
+export {
+  AllGamesQuery,
+  LibrarySettingsQuery,
+  LibrarySubscriptionQuery,
+  UpdateLibrarySettingsMutation,
+}

@@ -10,6 +10,7 @@ import { merge } from 'lodash-es'
 import { FC, Fragment, useMemo } from 'react'
 import { Setting } from '../../settings/components/Setting'
 import { Form } from '../../shared/components/forms/Form'
+import { useUpdateLibrarySettings } from '../hooks/updateLibrarySettings'
 import { LibrarySettingsQuery } from '../queries'
 
 const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
@@ -17,6 +18,7 @@ const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
   const isLgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'))
   const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
+  const [saveSettings] = useUpdateLibrarySettings()
   const { data } = useQuery<{
     library: {
       completionStates: Array<CompletionStatus>
@@ -67,7 +69,7 @@ const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
 
           settings.push({ id: key, value: value.toString() })
         }
-        console.debug('Submitted settings:', settings)
+        saveSettings({ variables: { input: { libraryId, settings } } })
       }}
     >
       {settings.map((setting) => (
