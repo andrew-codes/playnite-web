@@ -73,3 +73,10 @@ Packages:
     RequiredApiVersion: 6.13.0
     Changelog:
       - "fix: inability to sign out (#911)"
+  - Version: 13.0.2
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.0.2/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_0_2.pext
+    ReleaseDate: 2025-12-26
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: cover art broken in 13.0.0 (#914)"
+      - "docs: update to documentation (#913)"
