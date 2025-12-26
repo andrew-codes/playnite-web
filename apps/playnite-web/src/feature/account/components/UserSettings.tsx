@@ -1,8 +1,9 @@
 'use client'
 
 import { Button, Divider, Stack, useMediaQuery, useTheme } from '@mui/material'
-import { redirect } from 'next/navigation'
-import { FC, Fragment } from 'react'
+import { UserSetting } from 'apps/playnite-web/.generated/types.generated'
+import { merge } from 'lodash-es'
+import { FC, Fragment, useMemo } from 'react'
 import { Setting } from '../../settings/components/Setting'
 import { Form } from '../../shared/components/forms/Form'
 import { PageTitle } from '../../shared/components/PageTitle'
@@ -17,9 +18,14 @@ const UserSettings: FC<{}> = ({}) => {
   const [result] = useMe()
   const [saveSettings] = useUpdateUserSettings()
 
-  if (!result?.data?.me?.isAuthenticated) {
-    redirect('/login')
-  }
+  const settings = useMemo(() => {
+    return ((result?.data?.me?.settings ?? []) as Array<UserSetting>).map(
+      (setting) =>
+        merge({}, setting, {
+          value: JSON.parse(setting.value ?? '""'),
+        }),
+    )
+  }, [result])
 
   return (
     <>
@@ -35,7 +41,7 @@ const UserSettings: FC<{}> = ({}) => {
           saveSettings({ variables: { settings } })
         }}
       >
-        {result?.data?.me?.settings?.map((setting) => (
+        {settings.map((setting) => (
           <Fragment key={setting.id}>
             <Setting key={setting.id} setting={setting} />
             <Divider />
