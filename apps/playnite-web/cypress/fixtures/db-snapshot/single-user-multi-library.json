@@ -12,7 +12,7 @@
       "Settings": [
         {
           "id": 1,
-          "name": "Webhook URL",
+          "name": "webhook",
           "value": null,
           "dataType": "string",
           "userId": 1
@@ -23,7 +23,7 @@
   "userSettings": [
     {
       "id": 1,
-      "name": "Webhook URL",
+      "name": "webhook",
       "value": null,
       "dataType": "string",
       "userId": 1
