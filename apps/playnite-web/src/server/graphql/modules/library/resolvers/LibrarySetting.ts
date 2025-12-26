@@ -6,10 +6,17 @@ export const LibrarySetting: LibrarySettingResolvers = {
   id: async (parent) => {
     return create('LibrarySetting', parent.id).toString()
   },
+  name: async (parent) => {
+    return (
+      Object.values(defaultSettings).find(
+        (setting) => setting.id === parent.name,
+      )?.name || ''
+    )
+  },
   description: async (parent) => {
     return (
       Object.values(defaultSettings).find(
-        (setting) => setting.name === parent.name,
+        (setting) => setting.id === parent.name,
       )?.description || ''
     )
       .split('\n')
@@ -18,14 +25,14 @@ export const LibrarySetting: LibrarySettingResolvers = {
   helperText: async (parent) => {
     return (
       Object.values(defaultSettings).find(
-        (setting) => setting.name === parent.name,
+        (setting) => setting.id === parent.name,
       )?.helperText || ''
     )
   },
   code: async (parent) => {
     return (
       Object.values(defaultSettings).find(
-        (setting) => setting.name === parent.name,
+        (setting) => setting.id === parent.name,
       )?.id || ''
     )
   },

@@ -49,6 +49,7 @@ async function createSnapshot(snapshotName: string) {
     games,
     playlists,
     siteSettings,
+    librarySettings,
   ] = await Promise.all([
     prisma.user.findMany({ include: { Settings: true } }),
     prisma.userSetting.findMany(),
@@ -62,6 +63,7 @@ async function createSnapshot(snapshotName: string) {
     prisma.game.findMany(),
     prisma.playlist.findMany(),
     prisma.siteSettings.findMany(),
+    prisma.librarySetting.findMany(),
   ])
 
   // Get many-to-many relationships
@@ -91,6 +93,7 @@ async function createSnapshot(snapshotName: string) {
     releaseFeatures,
     releaseTags,
     gamePlaylists,
+    librarySettings,
   }
 
   // Write to fixture file in db-snapshot subdirectory
@@ -120,6 +123,7 @@ async function createSnapshot(snapshotName: string) {
   logger.info(`  - ${features.length} features`)
   logger.info(`  - ${completionStatuses.length} completion statuses`)
   logger.info(`  - ${tags.length} tags`)
+  logger.info(`  - ${librarySettings.length} library settings`)
 }
 
 async function main() {

@@ -5,7 +5,7 @@ export const updateSiteSetting: NonNullable<
   return _ctx.db.siteSettings.update({
     where: { id: _arg.id },
     data: {
-      value: _arg.value,
+      value: JSON.stringify(_arg.value),
     },
   })
 }

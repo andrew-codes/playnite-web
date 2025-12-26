@@ -20,7 +20,7 @@ export const updateUserSettings: NonNullable<
             id: (setting.id as IIdentify).id,
           },
           data: {
-            value: setting.value,
+            value: JSON.stringify(setting.value),
           },
         })
       }),

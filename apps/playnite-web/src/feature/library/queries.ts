@@ -47,9 +47,14 @@ const LibrarySettingsQuery = gql`
   query librarySettings($libraryId: String!) {
     library(libraryId: $libraryId) {
       id
+      completionStates {
+        id
+        name
+      }
       settings {
         id
         name
+        code
         value
         dataType
       }

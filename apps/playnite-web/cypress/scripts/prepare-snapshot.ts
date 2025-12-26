@@ -53,7 +53,7 @@ async function seedUsers(usernames: string[]) {
         Settings: {
           create: Object.entries(defaultUserSettings).map(([id, setting]) => ({
             name: setting.name,
-            value: setting.value,
+            value: JSON.stringify(setting.value),
             dataType: setting.dataType,
           })),
         },

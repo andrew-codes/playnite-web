@@ -1,12 +1,18 @@
 import {
   Box,
+  Checkbox,
   FormControlLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
   Stack,
   TextField,
   useMediaQuery,
 } from '@mui/material'
 import Typography from '@mui/material/Typography'
-import { FC, useMemo } from 'react'
+import { keyBy } from 'lodash-es'
+import { FC, useCallback, useMemo, useState } from 'react'
 import {
   LibrarySetting,
   UserSetting,
@@ -22,11 +28,36 @@ type SettingDataItem =
       }>
     })
 
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+}
+
 const Setting: FC<{
   setting: SettingDataItem
 }> = ({ setting }) => {
+  const [arrayState, setArrayState] = useState<string[]>(
+    setting.dataType === 'array' && Array.isArray(setting.value)
+      ? setting.value
+      : [],
+  )
+  const handleChange = useCallback((event: any) => {
+    const {
+      target: { value },
+    } = event
+    setArrayState(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    )
+  }, [])
+
   const SettingValue = useMemo(() => {
-    const value = JSON.parse(setting.value ?? '""')
     switch (setting.dataType) {
       case 'string':
         return (
@@ -34,7 +65,7 @@ const Setting: FC<{
             sx={{ width: '100%' }}
             helperText={setting.helperText}
             data-test={setting.code}
-            defaultValue={value ?? ''}
+            defaultValue={setting.value ?? ''}
           />
         )
       case 'array': {
@@ -42,27 +73,38 @@ const Setting: FC<{
           SettingDataItem,
           { dataType: 'array' }
         >
+        const datasource = keyBy(
+          arraySetting.datasource || [],
+          (item) => item.value,
+        )
         return (
-          <TextField
-            select
-            sx={{ width: '100%' }}
-            SelectProps={{ native: true }}
-            helperText={setting.helperText}
-            data-test={setting.code}
-            defaultValue={value ?? ''}
+          <Select
+            labelId="demo-multiple-checkbox-label"
+            id="demo-multiple-checkbox"
+            multiple
+            value={arrayState}
+            onChange={handleChange}
+            input={<OutlinedInput label="Tag" />}
+            renderValue={(selected) =>
+              selected
+                .map((value) => datasource[value]?.label || value)
+                .join(', ')
+            }
+            MenuProps={MenuProps}
           >
-            {arraySetting.datasource.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
+            {arraySetting.datasource.map(({ value, label }) => (
+              <MenuItem key={value} value={value}>
+                <Checkbox checked={arrayState.includes(value)} />
+                <ListItemText primary={label} />
+              </MenuItem>
             ))}
-          </TextField>
+          </Select>
         )
       }
       default:
         return <div></div>
     }
-  }, [setting])
+  }, [setting, arrayState, handleChange])
 
   const isLgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'))
   const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
