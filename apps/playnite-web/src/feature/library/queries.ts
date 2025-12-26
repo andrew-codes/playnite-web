@@ -71,8 +71,8 @@ const LibrarySubscriptionQuery = gql`
 `
 
 const UpdateLibrarySettingsMutation = gql`
-  mutation UpdateLibrarySettings($settings: [UserSettingInput!]!) {
-    updateLibrarySettings(input: { settings: $settings }) {
+  mutation UpdateLibrarySettings($settings: LibrarySettingsInput!) {
+    updateLibrarySettings(input: $settings) {
       id
       value
     }

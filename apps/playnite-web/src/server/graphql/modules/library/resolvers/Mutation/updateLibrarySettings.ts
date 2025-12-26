@@ -20,7 +20,7 @@ export const updateLibrarySettings: NonNullable<
             id: (setting.id as IIdentify).id,
           },
           data: {
-            value: JSON.stringify(setting.value),
+            value: JSON.parse(setting.value ?? 'null'),
           },
         })
       }),

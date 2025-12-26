@@ -42,6 +42,7 @@ const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
               value: state.id,
               label: state.name,
             })) || [],
+          value: JSON.parse(value),
         })
       }
 
@@ -63,13 +64,17 @@ const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
             data?.library?.settings.find((s) => s.id === key)?.dataType ===
             'array'
           ) {
-            settings.push({ id: key, value: value.toString().split(',') })
+            settings.push({
+              id: key,
+              value: JSON.stringify(value.toString().split(',')),
+            })
             continue
           }
 
           settings.push({ id: key, value: value.toString() })
         }
-        saveSettings({ variables: { input: { libraryId, settings } } })
+
+        saveSettings({ variables: { settings: { libraryId, settings } } })
       }}
     >
       {settings.map((setting) => (
