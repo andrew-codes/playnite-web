@@ -1,9 +1,10 @@
 import { useMutation } from '@apollo/client/react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { User } from '../../../../.generated/types.generated'
 import { MeQuery, SignOutMutation } from '../queries'
 const useSignOut = () => {
-  const [mutation] = useMutation<{ signOut: User }>(SignOutMutation, {
+  const router = useRouter()
+  const [mutate, result] = useMutation<{ signOut: User }>(SignOutMutation, {
     update: (cache, mutationResult) => {
       const me = mutationResult.data?.signOut
       if (!me) {
@@ -32,9 +33,10 @@ const useSignOut = () => {
 
   return [
     async () => {
-      await mutation()
-      redirect('/')
+      await mutate()
+      router.push('/')
     },
+    result,
   ] as const
 }
 

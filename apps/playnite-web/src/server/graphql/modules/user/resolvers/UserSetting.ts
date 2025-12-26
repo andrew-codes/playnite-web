@@ -9,14 +9,14 @@ export const UserSetting: UserSettingResolvers = {
   name: async (parent) => {
     return (
       Object.values(defaultSettings).find(
-        (setting) => setting.name === parent.name,
+        (setting) => setting.id === parent.name,
       )?.name || ''
     )
   },
   description: async (parent) => {
     return (
       Object.values(defaultSettings).find(
-        (setting) => setting.name === parent.name,
+        (setting) => setting.id === parent.name,
       )?.description || ''
     )
       .split('\n')
@@ -25,14 +25,14 @@ export const UserSetting: UserSettingResolvers = {
   helperText: async (parent) => {
     return (
       Object.values(defaultSettings).find(
-        (setting) => setting.name === parent.name,
+        (setting) => setting.id === parent.name,
       )?.helperText || ''
     )
   },
   code: async (parent) => {
     return (
       Object.values(defaultSettings).find(
-        (setting) => setting.name === parent.name,
+        (setting) => setting.id === parent.name,
       )?.id || ''
     )
   },
