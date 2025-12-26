@@ -63,6 +63,15 @@ const LibrarySettingsQuery = gql`
   }
 `
 
+const LibraryDetailsQuery = gql`
+  query librarySettings($libraryId: String!) {
+    library(libraryId: $libraryId) {
+      id
+      name
+    }
+  }
+`
+
 const LibrarySubscriptionQuery = gql`
   subscription syncedLibrary {
     librarySynced {
@@ -121,6 +130,7 @@ const LibraryGamesOnDeckQuery = gql`
 
 export {
   AllGamesQuery,
+  LibraryDetailsQuery,
   LibraryGamesOnDeckQuery,
   LibrarySettingsQuery,
   LibrarySubscriptionQuery,

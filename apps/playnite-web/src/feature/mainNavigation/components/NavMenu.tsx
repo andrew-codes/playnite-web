@@ -6,6 +6,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ListSubheader,
   styled,
   useTheme,
 } from '@mui/material'
@@ -71,7 +72,10 @@ const NavMenu: FC<{
 }> = ({ open, navItems, 'data-test': dataTest, title, ...rest }) => {
   return (
     <nav data-test={dataTest} aria-label={title} {...rest}>
-      <NavigationList open={open}>
+      <NavigationList
+        open={open}
+        subheader={open && <ListSubheader>{title}</ListSubheader>}
+      >
         {navItems.map((item, i) => {
           return (
             <ListItem

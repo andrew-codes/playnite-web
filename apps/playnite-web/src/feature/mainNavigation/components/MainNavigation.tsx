@@ -19,25 +19,25 @@ const MainNavigation: FC<{
 
   const pathname = usePathname()
 
+  const navItems = [
+    {
+      to: '/',
+      icon: <Home />,
+      text: 'Playnite Web Libraries',
+    },
+    {
+      to: !me?.isAuthenticated ? `/login?returnTo=${pathname}` : handleSignOut,
+      icon: <AccountCircle />,
+      text: !me?.isAuthenticated ? 'Sign In' : 'Sign Out',
+    },
+  ]
+
   return (
     <NavMenu
       title="Main navigation"
       data-test="MainNavigation"
       open={open}
-      navItems={[
-        {
-          to: '/',
-          icon: <Home />,
-          text: 'Playnite Web Libraries',
-        },
-        {
-          to: !me?.isAuthenticated
-            ? `/login?returnTo=${pathname}`
-            : handleSignOut,
-          icon: <AccountCircle />,
-          text: !me?.isAuthenticated ? 'Sign In' : 'Sign Out',
-        },
-      ]}
+      navItems={navItems}
     />
   )
 }

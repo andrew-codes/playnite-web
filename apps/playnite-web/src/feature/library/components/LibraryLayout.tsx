@@ -7,6 +7,8 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Library } from '../../../../.generated/types.generated'
 import { setCompletionStates } from '../../../api/client/state/completionStatesSlice'
+import { useMe } from '../../account/hooks/me'
+import AuthenticatedNavigation from '../../mainNavigation/components/AuthenticatedNavigation'
 import LibrariesNavigation from '../../mainNavigation/components/LibrariesNavigation'
 import LibraryNavigation from '../../mainNavigation/components/LibraryNavigation'
 import MainNavigation from '../../mainNavigation/components/MainNavigation'
@@ -30,6 +32,21 @@ const LibraryLayout = ({
   const { data, error } = useQuery<{ library: Library }>(AllGamesQuery, {
     variables: { libraryId },
   })
+
+  const [result] = useMe()
+  let navs = [LibraryNavigation, LibrariesNavigation, MainNavigation]
+  if (result?.data?.me?.isAuthenticated) {
+    navs = navs
+      .slice(0, 2)
+      .concat([AuthenticatedNavigation])
+      .concat(navs.slice(2))
+  }
+  if (
+    result?.data?.me?.isAuthenticated &&
+    username === result.data.me.username
+  ) {
+    navs = navs.filter((nav) => nav !== LibrariesNavigation)
+  }
 
   const dispatch = useDispatch()
   useEffect(() => {
@@ -64,7 +81,7 @@ const LibraryLayout = ({
           <FilterAlt />
         </IconButton>
       }
-      navs={[LibraryNavigation, LibrariesNavigation, MainNavigation]}
+      navs={navs}
     >
       {children}
     </Layout>
