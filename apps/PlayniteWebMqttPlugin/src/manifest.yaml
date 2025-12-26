@@ -80,3 +80,9 @@ Packages:
     Changelog:
       - "fix: cover art broken in 13.0.0 (#914)"
       - "docs: update to documentation (#913)"
+  - Version: 13.1.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.1.0/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_1_0.pext
+    ReleaseDate: 2025-12-26
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat: support cover art rate limiting (#917)"
