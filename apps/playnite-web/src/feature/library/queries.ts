@@ -47,6 +47,7 @@ const LibrarySettingsQuery = gql`
   query librarySettings($libraryId: String!) {
     library(libraryId: $libraryId) {
       id
+      name
       completionStates {
         id
         name
@@ -79,35 +80,39 @@ const UpdateLibrarySettingsMutation = gql`
   }
 `
 
-const OnDeckGamesQuery = gql`
-  query onDeckGames($libraryId: String!) {
-    onDeckGames(libraryId: $libraryId) {
+const LibraryGamesOnDeckQuery = gql`
+  query library($libraryId: String!) {
+    library(libraryId: $libraryId) {
       id
-      coverArt
-      primaryRelease {
+      name
+      gamesOnDeck {
         id
-        title
-        releaseYear
-        platform {
+        coverArt
+        primaryRelease {
           id
+          title
+          releaseYear
+          platform {
+            id
+          }
+          completionStatus {
+            id
+            name
+          }
+          features {
+            id
+          }
         }
-        completionStatus {
+        releases {
           id
-          name
-        }
-        features {
-          id
-        }
-      }
-      releases {
-        id
-        platform {
-          id
-          name
-          icon
-        }
-        source {
-          name
+          platform {
+            id
+            name
+            icon
+          }
+          source {
+            name
+          }
         }
       }
     }
@@ -116,8 +121,8 @@ const OnDeckGamesQuery = gql`
 
 export {
   AllGamesQuery,
+  LibraryGamesOnDeckQuery,
   LibrarySettingsQuery,
   LibrarySubscriptionQuery,
-  OnDeckGamesQuery,
   UpdateLibrarySettingsMutation,
 }

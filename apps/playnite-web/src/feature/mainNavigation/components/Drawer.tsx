@@ -4,11 +4,10 @@ import MobileDrawerNavigation from './MobileDrawerNavigation'
 
 const Drawer: FC<
   PropsWithChildren<{
-    title?: ReactNode | undefined
     navs: Array<ComponentType<{ open: boolean }>>
     secondaryMenu?: ReactNode | undefined
   }>
-> = ({ children, navs, title, secondaryMenu }) => {
+> = ({ children, navs, secondaryMenu }) => {
   const theme = useTheme()
   const shouldUseMobileDrawer = useMediaQuery(theme.breakpoints.down('lg'))
 
@@ -40,7 +39,6 @@ const Drawer: FC<
           },
         })}
       >
-        {title}
         {children}
       </Box>
     </MobileDrawerNavigation>
@@ -76,7 +74,6 @@ const Drawer: FC<
           },
         }}
       >
-        {title}
         {children}
       </Box>
     </Box>

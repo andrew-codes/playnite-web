@@ -2,16 +2,14 @@
 
 import { useQuery } from '@apollo/client/react'
 import { FilterAlt } from '@mui/icons-material'
-import { Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Game, Library } from '../../../../.generated/types.generated'
+import { Library } from '../../../../.generated/types.generated'
 import { setCompletionStates } from '../../../api/client/state/completionStatesSlice'
-import LibrariesNavigation from '../../../components/Navigation/LibrariesNavigation'
-import LibraryNavigation from '../../../components/Navigation/LibraryNavigation'
-import MainNavigation from '../../../components/Navigation/MainNavigation'
-import Header from '../../shared/components/Header'
+import LibrariesNavigation from '../../mainNavigation/components/LibrariesNavigation'
+import LibraryNavigation from '../../mainNavigation/components/LibraryNavigation'
+import MainNavigation from '../../mainNavigation/components/MainNavigation'
 import IconButton from '../../shared/components/IconButton'
 import { Layout } from '../../shared/components/Layout'
 import { AllGamesQuery } from '../queries'
@@ -19,14 +17,12 @@ import { AllGamesQuery } from '../queries'
 interface LibraryGamesProps {
   username: string
   libraryId: string
-  title: string
   children: React.ReactNode
 }
 
 const LibraryLayout = ({
   username,
   libraryId,
-  title,
   children,
 }: LibraryGamesProps) => {
   const router = useRouter()
@@ -49,8 +45,6 @@ const LibraryLayout = ({
     )
   }, [data?.library?.completionStates, dispatch])
 
-  const games = (data?.library?.games?.filter((g) => g) as Array<Game>) ?? []
-
   if (error) {
     console.error(error, data)
   }
@@ -69,16 +63,6 @@ const LibraryLayout = ({
         >
           <FilterAlt />
         </IconButton>
-      }
-      title={
-        <Header>
-          <Typography variant="h1">
-            {title} - {data?.library?.name}
-          </Typography>
-          <Typography variant="subtitle1">
-            <span>{games.length}</span>&nbsp;games in library
-          </Typography>
-        </Header>
       }
       navs={[LibraryNavigation, LibrariesNavigation, MainNavigation]}
     >

@@ -1,13 +1,11 @@
-import { Typography } from '@mui/material'
 import { User } from '../../../../../.generated/types.generated'
-import LibrariesNavigation from '../../../../components/Navigation/LibrariesNavigation'
-import MainNavigation from '../../../../components/Navigation/MainNavigation'
-import SiteAdminNavigation from '../../../../components/Navigation/SiteAdminNavigation'
 import { UserSettings } from '../../../../feature/account/components/UserSettings'
 import Permission, {
   userHasPermission,
 } from '../../../../feature/authorization/permissions'
-import Header from '../../../../feature/shared/components/Header'
+import LibrariesNavigation from '../../../../feature/mainNavigation/components/LibrariesNavigation'
+import MainNavigation from '../../../../feature/mainNavigation/components/MainNavigation'
+import SiteAdminNavigation from '../../../../feature/mainNavigation/components/SiteAdminNavigation'
 import { Layout } from '../../../../feature/shared/components/Layout'
 
 async function Account(props: { params: { username: string }; me: User }) {
@@ -18,17 +16,7 @@ async function Account(props: { params: { username: string }; me: User }) {
   }
 
   return (
-    <Layout
-      title={
-        <Header>
-          <div>
-            <Typography variant="h1">User Settings</Typography>
-            <Typography variant="subtitle1"></Typography>
-          </div>
-        </Header>
-      }
-      navs={navs}
-    >
+    <Layout navs={navs}>
       <UserSettings />
     </Layout>
   )

@@ -1,5 +1,6 @@
 import type { LibraryResolvers } from '../../../../../../.generated/types.generated'
-import { create } from '../../../../oid'
+import { defaultSettings } from '../../../../librarySetting'
+import { create, tryParseOid } from '../../../../oid'
 
 export const Library: LibraryResolvers = {
   id: (library) => create('Library', library.id).toString(),
@@ -70,6 +71,38 @@ export const Library: LibraryResolvers = {
       },
       orderBy: {
         name: 'asc',
+      },
+    })
+  },
+  gamesOnDeck: async (library, _args, ctx) => {
+    const onDeckSetting = await ctx.db.librarySetting.findUnique({
+      where: {
+        libraryId_name: {
+          name: defaultSettings.onDeck.id,
+          libraryId: library.id,
+        },
+      },
+    })
+
+    const onDeckCompletionStates = Array.isArray(onDeckSetting?.value)
+      ? (onDeckSetting.value as Array<string>).map(
+          (state) => tryParseOid(state).id,
+        )
+      : []
+
+    return ctx.db.game.findMany({
+      where: {
+        libraryId: library.id,
+        Releases: {
+          some: {
+            completionStatusId: {
+              in: onDeckCompletionStates,
+            },
+          },
+        },
+      },
+      orderBy: {
+        title: 'asc',
       },
     })
   },

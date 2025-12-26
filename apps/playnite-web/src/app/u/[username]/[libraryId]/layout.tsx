@@ -16,7 +16,7 @@ async function LibraryPage({
   const { username, libraryId } = await params
 
   return (
-    <LibraryLayout username={username} libraryId={libraryId} title="My Games">
+    <LibraryLayout username={username} libraryId={libraryId}>
       {children}
       {gameDetails}
       {filters}

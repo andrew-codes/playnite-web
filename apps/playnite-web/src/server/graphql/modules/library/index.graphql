@@ -9,12 +9,12 @@ type Library {
   completionStates: [CompletionStatus!]!
   tags: [Tag!]!
   settings: [LibrarySetting!]!
+  gamesOnDeck: [Game!]!
 }
 
 extend type Query {
   libraries(username: String!): [Library!]!
   library(libraryId: String!): Library
-  onDeckGames(libraryId: String!): [Game!]!
 }
 
 input LibraryReleaseInput {

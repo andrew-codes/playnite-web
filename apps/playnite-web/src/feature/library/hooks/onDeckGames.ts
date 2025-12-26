@@ -3,21 +3,21 @@ import { merge } from 'lodash-es'
 import { useEffect } from 'react'
 import { Library } from '../../../../.generated/types.generated'
 import { useSubscribeEntityUpdates } from '../../shared/hooks/subscribeEntityUpdates'
-import { LibrarySettingsQuery, OnDeckGamesQuery } from '../queries'
+import { LibraryGamesOnDeckQuery, LibrarySettingsQuery } from '../queries'
 import { useSubscribeLibrarySync } from './subscribeLibrarySync'
 
-const useOnDeckGames = (libraryId?: string, opts?: any) => {
+const useOnDeckGames = (libraryId: string, opts?: any) => {
   const q = useQuery<{ library: Library }>(
-    OnDeckGamesQuery,
+    LibraryGamesOnDeckQuery,
     merge({}, opts, {
-      variables: { libraryId: libraryId ?? '' },
+      variables: { libraryId: libraryId },
     }),
   )
 
   const librarySettings = useQuery<{ library: Library }>(
     LibrarySettingsQuery,
     merge({}, opts, {
-      variables: { libraryId: libraryId ?? '' },
+      variables: { libraryId: libraryId },
     }),
   )
   const entityUpdatedSubscription = useSubscribeEntityUpdates()

@@ -10,6 +10,7 @@ import { merge } from 'lodash-es'
 import { FC, Fragment, useMemo } from 'react'
 import { Setting } from '../../settings/components/Setting'
 import { Form } from '../../shared/components/forms/Form'
+import { PageTitle } from '../../shared/components/PageTitle'
 import { useUpdateLibrarySettings } from '../hooks/updateLibrarySettings'
 import { LibrarySettingsQuery } from '../queries'
 
@@ -21,6 +22,7 @@ const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
   const [saveSettings] = useUpdateLibrarySettings()
   const { data } = useQuery<{
     library: {
+      name: string
       completionStates: Array<CompletionStatus>
       settings: Array<LibrarySetting>
     }
@@ -54,53 +56,56 @@ const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
   }, [data?.library?.settings, data?.library?.completionStates])
 
   return (
-    <Form
-      onSubmit={(evt) => {
-        evt.preventDefault()
-        const formData = new FormData(evt.currentTarget)
-        const settings: Array<{ id: string; value: string | string[] }> = []
-        for (const [key, value] of formData.entries()) {
-          if (
-            data?.library?.settings.find((s) => s.id === key)?.dataType ===
-            'array'
-          ) {
-            settings.push({
-              id: key,
-              value: JSON.stringify(value.toString().split(',')),
-            })
-            continue
+    <>
+      <PageTitle title={`Library Settings - ${data?.library?.name ?? ''}`} />
+      <Form
+        onSubmit={(evt) => {
+          evt.preventDefault()
+          const formData = new FormData(evt.currentTarget)
+          const settings: Array<{ id: string; value: string | string[] }> = []
+          for (const [key, value] of formData.entries()) {
+            if (
+              data?.library?.settings.find((s) => s.id === key)?.dataType ===
+              'array'
+            ) {
+              settings.push({
+                id: key,
+                value: JSON.stringify(value.toString().split(',')),
+              })
+              continue
+            }
+
+            settings.push({ id: key, value: value.toString() })
           }
 
-          settings.push({ id: key, value: value.toString() })
-        }
-
-        saveSettings({ variables: { settings: { libraryId, settings } } })
-      }}
-    >
-      {settings.map((setting) => (
-        <Fragment key={setting.id}>
-          <Setting key={setting.id} setting={setting} />
-          <Divider />
-        </Fragment>
-      ))}
-      <Stack
-        direction="row"
-        spacing={2}
-        sx={{
-          justifyContent: 'end',
-          marginRight: isMdDown
-            ? '0'
-            : `calc(${isLgDown ? '250px' : '400px'} + ${theme.spacing(2)}) !important`,
+          saveSettings({ variables: { settings: { libraryId, settings } } })
         }}
       >
-        <Button variant="contained" color="primary" type="submit">
-          Save Changes
-        </Button>
-        <Button variant="contained" color="secondary" type="reset">
-          Cancel
-        </Button>
-      </Stack>
-    </Form>
+        {settings.map((setting) => (
+          <Fragment key={setting.id}>
+            <Setting key={setting.id} setting={setting} />
+            <Divider />
+          </Fragment>
+        ))}
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{
+            justifyContent: 'end',
+            marginRight: isMdDown
+              ? '0'
+              : `calc(${isLgDown ? '250px' : '400px'} + ${theme.spacing(2)}) !important`,
+          }}
+        >
+          <Button variant="contained" color="primary" type="submit">
+            Save Changes
+          </Button>
+          <Button variant="contained" color="secondary" type="reset">
+            Cancel
+          </Button>
+        </Stack>
+      </Form>
+    </>
   )
 }
 

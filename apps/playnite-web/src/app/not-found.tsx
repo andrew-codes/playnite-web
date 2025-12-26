@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography'
-import MainNavigation from '../components/Navigation/MainNavigation'
+import MainNavigation from '../feature/mainNavigation/components/MainNavigation'
 import Header from '../feature/shared/components/Header'
 import { Layout } from '../feature/shared/components/Layout'
 

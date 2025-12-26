@@ -4,10 +4,14 @@ interface LibraryPageProps {
   params: { libraryId: string; username: string }
 }
 
-async function LibraryPage({ params }: LibraryPageProps) {
+async function LibraryOnDeckGames({ params }: LibraryPageProps) {
   const { libraryId, username } = await params
 
-  return <OnDeck username={username} libraryId={libraryId} />
+  return (
+    <>
+      <OnDeck username={username} libraryId={libraryId} />
+    </>
+  )
 }
 
-export default LibraryPage
+export default LibraryOnDeckGames

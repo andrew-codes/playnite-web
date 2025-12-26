@@ -4,9 +4,9 @@ import { useQuery } from '@apollo/client/react'
 import { AccountCircle, Home } from '@mui/icons-material'
 import { usePathname } from 'next/navigation'
 import { FC } from 'react'
-import { User } from '../../../.generated/types.generated'
-import { useSignOut } from '../../feature/account/hooks/signOut'
-import { MeQuery } from '../../feature/account/queries'
+import { User } from '../../../../.generated/types.generated'
+import { useSignOut } from '../../account/hooks/signOut'
+import { MeQuery } from '../../account/queries'
 import NavMenu from './NavMenu'
 
 const MainNavigation: FC<{

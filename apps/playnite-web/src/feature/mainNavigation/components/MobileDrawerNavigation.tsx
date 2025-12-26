@@ -17,7 +17,7 @@ import {
   ReactNode,
   useState,
 } from 'react'
-import IconButton from '../../feature/shared/components/IconButton'
+import IconButton from '../../shared/components/IconButton'
 import MainNavigation from './MainNavigation'
 import { NavigationContainer } from './NavigationContainer'
 

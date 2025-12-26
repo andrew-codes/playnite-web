@@ -3,19 +3,18 @@
 import { Box, ThemeProvider, useMediaQuery } from '@mui/material'
 import { AnimatePresence } from 'framer-motion'
 import { ComponentType, FC, PropsWithChildren, ReactNode } from 'react'
-import Drawer from '../../../components/Navigation/Drawer'
-import NonMobileDrawerNavigation from '../../../components/Navigation/NonMobileDrawerNavigation'
 import OuterContainer from '../../../components/OuterContainer'
 import muiTheme from '../../../muiTheme'
+import Drawer from '../../mainNavigation/components/Drawer'
+import NonMobileDrawerNavigation from '../../mainNavigation/components/NonMobileDrawerNavigation'
 import { Reset } from './Reset'
 
 const Layout: FC<
   PropsWithChildren<{
     navs: Array<ComponentType<{ open: boolean }>>
-    title?: ReactNode
     secondaryMenu?: ReactNode
   }>
-> = ({ children, navs, title, secondaryMenu }) => {
+> = ({ children, navs, secondaryMenu }) => {
   const theme = muiTheme('desktop')
 
   const shouldUseNonMobileDrawer = useMediaQuery(theme.breakpoints.up('lg'))
@@ -36,11 +35,7 @@ const Layout: FC<
                     height: '100vh',
                   }}
                 >
-                  <Drawer
-                    navs={navs}
-                    title={title}
-                    secondaryMenu={secondaryMenu}
-                  >
+                  <Drawer navs={navs} secondaryMenu={secondaryMenu}>
                     <OuterContainer>{children}</OuterContainer>
                   </Drawer>
                 </Box>
@@ -54,7 +49,7 @@ const Layout: FC<
                   height: '100vh',
                 }}
               >
-                <Drawer navs={navs} title={title} secondaryMenu={secondaryMenu}>
+                <Drawer navs={navs} secondaryMenu={secondaryMenu}>
                   <OuterContainer>{children}</OuterContainer>
                 </Drawer>
               </Box>
