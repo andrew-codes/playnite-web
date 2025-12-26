@@ -7,7 +7,9 @@ import {
   LibrarySetting,
 } from 'apps/playnite-web/.generated/types.generated'
 import { merge } from 'lodash-es'
+import { redirect } from 'next/navigation'
 import { FC, Fragment, useMemo } from 'react'
+import { useMe } from '../../account/hooks/me'
 import { Setting } from '../../settings/components/Setting'
 import { Form } from '../../shared/components/forms/Form'
 import { PageTitle } from '../../shared/components/PageTitle'
@@ -29,6 +31,12 @@ const LibrarySettings: FC<{ libraryId: string }> = ({ libraryId }) => {
   }>(LibrarySettingsQuery, {
     variables: { libraryId },
   })
+
+  const [result] = useMe()
+
+  if (!result?.data?.me?.isAuthenticated) {
+    redirect('/login')
+  }
 
   const settings = useMemo(() => {
     return (data?.library?.settings ?? []).map((setting) => {

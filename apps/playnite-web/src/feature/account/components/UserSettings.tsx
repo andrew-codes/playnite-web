@@ -1,22 +1,25 @@
 'use client'
 
-import { useQuery } from '@apollo/client/react'
 import { Button, Divider, Stack, useMediaQuery, useTheme } from '@mui/material'
+import { redirect } from 'next/navigation'
 import { FC, Fragment } from 'react'
-import { User } from '../../../../.generated/types.generated'
 import { Setting } from '../../settings/components/Setting'
 import { Form } from '../../shared/components/forms/Form'
 import { PageTitle } from '../../shared/components/PageTitle'
+import { useMe } from '../hooks/me'
 import { useUpdateUserSettings } from '../hooks/updateUserSettings'
-import { MeQuery } from '../queries'
 
 const UserSettings: FC<{}> = ({}) => {
   const theme = useTheme()
   const isLgDown = useMediaQuery((theme) => theme.breakpoints.down('lg'))
   const isMdDown = useMediaQuery((theme) => theme.breakpoints.down('md'))
 
-  const { data } = useQuery<{ me: User }>(MeQuery)
+  const [result] = useMe()
   const [saveSettings] = useUpdateUserSettings()
+
+  if (!result?.data?.me?.isAuthenticated) {
+    redirect('/login')
+  }
 
   return (
     <>
@@ -32,7 +35,7 @@ const UserSettings: FC<{}> = ({}) => {
           saveSettings({ variables: { settings } })
         }}
       >
-        {data?.me?.settings?.map((setting) => (
+        {result?.data?.me?.settings?.map((setting) => (
           <Fragment key={setting.id}>
             <Setting key={setting.id} setting={setting} />
             <Divider />

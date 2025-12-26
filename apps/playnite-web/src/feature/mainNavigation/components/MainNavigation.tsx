@@ -1,19 +1,17 @@
 'use client'
 
-import { useQuery } from '@apollo/client/react'
 import { AccountCircle, Home } from '@mui/icons-material'
 import { usePathname } from 'next/navigation'
 import { FC } from 'react'
-import { User } from '../../../../.generated/types.generated'
+import { useMe } from '../../account/hooks/me'
 import { useSignOut } from '../../account/hooks/signOut'
-import { MeQuery } from '../../account/queries'
 import NavMenu from './NavMenu'
 
 const MainNavigation: FC<{
   open: boolean
 }> = ({ open, ...rest }) => {
-  const { data } = useQuery<{ me: User }>(MeQuery)
-  const me = data?.me
+  const [result] = useMe()
+  const me = result?.data?.me
   const [signOut] = useSignOut()
   const handleSignOut = () => {
     signOut()

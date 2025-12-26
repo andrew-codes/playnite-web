@@ -9,7 +9,7 @@ const OuterContainer: FC<PropsWithChildren<{}>> = ({ children }) => {
         width: '100%',
         flex: 1,
         flexDirection: 'column',
-        height: 'calc(100vh - 176px)',
+        height: `calc(100vh - ${theme.spacing(3)})`,
         [theme.breakpoints.down('lg')]: {
           height: 'calc(100% - 225px)',
         },

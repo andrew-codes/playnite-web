@@ -33,15 +33,17 @@ const userAccount: ProtectedRoute = [
 
 const matchesSettings = /\/u\/[a-zA-Z0-9-_]+\/Library:[1-9][0-9]*\/settings/
 const LibrarySettings: ProtectedRoute = [
-  (request) => matchesSettings.test(request.nextUrl.pathname),
+  (request) =>
+    matchesSettings.test(decodeURIComponent(request.nextUrl.pathname)),
   (user, request) => {
     if (!hasIdentity(user.id)) {
       return false
     }
 
-    const pathParts = request.nextUrl.pathname.split('/')
+    const decodedPathname = decodeURIComponent(request.nextUrl.pathname)
+    const pathParts = decodedPathname.split('/')
     const username = pathParts[2]
-    return request.nextUrl.pathname.startsWith(`/u/${username}`) &&
+    return decodedPathname.startsWith(`/u/${username}`) &&
       username === user.username
       ? true
       : false
