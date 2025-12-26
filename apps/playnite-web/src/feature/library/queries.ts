@@ -79,9 +79,45 @@ const UpdateLibrarySettingsMutation = gql`
   }
 `
 
+const OnDeckGamesQuery = gql`
+  query onDeckGames($libraryId: String!) {
+    onDeckGames(libraryId: $libraryId) {
+      id
+      coverArt
+      primaryRelease {
+        id
+        title
+        releaseYear
+        platform {
+          id
+        }
+        completionStatus {
+          id
+          name
+        }
+        features {
+          id
+        }
+      }
+      releases {
+        id
+        platform {
+          id
+          name
+          icon
+        }
+        source {
+          name
+        }
+      }
+    }
+  }
+`
+
 export {
   AllGamesQuery,
   LibrarySettingsQuery,
   LibrarySubscriptionQuery,
+  OnDeckGamesQuery,
   UpdateLibrarySettingsMutation,
 }
