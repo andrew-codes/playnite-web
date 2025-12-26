@@ -50,7 +50,7 @@ export const restartRelease: NonNullable<
     })
 
     if (webhookSetting.value) {
-      await fetch(webhookSetting.value, {
+      await fetch(JSON.parse(webhookSetting.value as string), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

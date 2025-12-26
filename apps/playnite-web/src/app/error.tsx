@@ -2,8 +2,9 @@
 
 import Typography from '@mui/material/Typography'
 import { FC } from 'react'
-import Header from '../feature/shared/components/Header'
+import MainNavigation from '../feature/mainNavigation/components/MainNavigation'
 import { Layout } from '../feature/shared/components/Layout'
+import { PageTitle } from '../feature/shared/components/PageTitle'
 
 const Error: FC<{ error: Error & { digest?: string }; reset: () => void }> = ({
   error,
@@ -12,14 +13,8 @@ const Error: FC<{ error: Error & { digest?: string }; reset: () => void }> = ({
   console.error(error.digest)
 
   return (
-    <Layout
-      title={
-        <Header>
-          <Typography variant="h1">Oops...</Typography>
-        </Header>
-      }
-      navs={[]}
-    >
+    <Layout navs={[MainNavigation]}>
+      <PageTitle title="Oops..." />
       <Typography variant="body1">Something went wrong.</Typography>
       {error.message && (
         <Typography variant="body1">{error.message}</Typography>

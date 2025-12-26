@@ -47,9 +47,8 @@ export const syncLibrary: NonNullable<
   const settings = Object.values(defaultSettings)
   await _ctx.db.librarySetting.createMany({
     data: settings.map((setting) => ({
-      id: setting.id,
       libraryId: libraryId,
-      name: setting.name,
+      name: setting.id,
       value:
         setting?.[setting.id] ?? (Array.isArray(setting.value) ? [] : null),
       dataType: setting.dataType,
