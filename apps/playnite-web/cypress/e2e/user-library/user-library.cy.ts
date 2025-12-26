@@ -101,51 +101,245 @@ describe('User Library', () => {
     })
   })
 
-  describe('Navigation', () => {
-    it(`Library centric navigation.
-      - Link to view games in library.
-      - Link to view playlists in library.
-      - Link to go back to all user's libraries.
-      - Site-wide links are shown below.
-      `, () => {
-      cy.get('[aria-label="open drawer"]').click()
-      cy.get('[data-test="Navigation"]').within(() => {
-        cy.get('nav')
-          .eq(0)
-          .within(() => {
+  describe.only(`Navigation.`, () => {
+    describe('Unauthenticated users.', () => {
+      beforeEach(() => {
+        cy.signOut()
+        cy.visit(`/u/test/Library:1`)
+        cy.wait('@api')
+      })
+      describe('Navigation collapsed.', () => {
+        it(`Libraries centric navigation.
+      - Library links are shown in the sidebar.
+      - Then main navigation.`, () => {
+          cy.get('[aria-label="Game Room - test"]').within(() => {
             cy.get('[role="button"]')
-              .parent()
               .eq(0)
-              .should('have.text', 'Games')
-          })
-        cy.get('nav')
-          .eq(1)
-          .within(() => {
+              .find('[aria-label]')
+              .should('have.attr', 'aria-label', 'Games')
             cy.get('[role="button"]')
-              .parent()
-              .eq(0)
-              .should('have.text', 'My Libraries')
-            cy.get('[role="button"]')
-              .parent()
               .eq(1)
-              .should('have.text', 'Sync Library')
-            cy.get('[role="button"]')
-              .parent()
-              .eq(2)
-              .should('have.text', 'Account Settings')
+              .find('[aria-label]')
+              .should('have.attr', 'aria-label', 'On Deck')
           })
-        cy.get('nav')
-          .eq(2)
-          .within(() => {
+          cy.get('[aria-label="Libraries - test"]').within(() => {
             cy.get('[role="button"]')
-              .parent()
               .eq(0)
-              .should('have.text', 'Playnite Web Libraries')
-            cy.get('[role="button"]')
-              .parent()
-              .eq(1)
-              .should('have.text', 'Sign Out')
+              .find('[aria-label]')
+              .should('have.attr', 'aria-label', 'Libraries')
           })
+          cy.get('[aria-label="Main navigation"]').within(() => {
+            cy.get('[role="button"]')
+              .eq(0)
+              .find('[aria-label]')
+              .should('have.attr', 'aria-label', 'Playnite Web Libraries')
+            cy.get('[role="button"]')
+              .eq(1)
+              .find('[aria-label]')
+              .should('have.attr', 'aria-label', 'Sign In')
+          })
+        })
+      })
+
+      describe('Navigation expanded.', () => {
+        beforeEach(() => {
+          cy.get('button[aria-label="open drawer"]').click()
+          cy.wait(500)
+        })
+
+        it(`Libraries centric navigation.
+      - Library links are shown in the sidebar
+      - Subheading is displayed.
+      - Then main navigation.`, () => {
+          cy.get('[aria-label="Game Room - test"]').within(() => {
+            cy.contains('li', 'Game Room - test')
+            cy.get('[role="button"]').eq(0).contains('div', 'Games')
+            cy.get('[role="button"]').eq(1).contains('div', 'On Deck')
+          })
+          cy.get('[aria-label="Libraries - test"]').within(() => {
+            cy.contains('li', 'Libraries - test')
+            cy.get('[role="button"]').eq(0).contains('div', 'Libraries')
+          })
+          cy.get('[aria-label="Main navigation"]').within(() => {
+            cy.contains('li', 'Main navigation')
+            cy.get('[role="button"]')
+              .eq(0)
+              .contains('div', 'Playnite Web Libraries')
+            cy.get('[role="button"]').eq(1).contains('div', 'Sign In')
+          })
+        })
+      })
+    })
+
+    describe('Authenticated users.', () => {
+      describe("On another user's library page.", () => {
+        beforeEach(() => {
+          cy.visit(`/u/jane/Library:2`)
+          cy.wait('@api')
+          cy.wait(500)
+        })
+
+        describe('Navigation collapsed.', () => {
+          it(`Libraries centric navigation.
+      - Library links are shown in the sidebar.
+      - User specific navigation.
+      - Then main navigation.`, () => {
+            cy.get('[aria-label="Library - jane"]').within(() => {
+              cy.get('[role="button"]')
+                .eq(0)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Games')
+              cy.get('[role="button"]')
+                .eq(1)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'On Deck')
+            })
+            cy.get('[aria-label="Libraries - jane"]').within(() => {
+              cy.get('[role="button"]')
+                .eq(0)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Libraries')
+            })
+            cy.get(
+              '[data-test=Navigation] > [aria-label="My Libraries"]',
+            ).within(() => {
+              cy.get('[role="button"]')
+                .eq(0)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'My Libraries')
+              cy.get('[role="button"]')
+                .eq(1)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Account Settings')
+            })
+            cy.get('[aria-label="Main navigation"]').within(() => {
+              cy.get('[role="button"]')
+                .eq(0)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Playnite Web Libraries')
+              cy.get('[role="button"]')
+                .eq(1)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Sign Out')
+            })
+          })
+        })
+
+        describe('Navigation expanded.', () => {
+          beforeEach(() => {
+            cy.get('button[aria-label="open drawer"]').click()
+            cy.wait(500)
+          })
+
+          it(`Libraries centric navigation.
+      - Library links are shown in the sidebar
+      - Subheading is displayed.
+      - User specific navigation.
+      - Then main navigation.`, () => {
+            cy.get('[aria-label="Library - jane"]').within(() => {
+              cy.contains('li', 'Library - jane')
+              cy.get('[role="button"]').eq(0).contains('div', 'Games')
+              cy.get('[role="button"]').eq(1).contains('div', 'On Deck')
+            })
+            cy.get('[aria-label="Libraries - jane"]').within(() => {
+              cy.contains('li', 'Libraries - jane')
+              cy.get('[role="button"]').eq(0).contains('div', 'Libraries')
+            })
+            cy.get(
+              '[data-test=Navigation] > [aria-label="My Libraries"]',
+            ).within(() => {
+              cy.contains('li', 'My Libraries')
+              cy.get('[role="button"]').eq(0).contains('div', 'My Libraries')
+              cy.get('[role="button"]')
+                .eq(1)
+                .contains('div', 'Account Settings')
+            })
+            cy.get('[aria-label="Main navigation"]').within(() => {
+              cy.contains('li', 'Main navigation')
+              cy.get('[role="button"]')
+                .eq(0)
+                .contains('div', 'Playnite Web Libraries')
+              cy.get('[role="button"]').eq(1).contains('div', 'Sign Out')
+            })
+          })
+        })
+      })
+
+      describe(`On my own library page.`, () => {
+        describe('Navigation collapsed.', () => {
+          it(`My library centric navigation only.
+      - Library links are shown in the sidebar.
+      - Then main navigation.`, () => {
+            cy.get('[aria-label="Library - test"]').within(() => {
+              cy.get('[role="button"]')
+                .eq(0)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Games')
+              cy.get('[role="button"]')
+                .eq(1)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'On Deck')
+            })
+            cy.get('[aria-label="Libraries - test"]').should('not.exist')
+            cy.get(
+              '[data-test=Navigation] > [aria-label="My Libraries"]',
+            ).within(() => {
+              cy.get('[role="button"]')
+                .eq(0)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'My Libraries')
+              cy.get('[role="button"]')
+                .eq(1)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Account Settings')
+            })
+            cy.get('[aria-label="Main navigation"]').within(() => {
+              cy.get('[role="button"]')
+                .eq(0)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Playnite Web Libraries')
+              cy.get('[role="button"]')
+                .eq(1)
+                .find('[aria-label]')
+                .should('have.attr', 'aria-label', 'Sign Out')
+            })
+          })
+        })
+
+        describe('Navigation expanded.', () => {
+          beforeEach(() => {
+            cy.wait(500)
+            cy.get('button[aria-label="open drawer"]').click()
+          })
+
+          it(`My library centric navigation only.
+      - Library links are shown in the sidebar
+      - Subheading is displayed.
+      - Then main navigation.`, () => {
+            cy.get('[aria-label="Game Room - test"]').within(() => {
+              cy.contains('li', 'Game Room - test')
+              cy.get('[role="button"]').eq(0).contains('div', 'Games')
+              cy.get('[role="button"]').eq(1).contains('div', 'On Deck')
+            })
+            cy.get('[aria-label="Libraries - test"]').should('not.exist')
+            cy.get(
+              '[data-test=Navigation] > [aria-label="My Libraries"]',
+            ).within(() => {
+              cy.contains('li', 'My Libraries')
+              cy.get('[role="button"]').eq(0).contains('div', 'My Libraries')
+              cy.get('[role="button"]')
+                .eq(1)
+                .contains('div', 'Account Settings')
+            })
+            cy.get('[aria-label="Main navigation"]').within(() => {
+              cy.contains('li', 'Main navigation')
+              cy.get('[role="button"]')
+                .eq(0)
+                .contains('div', 'Playnite Web Libraries')
+              cy.get('[role="button"]').eq(1).contains('div', 'Sign Out')
+            })
+          })
+        })
       })
     })
   })
