@@ -327,3 +327,10 @@ Packages:
     RequiredApiVersion: 6.13.0
     Changelog:
       - "feat: support cover art rate limiting (#917)"
+  - Version: 13.2.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.2.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_13_2_0.pext
+    ReleaseDate: 2025-12-27
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat: configurable games on deck, better navigation (#916)"
+      - "fix: image optimization errors (#919)"
