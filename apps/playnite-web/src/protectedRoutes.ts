@@ -32,7 +32,7 @@ const userAccount: ProtectedRoute = [
 ]
 
 const matchesSettings = /\/u\/[a-zA-Z0-9-_]+\/Library:[1-9][0-9]*\/settings/
-const LibrarySettings: ProtectedRoute = [
+const librarySettings: ProtectedRoute = [
   (request) =>
     matchesSettings.test(decodeURIComponent(request.nextUrl.pathname)),
   (user, request) => {
@@ -53,5 +53,5 @@ const LibrarySettings: ProtectedRoute = [
 export default [
   siteAdmin,
   userAccount,
-  LibrarySettings,
+  librarySettings,
 ] as Array<ProtectedRoute>
