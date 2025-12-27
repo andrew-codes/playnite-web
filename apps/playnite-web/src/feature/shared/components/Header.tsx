@@ -29,8 +29,7 @@ const Header: FC<PropsWithChildren<{}>> = ({ children, ...rest }) => {
           position: 'fixed',
           width: '100%',
           [theme.breakpoints.down('lg')]: {
-            paddingTop: `${theme.spacing(12)}`,
-            paddingBottom: `${theme.spacing(3)}`,
+            paddingTop: `${theme.spacing(9)}`,
           },
           [theme.breakpoints.up('lg')]: {
             paddingTop: `${theme.spacing(7)}`,
