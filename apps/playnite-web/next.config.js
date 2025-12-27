@@ -90,20 +90,15 @@ const nextConfig = {
     formats: ['image/webp'],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '*',
-        port: '*',
-        pathname: 'cover-art/**',
+        protocol: 'http',
+        hostname: '**',
       },
       {
         protocol: 'https',
-        hostname: '*',
-        port: '*',
-        pathname: 'assets/**',
+        hostname: '**',
       },
     ],
   },
-
   // output: 'standalone',
 }
 
