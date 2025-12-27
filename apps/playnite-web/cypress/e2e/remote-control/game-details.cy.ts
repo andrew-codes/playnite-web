@@ -24,7 +24,7 @@ describe(`Game details remote control.
     })
   })
 
-  describe.only('Authenticated users.', () => {
+  describe('Authenticated users.', () => {
     beforeEach(() => {
       cy.task('restoreDatabaseSnapshot', 'multi-user')
       cy.signIn('test', 'test')

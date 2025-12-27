@@ -101,7 +101,7 @@ describe('User Library', () => {
     })
   })
 
-  describe.only(`Navigation.`, () => {
+  describe(`Navigation.`, () => {
     describe('Unauthenticated users.', () => {
       beforeEach(() => {
         cy.signOut()
