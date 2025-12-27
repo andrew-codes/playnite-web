@@ -171,7 +171,15 @@ namespace PlayniteWebMqtt
       {
         StartConnection(settings.Settings);
       }
-      catch (Exception ex) { }
+      catch (Exception ex)
+      {
+        logger.Error(ex, "Error occurred while starting MQTT connection.");
+        PlayniteApi.Notifications.Add(new NotificationMessage(
+          "PlayniteWebMqttConnectionError",
+          $"Playnite Web (MQTT): Failed to establish connection. {ex.Message}",
+          NotificationType.Error
+        ));
+      }
 
       subscriber.OnStartRelease += Subscriber_OnStartRelease;
       subscriber.OnInstallRelease += Subscriber_OnInstallRelease;
@@ -252,7 +260,7 @@ namespace PlayniteWebMqtt
     {
       if (!string.IsNullOrEmpty(settings.DeviceId) && !string.IsNullOrWhiteSpace(settings.DeviceId))
       {
-        var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, Id.ToByteArray());
+        var options = new MqttPublisherOptions(settings.ClientId, settings.ServerAddress, settings.Port, settings.Username, settings.Password, Id.ToByteArray(), PlayniteApi);
         mqtt.StartConnection(options);
       }
     }
