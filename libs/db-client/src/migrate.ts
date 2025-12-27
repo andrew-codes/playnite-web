@@ -1,12 +1,11 @@
 import { spawnSync } from 'child_process'
-import path from 'path'
 
 const migrate = async (configPath?: string) => {
   const pathToConfig = configPath ?? 'prisma.config.ts'
 
   const migrate = spawnSync(
     'npx',
-    ['prisma', 'migrate', 'deploy', '--config', pathToConfig],
+    ['prisma', 'migrate', 'dev', '--config', pathToConfig],
     {
       stdio: 'inherit',
       env: process.env,

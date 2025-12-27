@@ -22,9 +22,9 @@ import { useMe } from '../../account/hooks/me'
 import { useRestartRelease } from '../hooks/restartRelease'
 import { useStartRelease } from '../hooks/startRelease'
 import { useStopRelease } from '../hooks/stopRelease'
-import { runState } from '../runStates'
 import { useSubscribeGameUpdates } from '../hooks/useSubscribeGameUpdates'
 import { GameByIdQuery } from '../queries'
+import { runState } from '../runStates'
 
 const Details = styled('div')(({ theme }) => ({
   '> * ': {
@@ -132,7 +132,7 @@ const GameDetails: FC<GameDetailsProps> = ({ gameId }) => {
   const game = gameData?.game
 
   const hasWebhookSetting = !!data?.me?.settings?.find(
-    (s) => s?.name === defaultUserSettings.webhook.name,
+    (s) => s?.code === defaultUserSettings.webhook.id,
   )?.value
 
   const releases = useMemo(
