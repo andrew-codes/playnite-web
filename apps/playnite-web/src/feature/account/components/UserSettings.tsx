@@ -20,10 +20,17 @@ const UserSettings: FC<{}> = ({}) => {
 
   const settings = useMemo(() => {
     return ((result?.data?.me?.settings ?? []) as Array<UserSetting>).map(
-      (setting) =>
-        merge({}, setting, {
-          value: JSON.parse(setting.value ?? '""'),
-        }),
+      (setting) => {
+        let value = setting.value
+        try {
+          value = JSON.parse(setting.value ?? '""')
+        } catch {
+          value = setting.value
+        }
+        return merge({}, setting, {
+          value,
+        })
+      },
     )
   }, [result])
 
