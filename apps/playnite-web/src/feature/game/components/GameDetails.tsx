@@ -15,13 +15,14 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-import { FC, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { Game, Release } from '../../../../.generated/types.generated'
 import { defaultSettings as defaultUserSettings } from '../../../server/userSettings'
 import { useMe } from '../../account/hooks/me'
 import { useRestartRelease } from '../hooks/restartRelease'
 import { useStartRelease } from '../hooks/startRelease'
 import { useStopRelease } from '../hooks/stopRelease'
+import { runState } from '../runStates'
 import { useSubscribeGameUpdates } from '../hooks/useSubscribeGameUpdates'
 import { GameByIdQuery } from '../queries'
 
@@ -139,7 +140,24 @@ const GameDetails: FC<GameDetailsProps> = ({ gameId }) => {
     [game?.releases],
   )
 
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const activeReleaseIndex = useMemo(
+    () =>
+      releases.findIndex(
+        (r) =>
+          r.runState === runState.starting || r.runState === runState.running,
+      ),
+    [releases],
+  )
+
+  const [selectedIndex, setSelectedIndex] = useState(() =>
+    activeReleaseIndex >= 0 ? activeReleaseIndex : 0,
+  )
+
+  useEffect(() => {
+    if (activeReleaseIndex >= 0 && activeReleaseIndex !== selectedIndex) {
+      setSelectedIndex(activeReleaseIndex)
+    }
+  }, [activeReleaseIndex, selectedIndex])
   const [startRelease] = useStartRelease()
   const [stopRelease] = useStopRelease()
   const [restartRelease] = useRestartRelease()
@@ -254,7 +272,9 @@ const GameDetails: FC<GameDetailsProps> = ({ gameId }) => {
               </Popper>
             </Action>
             {releases.some(
-              (r) => r.runState === 'starting' || r.runState === 'started',
+              (r) =>
+                r.runState === runState.starting ||
+                r.runState === runState.running,
             ) && (
               <>
                 <Action>
