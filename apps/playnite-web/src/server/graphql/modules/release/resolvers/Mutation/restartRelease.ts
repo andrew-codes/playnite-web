@@ -1,4 +1,5 @@
 import { GraphQLError } from 'graphql'
+import logger from '../../../../../logger'
 import { create, createNull, tryParseOid } from '../../../../../oid'
 import { defaultSettings as defaultUserSettings } from '../../../../../userSettings'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
@@ -40,7 +41,7 @@ export const restartRelease: NonNullable<
     const webhookSetting = await _ctx.db.userSetting.findUniqueOrThrow({
       where: {
         userId_name: {
-          name: defaultUserSettings.webhook.name,
+          name: defaultUserSettings.webhook.id,
           userId: user.id.id,
         },
       },
@@ -88,6 +89,7 @@ export const restartRelease: NonNullable<
 
     return release
   } catch (error) {
+    logger.error(`Failed to restart release ${_arg.id}`, error)
     const errorMessage =
       error instanceof Error ? error.message : 'Unknown error'
     throw new GraphQLError(
