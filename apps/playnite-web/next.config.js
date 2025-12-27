@@ -88,10 +88,17 @@ const nextConfig = {
     imageSizes: [175, 230, 280, 320],
     qualities: [50, 75, 100],
     formats: ['image/webp'],
-    loader: 'custom',
-    loaderFile: './src/imageLoader.js',
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
-
   // output: 'standalone',
 }
 
