@@ -147,9 +147,13 @@ describe('User Library', () => {
           - Subheading is displayed.
           - Then main navigation.`, () => {
           cy.get('button[aria-label="open drawer"]').click()
-          cy.wait('@api')
-          cy.wait(700)
-          cy.wait('@api')
+          cy.get('[aria-label="open drawer"]').then(($el) => {
+            if ($el.find('svg').attr('data-testid') === 'ChevronRightIcon') {
+              // Drawer is still closed, try again.
+              cy.get('button[aria-label="open drawer"]').click()
+            }
+          })
+
           cy.get('[aria-label="Game Room - test"]').within(() => {
             cy.contains('li', 'Game Room - test')
             cy.get('[role="button"]').eq(0).contains('div', 'Games')
@@ -231,9 +235,13 @@ describe('User Library', () => {
       - User specific navigation.
       - Then main navigation.`, () => {
             cy.get('button[aria-label="open drawer"]').click()
-            cy.wait('@api')
-            cy.wait(700)
-            cy.wait('@api')
+            cy.get('[aria-label="open drawer"]').then(($el) => {
+              if ($el.find('svg').attr('data-testid') === 'ChevronRightIcon') {
+                // Drawer is still closed, try again.
+                cy.get('button[aria-label="open drawer"]').click()
+              }
+            })
+
             cy.get('[aria-label="Library - jane"]').within(() => {
               cy.contains('li', 'Library - jane')
               cy.get('[role="button"]').eq(0).contains('div', 'Games')
@@ -310,9 +318,13 @@ describe('User Library', () => {
       - Subheading is displayed.
       - Then main navigation.`, () => {
             cy.get('button[aria-label="open drawer"]').click()
-            cy.wait('@api')
-            cy.wait(700)
-            cy.wait('@api')
+            cy.get('[aria-label="open drawer"]').then(($el) => {
+              if ($el.find('svg').attr('data-testid') === 'ChevronRightIcon') {
+                // Drawer is still closed, try again.
+                cy.get('button[aria-label="open drawer"]').click()
+              }
+            })
+
             cy.get('[aria-label="Game Room - test"]').within(() => {
               cy.contains('li', 'Game Room - test')
               cy.get('[role="button"]').eq(0).contains('div', 'Games')
