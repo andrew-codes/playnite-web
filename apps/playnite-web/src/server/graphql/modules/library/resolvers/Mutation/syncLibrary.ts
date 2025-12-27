@@ -1,3 +1,4 @@
+import { defaultSettings } from 'apps/playnite-web/src/server/librarySetting'
 import logger from '../../../../../logger'
 import { getClient } from '../../../../../mqtt'
 import { hasIdentity } from '../../../../../oid'
@@ -41,6 +42,19 @@ export const syncLibrary: NonNullable<
 
   const libraryId = library.id
   logger.info(`Library ID: ${libraryId}`)
+
+  logger.silly(`Creating library settings for library ${libraryId}`)
+  const settings = Object.values(defaultSettings)
+  await _ctx.db.librarySetting.createMany({
+    data: settings.map((setting) => ({
+      libraryId: libraryId,
+      name: setting.id,
+      value:
+        setting?.[setting.id] ?? (Array.isArray(setting.value) ? [] : null),
+      dataType: setting.dataType,
+    })),
+    skipDuplicates: true,
+  })
 
   // Publish complete library data to MQTT for processing
   const mqtt = await getClient()

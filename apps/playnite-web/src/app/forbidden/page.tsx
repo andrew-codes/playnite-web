@@ -1,18 +1,12 @@
 import Typography from '@mui/material/Typography'
-import MainNavigation from '../../components/Navigation/MainNavigation'
-import Header from '../../feature/shared/components/Header'
+import MainNavigation from '../../feature/mainNavigation/components/MainNavigation'
 import { Layout } from '../../feature/shared/components/Layout'
+import { PageTitle } from '../../feature/shared/components/PageTitle'
 
 async function Forbidden() {
   return (
-    <Layout
-      title={
-        <Header>
-          <Typography variant="h1">Forbidden...</Typography>
-        </Header>
-      }
-      navs={[MainNavigation]}
-    >
+    <Layout navs={[MainNavigation]}>
+      <PageTitle title="Forbidden" />
       <Typography variant="body1">
         You are not authorized to view this page.
       </Typography>

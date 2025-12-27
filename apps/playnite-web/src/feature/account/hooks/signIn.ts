@@ -24,7 +24,7 @@ const useSignIn = () =>
         me: merge({}, me, {
           permission: Permission.Read,
           libraries: [],
-          settings: [],
+          settings: mutationResult.data?.signIn.user.settings || [],
         }),
       }))
     },

@@ -1,18 +1,9 @@
-import { Typography } from '@mui/material'
-import MainNavigation from '../../components/Navigation/MainNavigation'
-import Header from '../../feature/shared/components/Header'
+import MainNavigation from '../../feature/mainNavigation/components/MainNavigation'
 import { Layout } from '../../feature/shared/components/Layout'
 
 export default function Help({ children }: { children: React.ReactNode }) {
   return (
-    <Layout
-      navs={[MainNavigation]}
-      title={
-        <Header>
-          <Typography variant="h1">Help</Typography>
-        </Header>
-      }
-    >
+    <Layout navs={[MainNavigation]}>
       <div className="help-page">{children}</div>
     </Layout>
   )

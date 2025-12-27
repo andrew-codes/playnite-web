@@ -15,7 +15,8 @@ describe('Authentication', () => {
   it(`Authentication flow
 - User can authenticate with a username and password.
 - Authenticated user is redirected back to original page.
-- Authenticated users can immediately sign out.`, () => {
+- Authenticated users can immediately sign out.
+- Signing out redirects to home page.`, () => {
     cy.visit('/help/sync-library')
     cy.get('[data-test="Navigation"]').clickMenuItem('Sign In')
 
@@ -31,7 +32,7 @@ describe('Authentication', () => {
     )
     cy.wait('@api')
 
-    cy.get('[data-test="Navigation"]').find('[aria-label="Sign In"]')
+    cy.location('pathname').should('equal', '/')
   })
 
   describe('UI.', () => {

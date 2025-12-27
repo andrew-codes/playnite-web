@@ -30,6 +30,15 @@ const SignInMutation = gql`
         id
         isAuthenticated
         username
+        settings {
+          id
+          code
+          name
+          value
+          description
+          helperText
+          dataType
+        }
       }
     }
   }

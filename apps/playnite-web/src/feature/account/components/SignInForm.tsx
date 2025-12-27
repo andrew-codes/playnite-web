@@ -11,6 +11,7 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FC, FormEventHandler, useEffect } from 'react'
 import { Form } from '../../shared/components/forms/Form'
+import { PageTitle } from '../../shared/components/PageTitle'
 import { useSignIn } from '../hooks/signIn'
 
 const SignInForm: FC = () => {
@@ -43,6 +44,7 @@ const SignInForm: FC = () => {
 
   return (
     <>
+      <PageTitle title="Sign In" />
       <Form onSubmit={handleSubmit}>
         <TextField
           name="username"

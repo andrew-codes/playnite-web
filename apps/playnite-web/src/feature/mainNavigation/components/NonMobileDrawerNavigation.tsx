@@ -15,7 +15,7 @@ import {
   ReactNode,
   useState,
 } from 'react'
-import IconButton from '../../feature/shared/components/IconButton'
+import IconButton from '../../shared/components/IconButton'
 import { NavigationContainer } from './NavigationContainer'
 
 const drawerWidth = 320

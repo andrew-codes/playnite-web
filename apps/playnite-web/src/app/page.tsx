@@ -1,18 +1,31 @@
-import Typography from '@mui/material/Typography'
-import MainNavigation from '../components/Navigation/MainNavigation'
-import Header from '../feature/shared/components/Header'
-import { Layout } from '../feature/shared/components/Layout'
+'use client'
 
-async function Index() {
+import { Typography } from '@mui/material'
+import { useMe } from '../feature/account/hooks/me'
+import AuthenticatedNavigation from '../feature/mainNavigation/components/AuthenticatedNavigation'
+import MainNavigation from '../feature/mainNavigation/components/MainNavigation'
+import { Layout } from '../feature/shared/components/Layout'
+import { Link } from '../feature/shared/components/Link'
+import { PageTitle } from '../feature/shared/components/PageTitle'
+
+function Index() {
+  const [result] = useMe()
+
+  const navs = [MainNavigation]
+  if (result.data?.me?.isAuthenticated) {
+    navs.unshift(AuthenticatedNavigation)
+  }
+
   return (
-    <Layout
-      title={
-        <Header>
-          <Typography variant="h1">Playnite Web</Typography>
-        </Header>
-      }
-      navs={[MainNavigation]}
-    ></Layout>
+    <Layout navs={navs}>
+      <PageTitle
+        title="Welcome to Playnite Web"
+        subtitle="Manage and view your game libraries online."
+      />
+      <Typography variant="body1">
+        Please <Link href="/login">sign-in</Link> to get started.
+      </Typography>
+    </Layout>
   )
 }
 

@@ -7,9 +7,9 @@ import {
   useTheme,
 } from '@mui/material'
 import { FC, useMemo } from 'react'
-import { Game } from '../../.generated/types.generated'
-import GameFigure from '../feature/library/components/GameFigure'
-import useThemeWidth from './useThemeWidth'
+import { Game } from '../../../../.generated/types.generated'
+import useThemeWidth from '../../../components/useThemeWidth'
+import GameFigure from './GameFigure'
 
 const ImageListWithoutOverflow = styled(ImageList)`
   overflow-y: hidden;

@@ -112,7 +112,7 @@ describe('Account Creation.', () => {
         Object.values(defaultUserSettings).forEach((setting, i) => {
           expect(response.body.data.me.settings[i]).to.include({
             name: setting.name,
-            value: setting.value,
+            value: JSON.stringify(setting.value),
             dataType: setting.dataType,
           })
         })

@@ -8,6 +8,8 @@ type Library {
   features: [Feature!]!
   completionStates: [CompletionStatus!]!
   tags: [Tag!]!
+  settings: [LibrarySetting!]!
+  gamesOnDeck: [Game!]!
 }
 
 extend type Query {
@@ -83,8 +85,19 @@ input LibraryInput {
   remove: LibraryRemovalInput!
 }
 
+input LibrarySettingUpdateInput {
+  id: String!
+  value: String
+}
+
+input LibrarySettingsInput {
+  libraryId: String!
+  settings: [LibrarySettingUpdateInput!]!
+}
+
 extend type Mutation {
   syncLibrary(libraryData: LibraryInput!): Library
+  updateLibrarySettings(input: LibrarySettingsInput!): [LibrarySetting!]!
 }
 
 type EntityCollectionUpdate {
@@ -112,6 +125,16 @@ type EntityUpdateDetails {
   id: String!
   playniteId: String
   fields: [EntityUpdateField!]!
+}
+
+type LibrarySetting {
+  id: String!
+  code: String!
+  name: String!
+  value: String
+  dataType: String!
+  helperText: String!
+  description: String!
 }
 
 extend type Subscription {

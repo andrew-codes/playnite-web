@@ -37,6 +37,7 @@ type ClaimUser = Omit<GraphUser, 'id'> & {
   id: string
 }
 type GraphLibrary = Prisma.LibraryGetPayload<{}>
+type GraphLibrarySetting = Prisma.LibrarySettingGetPayload<{}>
 
 type GraphSiteSetting = Prisma.SiteSettingsGetPayload<{}>
 type GraphUserSetting = Prisma.UserSettingGetPayload<{}>
@@ -75,10 +76,10 @@ export type {
   GraphCompletionStatus,
   GraphEntityCollectionUpdateDetails,
   GraphEntityUpdateDetails,
-  GraphUsers,
   GraphFeature,
   GraphGame,
   GraphLibrary,
+  GraphLibrarySetting,
   GraphPlatform,
   GraphPlaylist,
   GraphPublicUser,
@@ -87,5 +88,6 @@ export type {
   GraphSource,
   GraphTag,
   GraphUser,
+  GraphUsers,
   GraphUserSetting,
 }

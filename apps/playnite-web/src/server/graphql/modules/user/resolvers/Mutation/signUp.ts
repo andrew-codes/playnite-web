@@ -77,8 +77,8 @@ export const signUp: NonNullable<MutationResolvers['signUp']> = async (
         permission: permission,
         Settings: {
           create: Object.values(defaultUserSettings).map((setting) => ({
-            name: setting.name,
-            value: setting.value,
+            name: setting.id,
+            value: JSON.stringify(setting.value),
             dataType: setting.dataType,
           })),
         },

@@ -2,16 +2,16 @@
 
 import { useQuery } from '@apollo/client/react'
 import { FilterAlt } from '@mui/icons-material'
-import { Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Game, Library } from '../../../../.generated/types.generated'
+import { Library } from '../../../../.generated/types.generated'
 import { setCompletionStates } from '../../../api/client/state/completionStatesSlice'
-import LibrariesNavigation from '../../../components/Navigation/LibrariesNavigation'
-import LibraryNavigation from '../../../components/Navigation/LibraryNavigation'
-import MainNavigation from '../../../components/Navigation/MainNavigation'
-import Header from '../../shared/components/Header'
+import { useMe } from '../../account/hooks/me'
+import AuthenticatedNavigation from '../../mainNavigation/components/AuthenticatedNavigation'
+import LibrariesNavigation from '../../mainNavigation/components/LibrariesNavigation'
+import LibraryNavigation from '../../mainNavigation/components/LibraryNavigation'
+import MainNavigation from '../../mainNavigation/components/MainNavigation'
 import IconButton from '../../shared/components/IconButton'
 import { Layout } from '../../shared/components/Layout'
 import { AllGamesQuery } from '../queries'
@@ -33,6 +33,21 @@ const LibraryLayout = ({
     variables: { libraryId },
   })
 
+  const [result] = useMe()
+  let navs = [LibraryNavigation, LibrariesNavigation, MainNavigation]
+  if (result?.data?.me?.isAuthenticated) {
+    navs = navs
+      .slice(0, 2)
+      .concat([AuthenticatedNavigation])
+      .concat(navs.slice(2))
+  }
+  if (
+    result?.data?.me?.isAuthenticated &&
+    username === result.data.me.username
+  ) {
+    navs = navs.filter((nav) => nav !== LibrariesNavigation)
+  }
+
   const dispatch = useDispatch()
   useEffect(() => {
     if (!data?.library?.completionStates) {
@@ -46,8 +61,6 @@ const LibraryLayout = ({
       ),
     )
   }, [data?.library?.completionStates, dispatch])
-
-  const games = (data?.library?.games?.filter((g) => g) as Array<Game>) ?? []
 
   if (error) {
     console.error(error, data)
@@ -68,15 +81,7 @@ const LibraryLayout = ({
           <FilterAlt />
         </IconButton>
       }
-      title={
-        <Header>
-          <Typography variant="h1">My Games</Typography>
-          <Typography variant="subtitle1">
-            <span>{games.length}</span>&nbsp;games in library
-          </Typography>
-        </Header>
-      }
-      navs={[LibraryNavigation, LibrariesNavigation, MainNavigation]}
+      navs={navs}
     >
       {children}
     </Layout>

@@ -2,10 +2,12 @@ import type { MutationResolvers } from './../../../../../../../.generated/types.
 export const updateSiteSetting: NonNullable<
   MutationResolvers['updateSiteSetting']
 > = async (_parent, _arg, _ctx) => {
+  await _ctx.identityService.authorize(_ctx.jwt?.payload)
+
   return _ctx.db.siteSettings.update({
     where: { id: _arg.id },
     data: {
-      value: _arg.value,
+      value: JSON.stringify(_arg.value),
     },
   })
 }

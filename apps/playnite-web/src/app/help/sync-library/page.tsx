@@ -1,9 +1,10 @@
 import { Typography } from '@mui/material'
+import { PageTitle } from 'apps/playnite-web/src/feature/shared/components/PageTitle'
 
 export default function HelpSyncLibrary() {
   return (
     <>
-      <Typography variant="h2">Sync Library</Typography>
+      <PageTitle title="Help - Sync Library" />
       <Typography variant="body1">
         Here you can manage your library synchronization settings.
       </Typography>

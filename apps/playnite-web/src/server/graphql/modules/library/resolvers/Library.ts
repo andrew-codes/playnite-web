@@ -1,5 +1,6 @@
 import type { LibraryResolvers } from '../../../../../../.generated/types.generated'
-import { create } from '../../../../oid'
+import { defaultSettings } from '../../../../librarySetting'
+import { create, tryParseOid } from '../../../../oid'
 
 export const Library: LibraryResolvers = {
   id: (library) => create('Library', library.id).toString(),
@@ -65,6 +66,58 @@ export const Library: LibraryResolvers = {
   },
   tags: async (library, _args, ctx) => {
     return ctx.db.tag.findMany({
+      where: {
+        libraryId: library.id,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  },
+  gamesOnDeck: async (library, _args, ctx) => {
+    const onDeckSetting = await ctx.db.librarySetting.findUnique({
+      where: {
+        libraryId_name: {
+          name: defaultSettings.onDeck.id,
+          libraryId: library.id,
+        },
+      },
+    })
+
+    const onDeckCompletionStates = Array.isArray(onDeckSetting?.value)
+      ? (onDeckSetting.value as Array<string>).map(
+          (state) => tryParseOid(state).id,
+        )
+      : []
+
+    return ctx.db.game.findMany({
+      where: {
+        libraryId: library.id,
+        Releases: {
+          some: {
+            completionStatusId: {
+              in: onDeckCompletionStates,
+            },
+          },
+        },
+      },
+      orderBy: {
+        title: 'asc',
+      },
+    })
+  },
+  settings: async (library, _args, ctx) => {
+    const user = await ctx.identityService.authorize(ctx.jwt?.payload)
+
+    if (!user) {
+      throw new Error('Unauthorized')
+    }
+
+    if (library.userId !== user.id.id) {
+      throw new Error('Forbidden')
+    }
+
+    return ctx.db.librarySetting.findMany({
       where: {
         libraryId: library.id,
       },

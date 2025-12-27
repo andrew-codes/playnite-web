@@ -16,6 +16,7 @@ import prisma from 'db-client'
 import logger from 'dev-logger'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
+import { defaultSettings } from '../../src/server/userSettings'
 
 const DEFAULT_SNAPSHOT = 'librarySnapshot'
 
@@ -74,10 +75,19 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       `Restoring ${snapshotData.userSettings.length} user settings...`,
     )
     for (const setting of snapshotData.userSettings) {
+      const code = Object.entries(defaultSettings).find(
+        ([code, value]) => value.name === setting.name,
+      )?.[0]
+      if (!code) {
+        logger.warn(
+          `  - Skipping unknown user setting: ${setting.name} for userId ${setting.userId}`,
+        )
+        continue
+      }
       await prisma.userSetting.create({
         data: {
           id: setting.id,
-          name: setting.name,
+          name: code,
           value: setting.value,
           dataType: setting.dataType,
           userId: setting.userId,
@@ -102,7 +112,23 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 4. Platforms (depends on Library)
+    // 4. Library Settings (depends on Library)
+    logger.info(
+      `Restoring ${snapshotData.librarySettings.length} library settings...`,
+    )
+    for (const setting of snapshotData.librarySettings) {
+      await prisma.librarySetting.create({
+        data: {
+          id: setting.id,
+          name: setting.name,
+          value: setting.value,
+          dataType: setting.dataType,
+          libraryId: setting.libraryId,
+        },
+      })
+    }
+
+    // 5. Platforms (depends on Library)
     logger.info(`Restoring ${snapshotData.platforms.length} platforms...`)
     for (const platform of snapshotData.platforms) {
       await prisma.platform.create({
@@ -117,7 +143,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 5. Sources (depends on Library and Platform)
+    // 6. Sources (depends on Library and Platform)
     logger.info(`Restoring ${snapshotData.sources.length} sources...`)
     for (const source of snapshotData.sources) {
       await prisma.source.create({
@@ -133,7 +159,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 6. Features (depends on Library)
+    // 7. Features (depends on Library)
     logger.info(`Restoring ${snapshotData.features.length} features...`)
     for (const feature of snapshotData.features) {
       await prisma.feature.create({
@@ -148,7 +174,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 7. Completion Statuses (depends on Library)
+    // 8. Completion Statuses (depends on Library)
     logger.info(
       `Restoring ${snapshotData.completionStatuses.length} completion statuses...`,
     )
@@ -165,7 +191,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 8. Tags (depends on Library)
+    // 9. Tags (depends on Library)
     logger.info(`Restoring ${snapshotData.tags.length} tags...`)
     for (const tag of snapshotData.tags) {
       await prisma.tag.create({
@@ -180,7 +206,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 9. Games (depends on Library)
+    // 10. Games (depends on Library)
     logger.info(`Restoring ${snapshotData.games.length} games...`)
     for (const game of snapshotData.games) {
       await prisma.game.create({
@@ -193,7 +219,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 10. Playlists (depends on Library)
+    // 11. Playlists (depends on Library)
     logger.info(`Restoring ${snapshotData.playlists.length} playlists...`)
     for (const playlist of snapshotData.playlists) {
       await prisma.playlist.create({
@@ -207,7 +233,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 11. Releases (depends on Library, Source, CompletionStatus)
+    // 12. Releases (depends on Library, Source, CompletionStatus)
     logger.info(`Restoring ${snapshotData.releases.length} releases...`)
     for (const release of snapshotData.releases) {
       await prisma.release.create({
@@ -234,7 +260,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       })
     }
 
-    // 12. Many-to-many relationships
+    // 13. Many-to-many relationships
     logger.info('Restoring relationships...')
     logger.info(
       `  - ${snapshotData.releaseFeatures.length} release-feature links`,
@@ -259,7 +285,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       )
     }
 
-    // 13. Site Settings
+    // 14. Site Settings
     logger.info(
       `Restoring ${snapshotData.siteSettings.length} site settings...`,
     )
@@ -299,6 +325,7 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
     logger.info('Summary:')
     logger.info(`  - ${snapshotData.users.length} users`)
     logger.info(`  - ${snapshotData.libraries.length} libraries`)
+    logger.info(`  - ${snapshotData.librarySettings.length} library settings`)
     logger.info(`  - ${snapshotData.games.length} games`)
     logger.info(`  - ${snapshotData.releases.length} releases`)
     logger.info(`  - ${snapshotData.platforms.length} platforms`)

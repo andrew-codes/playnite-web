@@ -32,18 +32,11 @@ describe(`Game details remote control.
 
     it(`Non-owned library.
       - No action controls.`, () => {
-      cy.fixture('librarySync.json')
-        .then((libraryData) => {
-          cy.syncLibrary('test', 'test', libraryData)
-          cy.syncLibrary('jane', 'jane', libraryData)
-        })
-        .then((library) => {
-          cy.signIn('test', 'test')
-          cy.visit(`/u/jane/${library.body.data.syncLibrary.id}`)
-          cy.wait('@api')
-          cy.wait('@api')
-          cy.waitForImages(40, 30000)
-        })
+      cy.signIn('test', 'test')
+      cy.visit(`/u/jane/Library:2`)
+      cy.wait('@api')
+      cy.wait('@api')
+      cy.waitForImages(40, 30000)
       cy.get('[data-test="GameFigure"] button img').eq(0).click({ force: true })
       cy.wait('@rsc')
 
@@ -63,17 +56,11 @@ describe(`Game details remote control.
       })
 
       beforeEach(() => {
-        cy.fixture('librarySync.json')
-          .then((libraryData) => {
-            return cy.syncLibrary('test', 'test', libraryData)
-          })
-          .then((library) => {
-            cy.signIn('test', 'test')
-            cy.visit(`/u/test/${library.body.data.syncLibrary.id}`)
-            cy.wait('@api')
-            cy.wait('@api')
-            cy.waitForImages(40, 30000)
-          })
+        cy.signIn('test', 'test')
+        cy.visit(`/u/test/Library:1`)
+        cy.wait('@api')
+        cy.wait('@api')
+        cy.waitForImages(40, 30000)
       })
 
       it(`Play button.
