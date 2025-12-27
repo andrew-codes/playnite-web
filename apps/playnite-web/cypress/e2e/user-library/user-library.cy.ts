@@ -142,15 +142,14 @@ describe('User Library', () => {
       })
 
       describe('Navigation expanded.', () => {
-        beforeEach(() => {
-          cy.get('button[aria-label="open drawer"]').click()
-          cy.wait(500)
-        })
-
         it(`Libraries centric navigation.
-      - Library links are shown in the sidebar
-      - Subheading is displayed.
-      - Then main navigation.`, () => {
+          - Library links are shown in the sidebar
+          - Subheading is displayed.
+          - Then main navigation.`, () => {
+          cy.get('button[aria-label="open drawer"]').click()
+          cy.wait('@api')
+          cy.wait(700)
+          cy.wait('@api')
           cy.get('[aria-label="Game Room - test"]').within(() => {
             cy.contains('li', 'Game Room - test')
             cy.get('[role="button"]').eq(0).contains('div', 'Games')
@@ -226,16 +225,15 @@ describe('User Library', () => {
         })
 
         describe('Navigation expanded.', () => {
-          beforeEach(() => {
-            cy.get('button[aria-label="open drawer"]').click()
-            cy.wait(500)
-          })
-
           it(`Libraries centric navigation.
       - Library links are shown in the sidebar
       - Subheading is displayed.
       - User specific navigation.
       - Then main navigation.`, () => {
+            cy.get('button[aria-label="open drawer"]').click()
+            cy.wait('@api')
+            cy.wait(700)
+            cy.wait('@api')
             cy.get('[aria-label="Library - jane"]').within(() => {
               cy.contains('li', 'Library - jane')
               cy.get('[role="button"]').eq(0).contains('div', 'Games')
@@ -307,15 +305,14 @@ describe('User Library', () => {
         })
 
         describe('Navigation expanded.', () => {
-          beforeEach(() => {
-            cy.wait(500)
-            cy.get('button[aria-label="open drawer"]').click()
-          })
-
           it(`My library centric navigation only.
       - Library links are shown in the sidebar
       - Subheading is displayed.
       - Then main navigation.`, () => {
+            cy.get('button[aria-label="open drawer"]').click()
+            cy.wait('@api')
+            cy.wait(700)
+            cy.wait('@api')
             cy.get('[aria-label="Game Room - test"]').within(() => {
               cy.contains('li', 'Game Room - test')
               cy.get('[role="button"]').eq(0).contains('div', 'Games')
