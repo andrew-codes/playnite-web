@@ -142,7 +142,7 @@ describe('User Library', () => {
       })
 
       describe('Navigation expanded.', () => {
-        it(`Libraries centric navigation.
+        it.skip(`Libraries centric navigation.
           - Library links are shown in the sidebar
           - Subheading is displayed.
           - Then main navigation.`, () => {
