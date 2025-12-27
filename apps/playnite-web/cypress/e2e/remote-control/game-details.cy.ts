@@ -50,7 +50,7 @@ describe(`Game details remote control.
         cy.task('setUserSettings', {
           username: 'test',
           settings: {
-            webhook: '"http://localhost:3000/echo"',
+            webhook: 'http://localhost:3000/echo',
           },
         })
       })

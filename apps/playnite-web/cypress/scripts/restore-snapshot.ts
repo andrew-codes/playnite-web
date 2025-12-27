@@ -16,6 +16,7 @@ import prisma from 'db-client'
 import logger from 'dev-logger'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
+import { defaultSettings } from '../../src/server/userSettings'
 
 const DEFAULT_SNAPSHOT = 'librarySnapshot'
 
@@ -74,10 +75,19 @@ async function restoreDatabaseSnapshot(snapshotName: string) {
       `Restoring ${snapshotData.userSettings.length} user settings...`,
     )
     for (const setting of snapshotData.userSettings) {
+      const code = Object.entries(defaultSettings).find(
+        ([code, value]) => value.name === setting.name,
+      )?.[0]
+      if (!code) {
+        logger.warn(
+          `  - Skipping unknown user setting: ${setting.name} for userId ${setting.userId}`,
+        )
+        continue
+      }
       await prisma.userSetting.create({
         data: {
           id: setting.id,
-          name: setting.name,
+          name: code,
           value: setting.value,
           dataType: setting.dataType,
           userId: setting.userId,

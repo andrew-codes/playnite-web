@@ -502,16 +502,16 @@ const tasks = (on, config) => {
 
         results = await Promise.all(
           Object.entries(settings).map(async ([code, value]) => {
-            const name = defaultUserSettings[code]?.name || code
+            const name = defaultUserSettings[code]?.id || code
 
             return await prisma.userSetting.update({
               where: {
                 userId_name: {
                   userId: user.id,
-                  name,
+                  name: name,
                 },
               },
-              data: { value },
+              data: { value: JSON.stringify(value) },
             })
           }),
         )
