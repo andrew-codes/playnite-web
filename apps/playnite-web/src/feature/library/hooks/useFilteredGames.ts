@@ -11,6 +11,17 @@ export function useFilteredGames(games: DeepPartial<Game>[]): Array<Game> {
   return useMemo(() => {
     let filteredGames = games
 
+    filteredGames = filteredGames.filter((game) => {
+      const releases =
+        game.releases?.filter((release) => Boolean(release)) ?? []
+
+      if (releases.length === 0) {
+        return true
+      }
+
+      return !releases.every((release) => release?.hidden === true)
+    })
+
     // Apply name filter
     if (nameFilter && nameFilter.trim() !== '') {
       const isExactMatch =

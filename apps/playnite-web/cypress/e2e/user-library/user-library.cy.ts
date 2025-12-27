@@ -352,38 +352,49 @@ describe('User Library', () => {
       })
     })
   })
-})
 
-describe('User Library', () => {
-  describe.skip('UI.', () => {
-    Cypress._.each(breakpoints, ([name, x, y]) => {
-      describe(`${name}.`, () => {
-        beforeEach(() => {
-          cy.viewport(x, y)
-        })
+  describe('Hidden releases', () => {
+    it(`Omits games when all releases are hidden.`, () => {
+      cy.get('[data-test="GameFigure"]').contains('7 Days to Die')
+      cy.get('[data-test="GameFigure"]').should(
+        'not.contain',
+        'Aliens: Fireteam Elite',
+      )
+      cy.get('[data-test="GameFigure"]').contains('Aliens: Dark Descent')
+    })
+  })
 
-        beforeEach(() => {
-          cy.visit(`/u/test/Library:1`)
-        })
+  describe('User Library', () => {
+    describe.skip('UI.', () => {
+      Cypress._.each(breakpoints, ([name, x, y]) => {
+        describe(`${name}.`, () => {
+          beforeEach(() => {
+            cy.viewport(x, y)
+          })
 
-        it(`Displays the library correctly`, () => {
-          cy.get('[data-test="GameFigure"]').contains('3DMark')
+          beforeEach(() => {
+            cy.visit(`/u/test/Library:1`)
+          })
 
-          cy.compareSnapshot({
-            name: `library-${name}`,
-            cypressScreenshotOptions: {
-              onBeforeScreenshot($el) {
-                Cypress.$('body').css('overflow-y', 'hidden')
-                Cypress.$('[data-test="GameCoverImage"]').css(
-                  'visibility',
-                  'hidden',
-                )
-                Cypress.$('[data-test="GameGrid"] > div').css(
-                  'overflow-y',
-                  'hidden',
-                )
+          it(`Displays the library correctly`, () => {
+            cy.get('[data-test="GameFigure"]').contains('3DMark')
+
+            cy.compareSnapshot({
+              name: `library-${name}`,
+              cypressScreenshotOptions: {
+                onBeforeScreenshot($el) {
+                  Cypress.$('body').css('overflow-y', 'hidden')
+                  Cypress.$('[data-test="GameCoverImage"]').css(
+                    'visibility',
+                    'hidden',
+                  )
+                  Cypress.$('[data-test="GameGrid"] > div').css(
+                    'overflow-y',
+                    'hidden',
+                  )
+                },
               },
-            },
+            })
           })
         })
       })
