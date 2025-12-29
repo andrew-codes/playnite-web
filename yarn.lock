@@ -3462,13 +3462,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eddeee888/gcg-typescript-resolver-files@npm:^0.14.1":
-  version: 0.14.1
-  resolution: "@eddeee888/gcg-typescript-resolver-files@npm:0.14.1"
+"@eddeee888/gcg-typescript-resolver-files@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "@eddeee888/gcg-typescript-resolver-files@npm:0.15.0"
   dependencies:
     "@eddeee888/gcg-server-config": "npm:0.3.0"
     "@graphql-codegen/add": "npm:^6.0.0"
-    "@graphql-codegen/plugin-helpers": "npm:^6.0.0"
+    "@graphql-codegen/plugin-helpers": "npm:^6.1.0"
     "@graphql-codegen/schema-ast": "npm:^5.0.0"
     "@graphql-codegen/typescript": "npm:^5.0.1"
     "@graphql-codegen/typescript-resolvers": "npm:^5.0.1"
@@ -3479,7 +3479,7 @@ __metadata:
     tslib: "npm:^2.3.0"
   peerDependencies:
     graphql: ^15.0.0 || ^16.0.0
-  checksum: 10c0/f54b0701494761ab8b75c0211b8af9e78e17b59163e3b09e23b9bb9c646da7727d5ebf2c8af96fdbd042b9eaa5afdcae6f1287295d5a4da90620f8f79c3088db
+  checksum: 10c0/fbc7162636fd82b76b0b197aa8d978fed213122b1dc4bdf0f17a7f9b78f556d97e114e300a04ed1b470f7e8529601120566861a293ee7e42f76d5a8e4e48a8ea
   languageName: node
   linkType: hard
 
@@ -28696,7 +28696,7 @@ __metadata:
     "@cypress-audit/lighthouse": "npm:^1.4.2"
     "@cypress/code-coverage": "npm:^3.14.7"
     "@cypress/webpack-preprocessor": "npm:^7.0.2"
-    "@eddeee888/gcg-typescript-resolver-files": "npm:^0.14.1"
+    "@eddeee888/gcg-typescript-resolver-files": "npm:^0.15.0"
     "@emotion/cache": "npm:^11.14.0"
     "@emotion/react": "npm:^11.14.0"
     "@emotion/server": "npm:^11.11.0"
