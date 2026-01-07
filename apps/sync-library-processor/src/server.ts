@@ -483,6 +483,19 @@ async function run() {
               }
             }
 
+            let recentActivity: Date | null = null
+            if (release.lastActivity) {
+              const date = new Date(release.lastActivity)
+              if (isNaN(date.getTime())) {
+                logger.warn(
+                  `Invalid last activity date for release ${release.id}, ${release.title}: ${release.lastActivity}`,
+                )
+                recentActivity = null
+              } else {
+                recentActivity = date
+              }
+            }
+
             return {
               playniteId: release.id,
               title: release.title,
@@ -491,6 +504,7 @@ async function run() {
               releaseYear: releaseDate?.getFullYear() ?? null,
               criticScore: release.criticScore,
               playtime: BigInt(release.playtime ?? '0'),
+              recentActivity,
               communityScore: release.communityScore,
               hidden: release.hidden ?? false,
               sourceId: sourceMap.get(release.source),
@@ -561,12 +575,12 @@ async function run() {
             await prisma.$executeRaw`
               INSERT INTO "Release" (
                 "playniteId", "title", "description", "releaseDate", "releaseYear",
-                "criticScore", "playtime", "communityScore", "hidden", "sourceId",
+                "criticScore", "playtime", "recentActivity", "communityScore", "hidden", "sourceId",
                 "completionStatusId", "libraryId", "runState", "releaseGameId", "gameId", "createdAt", "updatedAt"
               )
               SELECT
                 rd.playnite_id, rd.title, rd.description, rd.release_date, rd.release_year,
-                rd.critic_score, rd.playtime, rd.community_score, rd.hidden, rd.source_id,
+                rd.critic_score, rd.playtime, rd.recent_activity, rd.community_score, rd.hidden, rd.source_id,
                 rd.completion_status_id, ${libraryId}, 'stopped', rd.release_game_id, rd.game_id,
                 ${now}::timestamp, ${now}::timestamp
               FROM ROWS FROM (
@@ -577,6 +591,7 @@ async function run() {
                 UNNEST(${releaseDataWithGameId.map((r) => r.releaseYear)}::integer[]),
                 UNNEST(${releaseDataWithGameId.map((r) => r.criticScore)}::float[]),
                 UNNEST(${releaseDataWithGameId.map((r) => r.playtime.toString())}::bigint[]),
+                UNNEST(${releaseDataWithGameId.map((r) => r.recentActivity)}::timestamp[]),
                 UNNEST(${releaseDataWithGameId.map((r) => r.communityScore)}::float[]),
                 UNNEST(${releaseDataWithGameId.map((r) => r.hidden)}::boolean[]),
                 UNNEST(${releaseDataWithGameId.map((r) => r.sourceId)}::integer[]),
@@ -585,7 +600,7 @@ async function run() {
                 UNNEST(${releaseDataWithGameId.map((r) => r.gameId)}::integer[])
               ) AS rd(
                 playnite_id, title, description, release_date, release_year,
-                critic_score, playtime, community_score, hidden, source_id,
+                critic_score, playtime, recent_activity, community_score, hidden, source_id,
                 completion_status_id, release_game_id, game_id
               )
               ON CONFLICT ("playniteId", "libraryId")
@@ -595,6 +610,8 @@ async function run() {
                 "releaseDate" = EXCLUDED."releaseDate",
                 "releaseYear" = EXCLUDED."releaseYear",
                 "criticScore" = EXCLUDED."criticScore",
+                "playtime" = EXCLUDED."playtime",
+                "recentActivity" = EXCLUDED."recentActivity",
                 "communityScore" = EXCLUDED."communityScore",
                 "hidden" = EXCLUDED."hidden",
                 "sourceId" = EXCLUDED."sourceId",

@@ -78,4 +78,7 @@ export const Release: ReleaseResolvers = {
   tags: async (_parent, _arg, _ctx) => {
     return _ctx.loaders.releaseTagLoader.load(Number(_parent.id))
   },
+  recentActivity: async (_parent, _arg, _ctx) => {
+    return _parent.recentActivity
+  },
 }
