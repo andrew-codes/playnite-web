@@ -103,6 +103,7 @@ model Release {
   completionStatusId Int?
   playniteId         String?
   playtime           BigInt?   @default(0)
+  recentActivity     DateTime?
   runState           String
   releaseGameId      Int
 
