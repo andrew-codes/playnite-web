@@ -354,3 +354,10 @@ Packages:
     Changelog:
       - "fix: no library settings when upgrading an existing installation."
       - "fix: broken action buttons"
+  - Version: 13.4.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.4.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_13_4_0.pext
+    ReleaseDate: 2026-01-07
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat: recent activity (#939)"
+      - "feat: recent activity"
