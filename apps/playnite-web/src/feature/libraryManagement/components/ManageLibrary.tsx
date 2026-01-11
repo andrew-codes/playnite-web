@@ -17,6 +17,7 @@ import { debounce } from 'lodash-es'
 import Image from 'next/image'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Game, Library } from '../../../../.generated/types.generated'
+import { useUpdateGame } from '../../game/hooks/updateGame'
 import GameGrid from '../../library/components/VirtualizedGameGrid'
 import { useFilteredGames } from '../../library/hooks/useFilteredGames'
 import { AllGamesQuery } from '../../library/queries'
@@ -62,6 +63,7 @@ const ManageLibrary: FC<{ libraryId: string }> = ({ libraryId }) => {
   const [game, setGame] = useState<Game | null>(null)
   const handleSelectGame = useCallback((evt, game: Game) => {
     setGame(game)
+    setSelectedCoverArtUrl(game.coverArt || '')
   }, [])
 
   const { searchGames, games: ignGames } = useSearchIgnGames()
@@ -75,18 +77,37 @@ const ManageLibrary: FC<{ libraryId: string }> = ({ libraryId }) => {
   const options = useMemo(() => {
     return ignGames.map((ignGame) => ({
       label: ignGame.metadata.names.name,
-      value: ignGame.primaryImage.url,
+      value: ignGame.primaryImage?.url,
     }))
   }, [ignGames])
 
-  const [selectedCoverArtUrl, setSelectedCoverArtUrl] = useState<string | null>(
-    null,
+  const [selectedCoverArtUrl, setSelectedCoverArtUrl] = useState<string>(
+    game?.coverArt || '',
   )
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback((evt) => {
+    evt.preventDefault()
+
     setGame(null)
-    setSelectedCoverArtUrl(null)
+    setSelectedCoverArtUrl('')
   }, [])
-  const handleSubmit = useCallback(() => {}, [])
+  const [updateGame] = useUpdateGame()
+  const handleSubmit = useCallback(
+    (evt) => {
+      evt.preventDefault()
+
+      if (!game) return
+
+      updateGame({
+        variables: {
+          input: {
+            id: game.id,
+            coverArt: selectedCoverArtUrl,
+          },
+        },
+      })
+    },
+    [game, selectedCoverArtUrl, updateGame],
+  )
 
   const theme = useTheme()
   const fullScreenDialog = useMediaQuery(theme.breakpoints.down('md'))
@@ -136,7 +157,9 @@ const ManageLibrary: FC<{ libraryId: string }> = ({ libraryId }) => {
                         value: string
                         label: string
                       } | null
-                      setSelectedCoverArtUrl(newOption ? newOption.value : null)
+                      setSelectedCoverArtUrl(
+                        newOption ? newOption.value : (game?.coverArt ?? ''),
+                      )
                     }}
                     freeSolo
                     fullWidth
@@ -173,9 +196,9 @@ const ManageLibrary: FC<{ libraryId: string }> = ({ libraryId }) => {
                 sx={{ minWidth: '200px', minHeight: '200px' }}
               >
                 <Typography variant="h3">Preview</Typography>
-                {selectedCoverArtUrl && (
+                {selectedCoverArtUrl !== '' && (
                   <Image
-                    src={selectedCoverArtUrl ?? ''}
+                    src={selectedCoverArtUrl}
                     alt={`Selected cover art for ${game?.primaryRelease?.title || ''}`}
                     width={200}
                     height={200}

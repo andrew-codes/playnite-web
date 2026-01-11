@@ -10,7 +10,7 @@ interface IgnGame {
       name: string
     }
   }
-  primaryImage: {
+  primaryImage?: {
     url: string
   }
   objectRegions: Array<{

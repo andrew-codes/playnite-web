@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import logger from '../../../../../logger'
-import { domains, tryParseOid } from '../../../../../oid'
+import { getClient } from '../../../../../mqtt'
+import { tryParseOid } from '../../../../../oid'
 import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
 export const updateGame: NonNullable<MutationResolvers['updateGame']> = async (
@@ -15,7 +16,7 @@ export const updateGame: NonNullable<MutationResolvers['updateGame']> = async (
     const gameId = tryParseOid(_arg.input.id)
 
     // Verify the game exists and belongs to the user's library
-    const existingGame = await _ctx.db.game.findUniqueOrThrow({
+    const game = await _ctx.db.game.findUniqueOrThrow({
       where: {
         id: gameId.id,
         Library: {
@@ -24,32 +25,42 @@ export const updateGame: NonNullable<MutationResolvers['updateGame']> = async (
           },
         },
       },
-    })
-
-    // Update the game with the new cover art
-    const game = await _ctx.db.game.update({
-      where: {
-        id: gameId.id,
-      },
-      data: {
-        coverArt: _arg.input.coverArt,
-      },
-    })
-
-    // Publish entity update for subscriptions
-    _ctx.subscriptionPublisher.publish('entityUpdated', {
-      id: gameId.id,
-      source: 'PlayniteWeb',
-      type: domains.Game,
-      fields: [
-        {
-          key: 'coverArt',
-          value: _arg.input.coverArt,
+      include: {
+        Library: {
+          select: {
+            id: true,
+          },
         },
-      ],
-      playniteId: null,
+      },
     })
 
+    // Publish MQTT message for sync library processor to download and persist cover art
+    const mqtt = await getClient()
+
+    try {
+      await mqtt.publish(
+        `playnite-web/game/update-cover-art`,
+        JSON.stringify({
+          gameId: gameId.id,
+          libraryId: game.libraryId,
+          userId: userId.id,
+          gameTitle: game.title,
+          coverArtUrl: _arg.input.coverArt,
+        }),
+        { qos: 2 },
+      )
+      logger.info(
+        `Published cover art update message for game ${gameId.id} (${game.title})`,
+      )
+    } catch (error) {
+      logger.error(
+        `Error publishing cover art update MQTT message for game ${gameId.id}`,
+        error,
+      )
+      throw new Error('Failed to publish cover art update message')
+    }
+
+    // Return the game with current state (cover art will be updated by sync processor)
     return game
   } catch (error: any) {
     logger.error('Failed to update game.', error)
@@ -60,6 +71,20 @@ export const updateGame: NonNullable<MutationResolvers['updateGame']> = async (
           code: 'BAD_USER_INPUT',
           http: {
             status: 400,
+          },
+          headers: {
+            'X-Error-Message': error.message,
+          },
+        },
+      })
+    }
+
+    if (error.message.includes('Failed to publish')) {
+      throw new GraphQLError('Failed to process cover art update.', {
+        extensions: {
+          code: 'INTERNAL_SERVER_ERROR',
+          http: {
+            status: 500,
           },
           headers: {
             'X-Error-Message': error.message,
