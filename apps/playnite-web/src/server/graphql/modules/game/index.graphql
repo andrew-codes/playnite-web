@@ -17,6 +17,15 @@ input Filter {
   filterItems: [FilterItemInput!]
 }
 
+input UpdateGameInput {
+  id: String!
+  coverArt: String!
+}
+
 extend type Query {
   game(id: String!): Game
+}
+
+extend type Mutation {
+  updateGame(input: UpdateGameInput!): Game!
 }
