@@ -40,7 +40,7 @@ const GameFigure: FC<
               width: '100%',
             })}
           >
-            {game.coverArt && (
+            {game.coverArt ? (
               <NextImage
                 quality={50}
                 width={230}
@@ -55,6 +55,14 @@ const GameFigure: FC<
                   width: '100%',
                   height: 'auto',
                   display: 'block',
+                  borderRadius: theme.shape.borderRadius,
+                }}
+              />
+            ) : (
+              <Box
+                sx={{
+                  width: '100%',
+                  height: '175px',
                   borderRadius: theme.shape.borderRadius,
                 }}
               />
