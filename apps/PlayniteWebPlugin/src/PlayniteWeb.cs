@@ -284,6 +284,8 @@ namespace PlayniteWeb
     {
         if (libraryPublisher == null)
         {
+            logger.Error("GraphQL client is not initialized. Cannot sync library.");
+
             yield return Task.CompletedTask;
             yield break;
         }
@@ -469,6 +471,7 @@ namespace PlayniteWeb
 
         if (settings.Token == null || settings.Token.Length == 0)
         {
+          logger.Debug("No existing auth token found. Signing in to obtain new token.");
           var response = await gql.SendMutationAsync<SignInMutation>(new GraphQLRequest(query: @"
             mutation MyMutation($input: SignInInput) {
               signIn(input: $input) {

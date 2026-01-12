@@ -60,7 +60,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
                    //categories = g.Categories.Select(c => c.Id),
                    releaseDate = !g.ReleaseDate.HasValue ? (string)null : g.ReleaseDate.Value.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
                    playtime = g.Playtime.ToString(),
-                   lastActivity = !g.LastActivity.HasValue ? (string)null : g.LastActivity.Value.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
+                   recentActivity = !g.LastActivity.HasValue ? (string)null : g.LastActivity.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
                  }),
               platforms = db.Platforms.Select(p => new { id = p.Id, name = p.Name }),
               sources = db.Sources.Select(s => new { id = s.Id, name = s.Name, platform = settings.SourcePlatforms[s.Id] }),
