@@ -86,6 +86,18 @@ const UpdateReleaseMutation = gql`
   }
 `
 
+const UpdateGameMutation = gql`
+  mutation updateGame($input: UpdateGameInput!) {
+    updateGame(input: $input) {
+      id
+      coverArt
+      library {
+        id
+      }
+    }
+  }
+`
+
 const SubscribeEntityUpdatesQuery = gql`
   subscription entityUpdates {
     entityUpdated {
@@ -106,5 +118,6 @@ export {
   StartReleaseMutation,
   StopReleaseMutation,
   SubscribeEntityUpdatesQuery,
+  UpdateGameMutation,
   UpdateReleaseMutation,
 }

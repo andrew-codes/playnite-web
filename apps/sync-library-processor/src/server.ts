@@ -116,10 +116,45 @@ async function run() {
     )
     await mqtt.subscribe('playnite-web/library/sync', { qos: 1 })
     await mqtt.subscribe('playnite-web/library/cover-art-retry', { qos: 1 })
+    await mqtt.subscribe('playnite-web/game/update-cover-art', { qos: 1 })
 
     mqtt.on('message', async (topic, message) => {
       try {
-        if (topic === 'playnite-web/library/cover-art-retry') {
+        if (topic === 'playnite-web/game/update-cover-art') {
+          const { gameId, libraryId, userId, gameTitle, coverArtUrl } =
+            JSON.parse(message.toString())
+
+          logger.info(
+            `Processing cover art update for game ${gameId} (${gameTitle})`,
+          )
+
+          try {
+            // Download and process the cover art from the provided URL
+            const success = await coverArtService.persistGameCoverArt(
+              {
+                id: gameId,
+                title: gameTitle,
+                coverArt: null,
+              },
+              coverArtUrl,
+            )
+
+            if (success) {
+              logger.info(
+                `Successfully updated cover art for game ${gameId} (${gameTitle})`,
+              )
+            } else {
+              logger.warn(
+                `Failed to update cover art for game ${gameId} (${gameTitle})`,
+              )
+            }
+          } catch (error) {
+            logger.error(
+              `Error processing cover art update for game ${gameId} (${gameTitle})`,
+              error,
+            )
+          }
+        } else if (topic === 'playnite-web/library/cover-art-retry') {
           const {
             libraryId,
             userId,

@@ -1,45 +1,108 @@
-// import createDebugger from 'debug'
-// import { first } from 'lodash-es'
-// import { Game } from '../../../../../data/types.entities'
-// import { fromString } from '../../../../../oid'
-// import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
+import { GraphQLError } from 'graphql'
+import logger from '../../../../../logger'
+import { getClient } from '../../../../../mqtt'
+import { tryParseOid } from '../../../../../oid'
+import type { MutationResolvers } from './../../../../../../../.generated/types.generated'
 
-// const debug = createDebugger('playnite-web/graphql/game/mutation/updateGame')
+export const updateGame: NonNullable<MutationResolvers['updateGame']> = async (
+  _parent,
+  _arg,
+  _ctx,
+) => {
+  const user = await _ctx.identityService.authorize(_ctx.jwt?.payload)
+  const userId = user.id
 
-// export const updateGame: NonNullable<MutationResolvers['updateGame']> = async (
-//   _parent,
-//   _arg,
-//   _ctx,
-// ) => {
-//   try {
-//     _ctx.identityService.authorize(_ctx.jwt?.payload)
+  try {
+    const gameId = tryParseOid(_arg.input.id)
 
-//     const oid = fromString(_arg.id)
-//     if (oid.type !== 'Game') {
-//       debug(`Invalid entity Oid. Expected Game, got ${oid.type}`)
-//       return { success: false }
-//     }
+    // Verify the game exists and belongs to the user's library
+    const game = await _ctx.db.game.findUniqueOrThrow({
+      where: {
+        id: gameId.id,
+        Library: {
+          User: {
+            id: userId.id,
+          },
+        },
+      },
+      include: {
+        Library: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
 
-//     const game = first(
-//       await _ctx.queryApi.execute<Game>({
-//         type: 'ExactMatch',
-//         entityType: 'Game',
-//         field: 'id',
-//         value: oid.id,
-//       }),
-//     )
+    // Publish MQTT message for sync library processor to download and persist cover art
+    const mqtt = await getClient()
 
-//     for (const releaseId of game?.releaseIds ?? []) {
-//       await _ctx.update({
-//         entityType: 'Release',
-//         entityId: releaseId,
-//         fields: _arg.input,
-//       })
-//     }
+    try {
+      await mqtt.publish(
+        `playnite-web/game/update-cover-art`,
+        JSON.stringify({
+          gameId: gameId.id,
+          libraryId: game.libraryId,
+          userId: userId.id,
+          gameTitle: game.title,
+          coverArtUrl: _arg.input.coverArt,
+        }),
+        { qos: 2 },
+      )
+      logger.info(
+        `Published cover art update message for game ${gameId.id} (${game.title})`,
+      )
+    } catch (error) {
+      logger.error(
+        `Error publishing cover art update MQTT message for game ${gameId.id}`,
+        error,
+      )
+      throw new Error('Failed to publish cover art update message')
+    }
 
-//     return { success: true }
-//   } catch (e) {
-//     console.error(e)
-//     return { success: false }
-//   }
-// }
+    // Return the game with current state (cover art will be updated by sync processor)
+    return game
+  } catch (error: any) {
+    logger.error('Failed to update game.', error)
+
+    if (error.message.includes('Invalid OID format')) {
+      throw new GraphQLError('Invalid OID format.', {
+        extensions: {
+          code: 'BAD_USER_INPUT',
+          http: {
+            status: 400,
+          },
+          headers: {
+            'X-Error-Message': error.message,
+          },
+        },
+      })
+    }
+
+    if (error.message.includes('Failed to publish')) {
+      throw new GraphQLError('Failed to process cover art update.', {
+        extensions: {
+          code: 'INTERNAL_SERVER_ERROR',
+          http: {
+            status: 500,
+          },
+          headers: {
+            'X-Error-Message': error.message,
+          },
+        },
+      })
+    }
+
+    throw new GraphQLError('Game not found or access denied.', {
+      extensions: {
+        code: 'NOT_FOUND',
+        http: {
+          status: 404,
+        },
+        headers: {
+          'X-Error-Message': error.message,
+        },
+      },
+    })
+  }
+}

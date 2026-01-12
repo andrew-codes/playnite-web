@@ -7,6 +7,7 @@ import helmet from 'helmet'
 import { createServer } from 'http'
 import next from 'next'
 import { NextServerOptions } from 'next/dist/server/next'
+import path from 'path'
 import { parse } from 'url'
 import { WebSocketServer } from 'ws'
 import prisma from './server/data/providers/postgres/client'
@@ -16,8 +17,6 @@ import schema from './server/graphql/schema'
 import { subscriptionPublisher } from './server/graphql/subscriptionPublisher'
 import logger from './server/logger'
 import { setupApp } from './server/setupApp'
-import path from 'path'
-import fs from 'fs'
 
 const dev = process.env.NODE_ENV !== 'production'
 const domain = process.env.HOST || 'localhost'
@@ -84,6 +83,7 @@ async function run() {
                 `wss://${domain}:*`,
                 `http://${domain}:*`,
                 `https://${domain}:*`,
+                'https://mollusk.apis.ign.com',
               ].concat(cspOrigins),
               'style-src': [
                 "'self'",
@@ -107,6 +107,7 @@ async function run() {
                 'raw.githubusercontent.com',
                 'data:',
                 'blob:',
+                'https://assets-prd.ignimgs.com',
               ].concat(cspOrigins),
               'font-src': [
                 "'self'",

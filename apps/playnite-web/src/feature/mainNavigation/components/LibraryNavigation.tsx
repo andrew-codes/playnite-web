@@ -1,5 +1,10 @@
 import { useQuery } from '@apollo/client/react'
-import { LibraryBooks, PlayArrow, Settings } from '@mui/icons-material'
+import {
+  LibraryBooks,
+  ModeEdit,
+  PlayArrow,
+  Settings,
+} from '@mui/icons-material'
 import { useParams } from 'next/navigation'
 import { FC } from 'react'
 import { useMe } from '../../account/hooks/me'
@@ -35,6 +40,11 @@ const LibraryNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
     result?.data?.me?.isAuthenticated &&
     result?.data?.me?.username === username
   ) {
+    navItems.push({
+      to: `/u/${username}/${libraryId}/manage`,
+      icon: <ModeEdit />,
+      text: 'Manage Library',
+    })
     navItems.push({
       to: `/u/${username}/${libraryId}/settings`,
       icon: <Settings />,
