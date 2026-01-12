@@ -120,3 +120,10 @@ Packages:
     Changelog:
       - "feat: recent activity (#939)"
       - "feat: recent activity"
+  - Version: 13.5.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.5.0/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_5_0.pext
+    ReleaseDate: 2026-01-12
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: broken sync"
+      - "feat: allow users to search IGN for cover art during library management"
