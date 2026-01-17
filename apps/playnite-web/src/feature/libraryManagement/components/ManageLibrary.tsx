@@ -105,6 +105,8 @@ const ManageLibrary: FC<{ libraryId: string }> = ({ libraryId }) => {
           },
         },
       })
+
+      setGame(null)
     },
     [game, selectedCoverArtUrl, updateGame],
   )
