@@ -127,3 +127,9 @@ Packages:
     Changelog:
       - "fix: broken sync"
       - "feat: allow users to search IGN for cover art during library management"
+  - Version: 13.5.1
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.5.1/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_5_1.pext
+    ReleaseDate: 2026-01-17
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: restart/stop buttons persist across page refreshes"
