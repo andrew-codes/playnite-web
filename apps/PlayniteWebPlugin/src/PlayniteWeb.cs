@@ -322,27 +322,49 @@ namespace PlayniteWeb
     //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
     //}
 
-    //public override void OnGameStarted(OnGameStartedEventArgs args)
-    //{
-    //  var release = ReleaseFromPlayniteGame(args.Game);
-    //  release.ProcessId = args.StartedProcessId;
-    //  //var gameStatePublisher = new PublishGameState(GameState.running, (IMqttClient)mqtt, topicManager, serializer);
-    //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
-    //}
+    public override void OnGameStarted(OnGameStartedEventArgs args)
+    {
+      if (releasePublisher == null)
+      {
+        logger.Error("GraphQL client is not initialized. Cannot handle game updates.");
+        return;
+      }
+
+      try
+      {
+        Task.WaitAll(releasePublisher.Publish(new List<IIdentifiable> { args.Game }).ToArray());
+      }
+      catch (Exception ex)
+      {
+        logger.Error(ex, "Error occurred while publishing game started event.");
+      }
+      
+    }
 
     //public override void OnGameStarting(OnGameStartingEventArgs args)
     //{
-    //  var release = ReleaseFromPlayniteGame(args.Game);
+    //  //var release = ReleaseFromPlayniteGame(args.Game);
     //  //var gameStatePublisher = new PublishGameState(GameState.launching, (IMqttClient)mqtt, topicManager, serializer);
     //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
     //}
 
-    //public override void OnGameStopped(OnGameStoppedEventArgs args)
-    //{
-    //  var release = ReleaseFromPlayniteGame(args.Game);
-    //  //var gameStatePublisher = new PublishGameState(GameState.installed, (IMqttClient)mqtt, topicManager, serializer);
-    //  //Task.WaitAll(gameStatePublisher.Publish(release).ToArray());
-    //}
+    public override void OnGameStopped(OnGameStoppedEventArgs args)
+    {
+      if (releasePublisher == null)
+      {
+        logger.Error("GraphQL client is not initialized. Cannot handle game updates.");
+        return;
+      }
+
+      try
+      {
+        Task.WaitAll(releasePublisher.Publish(new List<IIdentifiable> { args.Game }).ToArray());
+      }
+      catch (Exception ex)
+      {
+        logger.Error(ex, "Error occurred while publishing game started event.");
+      }
+    }
 
     //public override void OnGameUninstalled(OnGameUninstalledEventArgs args)
     //{
@@ -410,7 +432,6 @@ namespace PlayniteWeb
     {
       settings.OnVerifySettings += HandleVerifySettings;
       StartConnection(settings.Settings);
-
 
       gameUpdates.Subscribe(e => HandleGameUpdated(this, e));
       platformUpdates.Subscribe(e => HandlePlatformUpdated(this, e));

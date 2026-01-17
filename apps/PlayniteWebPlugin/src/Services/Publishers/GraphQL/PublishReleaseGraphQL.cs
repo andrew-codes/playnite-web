@@ -60,6 +60,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
                    //categories = g.Categories.Select(c => c.Id),
                    releaseDate = releaseDate.HasValue ? releaseDate.Value.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture) : (string)null,
                    playtime = g.GetValue("Playtime"),
+                   runState = ((bool)g.GetValue("IsRunning")) == true ? "running" : "stopped",
                  };
                }),
               platforms = Enumerable.Empty<object>(),
