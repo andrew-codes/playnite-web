@@ -133,3 +133,10 @@ Packages:
     RequiredApiVersion: 6.13.0
     Changelog:
       - "fix: restart/stop buttons persist across page refreshes"
+  - Version: 13.5.2
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.5.2/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_5_2.pext
+    ReleaseDate: 2026-01-17
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: saving game updates in library management closes the modal"
+      - "fix: Playnite game running state is updated/reflected in PW"
