@@ -38,6 +38,15 @@ export const startRelease: NonNullable<
       },
     })
 
+    await _ctx.db.release.update({
+      where: {
+        id: release.id,
+      },
+      data: {
+        runState: 'starting',
+      },
+    })
+
     const webhookSetting = await _ctx.db.userSetting.findUniqueOrThrow({
       where: {
         userId_name: {
