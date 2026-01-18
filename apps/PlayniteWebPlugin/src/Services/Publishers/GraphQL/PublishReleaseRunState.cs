@@ -25,17 +25,15 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
     {
       return gql.SendMutationAsync<dynamic>(new GraphQLHttpRequest
       {
-        Query = @"mutation($releaseInput: ReleaseInput!) {
-          updateRelease(releaseInput: releaseInput) {
+        Query = @"mutation($playniteId: String!, $runState: String!) {
+          updatePlayniteRunState(playniteId: $playniteId, runState: $runState) {
             id
           }
         }",
         Variables = new
         {
-          releaseInput= new {
-            id = game.Id,
-            runState = game.IsRunning == true || game.IsLaunching ? "running" : "stopped",
-          },
+          playniteId = game.Id,
+          runState = game.IsRunning == true || game.IsLaunching ? "running" : "stopped",
         }
       }).ContinueWith(r =>
       {

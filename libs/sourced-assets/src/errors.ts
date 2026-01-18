@@ -1,4 +1,4 @@
-export class RateLimitError extends Error {
+class RateLimitError extends Error {
   constructor(
     message: string,
     public readonly gameTitle: string,
@@ -8,6 +8,8 @@ export class RateLimitError extends Error {
   }
 }
 
-export function isRateLimitError(error: unknown): error is RateLimitError {
+function isRateLimitError(error: unknown): error is RateLimitError {
   return error instanceof RateLimitError
 }
+
+export { isRateLimitError, RateLimitError }

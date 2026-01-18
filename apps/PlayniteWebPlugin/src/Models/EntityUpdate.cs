@@ -1,3 +1,4 @@
+using Playnite.SDK;
 using Playnite.SDK.Models;
 using PlayniteWeb.Models;
 using System;
@@ -61,6 +62,8 @@ namespace PlayniteWeb.Models
   {
     private readonly IDictionary<string, Type> allowedFieldUpdates;
 
+    private readonly ILogger _logger = LogManager.GetLogger();
+
     protected string Type { get; set; }
     public Guid? Id { get; protected set; }
 
@@ -111,11 +114,18 @@ namespace PlayniteWeb.Models
       var e = entity;
       foreach(var field in Fields)
       {
-        var updater = constructor.Invoke(new object[]
+        try
         {
+          var updater = constructor.Invoke(new object[]
+          {
             field.Key, field, new FieldValueParser()
-        }) as IUpdateEntityField;
-        e =  updater.Update(e);
+          }) as IUpdateEntityField;
+          e = updater.Update(e);
+        }
+        catch (Exception ex)
+        {
+         _logger.Warn($"Could not update field {field.Key} on entity of type {Type}. Error: {ex.Message}");
+        }
       }
 
       return e;

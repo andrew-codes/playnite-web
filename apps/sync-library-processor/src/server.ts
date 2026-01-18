@@ -8,6 +8,7 @@ import path from 'path'
 import { IgnSourcedAssets } from 'sourced-assets/ign'
 import { CoverArtService } from './services/coverArtService.js'
 // Import test mocks - this file will setup mocks when TEST=E2E
+import { isRateLimitError } from 'sourced-assets/errors'
 import './testSetup'
 
 // Setup coverage collection for E2E tests

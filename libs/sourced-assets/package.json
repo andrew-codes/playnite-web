@@ -20,6 +20,10 @@
     "./slug": {
       "import": "./src/slug.ts",
       "default": "./src/slug.ts"
+    },
+    "./errors": {
+      "import": "./src/errors.ts",
+      "default": "./src/errors.ts"
     }
   },
   "dependencies": {

@@ -40,4 +40,5 @@ extend type Mutation {
   startRelease(id: String!): Release!
   restartRelease(id: String!): Release!
   stopRelease(id: String!): Release!
+  updatePlayniteRunState(playniteId: String!, runState: String!): Release!
 }
