@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\james\AppData\Local\Temp\vs4B40.tmp\Debug\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\AndrewSmith.AzureAD\AppData\Local\Temp\vs417D.tmp\Debug\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <IntermediateOutputPath>C:\Users\james\AppData\Local\Temp\vs4B40.tmp\Release\</IntermediateOutputPath>
+    <IntermediateOutputPath>C:\Users\AndrewSmith.AzureAD\AppData\Local\Temp\vs417D.tmp\Release\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -68,6 +68,7 @@
     <Compile Include="Services\Publishers\GraphQL\PublishEntiyCollectionGraphQL.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishEntityGraphQL.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishReleaseCollectionGraphQL.cs" />
+    <Compile Include="Services\Publishers\GraphQL\PublishReleaseRunState.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishReleaseGraphQL.cs" />
     <Compile Include="Services\Publishers\GraphQL\PublishLibraryGraphQL.cs" />
     <Compile Include="Services\Publishers\GraphQL\ReflectPropertyValue.cs" />

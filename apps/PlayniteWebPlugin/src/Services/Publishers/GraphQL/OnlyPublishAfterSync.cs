@@ -19,6 +19,7 @@ namespace PlayniteWeb.Services.Publishers.GraphQL
     {
       if (settings.LastPublish == null)
       {
+        yield return Task.CompletedTask;
         yield break;
       }
 

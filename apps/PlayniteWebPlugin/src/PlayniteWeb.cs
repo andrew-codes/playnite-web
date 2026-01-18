@@ -62,6 +62,8 @@ namespace PlayniteWeb
     private IPublishToPlayniteWeb<IIdentifiable> tagPublisher;
     private IPublishToPlayniteWeb<IIdentifiable> completionStatusPublisher;
     private IPublishToPlayniteWeb<IIdentifiable> featurePublisher;
+    private PublishReleaseRunState releaseRunStatePublisher;
+
     private OnlyPublishCollectionAfterSync releaseCollectionPublisher;
     private OnlyPublishCollectionAfterSync platformCollectionPublisher;
     private OnlyPublishCollectionAfterSync sourceCollectionPublisher;
@@ -324,7 +326,7 @@ namespace PlayniteWeb
 
     public override void OnGameStarted(OnGameStartedEventArgs args)
     {
-      if (releasePublisher == null)
+      if (releaseRunStatePublisher == null)
       {
         logger.Error("GraphQL client is not initialized. Cannot handle game updates.");
         return;
@@ -332,7 +334,7 @@ namespace PlayniteWeb
 
       try
       {
-        Task.WaitAll(releasePublisher.Publish(new List<IIdentifiable> { args.Game }).ToArray());
+        releaseRunStatePublisher.Publish(args.Game).Wait();
       }
       catch (Exception ex)
       {
@@ -350,7 +352,7 @@ namespace PlayniteWeb
 
     public override void OnGameStopped(OnGameStoppedEventArgs args)
     {
-      if (releasePublisher == null)
+      if (releaseRunStatePublisher == null)
       {
         logger.Error("GraphQL client is not initialized. Cannot handle game updates.");
         return;
@@ -358,7 +360,7 @@ namespace PlayniteWeb
 
       try
       {
-        Task.WaitAll(releasePublisher.Publish(new List<IIdentifiable> { args.Game }).ToArray());
+        releaseRunStatePublisher.Publish(args.Game).Wait();
       }
       catch (Exception ex)
       {
@@ -521,6 +523,8 @@ namespace PlayniteWeb
         tagPublisher =  new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.tags));
         completionStatusPublisher =  new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.completionStates));
         featurePublisher =  new OnlyPublishAfterSync(settings, new PublishEntityGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.features));
+
+        releaseRunStatePublisher = new PublishReleaseRunState(gql, settings.DeviceId.ToString(), settings);
 
         releaseCollectionPublisher = new OnlyPublishCollectionAfterSync(settings, new PublishReleaseCollectionGraphQL(gql, settings.DeviceId.ToString(), settings));
         platformCollectionPublisher = new OnlyPublishCollectionAfterSync(settings, new PublishEntiyCollectionGraphQL(gql, settings.DeviceId.ToString(), settings, EntityType.platforms));
