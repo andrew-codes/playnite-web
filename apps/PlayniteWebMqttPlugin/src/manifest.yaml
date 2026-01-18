@@ -140,3 +140,9 @@ Packages:
     Changelog:
       - "fix: saving game updates in library management closes the modal"
       - "fix: Playnite game running state is updated/reflected in PW"
+  - Version: 13.6.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.6.0/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_6_0.pext
+    ReleaseDate: 2026-01-18
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat: updating a game's run state via graph API invokes webhook"
