@@ -160,3 +160,9 @@ Packages:
     RequiredApiVersion: 6.13.0
     Changelog:
       - "fix: missing graph field for updating runState"
+  - Version: 13.6.3
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.6.3/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_6_3.pext
+    ReleaseDate: 2026-01-18
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: run state updates from Playnite extension"
