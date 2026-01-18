@@ -201,7 +201,7 @@ export const updateRelease: NonNullable<
             type:
               _arg.release.runState === 'running'
                 ? 'StartReleaseRequested'
-                : 'StopReleaseRequested',
+                : 'StoppedRelease',
             payload: {
               id: create('Release', release.id),
               title: release.title,
