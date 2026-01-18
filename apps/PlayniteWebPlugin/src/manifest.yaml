@@ -395,3 +395,9 @@ Packages:
       - "fix: do not request start on update if game is already starting"
       - "fix: stopping via update is distinct from requesting a stop from
         Playnite"
+  - Version: 13.6.2
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.6.2/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_13_6_2.pext
+    ReleaseDate: 2026-01-18
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: missing graph field for updating runState"
