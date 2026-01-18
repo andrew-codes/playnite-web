@@ -334,7 +334,7 @@ namespace PlayniteWeb
 
       try
       {
-        releaseRunStatePublisher.Publish(args.Game).Wait();
+        releaseRunStatePublisher.Publish(args.Game);
       }
       catch (Exception ex)
       {
@@ -360,7 +360,7 @@ namespace PlayniteWeb
 
       try
       {
-        releaseRunStatePublisher.Publish(args.Game).Wait();
+        releaseRunStatePublisher.Publish(args.Game);
       }
       catch (Exception ex)
       {
