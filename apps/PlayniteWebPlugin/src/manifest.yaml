@@ -413,3 +413,9 @@ Packages:
     RequiredApiVersion: 6.13.0
     Changelog:
       - "fix: locked Playnite when starting/stopping games"
+  - Version: 13.6.5
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.6.5/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_13_6_5.pext
+    ReleaseDate: 2026-01-18
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix: run state is published from Playnite"
