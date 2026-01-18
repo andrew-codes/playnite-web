@@ -31,6 +31,7 @@ input LibraryReleaseInput {
   source: String!
   tags: [String!]
   playtime: String
+  runState: String
 }
 
 input LibraryPlatformInput {
