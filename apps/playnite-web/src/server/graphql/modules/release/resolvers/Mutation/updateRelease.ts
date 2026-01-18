@@ -176,7 +176,8 @@ export const updateRelease: NonNullable<
     }
 
     if (
-      _arg.release.runState === 'running' ||
+      (release.runState !== 'starting' &&
+        _arg.release.runState === 'running') ||
       _arg.release.runState === 'stopped'
     ) {
       const webhookSetting = await _ctx.db.userSetting.findUnique({
