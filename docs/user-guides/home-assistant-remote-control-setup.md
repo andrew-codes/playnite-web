@@ -6,7 +6,7 @@
 	- [Playnite Web MQTT Control Topics](#playnite-web-mqtt-control-topics)
 	- [Example Automation](#example-automation)
 - [Step 2 - Add the Webhook URL to Playnite Web](#step-2---add-the-webhook-url-to-playnite-web)
-- [Step 3 - Access Playnite Web to Remotely Your Games Library](#access-playnite-web-to-remotely-control-your-games-library)
+- [Step 3 - Access Playnite Web to Remotely Control Your Games Library](#step-3---access-playnite-web-to-remotely-control-your-games-library)
 
 ## Overview 
 
