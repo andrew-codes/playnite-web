@@ -197,8 +197,7 @@ actions:
             data: {}
         alias: Event type is to restart a release
         
-        ```
-
+```
 
 ## Step 2 - Add the Webhook URL to Playnite Web
 
