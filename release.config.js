@@ -5,7 +5,7 @@ const config = {
   branches: ['main', 'next'],
   plugins: [
     [
-      '@semantic-release/commit-analyzer',
+      'release-commit-analyzer',
       {
         releaseRules: [
           {

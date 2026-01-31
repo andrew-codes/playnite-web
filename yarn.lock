@@ -28926,6 +28926,7 @@ __metadata:
     prettier: "npm:^3.7.4"
     react: "npm:^19.2.3"
     react-dom: "npm:^19.2.3"
+    release-commit-analyzer: "workspace:*"
     semantic-release: "npm:^25.0.2"
     ts-jest: "npm:^29.4.6"
     ts-node: "npm:^10.9.2"
@@ -30839,6 +30840,14 @@ __metadata:
   checksum: 10c0/f5d29b5c2f3c8a3438d43dcbc3022bd454c4ecbd4f0b10616df08bedc62d8aaa84f155f23e374053cf9f4a8238b93804e37a5b37ed9dc7ad01436d62d1b01d53
   languageName: node
   linkType: hard
+
+"release-commit-analyzer@workspace:*, release-commit-analyzer@workspace:libs/release-commit-analyzer":
+  version: 0.0.0-use.local
+  resolution: "release-commit-analyzer@workspace:libs/release-commit-analyzer"
+  dependencies:
+    "@semantic-release/commit-analyzer": "npm:^13.0.1"
+  languageName: unknown
+  linkType: soft
 
 "release-zalgo@npm:^1.0.0":
   version: 1.0.0
