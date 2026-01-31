@@ -2,9 +2,8 @@ name: "Release"
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  repository_dispatch:
+    types: [jira-release]
 
 permissions:
   contents: read
@@ -278,6 +277,8 @@ jobs:
         run: echo "value=$(yarn node nextVersion.js)" >> $GITHUB_OUTPUT
         shell: bash
         id: nextVersion
+        env:
+          RELEASE_TYPE: ${{ github.event.client_payload.releaseType }}
       - name: Run Version
         run: yarn nx run-many --target=version --exclude='*,!tag:windows'
         env:
@@ -454,3 +455,15 @@ jobs:
           EXCLUDE: "*,!tag:linux"
           INCLUDE_GH_RELEASE: "true"
           GITHUB_SHA: ${{ github.sha }}
+          RELEASE_TYPE: ${{ github.event.client_payload.releaseType }}
+      - name: Update GitHub Release with Jira release notes
+        if: github.event_name == 'repository_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No release found, skipping"
+            exit 0
+          fi
+          gh release edit "$LATEST_TAG" --notes '${{ github.event.client_payload.releaseNotes }}'

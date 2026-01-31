@@ -3,6 +3,10 @@ import { existsSync, globSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 
+function pinVersion(version: string): string {
+  return version.replace(/^[\^~>=<]+/, '')
+}
+
 async function run() {
   if (!existsSync('_custom-server-build') || !existsSync('.next')) {
     logger.error('Build files not found. Please build the project first.')
@@ -44,9 +48,16 @@ async function run() {
   pkg.name = `packaged-${pkg.name}`
   pkg.devDependencies = {}
   pkg.dependencies = Object.fromEntries(
-    Object.entries<string>(pkg.dependencies).filter(
-      ([key, value]) => !value.startsWith('workspace:'),
-    ),
+    Object.entries<string>(pkg.dependencies)
+      .filter(([key, value]) => !value.startsWith('workspace:'))
+      .map(([key, value]) => {
+        const pinned = pinVersion(value)
+        if (pinned !== value) {
+          logger.info(`Pinning ${key} to exact version ${pinned} (was ${value})`)
+          return [key, pinned]
+        }
+        return [key, value]
+      }),
   )
   await fs.writeFile(
     '_packaged/package.json',

@@ -9,7 +9,7 @@ async function run() {
     branches: ['main', 'next'],
     plugins: [
       [
-        '@semantic-release/commit-analyzer',
+        'release-commit-analyzer',
         {
           releaseRules: [
             {

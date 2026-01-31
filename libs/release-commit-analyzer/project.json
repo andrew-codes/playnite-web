@@ -1,0 +1,6 @@
+{
+  "name": "release-commit-analyzer",
+  "sourceRoot": "{projectRoot}/src",
+  "projectType": "library",
+  "targets": {}
+}
