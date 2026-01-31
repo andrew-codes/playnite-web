@@ -1,34 +1,10 @@
-import { execSync } from 'child_process'
 import logger from 'dev-logger'
 import { existsSync, globSync } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 
-function resolveExactVersion(packageName: string): string | null {
-  try {
-    const output = execSync(`yarn why ${packageName} --json`, {
-      encoding: 'utf8',
-      cwd: path.resolve(__dirname, '..'),
-    })
-    const lines = output.trim().split('\n').map((l) => JSON.parse(l))
-    for (const line of lines) {
-      if (line.children) {
-        for (const key of Object.keys(line.children)) {
-          const match = key.match(
-            new RegExp(
-              `${packageName.replace('/', '\\/')}@.*?npm:(\\d+\\.\\d+\\.\\d+.*)$`,
-            ),
-          )
-          if (match) {
-            return match[1]
-          }
-        }
-      }
-    }
-  } catch {
-    // Fall through
-  }
-  return null
+function pinVersion(version: string): string {
+  return version.replace(/^[\^~>=<]+/, '')
 }
 
 async function run() {
@@ -75,10 +51,10 @@ async function run() {
     Object.entries<string>(pkg.dependencies)
       .filter(([key, value]) => !value.startsWith('workspace:'))
       .map(([key, value]) => {
-        const exact = resolveExactVersion(key)
-        if (exact && exact !== value) {
-          logger.debug(`Pinning ${key} to exact version ${exact} (was ${value})`)
-          return [key, exact]
+        const pinned = pinVersion(value)
+        if (pinned !== value) {
+          logger.info(`Pinning ${key} to exact version ${pinned} (was ${value})`)
+          return [key, pinned]
         }
         return [key, value]
       }),
