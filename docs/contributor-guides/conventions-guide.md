@@ -1,1 +1,0 @@
-# Playnite Web Conventions
