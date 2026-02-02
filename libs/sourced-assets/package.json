@@ -30,7 +30,7 @@
     "dev-logger": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^24.10.4",
+    "@types/node": "^25.0.3",
     "glob": "^13.0.0",
     "jest": "^30.2.0",
     "nx": "^22.3.3",
