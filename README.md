@@ -10,6 +10,8 @@
 
 Share, automate, and remotely control your entire game library online with self-hosted Playnite Web. Learn more from the [documentation website](https://public.home.playniteweb.com/wiki/spaces/PW/overview?homepageId=27525123).
 
+> [Report Issues](https://playnite-web.atlassian.net/servicedesk/customer/portal/1)
+
 Playnite Web offers:
 
 - A beautiful web UI for your Playnite library to share with friends.
