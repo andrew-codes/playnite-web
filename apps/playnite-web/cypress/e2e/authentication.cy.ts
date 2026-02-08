@@ -17,14 +17,14 @@ describe('Authentication', () => {
 - Authenticated user is redirected back to original page.
 - Authenticated users can immediately sign out.
 - Signing out redirects to home page.`, () => {
-    cy.visit('/help/sync-library')
+    cy.visit('/about')
     cy.get('[data-test="Navigation"]').clickMenuItem('Sign In')
 
     cy.get('input[name="username"]').type('test')
     cy.get('input[name="password"]').type('test')
     cy.contains('button', 'Sign In').click()
 
-    cy.location('pathname').should('equal', '/help/sync-library')
+    cy.location('pathname').should('equal', '/about')
     cy.wait('@api')
 
     cy.get('[data-test="Navigation"]', { timeout: 15000 }).clickMenuItem(
