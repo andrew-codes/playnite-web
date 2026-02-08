@@ -13,7 +13,7 @@ describe('User Libraries', () => {
     cy.contains('a', 'Sync your Library').should(
       'have.attr',
       'href',
-      '/help/sync-library',
+      'https://public.home.playniteweb.com/wiki/spaces/PW/pages/68026369/How+to+Sync+Library',
     )
   })
 
