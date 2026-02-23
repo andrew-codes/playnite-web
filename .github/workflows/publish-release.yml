@@ -466,4 +466,6 @@ jobs:
             echo "No release found, skipping"
             exit 0
           fi
-          gh release edit "$LATEST_TAG" --notes '${{ github.event.client_payload.releaseNotes }}'
+          RELEASE_NOTES='${{ github.event.client_payload.releaseNotes }}'
+          RELEASE_NOTES=$(echo "$RELEASE_NOTES" | sed '1{/^```markdown$/d}' | sed '${/^```$/d}')
+          gh release edit "$LATEST_TAG" --notes "$RELEASE_NOTES"
