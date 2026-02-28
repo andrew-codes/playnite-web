@@ -326,7 +326,7 @@ jobs:
           YARN_ENABLE_HARDENED_MODE: "0"
       - name: Run all unit tests
         run: yarn nx run-many --target=test/unit --configuration=ci --parallel --verbose --exclude='*,!tag:windows'
-
+  
   package_windows:
     name: Package Windows projects
     runs-on: windows-latest

@@ -284,6 +284,8 @@ jobs:
         env:
           NODE_ENV: production
           VERSION: "${{ steps.nextVersion.outputs.value }}"
+      - name: New Version
+        run: echo "New version ${{ steps.nextVersion.outputs.value }}"
       - name: Package projects
         run: yarn nx run-many --target=package --parallel=1 --configuration=production --exclude='*,!tag:windows'
         env:
