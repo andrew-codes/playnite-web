@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { keyBy, memoize, merge } from 'lodash-es'
+import { keyBy, merge } from 'lodash-es'
 
 const initialState: {
   completionStates: Record<string, { id: string; name: string }>
@@ -11,9 +11,8 @@ const slice = createSlice({
   name: 'completionStates',
   initialState,
   selectors: {
-    getCompletionStates: memoize((state: typeof initialState) =>
+    getCompletionStates: (state: typeof initialState) =>
       Object.values(state.completionStates),
-    ),
   },
   reducers: {
     setCompletionStates(

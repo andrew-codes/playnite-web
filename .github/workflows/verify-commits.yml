@@ -6,6 +6,7 @@ on:
       - main
       - release-*
       - next
+      - main
 
 permissions:
   contents: read

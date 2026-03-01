@@ -74,6 +74,21 @@ export const Library: LibraryResolvers = {
       },
     })
   },
+  gamesNowPlaying: async (library, _args, ctx) => {
+    return ctx.db.game.findMany({
+      where: {
+        libraryId: library.id,
+        Releases: {
+          some: {
+            runState: { in: ['running', 'starting'] },
+          },
+        },
+      },
+      orderBy: {
+        title: 'asc',
+      },
+    })
+  },
   gamesOnDeck: async (library, _args, ctx) => {
     const onDeckSetting = await ctx.db.librarySetting.findUnique({
       where: {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@apollo/client/react'
-import { FilterAlt } from '@mui/icons-material'
+import { FilterAlt, PlayArrow } from '@mui/icons-material'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -15,6 +15,7 @@ import MainNavigation from '../../mainNavigation/components/MainNavigation'
 import IconButton from '../../shared/components/IconButton'
 import { Layout } from '../../shared/components/Layout'
 import { AllGamesQuery } from '../queries'
+import { useNowPlayingGames } from '../hooks/nowPlayingGames'
 
 interface LibraryGamesProps {
   username: string
@@ -34,17 +35,22 @@ const LibraryLayout = ({
   })
 
   const [result] = useMe()
+  const isAuthenticated = result?.data?.me?.isAuthenticated ?? false
+
+  const nowPlayingQuery = useNowPlayingGames(libraryId, {
+    skip: !isAuthenticated,
+  })
+  const hasNowPlayingGames =
+    (nowPlayingQuery.data?.library?.gamesNowPlaying?.length ?? 0) > 0
+
   let navs = [LibraryNavigation, LibrariesNavigation, MainNavigation]
-  if (result?.data?.me?.isAuthenticated) {
+  if (isAuthenticated) {
     navs = navs
       .slice(0, 2)
       .concat([AuthenticatedNavigation])
       .concat(navs.slice(2))
   }
-  if (
-    result?.data?.me?.isAuthenticated &&
-    username === result.data.me.username
-  ) {
+  if (isAuthenticated && username === result.data?.me?.username) {
     navs = navs.filter((nav) => nav !== LibrariesNavigation)
   }
 
@@ -70,16 +76,31 @@ const LibraryLayout = ({
     router.push(`/u/${username}/${libraryId}/filters`)
   }
 
+  const handleOpenNowPlaying = () => {
+    router.push(`/u/${username}/${libraryId}/now-playing`)
+  }
+
   return (
     <Layout
       secondaryMenu={
-        <IconButton
-          aria-label="Open filter drawer"
-          onClick={handleOpenFilter}
-          name="open-filter-drawer"
-        >
-          <FilterAlt />
-        </IconButton>
+        <>
+          {isAuthenticated && hasNowPlayingGames && (
+            <IconButton
+              aria-label="Open now playing"
+              onClick={handleOpenNowPlaying}
+              name="open-now-playing"
+            >
+              <PlayArrow />
+            </IconButton>
+          )}
+          <IconButton
+            aria-label="Open filter drawer"
+            onClick={handleOpenFilter}
+            name="open-filter-drawer"
+          >
+            <FilterAlt />
+          </IconButton>
+        </>
       }
       navs={navs}
     >

@@ -10,6 +10,7 @@ type Library {
   tags: [Tag!]!
   settings: [LibrarySetting!]!
   gamesOnDeck: [Game!]!
+  gamesNowPlaying: [Game!]!
 }
 
 extend type Query {
