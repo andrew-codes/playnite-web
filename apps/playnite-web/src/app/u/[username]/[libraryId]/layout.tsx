@@ -4,6 +4,7 @@ interface LibraryPageProps {
   children: React.ReactNode
   filters: React.ReactNode
   gameDetails: React.ReactNode
+  nowPlaying: React.ReactNode
   params: { username: string; libraryId: string }
 }
 
@@ -11,6 +12,7 @@ async function LibraryPage({
   children,
   filters,
   gameDetails,
+  nowPlaying,
   params,
 }: LibraryPageProps) {
   const { username, libraryId } = await params
@@ -20,6 +22,7 @@ async function LibraryPage({
       {children}
       {gameDetails}
       {filters}
+      {nowPlaying}
     </LibraryLayout>
   )
 }

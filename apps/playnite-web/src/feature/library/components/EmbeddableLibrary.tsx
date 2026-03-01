@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@apollo/client/react'
-import { FilterAlt } from '@mui/icons-material'
+import { FilterAlt, PlayArrow } from '@mui/icons-material'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import {
@@ -23,12 +23,15 @@ import IconButton from '../../shared/components/IconButton'
 import { Layout } from '../../shared/components/Layout'
 import { PageTitle } from '../../shared/components/PageTitle'
 import RightDrawer from '../../shared/components/RightDrawer'
+import TopDrawer from '../../shared/components/TopDrawer'
 import { GameDetails } from '../../game/components/GameDetails'
 import Filtering from '../../filtering/components/Filtering'
 import { AllGamesQuery } from '../queries'
 import EmbeddableGames from './EmbeddableGames'
 import EmbeddableOnDeck from './EmbeddableOnDeck'
 import { NavigationRouterProvider } from '../../shared/hooks/useNavigationRouter'
+import { NowPlayingContent } from './NowPlayingContent'
+import { useNowPlayingGames } from '../hooks/nowPlayingGames'
 
 interface EmbeddableLibraryProps {
   username: string
@@ -81,6 +84,20 @@ const FiltersView = () => {
   )
 }
 
+const NowPlayingEmbeddableView = ({
+  username,
+  libraryId,
+}: {
+  username: string
+  libraryId: string
+}) => {
+  return (
+    <TopDrawer>
+      <NowPlayingContent username={username} libraryId={libraryId} />
+    </TopDrawer>
+  )
+}
+
 const EmbeddableLibraryContent = ({
   username,
   libraryId,
@@ -105,17 +122,22 @@ const EmbeddableLibraryContent = ({
   }
 
   const [result] = useMe()
+  const isAuthenticated = result?.data?.me?.isAuthenticated ?? false
+
+  const nowPlayingQuery = useNowPlayingGames(libraryId, {
+    skip: !isAuthenticated,
+  })
+  const hasNowPlayingGames =
+    (nowPlayingQuery.data?.library?.gamesNowPlaying?.length ?? 0) > 0
+
   let navs = [LibraryNavigation, LibrariesNavigation, MainNavigation]
-  if (result?.data?.me?.isAuthenticated) {
+  if (isAuthenticated) {
     navs = navs
       .slice(0, 2)
       .concat([AuthenticatedNavigation])
       .concat(navs.slice(2))
   }
-  if (
-    result?.data?.me?.isAuthenticated &&
-    username === result.data.me.username
-  ) {
+  if (isAuthenticated && username === result.data?.me?.username) {
     navs = navs.filter((nav) => nav !== LibrariesNavigation)
   }
 
@@ -141,17 +163,32 @@ const EmbeddableLibraryContent = ({
     navigate('/filters')
   }
 
+  const handleOpenNowPlaying = () => {
+    navigate('/now-playing')
+  }
+
   return (
     <NavigationRouterProvider router={routerAdapter}>
       <Layout
         secondaryMenu={
-          <IconButton
-            aria-label="Open filter drawer"
-            onClick={handleOpenFilter}
-            name="open-filter-drawer"
-          >
-            <FilterAlt />
-          </IconButton>
+          <>
+            {isAuthenticated && hasNowPlayingGames && (
+              <IconButton
+                aria-label="Open now playing"
+                onClick={handleOpenNowPlaying}
+                name="open-now-playing"
+              >
+                <PlayArrow />
+              </IconButton>
+            )}
+            <IconButton
+              aria-label="Open filter drawer"
+              onClick={handleOpenFilter}
+              name="open-filter-drawer"
+            >
+              <FilterAlt />
+            </IconButton>
+          </>
         }
         navs={navs}
       >
@@ -165,10 +202,29 @@ const EmbeddableLibraryContent = ({
             element={<EmbeddableOnDeck username={username} libraryId={libraryId} />}
           />
           <Route
+            path="/now-playing"
+            element={
+              <>
+                <LibraryView username={username} libraryId={libraryId} />
+                <NowPlayingEmbeddableView username={username} libraryId={libraryId} />
+              </>
+            }
+          />
+          <Route
             path="/game/:gameId"
             element={
               <>
                 <LibraryView username={username} libraryId={libraryId} />
+                <GameDetailsView />
+              </>
+            }
+          />
+          <Route
+            path="/now-playing/game/:gameId"
+            element={
+              <>
+                <LibraryView username={username} libraryId={libraryId} />
+                <NowPlayingEmbeddableView username={username} libraryId={libraryId} />
                 <GameDetailsView />
               </>
             }
@@ -210,17 +266,18 @@ const EmbeddableLibrary = ({ username, libraryId }: EmbeddableLibraryProps) => {
   // Restore navigation state from localStorage
   const storageKey = `embeddable-library-${username}-${libraryId}`
   let savedPath = '/'
-  
+
   if (typeof window !== 'undefined') {
     const stored = localStorage.getItem(storageKey)
     // Validate that the stored path is one of our valid routes
-    const validPaths = ['/', '/on-deck', '/filters', '/on-deck/filters']
+    const validPaths = ['/', '/on-deck', '/filters', '/on-deck/filters', '/now-playing']
     const isValidPath = stored && (
-      validPaths.includes(stored) || 
-      stored.startsWith('/game/') || 
-      stored.startsWith('/on-deck/game/')
+      validPaths.includes(stored) ||
+      stored.startsWith('/game/') ||
+      stored.startsWith('/on-deck/game/') ||
+      stored.startsWith('/now-playing/game/')
     )
-    
+
     if (isValidPath) {
       savedPath = stored
     } else if (stored) {

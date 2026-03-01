@@ -130,9 +130,43 @@ const LibraryGamesOnDeckQuery = gql`
   }
 `
 
+const LibraryGamesNowPlayingQuery = gql`
+  query libraryNowPlaying($libraryId: String!) {
+    library(libraryId: $libraryId) {
+      id
+      gamesNowPlaying {
+        id
+        coverArt
+        library {
+          id
+          name
+        }
+        primaryRelease {
+          id
+          title
+        }
+        releases {
+          id
+          title
+          runState
+          platform {
+            id
+            name
+          }
+          source {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`
+
 export {
   AllGamesQuery,
   LibraryDetailsQuery,
+  LibraryGamesNowPlayingQuery,
   LibraryGamesOnDeckQuery,
   LibrarySettingsQuery,
   LibrarySubscriptionQuery,
