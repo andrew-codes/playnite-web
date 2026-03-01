@@ -100,14 +100,8 @@ const EmbeddableLibraryContent = ({
 
   // Create router adapter for react-router
   const routerAdapter = {
-    back: () => {
-      console.log('RouterAdapter: back() called, navigating to -1')
-      navigate(-1)
-    },
-    push: (path: string) => {
-      console.log('RouterAdapter: push() called with path:', path)
-      navigate(path)
-    },
+    back: () => navigate(-1),
+    push: (path: string) => navigate(path),
   }
 
   const [result] = useMe()
@@ -144,7 +138,6 @@ const EmbeddableLibraryContent = ({
   }
 
   const handleOpenFilter = () => {
-    console.log('EmbeddableLibrary: Opening filters')
     navigate('/filters')
   }
 
@@ -230,9 +223,7 @@ const EmbeddableLibrary = ({ username, libraryId }: EmbeddableLibraryProps) => {
     
     if (isValidPath) {
       savedPath = stored
-      console.log('EmbeddableLibrary: Restoring path from localStorage:', savedPath)
     } else if (stored) {
-      console.log('EmbeddableLibrary: Invalid stored path, using default:', stored)
       // Clear invalid path
       localStorage.removeItem(storageKey)
     }

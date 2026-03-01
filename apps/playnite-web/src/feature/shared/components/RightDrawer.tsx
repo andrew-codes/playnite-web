@@ -128,7 +128,6 @@ const RightDrawer: FC<
 > = ({ children, disableTransition }) => {
   const router = useNavigationRouter()
   const handleClose = useCallback(() => {
-    console.log('RightDrawer: handleClose called, calling router.back()')
     router.back()
   }, [router])
 
