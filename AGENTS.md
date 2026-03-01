@@ -52,3 +52,7 @@ When updating library features, test both:
 - If the user needs help with an Nx configuration or project graph error, use the `nx_workspace` tool to get any errors
 
 <!-- nx configuration end-->
+
+# Feature Specs
+
+Summarize and document implementation notes as a feature spec in Confluence. They should target both human and AI consumption. Each major feature receives a single feature spec. Feature specs are child pages to https://public.home.playniteweb.com/wiki/spaces/PW/folder/127107073?atlOrigin=eyJpIjoiODdmZTdhZjU0ZDZkNGUzZDhkZjk1NDM3ZmI5MGZhODQiLCJwIjoiYyJ9.
