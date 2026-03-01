@@ -2,6 +2,7 @@
 
 import { Typography } from '@mui/material'
 import { FC } from 'react'
+import { Game } from '../../../../.generated/types.generated'
 import { NowPlayingGameItem } from '../../game/components/NowPlayingGameItem'
 import { useNowPlayingGames } from '../hooks/nowPlayingGames'
 
@@ -22,7 +23,7 @@ const NowPlayingContent: FC<{
 
   return (
     <>
-      {games.map((game) => (
+      {games.filter((game): game is Game => !!game).map((game) => (
         <NowPlayingGameItem
           key={game.id}
           game={game}
