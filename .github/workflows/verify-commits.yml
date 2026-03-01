@@ -5,6 +5,7 @@ on:
     branches:
       - release-*
       - next
+      - main
 
 permissions:
   contents: read
