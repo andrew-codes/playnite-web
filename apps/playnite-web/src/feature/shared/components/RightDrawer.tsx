@@ -2,8 +2,8 @@
 
 import { Clear } from '@mui/icons-material'
 import { CSSObject, Drawer as MuiDrawer, Theme, styled } from '@mui/material'
-import { useRouter } from 'next/navigation'
 import { FC, PropsWithChildren, useCallback, useEffect, useState } from 'react'
+import { useNavigationRouter } from '../hooks/useNavigationRouter'
 import IconButton from './IconButton'
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -126,7 +126,7 @@ const RightDrawer: FC<
     disableTransition?: boolean
   }>
 > = ({ children, disableTransition }) => {
-  const router = useRouter()
+  const router = useNavigationRouter()
   const handleClose = useCallback(() => {
     router.back()
   }, [router])

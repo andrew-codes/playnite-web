@@ -2,6 +2,43 @@
 
 Agent instructions are found in `claude.md` files throughout the project. See these files in place of agents.md files.
 
+## Embeddable Library Features
+
+When modifying library-specific features in `apps/playnite-web`, ensure both standard and embeddable versions are kept in sync:
+
+### Standard vs Embeddable Components
+
+- **Standard components** (in `src/feature/library/components/`) use Next.js routing (`useRouter`, `Link`)
+- **Embeddable components** (prefixed with `Embeddable*`) use react-router (`useNavigate`, `Link` from react-router-dom)
+
+### Synchronization Rules
+
+1. **When adding a new library view** (e.g., playlists, collections):
+   - Create both standard and embeddable versions
+   - Add routes to both `src/app/u/[username]/[libraryId]/` and `EmbeddableLibrary.tsx`
+   - Ensure embeddable routes support game details and filters (e.g., `/playlist/:id`, `/playlist/:id/game/:gameId`, `/playlist/:id/filters`)
+
+2. **When modifying existing library components**:
+   - Update both the standard component (e.g., `OnDeck.tsx`) and its embeddable counterpart (`EmbeddableOnDeck.tsx`)
+   - Verify GraphQL queries, UI, and functionality remain consistent
+
+3. **When adding features to game navigation**:
+   - Update both `Games.tsx` and `EmbeddableGames.tsx`
+   - Ensure click handlers use the appropriate router (Next.js vs react-router)
+
+### Key Embeddable Files
+
+- `src/feature/library/components/EmbeddableLibrary.tsx` - Main router and route definitions
+- `src/feature/library/components/EmbeddableGames.tsx` - Game grid with react-router navigation
+- `src/feature/library/components/EmbeddableOnDeck.tsx` - On-deck view
+- `src/app/embed/[username]/[libraryId]/page.tsx` - Next.js entry point
+
+### Testing Checklist
+
+When updating library features, test both:
+- Standard URL: `/u/[username]/[libraryId]/*`
+- Embeddable URL: `/embed/[username]/[libraryId]` (with client-side routing)
+
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
 
