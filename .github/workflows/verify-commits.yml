@@ -3,6 +3,7 @@ name: "Verify Commits"
 on:
   push:
     branches:
+      - main
       - release-*
       - next
 

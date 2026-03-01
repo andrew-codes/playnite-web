@@ -19,7 +19,7 @@ const getDockerTags = async (version?: string, ref?: string, sha?: string) => {
     if (prNumber) {
       tags.push(`PR-${prNumber}`)
     }
-  } else if (!!ref && /^refs\/heads\/next$/.test(ref)) {
+  } else if (!!ref && /^refs\/heads\/(next|main)$/.test(ref)) {
     tags.push(`dev`)
   } else if (!!ref && /^[0-9a-f]{7,40}$/.test(ref)) {
     tags.push(ref)
