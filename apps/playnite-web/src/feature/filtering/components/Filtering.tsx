@@ -1,17 +1,17 @@
 'use client'
 
 import { Typography } from '@mui/material'
-import { useRouter } from 'next/navigation'
 import { FC, FormEvent, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   $filterValues,
   activateFilters,
 } from '../../../api/client/state/librarySlice'
+import { useNavigationRouter } from '../../shared/hooks/useNavigationRouter'
 import FilterForm from './FilterForm'
 
 const Filtering: FC<{}> = () => {
-  const router = useRouter()
+  const router = useNavigationRouter()
   const handleFilterCancel = useCallback(
     (evt) => {
       router.back()

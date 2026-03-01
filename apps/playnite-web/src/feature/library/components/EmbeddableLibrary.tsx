@@ -28,6 +28,7 @@ import Filtering from '../../filtering/components/Filtering'
 import { AllGamesQuery } from '../queries'
 import EmbeddableGames from './EmbeddableGames'
 import EmbeddableOnDeck from './EmbeddableOnDeck'
+import { NavigationRouterProvider } from '../../shared/hooks/useNavigationRouter'
 
 interface EmbeddableLibraryProps {
   username: string
@@ -97,6 +98,18 @@ const EmbeddableLibraryContent = ({
     localStorage.setItem(storageKey, location.pathname)
   }, [location.pathname, username, libraryId])
 
+  // Create router adapter for react-router
+  const routerAdapter = {
+    back: () => {
+      console.log('RouterAdapter: back() called, navigating to -1')
+      navigate(-1)
+    },
+    push: (path: string) => {
+      console.log('RouterAdapter: push() called with path:', path)
+      navigate(path)
+    },
+  }
+
   const [result] = useMe()
   let navs = [LibraryNavigation, LibrariesNavigation, MainNavigation]
   if (result?.data?.me?.isAuthenticated) {
@@ -131,78 +144,99 @@ const EmbeddableLibraryContent = ({
   }
 
   const handleOpenFilter = () => {
+    console.log('EmbeddableLibrary: Opening filters')
     navigate('/filters')
   }
 
   return (
-    <Layout
-      secondaryMenu={
-        <IconButton
-          aria-label="Open filter drawer"
-          onClick={handleOpenFilter}
-          name="open-filter-drawer"
-        >
-          <FilterAlt />
-        </IconButton>
-      }
-      navs={navs}
-    >
-      <Routes>
-        <Route
-          path="/"
-          element={<LibraryView username={username} libraryId={libraryId} />}
-        />
-        <Route
-          path="/on-deck"
-          element={<EmbeddableOnDeck username={username} libraryId={libraryId} />}
-        />
-        <Route
-          path="/game/:gameId"
-          element={
-            <>
-              <LibraryView username={username} libraryId={libraryId} />
-              <GameDetailsView />
-            </>
-          }
-        />
-        <Route
-          path="/on-deck/game/:gameId"
-          element={
-            <>
-              <EmbeddableOnDeck username={username} libraryId={libraryId} />
-              <GameDetailsView />
-            </>
-          }
-        />
-        <Route
-          path="/filters"
-          element={
-            <>
-              <LibraryView username={username} libraryId={libraryId} />
-              <FiltersView />
-            </>
-          }
-        />
-        <Route
-          path="/on-deck/filters"
-          element={
-            <>
-              <EmbeddableOnDeck username={username} libraryId={libraryId} />
-              <FiltersView />
-            </>
-          }
-        />
-      </Routes>
-    </Layout>
+    <NavigationRouterProvider router={routerAdapter}>
+      <Layout
+        secondaryMenu={
+          <IconButton
+            aria-label="Open filter drawer"
+            onClick={handleOpenFilter}
+            name="open-filter-drawer"
+          >
+            <FilterAlt />
+          </IconButton>
+        }
+        navs={navs}
+      >
+        <Routes>
+          <Route
+            path="/"
+            element={<LibraryView username={username} libraryId={libraryId} />}
+          />
+          <Route
+            path="/on-deck"
+            element={<EmbeddableOnDeck username={username} libraryId={libraryId} />}
+          />
+          <Route
+            path="/game/:gameId"
+            element={
+              <>
+                <LibraryView username={username} libraryId={libraryId} />
+                <GameDetailsView />
+              </>
+            }
+          />
+          <Route
+            path="/on-deck/game/:gameId"
+            element={
+              <>
+                <EmbeddableOnDeck username={username} libraryId={libraryId} />
+                <GameDetailsView />
+              </>
+            }
+          />
+          <Route
+            path="/filters"
+            element={
+              <>
+                <LibraryView username={username} libraryId={libraryId} />
+                <FiltersView />
+              </>
+            }
+          />
+          <Route
+            path="/on-deck/filters"
+            element={
+              <>
+                <EmbeddableOnDeck username={username} libraryId={libraryId} />
+                <FiltersView />
+              </>
+            }
+          />
+        </Routes>
+      </Layout>
+    </NavigationRouterProvider>
   )
 }
 
 const EmbeddableLibrary = ({ username, libraryId }: EmbeddableLibraryProps) => {
   // Restore navigation state from localStorage
   const storageKey = `embeddable-library-${username}-${libraryId}`
-  const savedPath = typeof window !== 'undefined' 
-    ? localStorage.getItem(storageKey) || '/'
-    : '/'
+  let savedPath = '/'
+  
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem(storageKey)
+    // Validate that the stored path is one of our valid routes
+    const validPaths = ['/', '/on-deck', '/filters', '/on-deck/filters']
+    const isValidPath = stored && (
+      validPaths.includes(stored) || 
+      stored.startsWith('/game/') || 
+      stored.startsWith('/on-deck/game/')
+    )
+    
+    if (isValidPath) {
+      savedPath = stored
+      console.log('EmbeddableLibrary: Restoring path from localStorage:', savedPath)
+    } else if (stored) {
+      console.log('EmbeddableLibrary: Invalid stored path, using default:', stored)
+      // Clear invalid path
+      localStorage.removeItem(storageKey)
+    }
+  }
 
   return (
     <MemoryRouter initialEntries={[savedPath]}>

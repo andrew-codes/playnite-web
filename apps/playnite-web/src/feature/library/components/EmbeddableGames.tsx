@@ -19,6 +19,7 @@ const EmbeddableGames: FC<{
   const navigate = useNavigate()
   const handleSelectGame = useCallback(
     (evt, game) => {
+      console.log('EmbeddableGames: Navigating to game', game.id)
       navigate(`/game/${game.id}`)
     },
     [navigate],

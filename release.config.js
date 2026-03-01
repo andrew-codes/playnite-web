@@ -117,8 +117,8 @@ const config = {
     [
       '@semantic-release/github',
       {
-        "successComment": false,
-         "failComment": false  ,
+        successComment: false,
+        failComment: false,
         assets: [
           {
             path: '_packaged/**/PlayniteWebPlugin/**/*.*',
