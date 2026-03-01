@@ -187,3 +187,10 @@ Packages:
       - "chore(misc): 🤖 release notes and version are owned by Jira version
         (#972)"
       - "chore(misc): 🤖 release notes and version are owned by Jira version"
+  - Version: 13.8.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.8.0/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_8_0.pext
+    ReleaseDate: 2026-03-01
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat: add embeddable library view and components with routing support"
+      - "fix: release pipeline"
