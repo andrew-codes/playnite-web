@@ -108,6 +108,7 @@ async function run() {
                 'data:',
                 'blob:',
                 'https://assets-prd.ignimgs.com',
+                'https://shared.akamai.steamstatic.com',
               ].concat(cspOrigins),
               'font-src': [
                 "'self'",
