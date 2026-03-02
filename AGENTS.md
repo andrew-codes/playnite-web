@@ -1,43 +1,40 @@
+# Project: Playnite Web
+
+## Description
+
+Playnite Web is a suite of services that allows viewing video games from your Playnite library on the web.
+
+## Tech Stack
+
+Unless otherwise stated.
+
+- Frontend: React, TypeScript, GraphQL client
+- Backend: Node.js, Next.js with app router and rsc, Yoga GraphQL server, Graphql-WS for graph subscriptions
+- Database: Postgres
+- Testing: Jest, Cypress component, Cypress e2e
+- Monorepo and packages: Nx, Yarn workspaces
+- Release: semantic release, packaged Docker images
+
 # Agent Instructions
 
-Agent instructions are found in `claude.md` files throughout the project. See these files in place of agents.md files.
+## Code Conventions
 
-## Embeddable Library Features
+- Use Functional components with hooks
+- Use camelCase for variables and functions in TypeScript
+- Use PascalCase for components, classes
+- Follow normal dotnet casing and conventions in C#
+- All module exports are at bottom of file. Do not inline export.
 
-When modifying library-specific features in `apps/playnite-web`, ensure both standard and embeddable versions are kept in sync:
+## Important Scripts
+- `yarn nx start web`: Start development Playnite Web application
+- `yarn nx test/unit`: Run unit tests for Nx project
+- `yarn nx test/component`: run component tests
+- `yarn nx test/e2e`: run e2e tests
+- `yarn nx lint`: run linter
 
-### Standard vs Embeddable Components
+## Feature Specs
 
-- **Standard components** (in `src/feature/library/components/`) use Next.js routing (`useRouter`, `Link`)
-- **Embeddable components** (prefixed with `Embeddable*`) use react-router (`useNavigate`, `Link` from react-router-dom)
-
-### Synchronization Rules
-
-1. **When adding a new library view** (e.g., playlists, collections):
-   - Create both standard and embeddable versions
-   - Add routes to both `src/app/u/[username]/[libraryId]/` and `EmbeddableLibrary.tsx`
-   - Ensure embeddable routes support game details and filters (e.g., `/playlist/:id`, `/playlist/:id/game/:gameId`, `/playlist/:id/filters`)
-
-2. **When modifying existing library components**:
-   - Update both the standard component (e.g., `OnDeck.tsx`) and its embeddable counterpart (`EmbeddableOnDeck.tsx`)
-   - Verify GraphQL queries, UI, and functionality remain consistent
-
-3. **When adding features to game navigation**:
-   - Update both `Games.tsx` and `EmbeddableGames.tsx`
-   - Ensure click handlers use the appropriate router (Next.js vs react-router)
-
-### Key Embeddable Files
-
-- `src/feature/library/components/EmbeddableLibrary.tsx` - Main router and route definitions
-- `src/feature/library/components/EmbeddableGames.tsx` - Game grid with react-router navigation
-- `src/feature/library/components/EmbeddableOnDeck.tsx` - On-deck view
-- `src/app/embed/[username]/[libraryId]/page.tsx` - Next.js entry point
-
-### Testing Checklist
-
-When updating library features, test both:
-- Standard URL: `/u/[username]/[libraryId]/*`
-- Embeddable URL: `/embed/[username]/[libraryId]` (with client-side routing)
+Summarize and document implementation notes as a feature spec in Confluence. They should target both human and AI consumption. Each major feature receives a single feature spec. Feature specs are child pages to https://public.home.playniteweb.com/wiki/spaces/PW/folder/127107073?atlOrigin=eyJpIjoiODdmZTdhZjU0ZDZkNGUzZDhkZjk1NDM3ZmI5MGZhODQiLCJwIjoiYyJ9.
 
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->
@@ -52,7 +49,3 @@ When updating library features, test both:
 - If the user needs help with an Nx configuration or project graph error, use the `nx_workspace` tool to get any errors
 
 <!-- nx configuration end-->
-
-# Feature Specs
-
-Summarize and document implementation notes as a feature spec in Confluence. They should target both human and AI consumption. Each major feature receives a single feature spec. Feature specs are child pages to https://public.home.playniteweb.com/wiki/spaces/PW/folder/127107073?atlOrigin=eyJpIjoiODdmZTdhZjU0ZDZkNGUzZDhkZjk1NDM3ZmI5MGZhODQiLCJwIjoiYyJ9.

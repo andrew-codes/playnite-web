@@ -7,6 +7,7 @@ Plugin to the Playnite application capable of receiving MQTT messages to start, 
 ## Tech Stack
 
 - C#
+- XAML
 
 ## Code Conventions
 

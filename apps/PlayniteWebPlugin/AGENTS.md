@@ -7,8 +7,7 @@ Plugin to the Playnite application responsible for sending Playnite game data to
 ## Tech Stack
 
 - C#
-
-## Code Conventions
+- XAML
 
 ## Project Structure
 
