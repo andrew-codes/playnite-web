@@ -8541,7 +8541,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/adapter-pg@npm:^7.2.0":
+"@prisma/adapter-pg@npm:7.2.0, @prisma/adapter-pg@npm:^7.2.0":
   version: 7.2.0
   resolution: "@prisma/adapter-pg@npm:7.2.0"
   dependencies:
@@ -8559,7 +8559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^7.2.0":
+"@prisma/client@npm:7.2.0, @prisma/client@npm:^7.2.0":
   version: 7.2.0
   resolution: "@prisma/client@npm:7.2.0"
   dependencies:
@@ -16378,7 +16378,7 @@ __metadata:
     jest: "npm:^30.2.0"
     nx: "npm:^22.3.3"
     prettier: "npm:^3.7.4"
-    prisma: "npm:^7.2.0"
+    prisma: "npm:7.2.0"
     rimraf: "npm:^6.1.2"
     shelljs: "npm:^0.10.0"
     ts-jest: "npm:^29.4.6"
@@ -16389,7 +16389,7 @@ __metadata:
     "@prisma/adapter-pg": ^7.2.0
     "@prisma/client": ^7.2.0
     isomorphic-dompurify: ^2.26.0
-    prisma: ^7.2.0
+    prisma: 7.2.0
   languageName: unknown
   linkType: soft
 
@@ -28807,7 +28807,7 @@ __metadata:
     nx: "npm:^22.3.3"
     nyc: "npm:^17.1.0"
     prettier: "npm:^3.7.4"
-    prisma: "npm:^7.2.0"
+    prisma: "npm:7.2.0"
     react: "npm:^19.2.3"
     react-devtools: "npm:^7.0.1"
     react-dom: "npm:^19.2.3"
@@ -29945,7 +29945,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:^7.2.0":
+"prisma@npm:7.2.0":
   version: 7.2.0
   resolution: "prisma@npm:7.2.0"
   dependencies:
@@ -33845,8 +33845,8 @@ __metadata:
   dependencies:
     "@jest/globals": "npm:^30.2.0"
     "@nx/devkit": "npm:^22.3.3"
-    "@prisma/adapter-pg": "npm:^7.2.0"
-    "@prisma/client": "npm:^7.2.0"
+    "@prisma/adapter-pg": "npm:7.2.0"
+    "@prisma/client": "npm:7.2.0"
     "@types/express": "npm:^4.17.25"
     "@types/jest": "npm:^30.0.0"
     "@types/lodash-es": "npm:^4.17.12"
@@ -33870,7 +33870,7 @@ __metadata:
     nx: "npm:^22.3.3"
     nyc: "npm:^17.1.0"
     prettier: "npm:^3.7.4"
-    prisma: "npm:^7.2.0"
+    prisma: "npm:7.2.0"
     rimraf: "npm:^6.1.2"
     sharp: "npm:^0.34.5"
     shelljs: "npm:^0.10.0"
