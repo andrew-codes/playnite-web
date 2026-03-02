@@ -1,4 +1,6 @@
 import { GraphQLError } from 'graphql'
+import fs from 'fs/promises'
+import path from 'path'
 import type { GameResolvers } from '../../../../../../.generated/types.generated'
 import { Release } from '../../../../data/providers/postgres/client'
 import { create, domains } from '../../../../oid'
@@ -9,7 +11,21 @@ export const Game: GameResolvers = {
   },
   coverArt: async (_parent, _arg, _ctx) => {
     if (!_parent.coverArt) return null
-    return `/cover-art/${_parent.coverArt}`
+    
+    // Add file modification timestamp to bust Next.js image optimization cache
+    // This ensures updated cover art is displayed without app restart
+    try {
+      const coverArtPath = path.resolve(
+        process.env.COVER_ART_PATH || './game-assets/cover-art',
+        _parent.coverArt,
+      )
+      const stats = await fs.stat(coverArtPath)
+      const timestamp = stats.mtimeMs
+      return `/cover-art/${_parent.coverArt}?t=${timestamp}`
+    } catch (error) {
+      // If file doesn't exist or stat fails, return URL without timestamp
+      return `/cover-art/${_parent.coverArt}`
+    }
   },
   releases: async (_parent, _arg, _ctx) => {
     const releases = await _ctx.loaders.releasesByGameLoader.load(
