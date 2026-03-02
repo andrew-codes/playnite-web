@@ -109,11 +109,10 @@ const EmbeddableLibraryContent = ({
     variables: { libraryId },
   })
 
-  // Persist navigation state to localStorage
+  // Persist navigation state to URL hash
   useEffect(() => {
-    const storageKey = `embeddable-library-${username}-${libraryId}`
-    localStorage.setItem(storageKey, location.pathname)
-  }, [location.pathname, username, libraryId])
+    window.location.hash = location.pathname
+  }, [location.pathname])
 
   // Create router adapter for react-router
   const routerAdapter = {
@@ -263,26 +262,21 @@ const EmbeddableLibraryContent = ({
 }
 
 const EmbeddableLibrary = ({ username, libraryId }: EmbeddableLibraryProps) => {
-  // Restore navigation state from localStorage
-  const storageKey = `embeddable-library-${username}-${libraryId}`
+  // Restore navigation state from URL hash
   let savedPath = '/'
 
   if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem(storageKey)
-    // Validate that the stored path is one of our valid routes
+    const hash = window.location.hash.slice(1)
     const validPaths = ['/', '/on-deck', '/filters', '/on-deck/filters', '/now-playing']
-    const isValidPath = stored && (
-      validPaths.includes(stored) ||
-      stored.startsWith('/game/') ||
-      stored.startsWith('/on-deck/game/') ||
-      stored.startsWith('/now-playing/game/')
+    const isValidPath = hash && (
+      validPaths.includes(hash) ||
+      hash.startsWith('/game/') ||
+      hash.startsWith('/on-deck/game/') ||
+      hash.startsWith('/now-playing/game/')
     )
 
     if (isValidPath) {
-      savedPath = stored
-    } else if (stored) {
-      // Clear invalid path
-      localStorage.removeItem(storageKey)
+      savedPath = hash
     }
   }
 
