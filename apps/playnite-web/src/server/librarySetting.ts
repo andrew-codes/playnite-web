@@ -7,7 +7,7 @@ type LibrarySetting = {
   helperText: string
 }
 
-const codes = ['onDeck'] as const
+const codes = ['onDeck', 'lastRoute'] as const
 
 const defaultSettings: Record<(typeof codes)[number], LibrarySetting> = {
   onDeck: {
@@ -19,6 +19,15 @@ const defaultSettings: Record<(typeof codes)[number], LibrarySetting> = {
 
          Games with these completion states will be highlighted in the On Deck section of the library.`,
     helperText: 'Select one or more completion states to include in On Deck.',
+  },
+  lastRoute: {
+    id: 'lastRoute',
+    name: 'Last Route',
+    value: null,
+    dataType: 'string',
+    description:
+      'The last route viewed in the embeddable library view. Used to restore navigation state across page loads.',
+    helperText: '',
   },
 }
 

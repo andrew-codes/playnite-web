@@ -1,6 +1,6 @@
 'use client'
 
-import { useQuery } from '@apollo/client/react'
+import { useMutation, useQuery } from '@apollo/client/react'
 import { FilterAlt, PlayArrow } from '@mui/icons-material'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -26,7 +26,11 @@ import RightDrawer from '../../shared/components/RightDrawer'
 import TopDrawer from '../../shared/components/TopDrawer'
 import { GameDetails } from '../../game/components/GameDetails'
 import Filtering from '../../filtering/components/Filtering'
-import { AllGamesQuery } from '../queries'
+import {
+  AllGamesQuery,
+  LibraryLastRouteQuery,
+  UpdateLastRouteMutation,
+} from '../queries'
 import EmbeddableGames from './EmbeddableGames'
 import EmbeddableOnDeck from './EmbeddableOnDeck'
 import { NavigationRouterProvider } from '../../shared/hooks/useNavigationRouter'
@@ -36,6 +40,18 @@ import { useNowPlayingGames } from '../hooks/nowPlayingGames'
 interface EmbeddableLibraryProps {
   username: string
   libraryId: string
+}
+
+const validPaths = ['/', '/on-deck', '/filters', '/on-deck/filters', '/now-playing']
+
+function isValidRoute(path: string | null | undefined): path is string {
+  if (!path) return false
+  return (
+    validPaths.includes(path) ||
+    path.startsWith('/game/') ||
+    path.startsWith('/on-deck/game/') ||
+    path.startsWith('/now-playing/game/')
+  )
 }
 
 const LibraryView = ({
@@ -109,19 +125,22 @@ const EmbeddableLibraryContent = ({
     variables: { libraryId },
   })
 
-  // Persist navigation state to URL hash
+  const [result] = useMe()
+  const isAuthenticated = result?.data?.me?.isAuthenticated ?? false
+
+  const [updateLastRoute] = useMutation(UpdateLastRouteMutation)
+
+  // Persist navigation state server-side when authenticated
   useEffect(() => {
-    window.location.hash = location.pathname
-  }, [location.pathname])
+    if (!isAuthenticated) return
+    updateLastRoute({ variables: { libraryId, route: location.pathname } })
+  }, [location.pathname, libraryId, isAuthenticated, updateLastRoute])
 
   // Create router adapter for react-router
   const routerAdapter = {
     back: () => navigate(-1),
     push: (path: string) => navigate(path),
   }
-
-  const [result] = useMe()
-  const isAuthenticated = result?.data?.me?.isAuthenticated ?? false
 
   const nowPlayingQuery = useNowPlayingGames(libraryId, {
     skip: !isAuthenticated,
@@ -262,23 +281,16 @@ const EmbeddableLibraryContent = ({
 }
 
 const EmbeddableLibrary = ({ username, libraryId }: EmbeddableLibraryProps) => {
-  // Restore navigation state from URL hash
-  let savedPath = '/'
+  const { data, loading } = useQuery<{ library: Library }>(
+    LibraryLastRouteQuery,
+    { variables: { libraryId }, errorPolicy: 'all' },
+  )
 
-  if (typeof window !== 'undefined') {
-    const hash = window.location.hash.slice(1)
-    const validPaths = ['/', '/on-deck', '/filters', '/on-deck/filters', '/now-playing']
-    const isValidPath = hash && (
-      validPaths.includes(hash) ||
-      hash.startsWith('/game/') ||
-      hash.startsWith('/on-deck/game/') ||
-      hash.startsWith('/now-playing/game/')
-    )
+  if (loading) return null
 
-    if (isValidPath) {
-      savedPath = hash
-    }
-  }
+  const savedPath = isValidRoute(data?.library?.lastRoute)
+    ? data.library.lastRoute
+    : '/'
 
   return (
     <MemoryRouter initialEntries={[savedPath]}>

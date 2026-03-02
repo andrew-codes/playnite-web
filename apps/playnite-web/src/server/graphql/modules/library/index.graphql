@@ -11,6 +11,7 @@ type Library {
   settings: [LibrarySetting!]!
   gamesOnDeck: [Game!]!
   gamesNowPlaying: [Game!]!
+  lastRoute: String
 }
 
 extend type Query {
@@ -99,6 +100,7 @@ input LibrarySettingsInput {
 
 extend type Mutation {
   syncLibrary(libraryData: LibraryInput!): Library
+  updateLastRoute(libraryId: String!, route: String!): Library!
   updateLibrarySettings(input: LibrarySettingsInput!): [LibrarySetting!]!
 }
 

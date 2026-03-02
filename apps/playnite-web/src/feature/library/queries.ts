@@ -74,6 +74,24 @@ const LibraryDetailsQuery = gql`
   }
 `
 
+const LibraryLastRouteQuery = gql`
+  query libraryLastRoute($libraryId: String!) {
+    library(libraryId: $libraryId) {
+      id
+      lastRoute
+    }
+  }
+`
+
+const UpdateLastRouteMutation = gql`
+  mutation UpdateLastRoute($libraryId: String!, $route: String!) {
+    updateLastRoute(libraryId: $libraryId, route: $route) {
+      id
+      lastRoute
+    }
+  }
+`
+
 const LibrarySubscriptionQuery = gql`
   subscription syncedLibrary {
     librarySynced {
@@ -168,7 +186,9 @@ export {
   LibraryDetailsQuery,
   LibraryGamesNowPlayingQuery,
   LibraryGamesOnDeckQuery,
+  LibraryLastRouteQuery,
   LibrarySettingsQuery,
   LibrarySubscriptionQuery,
+  UpdateLastRouteMutation,
   UpdateLibrarySettingsMutation,
 }

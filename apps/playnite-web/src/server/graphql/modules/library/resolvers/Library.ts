@@ -121,6 +121,18 @@ export const Library: LibraryResolvers = {
       },
     })
   },
+  lastRoute: async (library, _args, ctx) => {
+    const setting = await ctx.db.librarySetting.findUnique({
+      where: {
+        libraryId_name: {
+          name: defaultSettings.lastRoute.id,
+          libraryId: library.id,
+        },
+      },
+    })
+
+    return typeof setting?.value === 'string' ? setting.value : null
+  },
   settings: async (library, _args, ctx) => {
     const user = await ctx.identityService.authorize(ctx.jwt?.payload)
 
