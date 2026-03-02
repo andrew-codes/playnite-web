@@ -54,7 +54,7 @@ async function run() {
     // Serve cover art via Express from dynamic game-assets directory
     // This allows newly synced/updated cover art to be served without restart
     const coverArtPath = path.resolve(
-      process.env.COVER_ART_PATH || './.game-assets/cover-art',
+      process.env.COVER_ART_PATH || './game-assets/cover-art',
     )
     app.use(
       '/cover-art',

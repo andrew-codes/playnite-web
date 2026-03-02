@@ -16,7 +16,7 @@ export const Game: GameResolvers = {
     // This ensures updated cover art is displayed without app restart
     try {
       const coverArtPath = path.resolve(
-        process.env.COVER_ART_PATH || './.game-assets/cover-art',
+        process.env.COVER_ART_PATH || './game-assets/cover-art',
         _parent.coverArt,
       )
       const stats = await fs.stat(coverArtPath)
@@ -24,13 +24,6 @@ export const Game: GameResolvers = {
       return `/cover-art/${_parent.coverArt}?t=${timestamp}`
     } catch (error) {
       // If file doesn't exist or stat fails, return URL without timestamp
-      // Log error to help debug production issues
-      if (process.env.NODE_ENV === 'production') {
-        console.error(
-          `Failed to stat cover art file: ${_parent.coverArt}`,
-          error instanceof Error ? error.message : error,
-        )
-      }
       return `/cover-art/${_parent.coverArt}`
     }
   },
