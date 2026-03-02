@@ -131,6 +131,11 @@ const verifyRelease = async (pluginConfig, context) => {
     }
   })
 
+  // Add link to feature specs page
+  nextPackage.Changelog.push(
+    'For more details, see: https://public.home.playniteweb.com/wiki/x/AQC6Bw',
+  )
+
   const manifest = parse(
     fs.readFileSync(join(context.cwd, manifestFilePath), 'utf8'),
   )
