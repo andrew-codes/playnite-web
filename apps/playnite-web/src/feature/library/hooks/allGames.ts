@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client/react'
 import { merge } from 'lodash-es'
 import { useEffect } from 'react'
 import { Library } from '../../../../.generated/types.generated'
+import { useSubscribeEntityUpdates } from '../../shared/hooks/subscribeEntityUpdates'
 import { AllGamesQuery } from '../queries'
 import { useSubscribeLibrarySync } from './subscribeLibrarySync'
 
@@ -12,6 +13,17 @@ const useAllGames = (libraryId?: string, opts?: any) => {
       variables: { libraryId: libraryId ?? '' },
     }),
   )
+
+  const entityUpdatedSubscription = useSubscribeEntityUpdates()
+  useEffect(() => {
+    if (
+      entityUpdatedSubscription.data?.entityUpdated.some(
+        (e) => e.type === 'Game' && e.fields.some((f) => f.key === 'coverArt'),
+      )
+    ) {
+      q.refetch()
+    }
+  }, [q, entityUpdatedSubscription?.data?.entityUpdated])
 
   const librarySubscription = useSubscribeLibrarySync()
   useEffect(() => {

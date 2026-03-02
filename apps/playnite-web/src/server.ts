@@ -16,6 +16,8 @@ import createYoga from './server/graphql/index'
 import schema from './server/graphql/schema'
 import { subscriptionPublisher } from './server/graphql/subscriptionPublisher'
 import logger from './server/logger'
+import { getClient } from './server/mqtt'
+import { domains } from './server/oid'
 import { setupApp } from './server/setupApp'
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -225,6 +227,24 @@ async function run() {
   HTTP server running on http://${domain}:${port}
   GraphQL WebSocket server running on ws://${domain}:${port}${graphqlEndpoint}
 `)
+
+    const mqttClient = await getClient()
+    await mqttClient.subscribe('playnite-web/game/cover-art-updated', { qos: 1 })
+    mqttClient.on('message', (topic, message) => {
+      if (topic === 'playnite-web/game/cover-art-updated') {
+        try {
+          const { gameId } = JSON.parse(message.toString())
+          subscriptionPublisher.publish('entityUpdated', {
+            id: Number(gameId),
+            source: 'PlayniteWeb',
+            type: domains.Game,
+            fields: [{ key: 'coverArt' }],
+          })
+        } catch (e) {
+          logger.error('Error processing cover-art-updated message', e)
+        }
+      }
+    })
   } catch (error) {
     logger.error('Error starting Playnite Web:', error)
   }

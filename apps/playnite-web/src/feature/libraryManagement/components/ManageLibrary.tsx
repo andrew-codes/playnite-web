@@ -1,6 +1,5 @@
 'use client'
 
-import { useQuery } from '@apollo/client/react'
 import {
   Autocomplete,
   Box,
@@ -15,20 +14,18 @@ import {
 } from '@mui/material'
 import { debounce } from 'lodash-es'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Game, Library } from '../../../../.generated/types.generated'
+import { Game } from '../../../../.generated/types.generated'
 import { useUpdateGame } from '../../game/hooks/updateGame'
 import GameGrid from '../../library/components/VirtualizedGameGrid'
+import { useAllGames } from '../../library/hooks/allGames'
 import { useFilteredGames } from '../../library/hooks/useFilteredGames'
-import { AllGamesQuery } from '../../library/queries'
 import { Dialog } from '../../shared/components/Dialog'
 import { PageTitle } from '../../shared/components/PageTitle'
 import { Form } from '../../shared/components/forms/Form'
 import { useSearchIgnGames } from '../hooks/searchIgnGames'
 
 const ManageLibrary: FC<{ libraryId: string }> = ({ libraryId }) => {
-  const { data } = useQuery<{ library: Library }>(AllGamesQuery, {
-    variables: { libraryId },
-  })
+  const { data } = useAllGames(libraryId)
   const filteredGames = useFilteredGames(
     (data?.library?.games?.filter?.((g) => g) as Array<Game>) ?? [],
   )

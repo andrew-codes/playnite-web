@@ -146,6 +146,11 @@ async function run() {
               logger.info(
                 `Successfully updated cover art for game ${gameId} (${gameTitle})`,
               )
+              await mqtt.publish(
+                'playnite-web/game/cover-art-updated',
+                JSON.stringify({ gameId }),
+                { qos: 1 },
+              )
             } else {
               logger.warn(
                 `Failed to update cover art for game ${gameId} (${gameTitle})`,
