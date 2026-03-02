@@ -51,13 +51,18 @@ async function run() {
     // create express app
     const app = express()
 
-    // Serve cover art via Express for direct access (fallback)
-    const coverArtPath = path.resolve('./public/cover-art')
+    // Serve cover art via Express from dynamic game-assets directory
+    // This allows newly synced/updated cover art to be served without restart
+    const coverArtPath = path.resolve(
+      process.env.COVER_ART_PATH || './game-assets/cover-art',
+    )
     app.use(
       '/cover-art',
       express.static(coverArtPath, {
-        maxAge: '1y',
-        immutable: true,
+        // Remove caching to allow updated images to be served immediately
+        maxAge: '0',
+        etag: true,
+        lastModified: true,
       }),
     )
 
