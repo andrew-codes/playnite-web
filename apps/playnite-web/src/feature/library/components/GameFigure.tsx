@@ -45,7 +45,7 @@ const GameFigure: FC<
                 src={game.coverArt}
                 alt={game.primaryRelease?.title ?? 'Game Cover Art'}
                 loading={priority ? 'eager' : 'lazy'}
-                fetchpriority={isHighFetchPriority ? 'high' : 'auto'}
+                fetchPriority={isHighFetchPriority ? 'high' : 'auto'}
                 width={230}
                 height={230}
                 style={{
