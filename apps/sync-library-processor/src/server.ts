@@ -131,6 +131,7 @@ async function run() {
 
           try {
             // Download and process the cover art from the provided URL
+            // Force update to overwrite existing cover art
             const success = await coverArtService.persistGameCoverArt(
               {
                 id: gameId,
@@ -138,6 +139,7 @@ async function run() {
                 coverArt: null,
               },
               coverArtUrl,
+              true, // forceUpdate = true for manual updates
             )
 
             if (success) {

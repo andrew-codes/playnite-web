@@ -12,10 +12,12 @@ interface IPersistCoverArt {
   /**
    * Processes cover art for a game: checks if exists, downloads if needed, and updates database
    * Returns true if cover art was processed (either already exists or newly downloaded)
+   * @param forceUpdate - If true, re-downloads cover art even if file already exists
    */
   persistGameCoverArt(
     game: { id: number; title: string; coverArt: string | null },
     ignUrl: string,
+    forceUpdate?: boolean,
   ): Promise<boolean>
 
   /**

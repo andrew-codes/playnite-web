@@ -101,13 +101,15 @@ class IgnCoverArtService implements IPersistCoverArt {
   /**
    * Processes cover art for a game: checks if exists, downloads if needed, and updates database
    * Returns true if cover art was processed (either already exists or newly downloaded)
+   * @param forceUpdate - If true, re-downloads cover art even if file already exists
    */
   async persistGameCoverArt(
     game: { id: number; title: string; coverArt: string | null },
     ignUrl: string,
+    forceUpdate: boolean = false,
   ): Promise<boolean> {
-    // Check if cover art already exists on disk
-    if (await this.coverArtExists(game.title)) {
+    // Check if cover art already exists on disk (skip if forceUpdate is true)
+    if (!forceUpdate && (await this.coverArtExists(game.title))) {
       const filename = this.generateFilename(game.title)
 
       // Update database only if it's not already set
