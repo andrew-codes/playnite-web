@@ -4,8 +4,8 @@ const migrate = async (configPath?: string) => {
   const pathToConfig = configPath ?? 'prisma.config.ts'
 
   const migrate = spawnSync(
-    'npx',
-    ['prisma', 'migrate', 'dev', '--config', pathToConfig],
+    'yarn',
+    ['exec', 'prisma', 'migrate', 'dev', '--config', pathToConfig],
     {
       stdio: 'inherit',
       env: process.env,
