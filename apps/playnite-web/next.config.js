@@ -84,37 +84,9 @@ const nextConfig = {
     return config
   },
 
+  // Image optimization disabled - cover art is served directly from Express as regular img tags
   images: {
-    imageSizes: [175, 230, 280, 320],
-    qualities: [50, 75, 100],
-    formats: ['image/webp'],
-    // Disable server-side cache for cover art that can be updated dynamically
-    minimumCacheTTL: 0,
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: '**',
-      },
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
-  },
-
-  async headers() {
-    return [
-      {
-        // Set cache headers for Next.js optimized images to respect query parameters
-        source: '/_next/image',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate',
-          },
-        ],
-      },
-    ]
+    unoptimized: true,
   },
   // output: 'standalone',
 }

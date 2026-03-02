@@ -14,7 +14,6 @@ import {
   useTheme,
 } from '@mui/material'
 import { debounce } from 'lodash-es'
-import Image from 'next/image'
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Game, Library } from '../../../../.generated/types.generated'
 import { useUpdateGame } from '../../game/hooks/updateGame'
@@ -199,11 +198,12 @@ const ManageLibrary: FC<{ libraryId: string }> = ({ libraryId }) => {
               >
                 <Typography variant="h3">Preview</Typography>
                 {selectedCoverArtUrl !== '' && (
-                  <Image
+                  <img
                     src={selectedCoverArtUrl}
                     alt={`Selected cover art for ${game?.primaryRelease?.title || ''}`}
                     width={200}
                     height={200}
+                    style={{ width: 200, height: 'auto', display: 'block' }}
                   />
                 )}
               </Stack>

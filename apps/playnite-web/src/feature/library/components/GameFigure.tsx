@@ -1,6 +1,5 @@
 import { Box, Button, Stack, styled, useTheme } from '@mui/material'
-import NextImage from 'next/image'
-import { createContext, FC, PropsWithChildren } from 'react'
+import { createContext, FC, PropsWithChildren, useMemo } from 'react'
 import { Game } from '../../../../.generated/types.generated'
 import GameFigureChipList from './GameFigureChipList'
 
@@ -41,16 +40,14 @@ const GameFigure: FC<
             })}
           >
             {game.coverArt ? (
-              <NextImage
-                quality={50}
-                width={230}
-                height={230}
+              <img
                 data-test="GameCoverImage"
                 src={game.coverArt}
-                sizes="(min-width: 3200px) 320px, (min-width: 2800px) 280px, (min-width: 2560px) 230px, (min-width: 1366px) 175px, (min-width: 1024px) 230px, (min-width: 992px) 320px, (min-width: 768px) 230px, (min-width: 576px) 230px, 175px"
                 alt={game.primaryRelease?.title ?? 'Game Cover Art'}
                 loading={priority ? 'eager' : 'lazy'}
-                fetchPriority={isHighFetchPriority ? 'high' : 'auto'}
+                fetchpriority={isHighFetchPriority ? 'high' : 'auto'}
+                width={230}
+                height={230}
                 style={{
                   width: '100%',
                   height: 'auto',

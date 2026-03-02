@@ -2,7 +2,6 @@
 
 import { Replay, Stop } from '@mui/icons-material'
 import { Box, Button, Stack, Typography, styled } from '@mui/material'
-import NextImage from 'next/image'
 import { FC } from 'react'
 import { Game } from '../../../../.generated/types.generated'
 import { useRestartRelease } from '../hooks/restartRelease'
@@ -85,7 +84,7 @@ const NowPlayingGameItem: FC<{
     <ItemContainer>
       <CoverArtContainer>
         {game.coverArt ? (
-          <NextImage
+          <img
             src={game.coverArt}
             alt={title}
             width={80}
