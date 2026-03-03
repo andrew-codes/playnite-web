@@ -144,9 +144,33 @@ export const Library: LibraryResolvers = {
       throw new Error('Forbidden')
     }
 
+    const userVisibleSettings = Object.values(defaultSettings).filter(
+      (s) => s.userVisible,
+    )
+    const userVisibleCodes = userVisibleSettings.map((s) => s.id)
+
+    // Initialize any missing user-visible settings with their defaults
+    await Promise.all(
+      userVisibleSettings.map((setting) =>
+        ctx.db.librarySetting.upsert({
+          where: {
+            libraryId_name: { name: setting.id, libraryId: library.id },
+          },
+          create: {
+            name: setting.id,
+            value: setting.value ?? undefined,
+            dataType: setting.dataType,
+            libraryId: library.id,
+          },
+          update: {},
+        }),
+      ),
+    )
+
     return ctx.db.librarySetting.findMany({
       where: {
         libraryId: library.id,
+        name: { in: userVisibleCodes },
       },
       orderBy: {
         name: 'asc',

@@ -54,6 +54,16 @@ function isValidRoute(path: string | null | undefined): path is string {
   )
 }
 
+function getInitialEntries(savedPath: string): string[] {
+  if (savedPath.startsWith('/game/')) return ['/', savedPath]
+  if (savedPath.startsWith('/on-deck/game/')) return ['/on-deck', savedPath]
+  if (savedPath.startsWith('/now-playing/game/')) return ['/now-playing', savedPath]
+  if (savedPath === '/filters') return ['/', savedPath]
+  if (savedPath === '/on-deck/filters') return ['/on-deck', savedPath]
+  if (savedPath === '/now-playing') return ['/', savedPath]
+  return [savedPath]
+}
+
 const LibraryView = ({
   username,
   libraryId,
@@ -292,8 +302,10 @@ const EmbeddableLibrary = ({ username, libraryId }: EmbeddableLibraryProps) => {
     ? data.library.lastRoute
     : '/'
 
+  const initialEntries = getInitialEntries(savedPath)
+
   return (
-    <MemoryRouter initialEntries={[savedPath]}>
+    <MemoryRouter initialEntries={initialEntries}>
       <EmbeddableLibraryContent username={username} libraryId={libraryId} />
     </MemoryRouter>
   )
