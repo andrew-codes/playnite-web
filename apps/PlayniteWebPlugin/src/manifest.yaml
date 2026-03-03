@@ -435,3 +435,14 @@ Packages:
     Changelog:
       - "feat: add embeddable library view and components with routing support"
       - "fix: release pipeline"
+  - Version: 13.8.1
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.8.1/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_13_8_1.pext
+    ReleaseDate: 2026-03-03
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "fix(PWP-43): image changes appear as soon as they are made"
+      - "fix(PWP-43): remove Next.js image optimization for cover art"
+      - "chore: include link to docs in released manifest"
+      - "fix(PWP-43): allow overwriting existing cover art on manual update"
+      - "For more details, see:
+        https://public.home.playniteweb.com/wiki/x/AQC6Bw"
