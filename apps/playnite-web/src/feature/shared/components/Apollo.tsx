@@ -16,14 +16,17 @@ import {
 import { inMemoryCache } from '../gql/inMemoryCache'
 
 function makeClient() {
-  const domain = process.env.DOMAIN ?? 'localhost'
-  const port = parseInt(process.env.PORT ?? '3000', 10)
-  const host = `${domain}:${port}`
-  const protocol = process.env.PROTOCOL ?? 'http'
+  const wsProtocol =
+    typeof window !== 'undefined' && window.location.protocol === 'https:'
+      ? 'wss'
+      : 'ws'
+  const wsHost =
+    typeof window !== 'undefined' ? window.location.host : 'localhost:3000'
+  const wsUrl = `${wsProtocol}://${wsHost}/api`
 
   const wsLink = new GraphQLWsLink(
     createClient({
-      url: `${protocol === 'https:' ? 'wss' : 'ws'}://${host}/api`,
+      url: wsUrl,
       connectionParams: {
         'Access-Control-Allow-Origin': '*', // Required for CORS support to work
         credentials: true,
