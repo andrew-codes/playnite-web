@@ -6,12 +6,12 @@ import {
   Settings,
 } from '@mui/icons-material'
 import { useParams } from 'next/navigation'
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { useMe } from '../../account/hooks/me'
 import { LibraryDetailsQuery } from '../../library/queries'
 import NavMenu from './NavMenu'
 
-const LibraryNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
+const LibraryNavigation: FC<{ open: boolean; navigate?: (path: string) => void }> = ({ open, navigate: navigateProp }) => {
   const params = useParams()
   const { username, libraryId } = params
 
@@ -22,34 +22,25 @@ const LibraryNavigation: FC<{ open: boolean }> = ({ open, ...rest }) => {
     },
   )
 
+  const makeItem = (text: string, icon: ReactNode, relativePath: string, absolutePath: string) => ({
+    icon,
+    text,
+    to: navigateProp ? () => navigateProp(relativePath) : absolutePath,
+  })
+
   const navItems = [
-    {
-      to: `/u/${username}/${libraryId}`,
-      icon: <LibraryBooks />,
-      text: 'Games',
-    },
-    {
-      to: `/u/${username}/${libraryId}/on-deck`,
-      icon: <PlayArrow />,
-      text: 'On Deck',
-    },
+    makeItem('Games', <LibraryBooks />, '/', `/u/${username}/${libraryId}`),
+    makeItem('On Deck', <PlayArrow />, '/on-deck', `/u/${username}/${libraryId}/on-deck`),
   ]
 
   const [result] = useMe()
   if (
+    !navigateProp &&
     result?.data?.me?.isAuthenticated &&
     result?.data?.me?.username === username
   ) {
-    navItems.push({
-      to: `/u/${username}/${libraryId}/manage`,
-      icon: <ModeEdit />,
-      text: 'Manage Library',
-    })
-    navItems.push({
-      to: `/u/${username}/${libraryId}/settings`,
-      icon: <Settings />,
-      text: 'Library Settings',
-    })
+    navItems.push(makeItem('Manage Library', <ModeEdit />, '/manage', `/u/${username}/${libraryId}/manage`))
+    navItems.push(makeItem('Library Settings', <Settings />, '/settings', `/u/${username}/${libraryId}/settings`))
   }
 
   return (

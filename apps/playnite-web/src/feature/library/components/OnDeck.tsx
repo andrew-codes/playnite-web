@@ -2,7 +2,7 @@
 
 import { useQuery } from '@apollo/client/react'
 import { FC } from 'react'
-import { Library } from '../../../../.generated/types.generated'
+import { Game, Library } from '../../../../.generated/types.generated'
 import { PageTitle } from '../../shared/components/PageTitle'
 import { LibraryGamesOnDeckQuery } from '../queries'
 import Games from './Games'
@@ -10,7 +10,8 @@ import Games from './Games'
 const OnDeck: FC<{
   username: string
   libraryId: string
-}> = ({ username, libraryId }) => {
+  onSelectGame?: (evt: React.MouseEvent, game: Game) => void
+}> = ({ username, libraryId, onSelectGame }) => {
   const { data, error } = useQuery<{ library: Library }>(
     LibraryGamesOnDeckQuery,
     {
@@ -28,6 +29,7 @@ const OnDeck: FC<{
         username={username}
         libraryId={libraryId}
         games={data?.library?.gamesOnDeck ?? []}
+        onSelectGame={onSelectGame}
       />
     </>
   )
