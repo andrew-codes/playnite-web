@@ -16,8 +16,8 @@ import { Library } from '../../../../.generated/types.generated'
 import { setCompletionStates } from '../../../api/client/state/completionStatesSlice'
 import { useMe } from '../../account/hooks/me'
 import AuthenticatedNavigation from '../../mainNavigation/components/AuthenticatedNavigation'
+import EmbeddableLibraryNavigation from '../../mainNavigation/components/EmbeddableLibraryNavigation'
 import LibrariesNavigation from '../../mainNavigation/components/LibrariesNavigation'
-import LibraryNavigation from '../../mainNavigation/components/LibraryNavigation'
 import MainNavigation from '../../mainNavigation/components/MainNavigation'
 import IconButton from '../../shared/components/IconButton'
 import { Layout } from '../../shared/components/Layout'
@@ -158,7 +158,7 @@ const EmbeddableLibraryContent = ({
   const hasNowPlayingGames =
     (nowPlayingQuery.data?.library?.gamesNowPlaying?.length ?? 0) > 0
 
-  let navs = [LibraryNavigation, LibrariesNavigation, MainNavigation]
+  let navs = [EmbeddableLibraryNavigation, LibrariesNavigation, MainNavigation]
   if (isAuthenticated) {
     navs = navs
       .slice(0, 2)
@@ -188,7 +188,11 @@ const EmbeddableLibraryContent = ({
   }
 
   const handleOpenFilter = () => {
-    navigate('/filters')
+    if (location.pathname.startsWith('/on-deck')) {
+      navigate('/on-deck/filters')
+    } else {
+      navigate('/filters')
+    }
   }
 
   const handleOpenNowPlaying = () => {
