@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery } from '@apollo/client/react'
 import { FilterAlt, PlayArrow } from '@mui/icons-material'
-import { useEffect } from 'react'
+import { FC, useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import {
   MemoryRouter,
@@ -12,7 +12,7 @@ import {
   useParams,
   useLocation,
 } from 'react-router-dom'
-import { Library } from '../../../../.generated/types.generated'
+import { Game, Library } from '../../../../.generated/types.generated'
 import { setCompletionStates } from '../../../api/client/state/completionStatesSlice'
 import { useMe } from '../../account/hooks/me'
 import AuthenticatedNavigation from '../../mainNavigation/components/AuthenticatedNavigation'
@@ -31,8 +31,8 @@ import {
   LibraryLastRouteQuery,
   UpdateLastRouteMutation,
 } from '../queries'
-import EmbeddableGames from './EmbeddableGames'
-import EmbeddableOnDeck from './EmbeddableOnDeck'
+import Games from './Games'
+import OnDeck from './OnDeck'
 import { NavigationRouterProvider } from '../../shared/hooks/useNavigationRouter'
 import { NowPlayingContent } from './NowPlayingContent'
 import { useNowPlayingGames } from '../hooks/nowPlayingGames'
@@ -67,9 +67,11 @@ function getInitialEntries(savedPath: string): string[] {
 const LibraryView = ({
   username,
   libraryId,
+  onSelectGame,
 }: {
   username: string
   libraryId: string
+  onSelectGame?: (evt: React.MouseEvent, game: Game) => void
 }) => {
   const { data } = useQuery<{ library: Library }>(AllGamesQuery, {
     variables: { libraryId },
@@ -81,10 +83,11 @@ const LibraryView = ({
         title={`My Games - ${data?.library?.name ?? ''}`}
         subtitle={`${data?.library?.games.length ?? 0} ${data?.library?.games.length === 1 ? 'game' : 'games'}`}
       />
-      <EmbeddableGames
+      <Games
         username={username}
         libraryId={libraryId}
         games={data?.library?.games ?? []}
+        onSelectGame={onSelectGame}
       />
     </>
   )
@@ -124,6 +127,11 @@ const NowPlayingEmbeddableView = ({
   )
 }
 
+const EmbeddableLibraryNav: FC<{ open: boolean }> = ({ open }) => {
+  const navigate = useNavigate()
+  return <LibraryNavigation open={open} navigate={navigate} />
+}
+
 const EmbeddableLibraryContent = ({
   username,
   libraryId,
@@ -158,7 +166,7 @@ const EmbeddableLibraryContent = ({
   const hasNowPlayingGames =
     (nowPlayingQuery.data?.library?.gamesNowPlaying?.length ?? 0) > 0
 
-  let navs = [LibraryNavigation, LibrariesNavigation, MainNavigation]
+  let navs = [EmbeddableLibraryNav, LibrariesNavigation, MainNavigation]
   if (isAuthenticated) {
     navs = navs
       .slice(0, 2)
@@ -187,8 +195,19 @@ const EmbeddableLibraryContent = ({
     console.error(error, data)
   }
 
+  const handleSelectGame = useCallback(
+    (evt: React.MouseEvent, game: Game) => {
+      navigate(`/game/${game.id}`)
+    },
+    [navigate],
+  )
+
   const handleOpenFilter = () => {
-    navigate('/filters')
+    if (location.pathname.startsWith('/on-deck')) {
+      navigate('/on-deck/filters')
+    } else {
+      navigate('/filters')
+    }
   }
 
   const handleOpenNowPlaying = () => {
@@ -223,17 +242,17 @@ const EmbeddableLibraryContent = ({
         <Routes>
           <Route
             path="/"
-            element={<LibraryView username={username} libraryId={libraryId} />}
+            element={<LibraryView username={username} libraryId={libraryId} onSelectGame={handleSelectGame} />}
           />
           <Route
             path="/on-deck"
-            element={<EmbeddableOnDeck username={username} libraryId={libraryId} />}
+            element={<OnDeck username={username} libraryId={libraryId} onSelectGame={handleSelectGame} />}
           />
           <Route
             path="/now-playing"
             element={
               <>
-                <LibraryView username={username} libraryId={libraryId} />
+                <LibraryView username={username} libraryId={libraryId} onSelectGame={handleSelectGame} />
                 <NowPlayingEmbeddableView username={username} libraryId={libraryId} />
               </>
             }
@@ -242,7 +261,7 @@ const EmbeddableLibraryContent = ({
             path="/game/:gameId"
             element={
               <>
-                <LibraryView username={username} libraryId={libraryId} />
+                <LibraryView username={username} libraryId={libraryId} onSelectGame={handleSelectGame} />
                 <GameDetailsView />
               </>
             }
@@ -251,7 +270,7 @@ const EmbeddableLibraryContent = ({
             path="/now-playing/game/:gameId"
             element={
               <>
-                <LibraryView username={username} libraryId={libraryId} />
+                <LibraryView username={username} libraryId={libraryId} onSelectGame={handleSelectGame} />
                 <NowPlayingEmbeddableView username={username} libraryId={libraryId} />
                 <GameDetailsView />
               </>
@@ -261,7 +280,7 @@ const EmbeddableLibraryContent = ({
             path="/on-deck/game/:gameId"
             element={
               <>
-                <EmbeddableOnDeck username={username} libraryId={libraryId} />
+                <OnDeck username={username} libraryId={libraryId} onSelectGame={handleSelectGame} />
                 <GameDetailsView />
               </>
             }
@@ -270,7 +289,7 @@ const EmbeddableLibraryContent = ({
             path="/filters"
             element={
               <>
-                <LibraryView username={username} libraryId={libraryId} />
+                <LibraryView username={username} libraryId={libraryId} onSelectGame={handleSelectGame} />
                 <FiltersView />
               </>
             }
@@ -279,7 +298,7 @@ const EmbeddableLibraryContent = ({
             path="/on-deck/filters"
             element={
               <>
-                <EmbeddableOnDeck username={username} libraryId={libraryId} />
+                <OnDeck username={username} libraryId={libraryId} onSelectGame={handleSelectGame} />
                 <FiltersView />
               </>
             }

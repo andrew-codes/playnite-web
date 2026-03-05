@@ -11,7 +11,8 @@ const GamesWithDetails: FC<{
   username: string
   libraryId: string
   games: Array<Game>
-}> = ({ username, libraryId, games }) => {
+  onSelectGame?: (evt: React.MouseEvent, game: Game) => void
+}> = ({ username, libraryId, games, onSelectGame }) => {
   const filteredGames = useFilteredGames(
     (games.filter((g) => g) as Array<Game>) ?? [],
   )
@@ -19,9 +20,13 @@ const GamesWithDetails: FC<{
   const router = useRouter()
   const handleSelectGame = useCallback(
     (evt, game) => {
-      router.push(`/u/${username}/${libraryId}/game/${game.id}`)
+      if (onSelectGame) {
+        onSelectGame(evt, game)
+      } else {
+        router.push(`/u/${username}/${libraryId}/game/${game.id}`)
+      }
     },
-    [router, username, libraryId],
+    [router, username, libraryId, onSelectGame],
   )
 
   const ref = useRef<HTMLDivElement>(null)
