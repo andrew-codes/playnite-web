@@ -8,7 +8,8 @@
     "platforms": [],
     "releases": [],
     "sources": [],
-    "tags": []
+    "tags": [],
+    "genres": []
   },
   "update": {
     "completionStates": [
@@ -7747,6 +7748,7 @@
         "id": "d4a19d2d-61d9-49a8-9b79-eb93acd7486b",
         "name": "PlayStation Plus"
       }
-    ]
+    ],
+    "genres": []
   }
 }
