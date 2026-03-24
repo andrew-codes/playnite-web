@@ -197,9 +197,13 @@ const EmbeddableLibraryContent = ({
 
   const handleSelectGame = useCallback(
     (evt: React.MouseEvent, game: Game) => {
-      navigate(`/game/${game.id}`)
+      if (location.pathname.startsWith('/on-deck')) {
+        navigate(`/on-deck/game/${game.id}`)
+      } else {
+        navigate(`/game/${game.id}`)
+      }
     },
-    [navigate],
+    [navigate, location.pathname],
   )
 
   const handleOpenFilter = () => {
