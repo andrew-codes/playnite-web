@@ -1,6 +1,7 @@
 type FilterItemValue {
   value: String!
   display: String!
+  color: String
 }
 
 enum RelatedType {
@@ -12,6 +13,8 @@ enum RelatedType {
   Developer
   Tag
   Playlist
+  CriticScore
+  CommunityScore
 }
 
 type FilterItem {

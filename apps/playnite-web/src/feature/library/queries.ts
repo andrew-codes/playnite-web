@@ -32,6 +32,8 @@ const AllGamesQuery = gql`
           genres {
             id
           }
+          criticScore
+          communityScore
           hidden
         }
         releases {

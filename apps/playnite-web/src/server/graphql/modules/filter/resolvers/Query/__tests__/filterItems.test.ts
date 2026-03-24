@@ -137,4 +137,36 @@ it('only requests sources that have releases', async () => {
 
     expect(result.find((item) => item.name === 'Genre')).toBeUndefined()
   })
+
+  it('always includes Critic Score filter with preset score ranges', async () => {
+    const ctx = makeCtx()
+
+    const result = await filterItems(null, {}, ctx as any)
+
+    const criticFilter = result.find((item) => item.name === 'Critic Score')
+    expect(criticFilter).toBeDefined()
+    expect(criticFilter?.field).toBe('primaryRelease.criticScore')
+    expect(criticFilter?.relatedType).toBe('CriticScore')
+    expect(criticFilter?.allowedValues).toEqual([
+      { display: 'Masterpiece', value: '93-100', color: 'purple' },
+      { display: 'Amazing', value: '85-92', color: 'green' },
+      { display: 'Great', value: '79-85', color: 'green' },
+      { display: 'Good', value: '72-78', color: 'green' },
+      { display: 'Ok', value: '65-71', color: 'yellow' },
+      { display: 'Mediocre', value: '55-64', color: 'red' },
+      { display: 'Bad', value: '1-54', color: 'red' },
+    ])
+  })
+
+  it('always includes Community Score filter with preset score ranges', async () => {
+    const ctx = makeCtx()
+
+    const result = await filterItems(null, {}, ctx as any)
+
+    const communityFilter = result.find((item) => item.name === 'Community Score')
+    expect(communityFilter).toBeDefined()
+    expect(communityFilter?.field).toBe('primaryRelease.communityScore')
+    expect(communityFilter?.relatedType).toBe('CommunityScore')
+    expect(communityFilter?.allowedValues).toHaveLength(7)
+  })
 })

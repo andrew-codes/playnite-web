@@ -252,6 +252,96 @@ describe('Filtering.', () => {
         .contains('figcaption', 'Batman: Arkham Asylum')
     })
 
+    it(`Critic Score.
+      - Games must have a critic score within at least one selected range.`, () => {
+      const filterBy = 'Critic Score'
+      const filterValues = ['Masterpiece']
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      for (const filter of filterValues) {
+        cy.contains(new RegExp(`^${filter}$`)).click()
+      }
+
+      for (const filter of filterValues) {
+        cy.get('@filter').contains(new RegExp(`^${filter}$`))
+      }
+
+      cy.get('h2 + button').click()
+      cy.contains('button', 'Filter').click()
+
+      cy.get('[data-test="GameFigure"]').should('have.length', 1)
+      cy.get('[data-test="GameFigure"]')
+        .eq(0)
+        .contains('figcaption', 'Batman: Arkham Origins')
+    })
+
+    it(`Community Score.
+      - Games must have a community score within at least one selected range.`, () => {
+      const filterBy = 'Community Score'
+      const filterValues = ['Ok']
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      for (const filter of filterValues) {
+        cy.contains(new RegExp(`^${filter}$`)).click()
+      }
+
+      for (const filter of filterValues) {
+        cy.get('@filter').contains(new RegExp(`^${filter}$`))
+      }
+
+      cy.get('h2 + button').click()
+      cy.contains('button', 'Filter').click()
+
+      cy.get('[data-test="GameFigure"]').should('have.length', 1)
+      cy.get('[data-test="GameFigure"]')
+        .eq(0)
+        .contains('figcaption', 'Batman: Arkham City')
+    })
+
+    it(`Score filter options.
+      - All seven preset score ranges are shown.`, () => {
+      const filterBy = 'Critic Score'
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      cy.get('[role="option"]').should('have.length', 7)
+      cy.contains('[role="option"]', /^Masterpiece$/)
+      cy.contains('[role="option"]', /^Amazing$/)
+      cy.contains('[role="option"]', /^Great$/)
+      cy.contains('[role="option"]', /^Good$/)
+      cy.contains('[role="option"]', /^Ok$/)
+      cy.contains('[role="option"]', /^Mediocre$/)
+      cy.contains('[role="option"]', /^Bad$/)
+
+      cy.get('h2 + button').click()
+    })
+
     it(`Genre.
       - Games must match at least one genre.`, () => {
       const filterBy = 'Genre'

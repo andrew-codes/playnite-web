@@ -21,6 +21,16 @@ const SelectableListItem = styled(ListItem)(({ theme }) => ({
   },
 }))
 
+const ColorDot = styled('span')<{ dotColor: string }>(({ dotColor }) => ({
+  display: 'inline-block',
+  width: 10,
+  height: 10,
+  borderRadius: '50%',
+  backgroundColor: dotColor,
+  marginRight: 8,
+  flexShrink: 0,
+}))
+
 const ListAutoCompleteOptions: RenderOptions = ({
   getListboxProps,
   getOptionProps,
@@ -32,7 +42,9 @@ const ListAutoCompleteOptions: RenderOptions = ({
         <SelectableListItem
           {...getOptionProps({ option, index })}
           key={option.value}
+          sx={{ display: 'flex', alignItems: 'center' }}
         >
+          {option.color && <ColorDot dotColor={option.color} />}
           {option.display}
         </SelectableListItem>
       ))}

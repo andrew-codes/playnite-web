@@ -233,16 +233,17 @@ const FilterForm: FC<{
           relatedType: filterItem.relatedType,
         })),
       )
-      .map((filterItemValue) =>
-        merge({}, filterItemValue, {
-          display:
-            possibleFilterItems
-              .find((filterItem) => filterItem.field === filterItemValue.field)
-              ?.allowedValues.find(
-                (allowedValue) => allowedValue.value === filterItemValue.value,
-              )?.display ?? filterItemValue.value,
-        }),
-      )
+      .map((filterItemValue) => {
+        const allowedValue = possibleFilterItems
+          .find((filterItem) => filterItem.field === filterItemValue.field)
+          ?.allowedValues.find(
+            (allowedValue) => allowedValue.value === filterItemValue.value,
+          )
+        return merge({}, filterItemValue, {
+          display: allowedValue?.display ?? filterItemValue.value,
+          color: allowedValue?.color ?? null,
+        })
+      })
   }, [state.filterItems, possibleFilterItems])
 
   const allFilterItemRelatedTypes = useMemo(() => {
@@ -365,7 +366,13 @@ const FilterForm: FC<{
                 <Chip
                   label={filterItem.display}
                   onDelete={() => handleRemoveFilter(filterItem.value)}
-                  sx={(theme) => ({ margin: theme.spacing(0.25) })}
+                  sx={(theme) => ({
+                    margin: theme.spacing(0.25),
+                    ...(filterItem.color && {
+                      backgroundColor: filterItem.color,
+                      color: theme.palette.getContrastText(filterItem.color),
+                    }),
+                  })}
                 />
                 <input
                   type="hidden"

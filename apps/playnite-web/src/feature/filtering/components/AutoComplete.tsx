@@ -108,6 +108,7 @@ const StyledTag = styled(Tag)<TagProps>(
 type AutoCompleteItem = {
   display: string
   value: string
+  color?: string | null
 }
 type RenderOptionProps = {
   groupedOptions:

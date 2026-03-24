@@ -5,6 +5,18 @@ import { useSelector } from 'react-redux'
 import { Game } from '../../../../.generated/types.generated'
 import { $filterValuesForQuery } from '../../../api/client/state/librarySlice'
 
+const SCORE_FIELDS = [
+  'primaryRelease.criticScore',
+  'primaryRelease.communityScore',
+]
+
+function scoreMatchesRanges(score: number, ranges: string[]): boolean {
+  return ranges.some((rangeStr) => {
+    const [min, max] = rangeStr.split('-').map(Number)
+    return score >= min && score <= max
+  })
+}
+
 export function useFilteredGames(games: DeepPartial<Game>[]): Array<Game> {
   const { nameFilter, filterItems } = useSelector($filterValuesForQuery)
 
@@ -50,6 +62,13 @@ export function useFilteredGames(games: DeepPartial<Game>[]): Array<Game> {
 
           const gameValue = get(game, filterItem.field)
 
+          if (SCORE_FIELDS.includes(filterItem.field)) {
+            if (gameValue == null) {
+              return false
+            }
+            return scoreMatchesRanges(Number(gameValue), filterItem.values)
+          }
+
           if (!gameValue) {
             return false
           }
@@ -70,3 +89,5 @@ export function useFilteredGames(games: DeepPartial<Game>[]): Array<Game> {
     return filteredGames as Array<Game>
   }, [games, nameFilter, filterItems])
 }
+
+export { scoreMatchesRanges }
