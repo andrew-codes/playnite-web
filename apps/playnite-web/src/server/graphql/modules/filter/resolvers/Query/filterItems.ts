@@ -110,5 +110,31 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
     })
   }
 
+  const sources = await _ctx.db.source.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    where: {
+      Releases: {
+        some: {},
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  })
+  if (sources.length > 0) {
+    filterItems.push({
+      name: 'Source',
+      allowedValues: sources.map((source) => ({
+        value: create('Source', source.id).toString(),
+        display: source.name,
+      })),
+      field: 'primaryRelease.source.id',
+      relatedType: 'Source',
+    })
+  }
+
   return filterItems
 }

@@ -26,6 +26,9 @@ const AllGamesQuery = gql`
           features {
             id
           }
+          source {
+            id
+          }
           hidden
         }
         releases {
