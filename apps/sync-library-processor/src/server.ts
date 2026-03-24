@@ -332,7 +332,7 @@ async function run() {
             where: {
               libraryId,
               playniteId: {
-                in: libraryData.remove.genres,
+                in: libraryData.remove.genres ?? [],
               },
             },
           })
@@ -470,22 +470,23 @@ async function run() {
             `
           }
 
+          const genresToUpdate = libraryData.update.genres ?? []
           logger.debug(
             `Updating library ${libraryId} with new genres`,
-            libraryData.update.genres,
+            genresToUpdate,
           )
           // Genres - batch upsert
-          if (libraryData.update.genres.length > 0) {
+          if (genresToUpdate.length > 0) {
             const now = new Date()
             await prisma.$executeRaw`
               INSERT INTO "Genre" ("playniteId", "name", "libraryId", "createdAt", "updatedAt")
               SELECT *
               FROM ROWS FROM (
-                UNNEST(${libraryData.update.genres.map((g) => g.id)}::text[]),
-                UNNEST(${libraryData.update.genres.map((g) => g.name)}::text[]),
-                UNNEST(${Array(libraryData.update.genres.length).fill(libraryId)}::integer[]),
-                UNNEST(${Array(libraryData.update.genres.length).fill(now)}::timestamp[]),
-                UNNEST(${Array(libraryData.update.genres.length).fill(now)}::timestamp[])
+                UNNEST(${genresToUpdate.map((g) => g.id)}::text[]),
+                UNNEST(${genresToUpdate.map((g) => g.name)}::text[]),
+                UNNEST(${Array(genresToUpdate.length).fill(libraryId)}::integer[]),
+                UNNEST(${Array(genresToUpdate.length).fill(now)}::timestamp[]),
+                UNNEST(${Array(genresToUpdate.length).fill(now)}::timestamp[])
               ) AS t("playniteId", "name", "libraryId", "createdAt", "updatedAt")
               ON CONFLICT ("playniteId", "libraryId")
               DO UPDATE SET
