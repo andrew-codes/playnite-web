@@ -205,3 +205,11 @@ Packages:
       - "fix(PWP-43): allow overwriting existing cover art on manual update"
       - "For more details, see:
         https://public.home.playniteweb.com/wiki/x/AQC6Bw"
+  - Version: 13.9.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.9.0/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_9_0.pext
+    ReleaseDate: 2026-03-24
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat(PWP-116): embedded view supports on deck"
+      - "For more details, see:
+        https://public.home.playniteweb.com/wiki/x/AQC6Bw"
