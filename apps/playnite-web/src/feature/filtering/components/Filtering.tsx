@@ -1,6 +1,7 @@
 'use client'
 
 import { Typography } from '@mui/material'
+import { usePathname } from 'next/navigation'
 import { FC, FormEvent, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -12,6 +13,8 @@ import FilterForm from './FilterForm'
 
 const Filtering: FC<{}> = () => {
   const router = useNavigationRouter()
+  const pathname = usePathname()
+
   const handleFilterCancel = useCallback(
     (evt) => {
       router.back()
@@ -41,9 +44,21 @@ const Filtering: FC<{}> = () => {
         }),
       )
 
-      router.back()
+      // Build the library URL (strip /filters suffix) with filter state as query params
+      const libraryPath = pathname.replace(/\/filters$/, '')
+      const params = new URLSearchParams()
+      if (name !== '') {
+        params.set('nameFilter', name)
+      }
+      if (filters.length > 0) {
+        params.set('filters', JSON.stringify(filters))
+      }
+
+      const queryString = params.toString()
+      const url = queryString ? `${libraryPath}?${queryString}` : libraryPath
+      router.push(url)
     },
-    [router, dispatch],
+    [router, pathname, dispatch],
   )
 
   const activeFilters = useSelector($filterValues)

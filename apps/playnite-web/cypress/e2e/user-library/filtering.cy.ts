@@ -37,6 +37,7 @@ describe('Filtering.', () => {
         cy.location('pathname').should('equal', '/u/test/Library:1', {
           timeout: 2000,
         })
+        cy.location('search').should('include', 'nameFilter=Alan')
         cy.get('[data-test="GameFigure"]')
           .should('have.length', 1)
           .should('contain', 'Alan Wake Remastered')
@@ -52,9 +53,29 @@ describe('Filtering.', () => {
         cy.location('pathname').should('equal', '/u/test/Library:1', {
           timeout: 2000,
         })
+        cy.location('search').should('include', 'nameFilter=')
         cy.get('[data-test="GameFigure"]')
           .should('have.length', 1)
           .should('contain', 'Batman')
+      })
+
+      it('Filters persist after page refresh.', () => {
+        cy.contains('label', 'Find')
+          .parent()
+          .get('input[name="nameFilter"]')
+          .type('Alan')
+        cy.contains('button', 'Filter').as('filterButton').click()
+
+        cy.location('search').should('include', 'nameFilter=Alan')
+        cy.get('[data-test="GameFigure"]')
+          .should('have.length', 1)
+          .should('contain', 'Alan Wake Remastered')
+
+        cy.reload()
+
+        cy.get('[data-test="GameFigure"]')
+          .should('have.length', 1)
+          .should('contain', 'Alan Wake Remastered')
       })
     })
 

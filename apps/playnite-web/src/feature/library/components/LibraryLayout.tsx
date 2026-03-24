@@ -2,11 +2,12 @@
 
 import { useQuery } from '@apollo/client/react'
 import { FilterAlt, PlayArrow } from '@mui/icons-material'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Library } from '../../../../.generated/types.generated'
 import { setCompletionStates } from '../../../api/client/state/completionStatesSlice'
+import { activateFilters } from '../../../api/client/state/librarySlice'
 import { useMe } from '../../account/hooks/me'
 import AuthenticatedNavigation from '../../mainNavigation/components/AuthenticatedNavigation'
 import LibrariesNavigation from '../../mainNavigation/components/LibrariesNavigation'
@@ -29,6 +30,7 @@ const LibraryLayout = ({
   children,
 }: LibraryGamesProps) => {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const { data, error } = useQuery<{ library: Library }>(AllGamesQuery, {
     variables: { libraryId },
@@ -55,6 +57,31 @@ const LibraryLayout = ({
   }
 
   const dispatch = useDispatch()
+
+  // Sync filter state from URL query params to Redux on mount / URL change
+  useEffect(() => {
+    const nameFilter = searchParams.get('nameFilter') ?? ''
+    const filtersParam = searchParams.get('filters')
+    let filterItems: Array<{
+      field: string
+      value: Array<string>
+      relatedType: string
+    }> = []
+    if (filtersParam) {
+      try {
+        filterItems = JSON.parse(filtersParam)
+      } catch {
+        filterItems = []
+      }
+    }
+    dispatch(
+      activateFilters({
+        name: nameFilter === '' ? undefined : nameFilter,
+        filterItems,
+      }),
+    )
+  }, [searchParams, dispatch])
+
   useEffect(() => {
     if (!data?.library?.completionStates) {
       return
@@ -73,7 +100,8 @@ const LibraryLayout = ({
   }
 
   const handleOpenFilter = () => {
-    router.push(`/u/${username}/${libraryId}/filters`)
+    const currentSearch = typeof window !== 'undefined' ? window.location.search : ''
+    router.push(`/u/${username}/${libraryId}/filters${currentSearch}`)
   }
 
   const handleOpenNowPlaying = () => {
