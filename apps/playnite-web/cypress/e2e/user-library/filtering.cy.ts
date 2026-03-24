@@ -274,6 +274,111 @@ describe('Filtering.', () => {
       cy.get('h2 + button').click()
     })
 
+    it(`Source.
+      - Games must match at least one source.`, () => {
+      const filterBy = 'Source'
+      const filterValues = ['Epic']
+      const scoped = 'Metro'
+
+      if (scoped) {
+        cy.contains('label', 'Find')
+          .parent()
+          .get('input[name="nameFilter"]')
+          .type(scoped)
+      }
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      for (const filter of filterValues) {
+        cy.contains(new RegExp(`^${filter}$`)).click()
+      }
+
+      for (const filter of filterValues) {
+        cy.get('@filter').contains(new RegExp(`^${filter}$`))
+      }
+
+      cy.get('h2 + button').click()
+      cy.contains('button', 'Filter').click()
+
+      cy.get('[data-test="GameFigure"]').should('have.length', 2)
+      cy.get('[data-test="GameFigure"]')
+        .eq(0)
+        .contains('figcaption', 'Metro Exodus')
+      cy.get('[data-test="GameFigure"]')
+        .eq(1)
+        .contains('figcaption', 'Metro Exodus Enhanced Edition')
+    })
+
+    it(`Source filter - multiple sources.
+      - Games must match at least one source.`, () => {
+      const filterBy = 'Source'
+      const filterValues = ['Epic', 'Steam']
+      const scoped = 'Metro'
+
+      if (scoped) {
+        cy.contains('label', 'Find')
+          .parent()
+          .get('input[name="nameFilter"]')
+          .type(scoped)
+      }
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      for (const filter of filterValues) {
+        cy.contains(new RegExp(`^${filter}$`)).click()
+      }
+
+      for (const filter of filterValues) {
+        cy.get('@filter').contains(new RegExp(`^${filter}$`))
+      }
+
+      cy.get('h2 + button').click()
+      cy.contains('button', 'Filter').click()
+
+      cy.get('[data-test="GameFigure"]').should('have.length', 4)
+      cy.get('[data-test="GameFigure"]')
+        .eq(0)
+        .contains('figcaption', 'Metro 2033 Redux')
+    })
+
+    it(`Source filter options.
+      - Only sources with games are shown.`, () => {
+      const filterBy = 'Source'
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      cy.get('[role="option"]').should('have.length', 3)
+      cy.contains('[role="option"]', /^Epic$/)
+      cy.contains('[role="option"]', /^PlayStation$/)
+      cy.contains('[role="option"]', /^Steam$/)
+
+      cy.get('h2 + button').click()
+    })
+
     it(`Mixing filters
       - Games must match at least one filter for each filter by.`, () => {
       const filterBy = ['Release Year', 'Feature']
