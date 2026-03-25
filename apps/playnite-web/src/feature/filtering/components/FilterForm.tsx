@@ -16,6 +16,7 @@ import {
   TextField,
   styled,
 } from '@mui/material'
+import { green, purple, red, yellow } from '@mui/material/colors'
 import { keyBy, merge, uniqBy } from 'lodash-es'
 import {
   FC,
@@ -51,6 +52,24 @@ const CloseIconButton = styled(SquareIconButton)(({ theme }) => ({
   right: theme.spacing(3),
   top: theme.spacing(3),
 }))
+
+const filterChipColorStyles: Record<
+  string,
+  { backgroundColor: string; color: string }
+> = {
+  purple: { backgroundColor: purple[500], color: purple[50] },
+  green: { backgroundColor: green[600], color: green[50] },
+  yellow: { backgroundColor: yellow[700], color: '#111827' },
+  red: { backgroundColor: red[500], color: red[50] },
+}
+
+const getFilterChipColorStyles = (color?: string | null) => {
+  if (!color) {
+    return {}
+  }
+
+  return filterChipColorStyles[color] ?? { backgroundColor: color }
+}
 
 type FilterItemValue = {
   field: string
@@ -368,10 +387,7 @@ const FilterForm: FC<{
                   onDelete={() => handleRemoveFilter(filterItem.value)}
                   sx={(theme) => ({
                     margin: theme.spacing(0.25),
-                    ...(filterItem.color && {
-                      backgroundColor: filterItem.color,
-                      color: theme.palette.getContrastText(filterItem.color),
-                    }),
+                    ...getFilterChipColorStyles(filterItem.color),
                   })}
                 />
                 <input

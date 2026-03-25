@@ -272,7 +272,7 @@ describe('Filtering.', () => {
       }
 
       for (const filter of filterValues) {
-        cy.get('@filter').contains(new RegExp(`^${filter}$`))
+        cy.contains('[data-tag-index]', new RegExp(`^${filter}$`))
       }
 
       cy.get('h2 + button').click()
@@ -304,7 +304,7 @@ describe('Filtering.', () => {
       }
 
       for (const filter of filterValues) {
-        cy.get('@filter').contains(new RegExp(`^${filter}$`))
+        cy.contains('[data-tag-index]', new RegExp(`^${filter}$`))
       }
 
       cy.get('h2 + button').click()
