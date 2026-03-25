@@ -9,7 +9,8 @@
     "releases": [],
     "sources": [],
     "tags": [],
-    "genres": []
+    "genres": [],
+    "series": []
   },
   "update": {
     "completionStates": [
@@ -7749,6 +7750,7 @@
         "name": "PlayStation Plus"
       }
     ],
-    "genres": []
+    "genres": [],
+    "series": []
   }
 }

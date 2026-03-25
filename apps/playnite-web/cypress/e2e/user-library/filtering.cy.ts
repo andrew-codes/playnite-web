@@ -268,7 +268,7 @@ describe('Filtering.', () => {
         .click()
 
       for (const filter of filterValues) {
-        cy.contains(new RegExp(`^${filter}$`)).click()
+        cy.contains('[role="option"]', new RegExp(`^${filter}$`)).click()
       }
 
       for (const filter of filterValues) {
@@ -300,7 +300,7 @@ describe('Filtering.', () => {
         .click()
 
       for (const filter of filterValues) {
-        cy.contains(new RegExp(`^${filter}$`)).click()
+        cy.contains('[role="option"]', new RegExp(`^${filter}$`)).click()
       }
 
       for (const filter of filterValues) {
@@ -406,7 +406,7 @@ describe('Filtering.', () => {
         .click()
 
       for (const filter of filterValues) {
-        cy.contains(new RegExp(`^${filter}$`)).click()
+        cy.contains('[role="option"]', new RegExp(`^${filter}$`)).click()
       }
 
       for (const filter of filterValues) {

@@ -347,7 +347,7 @@ async function run() {
             where: {
               libraryId,
               playniteId: {
-                in: libraryData.remove.series,
+                in: libraryData.remove.series ?? [],
               },
             },
           })
@@ -510,22 +510,23 @@ async function run() {
             `
           }
 
+          const seriesToUpdate = libraryData.update.series ?? []
           logger.debug(
             `Updating library ${libraryId} with new series`,
-            libraryData.update.series,
+            seriesToUpdate,
           )
           // Series - batch upsert
-          if (libraryData.update.series.length > 0) {
+          if (seriesToUpdate.length > 0) {
             const now = new Date()
             await prisma.$executeRaw`
               INSERT INTO "Series" ("playniteId", "name", "libraryId", "createdAt", "updatedAt")
               SELECT *
               FROM ROWS FROM (
-                UNNEST(${libraryData.update.series.map((s) => s.id)}::text[]),
-                UNNEST(${libraryData.update.series.map((s) => s.name)}::text[]),
-                UNNEST(${Array(libraryData.update.series.length).fill(libraryId)}::integer[]),
-                UNNEST(${Array(libraryData.update.series.length).fill(now)}::timestamp[]),
-                UNNEST(${Array(libraryData.update.series.length).fill(now)}::timestamp[])
+                UNNEST(${seriesToUpdate.map((s) => s.id)}::text[]),
+                UNNEST(${seriesToUpdate.map((s) => s.name)}::text[]),
+                UNNEST(${Array(seriesToUpdate.length).fill(libraryId)}::integer[]),
+                UNNEST(${Array(seriesToUpdate.length).fill(now)}::timestamp[]),
+                UNNEST(${Array(seriesToUpdate.length).fill(now)}::timestamp[])
               ) AS t("playniteId", "name", "libraryId", "createdAt", "updatedAt")
               ON CONFLICT ("playniteId", "libraryId")
               DO UPDATE SET
