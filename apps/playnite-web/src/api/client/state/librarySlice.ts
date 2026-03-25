@@ -31,8 +31,15 @@ const slice = createSlice({
   },
   reducers: {
     activateFilters(state, action) {
+      const normalizedFilterItems = (action.payload.filterItems ?? []).map(
+        (item) => ({
+          ...item,
+          value: item.value ?? item.values ?? [],
+        }),
+      )
+
       state.activeNameFilters = action.payload.name
-      state.activeFilterItems = keyBy(action.payload.filterItems ?? [], 'field')
+      state.activeFilterItems = keyBy(normalizedFilterItems, 'field')
     },
   },
 })
