@@ -7,6 +7,7 @@ type Library {
   sources: [Source!]!
   features: [Feature!]!
   genres: [Genre!]!
+  series: [Series!]!
   completionStates: [CompletionStatus!]!
   tags: [Tag!]!
   settings: [LibrarySetting!]!
@@ -30,6 +31,7 @@ input LibraryReleaseInput {
   description: String
   features: [String!]
   genres: [String!]
+  series: [String!]
   hidden: Boolean!
   recentActivity: DateTime
   source: String!
@@ -69,6 +71,11 @@ input LibraryGenreInput {
   name: String!
 }
 
+input LibrarySeriesInput {
+  id: String!
+  name: String!
+}
+
 input LibraryUpdateInput {
   releases: [LibraryReleaseInput!]!
   platforms: [LibraryPlatformInput!]!
@@ -77,6 +84,7 @@ input LibraryUpdateInput {
   completionStates: [LibraryCompletionStateInput!]!
   features: [LibraryFeatureInput!]!
   genres: [LibraryGenreInput!]!
+  series: [LibrarySeriesInput!]!
 }
 
 input LibraryRemovalInput {
@@ -87,6 +95,7 @@ input LibraryRemovalInput {
   completionStates: [String!]!
   features: [String!]!
   genres: [String!]!
+  series: [String!]!
 }
 
 input LibraryInput {

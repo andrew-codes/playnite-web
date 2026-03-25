@@ -30,6 +30,7 @@ const tasks = (on, config) => {
           playlists,
           siteSettings,
           genres,
+          seriesList,
         ] = await Promise.all([
           prisma.user.findMany({ include: { Settings: true } }),
           prisma.userSetting.findMany(),
@@ -44,6 +45,7 @@ const tasks = (on, config) => {
           prisma.playlist.findMany(),
           prisma.siteSettings.findMany(),
           prisma.genre.findMany(),
+          prisma.series.findMany(),
         ])
 
         // Get many-to-many relationships
@@ -58,6 +60,9 @@ const tasks = (on, config) => {
         `
         const releaseGenres = await prisma.$queryRaw<any[]>`
           SELECT "A" as "genreId", "B" as "releaseId" FROM "_GenreToRelease"
+        `
+        const releaseSeries = await prisma.$queryRaw<any[]>`
+          SELECT "A" as "releaseId", "B" as "seriesId" FROM "_ReleaseToSeries"
         `
 
         const snapshot = {
@@ -74,10 +79,12 @@ const tasks = (on, config) => {
           playlists,
           siteSettings,
           genres,
+          series: seriesList,
           releaseFeatures,
           releaseTags,
           gamePlaylists,
           releaseGenres,
+          releaseSeries,
         }
 
         // Write to fixture file in db-snapshot subdirectory
@@ -272,6 +279,20 @@ const tasks = (on, config) => {
           })
         }
 
+        // 9b. Series (depends on Library)
+        for (const s of (snapshotData.series ?? [])) {
+          await prisma.series.create({
+            data: {
+              id: s.id,
+              libraryId: s.libraryId,
+              name: s.name,
+              playniteId: s.playniteId,
+              createdAt: s.createdAt,
+              updatedAt: s.updatedAt,
+            },
+          })
+        }
+
         // 10. Games (depends on Library)
         for (const game of snapshotData.games) {
           await prisma.game.create({
@@ -345,6 +366,12 @@ const tasks = (on, config) => {
         for (const rg of (snapshotData.releaseGenres ?? [])) {
           await prisma.$executeRawUnsafe(
             `INSERT INTO "_GenreToRelease" ("A", "B") VALUES (${rg.genreId}, ${rg.releaseId})`,
+          )
+        }
+
+        for (const rs of (snapshotData.releaseSeries ?? [])) {
+          await prisma.$executeRawUnsafe(
+            `INSERT INTO "_ReleaseToSeries" ("A", "B") VALUES (${rs.releaseId}, ${rs.seriesId})`,
           )
         }
 

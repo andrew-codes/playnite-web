@@ -382,6 +382,67 @@ describe('Filtering.', () => {
         .contains('figcaption', 'Batman')
     })
 
+    it(`Series.
+      - Games must match at least one series.`, () => {
+      const filterBy = 'Series'
+      const filterValues = ['Batman']
+      const scoped = 'Bat'
+
+      if (scoped) {
+        cy.contains('label', 'Find')
+          .parent()
+          .get('input[name="nameFilter"]')
+          .type(scoped)
+      }
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      for (const filter of filterValues) {
+        cy.contains(new RegExp(`^${filter}$`)).click()
+      }
+
+      for (const filter of filterValues) {
+        cy.get('@filter').contains(new RegExp(`^${filter}$`))
+      }
+
+      cy.get('h2 + button').click()
+      cy.contains('button', 'Filter').click()
+
+      cy.get('[data-test="GameFigure"]')
+        .as('gameFigures')
+        .eq(0)
+        .contains('figcaption', 'Batman')
+    })
+
+    it(`Series filter options.
+      - Only series with games are shown.`, () => {
+      const filterBy = 'Series'
+
+      cy.contains('label', 'Filter By').parent().click()
+
+      cy.get('[role="listbox"]').contains('li', filterBy).click()
+      cy.contains('label', filterBy)
+        .parent()
+        .as('filter')
+        .find('input[role="combobox"]')
+        .as('lookup')
+        .click()
+
+      cy.get('[role="option"]').should('have.length', 2)
+      cy.contains('[role="option"]', /^Batman$/)
+      cy.contains('[role="option"]', /^Mass Effect$/)
+
+      cy.get('h2 + button').click()
+    })
+
     it(`Genre filter options.
       - Only genres with games are shown.`, () => {
       const filterBy = 'Genre'

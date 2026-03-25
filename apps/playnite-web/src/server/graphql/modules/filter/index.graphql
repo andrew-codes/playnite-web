@@ -9,6 +9,7 @@ enum RelatedType {
   Platform
   Source
   Genre
+  Series
   Publisher
   Developer
   Tag

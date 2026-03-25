@@ -162,6 +162,32 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
     })
   }
 
+  const seriesList = await _ctx.db.series.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    where: {
+      Releases: {
+        some: {},
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  })
+  if (seriesList.length > 0) {
+    filterItems.push({
+      name: 'Series',
+      allowedValues: seriesList.map((s) => ({
+        value: create('Series', s.id).toString(),
+        display: s.name,
+      })),
+      field: 'primaryRelease.series',
+      relatedType: 'Series',
+    })
+  }
+
   const scoreRanges = [
     { display: 'Masterpiece', value: '93-100', color: 'purple' },
     { display: 'Amazing', value: '85-92', color: 'green' },

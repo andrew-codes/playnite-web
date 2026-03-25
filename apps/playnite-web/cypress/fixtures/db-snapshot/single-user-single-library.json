@@ -18483,5 +18483,61 @@
       "genreId": 2,
       "releaseId": 69
     }
+  ],
+  "series": [
+    {
+      "id": 1,
+      "libraryId": 1,
+      "playniteId": "b1c2d3e4-0000-0000-0000-000000000001",
+      "name": "Batman",
+      "createdAt": "2025-11-08T21:37:42.500Z",
+      "updatedAt": "2025-11-08T21:37:42.500Z"
+    },
+    {
+      "id": 2,
+      "libraryId": 1,
+      "playniteId": "b1c2d3e4-0000-0000-0000-000000000002",
+      "name": "Mass Effect",
+      "createdAt": "2025-11-08T21:37:42.500Z",
+      "updatedAt": "2025-11-08T21:37:42.500Z"
+    }
+  ],
+  "releaseSeries": [
+    {
+      "releaseId": 187,
+      "seriesId": 1
+    },
+    {
+      "releaseId": 195,
+      "seriesId": 1
+    },
+    {
+      "releaseId": 254,
+      "seriesId": 1
+    },
+    {
+      "releaseId": 262,
+      "seriesId": 1
+    },
+    {
+      "releaseId": 289,
+      "seriesId": 1
+    },
+    {
+      "releaseId": 402,
+      "seriesId": 1
+    },
+    {
+      "releaseId": 525,
+      "seriesId": 1
+    },
+    {
+      "releaseId": 326,
+      "seriesId": 2
+    },
+    {
+      "releaseId": 526,
+      "seriesId": 2
+    }
   ]
 }

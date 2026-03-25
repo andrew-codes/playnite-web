@@ -6,6 +6,7 @@ type Release {
   description: String
   features: [Feature!]!
   genres: [Genre!]!
+  series: [Series!]!
   game: Game!
   hidden: Boolean!
   platform: Platform!
