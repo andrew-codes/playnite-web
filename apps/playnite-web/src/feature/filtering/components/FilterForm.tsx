@@ -279,7 +279,7 @@ const FilterForm: FC<{
         InputProps={{
           endAdornment: state.nameFilter !== '' && (
             <InputAdornment position="end">
-              <IconButton onClick={handleNameFilterClear}>
+              <IconButton aria-label="Clear name filter" onClick={handleNameFilterClear}>
                 <Clear />
               </IconButton>
             </InputAdornment>
@@ -345,7 +345,7 @@ const FilterForm: FC<{
           <DialogTitle>
             <span>Filter by {currentFilterByName}</span>
           </DialogTitle>
-          <CloseIconButton onClick={handleCloseFilterValues}>
+          <CloseIconButton aria-label="Close filter by dialog" onClick={handleCloseFilterValues}>
             <Clear />
           </CloseIconButton>
           <DialogContent>
