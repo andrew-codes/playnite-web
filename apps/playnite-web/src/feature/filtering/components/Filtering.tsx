@@ -10,16 +10,19 @@ import {
 } from '../../../api/client/state/librarySlice'
 import { useNavigationRouter } from '../../shared/hooks/useNavigationRouter'
 import FilterForm from './FilterForm'
+import { buildLibraryUrlWithFilters } from './filterUrl'
 
 const Filtering: FC<{}> = () => {
   const router = useNavigationRouter()
   const pathname = usePathname()
+  const activeFilters = useSelector($filterValues)
 
   const handleFilterCancel = useCallback(
     (evt) => {
-      router.back()
+      const libraryPath = pathname.replace(/\/filters$/, '')
+      router.push(buildLibraryUrlWithFilters(libraryPath, activeFilters))
     },
-    [router],
+    [router, pathname, activeFilters],
   )
   const dispatch = useDispatch()
   const handleFilterSubmit = useCallback(
@@ -46,22 +49,15 @@ const Filtering: FC<{}> = () => {
 
       // Build the library URL (strip /filters suffix) with filter state as query params
       const libraryPath = pathname.replace(/\/filters$/, '')
-      const params = new URLSearchParams()
-      if (name !== '') {
-        params.set('nameFilter', name)
-      }
-      if (filters.length > 0) {
-        params.set('filters', JSON.stringify(filters))
-      }
-
-      const queryString = params.toString()
-      const url = queryString ? `${libraryPath}?${queryString}` : libraryPath
-      router.push(url)
+      router.push(
+        buildLibraryUrlWithFilters(libraryPath, {
+          nameFilter: name,
+          filterItems: filters,
+        }),
+      )
     },
     [router, pathname, dispatch],
   )
-
-  const activeFilters = useSelector($filterValues)
 
   return (
     <>

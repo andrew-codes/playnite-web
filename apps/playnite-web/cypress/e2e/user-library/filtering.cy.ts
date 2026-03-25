@@ -27,6 +27,37 @@ describe('Filtering.', () => {
     })
 
     describe('Name.', () => {
+      it('Cancel closes direct filter URL to library while keeping applied filters.', () => {
+        cy.visit('/u/test/Library:1/filters?nameFilter=Alan')
+        cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
+
+        cy.contains('button', 'Cancel').click()
+
+        cy.location('pathname').should('equal', '/u/test/Library%3A1', {
+          timeout: 2000,
+        })
+        cy.location('search').should('include', 'nameFilter=Alan')
+        cy.get('[data-test="GameFigure"]')
+          .should('have.length', 1)
+          .should('contain', 'Alan Wake Remastered')
+      })
+
+      it('Cancel closes direct filter URL to on-deck while keeping applied filters.', () => {
+        cy.visit('/u/test/Library:1/on-deck/filters?nameFilter=Alan')
+        cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
+
+        cy.contains('button', 'Cancel').click()
+
+        cy.location('pathname').should(
+          'equal',
+          '/u/test/Library%3A1/on-deck',
+          {
+            timeout: 2000,
+          },
+        )
+        cy.location('search').should('include', 'nameFilter=Alan')
+      })
+
       it('Like name.', () => {
         cy.contains('label', 'Find')
           .parent()
