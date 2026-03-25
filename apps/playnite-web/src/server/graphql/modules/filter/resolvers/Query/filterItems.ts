@@ -162,5 +162,55 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
     })
   }
 
+  const seriesList = await _ctx.db.series.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    where: {
+      Releases: {
+        some: {},
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  })
+  if (seriesList.length > 0) {
+    filterItems.push({
+      name: 'Series',
+      allowedValues: seriesList.map((s) => ({
+        value: create('Series', s.id).toString(),
+        display: s.name,
+      })),
+      field: 'primaryRelease.series',
+      relatedType: 'Series',
+    })
+  }
+
+  const scoreRanges = [
+    { display: 'Masterpiece', value: '93-100', color: 'purple' },
+    { display: 'Amazing', value: '85-92', color: 'green' },
+    { display: 'Great', value: '79-85', color: 'green' },
+    { display: 'Good', value: '72-78', color: 'green' },
+    { display: 'Ok', value: '65-71', color: 'yellow' },
+    { display: 'Mediocre', value: '55-64', color: 'red' },
+    { display: 'Bad', value: '1-54', color: 'red' },
+  ]
+
+  filterItems.push({
+    name: 'Critic Score',
+    allowedValues: scoreRanges,
+    field: 'primaryRelease.criticScore',
+    relatedType: 'CriticScore',
+  })
+
+  filterItems.push({
+    name: 'Community Score',
+    allowedValues: scoreRanges,
+    field: 'primaryRelease.communityScore',
+    relatedType: 'CommunityScore',
+  })
+
   return filterItems
 }

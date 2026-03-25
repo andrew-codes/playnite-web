@@ -75,6 +75,7 @@ model Library {
   Sources   Source[]
   Features  Feature[]
   Genres    Genre[]
+  Series    Series[]
 
   User             User               @relation(fields: [userId], references: [id])
   CompletionStatus CompletionStatus[]
@@ -112,6 +113,7 @@ model Release {
   Source           Source            @relation(fields: [sourceId], references: [id])
   Features         Feature[]
   Genres           Genre[]
+  Series           Series[]
   CompletionStatus CompletionStatus? @relation(fields: [completionStatusId], references: [id])
   Game             Game              @relation(fields: [releaseGameId], references: [id], name: "GameReleases")
   Tags             Tag[]
@@ -177,6 +179,23 @@ model Feature {
 }
 
 model Genre {
+  id         Int      @id @default(autoincrement())
+  libraryId  Int
+  playniteId String?
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  Releases Release[]
+  Library  Library   @relation(fields: [libraryId], references: [id])
+
+  @@unique([name, libraryId])
+  @@unique([playniteId, libraryId])
+  @@index([name, libraryId])
+  @@index([libraryId])
+}
+
+model Series {
   id         Int      @id @default(autoincrement())
   libraryId  Int
   playniteId String?

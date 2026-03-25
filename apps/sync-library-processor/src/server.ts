@@ -338,6 +338,21 @@ async function run() {
           })
           logger.debug(`Removed ${genresRemoved.count} genres.`)
 
+          // Series
+          logger.debug(
+            `Removing series from library ${libraryId}`,
+            libraryData.remove.series,
+          )
+          const seriesRemoved = await prisma.series.deleteMany({
+            where: {
+              libraryId,
+              playniteId: {
+                in: libraryData.remove.series ?? [],
+              },
+            },
+          })
+          logger.debug(`Removed ${seriesRemoved.count} series.`)
+
           // CompletionStates
           logger.debug(
             `Removing completion states from library ${libraryId}`,
@@ -495,6 +510,31 @@ async function run() {
             `
           }
 
+          const seriesToUpdate = libraryData.update.series ?? []
+          logger.debug(
+            `Updating library ${libraryId} with new series`,
+            seriesToUpdate,
+          )
+          // Series - batch upsert
+          if (seriesToUpdate.length > 0) {
+            const now = new Date()
+            await prisma.$executeRaw`
+              INSERT INTO "Series" ("playniteId", "name", "libraryId", "createdAt", "updatedAt")
+              SELECT *
+              FROM ROWS FROM (
+                UNNEST(${seriesToUpdate.map((s) => s.id)}::text[]),
+                UNNEST(${seriesToUpdate.map((s) => s.name)}::text[]),
+                UNNEST(${Array(seriesToUpdate.length).fill(libraryId)}::integer[]),
+                UNNEST(${Array(seriesToUpdate.length).fill(now)}::timestamp[]),
+                UNNEST(${Array(seriesToUpdate.length).fill(now)}::timestamp[])
+              ) AS t("playniteId", "name", "libraryId", "createdAt", "updatedAt")
+              ON CONFLICT ("playniteId", "libraryId")
+              DO UPDATE SET
+                "name" = EXCLUDED."name",
+                "updatedAt" = EXCLUDED."updatedAt"
+            `
+          }
+
           logger.debug(
             `Updating library ${libraryId} with new completion states`,
             libraryData.update.completionStates,
@@ -599,6 +639,7 @@ async function run() {
                   : null,
               features: release.features ?? [],
               genres: release.genres ?? [],
+              series: release.series ?? [],
               tags: release.tags ?? [],
             }
           })
@@ -719,7 +760,7 @@ async function run() {
               insertedReleases.map((r) => [r.playniteId, r.id]),
             )
 
-            // Prepare Features, Genres, and Tags relationships
+            // Prepare Features, Genres, Series, and Tags relationships
             const featureRelations: Array<{
               releaseId: number
               featureId: number
@@ -727,6 +768,10 @@ async function run() {
             const genreRelations: Array<{
               releaseId: number
               genreId: number
+            }> = []
+            const seriesRelations: Array<{
+              releaseId: number
+              seriesId: number
             }> = []
             const tagRelations: Array<{ releaseId: number; tagId: number }> = []
 
@@ -743,6 +788,14 @@ async function run() {
               select: { id: true, playniteId: true },
             })
             const genreIdMap = new Map(genres.map((g) => [g.playniteId, g.id]))
+
+            const seriesList = await prisma.series.findMany({
+              where: { libraryId },
+              select: { id: true, playniteId: true },
+            })
+            const seriesIdMap = new Map(
+              seriesList.map((s) => [s.playniteId, s.id]),
+            )
 
             const tags = await prisma.tag.findMany({
               where: { libraryId },
@@ -779,6 +832,18 @@ async function run() {
                 }
               }
 
+              // Series
+              if (release.series) {
+                for (const seriesPlayniteId of release.series.filter(
+                  (s) => s !== null,
+                )) {
+                  const seriesId = seriesIdMap.get(seriesPlayniteId)
+                  if (seriesId) {
+                    seriesRelations.push({ releaseId, seriesId })
+                  }
+                }
+              }
+
               // Tags
               if (release.tags) {
                 for (const tagPlayniteId of release.tags.filter(
@@ -806,6 +871,10 @@ async function run() {
                 WHERE "B" = ANY(${releaseIds}::integer[])
               `
               await prisma.$executeRaw`
+                DELETE FROM "_ReleaseToSeries"
+                WHERE "A" = ANY(${releaseIds}::integer[])
+              `
+              await prisma.$executeRaw`
                 DELETE FROM "_ReleaseToTag"
                 WHERE "A" = ANY(${releaseIds}::integer[])
               `
@@ -831,6 +900,19 @@ async function run() {
                   FROM ROWS FROM (
                     UNNEST(${genreRelations.map((r) => r.genreId)}::integer[]),
                     UNNEST(${genreRelations.map((r) => r.releaseId)}::integer[])
+                  ) AS t("A", "B")
+                  ON CONFLICT DO NOTHING
+                `
+              }
+
+              // Insert new series relationships
+              if (seriesRelations.length > 0) {
+                await prisma.$executeRaw`
+                  INSERT INTO "_ReleaseToSeries" ("A", "B")
+                  SELECT *
+                  FROM ROWS FROM (
+                    UNNEST(${seriesRelations.map((r) => r.releaseId)}::integer[]),
+                    UNNEST(${seriesRelations.map((r) => r.seriesId)}::integer[])
                   ) AS t("A", "B")
                   ON CONFLICT DO NOTHING
                 `

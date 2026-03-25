@@ -1,0 +1,10 @@
+type Series {
+  id: String!
+  name: String!
+  playniteId: String
+  games: [Game]!
+}
+
+extend type Query {
+  series(id: String!): Series
+}

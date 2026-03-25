@@ -16,6 +16,7 @@ import {
   TextField,
   styled,
 } from '@mui/material'
+import { green, purple, red, yellow } from '@mui/material/colors'
 import { keyBy, merge, uniqBy } from 'lodash-es'
 import {
   FC,
@@ -51,6 +52,24 @@ const CloseIconButton = styled(SquareIconButton)(({ theme }) => ({
   right: theme.spacing(3),
   top: theme.spacing(3),
 }))
+
+const filterChipColorStyles: Record<
+  string,
+  { backgroundColor: string; color: string }
+> = {
+  purple: { backgroundColor: purple[500], color: purple[50] },
+  green: { backgroundColor: green[600], color: green[50] },
+  yellow: { backgroundColor: yellow[700], color: '#111827' },
+  red: { backgroundColor: red[500], color: red[50] },
+}
+
+const getFilterChipColorStyles = (color?: string | null) => {
+  if (!color) {
+    return {}
+  }
+
+  return filterChipColorStyles[color] ?? { backgroundColor: color }
+}
 
 type FilterItemValue = {
   field: string
@@ -233,16 +252,17 @@ const FilterForm: FC<{
           relatedType: filterItem.relatedType,
         })),
       )
-      .map((filterItemValue) =>
-        merge({}, filterItemValue, {
-          display:
-            possibleFilterItems
-              .find((filterItem) => filterItem.field === filterItemValue.field)
-              ?.allowedValues.find(
-                (allowedValue) => allowedValue.value === filterItemValue.value,
-              )?.display ?? filterItemValue.value,
-        }),
-      )
+      .map((filterItemValue) => {
+        const allowedValue = possibleFilterItems
+          .find((filterItem) => filterItem.field === filterItemValue.field)
+          ?.allowedValues.find(
+            (allowedValue) => allowedValue.value === filterItemValue.value,
+          )
+        return merge({}, filterItemValue, {
+          display: allowedValue?.display ?? filterItemValue.value,
+          color: allowedValue?.color ?? null,
+        })
+      })
   }, [state.filterItems, possibleFilterItems])
 
   const allFilterItemRelatedTypes = useMemo(() => {
@@ -365,7 +385,10 @@ const FilterForm: FC<{
                 <Chip
                   label={filterItem.display}
                   onDelete={() => handleRemoveFilter(filterItem.value)}
-                  sx={(theme) => ({ margin: theme.spacing(0.25) })}
+                  sx={(theme) => ({
+                    margin: theme.spacing(0.25),
+                    ...getFilterChipColorStyles(filterItem.color),
+                  })}
                 />
                 <input
                   type="hidden"

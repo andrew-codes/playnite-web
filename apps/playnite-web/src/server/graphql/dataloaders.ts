@@ -5,6 +5,7 @@ export type DataLoaders = {
   completionStatusLoader: DataLoader<number, any>
   releaseFeatureLoader: DataLoader<number, any[]>
   releaseGenreLoader: DataLoader<number, any[]>
+  releaseSeriesLoader: DataLoader<number, any[]>
   releaseTagLoader: DataLoader<number, any[]>
   gameLoader: DataLoader<number, any>
   platformLoader: DataLoader<number, any>
@@ -57,6 +58,23 @@ export function createDataLoaders(db: PrismaClient): DataLoaders {
         }
 
         return releaseIds.map((id) => genresByRelease.get(id) ?? [])
+      },
+    ),
+
+    // Loads series for multiple releases
+    releaseSeriesLoader: new DataLoader(
+      async (releaseIds: readonly number[]) => {
+        const releases = await db.release.findMany({
+          where: { id: { in: [...releaseIds] } },
+          include: { Series: true },
+        })
+
+        const seriesByRelease = new Map<number, any[]>()
+        for (const release of releases) {
+          seriesByRelease.set(release.id, release.Series)
+        }
+
+        return releaseIds.map((id) => seriesByRelease.get(id) ?? [])
       },
     ),
 

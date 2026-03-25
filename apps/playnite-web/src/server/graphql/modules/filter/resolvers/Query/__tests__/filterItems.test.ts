@@ -30,6 +30,12 @@ const makeCtx = (overrides: any = {}) => ({
         { id: 2, name: 'Adventure' },
       ]),
     },
+    series: {
+      findMany: jest.fn().mockResolvedValue([
+        { id: 1, name: 'Batman' },
+        { id: 2, name: 'Mass Effect' },
+      ]),
+    },
     ...overrides,
   },
 })
@@ -136,5 +142,69 @@ it('only requests sources that have releases', async () => {
     const result = await filterItems(null, {}, ctx as any)
 
     expect(result.find((item) => item.name === 'Genre')).toBeUndefined()
+  })
+
+  it('only requests series that have releases', async () => {
+    const ctx = makeCtx()
+
+    const result = await filterItems(null, {}, ctx as any)
+
+    expect(ctx.db.series.findMany).toHaveBeenCalledWith({
+      select: { id: true, name: true },
+      where: {
+        Releases: {
+          some: {},
+        },
+      },
+      orderBy: { name: 'asc' },
+    })
+
+    const seriesFilter = result.find((item) => item.name === 'Series')
+    expect(seriesFilter?.allowedValues).toEqual([
+      { value: 'Series:1', display: 'Batman' },
+      { value: 'Series:2', display: 'Mass Effect' },
+    ])
+    expect(seriesFilter?.field).toBe('primaryRelease.series')
+    expect(seriesFilter?.relatedType).toBe('Series')
+  })
+
+  it('excludes series filter when no series exist', async () => {
+    const ctx = makeCtx({ series: { findMany: jest.fn().mockResolvedValue([]) } })
+
+    const result = await filterItems(null, {}, ctx as any)
+
+    expect(result.find((item) => item.name === 'Series')).toBeUndefined()
+  })
+
+  it('always includes Critic Score filter with preset score ranges', async () => {
+    const ctx = makeCtx()
+
+    const result = await filterItems(null, {}, ctx as any)
+
+    const criticFilter = result.find((item) => item.name === 'Critic Score')
+    expect(criticFilter).toBeDefined()
+    expect(criticFilter?.field).toBe('primaryRelease.criticScore')
+    expect(criticFilter?.relatedType).toBe('CriticScore')
+    expect(criticFilter?.allowedValues).toEqual([
+      { display: 'Masterpiece', value: '93-100', color: 'purple' },
+      { display: 'Amazing', value: '85-92', color: 'green' },
+      { display: 'Great', value: '79-85', color: 'green' },
+      { display: 'Good', value: '72-78', color: 'green' },
+      { display: 'Ok', value: '65-71', color: 'yellow' },
+      { display: 'Mediocre', value: '55-64', color: 'red' },
+      { display: 'Bad', value: '1-54', color: 'red' },
+    ])
+  })
+
+  it('always includes Community Score filter with preset score ranges', async () => {
+    const ctx = makeCtx()
+
+    const result = await filterItems(null, {}, ctx as any)
+
+    const communityFilter = result.find((item) => item.name === 'Community Score')
+    expect(communityFilter).toBeDefined()
+    expect(communityFilter?.field).toBe('primaryRelease.communityScore')
+    expect(communityFilter?.relatedType).toBe('CommunityScore')
+    expect(communityFilter?.allowedValues).toHaveLength(7)
   })
 })

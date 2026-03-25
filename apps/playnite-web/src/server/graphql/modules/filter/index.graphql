@@ -1,6 +1,7 @@
 type FilterItemValue {
   value: String!
   display: String!
+  color: String
 }
 
 enum RelatedType {
@@ -8,10 +9,13 @@ enum RelatedType {
   Platform
   Source
   Genre
+  Series
   Publisher
   Developer
   Tag
   Playlist
+  CriticScore
+  CommunityScore
 }
 
 type FilterItem {

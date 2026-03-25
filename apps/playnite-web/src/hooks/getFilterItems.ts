@@ -8,6 +8,7 @@ const GetFilterItemsQuery = gql`
       allowedValues {
         display
         value
+        color
       }
       field
       name

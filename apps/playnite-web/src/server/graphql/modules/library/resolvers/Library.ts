@@ -74,6 +74,16 @@ export const Library: LibraryResolvers = {
       },
     })
   },
+  series: async (library, _args, ctx) => {
+    return ctx.db.series.findMany({
+      where: {
+        libraryId: library.id,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  },
   tags: async (library, _args, ctx) => {
     return ctx.db.tag.findMany({
       where: {
