@@ -33,7 +33,7 @@ describe('Filtering.', () => {
 
         cy.contains('button', 'Cancel').click()
 
-        cy.location('pathname').should('equal', '/u/test/Library%3A1', {
+        cy.location('pathname').should('equal', '/u/test/Library:1', {
           timeout: 2000,
         })
         cy.location('search').should('include', 'nameFilter=Alan')
@@ -50,7 +50,7 @@ describe('Filtering.', () => {
 
         cy.location('pathname').should(
           'equal',
-          '/u/test/Library%3A1/on-deck',
+          '/u/test/Library:1/on-deck',
           {
             timeout: 2000,
           },
@@ -65,7 +65,7 @@ describe('Filtering.', () => {
           .type('Alan')
         cy.contains('button', 'Filter').as('filterButton').click()
 
-        cy.location('pathname').should('equal', '/u/test/Library%3A1', {
+        cy.location('pathname').should('equal', '/u/test/Library:1', {
           timeout: 2000,
         })
         cy.location('search').should('include', 'nameFilter=Alan')
@@ -81,7 +81,7 @@ describe('Filtering.', () => {
           .type('"Batman"')
         cy.contains('button', 'Filter').as('filterButton').click()
 
-        cy.location('pathname').should('equal', '/u/test/Library%3A1', {
+        cy.location('pathname').should('equal', '/u/test/Library:1', {
           timeout: 2000,
         })
         cy.location('search').should('include', 'nameFilter=')
