@@ -110,8 +110,8 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
     })
   }
 
-  const sources = await _ctx.db.source.findMany({
-    select: {
+ const sources = await _ctx.db.source.findMany({
+ select: {
       id: true,
       name: true,
     },
@@ -133,6 +133,32 @@ export const filterItems: NonNullable<QueryResolvers['filterItems']> = async (
       })),
       field: 'primaryRelease.source.id',
       relatedType: 'Source',
+       })
+  }
+
+  const genres = await _ctx.db.genre.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+    where: {
+      Releases: {
+        some: {},
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  })
+  if (genres.length > 0) {
+    filterItems.push({
+      name: 'Genre',
+      allowedValues: genres.map((genre) => ({
+        value: create('Genre', genre.id).toString(),
+        display: genre.name,
+      })),
+      field: 'primaryRelease.genres',
+      relatedType: 'Genre',
     })
   }
 

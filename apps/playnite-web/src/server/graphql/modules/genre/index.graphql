@@ -1,0 +1,10 @@
+type Genre {
+  id: String!
+  name: String!
+  playniteId: String
+  games: [Game]!
+}
+
+extend type Query {
+  genre(id: String!): Genre
+}

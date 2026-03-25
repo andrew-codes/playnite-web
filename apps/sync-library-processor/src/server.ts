@@ -323,6 +323,21 @@ async function run() {
           })
           logger.debug(`Removed ${tagsRemoved.count} tags.`)
 
+          // Genres
+          logger.debug(
+            `Removing genres from library ${libraryId}`,
+            libraryData.remove.genres,
+          )
+          const genresRemoved = await prisma.genre.deleteMany({
+            where: {
+              libraryId,
+              playniteId: {
+                in: libraryData.remove.genres,
+              },
+            },
+          })
+          logger.debug(`Removed ${genresRemoved.count} genres.`)
+
           // CompletionStates
           logger.debug(
             `Removing completion states from library ${libraryId}`,
@@ -456,6 +471,30 @@ async function run() {
           }
 
           logger.debug(
+            `Updating library ${libraryId} with new genres`,
+            libraryData.update.genres,
+          )
+          // Genres - batch upsert
+          if (libraryData.update.genres.length > 0) {
+            const now = new Date()
+            await prisma.$executeRaw`
+              INSERT INTO "Genre" ("playniteId", "name", "libraryId", "createdAt", "updatedAt")
+              SELECT *
+              FROM ROWS FROM (
+                UNNEST(${libraryData.update.genres.map((g) => g.id)}::text[]),
+                UNNEST(${libraryData.update.genres.map((g) => g.name)}::text[]),
+                UNNEST(${Array(libraryData.update.genres.length).fill(libraryId)}::integer[]),
+                UNNEST(${Array(libraryData.update.genres.length).fill(now)}::timestamp[]),
+                UNNEST(${Array(libraryData.update.genres.length).fill(now)}::timestamp[])
+              ) AS t("playniteId", "name", "libraryId", "createdAt", "updatedAt")
+              ON CONFLICT ("playniteId", "libraryId")
+              DO UPDATE SET
+                "name" = EXCLUDED."name",
+                "updatedAt" = EXCLUDED."updatedAt"
+            `
+          }
+
+          logger.debug(
             `Updating library ${libraryId} with new completion states`,
             libraryData.update.completionStates,
           )
@@ -558,6 +597,7 @@ async function run() {
                   ? completionStatusMap.get(release.completionStatus)
                   : null,
               features: release.features ?? [],
+              genres: release.genres ?? [],
               tags: release.tags ?? [],
             }
           })
@@ -678,10 +718,14 @@ async function run() {
               insertedReleases.map((r) => [r.playniteId, r.id]),
             )
 
-            // Prepare Features relationships
+            // Prepare Features, Genres, and Tags relationships
             const featureRelations: Array<{
               releaseId: number
               featureId: number
+            }> = []
+            const genreRelations: Array<{
+              releaseId: number
+              genreId: number
             }> = []
             const tagRelations: Array<{ releaseId: number; tagId: number }> = []
 
@@ -692,6 +736,12 @@ async function run() {
             const featureIdMap = new Map(
               features.map((f) => [f.playniteId, f.id]),
             )
+
+            const genres = await prisma.genre.findMany({
+              where: { libraryId },
+              select: { id: true, playniteId: true },
+            })
+            const genreIdMap = new Map(genres.map((g) => [g.playniteId, g.id]))
 
             const tags = await prisma.tag.findMany({
               where: { libraryId },
@@ -712,6 +762,18 @@ async function run() {
                   const featureId = featureIdMap.get(featurePlayniteId)
                   if (featureId) {
                     featureRelations.push({ releaseId, featureId })
+                  }
+                }
+              }
+
+              // Genres
+              if (release.genres) {
+                for (const genrePlayniteId of release.genres.filter(
+                  (g) => g !== null,
+                )) {
+                  const genreId = genreIdMap.get(genrePlayniteId)
+                  if (genreId) {
+                    genreRelations.push({ releaseId, genreId })
                   }
                 }
               }
@@ -739,6 +801,10 @@ async function run() {
                 WHERE "B" = ANY(${releaseIds}::integer[])
               `
               await prisma.$executeRaw`
+                DELETE FROM "_GenreToRelease"
+                WHERE "B" = ANY(${releaseIds}::integer[])
+              `
+              await prisma.$executeRaw`
                 DELETE FROM "_ReleaseToTag"
                 WHERE "A" = ANY(${releaseIds}::integer[])
               `
@@ -751,6 +817,19 @@ async function run() {
                   FROM ROWS FROM (
                     UNNEST(${featureRelations.map((r) => r.featureId)}::integer[]),
                     UNNEST(${featureRelations.map((r) => r.releaseId)}::integer[])
+                  ) AS t("A", "B")
+                  ON CONFLICT DO NOTHING
+                `
+              }
+
+              // Insert new genre relationships
+              if (genreRelations.length > 0) {
+                await prisma.$executeRaw`
+                  INSERT INTO "_GenreToRelease" ("A", "B")
+                  SELECT *
+                  FROM ROWS FROM (
+                    UNNEST(${genreRelations.map((r) => r.genreId)}::integer[]),
+                    UNNEST(${genreRelations.map((r) => r.releaseId)}::integer[])
                   ) AS t("A", "B")
                   ON CONFLICT DO NOTHING
                 `

@@ -6,6 +6,7 @@ type Library {
   playlists: [Playlist!]!
   sources: [Source!]!
   features: [Feature!]!
+  genres: [Genre!]!
   completionStates: [CompletionStatus!]!
   tags: [Tag!]!
   settings: [LibrarySetting!]!
@@ -28,6 +29,7 @@ input LibraryReleaseInput {
   criticScore: Int
   description: String
   features: [String!]
+  genres: [String!]
   hidden: Boolean!
   recentActivity: DateTime
   source: String!
@@ -62,6 +64,11 @@ input LibraryFeatureInput {
   name: String!
 }
 
+input LibraryGenreInput {
+  id: String!
+  name: String!
+}
+
 input LibraryUpdateInput {
   releases: [LibraryReleaseInput!]!
   platforms: [LibraryPlatformInput!]!
@@ -69,6 +76,7 @@ input LibraryUpdateInput {
   tags: [LibraryTagInput!]!
   completionStates: [LibraryCompletionStateInput!]!
   features: [LibraryFeatureInput!]!
+  genres: [LibraryGenreInput!]!
 }
 
 input LibraryRemovalInput {
@@ -78,6 +86,7 @@ input LibraryRemovalInput {
   tags: [String!]!
   completionStates: [String!]!
   features: [String!]!
+  genres: [String!]!
 }
 
 input LibraryInput {

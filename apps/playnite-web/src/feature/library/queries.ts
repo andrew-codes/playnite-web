@@ -29,6 +29,9 @@ const AllGamesQuery = gql`
           source {
             id
           }
+          genres {
+            id
+          }
           hidden
         }
         releases {
