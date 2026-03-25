@@ -5,6 +5,7 @@ type Release {
   criticScore: Int
   description: String
   features: [Feature!]!
+  genres: [Genre!]!
   game: Game!
   hidden: Boolean!
   platform: Platform!

@@ -20,6 +20,7 @@ const config: CodegenConfig = {
             '../src/server/graphql/resolverTypes#GraphEntityCollectionUpdateDetails',
           Feature: '../src/server/graphql/resolverTypes#GraphFeature',
           Game: '../src/server/graphql/resolverTypes#GraphGame',
+          Genre: '../src/server/graphql/resolverTypes#GraphGenre',
           Release: '../src/server/graphql/resolverTypes#GraphRelease',
           Platform: '../src/server/graphql/resolverTypes#GraphPlatform',
           Playlist: '../src/server/graphql/resolverTypes#GraphPlaylist',

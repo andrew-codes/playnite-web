@@ -1,38 +1,38 @@
 import { jest } from '@jest/globals'
 import { filterItems } from '../filterItems'
 
-function makeCtx(overrides: Record<string, any> = {}) {
-  return {
-    db: {
-      release: {
-        findMany: jest.fn().mockResolvedValue([
-          { releaseYear: 2024 },
-          { releaseYear: 2023 },
-          { releaseYear: null },
-        ]),
-      },
-      completionStatus: {
-        findMany: jest.fn().mockResolvedValue([{ id: 1, name: 'Completed' }]),
-      },
-      feature: {
-        findMany: jest.fn().mockResolvedValue([{ id: 1, name: 'Co-op' }]),
-      },
-      platform: {
-        findMany: jest.fn().mockResolvedValue([
-          { id: 1, name: 'PC (Windows)' },
-          { id: 2, name: 'Sony PlayStation 5' },
-        ]),
-      },
-      source: {
+const makeCtx = (overrides: any = {}) => ({
+  db: {
+    release: {
+      findMany: jest.fn().mockResolvedValue([{ releaseYear: 2024 }]),
+    },
+    completionStatus: {
+      findMany: jest.fn().mockResolvedValue([{ id: 1, name: 'Completed' }]),
+    },
+    feature: {
+      findMany: jest.fn().mockResolvedValue([{ id: 1, name: 'Co-op' }]),
+    },
+    platform: {
+      findMany: jest.fn().mockResolvedValue([
+        { id: 1, name: 'PC (Windows)' },
+        { id: 2, name: 'Sony PlayStation 5' },
+      ]),
+    },
+     source: {
         findMany: jest.fn().mockResolvedValue([
           { id: 1, name: 'GOG' },
           { id: 2, name: 'Steam' },
         ]),
       },
-      ...overrides,
+    genre: {
+      findMany: jest.fn().mockResolvedValue([
+        { id: 1, name: 'Action' },
+        { id: 2, name: 'Adventure' },
+      ]),
     },
-  }
-}
+    ...overrides,
+  },
+})
 
 describe('filterItems resolver', () => {
   it('only requests platforms that have releases', async () => {
@@ -61,13 +61,13 @@ describe('filterItems resolver', () => {
     ])
   })
 
-  it('only requests sources that have releases', async () => {
+it('only requests sources that have releases', async () => {
     const ctx = makeCtx()
 
     await filterItems(null, {}, ctx as any)
 
     expect(ctx.db.source.findMany).toHaveBeenCalledWith({
-      select: { id: true, name: true },
+  select: { id: true, name: true },
       where: {
         Releases: {
           some: {},
@@ -103,5 +103,38 @@ describe('filterItems resolver', () => {
 
     const sourceFilter = result.find((item) => item.name === 'Source')
     expect(sourceFilter).toBeUndefined()
+  })
+
+
+  it('only requests genres that have releases', async () => {
+    const ctx = makeCtx()
+
+    const result = await filterItems(null, {}, ctx as any)
+
+    expect(ctx.db.genre.findMany).toHaveBeenCalledWith({
+      select: { id: true, name: true },
+      where: {
+        Releases: {
+          some: {},
+        },
+      },
+      orderBy: { name: 'asc' },
+    })
+
+    const genreFilter = result.find((item) => item.name === 'Genre')
+    expect(genreFilter?.allowedValues).toEqual([
+      { value: 'Genre:1', display: 'Action' },
+      { value: 'Genre:2', display: 'Adventure' },
+    ])
+    expect(genreFilter?.field).toBe('primaryRelease.genres')
+    expect(genreFilter?.relatedType).toBe('Genre')
+  })
+
+  it('excludes genre filter when no genres exist', async () => {
+    const ctx = makeCtx({ genre: { findMany: jest.fn().mockResolvedValue([]) } })
+
+    const result = await filterItems(null, {}, ctx as any)
+
+    expect(result.find((item) => item.name === 'Genre')).toBeUndefined()
   })
 })

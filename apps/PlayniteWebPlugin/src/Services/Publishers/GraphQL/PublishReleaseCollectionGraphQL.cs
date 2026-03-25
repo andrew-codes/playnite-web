@@ -54,9 +54,8 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
                    completionStatus = g.GetValue("CompletionStatusId"),
                    hidden = g.GetValue("Hidden"),
                    features = g.GetValue("FeatureIds"),
+                   genres = g.GetValue("GenreIds"),
                    tags = g.GetValue("TagIds"),
-                   //genres = g.Genres.Select(ge => ge.Id),
-                   //categories = g.Categories.Select(c => c.Id),
                    releaseDate = releaseDate.HasValue ? releaseDate.Value.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture) : (string)null,
                    playtime = g.GetValue("Playtime")
                  };
@@ -66,6 +65,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               tags = Enumerable.Empty<object>(),
               completionStates = Enumerable.Empty<object>(),
               features = Enumerable.Empty<object>(),
+              genres = Enumerable.Empty<object>(),
             },
             remove = new
             {
@@ -75,6 +75,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               tags = Enumerable.Empty<string>(),
               completionStates = Enumerable.Empty<string>(),
               features = Enumerable.Empty<string>(),
+              genres = Enumerable.Empty<string>(),
             }
           }
         }

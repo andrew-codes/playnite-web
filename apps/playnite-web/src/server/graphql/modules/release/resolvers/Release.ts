@@ -23,6 +23,9 @@ export const Release: ReleaseResolvers = {
   features: async (_parent, _arg, _ctx) => {
     return _ctx.loaders.releaseFeatureLoader.load(Number(_parent.id))
   },
+  genres: async (_parent, _arg, _ctx) => {
+    return _ctx.loaders.releaseGenreLoader.load(Number(_parent.id))
+  },
   game: async (_parent, _arg, _ctx) => {
     const output = await _ctx.loaders.gameLoader.load(
       Number(_parent.releaseGameId),

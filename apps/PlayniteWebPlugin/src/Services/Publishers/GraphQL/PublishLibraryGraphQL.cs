@@ -55,9 +55,8 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
                    completionStatus = g.CompletionStatusId,
                    hidden = g.Hidden,
                    features = g.FeatureIds ?? Enumerable.Empty<Guid>(),
+                   genres = g.GenreIds ?? Enumerable.Empty<Guid>(),
                    tags = g.TagIds ?? Enumerable.Empty<Guid>(),
-                   //genres = g.Genres.Select(ge => ge.Id),
-                   //categories = g.Categories.Select(c => c.Id),
                    releaseDate = !g.ReleaseDate.HasValue ? (string)null : g.ReleaseDate.Value.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
                    playtime = g.Playtime.ToString(),
                    recentActivity = !g.LastActivity.HasValue ? (string)null : g.LastActivity.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture),
@@ -67,6 +66,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               tags = db.Tags.Select(t => new { id = t.Id, name = t.Name }),
               completionStates = db.CompletionStatuses.Select(c => new { id = c.Id, name = c.Name }),
               features = db.Features.Select(f => new { id = f.Id, name = f.Name }),
+              genres = db.Genres.Select(g => new { id = g.Id, name = g.Name }),
             },
             remove = new
             {
@@ -76,6 +76,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               tags = Enumerable.Empty<string>(),
               completionStates = Enumerable.Empty<string>(),
               features = Enumerable.Empty<string>(),
+              genres = Enumerable.Empty<string>(),
             }
           }
         }

@@ -10,6 +10,7 @@ type GameReleaseStateSubscriptionPayload = {
 }
 type GraphPlatform = Prisma.PlatformGetPayload<{}>
 type GraphFeature = Prisma.FeatureGetPayload<{}>
+type GraphGenre = Prisma.GenreGetPayload<{}>
 
 type GraphCompletionStatus = Prisma.CompletionStatusGetPayload<{}>
 
@@ -78,6 +79,7 @@ export type {
   GraphEntityUpdateDetails,
   GraphFeature,
   GraphGame,
+  GraphGenre,
   GraphLibrary,
   GraphLibrarySetting,
   GraphPlatform,
