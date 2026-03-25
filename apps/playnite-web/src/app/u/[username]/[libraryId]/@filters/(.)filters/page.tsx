@@ -1,16 +1,11 @@
-import Filtering from '../../../../../../feature/filtering/components/Filtering'
-import RightDrawer from '../../../../../../feature/shared/components/RightDrawer'
+import FilteringDrawer from '../../../../../../feature/filtering/components/FilteringDrawer'
 
 interface GameDetailsPageProps {
   params: { username: string; libraryId: string }
 }
 
 async function Filters({ params }: GameDetailsPageProps) {
-  return (
-    <RightDrawer>
-      <Filtering />
-    </RightDrawer>
-  )
+  return <FilteringDrawer />
 }
 
 export default Filters

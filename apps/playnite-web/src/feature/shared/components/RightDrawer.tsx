@@ -124,12 +124,17 @@ const DrawerBody = styled('div', {
 const RightDrawer: FC<
   PropsWithChildren<{
     disableTransition?: boolean
+    onClose?: () => void
   }>
-> = ({ children, disableTransition }) => {
+> = ({ children, disableTransition, onClose }) => {
   const router = useNavigationRouter()
   const handleClose = useCallback(() => {
-    router.back()
-  }, [router])
+    if (onClose) {
+      onClose()
+    } else {
+      router.back()
+    }
+  }, [router, onClose])
 
   const [open, setOpen] = useState(false)
   useEffect(() => {
