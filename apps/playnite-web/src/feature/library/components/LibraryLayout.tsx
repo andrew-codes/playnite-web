@@ -2,7 +2,7 @@
 
 import { useQuery } from '@apollo/client/react'
 import { FilterAlt, PlayArrow } from '@mui/icons-material'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Library } from '../../../../.generated/types.generated'
@@ -30,6 +30,7 @@ const LibraryLayout = ({
   children,
 }: LibraryGamesProps) => {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
 
   const { data, error } = useQuery<{ library: Library }>(AllGamesQuery, {
@@ -101,7 +102,12 @@ const LibraryLayout = ({
 
   const handleOpenFilter = () => {
     const currentSearch = typeof window !== 'undefined' ? window.location.search : ''
-    router.push(`/u/${username}/${libraryId}/filters${currentSearch}`)
+    const libraryBasePath = `/u/${username}/${libraryId}`
+    const isOnDeck = pathname.startsWith(`${libraryBasePath}/on-deck`)
+    const filtersPath = isOnDeck
+      ? `${libraryBasePath}/on-deck/filters`
+      : `${libraryBasePath}/filters`
+    router.push(`${filtersPath}${currentSearch}`)
   }
 
   const handleOpenNowPlaying = () => {
