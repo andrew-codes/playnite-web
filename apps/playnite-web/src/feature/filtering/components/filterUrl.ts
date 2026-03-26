@@ -20,8 +20,13 @@ function buildLibraryUrlWithFilters(
     params.set('filters', JSON.stringify(activeFilters.filterItems ?? []))
   }
 
+  const encodedPath = libraryPath
+    .split('/')
+    .map((segment) => encodeURIComponent(segment))
+    .join('/')
+
   const queryString = params.toString()
-  return queryString ? `${libraryPath}?${queryString}` : libraryPath
+  return queryString ? `${encodedPath}?${queryString}` : encodedPath
 }
 
 export { buildLibraryUrlWithFilters }

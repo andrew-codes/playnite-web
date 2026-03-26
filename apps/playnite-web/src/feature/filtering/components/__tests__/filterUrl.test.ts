@@ -13,7 +13,7 @@ describe('buildLibraryUrlWithFilters', () => {
       ],
     })
 
-    expect(url).toContain('/u/test/Library:1?')
+    expect(url).toContain('/u/test/Library%3A1?')
     expect(url).toContain('nameFilter=Alan')
     expect(url).toContain('filters=')
   })
@@ -24,6 +24,6 @@ describe('buildLibraryUrlWithFilters', () => {
       filterItems: [],
     })
 
-    expect(url).toBe('/u/test/Library:1/on-deck')
+    expect(url).toBe('/u/test/Library%3A1/on-deck')
   })
 })
