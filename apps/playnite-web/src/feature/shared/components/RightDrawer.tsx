@@ -128,21 +128,23 @@ const RightDrawer: FC<
   }>
 > = ({ children, disableTransition, onClose }) => {
   const router = useNavigationRouter()
-  const handleClose = useCallback(() => {
-    if (onClose) {
-      onClose()
-    } else {
-      router.back()
-    }
-  }, [router, onClose])
-
   const [open, setOpen] = useState(false)
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setOpen(true)
     }, 100)
     return () => clearTimeout(timer)
   }, [disableTransition])
+
+  const handleClose = useCallback(() => {
+    setOpen(false)
+    if (onClose) {
+      onClose()
+    } else {
+      router.back()
+    }
+  }, [router, onClose])
 
   return (
     <Drawer

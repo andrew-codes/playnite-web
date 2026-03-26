@@ -10,19 +10,26 @@ import {
 } from '../../../api/client/state/librarySlice'
 import { useNavigationRouter } from '../../shared/hooks/useNavigationRouter'
 import FilterForm from './FilterForm'
-import { buildLibraryUrlWithFilters } from './filterUrl'
+import { ActiveFilters, buildLibraryUrlWithFilters } from './filterUrl'
 
-const Filtering: FC<{}> = () => {
+const Filtering: FC<{
+  onFilter?: (filters: ActiveFilters) => void
+  onCancel?: () => void
+}> = ({ onFilter, onCancel }) => {
   const router = useNavigationRouter()
   const pathname = usePathname()
   const activeFilters = useSelector($filterValues)
 
   const handleFilterCancel = useCallback(
     (evt) => {
-      const libraryPath = pathname.replace(/\/filters$/, '')
-      router.push(buildLibraryUrlWithFilters(libraryPath, activeFilters))
+      if (onCancel) {
+        onCancel()
+      } else {
+        const libraryPath = pathname.replace(/\/filters$/, '')
+        router.push(buildLibraryUrlWithFilters(libraryPath, activeFilters))
+      }
     },
-    [router, pathname, activeFilters],
+    [onCancel, router, pathname, activeFilters],
   )
   const dispatch = useDispatch()
   const handleFilterSubmit = useCallback(
@@ -47,16 +54,21 @@ const Filtering: FC<{}> = () => {
         }),
       )
 
-      // Build the library URL (strip /filters suffix) with filter state as query params
-      const libraryPath = pathname.replace(/\/filters$/, '')
-      router.push(
-        buildLibraryUrlWithFilters(libraryPath, {
-          nameFilter: name,
-          filterItems: filters,
-        }),
-      )
+      const newFilters: ActiveFilters = {
+        nameFilter: name,
+        filterItems: filters,
+      }
+
+      if (onFilter) {
+        onFilter(newFilters)
+      } else {
+        // Fallback: when used outside FilteringDrawer (e.g., EmbeddableLibrary),
+        // navigate directly using the current Next.js pathname.
+        const libraryPath = pathname.replace(/\/filters$/, '')
+        router.push(buildLibraryUrlWithFilters(libraryPath, newFilters))
+      }
     },
-    [router, pathname, dispatch],
+    [router, pathname, dispatch, onFilter],
   )
 
   return (
