@@ -26,6 +26,7 @@ import RightDrawer from '../../shared/components/RightDrawer'
 import TopDrawer from '../../shared/components/TopDrawer'
 import { GameDetails } from '../../game/components/GameDetails'
 import Filtering from '../../filtering/components/Filtering'
+import type { ActiveFilters } from '../../filtering/components/filterUrl'
 import {
   AllGamesQuery,
   LibraryLastRouteQuery,
@@ -106,9 +107,25 @@ const GameDetailsView = () => {
 }
 
 const FiltersView = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const handleClose = useCallback(() => {
+    const basePath = location.pathname.replace(/\/filters$/, '')
+    navigate(basePath || '/')
+  }, [navigate, location.pathname])
+
+  const handleFilter = useCallback(
+    (_filters: ActiveFilters) => {
+      const basePath = location.pathname.replace(/\/filters$/, '')
+      navigate(basePath || '/')
+    },
+    [navigate, location.pathname],
+  )
+
   return (
     <RightDrawer>
-      <Filtering />
+      <Filtering onFilter={handleFilter} onCancel={handleClose} />
     </RightDrawer>
   )
 }
