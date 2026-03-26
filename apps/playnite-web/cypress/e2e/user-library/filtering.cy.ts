@@ -1,6 +1,5 @@
 import { breakpoints } from '../../support/breakpoints'
 
-// Filtering is broken; tracked in separate issue.
 describe('Filtering.', () => {
   describe('Filter button opens filter pane.', () => {
     Cypress._.each(breakpoints, ([breakpointName, x, y]) => {
@@ -11,6 +10,20 @@ describe('Filtering.', () => {
       it(`${breakpointName}.
     - Is navigable by URL.`, () => {
         cy.visit(`/u/test/Library:1`)
+
+        cy.get('[aria-label="Open filter drawer"]').click({ force: true })
+        cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
+      })
+
+      it(`${breakpointName}.
+    - Can be re-opened after closing.`, () => {
+        cy.visit(`/u/test/Library:1`)
+
+        cy.get('[aria-label="Open filter drawer"]').click({ force: true })
+        cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
+
+        cy.contains('button', 'Cancel').click()
+        cy.contains('h4', 'Filters').should('not.exist')
 
         cy.get('[aria-label="Open filter drawer"]').click({ force: true })
         cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
