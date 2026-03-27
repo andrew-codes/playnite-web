@@ -24,7 +24,6 @@ const FilteringDrawer: FC<{ disableTransition?: boolean }> = ({
   }, [pathname])
 
   const handleClose = useCallback(() => {
-    setClosing(true)
     const libraryPath = pathname.replace(/\/filters$/, '')
     router.push(buildLibraryUrlWithFilters(libraryPath, activeFilters))
   }, [router, pathname, activeFilters])
