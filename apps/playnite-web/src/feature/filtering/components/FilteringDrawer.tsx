@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { FC, useCallback, useEffect, useState } from 'react'
+import { FC, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { $filterValues } from '../../../api/client/state/librarySlice'
 import RightDrawer from '../../shared/components/RightDrawer'
@@ -15,30 +15,21 @@ const FilteringDrawer: FC<{ disableTransition?: boolean }> = ({
   const router = useNavigationRouter()
   const pathname = usePathname()
   const activeFilters = useSelector($filterValues)
-  const [closing, setClosing] = useState(false)
-
-  useEffect(() => {
-    if (pathname?.endsWith('/filters')) {
-      setClosing(false)
-    }
-  }, [pathname])
 
   const handleClose = useCallback(() => {
-    setClosing(true)
     const libraryPath = pathname.replace(/\/filters$/, '')
     router.push(buildLibraryUrlWithFilters(libraryPath, activeFilters))
   }, [router, pathname, activeFilters])
 
   const handleFilter = useCallback(
     (filters: ActiveFilters) => {
-      setClosing(true)
       const libraryPath = pathname.replace(/\/filters$/, '')
       router.push(buildLibraryUrlWithFilters(libraryPath, filters))
     },
     [router, pathname],
   )
 
-  if (closing || !pathname?.endsWith('/filters')) {
+  if (!pathname?.endsWith('/filters')) {
     return null
   }
 
