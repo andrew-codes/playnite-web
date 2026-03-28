@@ -23,7 +23,13 @@ const FilteringDrawer: FC<{ disableTransition?: boolean }> = ({
     }
   }, [pathname])
 
-  const handleClose = useCallback(() => {
+  const handleCancelClose = useCallback(() => {
+    const libraryPath = pathname.replace(/\/filters$/, '')
+    router.push(buildLibraryUrlWithFilters(libraryPath, activeFilters))
+  }, [router, pathname, activeFilters])
+
+  const handleXClose = useCallback(() => {
+    setClosing(true)
     const libraryPath = pathname.replace(/\/filters$/, '')
     router.push(buildLibraryUrlWithFilters(libraryPath, activeFilters))
   }, [router, pathname, activeFilters])
@@ -42,8 +48,8 @@ const FilteringDrawer: FC<{ disableTransition?: boolean }> = ({
   }
 
   return (
-    <RightDrawer disableTransition={disableTransition} onClose={handleClose}>
-      <Filtering onFilter={handleFilter} onCancel={handleClose} />
+    <RightDrawer disableTransition={disableTransition} onClose={handleXClose}>
+      <Filtering onFilter={handleFilter} onCancel={handleCancelClose} />
     </RightDrawer>
   )
 }
