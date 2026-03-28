@@ -1,51 +1,39 @@
-# Project: Playnite Web
+# Playnite Web
 
-## Description
+A suite of services for viewing your Playnite game library on the web.
 
-Playnite Web is a suite of services that allows viewing video games from your Playnite library on the web.
-
-## Tech Stack
-
-Unless otherwise stated.
+## Stack
 
 - Frontend: React, TypeScript, GraphQL client
-- Backend: Node.js, Next.js with app router and rsc, Yoga GraphQL server, Graphql-WS for graph subscriptions
+- Backend: Node.js, Next.js (app router + RSC), Yoga GraphQL, graphql-ws
 - Database: Postgres
-- Testing: Jest, Cypress component, Cypress e2e
-- Monorepo and packages: Nx, Yarn workspaces
-- Release: semantic release, packaged Docker images
+- Testing: Jest, Cypress (component + e2e)
+- Monorepo: Nx, Yarn workspaces
+- Release: semantic-release, Docker
 
-# Agent Instructions
+## Package Manager
 
-## Code Conventions
+Yarn. Always use `yarn nx` to run tasks — never invoke the underlying tooling directly.
 
-- Use Functional components with hooks
-- Use camelCase for variables and functions in TypeScript
-- Use PascalCase for components, classes
-- Follow normal dotnet casing and conventions in C#
-- All module exports are at bottom of file. Do not inline export.
+## Key Commands
 
-## Important Scripts
-- `yarn nx start web`: Start development Playnite Web application
-- `yarn nx test/unit`: Run unit tests for Nx project
-- `yarn nx test/component`: run component tests
-- `yarn nx test/e2e`: run e2e tests
-- `yarn nx lint`: run linter
+- `yarn nx start web` — start dev server
+- `yarn nx test/unit <project>` — unit tests
+- `yarn nx test/component <project>` — component tests
+- `yarn nx test/e2e <project>` — e2e tests
+- `yarn nx lint <project>` — lint
 
-## Feature Specs
+## Tools
 
-Summarize and document implementation notes as a feature spec in Confluence. They should target both human and AI consumption. Each major feature receives a single feature spec. Feature specs are child pages to https://public.home.playniteweb.com/wiki/x/AQC6Bw.
+Prefer Serena MCP tools (`find_symbol`, `get_symbols_overview`, `find_referencing_symbols`) over grep or find for navigating and understanding code. Use grep only when searching for raw text patterns that are not symbols.
 
-<!-- nx configuration start-->
-<!-- Leave the start & end comments to automatically receive updates. -->
+## Testing
 
-# General Guidelines for working with Nx
+Write tests for all new functionality.
 
-- When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
-- You have access to the Nx MCP server and its tools, use them to help the user
-- When answering questions about the repository, use the `nx_workspace` tool first to gain an understanding of the workspace architecture where applicable.
-- When working in individual projects, use the `nx_project_details` mcp tool to analyze and understand the specific project structure and dependencies
-- For questions around nx configuration, best practices or if you're unsure, use the `nx_docs` tool to get relevant, up-to-date docs. Always use this instead of assuming things about nx configuration
-- If the user needs help with an Nx configuration or project graph error, use the `nx_workspace` tool to get any errors
+## Further Reading
 
-<!-- nx configuration end-->
+- [Code Conventions](.agents/conventions.md)
+- [Nx Guidelines](.agents/nx.md)
+- [Feature Workflow](.agents/workflow.md)
+- [Writing AGENTS.md Files](.agents/writing-agents.md)
