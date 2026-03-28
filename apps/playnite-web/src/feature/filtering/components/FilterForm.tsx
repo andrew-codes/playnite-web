@@ -435,7 +435,7 @@ const FilterForm: FC<{
         <Button type="reset" size="large">
           Clear
         </Button>
-        <Button onClick={handleCancel} size="large" type="button">
+        <Button onClick={handleCancel} size="large">
           Cancel
         </Button>
       </Box>

@@ -22,13 +22,7 @@ function buildLibraryUrlWithFilters(
 
   const encodedPath = libraryPath
     .split('/')
-    .map((segment) => {
-      try {
-        return encodeURIComponent(decodeURIComponent(segment))
-      } catch {
-        return encodeURIComponent(segment)
-      }
-    })
+    .map((segment) => encodeURIComponent(segment))
     .join('/')
 
   const queryString = params.toString()
