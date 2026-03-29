@@ -138,10 +138,10 @@ const RightDrawer: FC<
   }, [disableTransition])
 
   const handleClose = useCallback(() => {
-    setOpen(false)
     if (onClose) {
       onClose()
     } else {
+      setOpen(false)
       router.back()
     }
   }, [router, onClose])
@@ -155,7 +155,7 @@ const RightDrawer: FC<
     >
       <DrawerHeader open={open}>
         <IconButton
-          onClick={handleClose}
+          onClick={onClose ?? handleClose}
           name="close-drawer"
           aria-label="close drawer"
         >
@@ -163,7 +163,7 @@ const RightDrawer: FC<
         </IconButton>
       </DrawerHeader>
       <DrawerBody open={open}>
-        <div>{children}</div>
+        <div>{open && children}</div>
       </DrawerBody>
     </Drawer>
   )

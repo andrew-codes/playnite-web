@@ -18,8 +18,13 @@ const FilteringDrawer: FC<{ disableTransition?: boolean }> = ({
 
   const handleClose = useCallback(() => {
     const libraryPath = pathname.replace(/\/filters$/, '')
-    router.push(buildLibraryUrlWithFilters(libraryPath, activeFilters))
-  }, [router, pathname, activeFilters])
+    const url = buildLibraryUrlWithFilters(libraryPath, activeFilters)
+    if (disableTransition) {
+      window.location.assign(url)
+    } else {
+      router.push(url)
+    }
+  }, [router, pathname, activeFilters, disableTransition])
 
   const handleFilter = useCallback(
     (filters: ActiveFilters) => {
