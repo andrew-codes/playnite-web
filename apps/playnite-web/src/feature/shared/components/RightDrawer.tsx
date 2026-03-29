@@ -138,10 +138,10 @@ const RightDrawer: FC<
   }, [disableTransition])
 
   const handleClose = useCallback(() => {
-    setOpen(false)
     if (onClose) {
       onClose()
     } else {
+      setOpen(false)
       router.back()
     }
   }, [router, onClose])
