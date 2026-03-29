@@ -163,7 +163,7 @@ const RightDrawer: FC<
         </IconButton>
       </DrawerHeader>
       <DrawerBody open={open}>
-        <div>{children}</div>
+        <div>{open && children}</div>
       </DrawerBody>
     </Drawer>
   )
