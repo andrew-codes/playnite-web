@@ -155,7 +155,7 @@ const RightDrawer: FC<
     >
       <DrawerHeader open={open}>
         <IconButton
-          onClick={handleClose}
+          onClick={onClose ?? handleClose}
           name="close-drawer"
           aria-label="close drawer"
         >
