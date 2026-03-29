@@ -479,7 +479,7 @@ namespace PlayniteWeb
     {
       try
       {
-        if (!string.IsNullOrEmpty(settings.ServerAddress) && !string.IsNullOrEmpty(settings.Username) && !settings.Password.Any())
+        if (string.IsNullOrEmpty(settings.ServerAddress) || string.IsNullOrEmpty(settings.Username) || !settings.Password.Any())
         {
           logger.Error("Connection information is not properly configured. Please check your plugin settings.");
           return;
@@ -555,7 +555,7 @@ namespace PlayniteWeb
       }
       catch (Exception e)
       {
-        logger.Error(e.Message);
+        logger.Error($"{e.GetType().Name}: {e.Message}{(e.InnerException != null ? $" --> {e.InnerException.GetType().Name}: {e.InnerException.Message}" : string.Empty)}");
       }
     }
 
