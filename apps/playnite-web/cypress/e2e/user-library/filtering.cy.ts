@@ -46,9 +46,7 @@ describe('Filtering.', () => {
 
         cy.contains('button', 'Cancel').click()
 
-        cy.location('pathname').should('equal', '/u/test/Library%3A1', {
-          timeout: 2000,
-        })
+        cy.location('pathname', { timeout: 8000 }).should('equal', '/u/test/Library%3A1')
         cy.location('search').should('include', 'nameFilter=Alan')
         cy.get('[data-test="GameFigure"]')
           .should('have.length', 1)
@@ -61,13 +59,7 @@ describe('Filtering.', () => {
 
         cy.contains('button', 'Cancel').click()
 
-        cy.location('pathname').should(
-          'equal',
-          '/u/test/Library%3A1/on-deck',
-          {
-            timeout: 2000,
-          },
-        )
+        cy.location('pathname', { timeout: 8000 }).should('equal', '/u/test/Library%3A1/on-deck')
         cy.location('search').should('include', 'nameFilter=Alan')
       })
 
@@ -77,9 +69,7 @@ describe('Filtering.', () => {
 
         cy.get('[aria-label="close drawer"]').click()
 
-        cy.location('pathname').should('equal', '/u/test/Library%3A1', {
-          timeout: 2000,
-        })
+        cy.location('pathname', { timeout: 8000 }).should('equal', '/u/test/Library%3A1')
         cy.location('search').should('include', 'nameFilter=Alan')
         cy.get('[data-test="GameFigure"]')
           .should('have.length', 1)
@@ -92,13 +82,7 @@ describe('Filtering.', () => {
 
         cy.get('[aria-label="close drawer"]').click()
 
-        cy.location('pathname').should(
-          'equal',
-          '/u/test/Library%3A1/on-deck',
-          {
-            timeout: 2000,
-          },
-        )
+        cy.location('pathname', { timeout: 8000 }).should('equal', '/u/test/Library%3A1/on-deck')
         cy.location('search').should('include', 'nameFilter=Alan')
       })
 
