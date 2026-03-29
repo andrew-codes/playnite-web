@@ -654,27 +654,44 @@ async function run() {
 
           const gameEntries = Object.entries(games)
           if (gameEntries.length > 0) {
-            // Use the first release's title from each group (preserves original casing)
-            const gameTitles = gameEntries.map(
-              ([_key, releases]) => releases[0].title,
+            // Query existing games first so we can do a case-insensitive dedup check
+            // before hitting the case-sensitive unique index. This prevents new duplicate
+            // Game rows (e.g. "Limbo" vs "LIMBO") when title casing drifts across syncs.
+            const existingGames = await prisma.game.findMany({
+              where: { libraryId },
+              select: { title: true },
+            })
+            const existingTitles = new Set(
+              existingGames.map((g) => g.title.toLowerCase()),
             )
-            await prisma.$executeRaw`
-              INSERT INTO "Game" ("title", "libraryId")
-              SELECT *
-              FROM ROWS FROM (
-                UNNEST(${gameTitles}::text[]),
-                UNNEST(${Array(gameEntries.length).fill(libraryId)}::integer[])
-              ) AS t("title", "libraryId")
-              ON CONFLICT ("title", "libraryId")
-              DO NOTHING
-            `
+
+            // Only insert games whose title (case-insensitively) is not already present.
+            const gameTitlesToInsert = gameEntries
+              .map(([_key, releases]) => releases[0].title)
+              .filter((t) => !existingTitles.has(t.toLowerCase()))
+
+            if (gameTitlesToInsert.length > 0) {
+              await prisma.$executeRaw`
+                INSERT INTO "Game" ("title", "libraryId")
+                SELECT *
+                FROM ROWS FROM (
+                  UNNEST(${gameTitlesToInsert}::text[]),
+                  UNNEST(${Array(gameTitlesToInsert.length).fill(libraryId)}::integer[])
+                ) AS t("title", "libraryId")
+                ON CONFLICT ("title", "libraryId")
+                DO NOTHING
+              `
+            }
           }
 
-          // Get all game IDs
+          // Get all game IDs (case-insensitive so title drift between syncs doesn't miss a row)
           const insertedGames = await prisma.game.findMany({
             where: {
               libraryId,
-              title: { in: releasesToUpdate.map((r) => r.title) },
+              title: {
+                in: releasesToUpdate.map((r) => r.title),
+                mode: 'insensitive',
+              },
             },
             select: { id: true, title: true, coverArt: true },
           })
@@ -688,13 +705,26 @@ async function run() {
           if (releaseData.length > 0) {
             const now = new Date()
 
-            // Add releaseGameId to releaseData
-            const releaseDataWithGameId = releaseData.map((r, idx) => ({
+            // Add releaseGameId to releaseData; skip releases whose game could not be resolved
+            const allReleaseDataWithGameId = releaseData.map((r, idx) => ({
               ...r,
               releaseGameId:
                 gameIdMap.get(releasesToUpdate[idx].title.toLowerCase()) ??
                 null,
             }))
+
+            const skipped = allReleaseDataWithGameId.filter(
+              (r) => r.releaseGameId === null,
+            )
+            if (skipped.length > 0) {
+              logger.warn(
+                `Skipping ${skipped.length} release(s) whose game could not be resolved: ${skipped.map((r) => r.title).join(', ')}`,
+              )
+            }
+
+            const releaseDataWithGameId = allReleaseDataWithGameId.filter(
+              (r) => r.releaseGameId !== null,
+            )
 
             // Upsert releases with releaseGameId and gameId
             await prisma.$executeRaw`
