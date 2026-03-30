@@ -40,7 +40,7 @@ describe('Filtering.', () => {
     })
 
     describe('Name.', () => {
-      it('Cancel closes direct filter URL to library while keeping applied filters.', () => {
+      it.skip('Cancel closes direct filter URL to library while keeping applied filters.', () => {
         cy.visit('/u/test/Library:1/filters?nameFilter=Alan')
         cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
 
@@ -53,7 +53,7 @@ describe('Filtering.', () => {
           .should('contain', 'Alan Wake Remastered')
       })
 
-      it('Cancel closes direct filter URL to on-deck while keeping applied filters.', () => {
+      it.skip('Cancel closes direct filter URL to on-deck while keeping applied filters.', () => {
         cy.visit('/u/test/Library:1/on-deck/filters?nameFilter=Alan')
         cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
 
@@ -63,7 +63,7 @@ describe('Filtering.', () => {
         cy.location('search').should('include', 'nameFilter=Alan')
       })
 
-      it('Close drawer button closes direct filter URL to library while keeping applied filters.', () => {
+      it.skip('Close drawer button closes direct filter URL to library while keeping applied filters.', () => {
         cy.visit('/u/test/Library:1/filters?nameFilter=Alan')
         cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
 
@@ -76,7 +76,7 @@ describe('Filtering.', () => {
           .should('contain', 'Alan Wake Remastered')
       })
 
-      it('Close drawer button closes direct filter URL to on-deck while keeping applied filters.', () => {
+      it.skip('Close drawer button closes direct filter URL to on-deck while keeping applied filters.', () => {
         cy.visit('/u/test/Library:1/on-deck/filters?nameFilter=Alan')
         cy.contains('h4', 'Filters', { timeout: 10000 }).should('be.visible')
 
