@@ -454,3 +454,39 @@ Packages:
       - "feat(PWP-116): embedded view supports on deck"
       - "For more details, see:
         https://public.home.playniteweb.com/wiki/x/AQC6Bw"
+  - Version: 13.10.0
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.10.0/PlayniteWeb_ec3439e3-51ee-43cb-9a8a-5d82cf45edac_13_10_0.pext
+    ReleaseDate: 2026-03-30
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "feat: error notifications in Playnite (#895)"
+      - "fix: call onClose directly from close button to ensure navigation works"
+      - "feat: add user notifications for MQTT authentication and connection
+        failures"
+      - "feat: add user notifications for authentication and sync failures"
+      - "fix: call onClose directly without setOpen(false) to prevent navigation
+        being blocked"
+      - "fix: use window.location.assign for direct filter page close"
+      - "fix: prevent double URL encoding and cancel button form submission"
+      - "fix: add closing state to FilteringDrawer to fix failing e2e tests"
+      - "fix(PWP-118): fix filter pane not re-opening after close"
+      - "fix(PWP-118): close filter pane without back navigation (#993)"
+      - "fix(PWP-118): normalize restored library filters (#992)"
+      - "fix(PWP-118): normalize restored library filters"
+      - "feat(PWP-29, PWP-30): filtering features (#989)"
+      - "fix(web): stabilize score filter e2e and chip colors"
+      - "fix: fix series null guard in sync-library-processor and Cypress filter
+        test selectors"
+      - "fix(PWP-29): add Series mapper to GraphQL codegen config"
+      - "feat(PWP-29): filter games by score range"
+      - "feat(PWP-28): filter library by genre (#988)"
+      - "fix(PWP-28): handle missing genres field in MQTT library sync messages"
+      - "fix(PWP-28): add missing genres field to library sync fixtures"
+      - "test(PWP-28): add unit and e2e tests for genre filter"
+      - "feat(PWP-28): add genre filter support for library filtering"
+      - "feat(PWP-27): encode filters in URL query params for shareability and
+        persistence (#987)"
+      - "feat(PWP-27): encode filters in URL query params for shareability and
+        persistence"
+      - "For more details, see:
+        https://public.home.playniteweb.com/wiki/x/AQC6Bw"
