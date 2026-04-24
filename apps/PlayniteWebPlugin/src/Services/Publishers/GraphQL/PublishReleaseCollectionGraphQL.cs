@@ -49,11 +49,14 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
                  {
                    id = g.Id,
                    title = g.GetValue("Name"),
+                   criticScore = g.GetValue("CriticScore"),
+                   communityScore = g.GetValue("CommunityScore"),
                    description = g.GetValue("Description"),
                    source = g.GetValue("SourceId"),
                    completionStatus = g.GetValue("CompletionStatusId"),
                    hidden = g.GetValue("Hidden"),
                    features = g.GetValue("FeatureIds"),
+                   series = g.GetValue("SeriesIds"),
                    genres = g.GetValue("GenreIds"),
                    tags = g.GetValue("TagIds"),
                    releaseDate = releaseDate.HasValue ? releaseDate.Value.Date.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture) : (string)null,
@@ -66,6 +69,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               completionStates = Enumerable.Empty<object>(),
               features = Enumerable.Empty<object>(),
               genres = Enumerable.Empty<object>(),
+              series = Enumerable.Empty<object>(),
             },
             remove = new
             {
@@ -76,6 +80,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               completionStates = Enumerable.Empty<string>(),
               features = Enumerable.Empty<string>(),
               genres = Enumerable.Empty<string>(),
+              series = Enumerable.Empty<object>(),
             }
           }
         }

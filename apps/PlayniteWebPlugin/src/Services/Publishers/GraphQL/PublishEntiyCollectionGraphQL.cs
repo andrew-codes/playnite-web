@@ -31,7 +31,9 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         ["sources"] = Enumerable.Empty<object>(),
         ["tags"] = Enumerable.Empty<object>(),
         ["completionStates"] = Enumerable.Empty<object>(),
-        ["features"] = Enumerable.Empty<object>()
+        ["features"] = Enumerable.Empty<object>(),
+        ["series"] = Enumerable.Empty<object>(),
+        ["genres"] = Enumerable.Empty<object>(),
       };
 
       var key = this.type.ToString();
@@ -49,7 +51,9 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         ["sources"] = Enumerable.Empty<string>(),
         ["tags"] = Enumerable.Empty<string>(),
         ["completionStates"] = Enumerable.Empty<string>(),
-        ["features"] = Enumerable.Empty<string>()
+        ["features"] = Enumerable.Empty<string>(),
+        ["series"] = Enumerable.Empty<string>(),
+        ["genres"] = Enumerable.Empty<string>(),
       };
 
       if (!removedUpdate.ContainsKey(key))
