@@ -273,6 +273,13 @@ jobs:
         run: yarn
         env:
           YARN_ENABLE_HARDENED_MODE: "0"
+      - name: Output release type
+        run: |
+          echo "github.event.client_payload.releaseType=${{ github.event.client_payload.releaseType }}"
+          echo "RELEASE_TYPE env=$RELEASE_TYPE"
+        shell: bash
+        env:
+          RELEASE_TYPE: ${{ github.event.client_payload.releaseType }}
       - name: Get next version
         run: echo "value=$(yarn node nextVersion.js)" >> $GITHUB_OUTPUT
         shell: bash

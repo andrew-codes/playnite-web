@@ -11,7 +11,7 @@ async function analyzeCommits(pluginConfig, context) {
   const releaseType = process.env.RELEASE_TYPE
   if (releaseType) {
     context.logger.log(`Using Jira release type: ${releaseType}`)
-    return releaseType
+    return releaseType.toLowerCase()
   }
 
   return commitResult
