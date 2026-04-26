@@ -256,3 +256,10 @@ Packages:
     Changelog:
       - "For more details, see:
         https://public.home.playniteweb.com/wiki/x/AQC6Bw"
+  - Version: 13.10.2
+    PackageUrl: https://github.com/andrew-codes/playnite-web/releases/download/v13.10.2/PlayniteWebMqtt_8c8e0788-7c52-426a-a479-fcf0836ea64a_13_10_2.pext
+    ReleaseDate: 2026-04-26
+    RequiredApiVersion: 6.13.0
+    Changelog:
+      - "For more details, see:
+        https://public.home.playniteweb.com/wiki/x/AQC6Bw"
