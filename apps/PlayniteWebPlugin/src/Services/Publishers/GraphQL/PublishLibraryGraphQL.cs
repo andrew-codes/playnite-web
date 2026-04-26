@@ -17,6 +17,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
     private readonly PlayniteWebSettings settings;
     private readonly Plugin plugin;
     private readonly IPlayniteAPI playniteApi;
+    private readonly ILogger logger = LogManager.GetLogger();
 
     public PublishLibraryGraphQL(GraphQLHttpClient gql, IGameDatabaseAPI db, string deviceId, PlayniteWebSettings settings, Plugin plugin, IPlayniteAPI playniteApi)
     {
@@ -30,7 +31,8 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
 
     public Task Publish()
     {
-      gql.SendMutationAsync<dynamic>(new GraphQLHttpRequest
+      logger.Info("Sending syncLibrary mutation to Playnite Web.");
+      return gql.SendMutationAsync<dynamic>(new GraphQLHttpRequest
       {
         Query = @"mutation($libraryData: LibraryInput!) {
           syncLibrary(libraryData: $libraryData) {
@@ -67,7 +69,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
                   communityScore = g.CommunityScore
                  }),
               platforms = db.Platforms.Select(p => new { id = p.Id, name = p.Name }),
-              sources = db.Sources.Select(s => new { id = s.Id, name = s.Name, platform = settings.SourcePlatforms[s.Id] }),
+              sources = db.Sources.Select(s => new { id = s.Id, name = s.Name, platform = settings.SourcePlatforms.ContainsKey(s.Id) ? settings.SourcePlatforms[s.Id] : Guid.Empty }),
               tags = db.Tags.Select(t => new { id = t.Id, name = t.Name }),
               completionStates = db.CompletionStatuses.Select(c => new { id = c.Id, name = c.Name }),
               features = db.Features.Select(f => new { id = f.Id, name = f.Name }),
@@ -91,6 +93,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         if (r.IsFaulted)
         {
           var errorMessage = r.Exception?.InnerException?.Message ?? r.Exception?.Message ?? "Unknown error occurred";
+          logger.Error($"syncLibrary mutation faulted: {errorMessage}");
           playniteApi.Notifications.Add(new NotificationMessage(
             "PlayniteWebSyncError",
             $"Playnite Web: Library sync failed. {errorMessage}",
@@ -103,16 +106,14 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
         if (response.Errors != null && response.Errors.Any())
         {
           var errorMessage = string.Join(Environment.NewLine, response.Errors.Select(e => e.Message));
-          // Notification will be handled at the top level; do not notify here to avoid duplicates.
-          var graphResponse = response.AsGraphQLHttpResponse();
+          logger.Error($"syncLibrary mutation returned GraphQL errors: {errorMessage}");
           throw new HttpRequestException(errorMessage);
         }
 
+        logger.Info("syncLibrary mutation succeeded.");
         settings.LastPublish = DateTime.UtcNow;
         plugin.SavePluginSettings(settings);
       });
-
-      return Task.CompletedTask;
     }
   }
 }
