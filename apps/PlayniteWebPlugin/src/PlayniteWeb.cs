@@ -275,24 +275,27 @@ namespace PlayniteWeb
 
     private void SyncLibraryFromMenu(MainMenuItemActionArgs args)
     {
-      try
+      Task.Run(async () =>
       {
-        logger.Info("Syncing library with Playnite Web.");
-        var tasks = SyncLibrary().ToArray();
-        Task.WhenAll(tasks).Wait();
-        logger.Debug($"Total published update messages: {tasks.Length}");
-        logger.Info("Finished syncing library with Playnite Web.");
-      }
-      catch (Exception e)
-      {
-        var errorMessage = e.InnerException?.Message ?? e.Message;
-        logger.Error($"Error occurred while syncing library: {errorMessage}");
-        PlayniteApi.Notifications.Add(new NotificationMessage(
-          "PlayniteWebSyncError",
-          $"Playnite Web: Library sync failed. {errorMessage}",
-          NotificationType.Error
-        ));
-      }
+        try
+        {
+          logger.Info("Syncing library with Playnite Web.");
+          var tasks = SyncLibrary().ToArray();
+          await Task.WhenAll(tasks);
+          logger.Debug($"Total published update messages: {tasks.Length}");
+          logger.Info("Finished syncing library with Playnite Web.");
+        }
+        catch (Exception e)
+        {
+          var errorMessage = e.InnerException?.Message ?? e.Message;
+          logger.Error($"Error occurred while syncing library: {errorMessage}");
+          PlayniteApi.Notifications.Add(new NotificationMessage(
+            "PlayniteWebSyncError",
+            $"Playnite Web: Library sync failed. {errorMessage}",
+            NotificationType.Error
+          ));
+        }
+      });
     }
 
     private IEnumerable<Task> SyncLibrary()
