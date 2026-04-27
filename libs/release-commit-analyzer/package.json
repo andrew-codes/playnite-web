@@ -2,6 +2,7 @@
   "name": "release-commit-analyzer",
   "version": "1.0.0",
   "description": "A tool to analyze release commit messages",
+  "type": "module",
   "main": "src/index.js",
   "dependencies": {
     "@semantic-release/commit-analyzer": "^13.0.1"

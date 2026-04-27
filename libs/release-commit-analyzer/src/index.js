@@ -14,14 +14,7 @@ async function analyzeCommits(pluginConfig, context) {
     return 'minor'
   }
 
-  const defectCount = parseInt(process.env.DEFECT_COUNT ?? '0', 10)
-  const taskCount = parseInt(process.env.TASK_COUNT ?? '0', 10)
-  if (defectCount > 0 || taskCount > 0) {
-    context.logger.log(`Defect count ${defectCount} or task count ${taskCount} > 0, using patch`)
-    return 'patch'
-  }
-
-  return commitResult
+  return 'patch'
 }
 
 export { analyzeCommits }
