@@ -84,6 +84,7 @@ namespace PlayniteWeb.Services.Publishers.WebSocket
               tags = Enumerable.Empty<string>(),
               completionStates = Enumerable.Empty<string>(),
               features = Enumerable.Empty<string>(),
+              series = Enumerable.Empty<string>(),
               genres = Enumerable.Empty<string>(),
             }
           }
