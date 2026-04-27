@@ -275,17 +275,22 @@ jobs:
           YARN_ENABLE_HARDENED_MODE: "0"
       - name: Output release type
         run: |
-          echo "github.event.client_payload.releaseType=${{ github.event.client_payload.releaseType }}"
-          echo "RELEASE_TYPE env=$RELEASE_TYPE"
+          echo "STORY_COUNT=$STORY_COUNT"
+          echo "DEFECT_COUNT=$DEFECT_COUNT"
+          echo "TASK_COUNT=$TASK_COUNT"
         shell: bash
         env:
-          RELEASE_TYPE: ${{ github.event.client_payload.releaseType }}
+          STORY_COUNT: ${{ github.event.client_payload.storyCount }}
+          DEFECT_COUNT: ${{ github.event.client_payload.defectCount }}
+          TASK_COUNT: ${{ github.event.client_payload.taskCount }}
       - name: Get next version
         run: echo "value=$(yarn node nextVersion.js)" >> $GITHUB_OUTPUT
         shell: bash
         id: nextVersion
         env:
-          RELEASE_TYPE: ${{ github.event.client_payload.releaseType }}
+          STORY_COUNT: ${{ github.event.client_payload.storyCount }}
+          DEFECT_COUNT: ${{ github.event.client_payload.defectCount }}
+          TASK_COUNT: ${{ github.event.client_payload.taskCount }}
       - name: Run Version
         run: yarn nx run-many --target=version --exclude='*,!tag:windows'
         env:
@@ -464,7 +469,9 @@ jobs:
           EXCLUDE: "*,!tag:linux"
           INCLUDE_GH_RELEASE: "true"
           GITHUB_SHA: ${{ github.sha }}
-          RELEASE_TYPE: ${{ github.event.client_payload.releaseType }}
+          STORY_COUNT: ${{ github.event.client_payload.storyCount }}
+          DEFECT_COUNT: ${{ github.event.client_payload.defectCount }}
+          TASK_COUNT: ${{ github.event.client_payload.taskCount }}
       - name: Update GitHub Release with Jira release notes
         if: github.event_name == 'repository_dispatch'
         env:
