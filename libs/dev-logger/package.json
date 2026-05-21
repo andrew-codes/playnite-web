@@ -16,7 +16,7 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^24.10.4",
+    "@types/node": "^25.0.3",
     "glob": "^13.0.0",
     "nx": "^22.3.3",
     "rimraf": "^6.1.2",

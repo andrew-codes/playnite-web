@@ -31,7 +31,7 @@
   "devDependencies": {
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
-    "@types/node": "^24.10.4",
+    "@types/node": "^25.0.3",
     "@yarnpkg/pnpify": "^4.1.6",
     "glob": "^13.0.0",
     "isomorphic-dompurify": "^2.34.0",
