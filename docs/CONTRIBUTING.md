@@ -64,6 +64,8 @@ Request a new feature when you think Playnite Web is missing a capability or exp
 
 ## Learn More About the Source Code
 
+Design and implementation notes for major features live in the [feature specs](feature-specs/README.md).
+
 You can ask questions and learn more about Playnite Web by joining our [Discord server](https://discord.gg/Dv8UrQ6mGb).
 
 ## Thank You
