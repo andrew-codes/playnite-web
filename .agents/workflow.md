@@ -2,4 +2,4 @@
 
 ## Feature Specs
 
-Summarize and document implementation notes as a feature spec in Confluence. They should target both human and AI consumption. Each major feature receives a single feature spec. Feature specs are child pages to https://public.home.playniteweb.com/wiki/x/AQC6Bw.
+Summarize and document implementation notes as a feature spec in the repository under `docs/feature-specs/`. They should target both human and AI consumption. Each major feature receives a single feature spec, as one markdown file. See `docs/feature-specs/README.md` for the convention.

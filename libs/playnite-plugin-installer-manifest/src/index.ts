@@ -133,7 +133,7 @@ const verifyRelease = async (pluginConfig, context) => {
 
   // Add link to parent release notes page
   nextPackage.Changelog.push(
-    'For more details, see: https://public.home.playniteweb.com/wiki/x/AQC6Bw',
+    `For more details, see: https://github.com/andrew-codes/playnite-web/releases`,
   )
 
   const manifest = parse(

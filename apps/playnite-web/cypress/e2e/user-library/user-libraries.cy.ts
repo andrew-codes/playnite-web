@@ -13,7 +13,7 @@ describe('User Libraries', () => {
     cy.contains('a', 'Sync your Library').should(
       'have.attr',
       'href',
-      'https://public.home.playniteweb.com/wiki/spaces/PW/pages/68026369/How+to+Sync+Library',
+      'https://github.com/andrew-codes/playnite-web/blob/main/docs/user-guides/setup-guide.md#step-4---sync-your-games-library',
     )
   })
 
