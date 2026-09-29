@@ -22,7 +22,7 @@ const UserLibraries = ({ username }: UserLibrariesProps) => {
       <Typography>
         No libraries found for this user.
         <br />
-        <Link href="https://public.home.playniteweb.com/wiki/spaces/PW/pages/68026369/How+to+Sync+Library">
+        <Link href="https://github.com/andrew-codes/playnite-web/blob/main/docs/user-guides/setup-guide.md#step-4---sync-your-games-library">
           Sync your Library
         </Link>
       </Typography>
