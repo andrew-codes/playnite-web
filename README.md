@@ -1,6 +1,6 @@
 # Playnite Web
 
-Share, automate, and remotely control your entire game library online with self-hosted Playnite Web. Learn more from the [documentation website](https://public.home.playniteweb.com/wiki/spaces/PW/overview?homepageId=27525123).
+Share, automate, and remotely control your entire game library online with self-hosted Playnite Web. Learn more from the [documentation](./docs/user-guides/setup-guide.md).
 
 <div style="display: flex">
 <img alt="Playnite Web logo" src="./docs/assets/images/icon.png" style="margin-bottom:-10px;" />
@@ -19,7 +19,17 @@ Share, automate, and remotely control your entire game library online with self-
 
 
 ## More Information
-> [Report Issues](https://playnite-web.atlassian.net/servicedesk/customer/portal/1)
+> [Report Issues](https://github.com/andrew-codes/playnite-web/issues)
+
+## Documentation
+
+- [Setup guide](./docs/user-guides/setup-guide.md) - deploy Playnite Web and install the Playnite plugin
+  - [Docker Compose deployment](./docs/user-guides/docker-compose.md) (recommended)
+  - [Manual deployment](./docs/user-guides/manual-deployment.md)
+- [Troubleshooting](./docs/user-guides/troubleshooting-guide.md)
+- [Remote control with Home Assistant](./docs/user-guides/home-assistant-remote-control-setup.md) and the [MQTT plugin](./docs/mqtt-plugin-documentation/index.md)
+- [Data model and GraphQL API](./docs/api-documentation/data-model.md)
+- [Contributing](./docs/CONTRIBUTING.md) and the [development environment](./docs/contributor-guides/development-environment/index.md)
 
 Playnite Web offers:
 

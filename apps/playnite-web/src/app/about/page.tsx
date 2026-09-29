@@ -26,10 +26,10 @@ function AboutPage() {
       <PageTitle title={`About`} />
       <List>
         <ListItem>
-          <Link href="https://public.home.playniteweb.com/wiki/spaces/PW/overview">
+          <Link href="https://github.com/andrew-codes/playnite-web/tree/main/docs">
             Playnite Web documentation website
           </Link>
-          <Link href="https://playnite-web.atlassian.net/servicedesk/customer/portal/1">
+          <Link href="https://github.com/andrew-codes/playnite-web/issues">
             File a defect or request a feature
           </Link>
           <Link href="https://discord.gg/SSqRj3EKyt">
